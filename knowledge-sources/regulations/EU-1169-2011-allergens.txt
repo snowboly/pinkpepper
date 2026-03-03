@@ -1,0 +1,130 @@
+REGULATION (EU) No 1169/2011 OF THE EUROPEAN PARLIAMENT AND OF THE COUNCIL
+on the provision of food information to consumers
+
+ALLERGEN LABELLING REQUIREMENTS
+
+Article 9 - Mandatory Particulars
+The following particulars shall be mandatory: any ingredient or processing aid causing allergies or intolerances used in the manufacture or preparation of a food and still present in the finished product, even if in an altered form.
+
+Article 21 - Labelling of Certain Substances or Products Causing Allergies or Intolerances
+The particulars referred to in point (c) of Article 9(1) shall meet the following requirements:
+(a) they shall be indicated in the list of ingredients with a clear reference to the name of the substance or product as listed in Annex II;
+(b) the name of the substance or product as listed in Annex II shall be emphasised through a typeset that clearly distinguishes it from the rest of the list of ingredients, for example by means of the font, style or background colour.
+
+In the absence of a list of ingredients, the indication of the particulars shall comprise the word 'contains' followed by the name of the substance or product as listed in Annex II.
+
+ANNEX II - SUBSTANCES OR PRODUCTS CAUSING ALLERGIES OR INTOLERANCES
+
+The 14 major allergens that must be declared:
+
+1. CEREALS CONTAINING GLUTEN
+Namely: wheat (such as spelt and khorasan wheat), rye, barley, oats or their hybridised strains, and products thereof.
+Exceptions: wheat-based glucose syrups including dextrose, wheat-based maltodextrins, glucose syrups based on barley, cereals used for making alcoholic distillates including ethyl alcohol of agricultural origin.
+
+2. CRUSTACEANS
+Crustaceans and products thereof.
+Examples: crab, lobster, prawns, shrimp, scampi, crayfish.
+
+3. EGGS
+Eggs and products thereof.
+Includes: all eggs from birds, egg white, egg yolk, egg lecithin (E322), lysozyme (E1105), albumin.
+
+4. FISH
+Fish and products thereof.
+Exceptions: fish gelatine used as carrier for vitamin or carotenoid preparations, fish gelatine or isinglass used as fining agent in beer and wine.
+
+5. PEANUTS
+Peanuts and products thereof.
+Note: Peanuts are legumes, not tree nuts. Cross-contamination with tree nuts is common.
+
+6. SOYBEANS
+Soybeans and products thereof.
+Exceptions: fully refined soybean oil and fat, natural mixed tocopherols (E306), natural D-alpha tocopherol, natural D-alpha tocopherol acetate, natural D-alpha tocopherol succinate from soybean sources, vegetable oils derived phytosterols and phytosterol esters from soybean sources, plant stanol ester produced from vegetable oil sterols from soybean sources.
+
+7. MILK
+Milk and products thereof (including lactose).
+Exceptions: whey used for making alcoholic distillates including ethyl alcohol of agricultural origin, lactitol.
+Includes: butter, cheese, cream, yoghurt, casein, caseinate, whey, lactalbumin, lactoglobulin.
+
+8. NUTS
+Specifically: almonds (Amygdalus communis L.), hazelnuts (Corylus avellana), walnuts (Juglans regia), cashews (Anacardium occidentale), pecan nuts (Carya illinoinensis), Brazil nuts (Bertholletia excelsa), pistachio nuts (Pistacia vera), macadamia or Queensland nuts (Macadamia ternifolia).
+And products thereof.
+Exceptions: nuts used for making alcoholic distillates including ethyl alcohol of agricultural origin.
+
+9. CELERY
+Celery and products thereof.
+Includes: celeriac, celery salt, celery seeds, celery leaves.
+
+10. MUSTARD
+Mustard and products thereof.
+Includes: mustard seeds, mustard powder, mustard oil, prepared mustard.
+
+11. SESAME SEEDS
+Sesame seeds and products thereof.
+Includes: sesame oil, tahini, halva.
+
+12. SULPHUR DIOXIDE AND SULPHITES
+At concentrations of more than 10 mg/kg or 10 mg/litre in terms of the total SO2.
+Used as preservatives in: dried fruits, wine, beer, soft drinks, sausages, burger meat, dried vegetables.
+E numbers: E220, E221, E222, E223, E224, E226, E227, E228.
+
+13. LUPIN
+Lupin and products thereof.
+Includes: lupin flour, lupin seeds. Found in some types of bread, pastries, pasta.
+
+14. MOLLUSCS
+Molluscs and products thereof.
+Examples: mussels, clams, oysters, scallops, squid, octopus, snails.
+
+ALLERGEN MANAGEMENT BEST PRACTICES
+
+Separation and Storage
+- Store allergenic ingredients separately from non-allergenic ingredients
+- Use clearly labelled, dedicated containers for allergens
+- Implement colour-coded storage systems
+- Store allergens on lower shelves to prevent cross-contamination from spills
+
+Preparation Areas
+- Designate separate preparation areas for allergen-free food where possible
+- Clean and sanitise work surfaces, utensils, and equipment between allergen and non-allergen food preparation
+- Use separate, clearly identified utensils for allergenic ingredients
+- Consider using coloured chopping boards for different allergen categories
+
+Staff Training Requirements
+- All food handlers must be trained on allergen awareness
+- Training must cover the 14 major allergens
+- Staff must understand cross-contamination risks
+- Training records must be maintained
+- Regular refresher training is recommended
+
+Communication with Customers
+- Allergen information must be readily available to customers
+- Staff must be able to direct customers to allergen information
+- For non-prepacked foods, allergen information can be provided orally but must be verifiable in writing
+- Clear signage about allergen enquiry process
+
+Documentation Requirements
+- Maintain accurate recipe specifications with allergen information
+- Keep supplier specifications confirming allergen status of ingredients
+- Document any changes to recipes or suppliers
+- Maintain training records for all staff
+
+Emergency Procedures
+- Staff must know how to respond to an allergic reaction
+- Emergency contact numbers must be readily available
+- First aid procedures for anaphylaxis should be understood
+- Adrenaline auto-injectors (where provided by customers) should be accessible
+
+Precautionary Allergen Labelling (PAL)
+"May contain" statements should only be used when:
+- Cross-contamination cannot be controlled through good manufacturing practice
+- A genuine risk assessment has been conducted
+- All reasonable steps have been taken to minimise cross-contamination
+- The statement is not used to avoid proper allergen management
+
+Cross-Contact Prevention
+- Wash hands thoroughly when switching between allergen and non-allergen foods
+- Change gloves between handling different allergens
+- Use separate cooking oil for foods with different allergen profiles
+- Clean deep-fat fryers when changing between allergen categories
+- Consider order of cooking (allergen-free first)

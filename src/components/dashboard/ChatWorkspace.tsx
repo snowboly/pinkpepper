@@ -4,10 +4,13 @@ import { FormEvent, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import type { SubscriptionTier } from "@/lib/tier";
 import { TIER_CAPABILITIES } from "@/lib/tier";
+import type { Citation } from "@/lib/rag/citations";
+import { SourceCardsList } from "@/components/chat/SourceCard";
 
 type Message = {
   role: "user" | "assistant";
   content: string;
+  citations?: Citation[];
 };
 
 type Conversation = {
@@ -271,6 +274,8 @@ export default function ChatWorkspace({
       const data = (await res.json()) as {
         error?: string;
         assistantMessage?: string;
+        citations?: Citation[];
+        ragEnabled?: boolean;
         conversationId?: string;
         usage?: { used: number; limit: number | null; tier: SubscriptionTier; isAdmin?: boolean };
       };
@@ -284,7 +289,14 @@ export default function ChatWorkspace({
 
       if (data.conversationId) setConversationId(data.conversationId);
       if (data.assistantMessage) {
-        setMessages((prev) => [...prev, { role: "assistant", content: data.assistantMessage! }]);
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: "assistant",
+            content: data.assistantMessage!,
+            citations: data.citations,
+          },
+        ]);
       }
       if (data.usage) {
         setUsage(data.usage.used);
@@ -438,15 +450,20 @@ export default function ChatWorkspace({
                     : "mr-auto border border-[#E8DADA] bg-white text-[#2B2B2B]"
                 }`}
               >
-                {msg.content}
+                <div className="whitespace-pre-wrap">{msg.content}</div>
+
+                {msg.role === "assistant" && msg.citations && msg.citations.length > 0 && (
+                  <SourceCardsList citations={msg.citations} maxInitialDisplay={3} />
+                )}
+
                 {msg.role === "assistant" && reviewEligible && conversationId && (
-                  <div className="mt-2">
+                  <div className="mt-3 border-t border-[#E8DADA] pt-3">
                     <button
                       type="button"
                       onClick={() => setReviewModalOpen(true)}
-                      className="rounded-full border border-[#E8DADA] bg-white px-3 py-1 text-xs"
+                      className="rounded-full border border-[#E8DADA] bg-[#FCFAF9] px-3 py-1 text-xs transition-colors hover:bg-[#F5EEEC]"
                     >
-                      Send this for review
+                      Request human review
                     </button>
                   </div>
                 )}

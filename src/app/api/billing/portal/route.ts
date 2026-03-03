@@ -1,0 +1,37 @@
+import { NextResponse } from "next/server";
+import { createClient } from "@/utils/supabase/server";
+import { getStripe } from "@/lib/billing/stripe";
+
+export const dynamic = "force-dynamic";
+
+export async function POST(request: Request) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const { data: subRow } = await supabase
+    .from("subscriptions")
+    .select("stripe_customer_id")
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  const customerId = subRow?.stripe_customer_id;
+  if (!customerId) {
+    return NextResponse.json({ error: "No billing profile found yet." }, { status: 400 });
+  }
+
+  const stripe = getStripe();
+  const appUrl = process.env.NEXT_PUBLIC_SITE_URL || new URL(request.url).origin;
+
+  const portal = await stripe.billingPortal.sessions.create({
+    customer: customerId,
+    return_url: `${appUrl}/dashboard`,
+  });
+
+  return NextResponse.json({ url: portal.url });
+}

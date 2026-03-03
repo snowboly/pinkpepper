@@ -1,0 +1,22 @@
+import { Resend } from "resend";
+
+type BillingEmailInput = {
+  to: string;
+  subject: string;
+  html: string;
+};
+
+export async function sendBillingEmail(input: BillingEmailInput) {
+  const apiKey = process.env.RESEND_API_KEY;
+  const from = process.env.RESEND_FROM;
+
+  if (!apiKey || !from) return;
+
+  const resend = new Resend(apiKey);
+  await resend.emails.send({
+    from,
+    to: input.to,
+    subject: input.subject,
+    html: input.html,
+  });
+}
