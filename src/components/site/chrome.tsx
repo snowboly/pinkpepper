@@ -43,7 +43,7 @@ export function SiteHeader() {
           </Link>
           <Link
             href="/signup"
-            className="rounded-full bg-[#0F172A] px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-[#1E293B] md:px-5 md:py-2.5"
+            className="rounded-full bg-[#E11D48] px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-[#BE123C] md:px-5 md:py-2.5"
           >
             Get started
           </Link>

@@ -295,51 +295,63 @@ export default function HomePage() {
             <p className="text-lg text-[#64748B]">Choose the tier that matches your document volume and review needs.</p>
           </div>
 
-          <div className="mx-auto grid max-w-5xl gap-8 lg:grid-cols-3">
-            <div className="rounded-3xl border border-[#E2E8F0] bg-white p-8 transition-all duration-200 hover:shadow-lg hover:shadow-black/[0.04]">
-              <h3 className="text-lg font-semibold text-[#0F172A]">Free</h3>
-              <div className="mt-2 text-5xl font-bold text-[#0F172A]">EUR 0</div>
+          <div className="mx-auto grid max-w-5xl gap-6 lg:grid-cols-3">
+            <div className="flex flex-col rounded-3xl border border-[#E2E8F0] bg-white p-8 transition-all duration-200 hover:shadow-lg hover:shadow-black/[0.04]">
+              <h3 className="text-xl font-bold text-[#0F172A]">Free</h3>
               <p className="mt-2 text-sm text-[#64748B]">Perfect for validating fit and testing workflow.</p>
-              <ul className="mt-6 space-y-3 text-sm text-[#475569]">
-                <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-[#CBD5E1]" />15 messages per day</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-[#CBD5E1]" />Basic food safety Q and A</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-[#CBD5E1]" />10 saved conversations</li>
+              <div className="mt-6 flex items-baseline gap-1">
+                <span className="text-5xl font-bold tracking-tight text-[#0F172A]">€0</span>
+                <span className="text-base text-[#94A3B8]">/month</span>
+              </div>
+              <div className="my-6 border-t border-[#F1F5F9]" />
+              <ul className="flex-1 space-y-3.5 text-sm text-[#475569]">
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />15 messages per day</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />Basic food safety Q and A</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />10 saved conversations</li>
               </ul>
-              <Link href="/signup" className="mt-7 block rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] py-3 text-center font-semibold text-[#0F172A] transition-colors hover:bg-[#F1F5F9]">
+              <Link href="/signup" className="mt-8 block rounded-xl border border-[#E2E8F0] bg-white py-3.5 text-center text-sm font-semibold text-[#0F172A] transition-colors hover:bg-[#F8FAFC]">
                 Get started
               </Link>
             </div>
 
-            <div className="relative rounded-3xl border-2 border-[#E11D48]/20 bg-[#0F172A] p-8 shadow-2xl shadow-black/20 lg:scale-105">
-              <div className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-[#E11D48] px-4 py-1 text-xs font-bold uppercase tracking-wide text-white">
+            <div className="relative flex flex-col rounded-3xl border-2 border-[#E11D48] bg-white p-8 shadow-lg shadow-[#E11D48]/[0.06]">
+              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-[#E11D48] px-4 py-1 text-xs font-bold uppercase tracking-wide text-white">
                 <Star className="mr-1 inline h-3 w-3" />
                 Most Popular
               </div>
-              <h3 className="text-lg font-semibold text-white">Plus</h3>
-              <div className="mt-2 text-5xl font-bold text-white">EUR 15</div>
-              <p className="mt-2 text-sm text-[#94A3B8]">Core plan for operators building recurring compliance packs.</p>
-              <ul className="mt-6 space-y-3 text-sm text-white">
-                <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4" />80 messages per day</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4" />HACCP plan generation</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4" />PDF export</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4" />2 human reviews per month</li>
+              <h3 className="text-xl font-bold text-[#0F172A]">Plus</h3>
+              <p className="mt-2 text-sm text-[#64748B]">Core plan for operators building recurring compliance packs.</p>
+              <div className="mt-6 flex items-baseline gap-1">
+                <span className="text-5xl font-bold tracking-tight text-[#0F172A]">€15</span>
+                <span className="text-base text-[#94A3B8]">/month</span>
+              </div>
+              <div className="my-6 border-t border-[#F1F5F9]" />
+              <ul className="flex-1 space-y-3.5 text-sm text-[#475569]">
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />80 messages per day</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />HACCP plan generation</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />PDF export</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />2 human reviews per month</li>
               </ul>
-              <Link href="/pricing" className="mt-7 block rounded-xl bg-[#E11D48] py-3 text-center font-semibold text-white transition-colors hover:bg-[#BE123C]">
+              <Link href="/pricing" className="mt-8 block rounded-xl bg-[#E11D48] py-3.5 text-center text-sm font-semibold text-white transition-colors hover:bg-[#BE123C]">
                 Choose Plus
               </Link>
             </div>
 
-            <div className="rounded-3xl border border-[#E2E8F0] bg-white p-8 transition-all duration-200 hover:shadow-lg hover:shadow-black/[0.04]">
-              <h3 className="text-lg font-semibold text-[#0F172A]">Pro</h3>
-              <div className="mt-2 text-5xl font-bold text-[#0F172A]">EUR 69</div>
+            <div className="flex flex-col rounded-3xl border border-[#E2E8F0] bg-white p-8 transition-all duration-200 hover:shadow-lg hover:shadow-black/[0.04]">
+              <h3 className="text-xl font-bold text-[#0F172A]">Pro</h3>
               <p className="mt-2 text-sm text-[#64748B]">For teams running advanced, multi-site operations.</p>
-              <ul className="mt-6 space-y-3 text-sm text-[#475569]">
-                <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-[#CBD5E1]" />250 messages per day</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-[#CBD5E1]" />Word and PDF export</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-[#CBD5E1]" />Multi-site profiles</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-[#CBD5E1]" />Priority support</li>
+              <div className="mt-6 flex items-baseline gap-1">
+                <span className="text-5xl font-bold tracking-tight text-[#0F172A]">€69</span>
+                <span className="text-base text-[#94A3B8]">/month</span>
+              </div>
+              <div className="my-6 border-t border-[#F1F5F9]" />
+              <ul className="flex-1 space-y-3.5 text-sm text-[#475569]">
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />250 messages per day</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />Word and PDF export</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />Multi-site profiles</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />Priority support</li>
               </ul>
-              <Link href="/pricing" className="mt-7 block rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] py-3 text-center font-semibold text-[#0F172A] transition-colors hover:bg-[#F1F5F9]">
+              <Link href="/pricing" className="mt-8 block rounded-xl border border-[#E2E8F0] bg-white py-3.5 text-center text-sm font-semibold text-[#0F172A] transition-colors hover:bg-[#F8FAFC]">
                 Choose Pro
               </Link>
             </div>
@@ -360,7 +372,7 @@ export default function HomePage() {
           </p>
           <Link
             href="/signup"
-            className="inline-flex items-center gap-3 rounded-full bg-[#0F172A] px-10 py-4 text-lg font-semibold text-white shadow-xl shadow-black/10 transition-all hover:bg-[#1E293B] hover:shadow-2xl hover:shadow-black/15"
+            className="inline-flex items-center gap-3 rounded-full bg-[#E11D48] px-10 py-4 text-lg font-semibold text-white shadow-xl shadow-[#E11D48]/20 transition-all hover:bg-[#BE123C] hover:shadow-2xl hover:shadow-[#E11D48]/25"
           >
             Start for free
             <ArrowRight className="h-5 w-5" />
