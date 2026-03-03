@@ -1,12 +1,12 @@
 @import "tailwindcss";
 
 :root {
-  --pp-primary: #c62828;
-  --pp-bg: #fff8f4;
+  --pp-primary: #E11D48;
+  --pp-bg: #FFFFFF;
   --pp-card: #FFFFFF;
-  --pp-text: #241414;
-  --pp-muted: #5b4a4a;
-  --pp-border: #ecd9cd;
+  --pp-text: #0F172A;
+  --pp-muted: #475569;
+  --pp-border: #E2E8F0;
 }
 
 * {
