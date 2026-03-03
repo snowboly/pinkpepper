@@ -9,7 +9,7 @@ const nav = [
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-50 border-b border-[#2F1C1C]/15 bg-[#FFF7F2]/92 shadow-[0_1px_0_rgba(47,28,28,0.08)] backdrop-blur-xl">
+    <header className="sticky top-0 z-50 border-b border-[#E2E8F0] bg-white/80 shadow-[0_1px_3px_rgba(0,0,0,0.04)] backdrop-blur-xl">
       <div className="pp-container flex h-14 items-center justify-between md:h-16">
         <div className="flex items-center gap-8 lg:gap-12">
           <Link href="/" className="flex h-12 items-center overflow-hidden leading-none md:h-14">
@@ -22,12 +22,12 @@ export function SiteHeader() {
               className="h-16 w-auto max-w-none scale-[1.3] md:h-[4.4rem] md:scale-[1.34]"
             />
           </Link>
-          <nav className="hidden items-center gap-7 text-sm font-semibold tracking-[0.01em] text-[#5E4747] lg:flex">
+          <nav className="hidden items-center gap-7 text-sm font-semibold tracking-[0.01em] text-[#64748B] lg:flex">
             {nav.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className="transition-colors hover:text-[#1F1212]"
+                className="transition-colors hover:text-[#0F172A]"
               >
                 {item.label}
               </Link>
@@ -37,13 +37,13 @@ export function SiteHeader() {
         <div className="flex items-center gap-3 md:gap-4">
           <Link
             href="/login"
-            className="hidden text-sm font-semibold text-[#5E4747] transition-colors hover:text-[#1F1212] sm:block"
+            className="hidden text-sm font-semibold text-[#64748B] transition-colors hover:text-[#0F172A] sm:block"
           >
             Log in
           </Link>
           <Link
             href="/signup"
-            className="rounded-full bg-gradient-to-r from-[#C62828] to-[#991B1B] px-4 py-2 text-sm font-semibold text-white transition-all hover:from-[#B91C1C] hover:to-[#7F1D1D] md:px-5 md:py-2.5"
+            className="rounded-full bg-[#0F172A] px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-[#1E293B] md:px-5 md:py-2.5"
           >
             Get started
           </Link>
@@ -55,7 +55,7 @@ export function SiteHeader() {
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-[#E8E4DF] bg-white py-16">
+    <footer className="border-t border-[#F1F5F9] bg-white py-16">
       <div className="pp-container mb-12 grid gap-12 md:grid-cols-4">
         <div>
           <Link href="/" className="inline-flex h-10 items-center overflow-hidden leading-none">
@@ -99,7 +99,7 @@ export function SiteFooter() {
           </ul>
         </div>
       </div>
-      <div className="pp-container border-t border-[#E8E4DF] pt-8">
+      <div className="pp-container border-t border-[#F1F5F9] pt-8">
         <div className="flex flex-col items-center justify-between gap-4 text-center text-sm text-[#9B9B9B] md:flex-row md:text-left">
           <p>&copy; {new Date().getFullYear()} PinkPepper.io. All rights reserved.</p>
           <p className="max-w-lg">
