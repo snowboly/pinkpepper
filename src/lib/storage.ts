@@ -66,7 +66,7 @@ export async function getUserStorageUsed(userId: string): Promise<number> {
     .is("deleted_at", null);
 
   if (error) throw new Error(`Failed to query storage usage: ${error.message}`);
-  const rows = (data ?? []) as Array<{ size_bytes: number }>;
+  const rows = data ?? [];
   return rows.reduce((sum, row) => sum + (row.size_bytes ?? 0), 0);
 }
 
@@ -137,7 +137,6 @@ export async function uploadFile(
     expiresAt = exp.toISOString();
   }
 
-  // Insert metadata — cast required because admin client has no generated types
   const insertPayload = {
     id: fileId,
     user_id: userId,
@@ -151,8 +150,7 @@ export async function uploadFile(
   };
   const { data: row, error: insertError } = await admin
     .from("files")
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    .insert(insertPayload as any)
+    .insert(insertPayload)
     .select("id")
     .single();
 
@@ -162,7 +160,7 @@ export async function uploadFile(
     throw new Error(`Metadata insert failed: ${insertError?.message ?? "no row returned"}`);
   }
 
-  return (row as { id: string }).id;
+  return row.id;
 }
 
 // ============================================================
@@ -179,16 +177,13 @@ export async function getSignedUrl(
 ): Promise<string> {
   const admin = createAdminClient();
 
-  type FileRow = { storage_path: string; bucket: string; deleted_at: string | null };
-
-  const { data: rawFile, error: fetchError } = await admin
+  const { data: file, error: fetchError } = await admin
     .from("files")
     .select("storage_path, bucket, deleted_at")
     .eq("id", fileId)
     .eq("user_id", userId)
     .single();
 
-  const file = rawFile as FileRow | null;
   if (fetchError || !file) {
     throw new Error("File not found or access denied.");
   }
@@ -218,16 +213,13 @@ export async function getSignedUrl(
 export async function deleteFile(fileId: string, userId: string): Promise<void> {
   const admin = createAdminClient();
 
-  type FileRow = { storage_path: string; bucket: string; deleted_at: string | null };
-
-  const { data: rawFile, error: fetchError } = await admin
+  const { data: file, error: fetchError } = await admin
     .from("files")
     .select("storage_path, bucket, deleted_at")
     .eq("id", fileId)
     .eq("user_id", userId)
     .single();
 
-  const file = rawFile as FileRow | null;
   if (fetchError || !file) {
     throw new Error("File not found or access denied.");
   }
@@ -260,21 +252,19 @@ export async function deleteFile(fileId: string, userId: string): Promise<void> 
 export async function purgeExpiredFiles(): Promise<{ purged: number }> {
   const admin = createAdminClient();
 
-  type ExpiredRow = { id: string; storage_path: string; bucket: string };
-
-  const { data: rawExpired, error } = await admin
+  const { data: expired, error } = await admin
     .from("files")
     .select("id, storage_path, bucket")
     .lt("expires_at", new Date().toISOString())
     .is("deleted_at", null);
 
   if (error) throw new Error(`Failed to fetch expired files: ${error.message}`);
-  const expired = (rawExpired ?? []) as ExpiredRow[];
-  if (expired.length === 0) return { purged: 0 };
+  const rows = expired ?? [];
+  if (rows.length === 0) return { purged: 0 };
 
   // Group by bucket for batch removal
   const byBucket: Record<string, string[]> = {};
-  for (const f of expired) {
+  for (const f of rows) {
     (byBucket[f.bucket] ??= []).push(f.storage_path);
   }
   for (const [bucket, paths] of Object.entries(byBucket)) {
@@ -282,7 +272,7 @@ export async function purgeExpiredFiles(): Promise<{ purged: number }> {
   }
 
   // Hard-delete metadata rows
-  const ids = expired.map((f) => f.id);
+  const ids = rows.map((f) => f.id);
   await admin.from("files").delete().in("id", ids);
 
   return { purged: ids.length };
