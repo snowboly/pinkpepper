@@ -1,179 +1,204 @@
+import { Metadata } from "next";
+import Link from "next/link";
+import { CheckCircle2, Star, XCircle } from "lucide-react";
+import { createClient } from "@/utils/supabase/server";
 import PricingActions from "@/components/pricing/PricingActions";
-import { CheckCircle2, XCircle } from "lucide-react";
 
-type MetricRow = {
-  label: string;
-  value: number;
-  display: string;
-  pct: number;
+export const metadata: Metadata = {
+  title: "Pricing | PinkPepper — AI Food Safety Compliance Software",
+  description:
+    "Simple, transparent pricing for AI-powered HACCP plans, SOP generation, and food safety documentation. Start free, upgrade when you need PDF export or expert human review.",
 };
 
-function MetricBar({ label, display, pct, barColor }: MetricRow & { barColor: string }) {
+export default async function PricingPage() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const isLoggedIn = !!user;
+
+  const ctaBase =
+    "mt-8 block w-full rounded-xl py-3.5 text-center text-sm font-semibold transition-colors";
+  const ctaPrimary = `${ctaBase} bg-[#E11D48] text-white hover:bg-[#BE123C]`;
+  const ctaSecondary = `${ctaBase} border border-[#E2E8F0] bg-white text-[#0F172A] hover:bg-[#F8FAFC]`;
+  const ctaNeutral = `${ctaBase} border border-[#E2E8F0] bg-white text-[#0F172A] hover:bg-[#F8FAFC]`;
+
   return (
-    <div className="flex items-center gap-3">
-      <span className="w-[7.5rem] shrink-0 text-xs">{label}</span>
-      <div className="h-1.5 flex-1 rounded-full bg-white/10">
-        <div className={`h-1.5 rounded-full ${barColor}`} style={{ width: `${pct}%` }} />
-      </div>
-      <span className="w-12 shrink-0 text-right text-xs font-bold tabular-nums">{display}</span>
-    </div>
-  );
-}
-
-const freeMetrics: MetricRow[] = [
-  { label: "Daily queries", value: 25, display: "25", pct: 2.5 },
-  { label: "Doc generations", value: 0, display: "0", pct: 0 },
-  { label: "Image uploads", value: 1, display: "1", pct: 5 },
-  { label: "Human reviews/mo", value: 0, display: "0", pct: 0 },
-];
-
-const plusMetrics: MetricRow[] = [
-  { label: "Daily queries", value: 100, display: "100", pct: 10 },
-  { label: "Doc generations", value: 3, display: "3", pct: 15 },
-  { label: "Image uploads", value: 3, display: "3", pct: 15 },
-  { label: "Human reviews/mo", value: 1, display: "1", pct: 17 },
-];
-
-const proMetrics: MetricRow[] = [
-  { label: "Daily queries", value: 1000, display: "1,000", pct: 100 },
-  { label: "Doc generations", value: 20, display: "20", pct: 100 },
-  { label: "Image uploads", value: 20, display: "20", pct: 100 },
-  { label: "Human reviews/mo", value: 6, display: "6", pct: 100 },
-];
-
-export default function PricingPage() {
-  return (
-    <main>
+    <main className="overflow-hidden">
+      {/* Hero */}
       <section className="py-16 text-center">
         <div className="pp-container max-w-3xl">
-          <h1 className="text-4xl font-black tracking-tight text-[#2B2B2B] md:text-5xl">Pricing</h1>
-          <p className="mt-4 text-lg text-[#6B6B6B]">
-            Start with Free, then unlock exports and advanced documentation workflows as your compliance needs grow.
-          </p>
-          <p className="mt-3 text-sm text-[#8F8080]">
-            Entitlements are enforced server-side via Supabase tier data synchronized with Stripe webhook events.
+          <h1 className="pp-display text-4xl font-black tracking-tight text-[#0F172A] md:text-5xl">
+            Simple pricing, clear upgrades
+          </h1>
+          <p className="mt-4 text-lg text-[#475569]">
+            Start free. Unlock PDF exports and expert human review as your compliance needs grow.
           </p>
         </div>
       </section>
 
-      <section className="relative overflow-hidden bg-[#241F1F] py-20 text-white">
+      {/* Pricing cards */}
+      <section className="relative overflow-hidden border-y border-[#F1F5F9] bg-white py-16">
         <div className="pp-container">
-          <div className="grid gap-8 lg:grid-cols-3">
-            {/* ── Free ── */}
-            <article className="flex flex-col rounded-[2.5rem] border border-[#3A3333] bg-[#1E1A1A] p-8 shadow-2xl">
-              <div className="mb-6">
-                <h2 className="mb-2 text-xl font-black">Free</h2>
-                <span className="text-4xl font-black">EUR0</span>
-                <p className="mt-3 text-sm font-medium text-[#9F9191]">AI food safety assistant — no export, no human review.</p>
-              </div>
-
-              {/* Metric bars */}
-              <div className="mb-6 space-y-2 text-[#C9BBBB]">
-                {freeMetrics.map((m) => (
-                  <MetricBar key={m.label} {...m} barColor="bg-[#E11D48]" />
-                ))}
-              </div>
-
-              <ul className="mb-8 flex-1 space-y-3 text-sm text-[#C9BBBB]">
-                <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-[#D96C6C]" /> 25 daily queries</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-[#D96C6C]" /> 1 image upload/day</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-[#D96C6C]" /> 10 saved conversations</li>
-                <li className="flex items-center gap-2 text-[#6B5E5E]"><XCircle className="h-4 w-4 text-[#6B5E5E]" /> No export</li>
-                <li className="flex items-center gap-2 text-[#6B5E5E]"><XCircle className="h-4 w-4 text-[#6B5E5E]" /> No human review</li>
-              </ul>
-              <p className="rounded-xl border border-[#4A4343] bg-[#2B2525] px-4 py-3 text-center text-sm font-bold text-[#D7CACA]">
-                Included at signup
+          <div className="mx-auto grid max-w-5xl gap-6 lg:grid-cols-3">
+            {/* Free */}
+            <div className="flex flex-col rounded-3xl border border-[#E2E8F0] bg-white p-8 transition-all duration-200 hover:shadow-lg hover:shadow-black/[0.04]">
+              <h2 className="text-xl font-bold text-[#0F172A]">Free</h2>
+              <p className="mt-2 text-sm text-[#64748B]">
+                Perfect for validating fit and testing workflows.
               </p>
-            </article>
-
-            {/* ── Plus ── */}
-            <article className="relative z-10 flex flex-col rounded-[2.5rem] border-2 border-[#EAA7A7] bg-[#D96C6C] p-8 shadow-2xl lg:scale-110">
-              <div className="absolute right-0 top-0 rounded-bl-2xl bg-[#F6D1A8] px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-[#5A3B1E]">
-                Most Popular
+              <div className="mt-6 flex items-baseline gap-1">
+                <span className="text-5xl font-bold tracking-tight text-[#0F172A]">€0</span>
+                <span className="text-base text-[#94A3B8]">/month</span>
               </div>
-              <div className="mb-6 pt-4">
-                <h2 className="mb-2 text-xl font-black text-white">Plus</h2>
-                <div className="flex items-baseline">
-                  <span className="text-5xl font-black text-white">EUR19</span>
-                  <span className="ml-2 font-bold text-[#F8D8D8]">+ VAT</span>
-                </div>
-                <p className="mt-3 text-sm font-medium text-[#FFE8E8]">PDF export + 1 expert human review/month.</p>
-              </div>
-
-              {/* Metric bars */}
-              <div className="mb-6 space-y-2 text-white">
-                {plusMetrics.map((m) => (
-                  <MetricBar key={m.label} {...m} barColor="bg-white/60" />
-                ))}
-              </div>
-
-              <ul className="mb-8 flex-1 space-y-3 text-sm font-bold text-white">
-                <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-[#FFE8E8]" /> 100 daily queries</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-[#FFE8E8]" /> 3 image uploads/day</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-[#FFE8E8]" /> 3 document generations/day</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-[#FFE8E8]" /> PDF export</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-[#FFE8E8]" /> 1 expert human review/month (72 h turnaround)</li>
-              </ul>
-            </article>
-
-            {/* ── Pro ── */}
-            <article className="flex flex-col rounded-[2.5rem] border border-[#4A4343] bg-[#2B2525] p-8 shadow-lg">
-              <div className="mb-6">
-                <h2 className="mb-2 text-xl font-black text-white">Pro</h2>
-                <div className="flex items-baseline">
-                  <span className="text-4xl font-black text-white">EUR99</span>
-                  <span className="ml-2 font-bold text-[#9F9191]">+ VAT</span>
-                </div>
-                <p className="mt-3 text-sm font-medium text-[#B8ABAB]">Word &amp; PDF export + 6 expert human reviews/month. Full HACCP plan reviews available.</p>
-              </div>
-
-              {/* Metric bars */}
-              <div className="mb-6 space-y-2 text-[#D7CACA]">
-                {proMetrics.map((m) => (
-                  <MetricBar key={m.label} {...m} barColor="bg-emerald-400" />
-                ))}
-              </div>
-
-              <ul className="mb-8 flex-1 space-y-3 text-sm text-[#D7CACA]">
-                <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-emerald-400" /> 1,000 daily queries</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-emerald-400" /> 20 image uploads/day</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-emerald-400" /> 20 document generations/day</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-emerald-400" /> Word &amp; PDF export</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-emerald-400" /> 6 expert human reviews/month (72 h turnaround)</li>
-                <li className="mt-2 flex items-center gap-2 rounded-lg border border-emerald-400/30 bg-emerald-400/10 px-3 py-1.5 text-emerald-400">
-                  <CheckCircle2 className="h-4 w-4" /> Full HACCP plan reviews — Pro only
+              <div className="my-6 border-t border-[#F1F5F9]" />
+              <ul className="flex-1 space-y-3.5 text-sm text-[#475569]">
+                <li className="flex items-start gap-2.5">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />
+                  25 daily queries
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />
+                  1 image upload/day
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />
+                  10 saved conversations
+                </li>
+                <li className="flex items-start gap-2.5 opacity-50">
+                  <XCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#94A3B8]" />
+                  No export
+                </li>
+                <li className="flex items-start gap-2.5 opacity-50">
+                  <XCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#94A3B8]" />
+                  No human review
                 </li>
               </ul>
-            </article>
-          </div>
-        </div>
-      </section>
+              <Link href="/signup" className={ctaNeutral}>
+                Get started free
+              </Link>
+            </div>
 
-      <section className="py-12">
-        <div className="pp-container">
-          <div className="pp-card p-6 md:p-8">
-            <h2 className="text-2xl font-black text-[#2B2B2B]">Tier gating summary</h2>
-            <div className="mt-4 grid gap-4 md:grid-cols-3">
-              <div className="rounded-xl border border-[#E8DADA] bg-white p-4">
-                <h3 className="font-semibold">Free</h3>
-                <p className="mt-2 text-sm text-[#6B6B6B]">No export, no human review. 25 daily queries, 1 image upload/day.</p>
+            {/* Plus — Most Popular */}
+            <div className="relative flex flex-col rounded-3xl border-2 border-[#E11D48] bg-white p-8 shadow-lg shadow-[#E11D48]/[0.06]">
+              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-[#E11D48] px-4 py-1 text-xs font-bold uppercase tracking-wide text-white">
+                <Star className="mr-1 inline h-3 w-3" />
+                Most Popular
               </div>
-              <div className="rounded-xl border border-[#E8DADA] bg-white p-4">
-                <h3 className="font-semibold">Plus</h3>
-                <p className="mt-2 text-sm text-[#6B6B6B]">PDF export enabled with 1 expert human review/month and higher daily limits.</p>
+              <h2 className="text-xl font-bold text-[#0F172A]">Plus</h2>
+              <p className="mt-2 text-sm text-[#64748B]">
+                PDF export and expert review for growing operations.
+              </p>
+              <div className="mt-6 flex items-baseline gap-1">
+                <span className="text-5xl font-bold tracking-tight text-[#0F172A]">€19</span>
+                <span className="text-base text-[#94A3B8]">/month + VAT</span>
               </div>
-              <div className="rounded-xl border border-[#E8DADA] bg-white p-4">
-                <h3 className="font-semibold">Pro</h3>
-                <p className="mt-2 text-sm text-[#6B6B6B]">Word and PDF export, 6 expert human reviews/month, and highest daily limits.</p>
+              <div className="my-6 border-t border-[#F1F5F9]" />
+              <ul className="flex-1 space-y-3.5 text-sm text-[#475569]">
+                <li className="flex items-start gap-2.5">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
+                  100 daily queries
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
+                  3 document generations/day
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
+                  3 image uploads/day
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
+                  PDF export
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
+                  1 expert human review/month (72 h turnaround)
+                </li>
+              </ul>
+              <PricingActions
+                isLoggedIn={isLoggedIn}
+                plan="plus"
+                label="Choose Plus"
+                className={ctaPrimary}
+              />
+            </div>
+
+            {/* Pro */}
+            <div className="flex flex-col rounded-3xl border border-[#E2E8F0] bg-white p-8 transition-all duration-200 hover:shadow-lg hover:shadow-black/[0.04]">
+              <h2 className="text-xl font-bold text-[#0F172A]">Pro</h2>
+              <p className="mt-2 text-sm text-[#64748B]">
+                Full HACCP reviews and highest limits for serious operators.
+              </p>
+              <div className="mt-6 flex items-baseline gap-1">
+                <span className="text-5xl font-bold tracking-tight text-[#0F172A]">€99</span>
+                <span className="text-base text-[#94A3B8]">/month + VAT</span>
               </div>
+              <div className="my-6 border-t border-[#F1F5F9]" />
+              <ul className="flex-1 space-y-3.5 text-sm text-[#475569]">
+                <li className="flex items-start gap-2.5">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-600" />
+                  1,000 daily queries
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-600" />
+                  20 document generations/day
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-600" />
+                  20 image uploads/day
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-600" />
+                  Word &amp; PDF export
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-600" />
+                  6 expert human reviews/month (72 h turnaround)
+                </li>
+                <li className="flex items-start gap-2.5 font-medium text-emerald-700">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-600" />
+                  Full HACCP plan reviews — Pro only
+                </li>
+              </ul>
+              <PricingActions
+                isLoggedIn={isLoggedIn}
+                plan="pro"
+                label="Choose Pro"
+                className={ctaSecondary}
+              />
             </div>
           </div>
         </div>
       </section>
 
-      <section className="py-8">
-        <div className="pp-container max-w-2xl">
-          <PricingActions />
+      {/* Tier comparison summary */}
+      <section className="py-16">
+        <div className="pp-container max-w-4xl">
+          <h2 className="mb-8 text-center text-2xl font-bold text-[#0F172A]">What each tier includes</h2>
+          <div className="grid gap-4 md:grid-cols-3">
+            <div className="rounded-2xl border border-[#E2E8F0] bg-[#F8FAFC] p-6">
+              <h3 className="mb-1 font-semibold text-[#0F172A]">Free</h3>
+              <p className="text-sm text-[#64748B]">
+                25 daily queries, 1 image upload/day, 10 saved conversations. No export, no human review.
+              </p>
+            </div>
+            <div className="rounded-2xl border border-[#E11D48]/20 bg-[#FFF1F2] p-6">
+              <h3 className="mb-1 font-semibold text-[#0F172A]">Plus</h3>
+              <p className="text-sm text-[#64748B]">
+                PDF export enabled. 100 daily queries, 3 document generations/day, 1 expert review/month.
+              </p>
+            </div>
+            <div className="rounded-2xl border border-emerald-100 bg-emerald-50 p-6">
+              <h3 className="mb-1 font-semibold text-[#0F172A]">Pro</h3>
+              <p className="text-sm text-[#64748B]">
+                Word &amp; PDF export, 1,000 daily queries, 20 generations/day, 6 reviews/month, full HACCP reviews.
+              </p>
+            </div>
+          </div>
+          <p className="mt-8 text-center text-xs text-[#94A3B8]">
+            Entitlements enforced server-side via Supabase, synchronized with Stripe webhook events.
+          </p>
         </div>
       </section>
     </main>

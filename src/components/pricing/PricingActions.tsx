@@ -1,15 +1,31 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 
 type Plan = "plus" | "pro";
 
-export default function PricingActions() {
-  const [loadingPlan, setLoadingPlan] = useState<Plan | null>(null);
+interface Props {
+  isLoggedIn: boolean;
+  plan: Plan;
+  label: string;
+  className: string;
+}
+
+export default function PricingActions({ isLoggedIn, plan, label, className }: Props) {
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  async function startCheckout(plan: Plan) {
-    setLoadingPlan(plan);
+  if (!isLoggedIn) {
+    return (
+      <Link href={`/signup?plan=${plan}`} className={className}>
+        {label}
+      </Link>
+    );
+  }
+
+  async function startCheckout() {
+    setLoading(true);
     setError(null);
     try {
       const res = await fetch("/api/billing/checkout", {
@@ -28,21 +44,16 @@ export default function PricingActions() {
     } catch {
       setError("Network error. Please try again.");
     } finally {
-      setLoadingPlan(null);
+      setLoading(false);
     }
   }
 
   return (
-    <div className="mt-6 space-y-3">
-      {error && <p className="text-sm text-red-700">{error}</p>}
-      <div className="grid gap-3 md:grid-cols-2">
-        <button onClick={() => startCheckout("plus")} disabled={loadingPlan !== null} className="pp-btn-primary">
-          {loadingPlan === "plus" ? "Loading..." : "Choose Plus"}
-        </button>
-        <button onClick={() => startCheckout("pro")} disabled={loadingPlan !== null} className="pp-btn-secondary">
-          {loadingPlan === "pro" ? "Loading..." : "Choose Pro"}
-        </button>
-      </div>
+    <div>
+      {error && <p className="mb-2 text-xs text-red-600">{error}</p>}
+      <button onClick={startCheckout} disabled={loading} className={className}>
+        {loading ? "Loading..." : label}
+      </button>
     </div>
   );
 }

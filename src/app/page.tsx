@@ -65,10 +65,6 @@ export default function HomePage() {
     router.push(`/signup?prompt=${prompt}`);
   };
 
-  const handleInputClick = () => {
-    if (!inputValue) router.push("/signup");
-  };
-
   return (
     <main className="overflow-hidden">
       <section className="relative overflow-hidden pb-20 pt-16 md:pb-24 md:pt-24">
@@ -114,7 +110,6 @@ export default function HomePage() {
                       onChange={(e) => setInputValue(e.target.value)}
                       onFocus={() => setIsFocused(true)}
                       onBlur={() => setIsFocused(false)}
-                      onClick={handleInputClick}
                       placeholder="Create a HACCP plan for a cafe in Dublin..."
                       className="flex-1 bg-transparent text-base text-[#0F172A] placeholder-[#94A3B8] outline-none md:text-lg"
                     />
@@ -322,7 +317,7 @@ export default function HomePage() {
               <h3 className="text-xl font-bold text-[#0F172A]">Plus</h3>
               <p className="mt-2 text-sm text-[#64748B]">Core plan for operators building recurring compliance packs.</p>
               <div className="mt-6 flex items-baseline gap-1">
-                <span className="text-5xl font-bold tracking-tight text-[#0F172A]">€15</span>
+                <span className="text-5xl font-bold tracking-tight text-[#0F172A]">€19</span>
                 <span className="text-base text-[#94A3B8]">/month</span>
               </div>
               <div className="my-6 border-t border-[#F1F5F9]" />
@@ -332,7 +327,7 @@ export default function HomePage() {
                 <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />PDF export</li>
                 <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />2 human reviews per month</li>
               </ul>
-              <Link href="/pricing" className="mt-8 block rounded-xl bg-[#E11D48] py-3.5 text-center text-sm font-semibold text-white transition-colors hover:bg-[#BE123C]">
+              <Link href="/signup?plan=plus" className="mt-8 block rounded-xl bg-[#E11D48] py-3.5 text-center text-sm font-semibold text-white transition-colors hover:bg-[#BE123C]">
                 Choose Plus
               </Link>
             </div>
@@ -341,7 +336,7 @@ export default function HomePage() {
               <h3 className="text-xl font-bold text-[#0F172A]">Pro</h3>
               <p className="mt-2 text-sm text-[#64748B]">For teams running advanced, multi-site operations.</p>
               <div className="mt-6 flex items-baseline gap-1">
-                <span className="text-5xl font-bold tracking-tight text-[#0F172A]">€69</span>
+                <span className="text-5xl font-bold tracking-tight text-[#0F172A]">€99</span>
                 <span className="text-base text-[#94A3B8]">/month</span>
               </div>
               <div className="my-6 border-t border-[#F1F5F9]" />
@@ -351,7 +346,7 @@ export default function HomePage() {
                 <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />Multi-site profiles</li>
                 <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />Priority support</li>
               </ul>
-              <Link href="/pricing" className="mt-8 block rounded-xl border border-[#E2E8F0] bg-white py-3.5 text-center text-sm font-semibold text-[#0F172A] transition-colors hover:bg-[#F8FAFC]">
+              <Link href="/signup?plan=pro" className="mt-8 block rounded-xl border border-[#E2E8F0] bg-white py-3.5 text-center text-sm font-semibold text-[#0F172A] transition-colors hover:bg-[#F8FAFC]">
                 Choose Pro
               </Link>
             </div>
