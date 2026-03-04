@@ -154,13 +154,13 @@ export async function uploadFile(
     .select("id")
     .single();
 
-  if (insertError) {
+  if (insertError || !row) {
     // Best-effort cleanup of the uploaded object
     await admin.storage.from(bucket).remove([storagePath]);
-    throw new Error(`Metadata insert failed: ${insertError.message}`);
+    throw new Error(`Metadata insert failed: ${insertError?.message ?? "no row returned"}`);
   }
 
-  return row.id as string;
+  return (row as { id: string }).id;
 }
 
 // ============================================================
@@ -177,13 +177,16 @@ export async function getSignedUrl(
 ): Promise<string> {
   const admin = createAdminClient();
 
-  const { data: file, error: fetchError } = await admin
+  type FileRow = { storage_path: string; bucket: string; deleted_at: string | null };
+
+  const { data: rawFile, error: fetchError } = await admin
     .from("files")
     .select("storage_path, bucket, deleted_at")
     .eq("id", fileId)
     .eq("user_id", userId)
     .single();
 
+  const file = rawFile as FileRow | null;
   if (fetchError || !file) {
     throw new Error("File not found or access denied.");
   }
@@ -192,8 +195,8 @@ export async function getSignedUrl(
   }
 
   const { data, error: urlError } = await admin.storage
-    .from(file.bucket as string)
-    .createSignedUrl(file.storage_path as string, SIGNED_URL_EXPIRY);
+    .from(file.bucket)
+    .createSignedUrl(file.storage_path, SIGNED_URL_EXPIRY);
 
   if (urlError || !data?.signedUrl) {
     throw new Error(`Failed to generate signed URL: ${urlError?.message}`);
@@ -213,13 +216,16 @@ export async function getSignedUrl(
 export async function deleteFile(fileId: string, userId: string): Promise<void> {
   const admin = createAdminClient();
 
-  const { data: file, error: fetchError } = await admin
+  type FileRow = { storage_path: string; bucket: string; deleted_at: string | null };
+
+  const { data: rawFile, error: fetchError } = await admin
     .from("files")
     .select("storage_path, bucket, deleted_at")
     .eq("id", fileId)
     .eq("user_id", userId)
     .single();
 
+  const file = rawFile as FileRow | null;
   if (fetchError || !file) {
     throw new Error("File not found or access denied.");
   }
@@ -237,8 +243,8 @@ export async function deleteFile(fileId: string, userId: string): Promise<void> 
 
   // Remove from object storage
   await admin.storage
-    .from(file.bucket as string)
-    .remove([file.storage_path as string]);
+    .from(file.bucket)
+    .remove([file.storage_path]);
 }
 
 // ============================================================
@@ -252,27 +258,29 @@ export async function deleteFile(fileId: string, userId: string): Promise<void> 
 export async function purgeExpiredFiles(): Promise<{ purged: number }> {
   const admin = createAdminClient();
 
-  const { data: expired, error } = await admin
+  type ExpiredRow = { id: string; storage_path: string; bucket: string };
+
+  const { data: rawExpired, error } = await admin
     .from("files")
     .select("id, storage_path, bucket")
     .lt("expires_at", new Date().toISOString())
     .is("deleted_at", null);
 
   if (error) throw new Error(`Failed to fetch expired files: ${error.message}`);
-  if (!expired || expired.length === 0) return { purged: 0 };
+  const expired = (rawExpired ?? []) as ExpiredRow[];
+  if (expired.length === 0) return { purged: 0 };
 
   // Group by bucket for batch removal
   const byBucket: Record<string, string[]> = {};
   for (const f of expired) {
-    const b = f.bucket as string;
-    (byBucket[b] ??= []).push(f.storage_path as string);
+    (byBucket[f.bucket] ??= []).push(f.storage_path);
   }
   for (const [bucket, paths] of Object.entries(byBucket)) {
     await admin.storage.from(bucket).remove(paths);
   }
 
   // Hard-delete metadata rows
-  const ids = expired.map((f) => f.id as string);
+  const ids = expired.map((f) => f.id);
   await admin.from("files").delete().in("id", ids);
 
   return { purged: ids.length };
