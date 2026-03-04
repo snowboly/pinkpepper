@@ -243,7 +243,10 @@ export async function POST(request: Request) {
       conversationId = newConv.id;
     }
 
-    return handleImageAnalysis(supabase, user.id, conversationId!, base64, imageFile.type, message, isAdmin);
+    if (!conversationId) {
+      return NextResponse.json({ error: "Failed to resolve conversation." }, { status: 500 });
+    }
+    return handleImageAnalysis(supabase, user.id, conversationId, base64, imageFile.type, message, isAdmin);
   }
 
   // --- Text chat path ---
