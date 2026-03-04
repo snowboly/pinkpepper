@@ -55,6 +55,7 @@ async function handleImageAnalysis(
       Authorization: `Bearer ${openaiKey}`,
       "Content-Type": "application/json",
     },
+    signal: AbortSignal.timeout(30_000),
     body: JSON.stringify({
       model: visionModel,
       max_tokens: 1500,
@@ -73,7 +74,8 @@ async function handleImageAnalysis(
 
   if (!openaiRes.ok) {
     const details = await openaiRes.text();
-    return NextResponse.json({ error: `Image analysis failed: ${details}` }, { status: 502 });
+    console.error("OpenAI Vision API error:", details);
+    return NextResponse.json({ error: "Image analysis service temporarily unavailable." }, { status: 502 });
   }
 
   const openaiJson = (await openaiRes.json()) as {
@@ -372,6 +374,7 @@ export async function POST(request: Request) {
       Authorization: `Bearer ${groqKey}`,
       "Content-Type": "application/json",
     },
+    signal: AbortSignal.timeout(30_000),
     body: JSON.stringify({
       model,
       temperature,
@@ -385,7 +388,8 @@ export async function POST(request: Request) {
 
   if (!groqRes.ok) {
     const details = await groqRes.text();
-    return NextResponse.json({ error: `Groq request failed: ${details}` }, { status: 502 });
+    console.error("Groq API error:", details);
+    return NextResponse.json({ error: "AI service temporarily unavailable." }, { status: 502 });
   }
 
   const groqJson = (await groqRes.json()) as {
