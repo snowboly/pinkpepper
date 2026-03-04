@@ -43,7 +43,7 @@ export default function PricingPage() {
               <div className="mb-8 pt-4">
                 <h2 className="mb-2 text-xl font-black text-white">Plus</h2>
                 <div className="flex items-baseline">
-                  <span className="text-5xl font-black text-white">EUR15</span>
+                  <span className="text-5xl font-black text-white">EUR19</span>
                   <span className="ml-2 font-bold text-[#F8D8D8]">+ VAT</span>
                 </div>
                 <p className="mt-4 text-sm font-medium text-[#FFE8E8]">Structured generation with PDF export.</p>
@@ -60,7 +60,7 @@ export default function PricingPage() {
               <div className="mb-8">
                 <h2 className="mb-2 text-xl font-black text-white">Pro</h2>
                 <div className="flex items-baseline">
-                  <span className="text-4xl font-black text-white">EUR69</span>
+                  <span className="text-4xl font-black text-white">EUR99</span>
                   <span className="ml-2 font-bold text-[#9F9191]">+ VAT</span>
                 </div>
                 <p className="mt-4 text-sm font-medium text-[#B8ABAB]">Full compliance documentation suite.</p>
