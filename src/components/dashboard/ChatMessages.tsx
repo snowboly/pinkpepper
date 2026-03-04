@@ -56,7 +56,7 @@ export default function ChatMessages({
         <div className="flex flex-col items-center justify-center py-16 text-center px-4">
           <div className="mb-6">
             <Image
-              src="/logo/PP_logo_nopadding.png"
+              src="/logo/LogoV3.png"
               alt="PinkPepper"
               width={160}
               height={44}
