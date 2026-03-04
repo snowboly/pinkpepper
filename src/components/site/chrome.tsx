@@ -12,14 +12,14 @@ export function SiteHeader() {
     <header className="sticky top-0 z-50 border-b border-[#E2E8F0] bg-white/80 shadow-[0_1px_3px_rgba(0,0,0,0.04)] backdrop-blur-xl">
       <div className="pp-container flex h-14 items-center justify-between md:h-16">
         <div className="flex items-center gap-8 lg:gap-12">
-          <Link href="/" className="flex h-12 items-center overflow-hidden leading-none md:h-14">
+          <Link href="/" className="flex items-center leading-none">
             <Image
-              src="/logo/PP_logo_nopadding.png"
+              src="/logo/LogoV2.png"
               alt="PinkPepper"
-              width={240}
-              height={64}
+              width={220}
+              height={44}
               priority
-              className="h-16 w-auto max-w-none scale-[1.3] md:h-[4.4rem] md:scale-[1.34]"
+              className="h-8 w-auto object-contain md:h-9"
             />
           </Link>
           <nav className="hidden items-center gap-7 text-sm font-semibold tracking-[0.01em] text-[#64748B] lg:flex">
@@ -58,13 +58,13 @@ export function SiteFooter() {
     <footer className="border-t border-[#F1F5F9] bg-white py-16">
       <div className="pp-container mb-12 grid gap-12 md:grid-cols-4">
         <div>
-          <Link href="/" className="inline-flex h-10 items-center overflow-hidden leading-none">
+          <Link href="/" className="inline-flex items-center leading-none">
             <Image
-              src="/logo/PP_logo_nopadding.png"
+              src="/logo/LogoV2.png"
               alt="PinkPepper"
               width={180}
-              height={48}
-              className="h-10 w-auto max-w-none scale-[1.22]"
+              height={36}
+              className="h-8 w-auto object-contain"
             />
           </Link>
           <p className="mt-4 text-sm leading-relaxed text-[#6B6B6B]">
