@@ -10,6 +10,7 @@ export type TierCapabilities = {
   persistentStorage: boolean;
   allowPdfExport: boolean;
   allowWordExport: boolean;
+  allowFullDocumentReview: boolean;
   priorityProcessing: boolean;
   monthlyHumanReviews: number;
   reviewTurnaround: string;
@@ -26,6 +27,7 @@ export const TIER_CAPABILITIES: Record<SubscriptionTier, TierCapabilities> = {
     persistentStorage: false,
     allowPdfExport: false,
     allowWordExport: false,
+    allowFullDocumentReview: false,
     priorityProcessing: false,
     monthlyHumanReviews: 0,
     reviewTurnaround: "N/A",
@@ -40,6 +42,7 @@ export const TIER_CAPABILITIES: Record<SubscriptionTier, TierCapabilities> = {
     persistentStorage: true,
     allowPdfExport: true,
     allowWordExport: false,
+    allowFullDocumentReview: false,
     priorityProcessing: false,
     monthlyHumanReviews: 1,
     reviewTurnaround: "within 48 hours",
@@ -54,6 +57,7 @@ export const TIER_CAPABILITIES: Record<SubscriptionTier, TierCapabilities> = {
     persistentStorage: true,
     allowPdfExport: true,
     allowWordExport: true,
+    allowFullDocumentReview: true,
     priorityProcessing: true,
     monthlyHumanReviews: 6,
     reviewTurnaround: "within 24 hours",

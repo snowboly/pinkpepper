@@ -6,11 +6,22 @@ import { countUsageSince, utcMonthStartIso } from "@/lib/policy";
 
 export const dynamic = "force-dynamic";
 
+const QUICK_CHECK_CATEGORIES = ["async_qa", "process_flow", "log_review", "short_procedure"] as const;
+const FULL_REVIEW_CATEGORIES = ["full_haccp_plan", "ccp_review", "prps_review", "operations_manual"] as const;
+
+type DocumentCategory = typeof QUICK_CHECK_CATEGORIES[number] | typeof FULL_REVIEW_CATEGORIES[number];
 type ReviewType = "quick_check" | "full_review";
 
-function normalizeReviewType(input: string | undefined): ReviewType {
-  if (input === "full_review") return "full_review";
-  return "quick_check";
+function normalizeDocumentCategory(input: string | undefined): DocumentCategory | null {
+  if (QUICK_CHECK_CATEGORIES.includes(input as typeof QUICK_CHECK_CATEGORIES[number])) return input as DocumentCategory;
+  if (FULL_REVIEW_CATEGORIES.includes(input as typeof FULL_REVIEW_CATEGORIES[number])) return input as DocumentCategory;
+  return null;
+}
+
+function deriveReviewType(category: DocumentCategory): ReviewType {
+  return FULL_REVIEW_CATEGORIES.includes(category as typeof FULL_REVIEW_CATEGORIES[number])
+    ? "full_review"
+    : "quick_check";
 }
 
 export async function GET(request: Request) {
@@ -28,7 +39,7 @@ export async function GET(request: Request) {
 
   let query = supabase
     .from("review_requests")
-    .select("id,conversation_id,review_type,status,created_at")
+    .select("id,conversation_id,review_type,document_category,status,created_at")
     .eq("user_id", user.id)
     .order("created_at", { ascending: false })
     .limit(20);
@@ -57,17 +68,23 @@ export async function POST(request: Request) {
 
   const body = (await request.json()) as {
     conversationId?: string;
-    reviewType?: string;
+    documentCategory?: string;
     notes?: string;
   };
 
   const conversationId = body.conversationId?.trim();
   const notes = body.notes?.trim() ?? "";
-  const reviewType = normalizeReviewType(body.reviewType);
+  const documentCategory = normalizeDocumentCategory(body.documentCategory);
 
   if (!conversationId) {
     return NextResponse.json({ error: "conversationId is required." }, { status: 400 });
   }
+
+  if (!documentCategory) {
+    return NextResponse.json({ error: "A valid documentCategory is required." }, { status: 400 });
+  }
+
+  const reviewType = deriveReviewType(documentCategory);
 
   const { data: profile } = await supabase
     .from("profiles")
@@ -80,6 +97,10 @@ export async function POST(request: Request) {
 
   if (!isAdmin && caps.monthlyHumanReviews <= 0) {
     return NextResponse.json({ error: "Human review is available on Plus and Pro." }, { status: 403 });
+  }
+
+  if (!isAdmin && reviewType === "full_review" && !caps.allowFullDocumentReview) {
+    return NextResponse.json({ error: "Full document review is available on Pro only." }, { status: 403 });
   }
 
   const { data: conv } = await supabase
@@ -121,6 +142,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Unable to read review usage." }, { status: 500 });
     }
 
+    if (reviewType === "full_review" && used >= 1) {
+      return NextResponse.json(
+        { error: "Full document review requires all monthly review slots to be available. Use your remaining quick checks first or wait until next month." },
+        { status: 402 }
+      );
+    }
+
     if (used >= caps.monthlyHumanReviews) {
       return NextResponse.json({ error: "Monthly human review limit reached for your plan." }, { status: 402 });
     }
@@ -132,24 +160,30 @@ export async function POST(request: Request) {
       user_id: user.id,
       conversation_id: conversationId,
       review_type: reviewType,
+      document_category: documentCategory,
       notes: notes.length > 0 ? notes : null,
       snapshot_content: latestAssistant.content,
       status: "queued",
       priority: tier === "pro" || isAdmin ? "priority" : "standard",
     })
-    .select("id,review_type,status,created_at")
+    .select("id,review_type,document_category,status,created_at")
     .single();
 
   if (createError || !created) {
     return NextResponse.json({ error: "Failed to create review request." }, { status: 500 });
   }
 
-  const { error: usageError } = await supabase.from("usage_events").insert({
+  // A full_review exhausts the entire monthly quota; insert one row per slot so
+  // countUsageSince correctly reflects the quota as exhausted.
+  const slotsToConsume = !isAdmin && reviewType === "full_review" ? caps.monthlyHumanReviews : 1;
+  const usageRows = Array.from({ length: slotsToConsume }, () => ({
     user_id: user.id,
-    event_type: "human_review_request",
+    event_type: "human_review_request" as const,
     event_count: 1,
-    metadata: { review_request_id: created.id, conversation_id: conversationId, review_type: reviewType },
-  });
+    metadata: { review_request_id: created.id, conversation_id: conversationId, document_category: documentCategory, review_type: reviewType },
+  }));
+
+  const { error: usageError } = await supabase.from("usage_events").insert(usageRows);
 
   if (usageError) {
     return NextResponse.json({ error: "Failed to record review usage." }, { status: 500 });
@@ -158,9 +192,8 @@ export async function POST(request: Request) {
   return NextResponse.json({
     request: created,
     usage: {
-      used: isAdmin ? 0 : used + 1,
+      used: isAdmin ? 0 : used + slotsToConsume,
       limit: isAdmin ? null : caps.monthlyHumanReviews,
     },
   });
 }
-
