@@ -20,11 +20,19 @@ export const metadata: Metadata = {
     "PinkPepper helps food businesses generate HACCP plans, SOPs, monitoring logs, allergen documentation, and traceability procedures.",
   icons: {
     icon: [
+<<<<<<< codex/replace-homepage-logo-and-icons
       { url: "/logo/LogoV2.png", sizes: "32x32", type: "image/png" },
       { url: "/logo/LogoV2.png", sizes: "64x64", type: "image/png" },
     ],
     apple: [{ url: "/logo/LogoV2.png", sizes: "1024x1024", type: "image/png" }],
     shortcut: ["/logo/LogoV2.png"],
+=======
+      { url: "/logo/pinkpepper-favicon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/logo/pinkpepper-favicon-64.png", sizes: "64x64", type: "image/png" },
+    ],
+    apple: [{ url: "/logo/pinkpepper-app-icon-1024.png", sizes: "1024x1024", type: "image/png" }],
+    shortcut: ["/logo/pinkpepper-favicon-32.png"],
+>>>>>>> main
   },
 };
 
