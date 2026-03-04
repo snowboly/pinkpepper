@@ -14,7 +14,7 @@ export function SiteHeader() {
         <div className="flex items-center gap-8 lg:gap-12">
           <Link href="/" className="flex items-center leading-none">
             <Image
-              src="/logo/LogoV2.png"
+              src="/logo/LogoV3.png"
               alt="PinkPepper"
               width={220}
               height={44}
@@ -60,7 +60,7 @@ export function SiteFooter() {
         <div>
           <Link href="/" className="inline-flex items-center leading-none">
             <Image
-              src="/logo/LogoV2.png"
+              src="/logo/LogoV3.png"
               alt="PinkPepper"
               width={180}
               height={36}

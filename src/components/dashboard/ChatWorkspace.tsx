@@ -553,7 +553,7 @@ export default function ChatWorkspace({
             </button>
 
             <div className="flex items-center gap-1.5">
-              <Image src="/logo/PP_logo_nopadding.png" alt="PinkPepper" width={100} height={28} className="h-7 w-auto" />
+              <Image src="/logo/LogoV3.png" alt="PinkPepper" width={100} height={28} className="h-7 w-auto" />
             </div>
 
             <div className="ml-auto flex items-center gap-2">
