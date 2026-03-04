@@ -137,20 +137,22 @@ export async function uploadFile(
     expiresAt = exp.toISOString();
   }
 
-  // Insert metadata
+  // Insert metadata — cast required because admin client has no generated types
+  const insertPayload = {
+    id: fileId,
+    user_id: userId,
+    conversation_id: opts.conversationId ?? null,
+    file_name: fileName,
+    file_type: mimeType,
+    size_bytes: fileBuffer.byteLength,
+    storage_path: storagePath,
+    bucket,
+    expires_at: expiresAt,
+  };
   const { data: row, error: insertError } = await admin
     .from("files")
-    .insert({
-      id: fileId,
-      user_id: userId,
-      conversation_id: opts.conversationId ?? null,
-      file_name: fileName,
-      file_type: mimeType,
-      size_bytes: fileBuffer.byteLength,
-      storage_path: storagePath,
-      bucket,
-      expires_at: expiresAt,
-    })
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    .insert(insertPayload as any)
     .select("id")
     .single();
 
