@@ -1,5 +1,6 @@
 "use client";
 
+import ReactMarkdown from "react-markdown";
 import type { Message } from "./types";
 import { SourceCardsList } from "@/components/chat/SourceCard";
 
@@ -52,12 +53,18 @@ export default function MessageItem({
         )}
 
         {/* Message content — full width, no bubble */}
-        <div className="text-sm leading-relaxed text-[#0F172A] whitespace-pre-wrap">
-          {message.content}
-          {message.isStreaming && (
-            <span className="inline-block w-0.5 h-4 bg-[#0F172A] animate-pulse ml-0.5 align-text-bottom" />
-          )}
-        </div>
+        {isUser ? (
+          <div className="text-sm leading-relaxed text-[#0F172A] whitespace-pre-wrap">
+            {message.content}
+          </div>
+        ) : (
+          <div className="text-sm text-[#0F172A] pp-markdown">
+            <ReactMarkdown>{message.content}</ReactMarkdown>
+            {message.isStreaming && (
+              <span className="inline-block w-0.5 h-4 bg-[#0F172A] animate-pulse ml-0.5 align-text-bottom" />
+            )}
+          </div>
+        )}
 
         {/* Citations */}
         {!isUser && message.citations && message.citations.length > 0 && (
