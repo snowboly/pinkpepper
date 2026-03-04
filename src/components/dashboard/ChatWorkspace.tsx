@@ -45,10 +45,10 @@ export default function ChatWorkspace({
   // ── Review state ──
   const [reviewLoading, setReviewLoading] = useState(false);
   const [reviewModalOpen, setReviewModalOpen] = useState(false);
-  const [reviewType, setReviewType] = useState<"quick_check" | "full_review">("quick_check");
+  const [documentCategory, setDocumentCategory] = useState("async_qa");
   const [reviewNotes, setReviewNotes] = useState("");
   const [reviewInfo, setReviewInfo] = useState<{ used: number; limit: number | null } | null>(null);
-  const [reviewRequests, setReviewRequests] = useState<Array<{ id: string; status: string; review_type: string; created_at: string }>>([]);
+  const [reviewRequests, setReviewRequests] = useState<Array<{ id: string; status: string; review_type: string; document_category?: string; created_at: string }>>([]);
 
   // ── Image attachment state ──
   const [attachedImage, setAttachedImage] = useState<File | null>(null);
@@ -255,12 +255,12 @@ export default function ChatWorkspace({
       const res = await fetch("/api/reviews", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ conversationId, reviewType, notes: reviewNotes }),
+        body: JSON.stringify({ conversationId, documentCategory, notes: reviewNotes }),
       });
       const data = (await res.json()) as {
         error?: string;
         usage?: { used: number; limit: number | null };
-        request?: { id: string; status: string; review_type: string; created_at: string };
+        request?: { id: string; status: string; review_type: string; document_category?: string; created_at: string };
       };
       if (!res.ok) {
         setError(data.error ?? "Failed to submit review request.");
@@ -269,7 +269,7 @@ export default function ChatWorkspace({
       setReviewInfo(data.usage ?? null);
       if (data.request) setReviewRequests((prev) => [data.request!, ...prev]);
       setReviewModalOpen(false);
-      setReviewType("quick_check");
+      setDocumentCategory("async_qa");
       setReviewNotes("");
     } catch {
       setError("Network error while requesting review.");
@@ -645,13 +645,15 @@ export default function ChatWorkspace({
         conversationId={conversationId}
         isAdmin={isAdmin}
         reviewEligible={reviewEligible}
-        reviewType={reviewType}
+        allowFullDocumentReview={dynamicCapabilities.allowFullDocumentReview ?? false}
+        reviewTurnaround={dynamicCapabilities.reviewTurnaround}
+        documentCategory={documentCategory}
         reviewNotes={reviewNotes}
         reviewLoading={reviewLoading}
         reviewInfo={reviewInfo}
         reviewRequests={reviewRequests}
         onClose={() => setReviewModalOpen(false)}
-        onSetReviewType={setReviewType}
+        onSetDocumentCategory={setDocumentCategory}
         onSetReviewNotes={setReviewNotes}
         onSubmit={() => void requestHumanReview()}
       />

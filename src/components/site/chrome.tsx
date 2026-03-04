@@ -86,7 +86,7 @@ export function SiteFooter() {
             <li><Link href="/" className="transition-colors hover:text-[#1A1A1A]">Product Overview</Link></li>
             <li><Link href="/resources" className="transition-colors hover:text-[#1A1A1A]">Blog and Updates</Link></li>
             <li><Link href="/compliance" className="transition-colors hover:text-[#1A1A1A]">Compliance Notes</Link></li>
-            <li><span className="text-[#9B9B9B]">Help Center (coming soon)</span></li>
+            <li><Link href="/contact" className="transition-colors hover:text-[#1A1A1A]">Contact & Support</Link></li>
           </ul>
         </div>
         <div>
