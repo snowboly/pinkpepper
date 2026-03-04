@@ -41,7 +41,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(redirectUrl);
   }
 
-  if (isAdminPage && user) {
+  if ((isProtected || isAdminPage) && user) {
     const { data: profile } = await supabase
       .from("profiles")
       .select("is_admin")
@@ -51,7 +51,7 @@ export async function middleware(request: NextRequest) {
     const allowed = isAdminUser(profile?.is_admin, user.email);
     if (!allowed) {
       const redirectUrl = request.nextUrl.clone();
-      redirectUrl.pathname = "/dashboard";
+      redirectUrl.pathname = "/";
       redirectUrl.search = "";
       return NextResponse.redirect(redirectUrl);
     }
@@ -59,7 +59,7 @@ export async function middleware(request: NextRequest) {
 
   if (isAuthPage && user) {
     const redirectUrl = request.nextUrl.clone();
-    redirectUrl.pathname = "/dashboard";
+    redirectUrl.pathname = "/admin";
     redirectUrl.search = "";
     return NextResponse.redirect(redirectUrl);
   }
