@@ -49,6 +49,7 @@ export default async function DashboardPage() {
       initialTier={tier}
       initialUsage={count}
       usageLimit={caps.dailyMessages}
+      dailyImageUploads={isAdmin ? Number.MAX_SAFE_INTEGER : caps.dailyImageUploads}
       canExportPdf={caps.allowPdfExport}
       canExportWord={caps.allowWordExport}
       isAdmin={isAdmin}
