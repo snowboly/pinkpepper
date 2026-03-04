@@ -24,7 +24,6 @@ export const metadata: Metadata = {
       { url: "/logo/LogoV2.png", sizes: "64x64", type: "image/png" },
       { url: "/logo/pinkpepper-favicon-32.png", sizes: "32x32", type: "image/png" },
       { url: "/logo/pinkpepper-favicon-64.png", sizes: "64x64", type: "image/png" },
-      { url: "/favicon.ico" },
     ],
     apple: [
       { url: "/logo/LogoV2.png", sizes: "1024x1024", type: "image/png" },
