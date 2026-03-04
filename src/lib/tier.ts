@@ -6,12 +6,9 @@ export type TierCapabilities = {
   dailyImageUploads: number;
   maxSavedConversations: number | null;
   conversationRetentionDays: number | null;
-  storageLimitBytes: number;
-  persistentStorage: boolean;
   allowPdfExport: boolean;
   allowWordExport: boolean;
   allowFullDocumentReview: boolean;
-  priorityProcessing: boolean;
   monthlyHumanReviews: number;
   reviewTurnaround: string;
 };
@@ -23,12 +20,9 @@ export const TIER_CAPABILITIES: Record<SubscriptionTier, TierCapabilities> = {
     dailyImageUploads: 1,
     maxSavedConversations: 10,
     conversationRetentionDays: 30,
-    storageLimitBytes: 50 * 1024 * 1024,
-    persistentStorage: false,
     allowPdfExport: false,
     allowWordExport: false,
     allowFullDocumentReview: false,
-    priorityProcessing: false,
     monthlyHumanReviews: 0,
     reviewTurnaround: "N/A",
   },
@@ -38,14 +32,11 @@ export const TIER_CAPABILITIES: Record<SubscriptionTier, TierCapabilities> = {
     dailyImageUploads: 3,
     maxSavedConversations: null,
     conversationRetentionDays: null,
-    storageLimitBytes: 500 * 1024 * 1024,
-    persistentStorage: true,
     allowPdfExport: true,
     allowWordExport: false,
     allowFullDocumentReview: false,
-    priorityProcessing: false,
     monthlyHumanReviews: 1,
-    reviewTurnaround: "within 48 hours",
+    reviewTurnaround: "within 72 hours",
   },
   pro: {
     dailyMessages: 1000,
@@ -53,14 +44,11 @@ export const TIER_CAPABILITIES: Record<SubscriptionTier, TierCapabilities> = {
     dailyImageUploads: 20,
     maxSavedConversations: null,
     conversationRetentionDays: null,
-    storageLimitBytes: 5 * 1024 * 1024 * 1024,
-    persistentStorage: true,
     allowPdfExport: true,
     allowWordExport: true,
     allowFullDocumentReview: true,
-    priorityProcessing: true,
     monthlyHumanReviews: 6,
-    reviewTurnaround: "within 24 hours",
+    reviewTurnaround: "within 72 hours",
   },
 };
 
