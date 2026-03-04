@@ -1,5 +1,5 @@
+import Image from "next/image";
 import Link from "next/link";
-import { LogoImage } from "@/components/site/logo-image";
 
 const nav = [
   { href: "/pricing", label: "Pricing" },
@@ -13,10 +13,12 @@ export function SiteHeader() {
       <div className="pp-container flex h-14 items-center justify-between md:h-16">
         <div className="flex items-center gap-8 lg:gap-12">
           <Link href="/" className="flex items-center leading-none">
-            <LogoImage
+            <Image
+              src="/logo/LogoV2.png"
               alt="PinkPepper"
               width={220}
               height={44}
+              priority
               className="h-8 w-auto object-contain md:h-9"
             />
           </Link>
@@ -57,7 +59,8 @@ export function SiteFooter() {
       <div className="pp-container mb-12 grid gap-12 md:grid-cols-4">
         <div>
           <Link href="/" className="inline-flex items-center leading-none">
-            <LogoImage
+            <Image
+              src="/logo/LogoV2.png"
               alt="PinkPepper"
               width={180}
               height={36}
