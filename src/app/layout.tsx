@@ -20,12 +20,22 @@ export const metadata: Metadata = {
     "PinkPepper helps food businesses generate HACCP plans, SOPs, monitoring logs, allergen documentation, and traceability procedures.",
   icons: {
     icon: [
+      { url: "/logo/logoV3.png", sizes: "32x32", type: "image/png" },
+      { url: "/logo/logoV3.png", sizes: "64x64", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/logo/LogoV2.png", sizes: "32x32", type: "image/png" },
       { url: "/logo/pinkpepper-favicon-32.png", sizes: "32x32", type: "image/png" },
       { url: "/logo/pinkpepper-favicon-64.png", sizes: "64x64", type: "image/png" },
       { url: "/favicon.ico" },
     ],
-    apple: [{ url: "/logo/pinkpepper-app-icon-1024.png", sizes: "1024x1024", type: "image/png" }],
-    shortcut: ["/favicon.ico"],
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+      { url: "/logo/logoV3.png", sizes: "1024x1024", type: "image/png" },
+      { url: "/logo/LogoV2.png", sizes: "1024x1024", type: "image/png" },
+      { url: "/logo/pinkpepper-app-icon-1024.png", sizes: "1024x1024", type: "image/png" },
+    ],
+    shortcut: ["/logo/logoV3.png", "/favicon.ico"],
   },
 };
 
