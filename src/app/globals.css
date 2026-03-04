@@ -59,3 +59,109 @@ a {
   font-weight: 700;
   border: 1px solid var(--pp-border);
 }
+
+/* Markdown rendering for assistant messages */
+.pp-markdown h1,
+.pp-markdown h2,
+.pp-markdown h3,
+.pp-markdown h4 {
+  font-weight: 600;
+  color: #0F172A;
+  margin-top: 1rem;
+  margin-bottom: 0.4rem;
+  line-height: 1.35;
+}
+.pp-markdown h1 { font-size: 1rem; }
+.pp-markdown h2 { font-size: 0.9375rem; }
+.pp-markdown h3 { font-size: 0.875rem; }
+.pp-markdown h4 { font-size: 0.875rem; font-style: italic; }
+.pp-markdown p {
+  margin-top: 0.4rem;
+  margin-bottom: 0.4rem;
+  line-height: 1.65;
+}
+.pp-markdown ul {
+  list-style-type: disc;
+  padding-left: 1.25rem;
+  margin-top: 0.4rem;
+  margin-bottom: 0.4rem;
+}
+.pp-markdown ol {
+  list-style-type: decimal;
+  padding-left: 1.25rem;
+  margin-top: 0.4rem;
+  margin-bottom: 0.4rem;
+}
+.pp-markdown li {
+  margin-top: 0.2rem;
+  margin-bottom: 0.2rem;
+  line-height: 1.55;
+}
+.pp-markdown li > ul,
+.pp-markdown li > ol {
+  margin-top: 0.2rem;
+  margin-bottom: 0.2rem;
+}
+.pp-markdown strong {
+  font-weight: 600;
+  color: #0F172A;
+}
+.pp-markdown em {
+  font-style: italic;
+}
+.pp-markdown code {
+  background: #F1F5F9;
+  color: #E11D48;
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+  font-family: ui-monospace, monospace;
+  font-size: 0.8125rem;
+}
+.pp-markdown pre {
+  background: #F1F5F9;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  overflow-x: auto;
+  margin: 0.5rem 0;
+}
+.pp-markdown pre code {
+  background: none;
+  color: #0F172A;
+  padding: 0;
+}
+.pp-markdown blockquote {
+  border-left: 2px solid #E2E8F0;
+  padding-left: 0.75rem;
+  color: #64748B;
+  font-style: italic;
+  margin: 0.5rem 0;
+}
+.pp-markdown table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+  margin: 0.5rem 0;
+}
+.pp-markdown th {
+  background: #F8F9FB;
+  font-weight: 600;
+  padding: 0.4rem 0.6rem;
+  text-align: left;
+  border: 1px solid #E2E8F0;
+}
+.pp-markdown td {
+  padding: 0.4rem 0.6rem;
+  border: 1px solid #E2E8F0;
+}
+.pp-markdown a {
+  color: #E11D48;
+  text-decoration: none;
+}
+.pp-markdown a:hover {
+  text-decoration: underline;
+}
+.pp-markdown hr {
+  border: none;
+  border-top: 1px solid #E2E8F0;
+  margin: 0.75rem 0;
+}

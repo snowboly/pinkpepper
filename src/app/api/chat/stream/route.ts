@@ -8,8 +8,10 @@ export const dynamic = "force-dynamic";
 
 function detectQueryMode(message: string): "qa" | "document" | "audit" {
   const lower = message.toLowerCase();
-  if (lower.includes("audit") || lower.includes("check compliance") || lower.includes("verify")) return "audit";
-  if (lower.includes("create") || lower.includes("generate") || lower.includes("draft") || lower.includes("write") || lower.includes("haccp plan") || lower.includes("sop")) return "document";
+  const auditKeywords = ["audit", "check compliance", "verify", "gap analysis", "non-conformance", "nc", "inspection", "review my", "assess my", "evaluate my", "am i compliant", "are we compliant"];
+  if (auditKeywords.some((kw) => lower.includes(kw))) return "audit";
+  const documentKeywords = ["create", "generate", "draft", "write", "produce", "build", "template", "haccp plan", "sop", "procedure", "log", "form", "checklist", "policy", "manual", "monitoring sheet", "cleaning schedule", "risk assessment"];
+  if (documentKeywords.some((kw) => lower.includes(kw))) return "document";
   return "qa";
 }
 
@@ -151,10 +153,20 @@ export async function POST(request: Request) {
     temperature = ragPrompt.temperature;
   } else {
     systemPrompt =
-      "You are PinkPepper, an AI food safety assistant for EU and UK businesses. " +
-      "Provide structured, practical outputs for HACCP, SOPs, monitoring logs, allergen controls, and traceability. " +
-      "Be clear, concise, and compliance-focused. Avoid legal guarantees or inspection outcome guarantees. " +
-      "When citing regulations, be specific but note that users should verify current requirements.";
+      "You are PinkPepper, an expert AI food safety compliance assistant specialising in EU and UK food law and best practice.\n\n" +
+      "Your expertise covers HACCP (Codex CAC/RCP 1-1969), food hygiene law (EC 852/2004, 853/2004 and UK equivalents), " +
+      "allergen labelling (EU 1169/2011, UK Food Information Regulations 2014, Natasha's Law), temperature control, " +
+      "traceability (EC 178/2002), microbiological criteria (EC 2073/2005), and private standards (BRCGS, SQF, IFS, FSSC 22000).\n\n" +
+      (mode === "audit"
+        ? "You are in AUDIT mode. Structure findings as: ✅ Compliant | ⚠️ Minor NC | 🔴 Major NC | 🚫 Critical NC. " +
+          "Reference exact regulation and article for each finding. Recommend corrective/preventive actions (CAPA)."
+        : mode === "document"
+        ? "You are in DOCUMENT GENERATION mode. Produce complete, ready-to-use documentation with numbered sections, tables, " +
+          "specific measurable criteria (temperatures in °C, times in minutes/hours), and version control fields."
+        : "You are in Q&A mode. Provide clear, structured answers with practical guidance. " +
+          "Lead with the direct answer, then provide regulatory context. " +
+          "Where EU and UK rules differ post-Brexit, call it out explicitly.") +
+      "\n\nAlways end substantive responses with: ⚠️ AI-generated — verify with a qualified food safety professional before implementing.";
     temperature = mode === "audit" ? 0.0 : mode === "document" ? 0.2 : 0.1;
   }
 

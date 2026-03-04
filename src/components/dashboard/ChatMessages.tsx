@@ -18,10 +18,14 @@ type ChatMessagesProps = {
 };
 
 const SUGGESTIONS = [
-  "Create a HACCP plan for a 25-seat café with hot holding",
-  "Draft a cleaning SOP for a commercial kitchen",
-  "What allergens must be declared under EU 1169/2011?",
-  "Generate a temperature monitoring log template",
+  { label: "HACCP plan", text: "Create a HACCP plan for a 25-seat café that serves hot food including sandwiches and soups" },
+  { label: "Cleaning SOP", text: "Draft a cleaning and disinfection SOP for a commercial kitchen including frequency, chemicals, and records" },
+  { label: "Allergen law", text: "What are the 14 allergens that must be declared under EU Regulation 1169/2011 and Natasha's Law?" },
+  { label: "Temp monitoring", text: "Generate a daily temperature monitoring log template for fridges, freezers, and hot-holding equipment" },
+  { label: "Audit prep", text: "Check compliance gaps for a small food manufacturer preparing for a BRC Global Standard audit" },
+  { label: "Traceability", text: "What traceability records must a food business keep under Regulation (EC) No 178/2002?" },
+  { label: "Supplier checks", text: "Draft a supplier approval procedure for a bakery including questionnaire and ongoing monitoring" },
+  { label: "Pest control", text: "What are the legal requirements for pest control in a food business under EC 852/2004?" },
 ];
 
 export default function ChatMessages({
@@ -63,21 +67,22 @@ export default function ChatMessages({
               className="h-11 w-auto mx-auto opacity-80"
             />
           </div>
-          <h2 className="text-xl font-semibold text-[#0F172A] mb-2">Food Safety Assistant</h2>
+          <h2 className="text-xl font-semibold text-[#0F172A] mb-2">Food Safety Compliance Assistant</h2>
           <p className="text-sm text-[#64748B] max-w-md">
-            Ask food safety questions, generate HACCP plans, create SOPs, or{" "}
+            Ask about EU &amp; UK food safety law, generate HACCP plans, SOPs, and monitoring logs, or audit your current procedures.{" "}
             {canUploadImages
-              ? "attach a photo of your kitchen or a food label for instant analysis."
-              : "upgrade to Plus or Pro to attach photos for analysis."}
+              ? "You can also attach a photo of your kitchen or a food label for instant compliance analysis."
+              : "Upgrade to Plus or Pro to attach photos of kitchens or labels for instant analysis."}
           </p>
-          <div className="mt-6 grid gap-2 grid-cols-1 sm:grid-cols-2 w-full max-w-lg">
-            {SUGGESTIONS.map((suggestion) => (
+          <div className="mt-6 grid gap-2 grid-cols-1 sm:grid-cols-2 w-full max-w-xl">
+            {SUGGESTIONS.map((s) => (
               <button
-                key={suggestion}
-                onClick={() => { onSetPrompt(suggestion); onFocusInput(); }}
-                className="rounded-xl border border-[#E2E8F0] bg-white px-3 py-2.5 text-xs text-left text-[#475569] hover:bg-[#F8F9FB] hover:border-[#CBD5E1] transition-colors"
+                key={s.label}
+                onClick={() => { onSetPrompt(s.text); onFocusInput(); }}
+                className="rounded-xl border border-[#E2E8F0] bg-white px-3 py-2.5 text-left hover:bg-[#F8F9FB] hover:border-[#CBD5E1] transition-colors"
               >
-                {suggestion}
+                <span className="block text-[10px] font-semibold uppercase tracking-wide text-[#E11D48] mb-0.5">{s.label}</span>
+                <span className="block text-xs text-[#475569] leading-snug">{s.text}</span>
               </button>
             ))}
           </div>
