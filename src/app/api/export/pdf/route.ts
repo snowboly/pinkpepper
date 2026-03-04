@@ -96,7 +96,8 @@ export async function POST(request: Request) {
     await recordExportUsage({ supabase, userId, format: "pdf", conversationId });
 
     const bytes = await pdfDoc.save();
-    const fileName = `pinkpepper-${conversationId}.pdf`;
+    const safeId = conversationId.replace(/[^\w-]/g, "_").substring(0, 64);
+    const fileName = `pinkpepper-${safeId}.pdf`;
 
     return new NextResponse(Buffer.from(bytes), {
       headers: {

@@ -179,6 +179,7 @@ export async function POST(request: Request) {
       Authorization: `Bearer ${groqKey}`,
       "Content-Type": "application/json",
     },
+    signal: AbortSignal.timeout(30_000),
     body: JSON.stringify({
       model,
       temperature,
@@ -193,7 +194,8 @@ export async function POST(request: Request) {
 
   if (!groqRes.ok) {
     const details = await groqRes.text();
-    return Response.json({ error: `Groq request failed: ${details}` }, { status: 502 });
+    console.error("Groq API error:", details);
+    return Response.json({ error: "AI service temporarily unavailable." }, { status: 502 });
   }
 
   const encoder = new TextEncoder();
@@ -208,7 +210,16 @@ export async function POST(request: Request) {
       );
 
       // Process Groq's SSE stream
-      const reader = groqRes.body!.getReader();
+      if (!groqRes.body) {
+        controller.enqueue(
+          encoder.encode(
+            `data: ${JSON.stringify({ type: "error", message: "No response body from AI service" })}\n\n`
+          )
+        );
+        controller.close();
+        return;
+      }
+      const reader = groqRes.body.getReader();
       const decoder = new TextDecoder();
       let fullContent = "";
       let buffer = "";

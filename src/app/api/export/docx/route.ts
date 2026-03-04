@@ -70,7 +70,8 @@ export async function POST(request: Request) {
 
     await recordExportUsage({ supabase, userId, format: "docx", conversationId });
 
-    const fileName = `pinkpepper-${conversationId}.docx`;
+    const safeId = conversationId.replace(/[^\w-]/g, "_").substring(0, 64);
+    const fileName = `pinkpepper-${safeId}.docx`;
 
     return new NextResponse(bodyBytes, {
       headers: {
