@@ -66,7 +66,8 @@ export async function getUserStorageUsed(userId: string): Promise<number> {
     .is("deleted_at", null);
 
   if (error) throw new Error(`Failed to query storage usage: ${error.message}`);
-  return (data ?? []).reduce((sum, row) => sum + (row.size_bytes ?? 0), 0);
+  const rows = (data ?? []) as Array<{ size_bytes: number }>;
+  return rows.reduce((sum, row) => sum + (row.size_bytes ?? 0), 0);
 }
 
 // ============================================================
