@@ -8,21 +8,13 @@ import { sendBillingEmail } from "@/lib/billing/email";
 export const dynamic = "force-dynamic";
 
 function getCurrentPeriodEndUnix(subscription: Stripe.Subscription): number | null {
-  const maybeValue = (subscription as unknown as { current_period_end?: number }).current_period_end;
-  return typeof maybeValue === "number" ? maybeValue : null;
+  const item = subscription.items.data[0];
+  if (!item) return null;
+  return typeof item.current_period_end === "number" ? item.current_period_end : null;
 }
 
 async function syncSubscriptionFromStripe(subscription: Stripe.Subscription) {
   const admin = createAdminClient();
-  type SubscriptionUpsert = {
-    user_id: string;
-    stripe_customer_id: string;
-    stripe_subscription_id: string;
-    stripe_price_id: string | null;
-    status: string;
-    tier: string;
-    current_period_end: string | null;
-  };
 
   const customerId =
     typeof subscription.customer === "string" ? subscription.customer : subscription.customer.id;
@@ -35,14 +27,11 @@ async function syncSubscriptionFromStripe(subscription: Stripe.Subscription) {
     currentPeriodEndUnix: getCurrentPeriodEndUnix(subscription),
   });
 
-  const result = await admin
+  const { data: row, error: findErr } = await admin
     .from("subscriptions")
     .select("user_id")
     .eq("stripe_customer_id", customerId)
     .maybeSingle();
-
-  const row = result.data as { user_id: string } | null;
-  const findErr = result.error;
 
   if (findErr || !row?.user_id) {
     throw new Error("Subscription row not found for stripe customer.");
@@ -50,35 +39,27 @@ async function syncSubscriptionFromStripe(subscription: Stripe.Subscription) {
 
   const userId = row.user_id;
 
-  const subscriptionsTable = admin.from("subscriptions") as unknown as {
-    upsert: (
-      values: SubscriptionUpsert,
-      options?: { onConflict?: string }
-    ) => Promise<{ error: Error | null }>;
-  };
-
-  const { error: upsertErr } = await subscriptionsTable.upsert(
-    {
-      user_id: userId,
-      stripe_customer_id: customerId,
-      stripe_subscription_id: subscription.id,
-      stripe_price_id: snapshot.stripePriceId,
-      status: snapshot.status,
-      tier: snapshot.tier,
-      current_period_end: snapshot.currentPeriodEnd,
-    },
-    { onConflict: "user_id" }
-  );
+  const { error: upsertErr } = await admin
+    .from("subscriptions")
+    .upsert(
+      {
+        user_id: userId,
+        stripe_customer_id: customerId,
+        stripe_subscription_id: subscription.id,
+        stripe_price_id: snapshot.stripePriceId,
+        status: snapshot.status,
+        tier: snapshot.tier,
+        current_period_end: snapshot.currentPeriodEnd,
+      },
+      { onConflict: "user_id" }
+    );
 
   if (upsertErr) throw upsertErr;
 
-  const profilesTable = admin.from("profiles") as unknown as {
-    update: (values: { tier: string }) => {
-      eq: (column: string, value: string) => Promise<{ error: Error | null }>;
-    };
-  };
-
-  const { error: profileErr } = await profilesTable.update({ tier: snapshot.tier }).eq("id", userId);
+  const { error: profileErr } = await admin
+    .from("profiles")
+    .update({ tier: snapshot.tier })
+    .eq("id", userId);
 
   if (profileErr) throw profileErr;
 
@@ -96,32 +77,22 @@ async function syncSubscriptionFromStripe(subscription: Stripe.Subscription) {
 
 async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   const admin = createAdminClient();
-  type CheckoutUpsert = {
-    user_id: string;
-    stripe_customer_id: string;
-    status: "pending";
-  };
 
   const userId = session.metadata?.user_id;
   const customerId = typeof session.customer === "string" ? session.customer : session.customer?.id;
 
   if (!userId || !customerId) return;
 
-  const subscriptionsTable = admin.from("subscriptions") as unknown as {
-    upsert: (
-      values: CheckoutUpsert,
-      options?: { onConflict?: string }
-    ) => Promise<{ error: Error | null }>;
-  };
-
-  await subscriptionsTable.upsert(
-    {
-      user_id: userId,
-      stripe_customer_id: customerId,
-      status: "pending",
-    },
-    { onConflict: "user_id" }
-  );
+  await admin
+    .from("subscriptions")
+    .upsert(
+      {
+        user_id: userId,
+        stripe_customer_id: customerId,
+        status: "pending",
+      },
+      { onConflict: "user_id" }
+    );
 }
 
 export async function POST(request: Request) {
@@ -160,7 +131,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ received: true });
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Webhook processing failed";
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error("Stripe webhook processing error:", err);
+    return NextResponse.json({ error: "Webhook processing failed" }, { status: 500 });
   }
 }

@@ -22,8 +22,8 @@ export async function POST(request: Request) {
 
     const body = (await request.json()) as { conversationId?: string };
     const conversationId = body.conversationId?.trim();
-    if (!conversationId) {
-      return NextResponse.json({ error: "conversationId is required." }, { status: 400 });
+    if (!conversationId || conversationId.length > 128) {
+      return NextResponse.json({ error: "A valid conversationId is required." }, { status: 400 });
     }
 
     const docData = await getLatestAssistantMessageForConversation({
