@@ -14,7 +14,7 @@ export function SiteHeader() {
         <div className="flex items-center gap-8 lg:gap-12">
           <Link href="/" className="flex h-12 items-center overflow-hidden leading-none md:h-14">
             <Image
-              src="/logo/PP_logo_nopadding.png"
+              src="/logo/LogoV2.png"
               alt="PinkPepper"
               width={240}
               height={64}
@@ -60,7 +60,7 @@ export function SiteFooter() {
         <div>
           <Link href="/" className="inline-flex h-10 items-center overflow-hidden leading-none">
             <Image
-              src="/logo/PP_logo_nopadding.png"
+              src="/logo/LogoV2.png"
               alt="PinkPepper"
               width={180}
               height={48}
