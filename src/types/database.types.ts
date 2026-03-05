@@ -161,26 +161,32 @@ export type Database = {
       }
       profiles: {
         Row: {
+          business_type: string | null
           created_at: string
           email: string | null
           id: string
           is_admin: boolean
+          onboarding_completed: boolean
           tier: Database["public"]["Enums"]["subscription_tier"]
           updated_at: string
         }
         Insert: {
+          business_type?: string | null
           created_at?: string
           email?: string | null
           id: string
           is_admin?: boolean
+          onboarding_completed?: boolean
           tier?: Database["public"]["Enums"]["subscription_tier"]
           updated_at?: string
         }
         Update: {
+          business_type?: string | null
           created_at?: string
           email?: string | null
           id?: string
           is_admin?: boolean
+          onboarding_completed?: boolean
           tier?: Database["public"]["Enums"]["subscription_tier"]
           updated_at?: string
         }

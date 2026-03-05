@@ -19,7 +19,7 @@ export default async function DashboardPage() {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("tier,is_admin")
+    .select("tier,is_admin,onboarding_completed")
     .eq("id", user.id)
     .maybeSingle();
 
@@ -53,6 +53,7 @@ export default async function DashboardPage() {
       canExportPdf={caps.allowPdfExport}
       canExportWord={caps.allowWordExport}
       isAdmin={isAdmin}
+      onboardingCompleted={profile?.onboarding_completed ?? false}
     />
   );
 }
