@@ -3,6 +3,7 @@ import Link from "next/link";
 
 const nav = [
   { href: "/pricing", label: "Pricing" },
+  { href: "/security", label: "Security" },
   { href: "/contact", label: "Contact" },
 ];
 
@@ -55,7 +56,7 @@ export function SiteHeader() {
 export function SiteFooter() {
   return (
     <footer className="border-t border-[#F1F5F9] bg-white py-16">
-      <div className="pp-container mb-12 grid gap-12 md:grid-cols-4">
+      <div className="pp-container mb-12 grid gap-12 sm:grid-cols-2 md:grid-cols-[2fr_1fr_1fr_1.5fr]">
         <div>
           <Link href="/" className="inline-flex items-center leading-none">
             <Image
@@ -98,12 +99,14 @@ export function SiteFooter() {
           </ul>
         </div>
         <div>
-          <h4 className="mb-4 text-sm font-semibold text-[#1A1A1A]">Legal</h4>
+          <h4 className="mb-4 text-sm font-semibold text-[#1A1A1A]">Security & Legal</h4>
           <ul className="space-y-3 text-sm text-[#6B6B6B]">
+            <li><Link href="/security" className="transition-colors hover:text-[#1A1A1A]">Security</Link></li>
             <li><Link href="/legal/terms" className="transition-colors hover:text-[#1A1A1A]">Terms of Service</Link></li>
             <li><Link href="/legal/privacy" className="transition-colors hover:text-[#1A1A1A]">Privacy Policy</Link></li>
             <li><Link href="/legal/cookies" className="transition-colors hover:text-[#1A1A1A]">Cookie Policy</Link></li>
             <li><Link href="/legal/dpa" className="transition-colors hover:text-[#1A1A1A]">DPA</Link></li>
+            <li><Link href="/legal/acceptable-use" className="transition-colors hover:text-[#1A1A1A]">Acceptable Use</Link></li>
             <li><Link href="/legal/refund" className="transition-colors hover:text-[#1A1A1A]">Refund Policy</Link></li>
           </ul>
         </div>
