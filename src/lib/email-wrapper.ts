@@ -1,4 +1,4 @@
-const APP_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://pinkpepper.ai";
+const APP_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://pinkpepper.io";
 const LOGO_URL = `${APP_URL}/LogoV3.png`;
 
 export { APP_URL };
@@ -65,10 +65,10 @@ export function wrapEmail(body: string, preheader = ""): string {
           <tr>
             <td style="padding:18px 28px 24px;background:#f8fafc;border-top:1px solid #e2e8f0;">
               <p style="margin:0 0 10px;color:#64748b;font-size:12px;line-height:18px;">
-                Need help? Contact <a href="mailto:support@pinkpepper.app" style="color:#334155;">support@pinkpepper.app</a>.
+                Need help? Contact <a href="mailto:support@pinkpepper.io" style="color:#334155;">support@pinkpepper.io</a>.
               </p>
               <p style="margin:0 0 8px;color:#94a3b8;font-size:11px;line-height:16px;">
-                <a href="${APP_URL}" style="color:#94a3b8;text-decoration:none;">pinkpepper.ai</a>
+                <a href="${APP_URL}" style="color:#94a3b8;text-decoration:none;">pinkpepper.io</a>
                 &nbsp;&middot;&nbsp;
                 <a href="${APP_URL}/legal/privacy" style="color:#94a3b8;text-decoration:none;">Privacy Policy</a>
                 &nbsp;&middot;&nbsp;
