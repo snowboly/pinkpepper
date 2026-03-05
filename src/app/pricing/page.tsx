@@ -87,7 +87,7 @@ export default async function PricingPage() {
               </div>
               <h2 className="text-xl font-bold text-[#0F172A]">Plus</h2>
               <p className="mt-2 text-sm text-[#64748B]">
-                PDF export and expert review for growing operations.
+                PDF export and higher limits for growing operations.
               </p>
               <div className="mt-6 flex items-baseline gap-1">
                 <span className="text-5xl font-bold tracking-tight text-[#0F172A]">€19</span>
@@ -111,9 +111,9 @@ export default async function PricingPage() {
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
                   PDF export
                 </li>
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  1 expert human review/month (72 h turnaround)
+                <li className="flex items-start gap-2.5 opacity-50">
+                  <XCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#94A3B8]" />
+                  No document review
                 </li>
               </ul>
               <PricingActions
@@ -128,7 +128,7 @@ export default async function PricingPage() {
             <div className="flex flex-col rounded-3xl border border-[#E2E8F0] bg-white p-8 transition-all duration-200 hover:shadow-lg hover:shadow-black/[0.04]">
               <h2 className="text-xl font-bold text-[#0F172A]">Pro</h2>
               <p className="mt-2 text-sm text-[#64748B]">
-                Full HACCP reviews and highest limits for serious operators.
+                Full document reviews and highest limits for serious operators.
               </p>
               <div className="mt-6 flex items-baseline gap-1">
                 <span className="text-5xl font-bold tracking-tight text-[#0F172A]">€99</span>
@@ -154,11 +154,11 @@ export default async function PricingPage() {
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-600" />
-                  6 expert human reviews/month (72 h turnaround)
+                  3 review credits/month
                 </li>
                 <li className="flex items-start gap-2.5 font-medium text-emerald-700">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-600" />
-                  Full HACCP plan reviews — Pro only
+                  Full HACCP &amp; document reviews — Pro only
                 </li>
               </ul>
               <PricingActions
@@ -180,25 +180,65 @@ export default async function PricingPage() {
             <div className="rounded-2xl border border-[#E2E8F0] bg-[#F8FAFC] p-6">
               <h3 className="mb-1 font-semibold text-[#0F172A]">Free</h3>
               <p className="text-sm text-[#64748B]">
-                25 daily queries, 1 image upload/day, 10 saved conversations. No export, no human review.
+                25 daily queries, 1 image upload/day, 10 saved conversations. No export, no document review.
               </p>
             </div>
             <div className="rounded-2xl border border-[#E11D48]/20 bg-[#FFF1F2] p-6">
               <h3 className="mb-1 font-semibold text-[#0F172A]">Plus</h3>
               <p className="text-sm text-[#64748B]">
-                PDF export enabled. 100 daily queries, 3 document generations/day, 1 expert review/month.
+                PDF export. 100 daily queries, 3 image uploads/day, 3 document generations/day. No document review.
               </p>
             </div>
             <div className="rounded-2xl border border-emerald-100 bg-emerald-50 p-6">
               <h3 className="mb-1 font-semibold text-[#0F172A]">Pro</h3>
               <p className="text-sm text-[#64748B]">
-                Word &amp; PDF export, 1,000 daily queries, 20 generations/day, 6 reviews/month, full HACCP reviews.
+                Word &amp; PDF export, 1,000 daily queries, 20 image uploads/day, 3 review credits/month — small docs or full HACCP reviews.
               </p>
             </div>
           </div>
           <p className="mt-8 text-center text-xs text-[#94A3B8]">
             Entitlements enforced server-side via Supabase, synchronized with Stripe webhook events.
           </p>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="border-t border-[#F1F5F9] bg-[#F8FAFC] py-16">
+        <div className="pp-container max-w-3xl">
+          <h2 className="mb-10 text-center text-2xl font-bold text-[#0F172A]">Frequently asked questions</h2>
+          <div className="space-y-6">
+            {[
+              {
+                q: "How do review credits work?",
+                a: "Pro users receive 3 review credits per month. A quick check (short SOP, log review, label, statement, process flow) costs 1 credit — so you can request up to 3 per month. A full document review (complete HACCP plan, CCP analysis, PRPs review, QA or operations manual) costs all 3 credits and can only be requested once per month.",
+              },
+              {
+                q: "How long does a review take?",
+                a: "Quick checks (SOPs, logs, labels, records) are returned within 3 working days. Full document reviews (HACCP plans, CCP analysis, PRPs, QA manuals) are returned within 5 working days. You'll receive an email when your review begins and again when feedback is ready.",
+              },
+              {
+                q: "What types of documents can I submit for review?",
+                a: "Quick checks include: cleaning schedules, temperature logs, allergen statements, supplier approval forms, traceability records, labelling, and short procedures (1–2 pages). Full reviews cover: complete HACCP plans (all 7 principles), CCP critical limit analysis, PRPs (cleaning, pest control, supplier approval), and full QA or operations manuals.",
+              },
+              {
+                q: "Can unused review credits roll over?",
+                a: "No — review credits reset at the start of each billing month and do not carry over. We recommend submitting documents throughout the month rather than all at once.",
+              },
+              {
+                q: "Can I cancel or change my plan?",
+                a: "Yes. You can upgrade, downgrade, or cancel at any time from the billing portal in your dashboard. Changes take effect at the next billing cycle. No contracts, no lock-in.",
+              },
+              {
+                q: "Is VAT included in the prices shown?",
+                a: "Prices shown are exclusive of VAT. VAT is applied at checkout based on your location.",
+              },
+            ].map(({ q, a }) => (
+              <div key={q} className="rounded-2xl border border-[#E2E8F0] bg-white p-6">
+                <h3 className="mb-2 text-sm font-semibold text-[#0F172A]">{q}</h3>
+                <p className="text-sm text-[#64748B] leading-relaxed">{a}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
     </main>

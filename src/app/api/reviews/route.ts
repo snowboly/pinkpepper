@@ -113,7 +113,7 @@ export async function POST(request: Request) {
   const caps = TIER_CAPABILITIES[tier];
 
   if (!isAdmin && caps.monthlyHumanReviews <= 0) {
-    return NextResponse.json({ error: "Human review is available on Plus and Pro." }, { status: 403 });
+    return NextResponse.json({ error: "Expert document review is available on Pro." }, { status: 403 });
   }
 
   if (!isAdmin && reviewType === "full_review" && !caps.allowFullDocumentReview) {
@@ -161,13 +161,13 @@ export async function POST(request: Request) {
 
     if (reviewType === "full_review" && used >= 1) {
       return NextResponse.json(
-        { error: "Full document review requires all monthly review slots to be available. Use your remaining quick checks first or wait until next month." },
+        { error: "Full document review costs all 3 credits and requires a fresh monthly balance. Use your remaining quick checks first or wait until next month." },
         { status: 402 }
       );
     }
 
     if (used >= caps.monthlyHumanReviews) {
-      return NextResponse.json({ error: "Monthly human review limit reached for your plan." }, { status: 402 });
+      return NextResponse.json({ error: "Monthly review credits exhausted. Credits reset at the start of your next billing month." }, { status: 402 });
     }
   }
 

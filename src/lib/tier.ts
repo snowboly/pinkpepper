@@ -35,8 +35,8 @@ export const TIER_CAPABILITIES: Record<SubscriptionTier, TierCapabilities> = {
     allowPdfExport: true,
     allowWordExport: false,
     allowFullDocumentReview: false,
-    monthlyHumanReviews: 1,
-    reviewTurnaround: "within 72 hours",
+    monthlyHumanReviews: 0,
+    reviewTurnaround: "N/A",
   },
   pro: {
     dailyMessages: 1000,
@@ -47,8 +47,8 @@ export const TIER_CAPABILITIES: Record<SubscriptionTier, TierCapabilities> = {
     allowPdfExport: true,
     allowWordExport: true,
     allowFullDocumentReview: true,
-    monthlyHumanReviews: 6,
-    reviewTurnaround: "within 72 hours",
+    monthlyHumanReviews: 3,
+    reviewTurnaround: "3–5 working days",
   },
 };
 
