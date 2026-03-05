@@ -95,7 +95,7 @@ export default function AcceptableUsePage() {
           <h2 className="mb-3 text-xl font-semibold text-[#0F172A]">7. Reporting violations</h2>
           <p>
             If you become aware of any use of PinkPepper that violates this AUP, please report it to{" "}
-            <a href="mailto:legal@pinkpepper.io" className="text-[#E11D48] hover:underline">legal@pinkpepper.io</a>.
+            <a href="mailto:support@pinkpepper.io" className="text-[#E11D48] hover:underline">support@pinkpepper.io</a>.
           </p>
         </section>
 

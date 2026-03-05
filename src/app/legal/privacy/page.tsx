@@ -24,7 +24,7 @@ export default function PrivacyPage() {
           </p>
           <p className="mt-3">
             If you have any privacy questions or wish to exercise your rights, contact us at{" "}
-            <a href="mailto:legal@pinkpepper.io" className="text-[#E11D48] hover:underline">legal@pinkpepper.io</a>.
+            <a href="mailto:support@pinkpepper.io" className="text-[#E11D48] hover:underline">support@pinkpepper.io</a>.
           </p>
         </section>
 
@@ -175,7 +175,7 @@ export default function PrivacyPage() {
           </ul>
           <p className="mt-3">
             To exercise any of these rights, email{" "}
-            <a href="mailto:legal@pinkpepper.io" className="text-[#E11D48] hover:underline">legal@pinkpepper.io</a>.
+            <a href="mailto:support@pinkpepper.io" className="text-[#E11D48] hover:underline">support@pinkpepper.io</a>.
             We will respond within one month. We may need to verify your identity before acting on a request.
           </p>
         </section>
@@ -185,7 +185,7 @@ export default function PrivacyPage() {
           <p>
             PinkPepper is not directed at children under the age of 16. We do not knowingly collect personal data from
             children. If you believe a child has provided us with personal data, contact us at{" "}
-            <a href="mailto:legal@pinkpepper.io" className="text-[#E11D48] hover:underline">legal@pinkpepper.io</a>{" "}
+            <a href="mailto:support@pinkpepper.io" className="text-[#E11D48] hover:underline">support@pinkpepper.io</a>{" "}
             and we will delete it.
           </p>
         </section>
@@ -232,7 +232,7 @@ export default function PrivacyPage() {
           <p className="mt-3">
             We would appreciate the opportunity to address your concerns before you contact a regulator, so please reach
             out to us first at{" "}
-            <a href="mailto:legal@pinkpepper.io" className="text-[#E11D48] hover:underline">legal@pinkpepper.io</a>.
+            <a href="mailto:support@pinkpepper.io" className="text-[#E11D48] hover:underline">support@pinkpepper.io</a>.
           </p>
         </section>
 

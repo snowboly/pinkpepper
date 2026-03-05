@@ -17,7 +17,7 @@ export default function DpaPage() {
         <strong>Note for customers requiring a signed DPA:</strong> This page sets out the standard terms
         under which PinkPepper acts as a data processor. If your organisation requires a countersigned DPA
         for compliance purposes, email{" "}
-        <a href="mailto:legal@pinkpepper.io" className="underline">legal@pinkpepper.io</a> and we will
+        <a href="mailto:support@pinkpepper.io" className="underline">support@pinkpepper.io</a> and we will
         arrange execution.
       </div>
 
@@ -195,7 +195,7 @@ export default function DpaPage() {
           <h2 className="mb-3 text-xl font-semibold text-[#0F172A]">11. Contact</h2>
           <p>
             For DPA enquiries or to request a countersigned copy, contact{" "}
-            <a href="mailto:legal@pinkpepper.io" className="text-[#E11D48] hover:underline">legal@pinkpepper.io</a>.
+            <a href="mailto:support@pinkpepper.io" className="text-[#E11D48] hover:underline">support@pinkpepper.io</a>.
           </p>
         </section>
 

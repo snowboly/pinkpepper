@@ -188,7 +188,7 @@ export default function TermsPage() {
           </p>
           <p className="mt-3">
             Before initiating any formal proceedings, we ask that you contact us at{" "}
-            <a href="mailto:legal@pinkpepper.io" className="text-[#E11D48] hover:underline">legal@pinkpepper.io</a>{" "}
+            <a href="mailto:support@pinkpepper.io" className="text-[#E11D48] hover:underline">support@pinkpepper.io</a>{" "}
             to attempt to resolve the dispute informally.
           </p>
         </section>
@@ -197,7 +197,7 @@ export default function TermsPage() {
           <h2 className="mb-3 text-xl font-semibold text-[#0F172A]">14. Contact</h2>
           <p>
             For questions about these Terms, contact us at{" "}
-            <a href="mailto:legal@pinkpepper.io" className="text-[#E11D48] hover:underline">legal@pinkpepper.io</a>.
+            <a href="mailto:support@pinkpepper.io" className="text-[#E11D48] hover:underline">support@pinkpepper.io</a>.
           </p>
         </section>
 
