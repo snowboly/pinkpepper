@@ -4,6 +4,11 @@ import { getStripe } from "@/lib/billing/stripe";
 import { createAdminClient } from "@/utils/supabase/admin";
 import { parseStripeSubscription } from "@/lib/billing/tier-mapping";
 import { sendBillingEmail } from "@/lib/billing/email";
+import {
+  buildSubscriptionActivatedEmail,
+  buildSubscriptionUpdatedEmail,
+  buildSubscriptionCancelledEmail,
+} from "@/lib/billing/email-templates";
 
 export const dynamic = "force-dynamic";
 
@@ -13,7 +18,7 @@ function getCurrentPeriodEndUnix(subscription: Stripe.Subscription): number | nu
   return typeof item.current_period_end === "number" ? item.current_period_end : null;
 }
 
-async function syncSubscriptionFromStripe(subscription: Stripe.Subscription) {
+async function syncSubscriptionFromStripe(subscription: Stripe.Subscription, eventType: string) {
   const admin = createAdminClient();
 
   const customerId =
@@ -67,11 +72,33 @@ async function syncSubscriptionFromStripe(subscription: Stripe.Subscription) {
   const email = userData?.user?.email;
 
   if (email) {
-    await sendBillingEmail({
-      to: email,
-      subject: "Your PinkPepper subscription was updated",
-      html: `<p>Your subscription status is now <strong>${snapshot.status}</strong> with tier <strong>${snapshot.tier.toUpperCase()}</strong>.</p>`,
-    });
+    let emailContent: { subject: string; html: string };
+
+    if (eventType === "customer.subscription.created" && snapshot.status === "active") {
+      emailContent = buildSubscriptionActivatedEmail({ tier: snapshot.tier });
+    } else if (
+      eventType === "customer.subscription.deleted" ||
+      snapshot.status === "canceled"
+    ) {
+      const periodEndDate = snapshot.currentPeriodEnd
+        ? new Date(snapshot.currentPeriodEnd).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })
+        : undefined;
+      emailContent = buildSubscriptionCancelledEmail({
+        tier: snapshot.tier,
+        periodEnd: periodEndDate,
+      });
+    } else {
+      emailContent = buildSubscriptionUpdatedEmail({
+        status: snapshot.status,
+        tier: snapshot.tier,
+      });
+    }
+
+    await sendBillingEmail({ to: email, ...emailContent });
   }
 }
 
@@ -122,7 +149,7 @@ export async function POST(request: Request) {
       case "customer.subscription.created":
       case "customer.subscription.updated":
       case "customer.subscription.deleted": {
-        await syncSubscriptionFromStripe(event.data.object as Stripe.Subscription);
+        await syncSubscriptionFromStripe(event.data.object as Stripe.Subscription, event.type);
         break;
       }
       default:

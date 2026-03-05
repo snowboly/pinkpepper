@@ -5,7 +5,7 @@ import { resolveUserAccess } from "@/lib/access";
 import { TIER_CAPABILITIES } from "@/lib/tier";
 import { countUsageSince, utcMonthStartIso } from "@/lib/policy";
 import { sendEmail } from "@/lib/email";
-import { buildNewReviewAdminEmail } from "@/lib/review-emails";
+import { buildNewReviewAdminEmail, buildReviewSubmittedEmail } from "@/lib/review-emails";
 
 export const dynamic = "force-dynamic";
 
@@ -206,6 +206,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Failed to record review usage." }, { status: 500 });
   }
 
+  const priority = tier === "pro" || isAdmin ? "priority" : "standard";
+
   // Notify admin(s) of new review request (fire-and-forget)
   try {
     const adminDb = createAdminClient();
@@ -231,13 +233,27 @@ export async function POST(request: Request) {
         userEmail: user.email ?? "unknown",
         documentCategory,
         reviewType,
-        priority: tier === "pro" || isAdmin ? "priority" : "standard",
+        priority,
         notes: notes.length > 0 ? notes : null,
       });
       await sendEmail({ to: allAdmins, ...emailContent });
     }
   } catch (err) {
     console.error("Failed to send admin notification email:", err);
+  }
+
+  // Send submission confirmation to the user (fire-and-forget)
+  if (user.email) {
+    try {
+      const confirmationEmail = buildReviewSubmittedEmail({
+        documentCategory,
+        reviewType,
+        priority,
+      });
+      await sendEmail({ to: user.email, ...confirmationEmail });
+    } catch (err) {
+      console.error("Failed to send review submission confirmation email:", err);
+    }
   }
 
   return NextResponse.json({
