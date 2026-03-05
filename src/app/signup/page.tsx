@@ -11,6 +11,8 @@ export default function SignupPage() {
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [magicLoading, setMagicLoading] = useState(false);
+  const [magicSent, setMagicSent] = useState(false);
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
@@ -46,6 +48,32 @@ export default function SignupPage() {
       setMessage("Check your inbox and click the verification link to activate your account.");
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function onMagicLink() {
+    if (!email) {
+      setError("Enter your email address above first.");
+      return;
+    }
+    setMagicLoading(true);
+    setError(null);
+    setMessage(null);
+
+    try {
+      const supabase = createClient();
+      const origin = window.location.origin;
+      const { error: otpError } = await supabase.auth.signInWithOtp({
+        email,
+        options: { emailRedirectTo: `${origin}/auth/confirm?next=/dashboard`, shouldCreateUser: true },
+      });
+      if (otpError) {
+        setError(otpError.message);
+        return;
+      }
+      setMagicSent(true);
+    } finally {
+      setMagicLoading(false);
     }
   }
 
@@ -105,6 +133,27 @@ export default function SignupPage() {
               {loading ? "Creating account..." : "Create account"}
             </button>
           </form>
+
+          <div className="my-5 flex items-center gap-3">
+            <div className="h-px flex-1 bg-[#E8DADA]" />
+            <span className="text-xs text-[#9B9B9B]">or</span>
+            <div className="h-px flex-1 bg-[#E8DADA]" />
+          </div>
+
+          {magicSent ? (
+            <p className="rounded-xl border border-[#E8DADA] bg-[#FAF6F5] px-3 py-2.5 text-center text-sm text-[#2B2B2B]">
+              Magic link sent — check your inbox.
+            </p>
+          ) : (
+            <button
+              type="button"
+              disabled={magicLoading}
+              onClick={onMagicLink}
+              className="w-full rounded-xl border border-[#E8DADA] bg-[#FAF6F5] py-3 text-sm font-semibold text-[#2B2B2B] transition-colors hover:bg-[#F2E8E8] disabled:opacity-70"
+            >
+              {magicLoading ? "Sending link..." : "Sign up with magic link"}
+            </button>
+          )}
 
           <p className="mt-4 text-sm text-[#6B6B6B]">
             Already have an account? <Link href="/login" className="underline">Log in</Link>

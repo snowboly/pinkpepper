@@ -114,9 +114,6 @@ export function SiteFooter() {
       <div className="pp-container border-t border-[#F1F5F9] pt-8">
         <div className="flex flex-col items-center justify-between gap-4 text-center text-sm text-[#9B9B9B] md:flex-row md:text-left">
           <p>&copy; {new Date().getFullYear()} PinkPepper.io. All rights reserved.</p>
-          <p className="max-w-lg">
-            AI-assisted drafts for food safety documentation. Outputs must be reviewed by qualified personnel.
-          </p>
         </div>
       </div>
     </footer>
