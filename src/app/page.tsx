@@ -18,6 +18,47 @@ import {
 
 type DemoMode = "haccp" | "allergen" | "audit";
 
+const differentiators = [
+  {
+    title: "Domain-trained for food safety",
+    description:
+      "PinkPepper is tuned for HACCP, allergen controls, and audit evidence workflows instead of broad, general chat use.",
+  },
+  {
+    title: "Built around UK and EU expectations",
+    description:
+      "Outputs are structured for EC 852/2004, UK FSA, and operational checks inspectors usually request.",
+  },
+  {
+    title: "From advice to usable documents",
+    description:
+      "Get practical plans, SOPs, and logs that your team can review, export, and use in day-to-day compliance.",
+  },
+];
+
+const faqs = [
+  {
+    question: "Is PinkPepper just another ChatGPT wrapper?",
+    answer:
+      "No. PinkPepper is a specialised food safety assistant designed for compliance workflows such as HACCP plans, allergen controls, corrective actions, and audit evidence packs. It is not a general-purpose chatbot for broad topics.",
+  },
+  {
+    question: "Can I rely on PinkPepper output for legal compliance?",
+    answer:
+      "PinkPepper helps draft and structure documents based on recognised guidance, but it does not provide legal advice. You should review outputs against your local legal obligations and, where needed, consult a qualified food safety professional or legal adviser.",
+  },
+  {
+    question: "Which regulations does PinkPepper support?",
+    answer:
+      "PinkPepper is focused on UK and EU food safety operations, including HACCP-oriented documentation and allergen management workflows. Requirements can vary by country, region, and business type, so final sign-off should be done by your responsible compliance lead.",
+  },
+  {
+    question: "Who is responsible for final documents and decisions?",
+    answer:
+      "Your business remains responsible for implementation, verification, and legal compliance. PinkPepper accelerates preparation, but final approval, staff training, and operational controls must be handled by accountable personnel.",
+  },
+];
+
 const demoMap: Record<
   DemoMode,
   {
@@ -77,6 +118,18 @@ export default function HomePage() {
   const [demoMode, setDemoMode] = useState<DemoMode>("haccp");
 
   const demo = demoMap[demoMode];
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: faq.answer,
+      },
+    })),
+  };
 
   const handleChatSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -86,6 +139,7 @@ export default function HomePage() {
 
   return (
     <main className="overflow-hidden">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <section className="relative overflow-hidden pb-20 pt-16 md:pb-24 md:pt-24">
         <div className="absolute inset-0 -z-10">
           <div className="absolute inset-0 bg-white" />
@@ -98,20 +152,29 @@ export default function HomePage() {
             <div className="text-center lg:text-left">
               <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-[#E2E8F0] bg-[#F8FAFC] px-5 py-2.5 text-sm font-semibold text-[#475569] shadow-sm">
                 <Sparkles className="h-4 w-4" />
-                AI-powered food safety compliance
+                Specialised AI food safety assistant
               </div>
 
               <h1 className="pp-display mb-6 max-w-3xl text-5xl leading-[1.04] tracking-[-0.02em] text-[#0F172A] md:text-6xl lg:text-7xl">
-                Create compliance docs{" "}
+                Not another generic chatbot.{" "}
                 <span className="bg-gradient-to-r from-[#E11D48] via-[#F43F5E] to-[#E11D48] bg-clip-text text-transparent">
-                  with red-hot velocity
+                  A specialised food safety agent.
                 </span>
               </h1>
 
               <p className="mb-10 max-w-2xl text-lg leading-relaxed text-[#475569] md:text-xl">
-                Generate HACCP plans, SOPs, and audit packs for EU and UK food businesses.
-                Regulation-grounded outputs, built for real inspection workflows.
+                PinkPepper is trained for HACCP, allergen management, SOP generation, and inspection prep.
+                Create UK/EU-ready compliance documents that are built for real kitchen and audit workflows.
               </p>
+
+              <div className="mb-8 grid max-w-2xl gap-3 text-left md:grid-cols-3">
+                {differentiators.map((item) => (
+                  <div key={item.title} className="rounded-2xl border border-[#E2E8F0] bg-white/80 p-4">
+                    <p className="text-sm font-semibold text-[#0F172A]">{item.title}</p>
+                    <p className="mt-1 text-sm text-[#64748B]">{item.description}</p>
+                  </div>
+                ))}
+              </div>
 
               <form onSubmit={handleChatSubmit} className="w-full max-w-2xl">
                 <div
@@ -380,6 +443,28 @@ export default function HomePage() {
               <Link href="/signup?plan=pro" className="mt-8 block rounded-xl border border-[#E2E8F0] bg-white py-3.5 text-center text-sm font-semibold text-[#0F172A] transition-colors hover:bg-[#F8FAFC]">
                 Choose Pro
               </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="relative overflow-hidden border-b border-[#F1F5F9] bg-[#F8FAFC] py-24">
+        <div className="pp-container">
+          <div className="mx-auto max-w-3xl">
+            <h2 className="pp-display text-center text-4xl text-[#0F172A] md:text-5xl">Frequently asked questions</h2>
+            <p className="mx-auto mt-4 max-w-2xl text-center text-lg text-[#64748B]">
+              Clear product, compliance, and responsibility answers before you deploy PinkPepper in your workflow.
+            </p>
+
+            <div className="mt-10 space-y-4">
+              {faqs.map((faq) => (
+                <details key={faq.question} className="group rounded-2xl border border-[#E2E8F0] bg-white p-6">
+                  <summary className="cursor-pointer list-none text-lg font-semibold text-[#0F172A]">
+                    {faq.question}
+                  </summary>
+                  <p className="mt-3 leading-relaxed text-[#475569]">{faq.answer}</p>
+                </details>
+              ))}
             </div>
           </div>
         </div>
