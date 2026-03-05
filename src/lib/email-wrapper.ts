@@ -1,5 +1,5 @@
 const APP_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://pinkpepper.io";
-const LOGO_URL = `${APP_URL}/LogoV3.png`;
+const LOGO_URL = "https://klzvpixfslfsrjafbwkc.supabase.co/storage/v1/object/public/assets/LogoV3.png";
 
 export { APP_URL };
 
