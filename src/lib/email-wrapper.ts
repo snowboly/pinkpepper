@@ -3,16 +3,9 @@ const LOGO_URL = `${APP_URL}/LogoV3.png`;
 
 export { APP_URL };
 
-/** Pill-style CTA button */
+/** Rounded CTA button */
 export function btn(href: string, label: string): string {
-  return `
-    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-top:24px;">
-      <tr>
-        <td align="left" style="border-radius:24px;background:#D96C6C;">
-          <a href="${href}" style="display:inline-block;padding:13px 28px;color:#ffffff;text-decoration:none;font-size:15px;font-weight:600;border-radius:24px;letter-spacing:-0.01em;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">${label}</a>
-        </td>
-      </tr>
-    </table>`;
+  return `<a href="${href}" style="display:inline-block;background:#0f172a;color:#ffffff;text-decoration:none;font-weight:600;font-size:15px;padding:12px 18px;border-radius:10px;">${label}</a>`;
 }
 
 /** Small inline badge */
@@ -30,60 +23,62 @@ export function infoCard(
 
 /** Horizontal rule divider */
 export function divider(): string {
-  return `<hr style="border:none;border-top:1px solid #E2E8F0;margin:24px 0;">`;
+  return `<hr style="border:none;border-top:1px solid #e2e8f0;margin:24px 0;">`;
 }
 
 /** Wraps email body in the full PinkPepper HTML shell with logo header and footer */
-export function wrapEmail(body: string): string {
+export function wrapEmail(body: string, preheader = ""): string {
   const year = new Date().getFullYear();
-  return `<!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+  const preheaderHtml = preheader
+    ? `<div style="display:none;max-height:0;overflow:hidden;opacity:0;">${preheader}</div>`
+    : "";
+
+  return `<!doctype html>
+<html lang="en" style="margin:0;padding:0;">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>PinkPepper</title>
 </head>
-<body style="margin:0;padding:0;background-color:#F1F5F9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F1F5F9;padding:48px 0;">
+<body style="margin:0;padding:0;background:#f8fafc;font-family:Inter,'Segoe UI',Arial,sans-serif;">
+  ${preheaderHtml}
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f8fafc;padding:24px 12px;">
     <tr>
-      <td align="center" style="padding:0 16px;">
-        <!--[if mso]><table width="560"><tr><td><![endif]-->
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+      <td align="center">
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:600px;background:#ffffff;border:1px solid #e2e8f0;border-radius:16px;overflow:hidden;">
 
-          <!-- ── Header ── -->
+          <!-- Header / Logo -->
           <tr>
-            <td style="background:#D96C6C;padding:28px 32px;text-align:center;">
-              <img src="${LOGO_URL}" alt="PinkPepper" height="48" style="display:block;margin:0 auto;border:0;outline:none;text-decoration:none;">
+            <td style="padding:28px 28px 18px;border-bottom:1px solid #e2e8f0;">
+              <img src="${LOGO_URL}" alt="PinkPepper" width="152" style="display:block;height:auto;border:0;" />
             </td>
           </tr>
 
-          <!-- ── Body ── -->
+          <!-- Body -->
           <tr>
-            <td style="padding:32px 32px 28px;color:#0F172A;">
+            <td style="padding:28px;color:#0f172a;">
               ${body}
             </td>
           </tr>
 
-          <!-- ── Footer ── -->
+          <!-- Footer -->
           <tr>
-            <td style="background:#F8FAFC;border-top:1px solid #E2E8F0;padding:20px 32px;text-align:center;">
-              <p style="margin:0 0 6px;font-size:13px;color:#64748B;line-height:1.5;">
-                PinkPepper &mdash; AI-Powered Food Safety
+            <td style="padding:18px 28px 24px;background:#f8fafc;border-top:1px solid #e2e8f0;">
+              <p style="margin:0 0 10px;color:#64748b;font-size:12px;line-height:18px;">
+                Need help? Contact <a href="mailto:support@pinkpepper.app" style="color:#334155;">support@pinkpepper.app</a>.
               </p>
-              <p style="margin:0;font-size:12px;color:#94A3B8;">
-                <a href="${APP_URL}" style="color:#94A3B8;text-decoration:none;">pinkpepper.ai</a>
+              <p style="margin:0 0 8px;color:#94a3b8;font-size:11px;line-height:16px;">
+                <a href="${APP_URL}" style="color:#94a3b8;text-decoration:none;">pinkpepper.ai</a>
                 &nbsp;&middot;&nbsp;
-                <a href="${APP_URL}/legal/privacy" style="color:#94A3B8;text-decoration:none;">Privacy Policy</a>
+                <a href="${APP_URL}/legal/privacy" style="color:#94a3b8;text-decoration:none;">Privacy Policy</a>
                 &nbsp;&middot;&nbsp;
-                <a href="${APP_URL}/legal/terms" style="color:#94A3B8;text-decoration:none;">Terms of Service</a>
+                <a href="${APP_URL}/legal/terms" style="color:#94a3b8;text-decoration:none;">Terms of Service</a>
               </p>
-              <p style="margin:8px 0 0;font-size:11px;color:#CBD5E1;">&copy; ${year} PinkPepper. All rights reserved.</p>
+              <p style="margin:0;color:#94a3b8;font-size:11px;line-height:16px;">&copy; ${year} PinkPepper. All rights reserved.</p>
             </td>
           </tr>
 
         </table>
-        <!--[if mso]></td></tr></table><![endif]-->
       </td>
     </tr>
   </table>
