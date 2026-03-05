@@ -3,6 +3,7 @@ import Link from "next/link";
 
 const nav = [
   { href: "/pricing", label: "Pricing" },
+  { href: "/contact", label: "Contact" },
 ];
 
 export function SiteHeader() {
