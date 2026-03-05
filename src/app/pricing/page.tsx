@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { CheckCircle2, Star, XCircle } from "lucide-react";
+import { CheckCircle2, Mail, Star, XCircle } from "lucide-react";
 import { createClient } from "@/utils/supabase/server";
 import PricingActions from "@/components/pricing/PricingActions";
 
@@ -55,15 +55,15 @@ export default async function PricingPage() {
               <ul className="flex-1 space-y-3.5 text-sm text-[#475569]">
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />
-                  25 daily queries
+                  25 AI queries per day
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />
-                  1 image upload/day
+                  1 photo analysis per day
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />
-                  10 saved conversations
+                  10 saved conversations (30-day history)
                 </li>
                 <li className="flex items-start gap-2.5 opacity-50">
                   <XCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#94A3B8]" />
@@ -97,19 +97,23 @@ export default async function PricingPage() {
               <ul className="flex-1 space-y-3.5 text-sm text-[#475569]">
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  100 daily queries
+                  100 AI queries per day
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  Improved model memory
+                  Longer conversation context
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  3 image uploads/day
+                  3 photo analyses per day
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  PDF export
+                  Export to PDF
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
+                  Unlimited saved conversations
                 </li>
                 <li className="flex items-start gap-2.5 opacity-50">
                   <XCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#94A3B8]" />
@@ -138,15 +142,15 @@ export default async function PricingPage() {
               <ul className="flex-1 space-y-3.5 text-sm text-[#475569]">
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-600" />
-                  1,000 daily queries
+                  1,000 AI queries per day
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-600" />
-                  20 document generations/day
+                  20 photo analyses per day
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-600" />
-                  20 image uploads/day
+                  Unlimited saved conversations
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-600" />
@@ -234,6 +238,29 @@ export default async function PricingPage() {
                 <p className="text-sm text-[#64748B] leading-relaxed">{a}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Contact CTA */}
+      <section className="py-12">
+        <div className="pp-container max-w-3xl">
+          <div className="flex flex-col items-center gap-4 rounded-2xl border border-[#E2E8F0] bg-white p-8 text-center sm:flex-row sm:text-left">
+            <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-[#FFF1F2]">
+              <Mail className="h-5 w-5 text-[#E11D48]" />
+            </div>
+            <div className="flex-1">
+              <h3 className="font-semibold text-[#0F172A]">Still have questions?</h3>
+              <p className="mt-1 text-sm text-[#64748B]">
+                Not sure which plan fits your operation? Get in touch and we'll help you decide.
+              </p>
+            </div>
+            <Link
+              href="/contact"
+              className="flex-shrink-0 rounded-xl border border-[#E2E8F0] bg-white px-5 py-2.5 text-sm font-semibold text-[#0F172A] transition-colors hover:bg-[#F8FAFC]"
+            >
+              Contact us
+            </Link>
           </div>
         </div>
       </section>
