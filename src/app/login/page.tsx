@@ -10,6 +10,8 @@ export default function LoginPage() {
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [magicLoading, setMagicLoading] = useState(false);
+  const [magicSent, setMagicSent] = useState(false);
   const [nextPath, setNextPath] = useState("/dashboard");
   const [flashError, setFlashError] = useState<string | null>(null);
 
@@ -46,6 +48,32 @@ export default function LoginPage() {
       window.location.href = nextPath;
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function onMagicLink() {
+    if (!email) {
+      setError("Enter your email address above first.");
+      return;
+    }
+    setMagicLoading(true);
+    setError(null);
+    setMessage(null);
+
+    try {
+      const supabase = createClient();
+      const origin = window.location.origin;
+      const { error: otpError } = await supabase.auth.signInWithOtp({
+        email,
+        options: { emailRedirectTo: `${origin}/auth/confirm?next=${nextPath}` },
+      });
+      if (otpError) {
+        setError(otpError.message);
+        return;
+      }
+      setMagicSent(true);
+    } finally {
+      setMagicLoading(false);
     }
   }
 
@@ -98,6 +126,27 @@ export default function LoginPage() {
               {loading ? "Signing in..." : "Log In"}
             </button>
           </form>
+
+          <div className="my-5 flex items-center gap-3">
+            <div className="h-px flex-1 bg-[#E8DADA]" />
+            <span className="text-xs text-[#9B9B9B]">or</span>
+            <div className="h-px flex-1 bg-[#E8DADA]" />
+          </div>
+
+          {magicSent ? (
+            <p className="rounded-xl border border-[#E8DADA] bg-[#FAF6F5] px-3 py-2.5 text-center text-sm text-[#2B2B2B]">
+              Magic link sent — check your inbox.
+            </p>
+          ) : (
+            <button
+              type="button"
+              disabled={magicLoading}
+              onClick={onMagicLink}
+              className="w-full rounded-xl border border-[#E8DADA] bg-[#FAF6F5] py-3 text-sm font-semibold text-[#2B2B2B] transition-colors hover:bg-[#F2E8E8] disabled:opacity-70"
+            >
+              {magicLoading ? "Sending link..." : "Send magic link"}
+            </button>
+          )}
 
           <div className="mt-4 flex items-center justify-between text-sm text-[#6B6B6B]">
             <Link href="/forgot-password" className="underline">Forgot password?</Link>
