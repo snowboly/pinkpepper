@@ -44,6 +44,7 @@ export default function ChatWorkspace({
 
   // ── Review state ──
   const [reviewLoading, setReviewLoading] = useState(false);
+  const [reviewSubmitted, setReviewSubmitted] = useState(false);
   const [reviewModalOpen, setReviewModalOpen] = useState(false);
   const [documentCategory, setDocumentCategory] = useState("async_qa");
   const [reviewNotes, setReviewNotes] = useState("");
@@ -268,7 +269,7 @@ export default function ChatWorkspace({
       }
       setReviewInfo(data.usage ?? null);
       if (data.request) setReviewRequests((prev) => [data.request!, ...prev]);
-      setReviewModalOpen(false);
+      setReviewSubmitted(true);
       setDocumentCategory("async_qa");
       setReviewNotes("");
     } catch {
@@ -650,9 +651,10 @@ export default function ChatWorkspace({
         documentCategory={documentCategory}
         reviewNotes={reviewNotes}
         reviewLoading={reviewLoading}
+        reviewSubmitted={reviewSubmitted}
         reviewInfo={reviewInfo}
         reviewRequests={reviewRequests}
-        onClose={() => setReviewModalOpen(false)}
+        onClose={() => { setReviewModalOpen(false); setReviewSubmitted(false); }}
         onSetDocumentCategory={setDocumentCategory}
         onSetReviewNotes={setReviewNotes}
         onSubmit={() => void requestHumanReview()}

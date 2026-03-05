@@ -18,6 +18,7 @@ type ReviewModalProps = {
   documentCategory: string;
   reviewNotes: string;
   reviewLoading: boolean;
+  reviewSubmitted: boolean;
   reviewInfo: { used: number; limit: number | null } | null;
   reviewRequests: ReviewRequest[];
   onClose: () => void;
@@ -55,6 +56,7 @@ export default function ReviewModal({
   documentCategory,
   reviewNotes,
   reviewLoading,
+  reviewSubmitted,
   reviewInfo,
   reviewRequests,
   onClose,
@@ -63,6 +65,39 @@ export default function ReviewModal({
   onSubmit,
 }: ReviewModalProps) {
   if (!open) return null;
+
+  // Confirmation state after successful submission
+  if (reviewSubmitted) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+        <div className="w-full max-w-md rounded-2xl border border-[#E2E8F0] bg-white p-6 shadow-2xl text-center">
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <h3 className="text-lg font-semibold text-[#0F172A] mb-2">Review Request Submitted</h3>
+          <p className="text-sm text-[#64748B] mb-4">
+            You&apos;ll receive an email when your review is picked up and when it&apos;s complete.
+          </p>
+          <div className="flex flex-col gap-2">
+            <a
+              href="/dashboard/reviews"
+              className="rounded-full bg-[#E11D48] px-4 py-2 text-sm font-semibold text-white hover:bg-[#BE123C] inline-block"
+            >
+              Track your reviews
+            </a>
+            <button
+              onClick={onClose}
+              className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 text-sm text-[#64748B] hover:bg-[#F8F9FB]"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const isFullReview = FULL_REVIEW_OPTIONS.some((o) => o.value === documentCategory);
 

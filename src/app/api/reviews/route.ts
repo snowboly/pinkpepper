@@ -1,8 +1,11 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
+import { createAdminClient } from "@/utils/supabase/admin";
 import { resolveUserAccess } from "@/lib/access";
 import { TIER_CAPABILITIES } from "@/lib/tier";
 import { countUsageSince, utcMonthStartIso } from "@/lib/policy";
+import { sendEmail } from "@/lib/email";
+import { buildNewReviewAdminEmail } from "@/lib/review-emails";
 
 export const dynamic = "force-dynamic";
 
@@ -36,24 +39,38 @@ export async function GET(request: Request) {
 
   const url = new URL(request.url);
   const conversationId = url.searchParams.get("conversationId");
+  const page = Math.max(1, parseInt(url.searchParams.get("page") ?? "1", 10));
+  const pageSize = 20;
+  const offset = (page - 1) * pageSize;
+
+  // When fetching for a specific conversation, return minimal fields (for ReviewModal)
+  // When fetching all reviews, return full details (for /dashboard/reviews)
+  const columns = conversationId
+    ? "id,conversation_id,review_type,document_category,status,created_at"
+    : "id,conversation_id,review_type,document_category,status,notes,reviewer_notes,snapshot_content,created_at,updated_at,completed_at";
 
   let query = supabase
     .from("review_requests")
-    .select("id,conversation_id,review_type,document_category,status,created_at")
+    .select(columns, { count: conversationId ? undefined : "exact" })
     .eq("user_id", user.id)
-    .order("created_at", { ascending: false })
-    .limit(20);
+    .order("created_at", { ascending: false });
 
   if (conversationId) {
-    query = query.eq("conversation_id", conversationId);
+    query = query.eq("conversation_id", conversationId).limit(20);
+  } else {
+    query = query.range(offset, offset + pageSize - 1);
   }
 
-  const { data, error } = await query;
+  const { data, error, count } = await query;
   if (error) {
     return NextResponse.json({ error: "Failed to load review requests." }, { status: 500 });
   }
 
-  return NextResponse.json({ requests: data ?? [] });
+  if (conversationId) {
+    return NextResponse.json({ requests: data ?? [] });
+  }
+
+  return NextResponse.json({ requests: data ?? [], total: count ?? 0, page });
 }
 
 export async function POST(request: Request) {
@@ -187,6 +204,40 @@ export async function POST(request: Request) {
 
   if (usageError) {
     return NextResponse.json({ error: "Failed to record review usage." }, { status: 500 });
+  }
+
+  // Notify admin(s) of new review request (fire-and-forget)
+  try {
+    const adminDb = createAdminClient();
+    const { data: adminProfiles } = await adminDb
+      .from("profiles")
+      .select("email")
+      .eq("is_admin", true);
+
+    const adminEmails = (adminProfiles ?? [])
+      .map((p) => p.email)
+      .filter(Boolean) as string[];
+
+    // Also include ADMIN_EMAILS env var
+    const envAdmins = (process.env.ADMIN_EMAILS ?? "")
+      .split(",")
+      .map((e) => e.trim().toLowerCase())
+      .filter(Boolean);
+
+    const allAdmins = [...new Set([...adminEmails, ...envAdmins])];
+
+    if (allAdmins.length > 0) {
+      const emailContent = buildNewReviewAdminEmail({
+        userEmail: user.email ?? "unknown",
+        documentCategory,
+        reviewType,
+        priority: tier === "pro" || isAdmin ? "priority" : "standard",
+        notes: notes.length > 0 ? notes : null,
+      });
+      await sendEmail({ to: allAdmins, ...emailContent });
+    }
+  } catch (err) {
+    console.error("Failed to send admin notification email:", err);
   }
 
   return NextResponse.json({
