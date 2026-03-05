@@ -3,8 +3,6 @@ import Link from "next/link";
 
 const nav = [
   { href: "/pricing", label: "Pricing" },
-  { href: "/resources", label: "Resources" },
-  { href: "/compliance", label: "Compliance" },
 ];
 
 export function SiteHeader() {
@@ -87,18 +85,14 @@ export function SiteFooter() {
         <div>
           <h4 className="mb-4 text-sm font-semibold text-[#1A1A1A]">Platform</h4>
           <ul className="space-y-3 text-sm text-[#6B6B6B]">
-            <li><Link href="/dashboard" className="transition-colors hover:text-[#1A1A1A]">Dashboard</Link></li>
             <li><Link href="/pricing" className="transition-colors hover:text-[#1A1A1A]">Pricing</Link></li>
             <li><Link href="/login" className="transition-colors hover:text-[#1A1A1A]">Log In</Link></li>
             <li><Link href="/signup" className="transition-colors hover:text-[#1A1A1A]">Create Account</Link></li>
           </ul>
         </div>
         <div>
-          <h4 className="mb-4 text-sm font-semibold text-[#1A1A1A]">Resources</h4>
+          <h4 className="mb-4 text-sm font-semibold text-[#1A1A1A]">Support</h4>
           <ul className="space-y-3 text-sm text-[#6B6B6B]">
-            <li><Link href="/" className="transition-colors hover:text-[#1A1A1A]">Features</Link></li>
-            <li><Link href="/resources" className="transition-colors hover:text-[#1A1A1A]">Updates</Link></li>
-            <li><Link href="/compliance" className="transition-colors hover:text-[#1A1A1A]">Compliance Notes</Link></li>
             <li><Link href="/contact" className="transition-colors hover:text-[#1A1A1A]">Contact & Support</Link></li>
           </ul>
         </div>
