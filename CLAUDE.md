@@ -122,7 +122,7 @@ scripts/
 | Daily image uploads | 1 | 3 | 20 |
 | PDF export | No | Yes | Yes |
 | DOCX export | No | No | Yes |
-| Human reviews/month | 0 | 1 | 6 |
+| Review credits/month | 0 | 0 | 3 (1 credit = small doc, 3 credits = full doc) |
 | Saved conversations | 10 (30d) | Unlimited | Unlimited |
 
 Admins bypass all limits.

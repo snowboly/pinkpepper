@@ -42,7 +42,7 @@ const PLANS = [
     tier: "pro" as SubscriptionTier,
     name: "Pro",
     price: "€49/mo",
-    highlights: ["1,000 messages/day", "20 image uploads/day", "PDF + Word export", "6 human reviews/month"],
+    highlights: ["1,000 messages/day", "20 image uploads/day", "PDF + Word export", "3 review credits/month"],
     cta: "Upgrade to Pro",
     colour: "border-[#059669] bg-[#ECFDF5]",
     btnColour: "bg-[#059669] hover:bg-[#047857]",

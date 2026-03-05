@@ -79,8 +79,7 @@ export function buildReviewSubmittedEmail(input: {
   priority: string;
 }): { subject: string; html: string } {
   const cat = categoryLabel(input.documentCategory);
-  const isPriority = input.priority === "priority";
-  const turnaround = isPriority ? "within 24 hours" : "within 72 hours";
+  const turnaround = input.reviewType === "full_review" ? "within 5 working days" : "within 3 working days";
 
   return {
     subject: `Review request received: ${cat}`,
@@ -107,7 +106,7 @@ export function buildReviewSubmittedEmail(input: {
         </tr>
         <tr>
           <td style="padding:8px 0;color:#64748B;border-top:1px solid #F1F5F9;">Priority</td>
-          <td style="padding:8px 0;border-top:1px solid #F1F5F9;">${isPriority ? "Priority" : "Standard"}</td>
+          <td style="padding:8px 0;border-top:1px solid #F1F5F9;">${input.priority === "priority" ? "Priority" : "Standard"}</td>
         </tr>
       </table>
 

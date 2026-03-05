@@ -115,10 +115,10 @@ export default function ReviewModal({
           </button>
         </div>
 
-        {/* Usage counter */}
+        {/* Credit counter */}
         {reviewInfo && !isAdmin && (
           <p className="mt-1 text-xs text-[#64748B]">
-            Reviews used this month: <span className="font-semibold">{reviewInfo.used}/{reviewInfo.limit ?? "unlimited"}</span>
+            Credits used this month: <span className="font-semibold">{reviewInfo.used}/{reviewInfo.limit ?? "unlimited"}</span>
           </p>
         )}
 
@@ -138,10 +138,10 @@ export default function ReviewModal({
           <p className="font-semibold text-[#334155]">What to expect</p>
           <p>Reviews are conducted by qualified food safety consultants. Feedback is returned as structured written notes via your dashboard.</p>
           <p>Reviews are scoped to the content of the selected conversation. Off-topic or out-of-scope requests may be declined.</p>
-          <p>Turnaround: <span className="font-medium">{reviewTurnaround === "N/A" ? "not available on your plan" : reviewTurnaround}</span>.</p>
+          <p>Turnaround: <span className="font-medium">3 working days for quick checks · 5 working days for full document reviews</span>.</p>
           {allowFullDocumentReview && (
             <p className="text-[#92400E] bg-[#FFFBEB] rounded px-2 py-1 mt-1">
-              Full document reviews use your entire monthly quota. You cannot combine them with quick checks in the same month.
+              Full document reviews cost all 3 credits and can only be requested once per month. Quick checks cost 1 credit each.
             </p>
           )}
         </div>
@@ -152,7 +152,7 @@ export default function ReviewModal({
             <legend className="mb-2 text-sm font-medium text-[#475569]">Document type</legend>
 
             <div className="space-y-1">
-              <p className="text-xs font-semibold uppercase tracking-wide text-[#94A3B8] mb-1">Quick Check</p>
+              <p className="text-xs font-semibold uppercase tracking-wide text-[#94A3B8] mb-1">Quick Check <span className="normal-case text-[#64748B]">— 1 credit</span></p>
               {QUICK_CHECK_OPTIONS.map((opt) => (
                 <label
                   key={opt.value}
@@ -180,7 +180,7 @@ export default function ReviewModal({
 
             {allowFullDocumentReview && (
               <div className="mt-3 space-y-1">
-                <p className="text-xs font-semibold uppercase tracking-wide text-[#94A3B8] mb-1">Full Document Review <span className="normal-case text-[#92400E]">— uses full monthly quota</span></p>
+                <p className="text-xs font-semibold uppercase tracking-wide text-[#94A3B8] mb-1">Full Document Review <span className="normal-case text-[#92400E]">— uses all 3 credits</span></p>
                 {FULL_REVIEW_OPTIONS.map((opt) => (
                   <label
                     key={opt.value}
