@@ -196,6 +196,7 @@ export type Database = {
           notes: string | null
           priority: Database["public"]["Enums"]["review_priority"]
           review_type: Database["public"]["Enums"]["review_type"]
+          reviewer_file_id: string | null
           reviewer_notes: string | null
           snapshot_content: string
           status: Database["public"]["Enums"]["review_status"]
@@ -211,6 +212,7 @@ export type Database = {
           notes?: string | null
           priority?: Database["public"]["Enums"]["review_priority"]
           review_type?: Database["public"]["Enums"]["review_type"]
+          reviewer_file_id?: string | null
           reviewer_notes?: string | null
           snapshot_content: string
           status?: Database["public"]["Enums"]["review_status"]
@@ -226,6 +228,7 @@ export type Database = {
           notes?: string | null
           priority?: Database["public"]["Enums"]["review_priority"]
           review_type?: Database["public"]["Enums"]["review_type"]
+          reviewer_file_id?: string | null
           reviewer_notes?: string | null
           snapshot_content?: string
           status?: Database["public"]["Enums"]["review_status"]

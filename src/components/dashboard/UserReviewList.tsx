@@ -10,6 +10,7 @@ type ReviewRequest = {
   status: string;
   notes: string | null;
   reviewer_notes: string | null;
+  reviewer_file_id: string | null;
   snapshot_content: string | null;
   created_at: string;
   updated_at: string;
@@ -215,6 +216,21 @@ export default function UserReviewList() {
                             {r.reviewer_notes}
                           </div>
                           <p className="mt-2 text-xs text-[#94A3B8]">This does not count against your monthly review quota.</p>
+                        </div>
+                      )}
+
+                      {/* Attached document download */}
+                      {r.reviewer_file_id && (r.status === "completed" || r.status === "rejected") && (
+                        <div>
+                          <a
+                            href={`/api/reviews/${r.id}/file`}
+                            className="inline-flex items-center gap-2 rounded-xl border border-[#E2E8F0] bg-white px-4 py-2.5 text-sm font-medium text-[#0F172A] hover:bg-[#F8F9FB] transition-colors"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-[#E11D48]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            Download annotated document
+                          </a>
                         </div>
                       )}
 
