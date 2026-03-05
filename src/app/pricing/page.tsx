@@ -19,9 +19,9 @@ export default async function PricingPage() {
 
   const ctaBase =
     "mt-8 block w-full rounded-xl py-3.5 text-center text-sm font-semibold transition-colors";
-  const ctaPrimary = `${ctaBase} bg-[#E11D48] text-white hover:bg-[#BE123C]`;
-  const ctaSecondary = `${ctaBase} border border-[#E2E8F0] bg-white text-[#0F172A] hover:bg-[#F8FAFC]`;
-  const ctaNeutral = `${ctaBase} border border-[#E2E8F0] bg-white text-[#0F172A] hover:bg-[#F8FAFC]`;
+  const ctaPrimary = `${ctaBase} bg-[#F43F5E] text-white hover:bg-[#E11D48]`;
+  const ctaSecondary = `${ctaBase} border border-[#E2E8F0] bg-[#F8FAFC] text-[#0F172A] hover:bg-[#F1F5F9]`;
+  const ctaNeutral = `${ctaBase} border border-[#E2E8F0] bg-[#F8FAFC] text-[#0F172A] hover:bg-[#F1F5F9]`;
 
   return (
     <main className="overflow-hidden">
@@ -257,7 +257,7 @@ export default async function PricingPage() {
             </div>
             <Link
               href="/contact"
-              className="flex-shrink-0 rounded-xl border border-[#E2E8F0] bg-white px-5 py-2.5 text-sm font-semibold text-[#0F172A] transition-colors hover:bg-[#F8FAFC]"
+              className="flex-shrink-0 rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] px-5 py-2.5 text-sm font-semibold text-[#0F172A] transition-colors hover:bg-[#F1F5F9]"
             >
               Contact us
             </Link>
