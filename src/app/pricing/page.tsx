@@ -101,7 +101,7 @@ export default async function PricingPage() {
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  3 document generations/day
+                  Improved model memory
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
