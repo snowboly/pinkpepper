@@ -8,10 +8,29 @@ export const dynamic = "force-dynamic";
 
 function detectQueryMode(message: string): "qa" | "document" | "audit" {
   const lower = message.toLowerCase();
-  const auditKeywords = ["audit", "check compliance", "verify", "gap analysis", "non-conformance", "nc", "inspection", "review my", "assess my", "evaluate my", "am i compliant", "are we compliant"];
+
+  const auditKeywords = [
+    "audit", "check compliance", "check my compliance", "verify", "gap analysis",
+    "non-conformance", "nonconformance", " nc ", "major nc", "minor nc", "critical nc",
+    "inspection", "review my", "assess my", "evaluate my",
+    "am i compliant", "are we compliant", "is this compliant",
+    "do i need to", "do we need to", "what are we missing",
+    "corrective action", "capa", "due diligence",
+  ];
   if (auditKeywords.some((kw) => lower.includes(kw))) return "audit";
-  const documentKeywords = ["create", "generate", "draft", "write", "produce", "build", "template", "haccp plan", "sop", "procedure", "log", "form", "checklist", "policy", "manual", "monitoring sheet", "cleaning schedule", "risk assessment"];
+
+  const documentKeywords = [
+    "create", "generate", "draft", "write", "produce", "build", "make me", "give me a",
+    "template", "haccp plan", "sop", "standard operating procedure",
+    "procedure", "log", "form", "checklist", "policy", "manual",
+    "monitoring sheet", "cleaning schedule", "risk assessment",
+    "flow diagram", "process flow", "control measure", "critical limit",
+    "recall procedure", "traceability system", "supplier questionnaire",
+    "staff training record", "induction document", "due diligence record",
+    "pest control log", "delivery check", "date labelling", "labelling policy",
+  ];
   if (documentKeywords.some((kw) => lower.includes(kw))) return "document";
+
   return "qa";
 }
 
@@ -119,12 +138,13 @@ export async function POST(request: Request) {
   }
 
   // Load conversation history
+  const historyLimit = isAdmin || tier === "pro" ? 20 : 10;
   const { data: historyRows } = await supabase
     .from("chat_messages")
     .select("role, content")
     .eq("conversation_id", conversationId)
     .order("created_at", { ascending: true })
-    .limit(10);
+    .limit(historyLimit);
 
   const history = (historyRows ?? []).map((row: { role: string; content: string }) => ({
     role: row.role,
@@ -136,7 +156,7 @@ export async function POST(request: Request) {
   let ragEnabled = false;
 
   try {
-    retrievedChunks = await retrieveContext(message, { topK: 5, threshold: 0.65 });
+    retrievedChunks = await retrieveContext(message, { topK: 8, threshold: 0.72 });
     ragEnabled = retrievedChunks.length > 0;
   } catch (ragError) {
     console.error("RAG retrieval error:", ragError);
@@ -152,21 +172,48 @@ export async function POST(request: Request) {
     systemPrompt = ragPrompt.systemPrompt;
     temperature = ragPrompt.temperature;
   } else {
+    const modeInstruction =
+      mode === "audit"
+        ? "You are in AUDIT MODE.\n" +
+          "- Structure every finding using this rating system: ✅ Compliant | ⚠️ Minor NC | 🔴 Major NC | 🚫 Critical NC\n" +
+          "- Cite the exact regulation and article number for each finding (e.g. Regulation (EC) No 852/2004, Annex II, Chapter IX).\n" +
+          "- For each non-conformance, provide a specific corrective action and, where appropriate, a preventive action (CAPA).\n" +
+          "- If you cannot assess a particular area from the information given, explicitly state what additional information is needed.\n" +
+          "- Do not assign ratings when you are uncertain — flag the gap instead."
+        : mode === "document"
+        ? "You are in DOCUMENT GENERATION MODE.\n" +
+          "- Produce complete, ready-to-use documents with numbered sections and subsections.\n" +
+          "- Use tables where appropriate (e.g. monitoring logs, temperature records, supplier lists).\n" +
+          "- All measurable criteria must be specific: temperatures in °C, times in minutes or hours, frequencies as 'daily/weekly/monthly'.\n" +
+          "- Include a version control block at the top: Document No., Version, Date, Approved by.\n" +
+          "- Do not truncate — if the document is long, complete it fully."
+        : "You are in Q&A MODE.\n" +
+          "- Lead with a direct, practical answer in the first sentence.\n" +
+          "- Follow with regulatory context: cite specific regulations and articles.\n" +
+          "- Where EU and UK rules differ post-Brexit, explicitly call out both.\n" +
+          "- Use bullet points or numbered lists to improve scannability.\n" +
+          "- Keep answers focused — do not pad with unnecessary caveats.";
+
     systemPrompt =
       "You are PinkPepper, an expert AI food safety compliance assistant specialising in EU and UK food law and best practice.\n\n" +
-      "Your expertise covers HACCP (Codex CAC/RCP 1-1969), food hygiene law (EC 852/2004, 853/2004 and UK equivalents), " +
-      "allergen labelling (EU 1169/2011, UK Food Information Regulations 2014, Natasha's Law), temperature control, " +
-      "traceability (EC 178/2002), microbiological criteria (EC 2073/2005), and private standards (BRCGS, SQF, IFS, FSSC 22000).\n\n" +
-      (mode === "audit"
-        ? "You are in AUDIT mode. Structure findings as: ✅ Compliant | ⚠️ Minor NC | 🔴 Major NC | 🚫 Critical NC. " +
-          "Reference exact regulation and article for each finding. Recommend corrective/preventive actions (CAPA)."
-        : mode === "document"
-        ? "You are in DOCUMENT GENERATION mode. Produce complete, ready-to-use documentation with numbered sections, tables, " +
-          "specific measurable criteria (temperatures in °C, times in minutes/hours), and version control fields."
-        : "You are in Q&A mode. Provide clear, structured answers with practical guidance. " +
-          "Lead with the direct answer, then provide regulatory context. " +
-          "Where EU and UK rules differ post-Brexit, call it out explicitly.") +
-      "\n\nAlways end substantive responses with: ⚠️ AI-generated — verify with a qualified food safety professional before implementing.";
+      "Your expertise covers:\n" +
+      "- HACCP principles (Codex Alimentarius CAC/RCP 1-1969, Rev. 2003)\n" +
+      "- Food hygiene law: Regulation (EC) No 852/2004, 853/2004, and their retained UK equivalents\n" +
+      "- Allergen labelling: Regulation (EU) No 1169/2011 (Article 21, Annex II), UK Food Information Regulations 2014, Natasha's Law (PPDS foods, from Oct 2021)\n" +
+      "- Temperature control: chilled (≤8°C), frozen (≤-18°C), hot-holding (≥63°C), cook temperatures\n" +
+      "- Traceability: Regulation (EC) No 178/2002 (Articles 17–20)\n" +
+      "- Microbiological criteria: Regulation (EC) No 2073/2005\n" +
+      "- Private certification standards: BRCGS Food Safety Issue 9, SQF Edition 9, IFS Food Version 8, FSSC 22000 Version 6\n" +
+      "- Shelf life, date marking, and QUID requirements\n" +
+      "- Pest control, cleaning and disinfection, personal hygiene, waste management\n\n" +
+      "STRICT RULES — follow these in every response:\n" +
+      "1. Only answer questions about food safety, food hygiene, HACCP, food law, allergens, food business operations, or related compliance topics. " +
+      "If a question is off-topic, politely say so and redirect the user.\n" +
+      "2. Never invent regulation numbers, article numbers, or legal citations. If you are not certain of a specific reference, write 'verify the exact article in the source regulation' rather than guessing.\n" +
+      "3. Where EU and UK law have diverged post-Brexit, call out both positions explicitly.\n" +
+      "4. If a question requires site-specific detail you do not have (e.g. specific menu, layout, volume), ask for it rather than making assumptions.\n" +
+      "5. End every substantive response with this exact line: ⚠️ AI-generated — verify with a qualified food safety professional before implementing.\n\n" +
+      modeInstruction;
     temperature = mode === "audit" ? 0.0 : mode === "document" ? 0.2 : 0.1;
   }
 

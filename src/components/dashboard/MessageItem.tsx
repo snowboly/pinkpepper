@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import type { Message } from "./types";
 import { SourceCardsList } from "@/components/chat/SourceCard";
@@ -20,6 +21,14 @@ export default function MessageItem({
   onRequestReview,
 }: MessageItemProps) {
   const isUser = message.role === "user";
+  const [copied, setCopied] = useState(false);
+
+  function copyToClipboard() {
+    navigator.clipboard.writeText(message.content).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  }
 
   return (
     <div className={`py-5 ${isUser ? "bg-[#F8F9FB]" : ""}`}>
@@ -73,16 +82,40 @@ export default function MessageItem({
           </div>
         )}
 
-        {/* Review button on last assistant message */}
-        {!isUser && isLastAssistantMessage && reviewEligible && conversationId && (
-          <div className="mt-2">
+        {/* Assistant message actions */}
+        {!isUser && !message.isStreaming && message.content && (
+          <div className="mt-2 flex items-center gap-2">
             <button
               type="button"
-              onClick={onRequestReview}
-              className="rounded-full border border-[#E2E8F0] bg-white px-3 py-1 text-xs text-[#64748B] hover:bg-[#F8F9FB] transition-colors"
+              onClick={copyToClipboard}
+              className="flex items-center gap-1.5 rounded-full border border-[#E2E8F0] bg-white px-3 py-1 text-xs text-[#64748B] hover:bg-[#F8F9FB] transition-colors"
+              title="Copy response"
             >
-              Request expert review
+              {copied ? (
+                <>
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                  Copied
+                </>
+              ) : (
+                <>
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
+                  Copy
+                </>
+              )}
             </button>
+            {isLastAssistantMessage && reviewEligible && conversationId && (
+              <button
+                type="button"
+                onClick={onRequestReview}
+                className="rounded-full border border-[#E2E8F0] bg-white px-3 py-1 text-xs text-[#64748B] hover:bg-[#F8F9FB] transition-colors"
+              >
+                Request expert review
+              </button>
+            )}
           </div>
         )}
       </div>

@@ -17,16 +17,25 @@ type ChatMessagesProps = {
   onRequestReview: () => void;
 };
 
-const SUGGESTIONS = [
-  { label: "HACCP plan", text: "Create a HACCP plan for a 25-seat café that serves hot food including sandwiches and soups" },
-  { label: "Cleaning SOP", text: "Draft a cleaning and disinfection SOP for a commercial kitchen including frequency, chemicals, and records" },
-  { label: "Allergen law", text: "What are the 14 allergens that must be declared under EU Regulation 1169/2011 and Natasha's Law?" },
-  { label: "Temp monitoring", text: "Generate a daily temperature monitoring log template for fridges, freezers, and hot-holding equipment" },
-  { label: "Audit prep", text: "Check compliance gaps for a small food manufacturer preparing for a BRC Global Standard audit" },
-  { label: "Traceability", text: "What traceability records must a food business keep under Regulation (EC) No 178/2002?" },
-  { label: "Supplier checks", text: "Draft a supplier approval procedure for a bakery including questionnaire and ongoing monitoring" },
-  { label: "Pest control", text: "What are the legal requirements for pest control in a food business under EC 852/2004?" },
+const SUGGESTIONS: { category: string; label: string; text: string }[] = [
+  // Document generation
+  { category: "document", label: "HACCP plan", text: "Create a HACCP plan for a 25-seat café that serves hot food including sandwiches and soups" },
+  { category: "document", label: "Cleaning SOP", text: "Draft a cleaning and disinfection SOP for a commercial kitchen including frequency, chemicals, and records" },
+  { category: "document", label: "Temp monitoring log", text: "Generate a daily temperature monitoring log template for fridges, freezers, and hot-holding equipment" },
+  { category: "document", label: "Supplier approval", text: "Draft a supplier approval procedure for a bakery including questionnaire and ongoing monitoring" },
+  // Audit / compliance
+  { category: "audit", label: "BRC audit prep", text: "Check compliance gaps for a small food manufacturer preparing for a BRC Global Standard Issue 9 audit" },
+  { category: "audit", label: "Allergen audit", text: "Review my allergen management procedure for a sandwich production unit against Natasha's Law requirements" },
+  // Q&A
+  { category: "qa", label: "Allergen law", text: "What are the 14 allergens that must be declared under EU Regulation 1169/2011 and Natasha's Law?" },
+  { category: "qa", label: "Traceability rules", text: "What traceability records must a food business keep under Regulation (EC) No 178/2002?" },
 ];
+
+const CATEGORY_COLOUR: Record<string, string> = {
+  document: "text-[#7C3AED]",
+  audit: "text-[#D97706]",
+  qa: "text-[#E11D48]",
+};
 
 export default function ChatMessages({
   messages,
@@ -81,7 +90,9 @@ export default function ChatMessages({
                 onClick={() => { onSetPrompt(s.text); onFocusInput(); }}
                 className="rounded-xl border border-[#E2E8F0] bg-white px-3 py-2.5 text-left hover:bg-[#F8F9FB] hover:border-[#CBD5E1] transition-colors"
               >
-                <span className="block text-[10px] font-semibold uppercase tracking-wide text-[#E11D48] mb-0.5">{s.label}</span>
+                <span className={`block text-[10px] font-semibold uppercase tracking-wide mb-0.5 ${CATEGORY_COLOUR[s.category]}`}>
+                  {s.label}
+                </span>
                 <span className="block text-xs text-[#475569] leading-snug">{s.text}</span>
               </button>
             ))}
