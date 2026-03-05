@@ -126,7 +126,7 @@ export default function CookiesPage() {
           <h2 className="mb-3 text-xl font-semibold text-[#0F172A]">6. Contact</h2>
           <p>
             For questions about our use of cookies, contact us at{" "}
-            <a href="mailto:legal@pinkpepper.io" className="text-[#E11D48] hover:underline">legal@pinkpepper.io</a>.
+            <a href="mailto:support@pinkpepper.io" className="text-[#E11D48] hover:underline">support@pinkpepper.io</a>.
           </p>
         </section>
 
