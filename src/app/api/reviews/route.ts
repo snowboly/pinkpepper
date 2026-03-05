@@ -47,7 +47,7 @@ export async function GET(request: Request) {
   // When fetching all reviews, return full details (for /dashboard/reviews)
   const columns = conversationId
     ? "id,conversation_id,review_type,document_category,status,created_at"
-    : "id,conversation_id,review_type,document_category,status,notes,reviewer_notes,snapshot_content,created_at,updated_at,completed_at";
+    : "id,conversation_id,review_type,document_category,status,notes,reviewer_notes,reviewer_file_id,snapshot_content,created_at,updated_at,completed_at";
 
   let query = supabase
     .from("review_requests")

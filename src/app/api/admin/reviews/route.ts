@@ -37,7 +37,7 @@ export async function GET(request: Request) {
 
   let query = admin
     .from("review_requests")
-    .select("id,user_id,conversation_id,review_type,document_category,status,priority,notes,reviewer_notes,snapshot_content,created_at,updated_at,completed_at", { count: "exact" })
+    .select("id,user_id,conversation_id,review_type,document_category,status,priority,notes,reviewer_notes,reviewer_file_id,snapshot_content,created_at,updated_at,completed_at", { count: "exact" })
     .order("priority", { ascending: false })
     .order("created_at", { ascending: true })
     .range(offset, offset + PAGE_SIZE - 1);

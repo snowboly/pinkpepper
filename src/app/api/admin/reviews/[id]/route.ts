@@ -3,6 +3,7 @@ import { createClient } from "@/utils/supabase/server";
 import { createAdminClient } from "@/utils/supabase/admin";
 import { resolveUserAccess } from "@/lib/access";
 import { sendEmail } from "@/lib/email";
+import { uploadFile, BUCKETS } from "@/lib/storage";
 import {
   buildReviewPickedUpEmail,
   buildReviewCompletedEmail,
@@ -15,6 +16,39 @@ const VALID_TRANSITIONS: Record<string, string[]> = {
   queued: ["in_review", "rejected"],
   in_review: ["completed", "rejected"],
 };
+
+const ALLOWED_FILE_TYPES = new Set([
+  "application/pdf",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+]);
+
+async function parseBody(request: Request): Promise<{
+  status: string | undefined;
+  reviewer_notes: string;
+  file: File | null;
+}> {
+  const contentType = request.headers.get("content-type") ?? "";
+
+  if (contentType.startsWith("multipart/form-data")) {
+    const formData = await request.formData();
+    return {
+      status: formData.get("status")?.toString(),
+      reviewer_notes: formData.get("reviewer_notes")?.toString()?.trim() ?? "",
+      file: formData.get("file") as File | null,
+    };
+  }
+
+  const body = (await request.json()) as {
+    status?: string;
+    reviewer_notes?: string;
+  };
+
+  return {
+    status: body.status,
+    reviewer_notes: body.reviewer_notes?.trim() ?? "",
+    file: null,
+  };
+}
 
 export async function PATCH(
   request: Request,
@@ -42,13 +76,7 @@ export async function PATCH(
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  const body = (await request.json()) as {
-    status?: string;
-    reviewer_notes?: string;
-  };
-
-  const newStatus = body.status;
-  const reviewerNotes = body.reviewer_notes?.trim() ?? "";
+  const { status: newStatus, reviewer_notes: reviewerNotes, file } = await parseBody(request);
 
   if (!newStatus || !["in_review", "completed", "rejected"].includes(newStatus)) {
     return NextResponse.json({ error: "Invalid status." }, { status: 400 });
@@ -57,6 +85,14 @@ export async function PATCH(
   if ((newStatus === "completed" || newStatus === "rejected") && !reviewerNotes) {
     return NextResponse.json(
       { error: "reviewer_notes is required when completing or rejecting a review." },
+      { status: 400 }
+    );
+  }
+
+  // Validate file type if provided
+  if (file && file.size > 0 && !ALLOWED_FILE_TYPES.has(file.type)) {
+    return NextResponse.json(
+      { error: "Only PDF and DOCX files are accepted." },
       { status: 400 }
     );
   }
@@ -82,6 +118,29 @@ export async function PATCH(
     );
   }
 
+  // Upload reviewer file if provided
+  let reviewerFileId: string | null = null;
+  if (file && file.size > 0) {
+    try {
+      const buffer = Buffer.from(await file.arrayBuffer());
+      // Upload under the review user's ID so RLS policies work for their downloads
+      reviewerFileId = await uploadFile(
+        review.user_id,
+        "pro", // Admin uploads bypass tier quota concerns; use pro for max limits
+        buffer,
+        file.name,
+        file.type,
+        BUCKETS.review,
+        { reviewRequestId: id }
+      );
+    } catch (err) {
+      return NextResponse.json(
+        { error: err instanceof Error ? err.message : "File upload failed." },
+        { status: 400 }
+      );
+    }
+  }
+
   // Build update payload
   const updatePayload: Record<string, unknown> = {
     status: newStatus,
@@ -96,11 +155,15 @@ export async function PATCH(
     updatePayload.completed_at = new Date().toISOString();
   }
 
+  if (reviewerFileId) {
+    updatePayload.reviewer_file_id = reviewerFileId;
+  }
+
   const { data: updated, error: updateError } = await admin
     .from("review_requests")
     .update(updatePayload)
     .eq("id", id)
-    .select("id,status,reviewer_notes,completed_at,updated_at")
+    .select("id,status,reviewer_notes,reviewer_file_id,completed_at,updated_at")
     .single();
 
   if (updateError || !updated) {

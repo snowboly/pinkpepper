@@ -13,6 +13,7 @@ type ReviewRequest = {
   priority: string;
   notes: string | null;
   reviewer_notes: string | null;
+  reviewer_file_id: string | null;
   snapshot_content: string | null;
   created_at: string;
   updated_at: string;
@@ -68,6 +69,7 @@ export default function AdminReviewQueue() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [reviewerNotes, setReviewerNotes] = useState<Record<string, string>>({});
+  const [reviewerFiles, setReviewerFiles] = useState<Record<string, File>>({});
   const [error, setError] = useState<string | null>(null);
 
   const fetchReviews = useCallback(async () => {
@@ -102,15 +104,30 @@ export default function AdminReviewQueue() {
     setActionLoading(id);
     setError(null);
     try {
-      const res = await fetch(`/api/admin/reviews/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: newStatus, reviewer_notes: notes || undefined }),
-      });
+      const file = reviewerFiles[id];
+      let res: Response;
+
+      if (file) {
+        // Use FormData when a file is attached
+        const fd = new FormData();
+        fd.append("status", newStatus);
+        if (notes) fd.append("reviewer_notes", notes);
+        fd.append("file", file);
+        res = await fetch(`/api/admin/reviews/${id}`, { method: "PATCH", body: fd });
+      } else {
+        res = await fetch(`/api/admin/reviews/${id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status: newStatus, reviewer_notes: notes || undefined }),
+        });
+      }
+
       if (!res.ok) {
         const data = await res.json();
         throw new Error(data.error ?? "Failed to update review");
       }
+      // Clean up local state for this review
+      setReviewerFiles((prev) => { const next = { ...prev }; delete next[id]; return next; });
       await fetchReviews();
       setExpandedId(null);
     } catch (err) {
@@ -250,6 +267,22 @@ export default function AdminReviewQueue() {
                         </div>
                       )}
 
+                      {/* Existing attached file (read-only for completed/rejected) */}
+                      {!isActionable && r.reviewer_file_id && (
+                        <div>
+                          <p className="text-xs font-semibold uppercase tracking-wide text-[#94A3B8] mb-1">Attached Document</p>
+                          <a
+                            href={`/api/reviews/${r.id}/file`}
+                            className="inline-flex items-center gap-2 rounded-xl border border-[#E2E8F0] bg-white px-3 py-2 text-sm text-[#64748B] hover:bg-[#F8F9FB]"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            Download annotated document
+                          </a>
+                        </div>
+                      )}
+
                       {/* Reviewer notes input + actions (for actionable reviews) */}
                       {isActionable && (
                         <>
@@ -265,6 +298,32 @@ export default function AdminReviewQueue() {
                               placeholder="Add feedback for the user..."
                             />
                           </div>
+                          {/* File attachment (optional) */}
+                          <div>
+                            <label className="block text-xs font-semibold uppercase tracking-wide text-[#94A3B8] mb-1">
+                              Attach annotated document <span className="normal-case text-[#64748B]">(optional, PDF or DOCX)</span>
+                            </label>
+                            <div className="flex items-center gap-2">
+                              <input
+                                type="file"
+                                accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                                onChange={(e) => {
+                                  const f = e.target.files?.[0];
+                                  if (f) setReviewerFiles((prev) => ({ ...prev, [r.id]: f }));
+                                }}
+                                className="text-sm text-[#64748B] file:mr-2 file:rounded-full file:border file:border-[#E2E8F0] file:bg-white file:px-3 file:py-1 file:text-xs file:text-[#64748B] hover:file:bg-[#F8F9FB]"
+                              />
+                              {reviewerFiles[r.id] && (
+                                <button
+                                  onClick={() => setReviewerFiles((prev) => { const next = { ...prev }; delete next[r.id]; return next; })}
+                                  className="text-xs text-red-500 hover:text-red-700"
+                                >
+                                  Remove
+                                </button>
+                              )}
+                            </div>
+                          </div>
+
                           <div className="flex flex-wrap gap-2">
                             {r.status === "queued" && (
                               <button
