@@ -19,9 +19,9 @@ export default async function PricingPage() {
 
   const ctaBase =
     "mt-8 block w-full rounded-xl py-3.5 text-center text-sm font-semibold transition-colors";
-  const ctaPrimary = `${ctaBase} bg-[#F43F5E] text-white hover:bg-[#E11D48]`;
-  const ctaSecondary = `${ctaBase} border border-[#E2E8F0] bg-[#F8FAFC] text-[#0F172A] hover:bg-[#F1F5F9]`;
-  const ctaNeutral = `${ctaBase} border border-[#E2E8F0] bg-[#F8FAFC] text-[#0F172A] hover:bg-[#F1F5F9]`;
+  const ctaPrimary = `${ctaBase} bg-[#FDA4AF] text-[#9F1239] hover:bg-[#FECDD3]`;
+  const ctaSecondary = `${ctaBase} border border-[#E2E8F0] bg-[#F8FAFC] text-[#475569] hover:bg-[#F1F5F9]`;
+  const ctaNeutral = `${ctaBase} border border-[#E2E8F0] bg-[#F8FAFC] text-[#475569] hover:bg-[#F1F5F9]`;
 
   return (
     <main className="overflow-hidden">
@@ -231,6 +231,10 @@ export default async function PricingPage() {
               {
                 q: "Is VAT included in the prices shown?",
                 a: "Prices shown are exclusive of VAT. VAT is applied at checkout based on your location.",
+              },
+              {
+                q: "Are AI outputs suitable for direct use in audits or inspections?",
+                a: "PinkPepper generates AI-assisted drafts to support your compliance work. All outputs should be reviewed and approved by a qualified food safety professional before being used in audits, inspections, or submitted to enforcement authorities. Our Food Safety Specialist review service (Pro plan) is designed to help with exactly this.",
               },
             ].map(({ q, a }) => (
               <div key={q} className="rounded-2xl border border-[#E2E8F0] bg-white p-6">
