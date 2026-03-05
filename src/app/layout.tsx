@@ -19,6 +19,29 @@ export const metadata: Metadata = {
   title: "PinkPepper | AI Food Safety Assistant for EU & UK Businesses",
   description:
     "PinkPepper helps food businesses generate HACCP plans, SOPs, monitoring logs, allergen documentation, and traceability procedures.",
+  openGraph: {
+    title: "PinkPepper | AI Food Safety Assistant for EU & UK Businesses",
+    description:
+      "Generate HACCP plans, SOPs, allergen docs, and audit-ready compliance documentation with an AI trained for EU and UK food safety law.",
+    url: "https://pinkpepper.io",
+    siteName: "PinkPepper",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "PinkPepper — AI Food Safety Assistant for EU & UK Businesses",
+      },
+    ],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "PinkPepper | AI Food Safety Assistant",
+    description:
+      "Generate HACCP plans, SOPs, and allergen docs with an AI trained for EU & UK food safety compliance.",
+    images: ["/og-image.png"],
+  },
   icons: {
     icon: [
       { url: "/logo/favicon-32x32.png", sizes: "32x32", type: "image/png" },
