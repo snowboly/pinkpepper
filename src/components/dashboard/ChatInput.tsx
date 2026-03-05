@@ -19,6 +19,7 @@ type ChatInputProps = {
   onClearImage: () => void;
   onKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
   textareaRef: React.RefObject<HTMLTextAreaElement | null>;
+  onUpgradeForImages?: () => void;
 };
 
 export default function ChatInput({
@@ -36,6 +37,7 @@ export default function ChatInput({
   onClearImage,
   onKeyDown,
   textareaRef,
+  onUpgradeForImages,
 }: ChatInputProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -94,15 +96,20 @@ export default function ChatInput({
               </svg>
             </button>
           ) : (
-            <Link
-              href="/pricing"
-              className="flex-shrink-0 rounded-xl border border-dashed border-[#E2E8F0] bg-[#F8F9FB] p-2.5 text-[#CBD5E1]"
+            <button
+              type="button"
+              onClick={() => onUpgradeForImages?.()}
+              className="group relative flex-shrink-0 rounded-xl border border-dashed border-[#E2E8F0] bg-[#F8F9FB] p-2.5 text-[#CBD5E1] hover:border-[#E11D48] hover:text-[#E11D48] transition-colors"
               title="Upgrade to Plus or Pro to analyse photos"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
-            </Link>
+              {/* Tooltip */}
+              <span className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-36 rounded-lg bg-[#0F172A] px-2 py-1.5 text-center text-[10px] text-white opacity-0 group-hover:opacity-100 transition-opacity whitespace-normal">
+                Upgrade for photo analysis
+              </span>
+            </button>
           )}
 
           {/* Textarea */}
