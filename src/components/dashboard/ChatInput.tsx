@@ -14,6 +14,7 @@ type ChatInputProps = {
   tier: SubscriptionTier;
   onPromptChange: (s: string) => void;
   onSubmit: (e: FormEvent) => void;
+  onStop: () => void;
   onImageSelect: (f: File) => void;
   onClearImage: () => void;
   onKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
@@ -30,6 +31,7 @@ export default function ChatInput({
   tier,
   onPromptChange,
   onSubmit,
+  onStop,
   onImageSelect,
   onClearImage,
   onKeyDown,
@@ -117,23 +119,29 @@ export default function ChatInput({
             />
           </div>
 
-          {/* Send button */}
-          <button
-            type="submit"
-            disabled={loading || (!prompt.trim() && !attachedImage)}
-            className="flex-shrink-0 rounded-xl bg-[#E11D48] p-2.5 text-white hover:bg-[#BE123C] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-          >
-            {loading ? (
-              <svg className="h-5 w-5 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+          {/* Stop / Send button */}
+          {loading ? (
+            <button
+              type="button"
+              onClick={onStop}
+              className="flex-shrink-0 rounded-xl border-2 border-[#E11D48] bg-white p-2.5 text-[#E11D48] hover:bg-[#FEF2F2] transition-colors"
+              title="Stop generating"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                <rect x="6" y="6" width="12" height="12" rx="2" />
               </svg>
-            ) : (
+            </button>
+          ) : (
+            <button
+              type="submit"
+              disabled={!prompt.trim() && !attachedImage}
+              className="flex-shrink-0 rounded-xl bg-[#E11D48] p-2.5 text-white hover:bg-[#BE123C] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
               </svg>
-            )}
-          </button>
+            </button>
+          )}
         </form>
 
         <p className="mt-2 text-center text-[10px] text-[#94A3B8]">

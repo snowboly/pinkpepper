@@ -57,10 +57,31 @@ export default function ChatWorkspace({
 
   // ── UI state ──
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [isDraggingOver, setIsDraggingOver] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
 
   const canUploadImages = isAdmin || dailyImageUploads > 0;
+
+  // ── Drag & drop image onto chat area ──
+  function handleDragOver(e: React.DragEvent) {
+    if (!canUploadImages) return;
+    e.preventDefault();
+    setIsDraggingOver(true);
+  }
+
+  function handleDragLeave(e: React.DragEvent) {
+    if (e.currentTarget.contains(e.relatedTarget as Node)) return;
+    setIsDraggingOver(false);
+  }
+
+  function handleDrop(e: React.DragEvent) {
+    e.preventDefault();
+    setIsDraggingOver(false);
+    if (!canUploadImages) return;
+    const file = e.dataTransfer.files?.[0];
+    if (file) handleImageSelect(file);
+  }
 
   // ── Derived values ──
   const usageLabel = useMemo(
@@ -540,7 +561,20 @@ export default function ChatWorkspace({
         )}
 
         {/* Main chat area */}
-        <main className="flex flex-1 flex-col overflow-hidden">
+        <main
+          className={`relative flex flex-1 flex-col overflow-hidden transition-colors ${isDraggingOver ? "bg-[#FEF2F2] ring-2 ring-inset ring-[#E11D48]" : ""}`}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+        >
+          {isDraggingOver && canUploadImages && (
+            <div className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center">
+              <div className="rounded-2xl border-2 border-dashed border-[#E11D48] bg-white/90 px-8 py-6 text-center shadow-lg">
+                <p className="text-sm font-semibold text-[#E11D48]">Drop photo to analyse</p>
+                <p className="text-xs text-[#64748B] mt-1">Kitchen, label, or food product</p>
+              </div>
+            </div>
+          )}
           {/* Top bar */}
           <div className="flex-shrink-0 flex items-center gap-2 border-b border-[#E2E8F0] bg-white px-4 py-2.5">
             <button
@@ -632,6 +666,7 @@ export default function ChatWorkspace({
             tier={tier}
             onPromptChange={setPrompt}
             onSubmit={sendPrompt}
+            onStop={() => abortControllerRef.current?.abort()}
             onImageSelect={handleImageSelect}
             onClearImage={clearImage}
             onKeyDown={handleKeyDown}
