@@ -11,6 +11,8 @@ import ChatSidebar from "./ChatSidebar";
 import ChatMessages from "./ChatMessages";
 import ChatInput from "./ChatInput";
 import ReviewModal from "./ReviewModal";
+import OnboardingModal from "./OnboardingModal";
+import UpgradeModal from "./UpgradeModal";
 
 export default function ChatWorkspace({
   userEmail,
@@ -21,6 +23,7 @@ export default function ChatWorkspace({
   canExportPdf,
   canExportWord,
   isAdmin: initialIsAdmin = false,
+  onboardingCompleted = false,
 }: ChatWorkspaceProps) {
   // ── Core chat state ──
   const [messages, setMessages] = useState<Message[]>([]);
@@ -54,6 +57,12 @@ export default function ChatWorkspace({
   // ── Image attachment state ──
   const [attachedImage, setAttachedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+
+  // ── Onboarding state ──
+  const [showOnboarding, setShowOnboarding] = useState(!onboardingCompleted);
+
+  // ── Upgrade modal state ──
+  const [upgradeModalTrigger, setUpgradeModalTrigger] = useState<"message_limit" | "image_limit" | "export" | "review" | null>(null);
 
   // ── UI state ──
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -373,7 +382,11 @@ export default function ChatWorkspace({
           usage?: { used: number; limit: number | null; tier: SubscriptionTier; isAdmin?: boolean };
         };
         if (!res.ok) {
-          setError(data.error ?? "Request failed");
+          if (res.status === 402) {
+            setUpgradeModalTrigger("message_limit");
+          } else {
+            setError(data.error ?? "Request failed");
+          }
           setMessages((prev) => prev.slice(0, -1));
           setPrompt(value);
           setAttachedImage(currentImage);
@@ -417,11 +430,16 @@ export default function ChatWorkspace({
 
       if (!res.ok) {
         let errMsg = "Request failed";
+        let isLimit = res.status === 402;
         try {
           const data = await res.json();
           errMsg = data.error ?? errMsg;
         } catch { /* body may not be JSON */ }
-        setError(errMsg);
+        if (isLimit) {
+          setUpgradeModalTrigger("message_limit");
+        } else {
+          setError(errMsg);
+        }
         setMessages((prev) => prev.slice(0, -2)); // remove user + placeholder
         setPrompt(value);
         setLoading(false);
@@ -671,9 +689,24 @@ export default function ChatWorkspace({
             onClearImage={clearImage}
             onKeyDown={handleKeyDown}
             textareaRef={textareaRef}
+            onUpgradeForImages={() => setUpgradeModalTrigger("image_limit")}
           />
         </main>
       </div>
+
+      {/* Onboarding modal */}
+      {showOnboarding && !initialIsAdmin && (
+        <OnboardingModal onComplete={() => setShowOnboarding(false)} />
+      )}
+
+      {/* Upgrade modal */}
+      {upgradeModalTrigger && !isAdmin && (
+        <UpgradeModal
+          trigger={upgradeModalTrigger}
+          currentTier={tier}
+          onClose={() => setUpgradeModalTrigger(null)}
+        />
+      )}
 
       {/* Review modal */}
       <ReviewModal

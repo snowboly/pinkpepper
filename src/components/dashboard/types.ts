@@ -25,4 +25,5 @@ export type ChatWorkspaceProps = {
   canExportPdf: boolean;
   canExportWord: boolean;
   isAdmin?: boolean;
+  onboardingCompleted?: boolean;
 };
