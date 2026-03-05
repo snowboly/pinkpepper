@@ -19,7 +19,7 @@ export function buildWelcomeEmail(): { subject: string; html: string } {
           <li>Export documents as PDF or DOCX</li>
           <li>Upgrade to Plus or Pro for expert human reviews</li>
         </ul>`,
-        { bg: "#FFF1F2", border: "#FECDD3" }
+        { bg: "#FDEAEA", border: "#FECDD3" }
       )}
 
       ${btn(`${APP_URL}/dashboard`, "Go to Dashboard")}
@@ -28,7 +28,7 @@ export function buildWelcomeEmail(): { subject: string; html: string } {
 
       <p style="font-size:12px;color:#94A3B8;line-height:1.5;margin:0;">
         Need help getting started? Visit our
-        <a href="${APP_URL}/dashboard" style="color:#E11D48;text-decoration:none;">dashboard</a>
+        <a href="${APP_URL}/dashboard" style="color:#D96C6C;text-decoration:none;">dashboard</a>
         or reply to this email and our team will be happy to assist.
       </p>
     `),
