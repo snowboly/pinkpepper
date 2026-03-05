@@ -10,7 +10,6 @@ import {
   ClipboardCheck,
   Download,
   MessageSquare,
-  Shield,
   Sparkles,
   Star,
   Users,
@@ -148,77 +147,132 @@ export default function HomePage() {
         </div>
 
         <div className="pp-container relative z-10">
-          <div className="grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]">
-            <div className="text-center lg:text-left">
-              <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-[#E2E8F0] bg-[#F8FAFC] px-5 py-2.5 text-sm font-semibold text-[#475569] shadow-sm">
-                <Sparkles className="h-4 w-4" />
-                Specialised AI food safety assistant
-              </div>
+          <div className="mx-auto max-w-5xl text-center">
+            <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-[#E2E8F0] bg-[#F8FAFC] px-5 py-2.5 text-sm font-semibold text-[#475569] shadow-sm">
+              <Sparkles className="h-4 w-4" />
+              Specialised AI food safety assistant
+            </div>
 
-              <h1 className="pp-display mb-6 max-w-3xl text-5xl leading-[1.04] tracking-[-0.02em] text-[#0F172A] md:text-6xl lg:text-7xl">
-                Not another generic chatbot.{" "}
-                <span className="bg-gradient-to-r from-[#E11D48] via-[#F43F5E] to-[#E11D48] bg-clip-text text-transparent">
-                  A specialised food safety agent.
-                </span>
-              </h1>
+            <h1 className="pp-display mx-auto mb-6 max-w-4xl text-5xl leading-[1.04] tracking-[-0.02em] text-[#0F172A] md:text-6xl lg:text-7xl">
+              Not another generic chatbot.{" "}
+              <span className="bg-gradient-to-r from-[#E11D48] via-[#F43F5E] to-[#E11D48] bg-clip-text text-transparent">
+                A specialised food safety agent.
+              </span>
+            </h1>
 
-              <p className="mb-10 max-w-2xl text-lg leading-relaxed text-[#475569] md:text-xl">
-                PinkPepper is trained for HACCP, allergen management, SOP generation, and inspection prep.
-                Create UK/EU-ready compliance documents that are built for real kitchen and audit workflows.
-              </p>
+            <p className="mx-auto mb-10 max-w-3xl text-lg leading-relaxed text-[#475569] md:text-xl">
+              PinkPepper is trained for HACCP, allergen management, SOP generation, and inspection prep.
+              Create UK/EU-ready compliance documents that are built for real kitchen and audit workflows.
+            </p>
 
-              <div className="mb-8 grid max-w-2xl gap-3 text-left md:grid-cols-3">
-                {differentiators.map((item) => (
-                  <div key={item.title} className="rounded-2xl border border-[#E2E8F0] bg-white/80 p-4">
-                    <p className="text-sm font-semibold text-[#0F172A]">{item.title}</p>
-                    <p className="mt-1 text-sm text-[#64748B]">{item.description}</p>
-                  </div>
-                ))}
-              </div>
-
-              <form onSubmit={handleChatSubmit} className="w-full max-w-2xl">
-                <div
-                  className={`group relative overflow-hidden rounded-2xl border bg-white shadow-[0_8px_40px_rgba(0,0,0,0.06)] transition-all duration-300 ${
-                    isFocused ? "border-[#E11D48]/40 shadow-[0_8px_40px_rgba(225,29,72,0.10)]" : "border-[#E2E8F0] hover:border-[#CBD5E1]"
-                  }`}
-                >
-                  <div className="flex items-center gap-3 p-3 md:gap-4 md:p-4">
-                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-[#F8FAFC]">
-                      <MessageSquare className="h-5 w-5 text-[#94A3B8]" />
-                    </div>
-                    <input
-                      type="text"
-                      value={inputValue}
-                      onChange={(e) => setInputValue(e.target.value)}
-                      onFocus={() => setIsFocused(true)}
-                      onBlur={() => setIsFocused(false)}
-                      placeholder="Create a HACCP plan for a cafe in Dublin..."
-                      className="flex-1 bg-transparent text-base text-[#0F172A] placeholder-[#94A3B8] outline-none md:text-lg"
-                    />
-                    <button
-                      type="submit"
-                      className="inline-flex items-center gap-2 rounded-xl bg-[#E11D48] px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-[#E11D48]/20 transition-all hover:bg-[#BE123C] hover:shadow-xl hover:shadow-[#E11D48]/25 md:px-5 md:py-3 md:text-base"
-                    >
-                      <span className="hidden sm:inline">Start free</span>
-                      <ArrowRight className="h-5 w-5" />
-                    </button>
-                  </div>
+            <div className="mx-auto mb-10 grid max-w-5xl gap-4 text-left md:grid-cols-3">
+              {differentiators.map((item) => (
+                <div key={item.title} className="rounded-2xl border border-[#E2E8F0] bg-white/90 p-5">
+                  <p className="text-sm font-semibold text-[#0F172A]">{item.title}</p>
+                  <p className="mt-2 text-sm leading-relaxed text-[#64748B]">{item.description}</p>
                 </div>
-              </form>
+              ))}
+            </div>
 
-              <div className="mt-7 flex flex-wrap items-center justify-center gap-5 text-sm text-[#64748B] lg:justify-start">
-                <span className="inline-flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                  No credit card required
-                </span>
-                <span className="inline-flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                  EU and UK regulations
-                </span>
-                <span className="inline-flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                  PDF and Word export
-                </span>
+            <form onSubmit={handleChatSubmit} className="mx-auto w-full max-w-3xl">
+              <div
+                className={`group relative overflow-hidden rounded-2xl border bg-white shadow-[0_20px_70px_rgba(15,23,42,0.10)] transition-all duration-300 ${
+                  isFocused ? "border-[#E11D48]/40 shadow-[0_20px_70px_rgba(225,29,72,0.18)]" : "border-[#E2E8F0] hover:border-[#CBD5E1]"
+                }`}
+              >
+                <div className="flex items-center gap-3 p-3 md:gap-4 md:p-4">
+                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-[#F8FAFC]">
+                    <MessageSquare className="h-5 w-5 text-[#94A3B8]" />
+                  </div>
+                  <input
+                    type="text"
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    onFocus={() => setIsFocused(true)}
+                    onBlur={() => setIsFocused(false)}
+                    placeholder="Create a HACCP plan for a cafe in Dublin..."
+                    className="flex-1 bg-transparent text-base text-[#0F172A] placeholder-[#94A3B8] outline-none md:text-lg"
+                  />
+                  <button
+                    type="submit"
+                    className="inline-flex items-center gap-2 rounded-xl bg-[#E11D48] px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-[#E11D48]/20 transition-all hover:bg-[#BE123C] hover:shadow-xl hover:shadow-[#E11D48]/25 md:px-5 md:py-3 md:text-base"
+                  >
+                    <span className="hidden sm:inline">Start free</span>
+                    <ArrowRight className="h-5 w-5" />
+                  </button>
+                </div>
+              </div>
+            </form>
+
+            <div className="mt-7 flex flex-wrap items-center justify-center gap-5 text-sm text-[#64748B]">
+              <span className="inline-flex items-center gap-2">
+                <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                No credit card required
+              </span>
+              <span className="inline-flex items-center gap-2">
+                <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                EU and UK regulations
+              </span>
+              <span className="inline-flex items-center gap-2">
+                <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                PDF and Word export
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="relative overflow-hidden border-y border-[#F1F5F9] bg-[#F8FAFC] py-24">
+        <div className="pp-container">
+          <div className="mb-14 max-w-xl">
+            <h2 className="pp-display text-4xl font-semibold tracking-[-0.01em] text-[#0F172A] md:text-5xl">
+              Built for operators, not just prompts
+            </h2>
+            <p className="mt-4 text-lg text-[#475569]">
+              PinkPepper combines practical generation with traceable references and export-ready structure.
+            </p>
+          </div>
+
+          <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+            <div className="grid gap-6 md:grid-cols-2">
+              <div className="group rounded-2xl border border-[#E2E8F0] bg-white p-7 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#CBD5E1] hover:shadow-xl hover:shadow-black/[0.04]">
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[#FFF1F2] text-[#E11D48]">
+                  <BookOpen className="h-6 w-6" />
+                </div>
+                <h3 className="mb-2 text-xl font-semibold text-[#0F172A]">Regulation-grounded</h3>
+                <p className="text-[#64748B]">
+                  Responses anchored in EC 852/2004, UK FSA guidance, and Codex HACCP references.
+                </p>
+              </div>
+
+              <div className="group rounded-2xl border border-[#E2E8F0] bg-white p-7 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#CBD5E1] hover:shadow-xl hover:shadow-black/[0.04]">
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[#FFF1F2] text-[#E11D48]">
+                  <ClipboardCheck className="h-6 w-6" />
+                </div>
+                <h3 className="mb-2 text-xl font-semibold text-[#0F172A]">HACCP in minutes</h3>
+                <p className="text-[#64748B]">
+                  Build hazard analysis, CCPs, monitoring logic, and corrective controls quickly.
+                </p>
+              </div>
+
+              <div className="group rounded-2xl border border-[#E2E8F0] bg-white p-7 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#CBD5E1] hover:shadow-xl hover:shadow-black/[0.04]">
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[#FFF1F2] text-[#E11D48]">
+                  <Download className="h-6 w-6" />
+                </div>
+                <h3 className="mb-2 text-xl font-semibold text-[#0F172A]">Audit-ready exports</h3>
+                <p className="text-[#64748B]">
+                  Export structured PDF and Word files with clean formatting and traceable sections.
+                </p>
+              </div>
+
+              <div className="group rounded-2xl border border-[#E2E8F0] bg-white p-7 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#CBD5E1] hover:shadow-xl hover:shadow-black/[0.04]">
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[#FFF1F2] text-[#E11D48]">
+                  <Users className="h-6 w-6" />
+                </div>
+                <h3 className="mb-2 text-xl font-semibold text-[#0F172A]">Expert review loop</h3>
+                <p className="text-[#64748B]">
+                  Route drafts to qualified reviewers before inspection or supplier audits.
+                </p>
               </div>
             </div>
 
@@ -284,90 +338,6 @@ export default function HomePage() {
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="relative overflow-hidden border-y border-[#F1F5F9] bg-[#F8FAFC] py-24">
-        <div className="pp-container">
-          <div className="mb-14 max-w-xl">
-            <h2 className="pp-display text-4xl font-semibold tracking-[-0.01em] text-[#0F172A] md:text-5xl">
-              Built for operators, not just prompts
-            </h2>
-            <p className="mt-4 text-lg text-[#475569]">
-              PinkPepper combines practical generation with traceable references and export-ready structure.
-            </p>
-          </div>
-
-          <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-            <div className="grid gap-6 md:grid-cols-2">
-              <div className="group rounded-2xl border border-[#E2E8F0] bg-white p-7 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#CBD5E1] hover:shadow-xl hover:shadow-black/[0.04]">
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[#FFF1F2] text-[#E11D48]">
-                  <BookOpen className="h-6 w-6" />
-                </div>
-                <h3 className="mb-2 text-xl font-semibold text-[#0F172A]">Regulation-grounded</h3>
-                <p className="text-[#64748B]">
-                  Responses anchored in EC 852/2004, UK FSA guidance, and Codex HACCP references.
-                </p>
-              </div>
-
-              <div className="group rounded-2xl border border-[#E2E8F0] bg-white p-7 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#CBD5E1] hover:shadow-xl hover:shadow-black/[0.04]">
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[#FFF1F2] text-[#E11D48]">
-                  <ClipboardCheck className="h-6 w-6" />
-                </div>
-                <h3 className="mb-2 text-xl font-semibold text-[#0F172A]">HACCP in minutes</h3>
-                <p className="text-[#64748B]">
-                  Build hazard analysis, CCPs, monitoring logic, and corrective controls quickly.
-                </p>
-              </div>
-
-              <div className="group rounded-2xl border border-[#E2E8F0] bg-white p-7 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#CBD5E1] hover:shadow-xl hover:shadow-black/[0.04]">
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[#FFF1F2] text-[#E11D48]">
-                  <Download className="h-6 w-6" />
-                </div>
-                <h3 className="mb-2 text-xl font-semibold text-[#0F172A]">Audit-ready exports</h3>
-                <p className="text-[#64748B]">
-                  Export structured PDF and Word files with clean formatting and traceable sections.
-                </p>
-              </div>
-
-              <div className="group rounded-2xl border border-[#E2E8F0] bg-white p-7 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#CBD5E1] hover:shadow-xl hover:shadow-black/[0.04]">
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[#FFF1F2] text-[#E11D48]">
-                  <Users className="h-6 w-6" />
-                </div>
-                <h3 className="mb-2 text-xl font-semibold text-[#0F172A]">Expert review loop</h3>
-                <p className="text-[#64748B]">
-                  Route drafts to qualified reviewers before inspection or supplier audits.
-                </p>
-              </div>
-            </div>
-
-            <div className="relative rounded-3xl border border-[#E2E8F0] bg-gradient-to-b from-white to-[#F8FAFC] p-8">
-              <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-[#FFF1F2] px-3 py-1 text-xs font-semibold text-[#E11D48]">
-                <Shield className="h-3.5 w-3.5" />
-                Compliance cockpit
-              </div>
-              <h3 className="pp-display mb-4 text-3xl leading-tight text-[#0F172A]">
-                One workspace for plans, proof, and progress
-              </h3>
-              <p className="text-[#475569]">
-                Keep recurring tasks visible, generate missing documents, and maintain evidence trails in one flow.
-              </p>
-              <ul className="mt-6 space-y-3">
-                <li className="flex items-center gap-2 text-sm text-[#475569]">
-                  <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                  Monthly hygiene and temperature checklists
-                </li>
-                <li className="flex items-center gap-2 text-sm text-[#475569]">
-                  <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                  Auto-linked sources in assistant responses
-                </li>
-                <li className="flex items-center gap-2 text-sm text-[#475569]">
-                  <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                  Team workflows across multiple sites
-                </li>
-              </ul>
             </div>
           </div>
         </div>
