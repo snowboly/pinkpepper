@@ -222,6 +222,22 @@ export default function HomePage() {
         </div>
       </section>
 
+      <section className="border-b border-[#F1F5F9] bg-white py-5">
+        <div className="pp-container">
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            <span className="text-xs font-medium text-[#94A3B8] mr-1">Grounded in:</span>
+            {["EC 852/2004", "EU 1169/2011", "EC 178/2002", "UK FSA Guidance", "Codex HACCP", "BRCGS-Ready"].map((reg) => (
+              <span
+                key={reg}
+                className="rounded-full border border-[#E2E8F0] bg-[#F8FAFC] px-3 py-1 text-xs font-medium text-[#475569]"
+              >
+                {reg}
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section className="relative overflow-hidden border-y border-[#F1F5F9] bg-[#F8FAFC] py-24">
         <div className="pp-container">
           <div className="mb-14 max-w-xl">
@@ -406,10 +422,10 @@ export default function HomePage() {
               </div>
               <div className="my-6 border-t border-[#F1F5F9]" />
               <ul className="flex-1 space-y-3.5 text-sm text-[#475569]">
-                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />1,000 messages per day</li>
-                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />20 image uploads per day</li>
-                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />Word &amp; PDF export</li>
-                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />3 review credits per month</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-600" />1,000 messages per day</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-600" />20 image uploads per day</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-600" />Word &amp; PDF export</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-600" />3 review credits per month</li>
               </ul>
               <Link href="/signup?plan=pro" className="mt-8 block rounded-xl border border-[#E2E8F0] bg-white py-3.5 text-center text-sm font-semibold text-[#0F172A] transition-colors hover:bg-[#F8FAFC]">
                 Choose Pro
