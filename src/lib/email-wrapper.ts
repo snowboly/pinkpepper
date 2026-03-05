@@ -8,7 +8,7 @@ export function btn(href: string, label: string): string {
   return `
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-top:24px;">
       <tr>
-        <td align="left" style="border-radius:24px;background:#E11D48;">
+        <td align="left" style="border-radius:24px;background:#D96C6C;">
           <a href="${href}" style="display:inline-block;padding:13px 28px;color:#ffffff;text-decoration:none;font-size:15px;font-weight:600;border-radius:24px;letter-spacing:-0.01em;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">${label}</a>
         </td>
       </tr>
@@ -53,7 +53,7 @@ export function wrapEmail(body: string): string {
 
           <!-- ── Header ── -->
           <tr>
-            <td style="background:#E11D48;padding:28px 32px;text-align:center;">
+            <td style="background:#D96C6C;padding:28px 32px;text-align:center;">
               <img src="${LOGO_URL}" alt="PinkPepper" height="48" style="display:block;margin:0 auto;border:0;outline:none;text-decoration:none;">
             </td>
           </tr>

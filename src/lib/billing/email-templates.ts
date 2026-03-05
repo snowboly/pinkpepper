@@ -54,7 +54,7 @@ export function buildSubscriptionActivatedEmail(input: {
           ? infoCard(
               `<p style="margin:0 0 6px;font-size:13px;color:#9F1239;text-transform:uppercase;letter-spacing:0.05em;font-weight:600;">What's included in ${name}</p>
               ${featuresList}`,
-              { bg: "#FFF1F2", border: "#FECDD3" }
+              { bg: "#FDEAEA", border: "#FECDD3" }
             )
           : ""
       }
