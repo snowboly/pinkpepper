@@ -152,13 +152,9 @@ export default async function PricingPage() {
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-600" />
                   Word &amp; PDF export
                 </li>
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-600" />
-                  3 review credits/month
-                </li>
                 <li className="flex items-start gap-2.5 font-medium text-emerald-700">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-600" />
-                  Full HACCP &amp; document reviews — Pro only
+                  Food Safety Specialist reviews
                 </li>
               </ul>
               <PricingActions
