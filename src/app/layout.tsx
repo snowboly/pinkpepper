@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Manrope, Space_Grotesk } from "next/font/google";
-import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { SiteFooter, SiteHeader } from "@/components/site/chrome";
+import { CookieBanner } from "@/components/site/CookieBanner";
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -39,7 +39,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <SiteHeader />
         {children}
         <SiteFooter />
-        <Analytics />
+        <CookieBanner />
       </body>
     </html>
   );
