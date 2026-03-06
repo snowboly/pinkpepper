@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import {
   Brain,
@@ -43,13 +42,8 @@ export default function AboutPage() {
         <div className="pp-container max-w-4xl">
           <div className="flex flex-col items-center gap-10 md:flex-row md:items-start md:gap-14">
             <div className="flex-shrink-0">
-              <div className="relative h-36 w-36 overflow-hidden rounded-2xl border-2 border-[#E11D48]/20 shadow-lg shadow-[#E11D48]/[0.06]">
-                <Image
-                  src="/images/dr-joao.jpg"
-                  alt="Dr Joao — Founder of PinkPepper"
-                  fill
-                  className="object-cover"
-                />
+              <div className="flex h-36 w-36 items-center justify-center rounded-2xl border-2 border-[#E11D48]/20 bg-gradient-to-br from-[#FFF1F2] to-[#FFE4E6] shadow-lg shadow-[#E11D48]/[0.06]">
+                <span className="text-4xl font-black tracking-tight text-[#E11D48]">DJ</span>
               </div>
               <p className="mt-3 text-center text-sm font-semibold text-[#0F172A]">
                 Dr&nbsp;Joao
