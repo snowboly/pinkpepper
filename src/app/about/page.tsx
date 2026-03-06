@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import {
   Brain,
@@ -43,13 +42,8 @@ export default function AboutPage() {
         <div className="pp-container max-w-4xl">
           <div className="flex flex-col items-center gap-10 md:flex-row md:items-start md:gap-14">
             <div className="flex-shrink-0">
-              <div className="relative h-36 w-36 overflow-hidden rounded-2xl border-2 border-[#E11D48]/20 shadow-lg shadow-[#E11D48]/[0.06]">
-                <Image
-                  src="/images/dr-joao.jpg"
-                  alt="Dr Joao — Founder of PinkPepper"
-                  fill
-                  className="object-cover"
-                />
+              <div className="flex h-36 w-36 items-center justify-center rounded-2xl border-2 border-[#E11D48]/20 bg-gradient-to-br from-[#FFF1F2] to-[#FFE4E6] shadow-lg shadow-[#E11D48]/[0.06]">
+                <span className="text-4xl font-black tracking-tight text-[#E11D48]">DJ</span>
               </div>
               <p className="mt-3 text-center text-sm font-semibold text-[#0F172A]">
                 Dr&nbsp;Joao
@@ -77,8 +71,7 @@ export default function AboutPage() {
                 >
                   iLoveHACCP
                 </a>
-                &nbsp;&mdash; a free HACCP plan generator used by food businesses
-                across Europe&nbsp;&mdash; one thing became clear: creating the
+                &nbsp;&mdash; a free tool for building HACCP plans for EU&nbsp;&amp;&nbsp;UK food businesses&nbsp;&mdash; one thing became clear: creating the
                 plan is only the beginning. Businesses need ongoing, day-to-day
                 guidance on SOPs, allergen management, audit preparation, and
                 regulatory changes.
@@ -262,8 +255,7 @@ export default function AboutPage() {
             >
               iLoveHACCP.com
             </a>
-            , a free HACCP plan builder trusted by food businesses across
-            Europe. While iLoveHACCP helps you create the plan, PinkPepper is
+            , a free HACCP plan builder for EU&nbsp;&amp;&nbsp;UK food businesses. While iLoveHACCP helps you create the plan, PinkPepper is
             your ongoing compliance companion&nbsp;&mdash; answering questions,
             generating documents, and connecting you with experts.
           </p>
