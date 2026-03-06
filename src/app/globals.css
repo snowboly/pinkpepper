@@ -48,6 +48,10 @@ summary {
   cursor: pointer;
 }
 
+summary::-webkit-details-marker {
+  display: none;
+}
+
 button:disabled,
 input[type="button"]:disabled,
 input[type="submit"]:disabled,
