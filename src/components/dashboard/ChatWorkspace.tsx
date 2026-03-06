@@ -924,6 +924,17 @@ export default function ChatWorkspace({
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
         >
+          <button
+            onClick={() => setSidebarOpen((v) => !v)}
+            className={`absolute left-3 top-3 z-30 rounded-lg border border-[#E2E8F0] bg-white p-1.5 text-[#64748B] shadow-sm hover:bg-[#F1F5F9] transition-colors ${
+              sidebarOpen ? "md:hidden" : ""
+            }`}
+            title={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
           {isDraggingOver && canUploadImages && (
             <div className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center">
               <div className="rounded-2xl border-2 border-dashed border-[#E11D48] bg-white/90 px-8 py-6 text-center shadow-lg">
@@ -932,20 +943,46 @@ export default function ChatWorkspace({
               </div>
             </div>
           )}
-          {/* Top bar */}
-          <div className="flex-shrink-0 flex items-center gap-2 border-b border-[#E2E8F0] bg-white px-4 py-2.5">
-            <button
-              onClick={() => setSidebarOpen((v) => !v)}
-              className="rounded-lg p-1.5 text-[#64748B] hover:bg-[#F1F5F9] transition-colors"
-              title={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
 
-            <div className="ml-auto flex items-center gap-2">
-              <div className="mr-2 hidden md:flex items-center rounded-full border border-[#E2E8F0] bg-[#F8FAFC] p-0.5">
+          {/* Error banners */}
+          {(error || billingError) && (
+            <div className="flex-shrink-0 bg-red-50 border-b border-red-200 px-4 py-2 text-sm text-red-700 flex items-center justify-between">
+              <span>{error ?? billingError}</span>
+              <button onClick={() => { setError(null); setBillingError(null); }} className="text-red-400 hover:text-red-600">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          )}
+
+          {/* Messages */}
+          <ChatMessages
+            messages={messages}
+            loading={loading}
+            loadingMessages={loadingMessages}
+            conversationId={conversationId}
+            reviewEligible={reviewEligible}
+            canUploadImages={canUploadImages}
+            onSetPrompt={setPrompt}
+            onFocusInput={() => textareaRef.current?.focus()}
+            onQuickSuggestion={(suggestion) => {
+              if (workspaceMode === "virtual_audit") {
+                void sendPromptValue(`Start virtual audit focus: ${suggestion.text}`);
+                return;
+              }
+              if (suggestion.category === "document") {
+                startDocumentWizard(suggestion);
+              } else {
+                void sendPromptValue(suggestion.text);
+              }
+            }}
+            onRequestReview={() => setReviewModalOpen(true)}
+          />
+
+          <div className="flex-shrink-0 border-t border-[#E2E8F0] bg-white px-4 py-2">
+            <div className="mx-auto flex max-w-5xl items-center gap-2 overflow-x-auto">
+              <div className="flex items-center rounded-full border border-[#E2E8F0] bg-[#F8FAFC] p-0.5">
                 <button
                   type="button"
                   onClick={() => switchMode("ask")}
@@ -1019,42 +1056,6 @@ export default function ChatWorkspace({
             </div>
           </div>
 
-          {/* Error banners */}
-          {(error || billingError) && (
-            <div className="flex-shrink-0 bg-red-50 border-b border-red-200 px-4 py-2 text-sm text-red-700 flex items-center justify-between">
-              <span>{error ?? billingError}</span>
-              <button onClick={() => { setError(null); setBillingError(null); }} className="text-red-400 hover:text-red-600">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-          )}
-
-          {/* Messages */}
-          <ChatMessages
-            messages={messages}
-            loading={loading}
-            loadingMessages={loadingMessages}
-            conversationId={conversationId}
-            reviewEligible={reviewEligible}
-            canUploadImages={canUploadImages}
-            onSetPrompt={setPrompt}
-            onFocusInput={() => textareaRef.current?.focus()}
-            onQuickSuggestion={(suggestion) => {
-              if (workspaceMode === "virtual_audit") {
-                void sendPromptValue(`Start virtual audit focus: ${suggestion.text}`);
-                return;
-              }
-              if (suggestion.category === "document") {
-                startDocumentWizard(suggestion);
-              } else {
-                void sendPromptValue(suggestion.text);
-              }
-            }}
-            onRequestReview={() => setReviewModalOpen(true)}
-          />
-
           {/* Input */}
           <ChatInput
             prompt={prompt}
@@ -1062,8 +1063,6 @@ export default function ChatWorkspace({
             attachedImage={attachedImage}
             imagePreview={imagePreview}
             canUploadImages={canUploadImages}
-            isAdmin={isAdmin}
-            tier={tier}
             onPromptChange={setPrompt}
             onSubmit={sendPrompt}
             onStop={() => abortControllerRef.current?.abort()}

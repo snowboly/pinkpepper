@@ -1,8 +1,6 @@
 ﻿"use client";
 
 import { FormEvent, useCallback, useEffect, useRef } from "react";
-import Link from "next/link";
-import type { SubscriptionTier } from "@/lib/tier";
 
 const MAX_PROMPT_CHARS = 2500;
 
@@ -12,8 +10,6 @@ type ChatInputProps = {
   attachedImage: File | null;
   imagePreview: string | null;
   canUploadImages: boolean;
-  isAdmin: boolean;
-  tier: SubscriptionTier;
   onPromptChange: (s: string) => void;
   onSubmit: (e: FormEvent) => void;
   onStop: () => void;
@@ -31,8 +27,6 @@ export default function ChatInput({
   attachedImage,
   imagePreview,
   canUploadImages,
-  isAdmin,
-  tier,
   onPromptChange,
   onSubmit,
   onStop,
@@ -67,7 +61,7 @@ export default function ChatInput({
   const remainingChars = MAX_PROMPT_CHARS - prompt.length;
 
   return (
-    <div className="flex-shrink-0 border-t border-[#E2E8F0] bg-white px-4 py-3">
+    <div className="flex-shrink-0 bg-white px-4 py-3">
       <div className="mx-auto max-w-5xl">
         {imagePreview && (
           <div className="mb-2 flex items-start gap-2">
@@ -179,15 +173,6 @@ export default function ChatInput({
           )}
         </form>
 
-        <p className="mt-2 text-center text-xs text-[#94A3B8]">
-          AI-assisted outputs must be reviewed by qualified personnel before use.
-          {!isAdmin && tier === "free" && (
-            <>
-              {" · "}
-              <Link href="/pricing" className="underline hover:text-[#64748B]">Upgrade for photo analysis &amp; exports</Link>
-            </>
-          )}
-        </p>
       </div>
     </div>
   );

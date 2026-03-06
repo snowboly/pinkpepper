@@ -94,6 +94,17 @@ export default function ChatSidebar({
   onDeleteProject,
   onRefreshBilling,
 }: ChatSidebarProps) {
+  const userInitials = (() => {
+    const local = userEmail.split("@")[0] ?? "";
+    const tokens = local.split(/[._-]+/).filter(Boolean);
+    if (tokens.length >= 2) {
+      return `${tokens[0][0] ?? ""}${tokens[1][0] ?? ""}`.toUpperCase();
+    }
+    if (tokens.length === 1) {
+      return tokens[0].slice(0, 2).toUpperCase();
+    }
+    return "U";
+  })();
   // Conversation rename
   const [renamingId, setRenamingId] = useState<string | null>(null);
   const [renameValue, setRenameValue] = useState("");
@@ -578,7 +589,7 @@ export default function ChatSidebar({
         </a>
         <div className="flex items-center gap-2">
           <div className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[#E11D48] text-[9px] font-bold text-white uppercase">
-            {userEmail.charAt(0)}
+            {userInitials}
           </div>
           <p className="text-xs text-[#94A3B8] truncate flex-1">{userEmail}</p>
           <a
