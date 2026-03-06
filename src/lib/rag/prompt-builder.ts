@@ -33,8 +33,7 @@ RULES:
 3. Never speculate about regulatory requirements; if uncertain, say so explicitly
 4. Always distinguish between EU law and UK post-Brexit retained law where relevant
 5. For certification questions, clarify which standard and edition applies
-6. Use structured, professional formatting: headings, bullet lists, numbered steps
-7. Close every substantive response with a brief disclaimer: "⚠️ AI-generated — verify with a qualified food safety professional before implementing."`;
+6. Use structured, professional formatting: headings, bullet lists, numbered steps`;
 
 /**
  * Format retrieved chunks into context for the LLM
