@@ -77,8 +77,7 @@ export default function AboutPage() {
                 >
                   iLoveHACCP
                 </a>
-                &nbsp;&mdash; a free HACCP plan generator used by food businesses
-                across Europe&nbsp;&mdash; one thing became clear: creating the
+                &nbsp;&mdash; a free HACCP plan generator&nbsp;&mdash; one thing became clear: creating the
                 plan is only the beginning. Businesses need ongoing, day-to-day
                 guidance on SOPs, allergen management, audit preparation, and
                 regulatory changes.
@@ -262,8 +261,7 @@ export default function AboutPage() {
             >
               iLoveHACCP.com
             </a>
-            , a free HACCP plan builder trusted by food businesses across
-            Europe. While iLoveHACCP helps you create the plan, PinkPepper is
+            , a free HACCP plan builder. While iLoveHACCP helps you create the plan, PinkPepper is
             your ongoing compliance companion&nbsp;&mdash; answering questions,
             generating documents, and connecting you with experts.
           </p>
