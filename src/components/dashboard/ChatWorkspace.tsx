@@ -7,13 +7,118 @@ import { TIER_CAPABILITIES } from "@/lib/tier";
 import type { Citation } from "@/lib/rag/citations";
 import type { Message, Conversation, Project, ChatWorkspaceProps } from "./types";
 import ChatSidebar from "./ChatSidebar";
-import ChatMessages from "./ChatMessages";
+import ChatMessages, { type StarterSuggestion } from "./ChatMessages";
 import ChatInput from "./ChatInput";
 import ReviewModal from "./ReviewModal";
 import OnboardingModal from "./OnboardingModal";
 import UpgradeModal from "./UpgradeModal";
 
 type StreamUsage = { used: number; limit: number | null; tier: SubscriptionTier; isAdmin?: boolean };
+type WorkspaceMode = "ask" | "virtual_audit";
+type DocWizard = {
+  id: string;
+  title: string;
+  intro: string;
+  questions: string[];
+  buildPrompt: (answers: string[]) => string;
+};
+
+const DOC_WIZARDS: Record<string, DocWizard> = {
+  "HACCP plan": {
+    id: "haccp_plan",
+    title: "HACCP Plan",
+    intro: "Great choice. I will ask a few quick questions, then generate a complete HACCP plan you can review and export.",
+    questions: [
+      "What is your business type, location (country), and service style (e.g., dine-in, takeaway, manufacturing)?",
+      "What products/menu items are in scope for this HACCP plan?",
+      "List the main process steps from receiving to service/sale.",
+      "Which hazards are most relevant in your operation (biological, chemical, physical, allergens)?",
+      "What control measures and critical limits do you currently use (temperatures, times, checks)?",
+      "Who is responsible for monitoring, corrective actions, and verification?",
+    ],
+    buildPrompt: (answers) =>
+      `Create a complete, audit-ready HACCP Plan document using the business details below.\n\n` +
+      `Business details:\n` +
+      `1) ${answers[0] ?? ""}\n` +
+      `2) ${answers[1] ?? ""}\n` +
+      `3) ${answers[2] ?? ""}\n` +
+      `4) ${answers[3] ?? ""}\n` +
+      `5) ${answers[4] ?? ""}\n` +
+      `6) ${answers[5] ?? ""}\n\n` +
+      `Output requirements:\n` +
+      `- Full HACCP structure: scope, product/process description, flow, hazard analysis, CCPs, critical limits, monitoring, corrective actions, verification, records.\n` +
+      `- Use clear headings and practical tables.\n` +
+      `- Use EU/UK compliant temperature and allergen control language where relevant.\n` +
+      `- Include version control block (Document No, Version, Date, Approved by).`,
+  },
+  "Cleaning SOP": {
+    id: "cleaning_sop",
+    title: "Cleaning and Disinfection SOP",
+    intro: "Perfect. I will collect key operational details and then generate a practical SOP.",
+    questions: [
+      "What type of premises/area is this SOP for (kitchen, bakery, production line, etc.)?",
+      "Which surfaces/equipment must be cleaned and how often?",
+      "What cleaning chemicals/sanitisers are used (including dilution/contact times if known)?",
+      "Who performs cleaning and who verifies sign-off?",
+      "What records/logs do you want included in the SOP?",
+    ],
+    buildPrompt: (answers) =>
+      `Draft a complete Cleaning and Disinfection SOP using the following details:\n\n` +
+      `1) ${answers[0] ?? ""}\n` +
+      `2) ${answers[1] ?? ""}\n` +
+      `3) ${answers[2] ?? ""}\n` +
+      `4) ${answers[3] ?? ""}\n` +
+      `5) ${answers[4] ?? ""}\n\n` +
+      `Requirements:\n` +
+      `- Structure: Purpose, Scope, Responsibilities, Materials/Chemicals, Procedure, Frequency, Verification, Corrective Action, Records.\n` +
+      `- Include example cleaning schedule and sign-off log table.\n` +
+      `- Keep wording operational and audit-friendly.`,
+  },
+  "Temp monitoring log": {
+    id: "temp_log",
+    title: "Temperature Monitoring Log",
+    intro: "Understood. I will gather your monitoring setup and generate a ready-to-use log template.",
+    questions: [
+      "Which equipment/processes need monitoring (fridges, freezers, hot holding, cooking, deliveries)?",
+      "What are your target limits/critical limits for each?",
+      "How often should checks be recorded (per shift, daily, hourly)?",
+      "Who records readings and who verifies them?",
+    ],
+    buildPrompt: (answers) =>
+      `Generate a practical Temperature Monitoring Log pack based on:\n\n` +
+      `1) ${answers[0] ?? ""}\n` +
+      `2) ${answers[1] ?? ""}\n` +
+      `3) ${answers[2] ?? ""}\n` +
+      `4) ${answers[3] ?? ""}\n\n` +
+      `Requirements:\n` +
+      `- Provide separate tables where useful (fridge/freezer/hot-hold/cooking/delivery).\n` +
+      `- Include date, time, item/equipment, reading, limit, pass/fail, corrective action, initials/sign-off.\n` +
+      `- Add concise guidance on what to do when limits are breached.`,
+  },
+  "Supplier approval": {
+    id: "supplier_approval",
+    title: "Supplier Approval Procedure",
+    intro: "Good choice. I will ask a few details and then produce a complete supplier approval procedure and forms.",
+    questions: [
+      "What type of business and product categories do you buy from suppliers?",
+      "Which supplier risks matter most to you (allergens, traceability, authenticity, chilled chain, etc.)?",
+      "What documents/certifications do you require before approval?",
+      "How often do you review suppliers and what triggers re-evaluation?",
+      "Who approves suppliers and where are records stored?",
+    ],
+    buildPrompt: (answers) =>
+      `Create a full Supplier Approval Procedure using:\n\n` +
+      `1) ${answers[0] ?? ""}\n` +
+      `2) ${answers[1] ?? ""}\n` +
+      `3) ${answers[2] ?? ""}\n` +
+      `4) ${answers[3] ?? ""}\n` +
+      `5) ${answers[4] ?? ""}\n\n` +
+      `Requirements:\n` +
+      `- Include onboarding checks, approval criteria, ongoing monitoring, non-conformance handling, and reapproval.\n` +
+      `- Include a supplier questionnaire/checklist template.\n` +
+      `- Include record-keeping table and responsibilities.`,
+  },
+};
 
 export default function ChatWorkspace({
   userEmail,
@@ -66,7 +171,11 @@ export default function ChatWorkspace({
   const [showOnboarding, setShowOnboarding] = useState(!onboardingCompleted);
 
   // ── Upgrade modal state ──
-  const [upgradeModalTrigger, setUpgradeModalTrigger] = useState<"message_limit" | "image_limit" | "export" | "review" | null>(null);
+  const [upgradeModalTrigger, setUpgradeModalTrigger] = useState<"message_limit" | "image_limit" | "export" | "review" | "audit_mode" | null>(null);
+  const [workspaceMode, setWorkspaceMode] = useState<WorkspaceMode>("ask");
+  const [activeDocWizard, setActiveDocWizard] = useState<DocWizard | null>(null);
+  const [docWizardStep, setDocWizardStep] = useState(0);
+  const [docWizardAnswers, setDocWizardAnswers] = useState<string[]>([]);
 
   // ── UI state ──
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -78,6 +187,10 @@ export default function ChatWorkspace({
   const pendingDoneRef = useRef<{ citations?: Citation[]; usage?: StreamUsage } | null>(null);
 
   const canUploadImages = isAdmin || dailyImageUploads > 0;
+
+  const pushAssistantMessage = useCallback((content: string) => {
+    setMessages((prev) => [...prev, { role: "assistant", content }]);
+  }, []);
 
   const clearTypingInterval = useCallback(() => {
     if (typingIntervalRef.current) {
@@ -396,11 +509,81 @@ export default function ChatWorkspace({
     typingQueueRef.current = "";
     pendingDoneRef.current = null;
     clearTypingInterval();
+    setActiveDocWizard(null);
+    setDocWizardStep(0);
+    setDocWizardAnswers([]);
     setConversationId(null);
     setMessages([]);
     setReviewRequests([]);
     clearImage();
     setError(null);
+  }
+
+  function switchMode(nextMode: WorkspaceMode) {
+    if (nextMode === "virtual_audit" && !isAdmin && tier !== "pro") {
+      setUpgradeModalTrigger("audit_mode");
+      return;
+    }
+    setWorkspaceMode(nextMode);
+    setActiveDocWizard(null);
+    setDocWizardStep(0);
+    setDocWizardAnswers([]);
+  }
+
+  function startDocumentWizard(suggestion: StarterSuggestion) {
+    const wizard = DOC_WIZARDS[suggestion.label];
+    if (!wizard) {
+      void sendPromptValue(suggestion.text);
+      return;
+    }
+    setActiveDocWizard(wizard);
+    setDocWizardStep(0);
+    setDocWizardAnswers([]);
+    pushAssistantMessage(`${wizard.intro}\n\nQuestion 1/${wizard.questions.length}: ${wizard.questions[0]}`);
+    setPrompt("");
+    textareaRef.current?.focus();
+  }
+
+  async function handleDocWizardInput(rawPrompt: string): Promise<boolean> {
+    if (!activeDocWizard) return false;
+    const answer = rawPrompt.trim();
+    if (!answer) return true;
+
+    setPrompt("");
+    if (textareaRef.current) textareaRef.current.style.height = "auto";
+
+    setMessages((prev) => [...prev, { role: "user", content: answer }]);
+
+    if (["cancel", "/cancel", "stop"].includes(answer.toLowerCase())) {
+      setActiveDocWizard(null);
+      setDocWizardStep(0);
+      setDocWizardAnswers([]);
+      pushAssistantMessage("Document builder cancelled. You can start again from any starter card.");
+      return true;
+    }
+
+    const nextAnswers = [...docWizardAnswers, answer];
+    const nextStep = docWizardStep + 1;
+
+    if (nextStep < activeDocWizard.questions.length) {
+      setDocWizardAnswers(nextAnswers);
+      setDocWizardStep(nextStep);
+      pushAssistantMessage(`Question ${nextStep + 1}/${activeDocWizard.questions.length}: ${activeDocWizard.questions[nextStep]}`);
+      return true;
+    }
+
+    const completedWizard = activeDocWizard;
+    setActiveDocWizard(null);
+    setDocWizardStep(0);
+    setDocWizardAnswers([]);
+    pushAssistantMessage("Perfect. I have enough information. Generating your full document now.");
+
+    const compiledPrompt = completedWizard.buildPrompt(nextAnswers);
+    await sendPromptValue(compiledPrompt, {
+      displayPrompt: `Generate the ${completedWizard.title} document using the provided business details.`,
+    });
+
+    return true;
   }
 
   // ── Reviews ──
@@ -484,9 +667,10 @@ export default function ChatWorkspace({
   }
 
   // ── Send message (with streaming for text, JSON for images) ──
-  async function sendPrompt(event: FormEvent) {
-    event.preventDefault();
-    const value = prompt.trim();
+  async function sendPromptValue(rawPrompt: string, options?: { displayPrompt?: string }) {
+    if (await handleDocWizardInput(rawPrompt)) return;
+
+    const value = rawPrompt.trim();
     if ((!value && !attachedImage) || loading) return;
 
     setLoading(true);
@@ -496,7 +680,9 @@ export default function ChatWorkspace({
 
     const userMessage: Message = {
       role: "user",
-      content: attachedImage ? (value || "Analyse this image for food safety concerns.") : value,
+      content: attachedImage
+        ? (value || "Analyse this image for food safety concerns.")
+        : (options?.displayPrompt ?? value),
       imagePreview: imagePreview ?? undefined,
     };
     setMessages((prev) => [...prev, userMessage]);
@@ -563,7 +749,8 @@ export default function ChatWorkspace({
     setMessages((prev) => [...prev, { role: "assistant", content: "", isStreaming: true }]);
 
     try {
-      const res = await fetch("/api/chat/stream", {
+      const streamEndpoint = workspaceMode === "virtual_audit" ? "/api/audit/stream" : "/api/chat/stream";
+      const res = await fetch(streamEndpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: value, conversationId }),
@@ -577,7 +764,9 @@ export default function ChatWorkspace({
           const data = await res.json();
           errMsg = data.error ?? errMsg;
         } catch { /* body may not be JSON */ }
-        if (isLimit) {
+        if (isLimit && workspaceMode === "virtual_audit") {
+          setUpgradeModalTrigger("audit_mode");
+        } else if (isLimit) {
           setUpgradeModalTrigger("message_limit");
         } else {
           setError(errMsg);
@@ -659,10 +848,15 @@ export default function ChatWorkspace({
     }
   }
 
+  async function sendPrompt(event: FormEvent) {
+    event.preventDefault();
+    await sendPromptValue(prompt);
+  }
+
   function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      void sendPrompt(e as unknown as FormEvent);
+      void sendPromptValue(prompt);
     }
   }
 
@@ -751,12 +945,35 @@ export default function ChatWorkspace({
             </button>
 
             <div className="ml-auto flex items-center gap-2">
+              <div className="mr-2 hidden md:flex items-center rounded-full border border-[#E2E8F0] bg-[#F8FAFC] p-0.5">
+                <button
+                  type="button"
+                  onClick={() => switchMode("ask")}
+                  className={`rounded-full px-3 py-1 text-xs font-semibold transition-colors ${
+                    workspaceMode === "ask" ? "bg-white text-[#0F172A] shadow-sm" : "text-[#64748B]"
+                  }`}
+                >
+                  Ask
+                </button>
+                <button
+                  type="button"
+                  onClick={() => switchMode("virtual_audit")}
+                  className={`rounded-full px-3 py-1 text-xs font-semibold transition-colors ${
+                    workspaceMode === "virtual_audit" ? "bg-white text-[#0F172A] shadow-sm" : "text-[#64748B]"
+                  }`}
+                >
+                  Virtual Audit
+                </button>
+              </div>
+              <span className={`rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-wide ${tierColour}`}>
+                {isAdmin ? "Admin" : tier}
+              </span>
               {isAdmin && (
                 <Link
                   href="/admin"
                   className="rounded-full border border-[#7C3AED] bg-[#F5F3FF] px-3 py-1 text-xs font-bold uppercase text-[#5B21B6]"
                 >
-                  Admin
+                  Admin panel
                 </Link>
               )}
               {reviewEligible && conversationId && (
@@ -766,6 +983,19 @@ export default function ChatWorkspace({
                   className="rounded-full border border-[#E2E8F0] bg-white px-3 py-1 text-xs text-[#64748B] hover:bg-[#F8F9FB] disabled:opacity-50"
                 >
                   Request review
+                </button>
+              )}
+              {workspaceMode === "virtual_audit" && (
+                <button
+                  onClick={() =>
+                    void sendPromptValue(
+                      "Generate the final virtual audit report now with: scope, evidence reviewed, findings table (Compliant/Minor NC/Major NC/Critical NC), CAPA plan, overall verdict, and evidence still required."
+                    )
+                  }
+                  disabled={loading}
+                  className="rounded-full border border-[#E2E8F0] bg-white px-3 py-1 text-xs text-[#64748B] hover:bg-[#F8F9FB] disabled:opacity-50"
+                >
+                  Generate report
                 </button>
               )}
               {dynamicCapabilities.allowPdfExport && (
@@ -811,6 +1041,17 @@ export default function ChatWorkspace({
             canUploadImages={canUploadImages}
             onSetPrompt={setPrompt}
             onFocusInput={() => textareaRef.current?.focus()}
+            onQuickSuggestion={(suggestion) => {
+              if (workspaceMode === "virtual_audit") {
+                void sendPromptValue(`Start virtual audit focus: ${suggestion.text}`);
+                return;
+              }
+              if (suggestion.category === "document") {
+                startDocumentWizard(suggestion);
+              } else {
+                void sendPromptValue(suggestion.text);
+              }
+            }}
             onRequestReview={() => setReviewModalOpen(true)}
           />
 
@@ -831,6 +1072,11 @@ export default function ChatWorkspace({
             onKeyDown={handleKeyDown}
             textareaRef={textareaRef}
             onUpgradeForImages={() => setUpgradeModalTrigger("image_limit")}
+            placeholder={
+              workspaceMode === "virtual_audit"
+                ? "Virtual Audit mode: describe scope, upload evidence, or ask for final audit report..."
+                : undefined
+            }
           />
         </main>
       </div>

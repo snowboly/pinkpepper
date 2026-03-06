@@ -5,6 +5,12 @@ import Image from "next/image";
 import type { Message } from "./types";
 import MessageItem from "./MessageItem";
 
+export type StarterSuggestion = {
+  category: "document" | "audit" | "qa";
+  label: string;
+  text: string;
+};
+
 type ChatMessagesProps = {
   messages: Message[];
   loading: boolean;
@@ -14,10 +20,11 @@ type ChatMessagesProps = {
   canUploadImages: boolean;
   onSetPrompt: (s: string) => void;
   onFocusInput: () => void;
+  onQuickSuggestion?: (s: StarterSuggestion) => void;
   onRequestReview: () => void;
 };
 
-const SUGGESTIONS: { category: string; label: string; text: string }[] = [
+const SUGGESTIONS: StarterSuggestion[] = [
   // Document generation
   { category: "document", label: "HACCP plan", text: "Create a HACCP plan for a 25-seat café that serves hot food including sandwiches and soups" },
   { category: "document", label: "Cleaning SOP", text: "Draft a cleaning and disinfection SOP for a commercial kitchen including frequency, chemicals, and records" },
@@ -46,6 +53,7 @@ export default function ChatMessages({
   canUploadImages,
   onSetPrompt,
   onFocusInput,
+  onQuickSuggestion,
   onRequestReview,
 }: ChatMessagesProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -87,7 +95,14 @@ export default function ChatMessages({
             {SUGGESTIONS.map((s) => (
               <button
                 key={s.label}
-                onClick={() => { onSetPrompt(s.text); onFocusInput(); }}
+                onClick={() => {
+                  if (onQuickSuggestion) {
+                    onQuickSuggestion(s);
+                  } else {
+                    onSetPrompt(s.text);
+                    onFocusInput();
+                  }
+                }}
                 className="rounded-xl border border-[#E2E8F0] bg-white px-3 py-2.5 text-left hover:bg-[#F8F9FB] hover:border-[#CBD5E1] transition-colors"
               >
                 <span className={`block text-xs font-semibold uppercase tracking-wide mb-0.5 ${CATEGORY_COLOUR[s.category]}`}>
