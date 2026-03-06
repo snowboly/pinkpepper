@@ -22,6 +22,7 @@ type ChatInputProps = {
   onKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
   textareaRef: React.RefObject<HTMLTextAreaElement | null>;
   onUpgradeForImages?: () => void;
+  placeholder?: string;
 };
 
 export default function ChatInput({
@@ -40,6 +41,7 @@ export default function ChatInput({
   onKeyDown,
   textareaRef,
   onUpgradeForImages,
+  placeholder,
 }: ChatInputProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -140,7 +142,12 @@ export default function ChatInput({
               rows={1}
               maxLength={MAX_PROMPT_CHARS}
               className={`w-full resize-none rounded-xl border bg-white px-4 py-2.5 pr-14 text-base text-[#0F172A] placeholder-[#94A3B8] outline-none focus:border-[#E11D48] focus:ring-1 focus:ring-[#E11D48] transition-colors ${remainingChars <= 100 ? "border-[#E11D48]" : "border-[#E2E8F0]"}`}
-              placeholder={attachedImage ? "Add a note about this photo (optional)..." : "Ask a food safety question... (Shift+Enter for new line)"}
+              placeholder={
+                placeholder ??
+                (attachedImage
+                  ? "Add a note about this photo (optional)..."
+                  : "Ask a food safety question... (Shift+Enter for new line)")
+              }
               style={{ minHeight: "44px", maxHeight: "min(32vh, 220px)" }}
             />
             <span className={`pointer-events-none absolute bottom-1.5 right-3 text-[11px] ${remainingChars <= 100 ? "text-[#E11D48]" : "text-[#94A3B8]"}`}>

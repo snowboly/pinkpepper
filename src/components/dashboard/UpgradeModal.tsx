@@ -4,7 +4,7 @@ import { useState } from "react";
 import type { SubscriptionTier } from "@/lib/tier";
 
 type UpgradeModalProps = {
-  trigger: "message_limit" | "image_limit" | "export" | "review";
+  trigger: "message_limit" | "image_limit" | "export" | "review" | "audit_mode";
   currentTier: SubscriptionTier;
   onClose: () => void;
 };
@@ -25,6 +25,10 @@ const COPY: Record<UpgradeModalProps["trigger"], { heading: string; body: string
   review: {
     heading: "Get expert review",
     body: "Have a qualified food safety consultant review your documents within 72 hours.",
+  },
+  audit_mode: {
+    heading: "Unlock Virtual Audit Mode",
+    body: "Run a clause-by-clause virtual food safety audit with structured findings, CAPA actions, and export-ready reports.",
   },
 };
 

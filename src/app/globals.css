@@ -27,6 +27,17 @@ body:has(.workspace-shell) .cookie-banner {
   display: none;
 }
 
+.workspace-shell button:not(:disabled),
+.workspace-shell a[href],
+.workspace-shell [role="button"] {
+  cursor: pointer;
+}
+
+.workspace-shell button:disabled,
+.workspace-shell [aria-disabled="true"] {
+  cursor: not-allowed;
+}
+
 .pp-display {
   font-family: var(--font-space-grotesk), var(--font-manrope), "Segoe UI", sans-serif;
   font-weight: 700;
