@@ -6,7 +6,7 @@ import Image from "next/image";
 import type { SubscriptionTier } from "@/lib/tier";
 import { TIER_CAPABILITIES } from "@/lib/tier";
 import type { Citation } from "@/lib/rag/citations";
-import type { Message, Conversation, ChatWorkspaceProps } from "./types";
+import type { Message, Conversation, Project, ChatWorkspaceProps } from "./types";
 import ChatSidebar from "./ChatSidebar";
 import ChatMessages from "./ChatMessages";
 import ChatInput from "./ChatInput";
@@ -34,6 +34,9 @@ export default function ChatWorkspace({
   const [loadingMessages, setLoadingMessages] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // ── Projects state ──
+  const [projects, setProjects] = useState<Project[]>([]);
 
   // ── Billing state ──
   const [billingError, setBillingError] = useState<string | null>(null);
@@ -248,6 +251,80 @@ export default function ChatWorkspace({
       if (res.ok) {
         setConversations((prev) =>
           prev.map((c) => (c.id === id ? { ...c, title: newTitle } : c))
+        );
+      }
+    } catch {
+      // Non-blocking
+    }
+  }
+
+  // ── Projects ──
+  const loadProjects = useCallback(async () => {
+    try {
+      const res = await fetch("/api/projects");
+      const data = (await res.json()) as { projects?: Project[]; error?: string };
+      if (res.ok) setProjects(data.projects ?? []);
+    } catch {
+      // Non-blocking
+    }
+  }, []);
+
+  async function createProject(name: string, emoji: string) {
+    try {
+      const res = await fetch("/api/projects", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, emoji }),
+      });
+      const data = (await res.json()) as { project?: Project };
+      if (res.ok && data.project) {
+        setProjects((prev) => [...prev, data.project!]);
+      }
+    } catch {
+      // Non-blocking
+    }
+  }
+
+  async function renameProject(id: string, name: string, emoji: string) {
+    try {
+      const res = await fetch(`/api/projects/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, emoji }),
+      });
+      if (res.ok) {
+        setProjects((prev) => prev.map((p) => (p.id === id ? { ...p, name, emoji } : p)));
+      }
+    } catch {
+      // Non-blocking
+    }
+  }
+
+  async function deleteProject(id: string) {
+    try {
+      const res = await fetch(`/api/projects/${id}`, { method: "DELETE" });
+      if (res.ok) {
+        setProjects((prev) => prev.filter((p) => p.id !== id));
+        // Unassign conversations that belonged to this project
+        setConversations((prev) =>
+          prev.map((c) => (c.project_id === id ? { ...c, project_id: null } : c))
+        );
+      }
+    } catch {
+      // Non-blocking
+    }
+  }
+
+  async function moveConversation(convId: string, projectId: string | null) {
+    try {
+      const res = await fetch(`/api/chat/conversations/${convId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ project_id: projectId }),
+      });
+      if (res.ok) {
+        setConversations((prev) =>
+          prev.map((c) => (c.id === convId ? { ...c, project_id: projectId } : c))
         );
       }
     } catch {
@@ -532,6 +609,7 @@ export default function ChatWorkspace({
 
   // ── Effects ──
   useEffect(() => { void loadConversations(); }, [loadConversations]);
+  useEffect(() => { void loadProjects(); }, [loadProjects]);
 
   useEffect(() => {
     if (conversationId) {
@@ -552,6 +630,7 @@ export default function ChatWorkspace({
         {/* Sidebar */}
         <ChatSidebar
           conversations={conversations}
+          projects={projects}
           activeConversationId={conversationId}
           loadingConversations={loadingConversations}
           sidebarOpen={sidebarOpen}
@@ -566,6 +645,10 @@ export default function ChatWorkspace({
           onSelectConversation={(id) => { setConversationId(id); }}
           onDeleteConversation={(id) => void removeConversation(id)}
           onRenameConversation={(id, title) => void renameConversation(id, title)}
+          onMoveConversation={(convId, projectId) => void moveConversation(convId, projectId)}
+          onCreateProject={(name, emoji) => void createProject(name, emoji)}
+          onRenameProject={(id, name, emoji) => void renameProject(id, name, emoji)}
+          onDeleteProject={(id) => void deleteProject(id)}
           onRefreshBilling={() => void refreshBillingStatus()}
           onOpenBilling={() => void openBillingPortal()}
         />

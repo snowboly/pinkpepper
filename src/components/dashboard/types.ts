@@ -14,6 +14,15 @@ export type Conversation = {
   title: string | null;
   updated_at: string;
   created_at?: string;
+  project_id?: string | null;
+};
+
+export type Project = {
+  id: string;
+  name: string;
+  emoji: string;
+  created_at: string;
+  updated_at: string;
 };
 
 export type ChatWorkspaceProps = {

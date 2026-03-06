@@ -47,11 +47,23 @@ export async function PATCH(request: Request, context: { params: Promise<{ id: s
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const body = (await request.json()) as { title?: string };
-  const title = body.title?.trim();
+  const body = (await request.json()) as { title?: string; project_id?: string | null };
+  const updates: Record<string, unknown> = {};
 
-  if (!title || title.length > 100) {
-    return NextResponse.json({ error: "Title is required and must be at most 100 characters." }, { status: 400 });
+  if (body.title !== undefined) {
+    const title = body.title.trim();
+    if (!title || title.length > 100) {
+      return NextResponse.json({ error: "Title must be 1–100 characters." }, { status: 400 });
+    }
+    updates.title = title;
+  }
+
+  if ("project_id" in body) {
+    updates.project_id = body.project_id ?? null;
+  }
+
+  if (Object.keys(updates).length === 0) {
+    return NextResponse.json({ error: "Nothing to update." }, { status: 400 });
   }
 
   const { data: conv } = await supabase
@@ -67,12 +79,12 @@ export async function PATCH(request: Request, context: { params: Promise<{ id: s
 
   const { error } = await supabase
     .from("conversations")
-    .update({ title })
+    .update(updates)
     .eq("id", id)
     .eq("user_id", user.id);
 
   if (error) {
-    return NextResponse.json({ error: "Failed to rename conversation." }, { status: 500 });
+    return NextResponse.json({ error: "Failed to update conversation." }, { status: 500 });
   }
 
   return NextResponse.json({ ok: true });

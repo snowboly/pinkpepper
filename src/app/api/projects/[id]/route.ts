@@ -3,10 +3,8 @@ import { createClient } from "@/utils/supabase/server";
 
 export const dynamic = "force-dynamic";
 
-export async function PATCH(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PATCH(request: Request, context: { params: Promise<{ id: string }> }) {
+  const { id } = await context.params;
   const supabase = await createClient();
   const {
     data: { user },
@@ -16,13 +14,14 @@ export async function PATCH(
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { id } = await params;
   const body = (await request.json()) as { name?: string; emoji?: string };
-  const { name, emoji } = body;
+  const name = body.name?.trim();
 
-  if (!name && emoji === undefined) {
-    return NextResponse.json({ error: "Nothing to update." }, { status: 400 });
+  if (!name || name.length > 100) {
+    return NextResponse.json({ error: "Project name is required." }, { status: 400 });
   }
+
+  const emoji = body.emoji?.trim() || "📁";
 
   const { error } = await supabase
     .from("projects")
@@ -37,10 +36,8 @@ export async function PATCH(
   return NextResponse.json({ ok: true });
 }
 
-export async function DELETE(
-  _request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function DELETE(_request: Request, context: { params: Promise<{ id: string }> }) {
+  const { id } = await context.params;
   const supabase = await createClient();
   const {
     data: { user },
@@ -50,8 +47,7 @@ export async function DELETE(
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { id } = await params;
-
+  // conversations.project_id cascades to null via ON DELETE SET NULL
   const { error } = await supabase
     .from("projects")
     .delete()
