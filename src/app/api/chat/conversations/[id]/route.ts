@@ -47,7 +47,7 @@ export async function PATCH(request: Request, context: { params: Promise<{ id: s
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const body = (await request.json()) as { title?: string; project_id?: string | null };
+  const body = (await request.json()) as { title?: string; project_id?: string | null; archived_at?: string | null };
   const updates: Record<string, unknown> = {};
 
   if (body.title !== undefined) {
@@ -60,6 +60,10 @@ export async function PATCH(request: Request, context: { params: Promise<{ id: s
 
   if ("project_id" in body) {
     updates.project_id = body.project_id ?? null;
+  }
+
+  if ("archived_at" in body) {
+    updates.archived_at = body.archived_at ?? null;
   }
 
   if (Object.keys(updates).length === 0) {

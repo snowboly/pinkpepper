@@ -28,6 +28,7 @@ export async function GET() {
     .from("conversations")
     .select("id,title,created_at,updated_at,project_id")
     .eq("user_id", user.id)
+    .is("archived_at", null)
     .order("updated_at", { ascending: false })
     .limit(caps.maxSavedConversations ?? 200);
 

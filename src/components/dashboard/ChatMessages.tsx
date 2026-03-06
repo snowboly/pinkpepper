@@ -76,8 +76,8 @@ export default function ChatMessages({
               className="h-11 w-auto mx-auto opacity-80"
             />
           </div>
-          <h2 className="text-xl font-semibold text-[#0F172A] mb-2">Food Safety Compliance Assistant</h2>
-          <p className="text-sm text-[#64748B] max-w-md">
+          <h2 className="text-2xl font-semibold text-[#0F172A] mb-2">Food Safety Compliance Assistant</h2>
+          <p className="text-base text-[#64748B] max-w-md">
             Ask about EU &amp; UK food safety law, generate HACCP plans, SOPs, and monitoring logs, or audit your current procedures.{" "}
             {canUploadImages
               ? "You can also attach a photo of your kitchen or a food label for instant compliance analysis."
@@ -90,10 +90,10 @@ export default function ChatMessages({
                 onClick={() => { onSetPrompt(s.text); onFocusInput(); }}
                 className="rounded-xl border border-[#E2E8F0] bg-white px-3 py-2.5 text-left hover:bg-[#F8F9FB] hover:border-[#CBD5E1] transition-colors"
               >
-                <span className={`block text-[10px] font-semibold uppercase tracking-wide mb-0.5 ${CATEGORY_COLOUR[s.category]}`}>
+                <span className={`block text-xs font-semibold uppercase tracking-wide mb-0.5 ${CATEGORY_COLOUR[s.category]}`}>
                   {s.label}
                 </span>
-                <span className="block text-xs text-[#475569] leading-snug">{s.text}</span>
+                <span className="block text-sm text-[#475569] leading-snug">{s.text}</span>
               </button>
             ))}
           </div>
@@ -103,7 +103,7 @@ export default function ChatMessages({
       {/* Loading conversation messages */}
       {loadingMessages && (
         <div className="flex justify-center py-8">
-          <span className="text-sm text-[#94A3B8]">Loading conversation...</span>
+          <span className="text-base text-[#94A3B8]">Loading conversation...</span>
         </div>
       )}
 

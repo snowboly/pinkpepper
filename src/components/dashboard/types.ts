@@ -15,6 +15,7 @@ export type Conversation = {
   updated_at: string;
   created_at?: string;
   project_id?: string | null;
+  archived_at?: string | null;
 };
 
 export type Project = {

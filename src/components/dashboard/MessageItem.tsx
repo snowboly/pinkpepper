@@ -36,7 +36,7 @@ export default function MessageItem({
         {/* Role label */}
         <div className="mb-1.5 flex items-center gap-2">
           {isUser ? (
-            <span className="text-sm font-semibold text-[#0F172A]">You</span>
+            <span className="text-base font-semibold text-[#0F172A]">You</span>
           ) : (
             <>
               <div className="h-5 w-5 rounded-full bg-[#E11D48] flex items-center justify-center">
@@ -44,7 +44,7 @@ export default function MessageItem({
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                 </svg>
               </div>
-              <span className="text-sm font-semibold text-[#0F172A]">PinkPepper</span>
+              <span className="text-base font-semibold text-[#0F172A]">PinkPepper</span>
             </>
           )}
         </div>
@@ -63,11 +63,11 @@ export default function MessageItem({
 
         {/* Message content — full width, no bubble */}
         {isUser ? (
-          <div className="text-sm leading-relaxed text-[#0F172A] whitespace-pre-wrap">
+          <div className="text-base leading-relaxed text-[#0F172A] whitespace-pre-wrap">
             {message.content}
           </div>
         ) : (
-          <div className="text-sm text-[#0F172A] pp-markdown">
+          <div className="text-base text-[#0F172A] pp-markdown">
             <ReactMarkdown>{message.content}</ReactMarkdown>
             {message.isStreaming && (
               <span className="inline-block w-0.5 h-4 bg-[#0F172A] animate-pulse ml-0.5 align-text-bottom" />
@@ -88,7 +88,7 @@ export default function MessageItem({
             <button
               type="button"
               onClick={copyToClipboard}
-              className="flex items-center gap-1.5 rounded-full border border-[#E2E8F0] bg-white px-3 py-1 text-xs text-[#64748B] hover:bg-[#F8F9FB] transition-colors"
+              className="flex items-center gap-1.5 rounded-full border border-[#E2E8F0] bg-white px-3 py-1 text-sm text-[#64748B] hover:bg-[#F8F9FB] transition-colors"
               title="Copy response"
             >
               {copied ? (
@@ -111,7 +111,7 @@ export default function MessageItem({
               <button
                 type="button"
                 onClick={onRequestReview}
-                className="rounded-full border border-[#E2E8F0] bg-white px-3 py-1 text-xs text-[#64748B] hover:bg-[#F8F9FB] transition-colors"
+                className="rounded-full border border-[#E2E8F0] bg-white px-3 py-1 text-sm text-[#64748B] hover:bg-[#F8F9FB] transition-colors"
               >
                 Request expert review
               </button>
