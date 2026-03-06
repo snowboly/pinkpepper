@@ -28,6 +28,11 @@ function detectQueryMode(message: string): "qa" | "document" | "audit" {
     "recall procedure", "traceability system", "supplier questionnaire",
     "staff training record", "induction document", "due diligence record",
     "pest control log", "delivery check", "date labelling", "labelling policy",
+    "waste management plan", "water safety plan", "legionella risk assessment",
+    "personal hygiene policy", "fitness to work policy", "illness policy",
+    "food contact material", "fcm register", "declaration of compliance",
+    "allergen matrix", "allergen chart", "cleaning validation",
+    "return to work", "visitor hygiene", "visitor declaration",
   ];
   if (documentKeywords.some((kw) => lower.includes(kw))) return "document";
 
