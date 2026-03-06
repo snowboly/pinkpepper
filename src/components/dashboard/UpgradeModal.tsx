@@ -33,7 +33,7 @@ const PLANS = [
     tier: "plus" as SubscriptionTier,
     name: "Plus",
     price: "€19/mo",
-    highlights: ["100 messages/day", "3 image uploads/day", "PDF export", "1 human review/month"],
+    highlights: ["100 messages/day", "3 image uploads/day", "PDF export", "Unlimited saved conversations"],
     cta: "Upgrade to Plus",
     colour: "border-[#D97706] bg-[#FFFBEB]",
     btnColour: "bg-[#D97706] hover:bg-[#B45309]",
@@ -41,7 +41,7 @@ const PLANS = [
   {
     tier: "pro" as SubscriptionTier,
     name: "Pro",
-    price: "€49/mo",
+    price: "€99/mo",
     highlights: ["1,000 messages/day", "20 image uploads/day", "PDF + Word export", "3 review credits/month"],
     cta: "Upgrade to Pro",
     colour: "border-[#059669] bg-[#ECFDF5]",
