@@ -20,6 +20,13 @@ body {
   font-family: var(--font-manrope), "Segoe UI", sans-serif;
 }
 
+/* Dashboard/admin workspace should be full-screen without marketing chrome */
+body:has(.workspace-shell) .site-header,
+body:has(.workspace-shell) .site-footer,
+body:has(.workspace-shell) .cookie-banner {
+  display: none;
+}
+
 .pp-display {
   font-family: var(--font-space-grotesk), var(--font-manrope), "Segoe UI", sans-serif;
   font-weight: 700;

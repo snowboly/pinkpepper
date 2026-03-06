@@ -2,7 +2,6 @@
 
 import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import type { SubscriptionTier } from "@/lib/tier";
 import { TIER_CAPABILITIES } from "@/lib/tier";
 import type { Citation } from "@/lib/rag/citations";
@@ -155,10 +154,6 @@ export default function ChatWorkspace({
   }
 
   // ── Derived values ──
-  const usageLabel = useMemo(
-    () => (isAdmin ? `${usage} today (unlimited)` : `${usage}/${usageLimit} messages`),
-    [isAdmin, usage, usageLimit]
-  );
   const usagePercent = useMemo(() => {
     if (isAdmin) return 0;
     return Math.min(100, Math.round((usage / Math.max(usageLimit, 1)) * 100));
@@ -220,24 +215,6 @@ export default function ChatWorkspace({
       setIsAdmin(Boolean(data.isAdmin));
     } catch {
       setBillingError("Network error while refreshing billing status.");
-    } finally {
-      setBillingLoading(false);
-    }
-  }
-
-  async function openBillingPortal() {
-    setBillingError(null);
-    setBillingLoading(true);
-    try {
-      const res = await fetch("/api/billing/portal", { method: "POST" });
-      const data = (await res.json()) as { url?: string; error?: string };
-      if (!res.ok || !data.url) {
-        setBillingError(data.error ?? "Unable to open billing portal.");
-        return;
-      }
-      window.location.href = data.url;
-    } catch {
-      setBillingError("Network error while opening billing portal.");
     } finally {
       setBillingLoading(false);
     }
@@ -712,7 +689,7 @@ export default function ChatWorkspace({
   // ── Render ──
   return (
     <>
-      <div className="fixed left-0 right-0 bottom-0 top-14 md:top-16 flex overflow-hidden bg-[#F8F9FB]">
+      <div className="workspace-shell fixed inset-0 flex overflow-hidden bg-[#F8F9FB]">
         {/* Sidebar */}
         <ChatSidebar
           conversations={conversations}
@@ -723,7 +700,6 @@ export default function ChatWorkspace({
           userEmail={userEmail}
           tier={tier}
           isAdmin={isAdmin}
-          usageLabel={usageLabel}
           usagePercent={usagePercent}
           billingLoading={billingLoading}
           tierColour={tierColour}
@@ -737,7 +713,6 @@ export default function ChatWorkspace({
           onRenameProject={(id, name, emoji) => void renameProject(id, name, emoji)}
           onDeleteProject={(id) => void deleteProject(id)}
           onRefreshBilling={() => void refreshBillingStatus()}
-          onOpenBilling={() => void openBillingPortal()}
         />
 
         {/* Mobile sidebar backdrop */}
@@ -774,10 +749,6 @@ export default function ChatWorkspace({
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
-
-            <div className="flex items-center gap-1.5">
-              <Image src="/logo/LogoV3.png" alt="PinkPepper" width={100} height={28} className="h-7 w-auto" />
-            </div>
 
             <div className="ml-auto flex items-center gap-2">
               {isAdmin && (

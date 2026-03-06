@@ -20,7 +20,7 @@ export function resolveUserAccess(profile: ProfileAccessRow | null | undefined, 
   tier: SubscriptionTier;
   isAdmin: boolean;
 } {
-  const tier = normalizeTier(profile?.tier);
   const isAdmin = isAdminUser(profile?.is_admin, email);
+  const tier = isAdmin ? "pro" : normalizeTier(profile?.tier);
   return { tier, isAdmin };
 }

@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
 import SettingsForm from "@/components/dashboard/SettingsForm";
+import { resolveUserAccess } from "@/lib/access";
 
 export const dynamic = "force-dynamic";
 
@@ -19,6 +20,7 @@ export default async function SettingsPage() {
     .select("tier,is_admin")
     .eq("id", user.id)
     .maybeSingle();
+  const { tier, isAdmin } = resolveUserAccess(profile, user.email);
 
   return (
     <div className="min-h-screen bg-[#F8F9FB] py-10 px-4">
@@ -39,8 +41,8 @@ export default async function SettingsPage() {
 
         <SettingsForm
           email={user.email ?? ""}
-          tier={(profile?.tier as string) ?? "free"}
-          isAdmin={profile?.is_admin ?? false}
+          tier={tier}
+          isAdmin={isAdmin}
         />
       </div>
     </div>

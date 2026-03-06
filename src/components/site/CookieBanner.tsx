@@ -41,7 +41,7 @@ export function CookieBanner() {
           role="dialog"
           aria-modal="false"
           aria-label="Cookie consent"
-          className="fixed bottom-0 left-0 right-0 z-50 border-t border-[#E2E8F0] bg-white px-4 py-4 shadow-[0_-4px_24px_rgba(0,0,0,0.06)] md:px-6"
+          className="cookie-banner fixed bottom-0 left-0 right-0 z-50 border-t border-[#E2E8F0] bg-white px-4 py-4 shadow-[0_-4px_24px_rgba(0,0,0,0.06)] md:px-6"
         >
           <div className="pp-container flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-sm leading-relaxed text-[#475569]">

@@ -29,7 +29,7 @@ export async function SiteHeader() {
   const initials = getUserInitials(user?.email, fullName);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-[#E2E8F0] bg-white/80 shadow-[0_1px_3px_rgba(0,0,0,0.04)] backdrop-blur-xl">
+    <header className="site-header sticky top-0 z-50 border-b border-[#E2E8F0] bg-white/80 shadow-[0_1px_3px_rgba(0,0,0,0.04)] backdrop-blur-xl">
       <div className="pp-container flex h-14 items-center justify-between md:h-16">
         <div className="flex items-center gap-8 lg:gap-12">
           <Link href="/" className="flex items-center leading-none">
@@ -89,7 +89,7 @@ export async function SiteHeader() {
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-[#F1F5F9] bg-white py-16">
+    <footer className="site-footer border-t border-[#F1F5F9] bg-white py-16">
       <div className="pp-container mb-12 grid gap-12 sm:grid-cols-2 md:grid-cols-[2fr_1fr_1fr_1.5fr]">
         <div>
           <Link href="/" className="inline-flex items-center leading-none">
