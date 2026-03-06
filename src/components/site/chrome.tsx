@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 const nav = [
+  { href: "/about", label: "About" },
   { href: "/pricing", label: "Pricing" },
   { href: "/security", label: "Security" },
   { href: "/contact", label: "Contact" },
@@ -87,6 +88,7 @@ export function SiteFooter() {
         <div>
           <h4 className="mb-4 text-sm font-semibold text-[#1A1A1A]">Platform</h4>
           <ul className="space-y-3 text-sm text-[#6B6B6B]">
+            <li><Link href="/about" className="transition-colors hover:text-[#1A1A1A]">About</Link></li>
             <li><Link href="/pricing" className="transition-colors hover:text-[#1A1A1A]">Pricing</Link></li>
             <li><Link href="/login" className="transition-colors hover:text-[#1A1A1A]">Log In</Link></li>
             <li><Link href="/signup" className="transition-colors hover:text-[#1A1A1A]">Create Account</Link></li>
