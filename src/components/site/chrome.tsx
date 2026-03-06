@@ -2,9 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 
 const nav = [
-  { href: "/about", label: "About" },
   { href: "/pricing", label: "Pricing" },
   { href: "/security", label: "Security" },
+  { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
 ];
 
@@ -24,11 +24,12 @@ export function SiteHeader() {
             />
           </Link>
           <nav className="hidden items-center gap-7 text-sm font-semibold tracking-[0.01em] text-[#64748B] lg:flex">
-            {nav.map((item) => (
+            {nav.map((item, i) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className="transition-colors hover:text-[#0F172A]"
+                className="nav-link hover:text-[#0F172A]"
+                style={{ animationDelay: `${i * 80}ms` }}
               >
                 {item.label}
               </Link>
