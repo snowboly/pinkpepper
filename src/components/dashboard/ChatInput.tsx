@@ -67,7 +67,7 @@ export default function ChatInput({
                 </svg>
               </button>
             </div>
-            <span className="text-xs text-[#64748B] mt-1">
+            <span className="text-sm text-[#64748B] mt-1">
               {attachedImage?.name} — food safety analysis will be performed on this photo.
             </span>
           </div>
@@ -120,7 +120,7 @@ export default function ChatInput({
               onChange={(e) => { onPromptChange(e.target.value); handleTextareaInput(); }}
               onKeyDown={onKeyDown}
               rows={1}
-              className="w-full resize-none rounded-xl border border-[#E2E8F0] bg-white px-4 py-2.5 pr-12 text-sm text-[#0F172A] placeholder-[#94A3B8] outline-none focus:border-[#E11D48] focus:ring-1 focus:ring-[#E11D48] transition-colors overflow-hidden"
+              className="w-full resize-none rounded-xl border border-[#E2E8F0] bg-white px-4 py-2.5 pr-12 text-base text-[#0F172A] placeholder-[#94A3B8] outline-none focus:border-[#E11D48] focus:ring-1 focus:ring-[#E11D48] transition-colors overflow-hidden"
               placeholder={attachedImage ? "Add a note about this photo (optional)..." : "Ask a food safety question... (Shift+Enter for new line)"}
               style={{ minHeight: "44px", maxHeight: "160px" }}
             />
@@ -151,7 +151,7 @@ export default function ChatInput({
           )}
         </form>
 
-        <p className="mt-2 text-center text-[10px] text-[#94A3B8]">
+        <p className="mt-2 text-center text-xs text-[#94A3B8]">
           AI-assisted outputs must be reviewed by qualified personnel before use.
           {!isAdmin && tier === "free" && (
             <> {" · "}<Link href="/pricing" className="underline hover:text-[#64748B]">Upgrade for photo analysis &amp; exports</Link></>

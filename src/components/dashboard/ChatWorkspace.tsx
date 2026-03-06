@@ -241,6 +241,29 @@ export default function ChatWorkspace({
     }
   }
 
+  async function archiveConversation(id: string) {
+    setError(null);
+    try {
+      const res = await fetch(`/api/chat/conversations/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ archived_at: new Date().toISOString() }),
+      });
+      if (!res.ok) {
+        const data = (await res.json()) as { error?: string };
+        setError(data.error ?? "Failed to archive conversation.");
+        return;
+      }
+      setConversations((prev) => prev.filter((c) => c.id !== id));
+      if (conversationId === id) {
+        setConversationId(null);
+        setMessages([]);
+      }
+    } catch {
+      setError("Network error while archiving conversation.");
+    }
+  }
+
   async function renameConversation(id: string, newTitle: string) {
     try {
       const res = await fetch(`/api/chat/conversations/${id}`, {
@@ -644,6 +667,7 @@ export default function ChatWorkspace({
           onNewChat={startNewChat}
           onSelectConversation={(id) => { setConversationId(id); }}
           onDeleteConversation={(id) => void removeConversation(id)}
+          onArchiveConversation={(id) => void archiveConversation(id)}
           onRenameConversation={(id, title) => void renameConversation(id, title)}
           onMoveConversation={(convId, projectId) => void moveConversation(convId, projectId)}
           onCreateProject={(name, emoji) => void createProject(name, emoji)}

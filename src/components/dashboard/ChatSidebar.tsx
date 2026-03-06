@@ -63,6 +63,7 @@ type ChatSidebarProps = {
   onNewChat: () => void;
   onSelectConversation: (id: string) => void;
   onDeleteConversation: (id: string) => void;
+  onArchiveConversation: (id: string) => void;
   onRenameConversation: (id: string, newTitle: string) => void;
   onMoveConversation: (convId: string, projectId: string | null) => void;
   onCreateProject: (name: string, emoji: string) => void;
@@ -88,6 +89,7 @@ export default function ChatSidebar({
   onNewChat,
   onSelectConversation,
   onDeleteConversation,
+  onArchiveConversation,
   onRenameConversation,
   onMoveConversation,
   onCreateProject,
@@ -103,6 +105,9 @@ export default function ChatSidebar({
 
   // Conversation search
   const [searchQuery, setSearchQuery] = useState("");
+
+  // Delete confirmation
+  const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
 
   // Move-to-project dropdown
   const [moveMenuConvId, setMoveMenuConvId] = useState<string | null>(null);
@@ -226,7 +231,7 @@ export default function ChatSidebar({
     return (
       <div
         key={conv.id}
-        className={`group relative flex items-center rounded-xl px-3 py-2 text-xs cursor-pointer transition-colors ${
+        className={`group relative flex items-center rounded-xl px-3 py-2 text-sm cursor-pointer transition-colors ${
           isActive ? "bg-[#FEF2F2] text-[#0F172A]" : "text-[#334155] hover:bg-[#F1F5F9]"
         }`}
       >
@@ -240,7 +245,7 @@ export default function ChatSidebar({
               if (e.key === "Enter") commitRename();
               if (e.key === "Escape") { setRenamingId(null); setRenameValue(""); }
             }}
-            className="flex-1 rounded border border-[#E11D48] bg-white px-1.5 py-0.5 text-xs outline-none"
+            className="flex-1 rounded border border-[#E11D48] bg-white px-1.5 py-0.5 text-sm outline-none"
             maxLength={100}
           />
         ) : (
@@ -295,7 +300,7 @@ export default function ChatSidebar({
                       <button
                         key={p.id}
                         onClick={(e) => { e.stopPropagation(); onMoveConversation(conv.id, p.id); setMoveMenuConvId(null); }}
-                        className="flex w-full items-center gap-2 px-3 py-1.5 text-xs text-[#334155] hover:bg-[#F1F5F9] text-left"
+                        className="flex w-full items-center gap-2 px-3 py-1.5 text-sm text-[#334155] hover:bg-[#F1F5F9] text-left"
                       >
                         <span>{p.emoji}</span>
                         <span className="truncate">{p.name}</span>
@@ -306,9 +311,20 @@ export default function ChatSidebar({
               </div>
             ) : null}
 
+            {/* Archive */}
+            <button
+              onClick={(e) => { e.stopPropagation(); onArchiveConversation(conv.id); }}
+              className="text-[#94A3B8] hover:text-[#0F172A] p-0.5"
+              title="Archive"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+              </svg>
+            </button>
+
             {/* Delete */}
             <button
-              onClick={(e) => { e.stopPropagation(); onDeleteConversation(conv.id); }}
+              onClick={(e) => { e.stopPropagation(); setDeleteConfirmId(conv.id); }}
               className="text-[#94A3B8] hover:text-[#E11D48] p-0.5"
               title="Delete"
             >
@@ -325,7 +341,7 @@ export default function ChatSidebar({
   return (
     <aside
       className={`${
-        sidebarOpen ? "w-64" : "w-0"
+        sidebarOpen ? "w-72" : "w-0"
       } flex-shrink-0 transition-[width] duration-200 overflow-hidden border-r border-[#E2E8F0] bg-white flex flex-col`}
     >
       {/* New chat button */}
@@ -339,6 +355,20 @@ export default function ChatSidebar({
           </svg>
           New chat
         </button>
+
+        {/* Search */}
+        <div className="relative mt-2">
+          <svg xmlns="http://www.w3.org/2000/svg" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#94A3B8]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <input
+            type="text"
+            placeholder="Search chats..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full rounded-xl border border-[#E2E8F0] bg-[#F8F9FB] pl-9 pr-3 py-2 text-sm text-[#0F172A] placeholder-[#94A3B8] outline-none focus:border-[#E11D48] transition-colors"
+          />
+        </div>
       </div>
 
       {/* Scrollable content */}
@@ -347,7 +377,7 @@ export default function ChatSidebar({
         {/* ── Projects section ── */}
         <div className="px-3 pt-3 pb-1">
           <div className="flex items-center justify-between mb-1">
-            <span className="text-[10px] font-semibold uppercase tracking-wider text-[#94A3B8]">
+            <span className="text-xs font-semibold uppercase tracking-wider text-[#94A3B8]">
               Projects
             </span>
             <button
@@ -393,13 +423,13 @@ export default function ChatSidebar({
                 <button
                   onClick={submitNewProject}
                   disabled={!newProjectName.trim()}
-                  className="flex-1 rounded-lg bg-[#E11D48] py-1 text-[11px] font-semibold text-white disabled:opacity-40 hover:bg-[#BE123C] transition-colors"
+                  className="flex-1 rounded-lg bg-[#E11D48] py-1 text-xs font-semibold text-white disabled:opacity-40 hover:bg-[#BE123C] transition-colors"
                 >
                   Create
                 </button>
                 <button
                   onClick={() => { setCreatingProject(false); setNewProjectName(""); }}
-                  className="flex-1 rounded-lg border border-[#E2E8F0] bg-white py-1 text-[11px] text-[#64748B] hover:bg-[#F8F9FB] transition-colors"
+                  className="flex-1 rounded-lg border border-[#E2E8F0] bg-white py-1 text-xs text-[#64748B] hover:bg-[#F8F9FB] transition-colors"
                 >
                   Cancel
                 </button>
@@ -409,7 +439,7 @@ export default function ChatSidebar({
 
           {/* Project folders */}
           {projects.length === 0 && !creatingProject && (
-            <p className="px-1 py-1 text-[11px] text-[#CBD5E1]">No projects yet.</p>
+            <p className="px-1 py-1 text-xs text-[#CBD5E1]">No projects yet.</p>
           )}
 
           {projects.map((project) => {
@@ -420,7 +450,7 @@ export default function ChatSidebar({
             return (
               <div key={project.id} className="mb-0.5">
                 {/* Project folder row */}
-                <div className="group flex items-center gap-1 rounded-xl px-2 py-1.5 text-xs text-[#334155] hover:bg-[#F1F5F9] transition-colors">
+                <div className="group flex items-center gap-1 rounded-xl px-2 py-1.5 text-sm text-[#334155] hover:bg-[#F1F5F9] transition-colors">
                   <button
                     onClick={() => toggleProject(project.id)}
                     className="flex flex-1 items-center gap-1.5 text-left overflow-hidden"
@@ -454,7 +484,7 @@ export default function ChatSidebar({
                       <span className="flex-1 truncate font-medium">{project.name}</span>
                     )}
                     {!isRenamingThis && (
-                      <span className="flex-shrink-0 text-[10px] text-[#CBD5E1]">
+                      <span className="flex-shrink-0 text-xs text-[#CBD5E1]">
                         {projectConvs.length}
                       </span>
                     )}
@@ -488,7 +518,7 @@ export default function ChatSidebar({
                 {isExpanded && (
                   <div className="pl-4 space-y-0.5 pb-1">
                     {projectConvs.length === 0 ? (
-                      <p className="px-3 py-1 text-[11px] text-[#CBD5E1]">No chats yet.</p>
+                      <p className="px-3 py-1 text-xs text-[#CBD5E1]">No chats yet.</p>
                     ) : (
                       projectConvs.map((conv) => (
                         <ConvRow key={conv.id} conv={conv} inProject={true} />
@@ -503,21 +533,10 @@ export default function ChatSidebar({
 
         <div className="mx-3 border-t border-[#F1F5F9] my-1" />
 
-        {/* ── Search ── */}
-        <div className="px-3 pb-1">
-          <input
-            type="text"
-            placeholder="Search chats..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full rounded-lg border border-[#E2E8F0] bg-[#F8F9FB] px-3 py-1.5 text-xs text-[#0F172A] placeholder-[#94A3B8] outline-none focus:border-[#E11D48] transition-colors"
-          />
-        </div>
-
         {/* ── All chats (unassigned) ── */}
         <div className="px-2 pb-2">
           {!isSearching && (
-            <p className="px-3 pt-2 pb-1 text-[10px] font-semibold uppercase tracking-wider text-[#94A3B8]">
+            <p className="px-3 pt-2 pb-1 text-xs font-semibold uppercase tracking-wider text-[#94A3B8]">
               All chats
             </p>
           )}
@@ -532,7 +551,7 @@ export default function ChatSidebar({
             unassignedGroups.map((group) => (
               <div key={group.label} className="mb-2">
                 {!isSearching && (
-                  <p className="px-3 pt-1 pb-1 text-[10px] font-semibold uppercase tracking-wider text-[#CBD5E1]">
+                  <p className="px-3 pt-1 pb-1 text-xs font-semibold uppercase tracking-wider text-[#CBD5E1]">
                     {group.label}
                   </p>
                 )}
@@ -550,10 +569,10 @@ export default function ChatSidebar({
       {/* Footer: user info + billing */}
       <div className="flex-shrink-0 border-t border-[#E2E8F0] p-3 space-y-2">
         <div className="flex items-center gap-2">
-          <span className={`rounded-full border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${tierColour}`}>
+          <span className={`rounded-full border px-2 py-0.5 text-xs font-bold uppercase tracking-wide ${tierColour}`}>
             {isAdmin ? "Admin" : tier}
           </span>
-          <span className="text-[11px] text-[#64748B] truncate">{usageLabel}</span>
+          <span className="text-xs text-[#64748B] truncate">{usageLabel}</span>
         </div>
         {!isAdmin && (
           <div className="h-1 w-full overflow-hidden rounded-full bg-[#E2E8F0]">
@@ -564,21 +583,21 @@ export default function ChatSidebar({
           <button
             onClick={onRefreshBilling}
             disabled={billingLoading}
-            className="flex-1 rounded-lg border border-[#E2E8F0] bg-white px-2 py-1 text-[11px] text-[#64748B] hover:bg-[#F8F9FB] disabled:opacity-50"
+            className="flex-1 rounded-lg border border-[#E2E8F0] bg-white px-2 py-1 text-xs text-[#64748B] hover:bg-[#F8F9FB] disabled:opacity-50"
           >
             {billingLoading ? "..." : "Refresh plan"}
           </button>
           <button
             onClick={onOpenBilling}
             disabled={billingLoading}
-            className="flex-1 rounded-lg border border-[#E2E8F0] bg-white px-2 py-1 text-[11px] text-[#64748B] hover:bg-[#F8F9FB] disabled:opacity-50"
+            className="flex-1 rounded-lg border border-[#E2E8F0] bg-white px-2 py-1 text-xs text-[#64748B] hover:bg-[#F8F9FB] disabled:opacity-50"
           >
             Billing
           </button>
         </div>
         <a
           href={isAdmin ? "/admin/reviews" : "/dashboard/reviews"}
-          className="flex w-full items-center gap-2 rounded-lg border border-[#E2E8F0] bg-white px-2 py-1.5 text-[11px] text-[#64748B] hover:bg-[#F8F9FB] transition-colors"
+          className="flex w-full items-center gap-2 rounded-lg border border-[#E2E8F0] bg-white px-2 py-1.5 text-xs text-[#64748B] hover:bg-[#F8F9FB] transition-colors"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
@@ -589,7 +608,7 @@ export default function ChatSidebar({
           <div className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[#E11D48] text-[9px] font-bold text-white uppercase">
             {userEmail.charAt(0)}
           </div>
-          <p className="text-[10px] text-[#94A3B8] truncate flex-1">{userEmail}</p>
+          <p className="text-xs text-[#94A3B8] truncate flex-1">{userEmail}</p>
           <a
             href="/dashboard/settings"
             className="text-[#CBD5E1] hover:text-[#64748B] transition-colors flex-shrink-0"
@@ -602,6 +621,32 @@ export default function ChatSidebar({
           </a>
         </div>
       </div>
+
+      {/* Delete confirmation dialog */}
+      {deleteConfirmId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="mx-4 w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl">
+            <h3 className="text-base font-semibold text-[#0F172A]">Delete conversation?</h3>
+            <p className="mt-2 text-sm text-[#64748B]">
+              This will permanently delete this conversation and all its messages. This action cannot be undone.
+            </p>
+            <div className="mt-5 flex gap-3">
+              <button
+                onClick={() => setDeleteConfirmId(null)}
+                className="flex-1 rounded-xl border border-[#E2E8F0] bg-white py-2 text-sm font-medium text-[#64748B] hover:bg-[#F8F9FB] transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => { onDeleteConversation(deleteConfirmId); setDeleteConfirmId(null); }}
+                className="flex-1 rounded-xl bg-[#E11D48] py-2 text-sm font-medium text-white hover:bg-[#BE123C] transition-colors"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </aside>
   );
 }
