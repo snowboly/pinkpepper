@@ -195,7 +195,7 @@ export default function HomePage() {
                   />
                   <button
                     type="submit"
-                    className="inline-flex items-center gap-2 rounded-xl bg-[#E11D48] px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-[#E11D48]/20 transition-all hover:bg-[#BE123C] hover:shadow-xl hover:shadow-[#E11D48]/25 md:px-5 md:py-3 md:text-base"
+                    className="inline-flex items-center gap-2 rounded-xl bg-[#E11D48] px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-[#E11D48]/20 transition-all duration-200 hover:bg-[#BE123C] hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#E11D48]/30 active:scale-[0.97] md:px-5 md:py-3 md:text-base"
                   >
                     <span className="hidden sm:inline">Start free</span>
                     <ArrowRight className="h-5 w-5" />
@@ -385,7 +385,7 @@ export default function HomePage() {
                 <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />Basic food safety Q&amp;A</li>
                 <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />10 saved conversations</li>
               </ul>
-              <Link href="/signup" className="mt-8 block rounded-xl border border-[#E2E8F0] bg-white py-3.5 text-center text-sm font-semibold text-[#0F172A] transition-colors hover:bg-[#F8FAFC]">
+              <Link href="/signup" className="mt-8 block rounded-xl border border-[#E2E8F0] bg-white py-3.5 text-center text-sm font-semibold text-[#0F172A] transition-all duration-200 hover:bg-[#F8FAFC] hover:-translate-y-0.5 hover:shadow-md active:scale-[0.98]">
                 Get started
               </Link>
             </div>
@@ -408,7 +408,7 @@ export default function HomePage() {
                 <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />Improved model memory</li>
                 <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />PDF export</li>
               </ul>
-              <Link href="/signup?plan=plus" className="mt-8 block rounded-xl bg-[#E11D48] py-3.5 text-center text-sm font-semibold text-white transition-colors hover:bg-[#BE123C]">
+              <Link href="/signup?plan=plus" className="mt-8 block rounded-xl bg-[#E11D48] py-3.5 text-center text-sm font-semibold text-white transition-all duration-200 hover:bg-[#BE123C] hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#E11D48]/25 active:scale-[0.98]">
                 Choose Plus
               </Link>
             </div>
@@ -427,7 +427,7 @@ export default function HomePage() {
                 <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-600" />Word &amp; PDF export</li>
                 <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-600" />Food Safety Specialist reviews</li>
               </ul>
-              <Link href="/signup?plan=pro" className="mt-8 block rounded-xl border border-[#E2E8F0] bg-white py-3.5 text-center text-sm font-semibold text-[#0F172A] transition-colors hover:bg-[#F8FAFC]">
+              <Link href="/signup?plan=pro" className="mt-8 block rounded-xl border border-[#E2E8F0] bg-white py-3.5 text-center text-sm font-semibold text-[#0F172A] transition-all duration-200 hover:bg-[#F8FAFC] hover:-translate-y-0.5 hover:shadow-md active:scale-[0.98]">
                 Choose Pro
               </Link>
             </div>
@@ -470,7 +470,7 @@ export default function HomePage() {
           </p>
           <Link
             href="/signup"
-            className="inline-flex items-center gap-3 rounded-full bg-[#E11D48] px-10 py-4 text-lg font-semibold text-white shadow-xl shadow-[#E11D48]/20 transition-all hover:bg-[#BE123C] hover:shadow-2xl hover:shadow-[#E11D48]/25"
+            className="inline-flex items-center gap-3 rounded-full bg-[#E11D48] px-10 py-4 text-lg font-semibold text-white shadow-xl shadow-[#E11D48]/20 transition-all duration-200 hover:bg-[#BE123C] hover:-translate-y-1 hover:shadow-2xl hover:shadow-[#E11D48]/30 active:scale-[0.97]"
           >
             Start for free
             <ArrowRight className="h-5 w-5" />

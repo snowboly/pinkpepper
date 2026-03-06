@@ -38,13 +38,13 @@ export function SiteHeader() {
         <div className="flex items-center gap-3 md:gap-4">
           <Link
             href="/login"
-            className="hidden text-sm font-semibold text-[#64748B] transition-colors hover:text-[#0F172A] sm:block"
+            className="hidden text-sm font-semibold text-[#64748B] transition-all duration-200 hover:text-[#0F172A] hover:-translate-y-px sm:block"
           >
             Log in
           </Link>
           <Link
             href="/signup"
-            className="rounded-full bg-[#E11D48] px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-[#BE123C] md:px-5 md:py-2.5"
+            className="rounded-full bg-[#E11D48] px-4 py-2 text-sm font-semibold text-white transition-all duration-200 hover:bg-[#BE123C] hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#E11D48]/30 active:scale-[0.97] md:px-5 md:py-2.5"
           >
             Get started
           </Link>
