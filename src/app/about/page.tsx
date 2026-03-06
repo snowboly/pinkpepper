@@ -12,7 +12,7 @@ import {
 export const metadata = {
   title: "About | PinkPepper",
   description:
-    "PinkPepper combines AI-powered food safety compliance with expert human review. Founded by Dr Joao, PhD in Food Microbiology.",
+    "PinkPepper combines AI-powered food safety compliance with expert human review. Founded by Dr Joao, with a background in chemistry and food science.",
 };
 
 export default function AboutPage() {
@@ -63,7 +63,7 @@ export default function AboutPage() {
               <h2 className="text-2xl font-bold text-[#0F172A]">Our Story</h2>
               <p>
                 PinkPepper was founded by <strong>Dr&nbsp;Joao</strong>, a food
-                scientist with a <strong>PhD in Food Microbiology</strong> and
+                scientist with a background in <strong>chemistry and food science</strong> and
                 years of hands-on experience helping food businesses achieve and
                 maintain compliance.
               </p>
