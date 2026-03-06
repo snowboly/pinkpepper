@@ -11,6 +11,9 @@ create table if not exists projects (
 
 alter table projects enable row level security;
 
+-- Drop the catch-all policy created by an earlier migration if it exists
+drop policy if exists "Users can manage their own projects" on projects;
+
 create policy "Users can select their own projects" on projects
   for select using (auth.uid() = user_id);
 
