@@ -57,14 +57,37 @@ export async function SiteHeader() {
         </div>
         <div className="flex items-center gap-3 md:gap-4">
           {user ? (
-            <Link
-              href="/dashboard"
-              aria-label="Go to dashboard"
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-[#E2E8F0] bg-white text-xs font-bold tracking-wide text-[#0F172A] transition-all duration-200 hover:border-[#CBD5E1] hover:bg-[#F8FAFC] md:h-10 md:w-10"
-              title={user.email ?? "Account"}
-            >
-              {initials}
-            </Link>
+            <details className="group relative">
+              <summary
+                aria-label="Open account menu"
+                className="flex h-9 w-9 list-none items-center justify-center rounded-full border border-[#E2E8F0] bg-white text-xs font-bold tracking-wide text-[#0F172A] transition-all duration-200 hover:border-[#CBD5E1] hover:bg-[#F8FAFC] md:h-10 md:w-10"
+                title={user.email ?? "Account"}
+              >
+                {initials}
+              </summary>
+              <div className="absolute right-0 top-[calc(100%+10px)] z-50 w-44 rounded-xl border border-[#E2E8F0] bg-white p-1.5 shadow-lg shadow-black/10">
+                <Link
+                  href="/dashboard"
+                  className="block rounded-lg px-3 py-2 text-sm font-medium text-[#0F172A] hover:bg-[#F8FAFC]"
+                >
+                  Dashboard
+                </Link>
+                <Link
+                  href="/dashboard/settings"
+                  className="block rounded-lg px-3 py-2 text-sm font-medium text-[#0F172A] hover:bg-[#F8FAFC]"
+                >
+                  Settings
+                </Link>
+                <form action="/api/auth/signout" method="POST">
+                  <button
+                    type="submit"
+                    className="block w-full rounded-lg px-3 py-2 text-left text-sm font-medium text-[#E11D48] hover:bg-[#FFF1F2]"
+                  >
+                    Log out
+                  </button>
+                </form>
+              </div>
+            </details>
           ) : (
             <>
               <Link
