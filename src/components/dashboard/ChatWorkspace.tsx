@@ -14,6 +14,8 @@ import ReviewModal from "./ReviewModal";
 import OnboardingModal from "./OnboardingModal";
 import UpgradeModal from "./UpgradeModal";
 
+type StreamUsage = { used: number; limit: number | null; tier: SubscriptionTier; isAdmin?: boolean };
+
 export default function ChatWorkspace({
   userEmail,
   initialTier,
@@ -72,8 +74,65 @@ export default function ChatWorkspace({
   const [isDraggingOver, setIsDraggingOver] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
+  const typingQueueRef = useRef("");
+  const typingIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const pendingDoneRef = useRef<{ citations?: Citation[]; usage?: StreamUsage } | null>(null);
 
   const canUploadImages = isAdmin || dailyImageUploads > 0;
+
+  const clearTypingInterval = useCallback(() => {
+    if (typingIntervalRef.current) {
+      clearInterval(typingIntervalRef.current);
+      typingIntervalRef.current = null;
+    }
+  }, []);
+
+  const finalizeStreamingMessage = useCallback((doneData: { citations?: Citation[]; usage?: StreamUsage } | null) => {
+    setMessages((prev) => {
+      const updated = [...prev];
+      const last = updated[updated.length - 1];
+      if (last?.isStreaming) {
+        updated[updated.length - 1] = {
+          ...last,
+          isStreaming: false,
+          citations: doneData?.citations,
+        };
+      }
+      return updated;
+    });
+    if (doneData?.usage) {
+      setUsage(doneData.usage.used);
+      setTier(doneData.usage.tier);
+      setIsAdmin(Boolean(doneData.usage.isAdmin));
+    }
+  }, []);
+
+  const startTypingDrain = useCallback(() => {
+    if (typingIntervalRef.current) return;
+    typingIntervalRef.current = setInterval(() => {
+      const queue = typingQueueRef.current;
+
+      if (queue.length > 0) {
+        const chunkSize = queue.length > 40 ? 4 : queue.length > 20 ? 3 : 2;
+        const nextChunk = queue.slice(0, chunkSize);
+        typingQueueRef.current = queue.slice(chunkSize);
+        setMessages((prev) => {
+          const updated = [...prev];
+          const last = updated[updated.length - 1];
+          if (!last) return prev;
+          updated[updated.length - 1] = { ...last, content: last.content + nextChunk };
+          return updated;
+        });
+        return;
+      }
+
+      if (pendingDoneRef.current) {
+        finalizeStreamingMessage(pendingDoneRef.current);
+        pendingDoneRef.current = null;
+      }
+      clearTypingInterval();
+    }, 20);
+  }, [clearTypingInterval, finalizeStreamingMessage]);
 
   // ── Drag & drop image onto chat area ──
   function handleDragOver(e: React.DragEvent) {
@@ -357,6 +416,9 @@ export default function ChatWorkspace({
 
   function startNewChat() {
     abortControllerRef.current?.abort();
+    typingQueueRef.current = "";
+    pendingDoneRef.current = null;
+    clearTypingInterval();
     setConversationId(null);
     setMessages([]);
     setReviewRequests([]);
@@ -518,6 +580,9 @@ export default function ChatWorkspace({
 
     // Text messages use the streaming endpoint
     abortControllerRef.current = new AbortController();
+    typingQueueRef.current = "";
+    pendingDoneRef.current = null;
+    clearTypingInterval();
     setMessages((prev) => [...prev, { role: "assistant", content: "", isStreaming: true }]);
 
     try {
@@ -530,7 +595,7 @@ export default function ChatWorkspace({
 
       if (!res.ok) {
         let errMsg = "Request failed";
-        let isLimit = res.status === 402;
+        const isLimit = res.status === 402;
         try {
           const data = await res.json();
           errMsg = data.error ?? errMsg;
@@ -564,7 +629,7 @@ export default function ChatWorkspace({
           const payload = line.slice(6);
           if (payload === "[DONE]") continue;
 
-          let event: { type: string; delta?: string; conversationId?: string; citations?: Citation[]; usage?: { used: number; limit: number | null; tier: SubscriptionTier; isAdmin?: boolean } };
+          let event: { type: string; delta?: string; conversationId?: string; citations?: Citation[]; usage?: StreamUsage };
           try {
             event = JSON.parse(payload);
           } catch {
@@ -574,35 +639,26 @@ export default function ChatWorkspace({
           if (event.type === "metadata" && event.conversationId) {
             setConversationId(event.conversationId);
           } else if (event.type === "content" && event.delta) {
-            setMessages((prev) => {
-              const updated = [...prev];
-              const last = updated[updated.length - 1];
-              updated[updated.length - 1] = { ...last, content: last.content + event.delta };
-              return updated;
-            });
+            typingQueueRef.current += event.delta;
+            startTypingDrain();
           } else if (event.type === "done") {
-            setMessages((prev) => {
-              const updated = [...prev];
-              const last = updated[updated.length - 1];
-              updated[updated.length - 1] = {
-                ...last,
-                isStreaming: false,
-                citations: event.citations,
-              };
-              return updated;
-            });
-            if (event.usage) {
-              setUsage(event.usage.used);
-              setTier(event.usage.tier);
-              setIsAdmin(Boolean(event.usage.isAdmin));
-            }
+            pendingDoneRef.current = { citations: event.citations, usage: event.usage };
+            startTypingDrain();
           }
         }
+      }
+
+      if (typingQueueRef.current.length === 0 && pendingDoneRef.current) {
+        finalizeStreamingMessage(pendingDoneRef.current);
+        pendingDoneRef.current = null;
       }
 
       await loadConversations();
     } catch (err: unknown) {
       if (err instanceof DOMException && err.name === "AbortError") {
+        typingQueueRef.current = "";
+        pendingDoneRef.current = null;
+        clearTypingInterval();
         // User navigated away — keep partial content visible
         setMessages((prev) => {
           const updated = [...prev];
@@ -613,6 +669,9 @@ export default function ChatWorkspace({
           return updated;
         });
       } else {
+        typingQueueRef.current = "";
+        pendingDoneRef.current = null;
+        clearTypingInterval();
         setError("Network error. Please try again.");
         setMessages((prev) => prev.slice(0, -2));
         setPrompt(value);
@@ -645,6 +704,10 @@ export default function ChatWorkspace({
     const params = new URLSearchParams(window.location.search);
     if (params.get("billing") === "success") void refreshBillingStatus();
   }, []);
+
+  useEffect(() => {
+    return () => clearTypingInterval();
+  }, [clearTypingInterval]);
 
   // ── Render ──
   return (

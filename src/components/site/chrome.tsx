@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { createClient } from "@/utils/supabase/server";
 
 const nav = [
   { href: "/pricing", label: "Pricing" },
@@ -8,7 +9,25 @@ const nav = [
   { href: "/contact", label: "Contact" },
 ];
 
-export function SiteHeader() {
+function getUserInitials(email: string | null | undefined, fullName: string | null | undefined) {
+  if (fullName) {
+    const words = fullName.trim().split(/\s+/).filter(Boolean);
+    if (words.length >= 2) return `${words[0][0]}${words[1][0]}`.toUpperCase();
+    if (words.length === 1) return words[0].slice(0, 2).toUpperCase();
+  }
+  if (email) return email.slice(0, 2).toUpperCase();
+  return "U";
+}
+
+export async function SiteHeader() {
+  const supabase = await createClient();
+  const { data } = await supabase.auth.getUser();
+  const user = data.user;
+  const fullName =
+    (typeof user?.user_metadata?.full_name === "string" ? user.user_metadata.full_name : null) ??
+    (typeof user?.user_metadata?.name === "string" ? user.user_metadata.name : null);
+  const initials = getUserInitials(user?.email, fullName);
+
   return (
     <header className="sticky top-0 z-50 border-b border-[#E2E8F0] bg-white/80 shadow-[0_1px_3px_rgba(0,0,0,0.04)] backdrop-blur-xl">
       <div className="pp-container flex h-14 items-center justify-between md:h-16">
@@ -37,18 +56,31 @@ export function SiteHeader() {
           </nav>
         </div>
         <div className="flex items-center gap-3 md:gap-4">
-          <Link
-            href="/login"
-            className="hidden text-sm font-semibold text-[#64748B] transition-all duration-200 hover:text-[#0F172A] hover:-translate-y-px sm:block"
-          >
-            Log in
-          </Link>
-          <Link
-            href="/signup"
-            className="rounded-full bg-[#E11D48] px-4 py-2 text-sm font-semibold text-white transition-all duration-200 hover:bg-[#BE123C] hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#E11D48]/30 active:scale-[0.97] md:px-5 md:py-2.5"
-          >
-            Get started
-          </Link>
+          {user ? (
+            <Link
+              href="/dashboard"
+              aria-label="Go to dashboard"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-[#E2E8F0] bg-white text-xs font-bold tracking-wide text-[#0F172A] transition-all duration-200 hover:border-[#CBD5E1] hover:bg-[#F8FAFC] md:h-10 md:w-10"
+              title={user.email ?? "Account"}
+            >
+              {initials}
+            </Link>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className="hidden text-sm font-semibold text-[#64748B] transition-all duration-200 hover:text-[#0F172A] hover:-translate-y-px sm:block"
+              >
+                Log in
+              </Link>
+              <Link
+                href="/signup"
+                className="rounded-full bg-[#E11D48] px-4 py-2 text-sm font-semibold text-white transition-all duration-200 hover:bg-[#BE123C] hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#E11D48]/30 active:scale-[0.97] md:px-5 md:py-2.5"
+              >
+                Get started
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </header>
