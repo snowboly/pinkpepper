@@ -56,7 +56,6 @@ type ChatSidebarProps = {
   userEmail: string;
   tier: SubscriptionTier;
   isAdmin: boolean;
-  usageLabel: string;
   usagePercent: number;
   billingLoading: boolean;
   tierColour: string;
@@ -70,7 +69,6 @@ type ChatSidebarProps = {
   onRenameProject: (id: string, name: string, emoji: string) => void;
   onDeleteProject: (id: string) => void;
   onRefreshBilling: () => void;
-  onOpenBilling: () => void;
 };
 
 export default function ChatSidebar({
@@ -82,7 +80,6 @@ export default function ChatSidebar({
   userEmail,
   tier,
   isAdmin,
-  usageLabel,
   usagePercent,
   billingLoading,
   tierColour,
@@ -96,7 +93,6 @@ export default function ChatSidebar({
   onRenameProject,
   onDeleteProject,
   onRefreshBilling,
-  onOpenBilling,
 }: ChatSidebarProps) {
   // Conversation rename
   const [renamingId, setRenamingId] = useState<string | null>(null);
@@ -108,9 +104,8 @@ export default function ChatSidebar({
 
   // Delete confirmation
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
-
-  // Move-to-project dropdown
-  const [moveMenuConvId, setMoveMenuConvId] = useState<string | null>(null);
+  const [dragOverProjectId, setDragOverProjectId] = useState<string | null>(null);
+  const [dragOverAllChats, setDragOverAllChats] = useState(false);
 
   // Project expand/collapse
   const [expandedProjects, setExpandedProjects] = useState<Set<string>>(new Set());
@@ -146,17 +141,6 @@ export default function ChatSidebar({
       renameProjectInputRef.current.select();
     }
   }, [renamingProjectId]);
-
-  // Close move menu on outside click
-  useEffect(() => {
-    if (!moveMenuConvId) return;
-    function handler(e: MouseEvent) {
-      const target = e.target as HTMLElement;
-      if (!target.closest("[data-move-menu]")) setMoveMenuConvId(null);
-    }
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, [moveMenuConvId]);
 
   function startRename(conv: Conversation) {
     setRenamingId(conv.id);
@@ -226,7 +210,7 @@ export default function ChatSidebar({
   const unassignedGroups = groupConversationsByTime(isSearching ? searchFiltered : unassigned);
 
   // ── Shared conversation row renderer ──
-  function ConvRow({ conv, inProject }: { conv: Conversation; inProject: boolean }) {
+  function ConvRow({ conv }: { conv: Conversation }) {
     const isActive = activeConversationId === conv.id;
     return (
       <div
@@ -234,6 +218,11 @@ export default function ChatSidebar({
         className={`group relative flex items-center rounded-xl px-3 py-2 text-sm cursor-pointer transition-colors ${
           isActive ? "bg-[#FEF2F2] text-[#0F172A]" : "text-[#334155] hover:bg-[#F1F5F9]"
         }`}
+        draggable={renamingId !== conv.id}
+        onDragStart={(e) => {
+          e.dataTransfer.setData("text/plain", conv.id);
+          e.dataTransfer.effectAllowed = "move";
+        }}
       >
         {renamingId === conv.id ? (
           <input
@@ -269,47 +258,6 @@ export default function ChatSidebar({
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
               </svg>
             </button>
-
-            {/* Move to / remove from project */}
-            {inProject ? (
-              <button
-                onClick={(e) => { e.stopPropagation(); onMoveConversation(conv.id, null); }}
-                className="text-[#94A3B8] hover:text-[#64748B] p-0.5"
-                title="Remove from project"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 7a2 2 0 012-2h4l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6" />
-                </svg>
-              </button>
-            ) : projects.length > 0 ? (
-              <div data-move-menu className="relative">
-                <button
-                  onClick={(e) => { e.stopPropagation(); setMoveMenuConvId(moveMenuConvId === conv.id ? null : conv.id); }}
-                  className="text-[#94A3B8] hover:text-[#64748B] p-0.5"
-                  title="Move to project"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 7a2 2 0 012-2h4l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v4m2-2H10" />
-                  </svg>
-                </button>
-                {moveMenuConvId === conv.id && (
-                  <div className="absolute bottom-full left-0 z-50 mb-1 min-w-[140px] rounded-xl border border-[#E2E8F0] bg-white shadow-lg py-1">
-                    {projects.map((p) => (
-                      <button
-                        key={p.id}
-                        onClick={(e) => { e.stopPropagation(); onMoveConversation(conv.id, p.id); setMoveMenuConvId(null); }}
-                        className="flex w-full items-center gap-2 px-3 py-1.5 text-sm text-[#334155] hover:bg-[#F1F5F9] text-left"
-                      >
-                        <span>{p.emoji}</span>
-                        <span className="truncate">{p.name}</span>
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ) : null}
 
             {/* Archive */}
             <button
@@ -450,7 +398,25 @@ export default function ChatSidebar({
             return (
               <div key={project.id} className="mb-0.5">
                 {/* Project folder row */}
-                <div className="group flex items-center gap-1 rounded-xl px-2 py-1.5 text-sm text-[#334155] hover:bg-[#F1F5F9] transition-colors">
+                <div
+                  className={`group flex items-center gap-1 rounded-xl px-2 py-1.5 text-sm text-[#334155] transition-colors ${
+                    dragOverProjectId === project.id ? "bg-[#FEF2F2] ring-1 ring-inset ring-[#E11D48]/30" : "hover:bg-[#F1F5F9]"
+                  }`}
+                  onDragOver={(e) => {
+                    e.preventDefault();
+                    setDragOverProjectId(project.id);
+                  }}
+                  onDragLeave={() => {
+                    if (dragOverProjectId === project.id) setDragOverProjectId(null);
+                  }}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    const convId = e.dataTransfer.getData("text/plain");
+                    if (convId) onMoveConversation(convId, project.id);
+                    setDragOverProjectId(null);
+                    setExpandedProjects((prev) => new Set(prev).add(project.id));
+                  }}
+                >
                   <button
                     onClick={() => toggleProject(project.id)}
                     className="flex flex-1 items-center gap-1.5 text-left overflow-hidden"
@@ -521,7 +487,7 @@ export default function ChatSidebar({
                       <p className="px-3 py-1 text-xs text-[#CBD5E1]">No chats yet.</p>
                     ) : (
                       projectConvs.map((conv) => (
-                        <ConvRow key={conv.id} conv={conv} inProject={true} />
+                        <ConvRow key={conv.id} conv={conv} />
                       ))
                     )}
                   </div>
@@ -534,7 +500,21 @@ export default function ChatSidebar({
         <div className="mx-3 border-t border-[#F1F5F9] my-1" />
 
         {/* ── All chats (unassigned) ── */}
-        <div className="px-2 pb-2">
+        <div
+          className={`px-2 pb-2 rounded-xl ${dragOverAllChats ? "bg-[#F8FAFC] ring-1 ring-inset ring-[#CBD5E1]" : ""}`}
+          onDragOver={(e) => {
+            e.preventDefault();
+            setDragOverAllChats(true);
+          }}
+          onDragLeave={() => setDragOverAllChats(false)}
+          onDrop={(e) => {
+            e.preventDefault();
+            const convId = e.dataTransfer.getData("text/plain");
+            if (convId) onMoveConversation(convId, null);
+            setDragOverAllChats(false);
+            setDragOverProjectId(null);
+          }}
+        >
           {!isSearching && (
             <p className="px-3 pt-2 pb-1 text-xs font-semibold uppercase tracking-wider text-[#94A3B8]">
               All chats
@@ -557,7 +537,7 @@ export default function ChatSidebar({
                 )}
                 <div className="space-y-0.5">
                   {group.conversations.map((conv) => (
-                    <ConvRow key={conv.id} conv={conv} inProject={false} />
+                    <ConvRow key={conv.id} conv={conv} />
                   ))}
                 </div>
               </div>
@@ -568,31 +548,23 @@ export default function ChatSidebar({
 
       {/* Footer: user info + billing */}
       <div className="flex-shrink-0 border-t border-[#E2E8F0] p-3 space-y-2">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center">
           <span className={`rounded-full border px-2 py-0.5 text-xs font-bold uppercase tracking-wide ${tierColour}`}>
             {isAdmin ? "Admin" : tier}
           </span>
-          <span className="text-xs text-[#64748B] truncate">{usageLabel}</span>
         </div>
         {!isAdmin && (
           <div className="h-1 w-full overflow-hidden rounded-full bg-[#E2E8F0]">
             <div className="h-full rounded-full bg-[#E11D48]" style={{ width: `${usagePercent}%` }} />
           </div>
         )}
-        <div className="flex gap-2">
+        <div className="flex">
           <button
             onClick={onRefreshBilling}
             disabled={billingLoading}
-            className="flex-1 rounded-lg border border-[#E2E8F0] bg-white px-2 py-1 text-xs text-[#64748B] hover:bg-[#F8F9FB] disabled:opacity-50"
+            className="w-full rounded-lg border border-[#E2E8F0] bg-white px-2 py-1 text-xs text-[#64748B] hover:bg-[#F8F9FB] disabled:opacity-50"
           >
             {billingLoading ? "..." : "Refresh plan"}
-          </button>
-          <button
-            onClick={onOpenBilling}
-            disabled={billingLoading}
-            className="flex-1 rounded-lg border border-[#E2E8F0] bg-white px-2 py-1 text-xs text-[#64748B] hover:bg-[#F8F9FB] disabled:opacity-50"
-          >
-            Billing
           </button>
         </div>
         <a

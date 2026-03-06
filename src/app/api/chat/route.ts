@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient as createSupabaseServer } from "@/utils/supabase/server";
-import { TIER_CAPABILITIES } from "@/lib/tier";
+import { TIER_CAPABILITIES, type SubscriptionTier } from "@/lib/tier";
 import { resolveUserAccess } from "@/lib/access";
 import { countUsageSince, utcDayStartIso } from "@/lib/policy";
 import { retrieveContext, buildRAGPrompt, formatCitations, type KnowledgeChunk } from "@/lib/rag";
@@ -38,7 +38,9 @@ async function handleImageAnalysis(
   imageBase64: string,
   imageMimeType: string,
   message: string,
-  isAdmin: boolean
+  isAdmin: boolean,
+  tier: SubscriptionTier,
+  usage: { used: number; limit: number | null }
 ) {
   const openaiKey = process.env.OPENAI_API_KEY;
   if (!openaiKey) {
@@ -116,9 +118,9 @@ async function handleImageAnalysis(
     ragEnabled: false,
     imageAnalysis: true,
     usage: {
-      used: 1,
-      limit: null,
-      tier: "free",
+      used: usage.used,
+      limit: usage.limit,
+      tier,
       isAdmin,
     },
   });
@@ -246,7 +248,20 @@ export async function POST(request: Request) {
     if (!conversationId) {
       return NextResponse.json({ error: "Failed to resolve conversation." }, { status: 500 });
     }
-    return handleImageAnalysis(supabase, user.id, conversationId, base64, imageFile.type, message, isAdmin);
+    return handleImageAnalysis(
+      supabase,
+      user.id,
+      conversationId,
+      base64,
+      imageFile.type,
+      message,
+      isAdmin,
+      tier,
+      {
+        used: isAdmin ? 0 : imageUsed + 1,
+        limit: isAdmin ? null : dailyImageLimit,
+      }
+    );
   }
 
   // --- Text chat path ---
