@@ -118,7 +118,46 @@ export function buildSubscriptionUpdatedEmail(input: {
   };
 }
 
-// ─── 3. Subscription cancelled ────────────────────────────────────────────────
+// ─── 3. Payment failed ───────────────────────────────────────────────────────
+
+export function buildPaymentFailedEmail(input: {
+  tier: string;
+  nextRetryDate?: string;
+}): { subject: string; html: string } {
+  const name = tierName(input.tier);
+
+  const retryNote = input.nextRetryDate
+    ? `We will automatically retry the payment on <strong>${input.nextRetryDate}</strong>.`
+    : `We will automatically retry the payment soon.`;
+
+  return {
+    subject: `Payment failed for your PinkPepper subscription`,
+    html: wrapEmail(`
+      <h1 style="margin:0 0 8px;font-size:22px;font-weight:700;color:#0F172A;">Payment Failed</h1>
+      <p style="margin:0 0 16px;font-size:15px;color:#475569;line-height:1.6;">
+        We were unable to process the latest payment for your PinkPepper <strong>${name}</strong> plan.
+      </p>
+
+      ${infoCard(
+        `<p style="margin:0 0 4px;font-size:13px;color:#92400E;text-transform:uppercase;letter-spacing:0.05em;font-weight:600;">Action required</p>
+        <p style="margin:0;font-size:14px;color:#0F172A;line-height:1.6;">
+          Please update your payment method to avoid any interruption to your ${name} features. ${retryNote}
+        </p>`,
+        { bg: "#FFFBEB", border: "#FDE68A" }
+      )}
+
+      ${btn(`${APP_URL}/dashboard`, "Update Payment Method")}
+
+      ${divider()}
+
+      <p style="font-size:12px;color:#94A3B8;line-height:1.5;margin:0;">
+        If you believe this is an error, please contact your card issuer or reply to this email for assistance.
+      </p>
+    `),
+  };
+}
+
+// ─── 4. Subscription cancelled ────────────────────────────────────────────────
 
 export function buildSubscriptionCancelledEmail(input: {
   tier: string;
