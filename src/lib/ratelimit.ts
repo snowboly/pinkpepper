@@ -17,7 +17,7 @@ function getRedis(): Redis {
 
 type LimiterConfig = { window: Parameters<typeof Ratelimit.slidingWindow>[1]; max: number; prefix: string };
 
-let _limiters: Record<string, Ratelimit> = {};
+const _limiters: Record<string, Ratelimit> = {};
 function getLimiter({ window, max, prefix }: LimiterConfig): Ratelimit {
   if (!_limiters[prefix]) {
     _limiters[prefix] = new Ratelimit({
