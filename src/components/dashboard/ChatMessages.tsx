@@ -118,7 +118,7 @@ export default function ChatMessages({
       {/* Loading conversation messages */}
       {loadingMessages && (
         <div className="flex justify-center py-8">
-          <span className="text-base text-[#94A3B8]">Loading conversation...</span>
+          <span className="text-base text-[#6B7280]">Loading conversation...</span>
         </div>
       )}
 
@@ -145,9 +145,9 @@ export default function ChatMessages({
               <span className="text-sm font-semibold text-[#0F172A]">PinkPepper</span>
             </div>
             <div className="flex gap-1 ml-7">
-              <span className="h-2 w-2 rounded-full bg-[#CBD5E1] animate-bounce" style={{ animationDelay: "0ms" }} />
-              <span className="h-2 w-2 rounded-full bg-[#CBD5E1] animate-bounce" style={{ animationDelay: "150ms" }} />
-              <span className="h-2 w-2 rounded-full bg-[#CBD5E1] animate-bounce" style={{ animationDelay: "300ms" }} />
+              <span className="h-2 w-2 rounded-full bg-[#9CA3AF] animate-bounce" style={{ animationDelay: "0ms" }} />
+              <span className="h-2 w-2 rounded-full bg-[#9CA3AF] animate-bounce" style={{ animationDelay: "150ms" }} />
+              <span className="h-2 w-2 rounded-full bg-[#9CA3AF] animate-bounce" style={{ animationDelay: "300ms" }} />
             </div>
           </div>
         </div>
