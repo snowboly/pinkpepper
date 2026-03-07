@@ -256,7 +256,7 @@ export default async function PricingPage() {
             <div className="flex-1">
               <h3 className="font-semibold text-[#0F172A]">Still have questions?</h3>
               <p className="mt-1 text-sm text-[#64748B]">
-                Not sure which plan fits your operation? Get in touch and we'll help you decide.
+                Not sure which plan fits your operation? Get in touch and we&apos;ll help you decide.
               </p>
             </div>
             <Link

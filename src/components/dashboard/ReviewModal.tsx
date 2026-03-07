@@ -52,7 +52,7 @@ export default function ReviewModal({
   isAdmin,
   reviewEligible,
   allowFullDocumentReview,
-  reviewTurnaround,
+  reviewTurnaround: _reviewTurnaround,
   documentCategory,
   reviewNotes,
   reviewLoading,
