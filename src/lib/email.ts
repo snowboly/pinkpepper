@@ -8,10 +8,10 @@ type EmailInput = {
 
 export async function sendEmail(input: EmailInput) {
   const apiKey = process.env.RESEND_API_KEY;
-  const from = process.env.RESEND_FROM;
+  const from = process.env.RESEND_FROM_EMAIL;
 
   if (!apiKey || !from) {
-    console.warn("sendEmail: RESEND_API_KEY or RESEND_FROM not configured, skipping email");
+    console.warn("sendEmail: RESEND_API_KEY or RESEND_FROM_EMAIL not configured, skipping email");
     return;
   }
 
