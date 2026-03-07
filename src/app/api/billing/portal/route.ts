@@ -1,10 +1,21 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
 import { getStripe } from "@/lib/billing/stripe";
+import { billingLimiter, checkRateLimit } from "@/lib/ratelimit";
 
 export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
+  const origin = request.headers.get("origin");
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
+  if (!origin || !siteUrl || !origin.startsWith(siteUrl)) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
+  const ip = request.headers.get("x-forwarded-for")?.split(",")[0].trim() ?? "unknown";
+  const rateLimitRes = await checkRateLimit(billingLimiter, ip);
+  if (rateLimitRes) return rateLimitRes;
+
   const supabase = await createClient();
   const {
     data: { user },

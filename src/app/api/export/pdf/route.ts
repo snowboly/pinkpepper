@@ -7,6 +7,7 @@ import {
   getLatestAssistantMessageForConversation,
   recordExportUsage,
 } from "@/lib/export/common";
+import { exportLimiter, checkRateLimit } from "@/lib/ratelimit";
 
 export const dynamic = "force-dynamic";
 
@@ -32,6 +33,9 @@ function wrapText(text: string, maxLineLength = 95) {
 export async function POST(request: Request) {
   try {
     const { supabase, userId, tier, isAdmin } = await getExportContext();
+
+    const rateLimitRes = await checkRateLimit(exportLimiter, userId);
+    if (rateLimitRes) return rateLimitRes;
 
     if (!canExportPdf(tier, isAdmin)) {
       return NextResponse.json({ error: "PDF export is not available for your plan." }, { status: 403 });
@@ -82,14 +86,13 @@ export async function POST(request: Request) {
     y -= 24;
 
     const lines = wrapText(docData.content, 96);
+    let currentPage = page;
     for (const line of lines) {
       if (y < 40) {
+        currentPage = pdfDoc.addPage([595.28, 841.89]);
         y = 800;
-        const newPage = pdfDoc.addPage([595.28, 841.89]);
-        newPage.drawText(line, { x: 40, y, size: 11, font, color: rgb(0.17, 0.17, 0.17) });
-      } else {
-        page.drawText(line, { x: 40, y, size: 11, font, color: rgb(0.17, 0.17, 0.17) });
       }
+      currentPage.drawText(line, { x: 40, y, size: 11, font, color: rgb(0.17, 0.17, 0.17) });
       y -= 14;
     }
 
@@ -119,6 +122,7 @@ export async function POST(request: Request) {
     if (message === "DOC_DAILY_LIMIT_REACHED") {
       return NextResponse.json({ error: "Daily document generation limit reached for your plan." }, { status: 402 });
     }
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error("[export/pdf] unhandled error:", error);
+    return NextResponse.json({ error: "Export failed. Please try again." }, { status: 500 });
   }
 }

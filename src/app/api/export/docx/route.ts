@@ -7,12 +7,16 @@ import {
   getLatestAssistantMessageForConversation,
   recordExportUsage,
 } from "@/lib/export/common";
+import { exportLimiter, checkRateLimit } from "@/lib/ratelimit";
 
 export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
   try {
     const { supabase, userId, tier, isAdmin } = await getExportContext();
+
+    const rateLimitRes = await checkRateLimit(exportLimiter, userId);
+    if (rateLimitRes) return rateLimitRes;
 
     if (!canExportDocx(tier, isAdmin)) {
       return NextResponse.json({ error: "DOCX export is only available on Pro." }, { status: 403 });
@@ -93,6 +97,7 @@ export async function POST(request: Request) {
     if (message === "DOC_DAILY_LIMIT_REACHED") {
       return NextResponse.json({ error: "Daily document generation limit reached for your plan." }, { status: 402 });
     }
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error("[export/docx] unhandled error:", error);
+    return NextResponse.json({ error: "Export failed. Please try again." }, { status: 500 });
   }
 }

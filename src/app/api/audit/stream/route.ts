@@ -3,6 +3,7 @@ import { TIER_CAPABILITIES } from "@/lib/tier";
 import { resolveUserAccess } from "@/lib/access";
 import { countUsageSince, utcDayStartIso } from "@/lib/policy";
 import { retrieveContext, formatCitations, type KnowledgeChunk } from "@/lib/rag";
+import { chatLimiter, checkRateLimit } from "@/lib/ratelimit";
 
 export const dynamic = "force-dynamic";
 
@@ -21,6 +22,9 @@ export async function POST(request: Request) {
   if (userError || !user) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  const rateLimitRes = await checkRateLimit(chatLimiter, user.id);
+  if (rateLimitRes) return rateLimitRes;
 
   const { data: profile } = await supabase
     .from("profiles")
@@ -99,10 +103,10 @@ export async function POST(request: Request) {
     .from("chat_messages")
     .select("role, content")
     .eq("conversation_id", conversationId)
-    .order("created_at", { ascending: true })
+    .order("created_at", { ascending: false })
     .limit(historyLimit);
 
-  const history = (historyRows ?? []).map((row: { role: string; content: string }) => ({
+  const history = (historyRows ?? []).reverse().map((row: { role: string; content: string }) => ({
     role: row.role,
     content: row.content,
   }));

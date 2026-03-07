@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  ci:
+    name: Lint · Typecheck · Test · Security · Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      # ── Lint ──────────────────────────────────────────────────────────────
+      - name: Lint
+        run: npm run lint
+
+      # ── Typecheck ─────────────────────────────────────────────────────────
+      - name: Typecheck
+        run: npm run typecheck
+
+      # ── Unit tests ────────────────────────────────────────────────────────
+      - name: Test
+        run: npm test
+
+      # ── Security audit ────────────────────────────────────────────────────
+      # Fails the build on high/critical vulnerabilities in production deps.
+      - name: Security audit
+        run: npm audit --audit-level=high --omit=dev
+
+      # ── Build ─────────────────────────────────────────────────────────────
+      # Stub public env vars so Next.js can complete the build.
+      # Server-side secrets are not needed at build time.
+      - name: Build
+        run: npm run build
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
+          NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY }}
+          # Server-side vars — only needed at runtime, but Next.js may reference
+          # them during build if imported at module scope. Set as secrets if needed.
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+          STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
+          STRIPE_PLUS_PRICE_ID: ${{ secrets.STRIPE_PLUS_PRICE_ID }}
+          STRIPE_PRO_PRICE_ID: ${{ secrets.STRIPE_PRO_PRICE_ID }}
+          UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL }}
+          UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
