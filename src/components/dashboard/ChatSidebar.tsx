@@ -262,7 +262,7 @@ export default function ChatSidebar({
             {/* Rename */}
             <button
               onClick={(e) => { e.stopPropagation(); startRename(conv); }}
-              className="text-[#94A3B8] hover:text-[#0F172A] p-0.5"
+              className="text-[#6B7280] hover:text-[#0F172A] p-0.5"
               title="Rename"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -273,7 +273,7 @@ export default function ChatSidebar({
             {/* Archive */}
             <button
               onClick={(e) => { e.stopPropagation(); onArchiveConversation(conv.id); }}
-              className="text-[#94A3B8] hover:text-[#0F172A] p-0.5"
+              className="text-[#6B7280] hover:text-[#0F172A] p-0.5"
               title="Archive"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -284,7 +284,7 @@ export default function ChatSidebar({
             {/* Delete */}
             <button
               onClick={(e) => { e.stopPropagation(); setDeleteConfirmId(conv.id); }}
-              className="text-[#94A3B8] hover:text-[#E11D48] p-0.5"
+              className="text-[#6B7280] hover:text-[#E11D48] p-0.5"
               title="Delete"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -317,7 +317,7 @@ export default function ChatSidebar({
 
         {/* Search */}
         <div className="relative mt-2">
-          <svg xmlns="http://www.w3.org/2000/svg" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#94A3B8]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <svg xmlns="http://www.w3.org/2000/svg" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#6B7280]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
           <input
@@ -325,7 +325,7 @@ export default function ChatSidebar({
             placeholder="Search chats..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full rounded-xl border border-[#E2E8F0] bg-[#F8F9FB] pl-9 pr-3 py-2 text-sm text-[#0F172A] placeholder-[#94A3B8] outline-none focus:border-[#E11D48] transition-colors"
+            className="w-full rounded-xl border border-[#E2E8F0] bg-[#F8F9FB] pl-9 pr-3 py-2 text-sm text-[#0F172A] placeholder-[#9CA3AF] outline-none focus:border-[#E11D48] transition-colors"
           />
         </div>
       </div>
@@ -336,12 +336,12 @@ export default function ChatSidebar({
         {/* ── Projects section ── */}
         <div className="px-3 pt-3 pb-1">
           <div className="flex items-center justify-between mb-1">
-            <span className="text-xs font-semibold uppercase tracking-wider text-[#94A3B8]">
+            <span className="text-xs font-semibold uppercase tracking-wider text-[#6B7280]">
               Projects
             </span>
             <button
               onClick={() => { setCreatingProject(true); setExpandedProjects((prev) => new Set(prev)); }}
-              className="rounded p-0.5 text-[#94A3B8] hover:text-[#0F172A] hover:bg-[#F1F5F9] transition-colors"
+              className="rounded p-0.5 text-[#6B7280] hover:text-[#0F172A] hover:bg-[#F1F5F9] transition-colors"
               title="New project"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -376,7 +376,7 @@ export default function ChatSidebar({
                 }}
                 placeholder="Project name..."
                 maxLength={100}
-                className="w-full rounded-lg border border-[#E2E8F0] bg-white px-2 py-1 text-xs text-[#0F172A] placeholder-[#94A3B8] outline-none focus:border-[#E11D48]"
+                className="w-full rounded-lg border border-[#E2E8F0] bg-white px-2 py-1 text-xs text-[#0F172A] placeholder-[#9CA3AF] outline-none focus:border-[#E11D48]"
               />
               <div className="flex gap-1.5">
                 <button
@@ -398,7 +398,7 @@ export default function ChatSidebar({
 
           {/* Project folders */}
           {projects.length === 0 && !creatingProject && (
-            <p className="px-1 py-1 text-xs text-[#CBD5E1]">No projects yet.</p>
+            <p className="px-1 py-1 text-xs text-[#9CA3AF]">No projects yet.</p>
           )}
 
           {projects.map((project) => {
@@ -434,7 +434,7 @@ export default function ChatSidebar({
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      className={`h-3 w-3 flex-shrink-0 text-[#CBD5E1] transition-transform ${isExpanded ? "rotate-90" : ""}`}
+                      className={`h-3 w-3 flex-shrink-0 text-[#9CA3AF] transition-transform ${isExpanded ? "rotate-90" : ""}`}
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -461,7 +461,7 @@ export default function ChatSidebar({
                       <span className="flex-1 truncate font-medium">{project.name}</span>
                     )}
                     {!isRenamingThis && (
-                      <span className="flex-shrink-0 text-xs text-[#CBD5E1]">
+                      <span className="flex-shrink-0 text-xs text-[#9CA3AF]">
                         {projectConvs.length}
                       </span>
                     )}
@@ -471,7 +471,7 @@ export default function ChatSidebar({
                     <div className="hidden group-hover:flex items-center gap-0.5 flex-shrink-0">
                       <button
                         onClick={(e) => { e.stopPropagation(); startRenameProject(project); }}
-                        className="text-[#CBD5E1] hover:text-[#64748B] p-0.5"
+                        className="text-[#9CA3AF] hover:text-[#64748B] p-0.5"
                         title="Rename project"
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -480,7 +480,7 @@ export default function ChatSidebar({
                       </button>
                       <button
                         onClick={(e) => { e.stopPropagation(); onDeleteProject(project.id); }}
-                        className="text-[#CBD5E1] hover:text-[#E11D48] p-0.5"
+                        className="text-[#9CA3AF] hover:text-[#E11D48] p-0.5"
                         title="Delete project"
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -495,7 +495,7 @@ export default function ChatSidebar({
                 {isExpanded && (
                   <div className="pl-4 space-y-0.5 pb-1">
                     {projectConvs.length === 0 ? (
-                      <p className="px-3 py-1 text-xs text-[#CBD5E1]">No chats yet.</p>
+                      <p className="px-3 py-1 text-xs text-[#9CA3AF]">No chats yet.</p>
                     ) : (
                       projectConvs.map((conv) => (
                         <ConvRow key={conv.id} conv={conv} />
@@ -527,22 +527,22 @@ export default function ChatSidebar({
           }}
         >
           {!isSearching && (
-            <p className="px-3 pt-2 pb-1 text-xs font-semibold uppercase tracking-wider text-[#94A3B8]">
+            <p className="px-3 pt-2 pb-1 text-xs font-semibold uppercase tracking-wider text-[#6B7280]">
               All chats
             </p>
           )}
 
           {loadingConversations ? (
-            <p className="px-3 py-2 text-xs text-[#94A3B8]">Loading...</p>
+            <p className="px-3 py-2 text-xs text-[#6B7280]">Loading...</p>
           ) : unassignedGroups.length === 0 ? (
-            <p className="px-3 py-2 text-xs text-[#94A3B8]">
+            <p className="px-3 py-2 text-xs text-[#6B7280]">
               {isSearching ? "No matches found." : "No conversations yet."}
             </p>
           ) : (
             unassignedGroups.map((group) => (
               <div key={group.label} className="mb-2">
                 {!isSearching && (
-                  <p className="px-3 pt-1 pb-1 text-xs font-semibold uppercase tracking-wider text-[#CBD5E1]">
+                  <p className="px-3 pt-1 pb-1 text-xs font-semibold uppercase tracking-wider text-[#9CA3AF]">
                     {group.label}
                   </p>
                 )}
@@ -591,10 +591,10 @@ export default function ChatSidebar({
           <div className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[#E11D48] text-[9px] font-bold text-white uppercase">
             {userInitials}
           </div>
-          <p className="text-xs text-[#94A3B8] truncate flex-1">{userEmail}</p>
+          <p className="text-xs text-[#6B7280] truncate flex-1">{userEmail}</p>
           <a
             href="/dashboard/settings"
-            className="text-[#CBD5E1] hover:text-[#64748B] transition-colors flex-shrink-0"
+            className="text-[#9CA3AF] hover:text-[#64748B] transition-colors flex-shrink-0"
             title="Account settings"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
