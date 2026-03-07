@@ -1,24 +1,22 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Analytics } from "@vercel/analytics/next";
 
 type Consent = "accepted" | "essential";
 
 const STORAGE_KEY = "pp-cookie-consent";
 
-export function CookieBanner() {
-  const [consent, setConsent] = useState<Consent | null>(null);
-  const [visible, setVisible] = useState(false);
+function readStoredConsent(): Consent | null {
+  if (typeof window === "undefined") return null;
+  const stored = localStorage.getItem(STORAGE_KEY);
+  if (stored === "accepted" || stored === "essential") return stored;
+  return null;
+}
 
-  useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY) as Consent | null;
-    if (stored === "accepted" || stored === "essential") {
-      setConsent(stored);
-    } else {
-      setVisible(true);
-    }
-  }, []);
+export function CookieBanner() {
+  const [consent, setConsent] = useState<Consent | null>(readStoredConsent);
+  const [visible, setVisible] = useState(() => readStoredConsent() === null);
 
   function accept() {
     localStorage.setItem(STORAGE_KEY, "accepted");
