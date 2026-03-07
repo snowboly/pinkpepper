@@ -11,11 +11,16 @@ export const metadata: Metadata = {
 };
 
 export default async function PricingPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  const isLoggedIn = !!user;
+  let isLoggedIn = false;
+  try {
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    isLoggedIn = !!user;
+  } catch {
+    // Supabase env vars unavailable during build-time prerendering — assume not logged in
+  }
 
   const ctaBase =
     "mt-8 block w-full rounded-xl py-3.5 text-center text-sm font-semibold transition-colors";
