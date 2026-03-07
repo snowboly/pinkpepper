@@ -5,6 +5,7 @@ import { resolveUserAccess } from "@/lib/access";
 import { countUsageSince, utcDayStartIso } from "@/lib/policy";
 import { retrieveContext, buildRAGPrompt, formatCitations, type KnowledgeChunk } from "@/lib/rag";
 import { FOOD_SAFETY_VISION_SYSTEM_PROMPT } from "@/lib/rag/vision-prompt";
+import { chatLimiter, visionLimiter, checkRateLimit } from "@/lib/ratelimit";
 
 export const dynamic = "force-dynamic";
 
@@ -151,6 +152,10 @@ export async function POST(request: Request) {
   // --- Detect if this is an image upload (multipart/form-data) ---
   const contentType = request.headers.get("content-type") ?? "";
   const isImageRequest = contentType.startsWith("multipart/form-data");
+
+  const limiter = isImageRequest ? visionLimiter : chatLimiter;
+  const rateLimitRes = await checkRateLimit(limiter, user.id);
+  if (rateLimitRes) return rateLimitRes;
 
   if (isImageRequest) {
     // Image analysis path
@@ -350,10 +355,10 @@ export async function POST(request: Request) {
     .from("chat_messages")
     .select("role, content")
     .eq("conversation_id", conversationId)
-    .order("created_at", { ascending: true })
+    .order("created_at", { ascending: false })
     .limit(10);
 
-  const history = (historyRows ?? []).map((row: { role: string; content: string }) => ({ role: row.role, content: row.content }));
+  const history = (historyRows ?? []).reverse().map((row: { role: string; content: string }) => ({ role: row.role, content: row.content }));
 
   // RAG: Retrieve relevant context from knowledge base
   let retrievedChunks: KnowledgeChunk[] = [];

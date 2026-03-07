@@ -183,7 +183,7 @@ export default function ChatWorkspace({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
   const typingQueueRef = useRef("");
-  const typingIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const typingIntervalRef = useRef<number | null>(null);
   const pendingDoneRef = useRef<{ citations?: Citation[]; usage?: StreamUsage } | null>(null);
 
   const canUploadImages = isAdmin || dailyImageUploads > 0;
@@ -194,7 +194,7 @@ export default function ChatWorkspace({
 
   const clearTypingInterval = useCallback(() => {
     if (typingIntervalRef.current) {
-      clearInterval(typingIntervalRef.current);
+      cancelAnimationFrame(typingIntervalRef.current);
       typingIntervalRef.current = null;
     }
   }, []);
@@ -221,7 +221,7 @@ export default function ChatWorkspace({
 
   const startTypingDrain = useCallback(() => {
     if (typingIntervalRef.current) return;
-    typingIntervalRef.current = setInterval(() => {
+    const drain = () => {
       const queue = typingQueueRef.current;
 
       if (queue.length > 0) {
@@ -235,6 +235,7 @@ export default function ChatWorkspace({
           updated[updated.length - 1] = { ...last, content: last.content + nextChunk };
           return updated;
         });
+        typingIntervalRef.current = requestAnimationFrame(drain);
         return;
       }
 
@@ -242,9 +243,10 @@ export default function ChatWorkspace({
         finalizeStreamingMessage(pendingDoneRef.current);
         pendingDoneRef.current = null;
       }
-      clearTypingInterval();
-    }, 20);
-  }, [clearTypingInterval, finalizeStreamingMessage]);
+      typingIntervalRef.current = null;
+    };
+    typingIntervalRef.current = requestAnimationFrame(drain);
+  }, [finalizeStreamingMessage]);
 
   // ── Drag & drop image onto chat area ──
   function handleDragOver(e: React.DragEvent) {
