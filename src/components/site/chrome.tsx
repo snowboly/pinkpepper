@@ -20,9 +20,14 @@ function getUserInitials(email: string | null | undefined, fullName: string | nu
 }
 
 export async function SiteHeader() {
-  const supabase = await createClient();
-  const { data } = await supabase.auth.getUser();
-  const user = data.user;
+  let user = null;
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase.auth.getUser();
+    user = data.user;
+  } catch {
+    // Supabase env vars unavailable during build-time prerendering — show logged-out state
+  }
   const fullName =
     (typeof user?.user_metadata?.full_name === "string" ? user.user_metadata.full_name : null) ??
     (typeof user?.user_metadata?.name === "string" ? user.user_metadata.name : null);
