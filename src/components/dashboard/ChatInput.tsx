@@ -111,7 +111,7 @@ export default function ChatInput({
             <button
               type="button"
               onClick={() => onUpgradeForImages?.()}
-              className="group relative flex-shrink-0 rounded-xl border border-dashed border-[#E2E8F0] bg-[#F8F9FB] p-2.5 text-[#CBD5E1] hover:border-[#E11D48] hover:text-[#E11D48] transition-colors"
+              className="group relative flex-shrink-0 rounded-xl border border-dashed border-[#E2E8F0] bg-[#F8F9FB] p-2.5 text-[#9CA3AF] hover:border-[#E11D48] hover:text-[#E11D48] transition-colors"
               title="Upgrade to Plus or Pro to analyse photos"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
@@ -135,7 +135,7 @@ export default function ChatInput({
               onKeyDown={onKeyDown}
               rows={1}
               maxLength={MAX_PROMPT_CHARS}
-              className={`w-full resize-none rounded-xl border bg-white px-4 py-2.5 pr-14 text-base text-[#0F172A] placeholder-[#94A3B8] outline-none focus:border-[#E11D48] focus:ring-1 focus:ring-[#E11D48] transition-colors ${remainingChars <= 100 ? "border-[#E11D48]" : "border-[#E2E8F0]"}`}
+              className={`w-full resize-none rounded-xl border bg-white px-4 py-2.5 pr-14 text-base text-[#0F172A] placeholder-[#9CA3AF] outline-none focus:border-[#E11D48] focus:ring-1 focus:ring-[#E11D48] transition-colors ${remainingChars <= 100 ? "border-[#E11D48]" : "border-[#E2E8F0]"}`}
               placeholder={
                 placeholder ??
                 (attachedImage
@@ -144,7 +144,7 @@ export default function ChatInput({
               }
               style={{ minHeight: "44px", maxHeight: "min(32vh, 220px)" }}
             />
-            <span className={`pointer-events-none absolute bottom-1.5 right-3 text-[11px] ${remainingChars <= 100 ? "text-[#E11D48]" : "text-[#94A3B8]"}`}>
+            <span className={`pointer-events-none absolute bottom-1.5 right-3 text-[11px] ${remainingChars <= 100 ? "text-[#E11D48]" : "text-[#6B7280]"}`}>
               {prompt.length}/{MAX_PROMPT_CHARS}
             </span>
           </div>
