@@ -530,6 +530,10 @@ export default function ChatWorkspace({
     setActiveDocWizard(null);
     setDocWizardStep(0);
     setDocWizardAnswers([]);
+    // Start a fresh conversation when entering virtual audit mode
+    if (nextMode === "virtual_audit") {
+      startNewChat();
+    }
   }
 
   function startDocumentWizard(suggestion: StarterSuggestion) {
