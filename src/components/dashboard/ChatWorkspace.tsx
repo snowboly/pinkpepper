@@ -309,20 +309,20 @@ export default function ChatWorkspace({
   }
 
   // ── Conversations ──
-  const loadConversations = useCallback(async () => {
-    setLoadingConversations(true);
+  const loadConversations = useCallback(async (silent = false) => {
+    if (!silent) setLoadingConversations(true);
     try {
       const res = await fetch("/api/chat/conversations");
       const data = (await res.json()) as { conversations?: Conversation[]; error?: string };
       if (!res.ok) {
-        setError(data.error ?? "Failed to load conversations.");
+        if (!silent) setError(data.error ?? "Failed to load conversations.");
         return;
       }
       setConversations(data.conversations ?? []);
     } catch {
-      setError("Network error while loading conversations.");
+      if (!silent) setError("Network error while loading conversations.");
     } finally {
-      setLoadingConversations(false);
+      if (!silent) setLoadingConversations(false);
     }
   }, []);
 
@@ -713,7 +713,7 @@ export default function ChatWorkspace({
           setTier(data.usage.tier);
           setIsAdmin(Boolean(data.usage.isAdmin));
         }
-        await loadConversations();
+        await loadConversations(true);
       } catch {
         setError("Network error. Please try again.");
         setMessages((prev) => prev.slice(0, -1));
@@ -802,7 +802,7 @@ export default function ChatWorkspace({
         pendingDoneRef.current = null;
       }
 
-      await loadConversations();
+      await loadConversations(true);
     } catch (err: unknown) {
       if (err instanceof DOMException && err.name === "AbortError") {
         typingQueueRef.current = "";
@@ -847,11 +847,23 @@ export default function ChatWorkspace({
   useEffect(() => { void loadConversations(); }, [loadConversations]);
   useEffect(() => { void loadProjects(); }, [loadProjects]);
 
+  // Track whether conversationId was set by user clicking sidebar (not by streaming metadata)
+  const loadConvOnSelect = useRef<string | null>(null);
+
+  function selectConversation(id: string) {
+    loadConvOnSelect.current = id;
+    setConversationId(id);
+  }
+
   useEffect(() => {
-    if (conversationId) {
+    if (!conversationId) return;
+    // Only load messages from DB when user explicitly selected a conversation,
+    // NOT when conversationId was set by streaming metadata (which would abort the active stream).
+    if (loadConvOnSelect.current === conversationId) {
+      loadConvOnSelect.current = null;
       void loadConversationMessages(conversationId);
-      void loadReviewRequests(conversationId);
     }
+    void loadReviewRequests(conversationId);
   }, [conversationId]);
 
   useEffect(() => {
@@ -881,7 +893,7 @@ export default function ChatWorkspace({
           billingLoading={billingLoading}
           tierColour={tierColour}
           onNewChat={startNewChat}
-          onSelectConversation={(id) => { setConversationId(id); }}
+          onSelectConversation={(id) => { selectConversation(id); }}
           onDeleteConversation={(id) => void removeConversation(id)}
           onArchiveConversation={(id) => void archiveConversation(id)}
           onRenameConversation={(id, title) => void renameConversation(id, title)}
