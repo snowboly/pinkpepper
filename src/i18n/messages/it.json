@@ -18,12 +18,12 @@
     "photoNote": "Aggiungi una nota su questa foto (facoltativo)...",
     "placeholder": "Fai una domanda sulla sicurezza alimentare... (Shift+Invio per andare a capo)",
     "stopGenerating": "Interrompi generazione",
-    "reviewBannerTitle": "Vuoi far verificare questo documento da un esperto certificato?",
+    "reviewBannerTitle": "Vuoi far verificare questo documento da un esperto umano?",
     "reviewBannerBody": "I nostri specialisti in sicurezza alimentare esaminano i tuoi documenti generati dall'IA per verificare accuratezza, lacune di conformità e preparazione all'audit.",
     "reviewUpsellTitle": "Fai verificare questo documento da un esperto umano",
-    "reviewUpsellBody": "Il piano Pro include 3 crediti di revisione esperta/mese — specialisti certificati controllano i tuoi documenti per la conformità.",
+    "reviewUpsellBody": "Il piano Pro include 3 crediti di revisione esperta/mese — specialisti controllano i tuoi documenti per la conformità.",
     "reviewUpsellCta": "Passa al piano Pro",
-    "humanReviewHighlight": "Il piano Pro include revisioni di documenti da parte di esperti certificati in sicurezza alimentare.",
+    "humanReviewHighlight": "Il piano Pro include revisioni di documenti da parte di esperti in sicurezza alimentare.",
     "suggestions": {
       "haccpPlan": {
         "label": "Piano HACCP",

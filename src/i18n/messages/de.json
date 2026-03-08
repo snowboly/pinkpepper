@@ -18,12 +18,12 @@
     "photoNote": "Notiz zu diesem Foto hinzufügen (optional)...",
     "placeholder": "Stellen Sie eine Frage zur Lebensmittelsicherheit... (Umschalt+Eingabe für neue Zeile)",
     "stopGenerating": "Generierung stoppen",
-    "reviewBannerTitle": "Möchten Sie dieses Dokument von einem zertifizierten Experten prüfen lassen?",
+    "reviewBannerTitle": "Möchten Sie dieses Dokument von einem Experten prüfen lassen?",
     "reviewBannerBody": "Unsere Lebensmittelsicherheitsexperten überprüfen Ihre KI-generierten Dokumente auf Genauigkeit, Compliance-Lücken und Audit-Bereitschaft.",
     "reviewUpsellTitle": "Lassen Sie dieses Dokument von einem menschlichen Experten verifizieren",
-    "reviewUpsellBody": "Der Pro-Plan enthält 3 Experten-Review-Credits/Monat — zertifizierte Spezialisten prüfen Ihre Dokumente auf Compliance.",
+    "reviewUpsellBody": "Der Pro-Plan enthält 3 Experten-Review-Credits/Monat — Spezialisten prüfen Ihre Dokumente auf Compliance.",
     "reviewUpsellCta": "Auf Pro upgraden",
-    "humanReviewHighlight": "Der Pro-Plan umfasst Dokumentenprüfungen durch zertifizierte Lebensmittelsicherheitsexperten.",
+    "humanReviewHighlight": "Der Pro-Plan umfasst Dokumentenprüfungen durch Lebensmittelsicherheitsexperten.",
     "suggestions": {
       "haccpPlan": {
         "label": "HACCP-Plan",

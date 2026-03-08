@@ -18,12 +18,12 @@
     "photoNote": "Add a note about this photo (optional)...",
     "placeholder": "Ask a food safety question... (Shift+Enter for new line)",
     "stopGenerating": "Stop generating",
-    "reviewBannerTitle": "Want a certified expert to check this document?",
+    "reviewBannerTitle": "Want a human expert to check this document?",
     "reviewBannerBody": "Our food safety specialists review your AI-generated documents for accuracy, compliance gaps, and audit readiness.",
     "reviewUpsellTitle": "Get this document verified by a human expert",
-    "reviewUpsellBody": "Pro plan includes 3 expert review credits/month — certified specialists check your documents for compliance.",
+    "reviewUpsellBody": "Pro plan includes 3 expert review credits/month — specialists check your documents for compliance.",
     "reviewUpsellCta": "Upgrade to Pro",
-    "humanReviewHighlight": "Pro plan includes human expert document reviews by certified food safety specialists.",
+    "humanReviewHighlight": "Pro plan includes human expert document reviews by food safety specialists.",
     "suggestions": {
       "haccpPlan": {
         "label": "HACCP plan",
