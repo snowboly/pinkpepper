@@ -4,7 +4,6 @@ import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { useTranslations } from "next-intl";
 import type { Message } from "./types";
-import { SourceCardsList } from "@/components/chat/SourceCard";
 
 type MessageItemProps = {
   message: Message;
@@ -70,12 +69,6 @@ export default function MessageItem({
                 <span className="inline-block w-0.5 h-4 bg-[#0F172A] animate-pulse ml-0.5 align-text-bottom" />
               )}
             </div>
-
-            {message.citations && message.citations.length > 0 && (
-              <div className="mt-3">
-                <SourceCardsList citations={message.citations} maxInitialDisplay={3} />
-              </div>
-            )}
 
             {!message.isStreaming && message.content && (
               <div className="mt-2 flex items-center gap-2">
