@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl";
 import type { SubscriptionTier } from "@/lib/tier";
 import { TIER_CAPABILITIES } from "@/lib/tier";
 import type { Citation } from "@/lib/rag/citations";
-import type { Message, Conversation, Project, ChatWorkspaceProps } from "./types";
+import type { Message, Conversation, Project, ChatWorkspaceProps, PersonaInfo } from "./types";
 import ChatSidebar from "./ChatSidebar";
 import ChatMessages, { type StarterSuggestion } from "./ChatMessages";
 import ChatInput from "./ChatInput";
@@ -108,6 +108,7 @@ export default function ChatWorkspace({
   const [messages, setMessages] = useState<Message[]>([]);
   const [prompt, setPrompt] = useState("");
   const [conversationId, setConversationId] = useState<string | null>(null);
+  const [currentPersona, setCurrentPersona] = useState<PersonaInfo | null>(null);
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [loadingConversations, setLoadingConversations] = useState(true);
   const [loadingMessages, setLoadingMessages] = useState(false);
@@ -161,8 +162,8 @@ export default function ChatWorkspace({
 
   const canUploadImages = isAdmin || dailyImageUploads > 0;
 
-  const pushAssistantMessage = useCallback((content: string) => {
-    setMessages((prev) => [...prev, { role: "assistant", content }]);
+  const pushAssistantMessage = useCallback((content: string, persona?: PersonaInfo | null) => {
+    setMessages((prev) => [...prev, { role: "assistant", content, persona: persona ?? undefined }]);
   }, []);
 
   const clearTypingInterval = useCallback(() => {
@@ -488,6 +489,7 @@ export default function ChatWorkspace({
     setDocWizardStep(0);
     setDocWizardAnswers([]);
     setConversationId(null);
+    setCurrentPersona(null);
     setMessages([]);
     setReviewRequests([]);
     clearImage();
@@ -520,7 +522,7 @@ export default function ChatWorkspace({
     setDocWizardAnswers([]);
     const intro = tw(`wizards.${wizard.wizardKey}.intro`);
     const q1 = tw(`wizards.${wizard.wizardKey}.q1`);
-    pushAssistantMessage(`${intro}\n\nQuestion 1/${wizard.questionCount}: ${q1}`);
+    pushAssistantMessage(`${intro}\n\nQuestion 1/${wizard.questionCount}: ${q1}`, currentPersona);
     setPrompt("");
     textareaRef.current?.focus();
   }
@@ -539,7 +541,7 @@ export default function ChatWorkspace({
       setActiveDocWizard(null);
       setDocWizardStep(0);
       setDocWizardAnswers([]);
-      pushAssistantMessage(tw("wizardCancelled"));
+      pushAssistantMessage(tw("wizardCancelled"), currentPersona);
       return true;
     }
 
@@ -550,7 +552,7 @@ export default function ChatWorkspace({
       setDocWizardAnswers(nextAnswers);
       setDocWizardStep(nextStep);
       const nextQ = tw(`wizards.${activeDocWizard.wizardKey}.q${nextStep + 1}`);
-      pushAssistantMessage(`Question ${nextStep + 1}/${activeDocWizard.questionCount}: ${nextQ}`);
+      pushAssistantMessage(`Question ${nextStep + 1}/${activeDocWizard.questionCount}: ${nextQ}`, currentPersona);
       return true;
     }
 
@@ -558,7 +560,7 @@ export default function ChatWorkspace({
     setActiveDocWizard(null);
     setDocWizardStep(0);
     setDocWizardAnswers([]);
-    pushAssistantMessage(tw("wizardGenerating"));
+    pushAssistantMessage(tw("wizardGenerating"), currentPersona);
 
     const wizardTitle = tw(`wizards.${completedWizard.wizardKey}.title`);
     const compiledPrompt = completedWizard.buildPrompt(nextAnswers);
@@ -705,7 +707,7 @@ export default function ChatWorkspace({
         if (data.assistantMessage) {
           setMessages((prev) => [
             ...prev,
-            { role: "assistant", content: data.assistantMessage!, citations: data.citations },
+            { role: "assistant", content: data.assistantMessage!, citations: data.citations, persona: currentPersona ?? undefined },
           ]);
         }
         if (data.usage) {
@@ -729,7 +731,7 @@ export default function ChatWorkspace({
     typingQueueRef.current = "";
     pendingDoneRef.current = null;
     clearTypingInterval();
-    setMessages((prev) => [...prev, { role: "assistant", content: "", isStreaming: true }]);
+    setMessages((prev) => [...prev, { role: "assistant", content: "", isStreaming: true, persona: currentPersona ?? undefined }]);
 
     try {
       const streamEndpoint = workspaceMode === "virtual_audit" ? "/api/audit/stream" : "/api/chat/stream";
@@ -778,15 +780,28 @@ export default function ChatWorkspace({
           const payload = line.slice(6);
           if (payload === "[DONE]") continue;
 
-          let event: { type: string; delta?: string; conversationId?: string; citations?: Citation[]; usage?: StreamUsage };
+          let event: { type: string; delta?: string; conversationId?: string; citations?: Citation[]; usage?: StreamUsage; persona?: PersonaInfo };
           try {
             event = JSON.parse(payload);
           } catch {
             continue;
           }
 
-          if (event.type === "metadata" && event.conversationId) {
-            setConversationId(event.conversationId);
+          if (event.type === "metadata") {
+            if (event.conversationId) setConversationId(event.conversationId);
+            if (event.persona) {
+              const p = event.persona as PersonaInfo;
+              setCurrentPersona(p);
+              // Stamp persona on the streaming assistant message
+              setMessages((prev) => {
+                const updated = [...prev];
+                const last = updated[updated.length - 1];
+                if (last?.isStreaming) {
+                  updated[updated.length - 1] = { ...last, persona: p };
+                }
+                return updated;
+              });
+            }
           } else if (event.type === "content" && event.delta) {
             typingQueueRef.current += event.delta;
             startTypingDrain();
@@ -974,6 +989,7 @@ export default function ChatWorkspace({
             }}
             onRequestReview={() => setReviewModalOpen(true)}
             onUpgradeForReview={!reviewEligible ? () => setUpgradeModalTrigger("review") : undefined}
+            currentPersona={currentPersona}
           />
 
           <div className="flex-shrink-0 border-t border-[#E2E8F0] bg-white px-4 py-2">

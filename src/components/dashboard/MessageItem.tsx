@@ -62,7 +62,12 @@ export default function MessageItem({
               <div className="relative h-5 w-5 rounded-full bg-[#E11D48]">
                 <span className="absolute left-[5px] top-[4px] h-1.5 w-1.5 rounded-full bg-white/80" />
               </div>
-              <span className="text-base font-semibold text-[#0F172A]">{t("pinkPepper")}</span>
+              <span className="text-base font-semibold text-[#0F172A]">
+                {message.persona ? `${message.persona.name}` : t("pinkPepper")}
+              </span>
+              {message.persona && (
+                <span className="text-xs text-[#94A3B8] font-normal">{t("pinkPepper")}</span>
+              )}
             </div>
 
             <div className="text-base text-[#0F172A] pp-markdown">
