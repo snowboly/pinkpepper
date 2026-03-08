@@ -1,7 +1,18 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations, useLocale } from "next-intl";
 import { createClient } from "@/utils/supabase/client";
+import { locales, type Locale } from "@/i18n/config";
+
+const LOCALE_LABELS: Record<Locale, string> = {
+  en: "English",
+  fr: "Français",
+  de: "Deutsch",
+  es: "Español",
+  it: "Italiano",
+  pt: "Português",
+};
 
 type SettingsFormProps = {
   email: string;
@@ -10,6 +21,8 @@ type SettingsFormProps = {
 };
 
 export default function SettingsForm({ email, tier, isAdmin }: SettingsFormProps) {
+  const t = useTranslations("settings");
+  const currentLocale = useLocale() as Locale;
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -33,11 +46,11 @@ export default function SettingsForm({ email, tier, isAdmin }: SettingsFormProps
     setPasswordMsg(null);
 
     if (newPassword.length < 8) {
-      setPasswordMsg({ type: "error", text: "New password must be at least 8 characters." });
+      setPasswordMsg({ type: "error", text: t("passwordTooShort") });
       return;
     }
     if (newPassword !== confirmPassword) {
-      setPasswordMsg({ type: "error", text: "Passwords do not match." });
+      setPasswordMsg({ type: "error", text: t("passwordsDoNotMatch") });
       return;
     }
 
@@ -49,7 +62,7 @@ export default function SettingsForm({ email, tier, isAdmin }: SettingsFormProps
         password: currentPassword,
       });
       if (signInError) {
-        setPasswordMsg({ type: "error", text: "Current password is incorrect." });
+        setPasswordMsg({ type: "error", text: t("currentPasswordIncorrect") });
         return;
       }
 
@@ -58,12 +71,12 @@ export default function SettingsForm({ email, tier, isAdmin }: SettingsFormProps
         setPasswordMsg({ type: "error", text: error.message });
         return;
       }
-      setPasswordMsg({ type: "success", text: "Password updated successfully." });
+      setPasswordMsg({ type: "success", text: t("passwordUpdated") });
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
     } catch {
-      setPasswordMsg({ type: "error", text: "An unexpected error occurred." });
+      setPasswordMsg({ type: "error", text: t("unexpectedError") });
     } finally {
       setPasswordLoading(false);
     }
@@ -79,14 +92,14 @@ export default function SettingsForm({ email, tier, isAdmin }: SettingsFormProps
     <div className="space-y-6">
       {/* Profile card */}
       <div className="rounded-2xl border border-[#E2E8F0] bg-white p-6">
-        <h2 className="text-sm font-semibold text-[#0F172A] mb-4">Profile</h2>
+        <h2 className="text-sm font-semibold text-[#0F172A] mb-4">{t("profile")}</h2>
         <div className="space-y-3">
           <div>
-            <p className="text-xs text-[#64748B] mb-1">Email address</p>
+            <p className="text-xs text-[#64748B] mb-1">{t("emailAddress")}</p>
             <p className="rounded-xl border border-[#E2E8F0] bg-[#F8F9FB] px-4 py-2.5 text-sm text-[#334155]">{email}</p>
           </div>
           <div>
-            <p className="text-xs text-[#64748B] mb-1">Plan</p>
+            <p className="text-xs text-[#64748B] mb-1">{t("plan")}</p>
             <span className={`inline-block rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-wide ${tierColour}`}>
               {isAdmin ? "Admin" : tier}
             </span>
@@ -94,13 +107,39 @@ export default function SettingsForm({ email, tier, isAdmin }: SettingsFormProps
         </div>
       </div>
 
+      {/* Language card */}
+      <div className="rounded-2xl border border-[#E2E8F0] bg-white p-6">
+        <h2 className="text-sm font-semibold text-[#0F172A] mb-4">{t("language")}</h2>
+        <p className="text-xs text-[#64748B] mb-3">{t("languageDescription")}</p>
+        <select
+          value={currentLocale}
+          onChange={async (e) => {
+            const newLocale = e.target.value as Locale;
+            document.cookie = `locale=${newLocale}; path=/; max-age=31536000`;
+            try {
+              await supabase.from("profiles").update({ locale: newLocale } as Record<string, string>).eq("id", (await supabase.auth.getUser()).data.user?.id ?? "");
+            } catch {
+              // Non-blocking — cookie is the primary source
+            }
+            window.location.reload();
+          }}
+          className="w-full rounded-xl border border-[#E2E8F0] bg-[#F8F9FB] px-4 py-2.5 text-sm text-[#0F172A] outline-none focus:border-[#E11D48] focus:ring-1 focus:ring-[#E11D48] transition-colors"
+        >
+          {locales.map((loc) => (
+            <option key={loc} value={loc}>
+              {LOCALE_LABELS[loc]}
+            </option>
+          ))}
+        </select>
+      </div>
+
       {/* Change password card */}
       <div className="rounded-2xl border border-[#E2E8F0] bg-white p-6">
-        <h2 className="text-sm font-semibold text-[#0F172A] mb-4">Change Password</h2>
+        <h2 className="text-sm font-semibold text-[#0F172A] mb-4">{t("changePassword")}</h2>
         <form onSubmit={handleChangePassword} className="space-y-3">
           <div>
             <label className="block text-xs text-[#64748B] mb-1" htmlFor="current-password">
-              Current password
+              {t("currentPassword")}
             </label>
             <input
               id="current-password"
@@ -110,12 +149,12 @@ export default function SettingsForm({ email, tier, isAdmin }: SettingsFormProps
               required
               autoComplete="current-password"
               className="w-full rounded-xl border border-[#E2E8F0] bg-[#F8F9FB] px-4 py-2.5 text-sm text-[#0F172A] placeholder-[#94A3B8] outline-none focus:border-[#E11D48] focus:ring-1 focus:ring-[#E11D48] transition-colors"
-              placeholder="••••••••"
+              placeholder={t("passwordPlaceholder")}
             />
           </div>
           <div>
             <label className="block text-xs text-[#64748B] mb-1" htmlFor="new-password">
-              New password
+              {t("newPassword")}
             </label>
             <input
               id="new-password"
@@ -125,12 +164,12 @@ export default function SettingsForm({ email, tier, isAdmin }: SettingsFormProps
               required
               autoComplete="new-password"
               className="w-full rounded-xl border border-[#E2E8F0] bg-[#F8F9FB] px-4 py-2.5 text-sm text-[#0F172A] placeholder-[#94A3B8] outline-none focus:border-[#E11D48] focus:ring-1 focus:ring-[#E11D48] transition-colors"
-              placeholder="At least 8 characters"
+              placeholder={t("atLeast8Chars")}
             />
           </div>
           <div>
             <label className="block text-xs text-[#64748B] mb-1" htmlFor="confirm-password">
-              Confirm new password
+              {t("confirmNewPassword")}
             </label>
             <input
               id="confirm-password"
@@ -140,7 +179,7 @@ export default function SettingsForm({ email, tier, isAdmin }: SettingsFormProps
               required
               autoComplete="new-password"
               className="w-full rounded-xl border border-[#E2E8F0] bg-[#F8F9FB] px-4 py-2.5 text-sm text-[#0F172A] placeholder-[#94A3B8] outline-none focus:border-[#E11D48] focus:ring-1 focus:ring-[#E11D48] transition-colors"
-              placeholder="••••••••"
+              placeholder={t("passwordPlaceholder")}
             />
           </div>
 
@@ -155,7 +194,7 @@ export default function SettingsForm({ email, tier, isAdmin }: SettingsFormProps
             disabled={passwordLoading || !currentPassword || !newPassword || !confirmPassword}
             className="w-full rounded-xl bg-[#0F172A] px-4 py-2.5 text-sm font-medium text-white hover:bg-[#1E293B] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
-            {passwordLoading ? "Updating..." : "Update password"}
+            {passwordLoading ? t("updating") : t("updatePassword")}
           </button>
         </form>
       </div>
@@ -163,16 +202,16 @@ export default function SettingsForm({ email, tier, isAdmin }: SettingsFormProps
       {/* Billing card */}
       {!isAdmin && (
         <div className="rounded-2xl border border-[#E2E8F0] bg-white p-6">
-          <h2 className="text-sm font-semibold text-[#0F172A] mb-4">Billing</h2>
+          <h2 className="text-sm font-semibold text-[#0F172A] mb-4">{t("billing")}</h2>
           <p className="text-xs text-[#64748B] mb-3">
-            Manage your subscription, update payment methods, or cancel.
+            {t("billingDescription")}
           </p>
           <div className="flex gap-2">
             <a
               href="/pricing"
               className="rounded-xl border border-[#E2E8F0] px-4 py-2 text-sm text-[#64748B] hover:bg-[#F8F9FB] transition-colors"
             >
-              View plans
+              {t("viewPlans")}
             </a>
             {tier !== "free" && (
               <ManageBillingButton />
@@ -183,13 +222,13 @@ export default function SettingsForm({ email, tier, isAdmin }: SettingsFormProps
 
       {/* Danger zone */}
       <div className="rounded-2xl border border-[#E2E8F0] bg-white p-6">
-        <h2 className="text-sm font-semibold text-[#0F172A] mb-4">Account</h2>
+        <h2 className="text-sm font-semibold text-[#0F172A] mb-4">{t("account")}</h2>
         <button
           onClick={handleSignOut}
           disabled={signOutLoading}
           className="rounded-xl border border-[#E2E8F0] px-4 py-2 text-sm text-[#64748B] hover:bg-[#F8F9FB] hover:text-[#0F172A] disabled:opacity-50 transition-colors"
         >
-          {signOutLoading ? "Signing out..." : "Sign out"}
+          {signOutLoading ? t("signingOut") : t("signOut")}
         </button>
       </div>
     </div>
@@ -197,6 +236,7 @@ export default function SettingsForm({ email, tier, isAdmin }: SettingsFormProps
 }
 
 function ManageBillingButton() {
+  const t = useTranslations("settings");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -207,12 +247,12 @@ function ManageBillingButton() {
       const res = await fetch("/api/billing/portal", { method: "POST" });
       const data = (await res.json()) as { url?: string; error?: string };
       if (!res.ok || !data.url) {
-        setError(data.error ?? "Unable to open billing portal.");
+        setError(data.error ?? t("unableToOpenPortal"));
         return;
       }
       window.location.href = data.url;
     } catch {
-      setError("Network error.");
+      setError(t("unexpectedError"));
     } finally {
       setLoading(false);
     }
@@ -225,7 +265,7 @@ function ManageBillingButton() {
         disabled={loading}
         className="rounded-xl bg-[#0F172A] px-4 py-2 text-sm font-medium text-white hover:bg-[#1E293B] disabled:opacity-40 transition-colors"
       >
-        {loading ? "Opening..." : "Manage billing"}
+        {loading ? t("opening") : t("manageBilling")}
       </button>
       {error && <p className="mt-1 text-xs text-[#E11D48]">{error}</p>}
     </div>

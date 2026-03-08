@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import type { Message } from "./types";
 import MessageItem from "./MessageItem";
 
@@ -24,18 +25,15 @@ type ChatMessagesProps = {
   onRequestReview: () => void;
 };
 
-const SUGGESTIONS: StarterSuggestion[] = [
-  // Document generation
-  { category: "document", label: "HACCP plan", text: "Create a HACCP plan for a 25-seat café that serves hot food including sandwiches and soups" },
-  { category: "document", label: "Cleaning SOP", text: "Draft a cleaning and disinfection SOP for a commercial kitchen including frequency, chemicals, and records" },
-  { category: "document", label: "Temp monitoring log", text: "Generate a daily temperature monitoring log template for fridges, freezers, and hot-holding equipment" },
-  { category: "document", label: "Supplier approval", text: "Draft a supplier approval procedure for a bakery including questionnaire and ongoing monitoring" },
-  // Audit / compliance
-  { category: "audit", label: "BRC audit prep", text: "Check compliance gaps for a small food manufacturer preparing for a BRC Global Standard Issue 9 audit" },
-  { category: "audit", label: "Allergen audit", text: "Review my allergen management procedure for a sandwich production unit against Natasha's Law requirements" },
-  // Q&A
-  { category: "qa", label: "Allergen law", text: "What are the 14 allergens that must be declared under EU Regulation 1169/2011 and Natasha's Law?" },
-  { category: "qa", label: "Traceability rules", text: "What traceability records must a food business keep under Regulation (EC) No 178/2002?" },
+const SUGGESTION_KEYS = [
+  { category: "document" as const, key: "haccpPlan" },
+  { category: "document" as const, key: "cleaningSop" },
+  { category: "document" as const, key: "tempLog" },
+  { category: "document" as const, key: "supplierApproval" },
+  { category: "audit" as const, key: "brcAudit" },
+  { category: "audit" as const, key: "allergenAudit" },
+  { category: "qa" as const, key: "allergenLaw" },
+  { category: "qa" as const, key: "traceabilityRules" },
 ];
 
 const CATEGORY_COLOUR: Record<string, string> = {
@@ -56,11 +54,18 @@ export default function ChatMessages({
   onQuickSuggestion,
   onRequestReview,
 }: ChatMessagesProps) {
+  const t = useTranslations("chat");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, loading]);
+
+  const suggestions: StarterSuggestion[] = SUGGESTION_KEYS.map((s) => ({
+    category: s.category,
+    label: t(`suggestions.${s.key}.label`),
+    text: t(`suggestions.${s.key}.text`),
+  }));
 
   // Find the index of the last assistant message
   const lastAssistantIdx = (() => {
@@ -84,15 +89,15 @@ export default function ChatMessages({
               className="h-11 w-auto mx-auto opacity-80"
             />
           </div>
-          <h2 className="text-2xl font-semibold text-[#0F172A] mb-2">Food Safety Compliance Assistant</h2>
+          <h2 className="text-2xl font-semibold text-[#0F172A] mb-2">{t("title")}</h2>
           <p className="text-base text-[#64748B] max-w-md">
-            Ask about EU &amp; UK food safety law, generate HACCP plans, SOPs, and monitoring logs, or audit your current procedures.{" "}
+            {t("description")}{" "}
             {canUploadImages
-              ? "You can also attach a photo of your kitchen or a food label for instant compliance analysis."
-              : "Upgrade to Plus or Pro to attach photos of kitchens or labels for instant analysis."}
+              ? t("descriptionWithImages")
+              : t("descriptionUpgradeImages")}
           </p>
           <div className="mt-6 grid gap-2 grid-cols-1 sm:grid-cols-2 w-full max-w-xl">
-            {SUGGESTIONS.map((s) => (
+            {suggestions.map((s) => (
               <button
                 key={s.label}
                 onClick={() => {
@@ -118,7 +123,7 @@ export default function ChatMessages({
       {/* Loading conversation messages */}
       {loadingMessages && (
         <div className="flex justify-center py-8">
-          <span className="text-base text-[#6B7280]">Loading conversation...</span>
+          <span className="text-base text-[#6B7280]">{t("loadingConversation")}</span>
         </div>
       )}
 
@@ -142,7 +147,7 @@ export default function ChatMessages({
               <div className="relative h-5 w-5 rounded-full bg-[#E11D48] animate-pulse">
                 <span className="absolute left-[5px] top-[4px] h-1.5 w-1.5 rounded-full bg-white/80" />
               </div>
-              <span className="text-sm font-semibold text-[#0F172A]">PinkPepper</span>
+              <span className="text-sm font-semibold text-[#0F172A]">{t("pinkPepper")}</span>
             </div>
             <div className="flex gap-1 ml-7">
               <span className="h-2 w-2 rounded-full bg-[#9CA3AF] animate-bounce" style={{ animationDelay: "0ms" }} />

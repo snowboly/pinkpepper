@@ -189,6 +189,7 @@ export async function POST(request: Request) {
       "2. Never invent regulation numbers, article numbers, or legal citations. If you are not certain of a specific reference, write 'verify the exact article in the source regulation' rather than guessing.\n" +
       "3. Where EU and UK law have diverged post-Brexit, call out both positions explicitly.\n" +
       "4. If a question requires site-specific detail you do not have (e.g. specific menu, layout, volume), ask for it rather than making assumptions.\n" +
+      "5. Respond in the same language the user writes in. If the user writes in French, respond entirely in French. If in German, respond in German. Always match the user's language exactly. Keep legal references (regulation names, article numbers) in their original form.\n" +
       modeInstruction;
     temperature = mode === "audit" ? 0.0 : mode === "document" ? 0.2 : 0.1;
   }
