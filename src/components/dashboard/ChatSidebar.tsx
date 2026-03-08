@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { useTranslations } from "next-intl";
 import type { SubscriptionTier } from "@/lib/tier";
 import type { Conversation, Project } from "./types";
 
@@ -26,20 +27,20 @@ function groupConversationsByTime(conversations: Conversation[]): ConversationGr
   const monthStart = startOfDay(new Date(now.getTime() - 30 * 86400000)).getTime();
 
   const buckets: Record<string, Conversation[]> = {
-    Today: [],
-    Yesterday: [],
-    "Previous 7 Days": [],
-    "Previous 30 Days": [],
-    Older: [],
+    today: [],
+    yesterday: [],
+    previous7Days: [],
+    previous30Days: [],
+    older: [],
   };
 
   for (const conv of conversations) {
-    const t = new Date(conv.updated_at).getTime();
-    if (t >= todayStart) buckets.Today.push(conv);
-    else if (t >= yesterdayStart) buckets.Yesterday.push(conv);
-    else if (t >= weekStart) buckets["Previous 7 Days"].push(conv);
-    else if (t >= monthStart) buckets["Previous 30 Days"].push(conv);
-    else buckets.Older.push(conv);
+    const ts = new Date(conv.updated_at).getTime();
+    if (ts >= todayStart) buckets.today.push(conv);
+    else if (ts >= yesterdayStart) buckets.yesterday.push(conv);
+    else if (ts >= weekStart) buckets.previous7Days.push(conv);
+    else if (ts >= monthStart) buckets.previous30Days.push(conv);
+    else buckets.older.push(conv);
   }
 
   return Object.entries(buckets)
@@ -94,6 +95,7 @@ export default function ChatSidebar({
   onDeleteProject,
   onRefreshBilling,
 }: ChatSidebarProps) {
+  const t = useTranslations("sidebar");
   const userInitials = (() => {
     const local = userEmail.split("@")[0] ?? "";
     const tokens = local.split(/[._-]+/).filter(Boolean);
@@ -253,7 +255,7 @@ export default function ChatSidebar({
             onClick={() => onSelectConversation(conv.id)}
             className="flex-1 text-left leading-snug font-medium truncate"
           >
-            {conv.title || "Untitled conversation"}
+            {conv.title || t("untitledConversation")}
           </button>
         )}
 
@@ -263,7 +265,7 @@ export default function ChatSidebar({
             <button
               onClick={(e) => { e.stopPropagation(); startRename(conv); }}
               className="text-[#6B7280] hover:text-[#0F172A] p-0.5"
-              title="Rename"
+              title={t("rename")}
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
@@ -274,7 +276,7 @@ export default function ChatSidebar({
             <button
               onClick={(e) => { e.stopPropagation(); onArchiveConversation(conv.id); }}
               className="text-[#6B7280] hover:text-[#0F172A] p-0.5"
-              title="Archive"
+              title={t("archive")}
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
@@ -285,7 +287,7 @@ export default function ChatSidebar({
             <button
               onClick={(e) => { e.stopPropagation(); setDeleteConfirmId(conv.id); }}
               className="text-[#6B7280] hover:text-[#E11D48] p-0.5"
-              title="Delete"
+              title={t("delete")}
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -312,7 +314,7 @@ export default function ChatSidebar({
           <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-[#E11D48]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
           </svg>
-          New chat
+          {t("newChat")}
         </button>
 
         {/* Search */}
@@ -322,7 +324,7 @@ export default function ChatSidebar({
           </svg>
           <input
             type="text"
-            placeholder="Search chats..."
+            placeholder={t("searchChats")}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full rounded-xl border border-[#E2E8F0] bg-[#F8F9FB] pl-9 pr-3 py-2 text-sm text-[#0F172A] placeholder-[#9CA3AF] outline-none focus:border-[#E11D48] transition-colors"
@@ -337,12 +339,12 @@ export default function ChatSidebar({
         <div className="px-3 pt-3 pb-1">
           <div className="flex items-center justify-between mb-1">
             <span className="text-xs font-semibold uppercase tracking-wider text-[#6B7280]">
-              Projects
+              {t("projects")}
             </span>
             <button
               onClick={() => { setCreatingProject(true); setExpandedProjects((prev) => new Set(prev)); }}
               className="rounded p-0.5 text-[#6B7280] hover:text-[#0F172A] hover:bg-[#F1F5F9] transition-colors"
-              title="New project"
+              title={t("newProject")}
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -374,7 +376,7 @@ export default function ChatSidebar({
                   if (e.key === "Enter") submitNewProject();
                   if (e.key === "Escape") { setCreatingProject(false); setNewProjectName(""); }
                 }}
-                placeholder="Project name..."
+                placeholder={t("projectName")}
                 maxLength={100}
                 className="w-full rounded-lg border border-[#E2E8F0] bg-white px-2 py-1 text-xs text-[#0F172A] placeholder-[#9CA3AF] outline-none focus:border-[#E11D48]"
               />
@@ -384,13 +386,13 @@ export default function ChatSidebar({
                   disabled={!newProjectName.trim()}
                   className="flex-1 rounded-lg bg-[#E11D48] py-1 text-xs font-semibold text-white disabled:opacity-40 hover:bg-[#BE123C] transition-colors"
                 >
-                  Create
+                  {t("create")}
                 </button>
                 <button
                   onClick={() => { setCreatingProject(false); setNewProjectName(""); }}
                   className="flex-1 rounded-lg border border-[#E2E8F0] bg-white py-1 text-xs text-[#64748B] hover:bg-[#F8F9FB] transition-colors"
                 >
-                  Cancel
+                  {t("cancel")}
                 </button>
               </div>
             </div>
@@ -398,7 +400,7 @@ export default function ChatSidebar({
 
           {/* Project folders */}
           {projects.length === 0 && !creatingProject && (
-            <p className="px-1 py-1 text-xs text-[#9CA3AF]">No projects yet.</p>
+            <p className="px-1 py-1 text-xs text-[#9CA3AF]">{t("noProjectsYet")}</p>
           )}
 
           {projects.map((project) => {
@@ -472,7 +474,7 @@ export default function ChatSidebar({
                       <button
                         onClick={(e) => { e.stopPropagation(); startRenameProject(project); }}
                         className="text-[#9CA3AF] hover:text-[#64748B] p-0.5"
-                        title="Rename project"
+                        title={t("renameProject")}
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
@@ -481,7 +483,7 @@ export default function ChatSidebar({
                       <button
                         onClick={(e) => { e.stopPropagation(); onDeleteProject(project.id); }}
                         className="text-[#9CA3AF] hover:text-[#E11D48] p-0.5"
-                        title="Delete project"
+                        title={t("deleteProject")}
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -495,7 +497,7 @@ export default function ChatSidebar({
                 {isExpanded && (
                   <div className="pl-4 space-y-0.5 pb-1">
                     {projectConvs.length === 0 ? (
-                      <p className="px-3 py-1 text-xs text-[#9CA3AF]">No chats yet.</p>
+                      <p className="px-3 py-1 text-xs text-[#9CA3AF]">{t("noChatsYet")}</p>
                     ) : (
                       projectConvs.map((conv) => (
                         <ConvRow key={conv.id} conv={conv} />
@@ -528,22 +530,22 @@ export default function ChatSidebar({
         >
           {!isSearching && (
             <p className="px-3 pt-2 pb-1 text-xs font-semibold uppercase tracking-wider text-[#6B7280]">
-              All chats
+              {t("allChats")}
             </p>
           )}
 
           {loadingConversations ? (
-            <p className="px-3 py-2 text-xs text-[#6B7280]">Loading...</p>
+            <p className="px-3 py-2 text-xs text-[#6B7280]">{t("loading")}</p>
           ) : unassignedGroups.length === 0 ? (
             <p className="px-3 py-2 text-xs text-[#6B7280]">
-              {isSearching ? "No matches found." : "No conversations yet."}
+              {isSearching ? t("noMatchesFound") : t("noConversationsYet")}
             </p>
           ) : (
             unassignedGroups.map((group) => (
               <div key={group.label} className="mb-2">
                 {!isSearching && (
                   <p className="px-3 pt-1 pb-1 text-xs font-semibold uppercase tracking-wider text-[#9CA3AF]">
-                    {group.label}
+                    {t(group.label)}
                   </p>
                 )}
                 <div className="space-y-0.5">
@@ -575,7 +577,7 @@ export default function ChatSidebar({
             disabled={billingLoading}
             className="w-full rounded-lg border border-[#E2E8F0] bg-white px-2 py-1 text-xs text-[#64748B] hover:bg-[#F8F9FB] disabled:opacity-50"
           >
-            {billingLoading ? "..." : "Refresh plan"}
+            {billingLoading ? "..." : t("refreshPlan")}
           </button>
         </div>
         <a
@@ -585,7 +587,7 @@ export default function ChatSidebar({
           <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
           </svg>
-          {isAdmin ? "Review Queue" : "My Reviews"}
+          {isAdmin ? t("reviewQueue") : t("myReviews")}
         </a>
         <div className="flex items-center gap-2">
           <div className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[#E11D48] text-[9px] font-bold text-white uppercase">
@@ -595,7 +597,7 @@ export default function ChatSidebar({
           <a
             href="/dashboard/settings"
             className="text-[#9CA3AF] hover:text-[#64748B] transition-colors flex-shrink-0"
-            title="Account settings"
+            title={t("accountSettings")}
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
@@ -609,22 +611,22 @@ export default function ChatSidebar({
       {deleteConfirmId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
           <div className="mx-4 w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl">
-            <h3 className="text-base font-semibold text-[#0F172A]">Delete conversation?</h3>
+            <h3 className="text-base font-semibold text-[#0F172A]">{t("deleteConversation")}</h3>
             <p className="mt-2 text-sm text-[#64748B]">
-              This will permanently delete this conversation and all its messages. This action cannot be undone.
+              {t("deleteConversationBody")}
             </p>
             <div className="mt-5 flex gap-3">
               <button
                 onClick={() => setDeleteConfirmId(null)}
                 className="flex-1 rounded-xl border border-[#E2E8F0] bg-white py-2 text-sm font-medium text-[#64748B] hover:bg-[#F8F9FB] transition-colors"
               >
-                Cancel
+                {t("cancel")}
               </button>
               <button
                 onClick={() => { onDeleteConversation(deleteConfirmId); setDeleteConfirmId(null); }}
                 className="flex-1 rounded-xl bg-[#E11D48] py-2 text-sm font-medium text-white hover:bg-[#BE123C] transition-colors"
               >
-                Delete
+                {t("delete")}
               </button>
             </div>
           </div>

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
+import { useTranslations } from "next-intl";
 import type { Message } from "./types";
 import { SourceCardsList } from "@/components/chat/SourceCard";
 
@@ -20,6 +21,7 @@ export default function MessageItem({
   conversationId,
   onRequestReview,
 }: MessageItemProps) {
+  const t = useTranslations("chat");
   const isUser = message.role === "user";
   const [copied, setCopied] = useState(false);
 
@@ -42,7 +44,7 @@ export default function MessageItem({
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={message.imagePreview}
-                    alt="Attached photo"
+                    alt={t("attachedPhoto")}
                     className="max-h-48 rounded-lg object-cover"
                   />
                 </div>
@@ -59,7 +61,7 @@ export default function MessageItem({
               <div className="relative h-5 w-5 rounded-full bg-[#E11D48]">
                 <span className="absolute left-[5px] top-[4px] h-1.5 w-1.5 rounded-full bg-white/80" />
               </div>
-              <span className="text-base font-semibold text-[#0F172A]">PinkPepper</span>
+              <span className="text-base font-semibold text-[#0F172A]">{t("pinkPepper")}</span>
             </div>
 
             <div className="text-base text-[#0F172A] pp-markdown">
@@ -81,21 +83,21 @@ export default function MessageItem({
                   type="button"
                   onClick={copyToClipboard}
                   className="flex items-center gap-1.5 rounded-full border border-[#E2E8F0] bg-white px-3 py-1 text-sm text-[#64748B] hover:bg-[#F8F9FB] transition-colors"
-                  title="Copy response"
+                  title={t("copyResponse")}
                 >
                   {copied ? (
                     <>
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                       </svg>
-                      Copied
+                      {t("copied")}
                     </>
                   ) : (
                     <>
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
                       </svg>
-                      Copy
+                      {t("copy")}
                     </>
                   )}
                 </button>

@@ -1,0 +1,270 @@
+{
+  "chat": {
+    "title": "Food Safety Compliance Assistant",
+    "description": "Ask about EU & UK food safety law, generate HACCP plans, SOPs, and monitoring logs, or audit your current procedures.",
+    "descriptionWithImages": "You can also attach a photo of your kitchen or a food label for instant compliance analysis.",
+    "descriptionUpgradeImages": "Upgrade to Plus or Pro to attach photos of kitchens or labels for instant analysis.",
+    "loadingConversation": "Loading conversation...",
+    "pinkPepper": "PinkPepper",
+    "copy": "Copy",
+    "copied": "Copied",
+    "copyResponse": "Copy response",
+    "requestExpertReview": "Request expert review",
+    "attachedPhoto": "Attached photo",
+    "imageAnalysisNote": "{name} - food safety analysis will be performed on this photo.",
+    "attachPhotoTitle": "Attach a photo for food safety analysis",
+    "upgradePhotoTitle": "Upgrade to Plus or Pro to analyse photos",
+    "upgradePhotoTooltip": "Upgrade for photo analysis",
+    "photoNote": "Add a note about this photo (optional)...",
+    "placeholder": "Ask a food safety question... (Shift+Enter for new line)",
+    "stopGenerating": "Stop generating",
+    "suggestions": {
+      "haccpPlan": {
+        "label": "HACCP plan",
+        "text": "Create a HACCP plan for a 25-seat café that serves hot food including sandwiches and soups"
+      },
+      "cleaningSop": {
+        "label": "Cleaning SOP",
+        "text": "Draft a cleaning and disinfection SOP for a commercial kitchen including frequency, chemicals, and records"
+      },
+      "tempLog": {
+        "label": "Temp monitoring log",
+        "text": "Generate a daily temperature monitoring log template for fridges, freezers, and hot-holding equipment"
+      },
+      "supplierApproval": {
+        "label": "Supplier approval",
+        "text": "Draft a supplier approval procedure for a bakery including questionnaire and ongoing monitoring"
+      },
+      "brcAudit": {
+        "label": "BRC audit prep",
+        "text": "Check compliance gaps for a small food manufacturer preparing for a BRC Global Standard Issue 9 audit"
+      },
+      "allergenAudit": {
+        "label": "Allergen audit",
+        "text": "Review my allergen management procedure for a sandwich production unit against Natasha's Law requirements"
+      },
+      "allergenLaw": {
+        "label": "Allergen law",
+        "text": "What are the 14 allergens that must be declared under EU Regulation 1169/2011 and Natasha's Law?"
+      },
+      "traceabilityRules": {
+        "label": "Traceability rules",
+        "text": "What traceability records must a food business keep under Regulation (EC) No 178/2002?"
+      }
+    }
+  },
+  "sidebar": {
+    "newChat": "New chat",
+    "searchChats": "Search chats...",
+    "projects": "Projects",
+    "newProject": "New project",
+    "projectName": "Project name...",
+    "create": "Create",
+    "cancel": "Cancel",
+    "noProjectsYet": "No projects yet.",
+    "noChatsYet": "No chats yet.",
+    "allChats": "All chats",
+    "loading": "Loading...",
+    "noMatchesFound": "No matches found.",
+    "noConversationsYet": "No conversations yet.",
+    "untitledConversation": "Untitled conversation",
+    "rename": "Rename",
+    "archive": "Archive",
+    "delete": "Delete",
+    "renameProject": "Rename project",
+    "deleteProject": "Delete project",
+    "deleteConversation": "Delete conversation?",
+    "deleteConversationBody": "This will permanently delete this conversation and all its messages. This action cannot be undone.",
+    "refreshPlan": "Refresh plan",
+    "reviewQueue": "Review Queue",
+    "myReviews": "My Reviews",
+    "accountSettings": "Account settings",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "previous7Days": "Previous 7 Days",
+    "previous30Days": "Previous 30 Days",
+    "older": "Older"
+  },
+  "workspace": {
+    "title": "Food Safety Compliance Assistant",
+    "wizards": {
+      "haccpPlan": {
+        "title": "HACCP Plan",
+        "intro": "Great choice. I will ask a few quick questions, then generate a complete HACCP plan you can review and export.",
+        "q1": "What is your business type, location (country), and service style (e.g., dine-in, takeaway, manufacturing)?",
+        "q2": "What products/menu items are in scope for this HACCP plan?",
+        "q3": "List the main process steps from receiving to service/sale.",
+        "q4": "Which hazards are most relevant in your operation (biological, chemical, physical, allergens)?",
+        "q5": "What control measures and critical limits do you currently use (temperatures, times, checks)?",
+        "q6": "Who is responsible for monitoring, corrective actions, and verification?"
+      },
+      "cleaningSop": {
+        "title": "Cleaning and Disinfection SOP",
+        "intro": "Perfect. I will collect key operational details and then generate a practical SOP.",
+        "q1": "What type of premises/area is this SOP for (kitchen, bakery, production line, etc.)?",
+        "q2": "Which surfaces/equipment must be cleaned and how often?",
+        "q3": "What cleaning chemicals/sanitisers are used (including dilution/contact times if known)?",
+        "q4": "Who performs cleaning and who verifies sign-off?",
+        "q5": "What records/logs do you want included in the SOP?"
+      },
+      "tempLog": {
+        "title": "Temperature Monitoring Log",
+        "intro": "Understood. I will gather your monitoring setup and generate a ready-to-use log template.",
+        "q1": "Which equipment/processes need monitoring (fridges, freezers, hot holding, cooking, deliveries)?",
+        "q2": "What are your target limits/critical limits for each?",
+        "q3": "How often should checks be recorded (per shift, daily, hourly)?",
+        "q4": "Who records readings and who verifies them?"
+      },
+      "supplierApproval": {
+        "title": "Supplier Approval Procedure",
+        "intro": "Good choice. I will ask a few details and then produce a complete supplier approval procedure and forms.",
+        "q1": "What type of business and product categories do you buy from suppliers?",
+        "q2": "Which supplier risks matter most to you (allergens, traceability, authenticity, chilled chain, etc.)?",
+        "q3": "What documents/certifications do you require before approval?",
+        "q4": "How often do you review suppliers and what triggers re-evaluation?",
+        "q5": "Who approves suppliers and where are records stored?"
+      }
+    },
+    "ask": "Ask",
+    "virtualAudit": "Virtual Audit",
+    "adminPanel": "Admin panel",
+    "requestReview": "Request review",
+    "generateReport": "Generate report",
+    "exporting": "Exporting...",
+    "pdf": "PDF",
+    "docx": "DOCX",
+    "dropPhotoToAnalyse": "Drop photo to analyse",
+    "dropPhotoHint": "Kitchen, label, or food product",
+    "collapseSidebar": "Collapse sidebar",
+    "expandSidebar": "Expand sidebar",
+    "wizardCancelled": "Document builder cancelled. You can start again from any starter card.",
+    "wizardGenerating": "Perfect. I have enough information. Generating your full document now.",
+    "virtualAuditPlaceholder": "Virtual Audit mode: describe scope, upload evidence, or ask for final audit report..."
+  },
+  "onboarding": {
+    "welcome": "Welcome to PinkPepper",
+    "tellUs": "Tell us about your business so we can tailor the experience.",
+    "businessTypeQuestion": "What type of food business do you run?",
+    "somethingWentWrong": "Something went wrong. Please try again.",
+    "networkError": "Network error. Please try again.",
+    "saving": "Saving...",
+    "getStarted": "Get started",
+    "personaliseNote": "This helps personalise your compliance guidance. You can change it later in settings.",
+    "businessTypes": {
+      "restaurant_cafe": "Restaurant / Café",
+      "food_manufacturer": "Food Manufacturer",
+      "retailer_deli": "Retailer / Deli",
+      "catering": "Catering Company",
+      "street_food": "Street Food / Market",
+      "wholesaler": "Wholesaler / Distributor",
+      "consultant": "Food Safety Consultant",
+      "other": "Other"
+    }
+  },
+  "upgrade": {
+    "triggers": {
+      "message_limit": {
+        "heading": "You've reached your daily message limit",
+        "body": "Upgrade to continue chatting. Plus gives you 4× more messages per day — Pro gives you 40×."
+      },
+      "image_limit": {
+        "heading": "Unlock photo analysis",
+        "body": "Upload photos of kitchens, labels, or food products and get instant food safety feedback."
+      },
+      "export": {
+        "heading": "Export your compliance documents",
+        "body": "Download HACCP plans, SOPs, and audit prep as PDF or Word — ready to use or share."
+      },
+      "review": {
+        "heading": "Get expert review",
+        "body": "Have a qualified food safety consultant review your documents within 72 hours."
+      },
+      "audit_mode": {
+        "heading": "Unlock Virtual Audit Mode",
+        "body": "Run a clause-by-clause virtual food safety audit with structured findings, CAPA actions, and export-ready reports."
+      }
+    },
+    "plans": {
+      "plus": {
+        "name": "Plus",
+        "price": "€19/mo",
+        "highlights": ["100 messages/day", "3 image uploads/day", "PDF export", "Unlimited saved conversations"],
+        "cta": "Upgrade to Plus"
+      },
+      "pro": {
+        "name": "Pro",
+        "price": "€99/mo",
+        "highlights": ["1,000 messages/day", "20 image uploads/day", "PDF + Word export", "3 review credits/month"],
+        "cta": "Upgrade to Pro"
+      }
+    },
+    "redirecting": "Redirecting...",
+    "unableToCheckout": "Unable to start checkout.",
+    "networkError": "Network error. Please try again.",
+    "compareAllPlans": "Compare all plans",
+    "maybeLater": "Maybe later"
+  },
+  "review": {
+    "title": "Request Expert Review",
+    "creditsUsed": "Credits used this month:",
+    "whatToExpect": "What to expect",
+    "whatToExpectBody": "Reviews are conducted by qualified food safety consultants. Feedback is returned as structured written notes via your dashboard.",
+    "scopeNote": "Reviews are scoped to the content of the selected conversation. Off-topic or out-of-scope requests may be declined.",
+    "turnaround": "Turnaround:",
+    "turnaroundTimes": "3 working days for quick checks · 5 working days for full document reviews",
+    "fullReviewCostNote": "Full document reviews cost all 3 credits and can only be requested once per month. Quick checks cost 1 credit each.",
+    "documentType": "Document type",
+    "quickCheck": "Quick Check",
+    "quickCheckCredits": "— 1 credit",
+    "fullDocumentReview": "Full Document Review",
+    "fullDocumentReviewCredits": "— uses all 3 credits",
+    "fullReviewWarning": "This will use all 6 of your monthly review slots. You won't be able to submit additional reviews this month.",
+    "notesLabel": "Notes for reviewer (optional)",
+    "notesPlaceholder": "Tell the reviewer what you want checked.",
+    "submitting": "Submitting...",
+    "submitRequest": "Submit request",
+    "submitted": "Review Request Submitted",
+    "submittedBody": "You'll receive an email when your review is picked up and when it's complete.",
+    "trackReviews": "Track your reviews",
+    "close": "Close",
+    "categories": {
+      "async_qa": { "label": "Async Q&A", "desc": "Written answer to a specific food safety question." },
+      "process_flow": { "label": "Process Flow Review", "desc": "Review of a described production or preparation process." },
+      "log_review": { "label": "Log / Record Review", "desc": "Temperature logs, cleaning records, monitoring sheets." },
+      "short_procedure": { "label": "Short Procedure", "desc": "A single SOP or procedure document (approx. 1–2 pages)." },
+      "full_haccp_plan": { "label": "Full HACCP Plan", "desc": "Complete 7-principle HACCP plan with CCP analysis." },
+      "ccp_review": { "label": "CCP Review", "desc": "Focused review of critical control points." },
+      "prps_review": { "label": "PRPs Review", "desc": "Prerequisite programmes: cleaning, pest control, supplier approval, etc." },
+      "operations_manual": { "label": "Operations Manual", "desc": "Multi-section food safety management manual." }
+    }
+  },
+  "settings": {
+    "profile": "Profile",
+    "emailAddress": "Email address",
+    "plan": "Plan",
+    "changePassword": "Change Password",
+    "currentPassword": "Current password",
+    "newPassword": "New password",
+    "confirmNewPassword": "Confirm new password",
+    "passwordPlaceholder": "••••••••",
+    "atLeast8Chars": "At least 8 characters",
+    "passwordTooShort": "New password must be at least 8 characters.",
+    "passwordsDoNotMatch": "Passwords do not match.",
+    "currentPasswordIncorrect": "Current password is incorrect.",
+    "passwordUpdated": "Password updated successfully.",
+    "unexpectedError": "An unexpected error occurred.",
+    "updating": "Updating...",
+    "updatePassword": "Update password",
+    "billing": "Billing",
+    "billingDescription": "Manage your subscription, update payment methods, or cancel.",
+    "viewPlans": "View plans",
+    "manageBilling": "Manage billing",
+    "opening": "Opening...",
+    "unableToOpenPortal": "Unable to open billing portal.",
+    "account": "Account",
+    "signingOut": "Signing out...",
+    "signOut": "Sign out",
+    "language": "Language",
+    "languageDescription": "Choose your preferred language for the interface."
+  }
+}

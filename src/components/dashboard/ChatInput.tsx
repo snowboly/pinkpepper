@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { FormEvent, useCallback, useEffect, useRef } from "react";
+import { useTranslations } from "next-intl";
 
 const MAX_PROMPT_CHARS = 2500;
 
@@ -37,6 +38,7 @@ export default function ChatInput({
   onUpgradeForImages,
   placeholder,
 }: ChatInputProps) {
+  const t = useTranslations("chat");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const resizeTextarea = useCallback(() => {
@@ -79,7 +81,7 @@ export default function ChatInput({
               </button>
             </div>
             <span className="text-sm text-[#64748B] mt-1">
-              {attachedImage?.name} - food safety analysis will be performed on this photo.
+              {t("imageAnalysisNote", { name: attachedImage?.name ?? "" })}
             </span>
           </div>
         )}
@@ -101,7 +103,7 @@ export default function ChatInput({
               type="button"
               onClick={() => fileInputRef.current?.click()}
               className="flex-shrink-0 rounded-xl border border-[#E2E8F0] bg-white p-2.5 text-[#64748B] hover:bg-[#F8F9FB] hover:text-[#0F172A] transition-colors"
-              title="Attach a photo for food safety analysis"
+              title={t("attachPhotoTitle")}
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -112,13 +114,13 @@ export default function ChatInput({
               type="button"
               onClick={() => onUpgradeForImages?.()}
               className="group relative flex-shrink-0 rounded-xl border border-dashed border-[#E2E8F0] bg-[#F8F9FB] p-2.5 text-[#9CA3AF] hover:border-[#E11D48] hover:text-[#E11D48] transition-colors"
-              title="Upgrade to Plus or Pro to analyse photos"
+              title={t("upgradePhotoTitle")}
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
               <span className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-36 rounded-lg bg-[#0F172A] px-2 py-1.5 text-center text-[10px] text-white opacity-0 group-hover:opacity-100 transition-opacity whitespace-normal">
-                Upgrade for photo analysis
+                {t("upgradePhotoTooltip")}
               </span>
             </button>
           )}
@@ -139,8 +141,8 @@ export default function ChatInput({
               placeholder={
                 placeholder ??
                 (attachedImage
-                  ? "Add a note about this photo (optional)..."
-                  : "Ask a food safety question... (Shift+Enter for new line)")
+                  ? t("photoNote")
+                  : t("placeholder"))
               }
               style={{ minHeight: "44px", maxHeight: "min(32vh, 220px)" }}
             />
@@ -154,7 +156,7 @@ export default function ChatInput({
               type="button"
               onClick={onStop}
               className="flex-shrink-0 rounded-xl border-2 border-[#E11D48] bg-white p-2.5 text-[#E11D48] hover:bg-[#FEF2F2] transition-colors"
-              title="Stop generating"
+              title={t("stopGenerating")}
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
                 <rect x="6" y="6" width="12" height="12" rx="2" />

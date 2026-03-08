@@ -64,6 +64,21 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(redirectUrl);
   }
 
+  // Sync locale cookie from profile if missing
+  if (user && !request.cookies.get("locale")?.value) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("locale")
+      .eq("id", user.id)
+      .maybeSingle();
+    if (profile?.locale) {
+      response.cookies.set("locale", profile.locale, {
+        path: "/",
+        maxAge: 31536000,
+      });
+    }
+  }
+
   return response;
 }
 
