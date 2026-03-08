@@ -1,12 +1,18 @@
 import type { SubscriptionTier } from "@/lib/tier";
 import type { Citation } from "@/lib/rag/citations";
 
+export type PersonaInfo = {
+  id: string;
+  name: string;
+};
+
 export type Message = {
   role: "user" | "assistant";
   content: string;
   imagePreview?: string;
   citations?: Citation[];
   isStreaming?: boolean;
+  persona?: PersonaInfo;
 };
 
 export type Conversation = {

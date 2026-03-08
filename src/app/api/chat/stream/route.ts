@@ -5,6 +5,7 @@ import { countUsageSince, utcDayStartIso } from "@/lib/policy";
 import { retrieveContext, buildRAGPrompt, formatCitations, type KnowledgeChunk } from "@/lib/rag";
 import { chatLimiter, checkRateLimit } from "@/lib/ratelimit";
 import { detectQueryMode } from "@/lib/query-mode";
+import { getPersonaForConversation, getRandomPersona, type Persona } from "@/lib/personas";
 
 export const dynamic = "force-dynamic";
 
@@ -114,6 +115,9 @@ export async function POST(request: Request) {
     conversationId = newConv.id;
   }
 
+  // Assign persona based on conversation ID
+  const persona: Persona = getPersonaForConversation(conversationId!);
+
   // Load conversation history
   const historyLimit = isAdmin || tier === "pro" ? 20 : 10;
   const { data: historyRows } = await supabase
@@ -146,7 +150,7 @@ export async function POST(request: Request) {
 
   if (ragEnabled) {
     const ragPrompt = buildRAGPrompt(message, retrievedChunks, mode);
-    systemPrompt = ragPrompt.systemPrompt;
+    systemPrompt = ragPrompt.systemPrompt + `\n\nPERSONA:\n${persona.promptFragment}`;
     temperature = ragPrompt.temperature;
   } else {
     const modeInstruction =
@@ -197,7 +201,8 @@ export async function POST(request: Request) {
       "2. Never invent regulation numbers, article numbers, or legal citations. If you are not certain of a specific reference, write 'verify the exact article in the source regulation' rather than guessing.\n" +
       "3. Where EU and UK law have diverged post-Brexit, call out both positions explicitly.\n" +
       "4. If a question requires site-specific detail you do not have (e.g. specific menu, layout, volume), ask for it rather than making assumptions.\n" +
-      "5. Respond in the same language the user writes in. If the user writes in French, respond entirely in French. If in German, respond in German. Always match the user's language exactly. Keep legal references (regulation names, article numbers) in their original form.\n" +
+      "5. Respond in the same language the user writes in. If the user writes in French, respond entirely in French. If in German, respond in German. Always match the user's language exactly. Keep legal references (regulation names, article numbers) in their original form.\n\n" +
+      "PERSONA:\n" + persona.promptFragment + "\n\n" +
       modeInstruction;
     temperature = mode === "audit" ? 0.0 : mode === "document" ? 0.2 : 0.1;
   }
@@ -237,7 +242,7 @@ export async function POST(request: Request) {
       // Send metadata event
       controller.enqueue(
         encoder.encode(
-          `data: ${JSON.stringify({ type: "metadata", conversationId, ragEnabled })}\n\n`
+          `data: ${JSON.stringify({ type: "metadata", conversationId, ragEnabled, persona: { id: persona.id, name: persona.name } })}\n\n`
         )
       );
 

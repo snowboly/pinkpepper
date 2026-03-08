@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import type { Message } from "./types";
+import type { Message, PersonaInfo } from "./types";
 import MessageItem from "./MessageItem";
 
 export type StarterSuggestion = {
@@ -24,6 +24,7 @@ type ChatMessagesProps = {
   onQuickSuggestion?: (s: StarterSuggestion) => void;
   onRequestReview: () => void;
   onUpgradeForReview?: () => void;
+  currentPersona?: PersonaInfo | null;
 };
 
 const SUGGESTION_KEYS = [
@@ -55,6 +56,7 @@ export default function ChatMessages({
   onQuickSuggestion,
   onRequestReview,
   onUpgradeForReview,
+  currentPersona,
 }: ChatMessagesProps) {
   const t = useTranslations("chat");
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -162,7 +164,7 @@ export default function ChatMessages({
               <div className="relative h-5 w-5 rounded-full bg-[#E11D48] animate-pulse">
                 <span className="absolute left-[5px] top-[4px] h-1.5 w-1.5 rounded-full bg-white/80" />
               </div>
-              <span className="text-sm font-semibold text-[#0F172A]">{t("pinkPepper")}</span>
+              <span className="text-sm font-semibold text-[#0F172A]">{currentPersona ? currentPersona.name : t("pinkPepper")}</span>
             </div>
             <div className="flex gap-1 ml-7">
               <span className="h-2 w-2 rounded-full bg-[#9CA3AF] animate-bounce" style={{ animationDelay: "0ms" }} />
