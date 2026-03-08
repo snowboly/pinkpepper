@@ -15,6 +15,7 @@ Intent Router (tiny model)
 Easy → Cheap model
 Medium → Mid model
 Hard → Strong model
-- 
+- The human reviews are not highlighted anywhere in the copy and thats what differentiates us from the competition. Devise a plan to show the users we do human doc reviews by specialists.
+
 
 
