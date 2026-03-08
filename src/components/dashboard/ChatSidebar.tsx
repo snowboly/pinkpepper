@@ -582,12 +582,19 @@ export default function ChatSidebar({
         </div>
         <a
           href={isAdmin ? "/admin/reviews" : "/dashboard/reviews"}
-          className="flex w-full items-center gap-2 rounded-lg border border-[#E2E8F0] bg-white px-2 py-1.5 text-xs text-[#64748B] hover:bg-[#F8F9FB] transition-colors"
+          className={`flex w-full items-center gap-2 rounded-lg border px-2 py-1.5 text-xs transition-colors ${
+            isAdmin || tier === "pro"
+              ? "border-[#059669]/30 bg-[#ECFDF5] text-[#047857] hover:bg-[#D1FAE5]"
+              : "border-[#E2E8F0] bg-white text-[#64748B] hover:bg-[#F8F9FB]"
+          }`}
         >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
           </svg>
-          {isAdmin ? t("reviewQueue") : t("myReviews")}
+          <span className="flex-1">{isAdmin ? t("reviewQueue") : t("expertReviews")}</span>
+          {!isAdmin && tier !== "pro" && (
+            <span className="rounded bg-[#059669] px-1 py-0.5 text-[9px] font-bold uppercase text-white leading-none">PRO</span>
+          )}
         </a>
         <div className="flex items-center gap-2">
           <div className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[#E11D48] text-[9px] font-bold text-white uppercase">

@@ -18,6 +18,12 @@
     "photoNote": "Ajouter une note sur cette photo (facultatif)...",
     "placeholder": "Posez une question sur la sécurité alimentaire... (Maj+Entrée pour un retour à la ligne)",
     "stopGenerating": "Arrêter la génération",
+    "reviewBannerTitle": "Souhaitez-vous qu'un expert certifié vérifie ce document ?",
+    "reviewBannerBody": "Nos spécialistes en sécurité alimentaire examinent vos documents générés par l'IA pour en vérifier l'exactitude, les lacunes de conformité et la préparation à l'audit.",
+    "reviewUpsellTitle": "Faites vérifier ce document par un expert humain",
+    "reviewUpsellBody": "Le plan Pro inclut 3 crédits de révision d'expert/mois — des spécialistes certifiés vérifient vos documents pour la conformité.",
+    "reviewUpsellCta": "Passer au plan Pro",
+    "humanReviewHighlight": "Le plan Pro inclut des révisions de documents par des experts certifiés en sécurité alimentaire.",
     "suggestions": {
       "haccpPlan": {
         "label": "Plan HACCP",
@@ -78,6 +84,7 @@
     "refreshPlan": "Actualiser le plan",
     "reviewQueue": "File d'attente des avis",
     "myReviews": "Mes avis",
+    "expertReviews": "Avis d'experts",
     "accountSettings": "Paramètres du compte",
     "today": "Aujourd'hui",
     "yesterday": "Hier",

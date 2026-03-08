@@ -973,6 +973,7 @@ export default function ChatWorkspace({
               }
             }}
             onRequestReview={() => setReviewModalOpen(true)}
+            onUpgradeForReview={!reviewEligible ? () => setUpgradeModalTrigger("review") : undefined}
           />
 
           <div className="flex-shrink-0 border-t border-[#E2E8F0] bg-white px-4 py-2">
