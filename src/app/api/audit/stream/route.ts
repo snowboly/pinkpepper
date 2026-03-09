@@ -156,28 +156,53 @@ export async function POST(request: Request) {
 
   const model = process.env.GROQ_MODEL ?? "llama-3.3-70b-versatile";
 
-  const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${groqKey}`,
-      "Content-Type": "application/json",
-    },
-    signal: AbortSignal.timeout(30_000),
-    body: JSON.stringify({
-      model,
-      temperature: 0.0,
-      stream: true,
-      messages: [
-        { role: "system", content: systemPrompt },
-        ...history,
-        { role: "user", content: message },
-      ],
-    }),
-  });
+  const groqPayload = {
+    model,
+    temperature: 0.0,
+    stream: true,
+    messages: [
+      { role: "system", content: systemPrompt },
+      ...history,
+      { role: "user", content: message },
+    ],
+  };
 
-  if (!groqRes.ok) {
-    const details = await groqRes.text();
-    console.error("Groq API error (audit):", details);
+  let groqRes: Response | null = null;
+  const maxRetries = 3;
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    try {
+      groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${groqKey}`,
+          "Content-Type": "application/json",
+        },
+        signal: AbortSignal.timeout(30_000),
+        body: JSON.stringify(groqPayload),
+      });
+
+      if (groqRes.ok || (groqRes.status < 500 && groqRes.status !== 429)) {
+        break;
+      }
+
+      if (attempt < maxRetries - 1) {
+        const backoffMs = Math.pow(2, attempt) * 1000;
+        await new Promise((r) => setTimeout(r, backoffMs));
+      }
+    } catch (fetchErr) {
+      if (attempt < maxRetries - 1) {
+        const backoffMs = Math.pow(2, attempt) * 1000;
+        await new Promise((r) => setTimeout(r, backoffMs));
+      } else {
+        console.error("Groq API fetch failed after retries (audit):", fetchErr);
+        return Response.json({ error: "AI audit service temporarily unavailable." }, { status: 502 });
+      }
+    }
+  }
+
+  if (!groqRes || !groqRes.ok) {
+    const details = groqRes ? await groqRes.text() : "No response";
+    console.error("Groq API error after retries (audit):", details);
     return Response.json({ error: "AI audit service temporarily unavailable." }, { status: 502 });
   }
 

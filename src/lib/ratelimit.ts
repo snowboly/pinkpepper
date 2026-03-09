@@ -30,7 +30,7 @@ function getLimiter({ window, max, prefix }: LimiterConfig): Ratelimit {
 }
 
 export const chatLimiter      = { _cfg: { max: 10, window: "1 m" as const, prefix: "rl:chat" } };
-export const chatBurstLimiter = { _cfg: { max: 3,  window: "30 s" as const, prefix: "rl:chat-burst" } };
+export const chatBurstLimiter = { _cfg: { max: 5,  window: "30 s" as const, prefix: "rl:chat-burst" } };
 export const visionLimiter    = { _cfg: { max: 5,  window: "1 m" as const, prefix: "rl:vision" } };
 export const exportLimiter    = { _cfg: { max: 5,  window: "1 m" as const, prefix: "rl:export" } };
 export const billingLimiter   = { _cfg: { max: 5,  window: "1 m" as const, prefix: "rl:billing" } };
