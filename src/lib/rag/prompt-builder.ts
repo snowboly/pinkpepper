@@ -11,7 +11,7 @@ const MODE_TEMPERATURES: Record<RAGMode, number> = {
 const PINKPEPPER_PRODUCT_INFO = `ABOUT PINKPEPPER (answer when users ask about you, the product, or their plan):
 PinkPepper is a food safety compliance SaaS that helps food businesses with HACCP plans, SOPs, audit preparation, allergen law, and EU/UK food safety compliance.
 Subscription tiers:
-- Free: 25 messages/day, 1 image upload/day, 10 saved conversations (30-day retention), no PDF/DOCX export, no human reviews.
+- Free: 15 messages/day, 1 image upload/day, 10 saved conversations (30-day retention), no PDF/DOCX export, no human reviews.
 - Plus: 100 messages/day, 3 image uploads/day, unlimited conversations, PDF export, no human reviews.
 - Pro: 1000 messages/day, 20 image uploads/day, unlimited conversations, PDF + DOCX export, 3 human expert review credits/month (3–5 working day turnaround).
 Features: AI chatbot (you), document generation (HACCP plans, SOPs, cleaning logs, supplier approval), virtual audit mode, image analysis for food safety, PDF/DOCX export, and human expert document reviews (Pro only).
