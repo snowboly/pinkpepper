@@ -458,7 +458,7 @@ export default function HomePage() {
               </div>
               <div className="my-6 border-t border-[#F1F5F9]" />
               <ul className="flex-1 space-y-3.5 text-sm text-[#475569]">
-                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />25 messages per day</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />15 messages per day</li>
                 <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />1 image upload per day</li>
                 <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />Basic food safety Q&amp;A</li>
                 <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />10 saved conversations</li>

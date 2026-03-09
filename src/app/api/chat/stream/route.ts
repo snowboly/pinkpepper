@@ -3,8 +3,8 @@ import { TIER_CAPABILITIES } from "@/lib/tier";
 import { resolveUserAccess } from "@/lib/access";
 import { countUsageSince, utcDayStartIso } from "@/lib/policy";
 import { retrieveContext, buildRAGPrompt, formatCitations, type KnowledgeChunk } from "@/lib/rag";
-import { chatLimiter, checkRateLimit } from "@/lib/ratelimit";
-import { detectQueryMode } from "@/lib/query-mode";
+import { chatLimiter, chatBurstLimiter, checkRateLimit } from "@/lib/ratelimit";
+import { detectQueryMode, detectComplexity } from "@/lib/query-mode";
 import { getPersonaForConversation, getRandomPersona, type Persona } from "@/lib/personas";
 
 export const dynamic = "force-dynamic";
@@ -27,6 +27,10 @@ export async function POST(request: Request) {
 
   const rateLimitRes = await checkRateLimit(chatLimiter, user.id);
   if (rateLimitRes) return rateLimitRes;
+
+  // Burst protection: max 3 messages per 30 seconds
+  const burstLimitRes = await checkRateLimit(chatBurstLimiter, user.id);
+  if (burstLimitRes) return burstLimitRes;
 
   const { data: profile } = await supabase
     .from("profiles")
@@ -207,7 +211,16 @@ export async function POST(request: Request) {
     temperature = mode === "audit" ? 0.0 : mode === "document" ? 0.2 : 0.1;
   }
 
-  const model = process.env.GROQ_MODEL ?? "llama-3.3-70b-versatile";
+  // Model routing: simple Q&A → 8B, complex/document/audit → 70B
+  const complexity = detectComplexity(message, mode);
+  const modelOverride = process.env.GROQ_MODEL;
+  const model = modelOverride
+    ? modelOverride
+    : complexity === "simple"
+      ? "llama-3.1-8b-instant"
+      : "llama-3.3-70b-versatile";
+
+  const maxTokens = isAdmin ? 8192 : caps.maxResponseTokens;
 
   // Call Groq with streaming enabled
   const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
@@ -220,6 +233,7 @@ export async function POST(request: Request) {
     body: JSON.stringify({
       model,
       temperature,
+      max_tokens: maxTokens,
       stream: true,
       messages: [
         { role: "system", content: systemPrompt },
@@ -305,7 +319,7 @@ export async function POST(request: Request) {
           user_id: user.id,
           event_type: "chat_prompt",
           event_count: 1,
-          metadata: { conversation_id: conversationId, model, rag_enabled: ragEnabled, mode },
+          metadata: { conversation_id: conversationId, model, complexity, rag_enabled: ragEnabled, mode },
         });
 
         // Send final event with citations and usage

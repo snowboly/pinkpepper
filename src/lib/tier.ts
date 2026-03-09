@@ -11,11 +11,13 @@ export type TierCapabilities = {
   allowFullDocumentReview: boolean;
   monthlyHumanReviews: number;
   reviewTurnaround: string;
+  /** Max tokens for LLM response */
+  maxResponseTokens: number;
 };
 
 export const TIER_CAPABILITIES: Record<SubscriptionTier, TierCapabilities> = {
   free: {
-    dailyMessages: 25,
+    dailyMessages: 15,
     dailyDocumentGenerations: 0,
     dailyImageUploads: 1,
     maxSavedConversations: 10,
@@ -25,6 +27,7 @@ export const TIER_CAPABILITIES: Record<SubscriptionTier, TierCapabilities> = {
     allowFullDocumentReview: false,
     monthlyHumanReviews: 0,
     reviewTurnaround: "N/A",
+    maxResponseTokens: 2048,
   },
   plus: {
     dailyMessages: 100,
@@ -37,6 +40,7 @@ export const TIER_CAPABILITIES: Record<SubscriptionTier, TierCapabilities> = {
     allowFullDocumentReview: false,
     monthlyHumanReviews: 0,
     reviewTurnaround: "N/A",
+    maxResponseTokens: 4096,
   },
   pro: {
     dailyMessages: 1000,
@@ -49,6 +53,7 @@ export const TIER_CAPABILITIES: Record<SubscriptionTier, TierCapabilities> = {
     allowFullDocumentReview: true,
     monthlyHumanReviews: 3,
     reviewTurnaround: "3–5 working days",
+    maxResponseTokens: 8192,
   },
 };
 
