@@ -222,30 +222,58 @@ export async function POST(request: Request) {
 
   const maxTokens = isAdmin ? 8192 : caps.maxResponseTokens;
 
-  // Call Groq with streaming enabled
-  const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${groqKey}`,
-      "Content-Type": "application/json",
-    },
-    signal: AbortSignal.timeout(30_000),
-    body: JSON.stringify({
-      model,
-      temperature,
-      max_tokens: maxTokens,
-      stream: true,
-      messages: [
-        { role: "system", content: systemPrompt },
-        ...history,
-        { role: "user", content: message },
-      ],
-    }),
-  });
+  // Call Groq with streaming enabled (retry on transient errors)
+  const groqPayload = {
+    model,
+    temperature,
+    max_tokens: maxTokens,
+    stream: true,
+    messages: [
+      { role: "system", content: systemPrompt },
+      ...history,
+      { role: "user", content: message },
+    ],
+  };
 
-  if (!groqRes.ok) {
-    const details = await groqRes.text();
-    console.error("Groq API error:", details);
+  let groqRes: Response | null = null;
+  const maxRetries = 3;
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    try {
+      groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${groqKey}`,
+          "Content-Type": "application/json",
+        },
+        signal: AbortSignal.timeout(30_000),
+        body: JSON.stringify(groqPayload),
+      });
+
+      // Success or non-retryable error — stop retrying
+      if (groqRes.ok || (groqRes.status < 500 && groqRes.status !== 429)) {
+        break;
+      }
+
+      // Retryable error (429, 5xx) — wait and retry
+      if (attempt < maxRetries - 1) {
+        const backoffMs = Math.pow(2, attempt) * 1000; // 1s, 2s
+        await new Promise((r) => setTimeout(r, backoffMs));
+      }
+    } catch (fetchErr) {
+      // Network error or timeout — retry
+      if (attempt < maxRetries - 1) {
+        const backoffMs = Math.pow(2, attempt) * 1000;
+        await new Promise((r) => setTimeout(r, backoffMs));
+      } else {
+        console.error("Groq API fetch failed after retries:", fetchErr);
+        return Response.json({ error: "AI service temporarily unavailable." }, { status: 502 });
+      }
+    }
+  }
+
+  if (!groqRes || !groqRes.ok) {
+    const details = groqRes ? await groqRes.text() : "No response";
+    console.error("Groq API error after retries:", details);
     return Response.json({ error: "AI service temporarily unavailable." }, { status: 502 });
   }
 
