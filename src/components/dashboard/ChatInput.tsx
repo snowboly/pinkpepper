@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { FormEvent, useCallback, useEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
@@ -11,14 +11,19 @@ type ChatInputProps = {
   attachedImage: File | null;
   imagePreview: string | null;
   canUploadImages: boolean;
+  canUploadDocuments: boolean;
+  attachedDocument: File | null;
   onPromptChange: (s: string) => void;
   onSubmit: (e: FormEvent) => void;
   onStop: () => void;
   onImageSelect: (f: File) => void;
   onClearImage: () => void;
+  onDocumentSelect: (f: File) => void;
+  onClearDocument: () => void;
   onKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
   textareaRef: React.RefObject<HTMLTextAreaElement | null>;
   onUpgradeForImages?: () => void;
+  onUpgradeForDocuments?: () => void;
   placeholder?: string;
 };
 
@@ -28,18 +33,24 @@ export default function ChatInput({
   attachedImage,
   imagePreview,
   canUploadImages,
+  canUploadDocuments,
+  attachedDocument,
   onPromptChange,
   onSubmit,
   onStop,
   onImageSelect,
   onClearImage,
+  onDocumentSelect,
+  onClearDocument,
   onKeyDown,
   textareaRef,
   onUpgradeForImages,
+  onUpgradeForDocuments,
   placeholder,
 }: ChatInputProps) {
   const t = useTranslations("chat");
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const docInputRef = useRef<HTMLInputElement>(null);
 
   const resizeTextarea = useCallback(() => {
     const el = textareaRef.current;
@@ -86,6 +97,29 @@ export default function ChatInput({
           </div>
         )}
 
+        {attachedDocument && (
+          <div className="mb-2 flex items-start gap-2">
+            <div className="relative flex items-center gap-2 rounded-lg border border-[#E2E8F0] bg-[#F8F9FB] px-3 py-2">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#64748B]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              <span className="text-sm text-[#0F172A] max-w-[200px] truncate">{attachedDocument.name}</span>
+              <button
+                type="button"
+                onClick={onClearDocument}
+                className="ml-1 h-5 w-5 rounded-full bg-[#E11D48] text-white flex items-center justify-center hover:bg-[#BE123C] transition-colors"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <span className="text-sm text-[#64748B] mt-1">
+              {t("docAnalysisNote", { name: attachedDocument.name })}
+            </span>
+          </div>
+        )}
+
         <form onSubmit={onSubmit} className="flex items-end gap-2">
           <input
             ref={fileInputRef}
@@ -95,6 +129,17 @@ export default function ChatInput({
             onChange={(e) => {
               const f = e.target.files?.[0];
               if (f) onImageSelect(f);
+            }}
+          />
+
+          <input
+            ref={docInputRef}
+            type="file"
+            accept="application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            className="hidden"
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              if (f) onDocumentSelect(f);
             }}
           />
 
@@ -121,6 +166,34 @@ export default function ChatInput({
               </svg>
               <span className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-36 rounded-lg bg-[#0F172A] px-2 py-1.5 text-center text-[10px] text-white opacity-0 group-hover:opacity-100 transition-opacity whitespace-normal">
                 {t("upgradePhotoTooltip")}
+              </span>
+            </button>
+          )}
+
+          {/* Document upload button */}
+          {canUploadDocuments ? (
+            <button
+              type="button"
+              onClick={() => docInputRef.current?.click()}
+              className="flex-shrink-0 rounded-xl border border-[#E2E8F0] bg-white p-2.5 text-[#64748B] hover:bg-[#F8F9FB] hover:text-[#0F172A] transition-colors h-[44px] w-[44px] flex items-center justify-center"
+              title={t("attachDocTitle")}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => onUpgradeForDocuments?.()}
+              className="group relative flex-shrink-0 rounded-xl border border-dashed border-[#E2E8F0] bg-[#F8F9FB] p-2.5 text-[#9CA3AF] hover:border-[#E11D48] hover:text-[#E11D48] transition-colors h-[44px] w-[44px] flex items-center justify-center"
+              title={t("upgradeDocTitle")}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              <span className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-36 rounded-lg bg-[#0F172A] px-2 py-1.5 text-center text-[10px] text-white opacity-0 group-hover:opacity-100 transition-opacity whitespace-normal">
+                {t("upgradeDocTooltip")}
               </span>
             </button>
           )}
@@ -165,7 +238,7 @@ export default function ChatInput({
           ) : (
             <button
               type="submit"
-              disabled={!prompt.trim() && !attachedImage}
+              disabled={!prompt.trim() && !attachedImage && !attachedDocument}
               className="flex-shrink-0 rounded-xl bg-[#E11D48] p-2.5 text-white hover:bg-[#BE123C] disabled:opacity-40 disabled:cursor-not-allowed transition-colors h-[44px] w-[44px] flex items-center justify-center"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

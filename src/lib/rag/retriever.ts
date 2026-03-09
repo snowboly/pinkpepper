@@ -118,3 +118,51 @@ export async function retrieveCertificationContext(
     sourceType: "certification",
   });
 }
+
+/**
+ * Retrieve context from a user's uploaded documents.
+ * Searches the user_document_chunks table scoped to the given userId.
+ */
+export async function retrieveUserDocumentContext(
+  query: string,
+  userId: string,
+  options: Pick<RetrievalOptions, "topK" | "threshold"> = {}
+): Promise<KnowledgeChunk[]> {
+  const { topK, threshold } = { ...DEFAULT_OPTIONS, ...options };
+
+  const { embedding } = await generateEmbedding(query);
+
+  const { data, error } = await getSupabase().rpc("search_user_document_chunks", {
+    p_user_id: userId,
+    query_embedding: embedding,
+    match_threshold: threshold,
+    match_count: topK,
+  });
+
+  if (error) {
+    console.error("User document retrieval error:", error);
+    // Non-fatal: return empty rather than throwing
+    return [];
+  }
+
+  return (data as KnowledgeChunk[]) || [];
+}
+
+/**
+ * Retrieve context from both knowledge base and user documents, merged by similarity.
+ */
+export async function retrieveCombinedContext(
+  query: string,
+  userId: string,
+  options: RetrievalOptions = {}
+): Promise<{ knowledgeChunks: KnowledgeChunk[]; userChunks: KnowledgeChunk[] }> {
+  const [knowledgeChunks, userChunks] = await Promise.all([
+    retrieveContext(query, options),
+    retrieveUserDocumentContext(query, userId, {
+      topK: options.topK ?? 3,
+      threshold: options.threshold ?? 0.65,
+    }),
+  ]);
+
+  return { knowledgeChunks, userChunks };
+}

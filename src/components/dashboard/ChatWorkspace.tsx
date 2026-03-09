@@ -141,6 +141,9 @@ export default function ChatWorkspace({
   const [attachedImage, setAttachedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
+  // ── Document attachment state ──
+  const [attachedDocument, setAttachedDocument] = useState<File | null>(null);
+
   // ── Onboarding state ──
   const [showOnboarding, setShowOnboarding] = useState(!onboardingCompleted);
 
@@ -161,6 +164,7 @@ export default function ChatWorkspace({
   const pendingDoneRef = useRef<{ citations?: Citation[]; usage?: StreamUsage } | null>(null);
 
   const canUploadImages = isAdmin || dailyImageUploads > 0;
+  const canUploadDocuments = isAdmin || tier === "plus" || tier === "pro";
 
   const pushAssistantMessage = useCallback((content: string, persona?: PersonaInfo | null) => {
     setMessages((prev) => [...prev, { role: "assistant", content, persona: persona ?? undefined }]);
@@ -287,6 +291,46 @@ export default function ChatWorkspace({
   function clearImage() {
     setAttachedImage(null);
     setImagePreview(null);
+  }
+
+  // ── Document helpers ──
+  function handleDocumentSelect(file: File) {
+    if (!canUploadDocuments) return;
+    const allowedTypes = [
+      "application/pdf",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    ];
+    if (!allowedTypes.includes(file.type)) {
+      setError("Only PDF and DOCX files are supported.");
+      return;
+    }
+    if (file.size > 25 * 1024 * 1024) {
+      setError("Document must be under 25MB.");
+      return;
+    }
+    setAttachedDocument(file);
+  }
+
+  function clearDocument() {
+    setAttachedDocument(null);
+  }
+
+  async function uploadDocumentForAnalysis(doc: File) {
+    const fd = new FormData();
+    fd.append("file", doc);
+    if (conversationId) fd.append("conversationId", conversationId);
+    try {
+      const res = await fetch("/api/documents/upload", { method: "POST", body: fd });
+      const data = (await res.json()) as { success?: boolean; chunks?: number; error?: string };
+      if (!res.ok) {
+        setError(data.error ?? "Document upload failed.");
+        return null;
+      }
+      return data;
+    } catch {
+      setError("Network error while uploading document.");
+      return null;
+    }
   }
 
   // ── Billing ──
@@ -493,6 +537,7 @@ export default function ChatWorkspace({
     setMessages([]);
     setReviewRequests([]);
     clearImage();
+    clearDocument();
     setError(null);
   }
 
@@ -656,12 +701,125 @@ export default function ChatWorkspace({
     if (await handleDocWizardInput(rawPrompt)) return;
 
     const value = rawPrompt.trim();
-    if ((!value && !attachedImage) || loading) return;
+    if ((!value && !attachedImage && !attachedDocument) || loading) return;
 
     setLoading(true);
     setError(null);
     setPrompt("");
     if (textareaRef.current) textareaRef.current.style.height = "auto";
+
+    // Handle document upload first
+    const currentDocument = attachedDocument;
+    if (currentDocument) {
+      clearDocument();
+      const uploadResult = await uploadDocumentForAnalysis(currentDocument);
+      if (!uploadResult) {
+        setLoading(false);
+        return;
+      }
+      // Append a system note about the uploaded document to the user's message
+      const docNote = `[Uploaded document: ${currentDocument.name} — ${uploadResult.chunks} sections indexed]`;
+      const combinedMessage = value
+        ? `${value}\n\n${docNote}`
+        : `Analyse the uploaded document "${currentDocument.name}" for food safety compliance.`;
+
+      const userMessage: Message = { role: "user", content: combinedMessage };
+      setMessages((prev) => [...prev, userMessage]);
+
+      // Continue with normal text streaming using the combined message
+      const effectivePrompt = value
+        ? `${value}\n\nContext: The user has just uploaded a document called "${currentDocument.name}" (${uploadResult.chunks} sections). Use the user's uploaded document context to answer.`
+        : `The user uploaded a food safety document called "${currentDocument.name}". Analyse it for compliance, identify any gaps, and provide recommendations. Use the user's uploaded document context to answer.`;
+
+      // Fall through to the streaming path below
+      abortControllerRef.current = new AbortController();
+      typingQueueRef.current = "";
+      pendingDoneRef.current = null;
+      clearTypingInterval();
+      setMessages((prev) => [...prev, { role: "assistant", content: "", isStreaming: true, persona: currentPersona ?? undefined }]);
+
+      try {
+        const res = await fetch("/api/chat/stream", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: effectivePrompt, conversationId }),
+          signal: abortControllerRef.current.signal,
+        });
+
+        if (!res.ok) {
+          let errMsg = "Request failed";
+          try { const data = await res.json(); errMsg = data.error ?? errMsg; } catch { /* */ }
+          setError(errMsg);
+          setMessages((prev) => prev.slice(0, -2));
+          setLoading(false);
+          return;
+        }
+
+        const reader = res.body!.getReader();
+        const decoder = new TextDecoder();
+        let buffer = "";
+        while (true) {
+          const { done, value: chunk } = await reader.read();
+          if (done) break;
+          buffer += decoder.decode(chunk, { stream: true });
+          const lines = buffer.split("\n");
+          buffer = lines.pop() ?? "";
+          for (const line of lines) {
+            if (!line.startsWith("data: ")) continue;
+            const payload = line.slice(6);
+            if (payload === "[DONE]") continue;
+            let event: { type: string; delta?: string; conversationId?: string; citations?: Citation[]; usage?: StreamUsage; persona?: PersonaInfo };
+            try { event = JSON.parse(payload); } catch { continue; }
+            if (event.type === "metadata") {
+              if (event.conversationId) setConversationId(event.conversationId);
+              if (event.persona) {
+                const p = event.persona as PersonaInfo;
+                setCurrentPersona(p);
+                setMessages((prev) => {
+                  const updated = [...prev];
+                  const last = updated[updated.length - 1];
+                  if (last?.isStreaming) updated[updated.length - 1] = { ...last, persona: p };
+                  return updated;
+                });
+              }
+            } else if (event.type === "content" && event.delta) {
+              typingQueueRef.current += event.delta;
+              startTypingDrain();
+            } else if (event.type === "done") {
+              pendingDoneRef.current = { citations: event.citations, usage: event.usage };
+              startTypingDrain();
+            }
+          }
+        }
+        if (typingQueueRef.current.length === 0 && pendingDoneRef.current) {
+          finalizeStreamingMessage(pendingDoneRef.current);
+          pendingDoneRef.current = null;
+        }
+        await loadConversations(true);
+      } catch (err: unknown) {
+        if (err instanceof DOMException && err.name === "AbortError") {
+          typingQueueRef.current = "";
+          pendingDoneRef.current = null;
+          clearTypingInterval();
+          setMessages((prev) => {
+            const updated = [...prev];
+            const last = updated[updated.length - 1];
+            if (last?.isStreaming) updated[updated.length - 1] = { ...last, isStreaming: false };
+            return updated;
+          });
+        } else {
+          typingQueueRef.current = "";
+          pendingDoneRef.current = null;
+          clearTypingInterval();
+          setError("Network error. Please try again.");
+          setMessages((prev) => prev.slice(0, -2));
+        }
+      } finally {
+        setLoading(false);
+        abortControllerRef.current = null;
+      }
+      return;
+    }
 
     const userMessage: Message = {
       role: "user",
@@ -1075,14 +1233,19 @@ export default function ChatWorkspace({
             attachedImage={attachedImage}
             imagePreview={imagePreview}
             canUploadImages={canUploadImages}
+            canUploadDocuments={canUploadDocuments}
+            attachedDocument={attachedDocument}
             onPromptChange={setPrompt}
             onSubmit={sendPrompt}
             onStop={() => abortControllerRef.current?.abort()}
             onImageSelect={handleImageSelect}
             onClearImage={clearImage}
+            onDocumentSelect={handleDocumentSelect}
+            onClearDocument={clearDocument}
             onKeyDown={handleKeyDown}
             textareaRef={textareaRef}
             onUpgradeForImages={() => setUpgradeModalTrigger("image_limit")}
+            onUpgradeForDocuments={() => setUpgradeModalTrigger("message_limit")}
             placeholder={
               workspaceMode === "virtual_audit"
                 ? tw("virtualAuditPlaceholder")

@@ -127,6 +127,27 @@ async function readTextFile(filePath: string): Promise<string> {
 }
 
 /**
+ * Parse a PDF file into plain text
+ */
+async function readPdfFile(filePath: string): Promise<string> {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const pdfParse = require("pdf-parse");
+  const buffer = await fs.promises.readFile(filePath);
+  const data = await pdfParse(buffer, { max: 200 });
+  return data.text?.trim() ?? "";
+}
+
+/**
+ * Parse a DOCX file into plain text
+ */
+async function readDocxFile(filePath: string): Promise<string> {
+  const mammoth = await import("mammoth");
+  const buffer = await fs.promises.readFile(filePath);
+  const result = await mammoth.extractRawText({ buffer });
+  return result.value?.trim() ?? "";
+}
+
+/**
  * Process a single document file
  */
 async function processDocument(filePath: string): Promise<DocumentChunk[]> {
@@ -135,10 +156,12 @@ async function processDocument(filePath: string): Promise<DocumentChunk[]> {
   const ext = path.extname(filePath).toLowerCase();
   let text: string;
 
-  // For now, only handle plain text files
-  // In production, add PDF and DOCX parsing
   if (ext === ".txt" || ext === ".md") {
     text = await readTextFile(filePath);
+  } else if (ext === ".pdf") {
+    text = await readPdfFile(filePath);
+  } else if (ext === ".docx") {
+    text = await readDocxFile(filePath);
   } else {
     console.log(`  Skipping unsupported format: ${ext}`);
     return [];
