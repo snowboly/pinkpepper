@@ -90,7 +90,7 @@ export async function recordExportUsage(input: {
 
   await supabase.from("usage_events").insert({
     user_id: userId,
-    event_type: "document_generation",
+    event_type: "document_export",
     event_count: 1,
     metadata: { conversation_id: conversationId, format },
   });

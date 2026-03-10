@@ -187,6 +187,10 @@
         "heading": "Unlock photo analysis",
         "body": "Upload photos of kitchens, labels, or food products and get instant food safety feedback."
       },
+      "transcription_limit": {
+        "heading": "Unlock voice transcription",
+        "body": "Record questions hands-free and turn speech into chat instantly with Plus or Pro."
+      },
       "export": {
         "heading": "Export your compliance documents",
         "body": "Download HACCP plans, SOPs, and audit prep as PDF or Word — ready to use or share."
