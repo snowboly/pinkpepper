@@ -15,13 +15,15 @@ export default async function SettingsPage() {
     redirect("/login?next=/dashboard/settings");
   }
 
-  const { data: profile } = await supabase
+  type ProfileRow = { tier?: string | null; is_admin?: boolean | null; chat_language?: string | null };
+  const profileResult = await supabase
     .from("profiles")
     .select("tier,is_admin,chat_language")
     .eq("id", user.id)
     .maybeSingle();
+  const profile = profileResult.data as ProfileRow | null;
   const { tier, isAdmin } = resolveUserAccess(profile, user.email);
-  const chatLanguage = (profile as { chat_language?: string } | null)?.chat_language ?? "en";
+  const chatLanguage = profile?.chat_language ?? "en";
 
   return (
     <div className="min-h-screen bg-[#F8F9FB] py-10 px-4">

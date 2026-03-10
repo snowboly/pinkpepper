@@ -32,14 +32,16 @@ export async function POST(request: Request) {
   const burstLimitRes = await checkRateLimit(chatBurstLimiter, user.id);
   if (burstLimitRes) return burstLimitRes;
 
-  const { data: profile } = await supabase
+  type ProfileRow = { tier?: string | null; is_admin?: boolean | null; chat_language?: string | null };
+  const profileResult = await supabase
     .from("profiles")
     .select("tier,is_admin,chat_language")
     .eq("id", user.id)
     .maybeSingle();
+  const profile = profileResult.data as ProfileRow | null;
 
   const { tier, isAdmin } = resolveUserAccess(profile, user.email);
-  const chatLanguage = (profile as { chat_language?: string } | null)?.chat_language ?? "en";
+  const chatLanguage = profile?.chat_language ?? "en";
   const caps = TIER_CAPABILITIES[tier];
 
   const body = (await request.json()) as { message?: string; conversationId?: string | null };
