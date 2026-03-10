@@ -168,7 +168,7 @@ export default function ChatWorkspace({
   const [showOnboarding, setShowOnboarding] = useState(!onboardingCompleted);
 
   // ── Upgrade modal state ──
-  const [upgradeModalTrigger, setUpgradeModalTrigger] = useState<"message_limit" | "image_limit" | "export" | "review" | "audit_mode" | null>(null);
+  const [upgradeModalTrigger, setUpgradeModalTrigger] = useState<"message_limit" | "image_limit" | "export" | "review" | "audit_mode" | "transcription_limit" | null>(null);
   const [workspaceMode, setWorkspaceMode] = useState<WorkspaceMode>("ask");
   const [activeDocWizard, setActiveDocWizard] = useState<DocWizard | null>(null);
   const [docWizardStep, setDocWizardStep] = useState(0);
@@ -349,6 +349,9 @@ export default function ChatWorkspace({
       const res = await fetch("/api/chat/transcribe", { method: "POST", body: formData });
       const data = (await res.json()) as { text?: string; error?: { message?: string } };
       if (!res.ok) {
+        if (res.status === 402) {
+          setUpgradeModalTrigger("transcription_limit");
+        }
         throw new Error(data.error?.message ?? tc("transcriptionError"));
       }
 
@@ -894,7 +897,7 @@ export default function ChatWorkspace({
         };
         if (!res.ok) {
           if (res.status === 402) {
-            setUpgradeModalTrigger("message_limit");
+            setUpgradeModalTrigger("image_limit");
           } else {
             setError(data.error ?? "Request failed");
           }

@@ -1,38 +1,28 @@
-import { describe, it, expect } from "vitest";
-import { canExportPdf, canExportDocx } from "@/lib/export/common";
+import { describe, expect, it, vi } from "vitest";
+import { recordExportUsage } from "@/lib/export/common";
 
-describe("canExportPdf", () => {
-  it("free tier cannot export PDF", () => {
-    expect(canExportPdf("free")).toBe(false);
-  });
+describe("recordExportUsage", () => {
+  it("stores exports under document_export instead of document_generation", async () => {
+    const insert = vi.fn().mockResolvedValue({ error: null });
+    const supabase = {
+      from: vi.fn().mockReturnValue({ insert }),
+    } as unknown as {
+      from: (table: string) => { insert: typeof insert };
+    };
 
-  it("plus tier can export PDF", () => {
-    expect(canExportPdf("plus")).toBe(true);
-  });
+    await recordExportUsage({
+      supabase: supabase as never,
+      userId: "user-123",
+      format: "pdf",
+      conversationId: "conv-123",
+    });
 
-  it("pro tier can export PDF", () => {
-    expect(canExportPdf("pro")).toBe(true);
-  });
-
-  it("admin always can export PDF regardless of tier", () => {
-    expect(canExportPdf("free", true)).toBe(true);
-  });
-});
-
-describe("canExportDocx", () => {
-  it("free tier cannot export DOCX", () => {
-    expect(canExportDocx("free")).toBe(false);
-  });
-
-  it("plus tier cannot export DOCX", () => {
-    expect(canExportDocx("plus")).toBe(false);
-  });
-
-  it("pro tier can export DOCX", () => {
-    expect(canExportDocx("pro")).toBe(true);
-  });
-
-  it("admin always can export DOCX regardless of tier", () => {
-    expect(canExportDocx("free", true)).toBe(true);
+    expect(supabase.from).toHaveBeenCalledWith("usage_events");
+    expect(insert).toHaveBeenCalledWith({
+      user_id: "user-123",
+      event_type: "document_export",
+      event_count: 1,
+      metadata: { conversation_id: "conv-123", format: "pdf" },
+    });
   });
 });

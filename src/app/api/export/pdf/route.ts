@@ -2,7 +2,6 @@ import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import { NextResponse } from "next/server";
 import {
   canExportPdf,
-  enforceDailyDocumentLimit,
   getExportContext,
   getLatestAssistantMessageForConversation,
   recordExportUsage,
@@ -40,8 +39,6 @@ export async function POST(request: Request) {
     if (!canExportPdf(tier, isAdmin)) {
       return NextResponse.json({ error: "PDF export is not available for your plan." }, { status: 403 });
     }
-
-    await enforceDailyDocumentLimit({ supabase, userId, tier, isAdmin });
 
     const body = (await request.json()) as { conversationId?: string };
     const conversationId = body.conversationId?.trim();
@@ -118,9 +115,6 @@ export async function POST(request: Request) {
     }
     if (message === "NO_ASSISTANT_CONTENT") {
       return NextResponse.json({ error: "No assistant response available to export." }, { status: 400 });
-    }
-    if (message === "DOC_DAILY_LIMIT_REACHED") {
-      return NextResponse.json({ error: "Daily document generation limit reached for your plan." }, { status: 402 });
     }
     console.error("[export/pdf] unhandled error:", error);
     return NextResponse.json({ error: "Export failed. Please try again." }, { status: 500 });
