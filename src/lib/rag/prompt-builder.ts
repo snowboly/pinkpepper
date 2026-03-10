@@ -45,7 +45,7 @@ RULES:
 4. Always distinguish between EU law and UK post-Brexit retained law where relevant
 5. For certification questions, clarify which standard and edition applies
 6. Use structured, professional formatting: headings, bullet lists, numbered steps
-7. Respond in the same language the user writes in. If the user writes in French, respond entirely in French. If in German, respond in German. Always match the user's language exactly. Keep legal references (regulation names, article numbers) in their original form`;
+7. {LANGUAGE_INSTRUCTION} Keep legal references (regulation names, article numbers) in their original form`;
 
 /**
  * Format retrieved chunks into context for the LLM
@@ -69,13 +69,18 @@ export function formatContext(chunks: KnowledgeChunk[]): string {
  */
 export function buildRAGSystemPrompt(
   chunks: KnowledgeChunk[],
-  mode: RAGMode = "qa"
+  mode: RAGMode = "qa",
+  preferredLanguage = "English"
 ): string {
   const contextSection = formatContext(chunks);
-
   const modeInstructions = getModeInstructions(mode);
+  const languageInstruction = `Respond in ${preferredLanguage}. This is the user's preferred response language. Do not switch to another language unless the user explicitly asks you to.`;
+  const prompt = SYSTEM_PROMPT_BASE.replace(
+    "{LANGUAGE_INSTRUCTION}",
+    languageInstruction
+  );
 
-  return `${SYSTEM_PROMPT_BASE}
+  return `${prompt}
 
 ${modeInstructions}
 
@@ -123,10 +128,11 @@ function getModeInstructions(mode: RAGMode): string {
 export function buildRAGPrompt(
   userMessage: string,
   chunks: KnowledgeChunk[],
-  mode: RAGMode = "qa"
+  mode: RAGMode = "qa",
+  preferredLanguage = "English"
 ): { systemPrompt: string; temperature: number } {
   return {
-    systemPrompt: buildRAGSystemPrompt(chunks, mode),
+    systemPrompt: buildRAGSystemPrompt(chunks, mode, preferredLanguage),
     temperature: MODE_TEMPERATURES[mode],
   };
 }

@@ -34,11 +34,12 @@ export async function POST(request: Request) {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("tier,is_admin")
+    .select("tier,is_admin,chat_language")
     .eq("id", user.id)
     .maybeSingle();
 
   const { tier, isAdmin } = resolveUserAccess(profile, user.email);
+  const chatLanguage = (profile as { chat_language?: string } | null)?.chat_language ?? "en";
   const caps = TIER_CAPABILITIES[tier];
 
   const body = (await request.json()) as { message?: string; conversationId?: string | null };
@@ -152,8 +153,19 @@ export async function POST(request: Request) {
   let systemPrompt: string;
   let temperature: number;
 
+  const CHAT_LANGUAGE_NAMES: Record<string, string> = {
+    en: "English",
+    fr: "French",
+    de: "German",
+    es: "Spanish",
+    it: "Italian",
+    pt: "Portuguese",
+  };
+  const preferredLanguage = CHAT_LANGUAGE_NAMES[chatLanguage] ?? "English";
+  const languageInstruction = `Respond in ${preferredLanguage}. This is the user's preferred response language. Do not switch to another language unless the user explicitly asks you to.`;
+
   if (ragEnabled) {
-    const ragPrompt = buildRAGPrompt(message, retrievedChunks, mode);
+    const ragPrompt = buildRAGPrompt(message, retrievedChunks, mode, preferredLanguage);
     systemPrompt = ragPrompt.systemPrompt + `\n\nPERSONA:\n${persona.promptFragment}`;
     temperature = ragPrompt.temperature;
   } else {
@@ -205,7 +217,7 @@ export async function POST(request: Request) {
       "2. Never invent regulation numbers, article numbers, or legal citations. If you are not certain of a specific reference, write 'verify the exact article in the source regulation' rather than guessing.\n" +
       "3. Where EU and UK law have diverged post-Brexit, call out both positions explicitly.\n" +
       "4. If a question requires site-specific detail you do not have (e.g. specific menu, layout, volume), ask for it rather than making assumptions.\n" +
-      "5. Respond in the same language the user writes in. If the user writes in French, respond entirely in French. If in German, respond in German. Always match the user's language exactly. Keep legal references (regulation names, article numbers) in their original form.\n\n" +
+      `5. ${languageInstruction} Keep legal references (regulation names, article numbers) in their original form.\n\n` +
       "PERSONA:\n" + persona.promptFragment + "\n\n" +
       modeInstruction;
     temperature = mode === "audit" ? 0.0 : mode === "document" ? 0.2 : 0.1;

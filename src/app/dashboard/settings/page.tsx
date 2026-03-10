@@ -17,10 +17,11 @@ export default async function SettingsPage() {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("tier,is_admin")
+    .select("tier,is_admin,chat_language")
     .eq("id", user.id)
     .maybeSingle();
   const { tier, isAdmin } = resolveUserAccess(profile, user.email);
+  const chatLanguage = (profile as { chat_language?: string } | null)?.chat_language ?? "en";
 
   return (
     <div className="min-h-screen bg-[#F8F9FB] py-10 px-4">
@@ -43,6 +44,7 @@ export default async function SettingsPage() {
           email={user.email ?? ""}
           tier={tier}
           isAdmin={isAdmin}
+          chatLanguage={chatLanguage}
         />
       </div>
     </div>
