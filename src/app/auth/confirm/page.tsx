@@ -14,31 +14,25 @@ export default function ConfirmPage() {
     const type = params.get("type") as EmailOtpType | null;
     const code = params.get("code");
     const next = params.get("next") ?? "/dashboard";
+    const flow = params.get("flow");
 
     const supabase = createClient();
 
     async function confirm() {
       let verified = false;
-      let isSignup = false;
+      let isSignup = flow === "signup";
 
       // PKCE flow — Supabase redirects with a `code` param
       if (code) {
         const { error } = await supabase.auth.exchangeCodeForSession(code);
         verified = !error;
-        if (verified) {
-          const { data: { user } } = await supabase.auth.getUser();
-          if (user?.email_confirmed_at) {
-            const confirmedAt = new Date(user.email_confirmed_at).getTime();
-            isSignup = Date.now() - confirmedAt < 60_000;
-          }
-        }
       }
 
       // Token-hash flow
       if (!verified && token_hash && type) {
         const { error } = await supabase.auth.verifyOtp({ token_hash, type });
         verified = !error;
-        isSignup = type === "signup" || type === "email";
+        isSignup = isSignup || type === "signup";
       }
 
       if (!verified) {
