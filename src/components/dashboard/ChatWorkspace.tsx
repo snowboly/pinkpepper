@@ -102,6 +102,16 @@ const DOC_WIZARDS: Record<string, DocWizard> = {
   },
 };
 
+const ALLOWED_TRANSCRIPTION_MIME_TYPES = new Set(["audio/webm", "audio/mp4", "audio/wav"]);
+
+function normalizeRecordedMimeType(mimeType: string | undefined) {
+  const normalized = (mimeType ?? "").split(";")[0]?.trim().toLowerCase();
+  if (ALLOWED_TRANSCRIPTION_MIME_TYPES.has(normalized)) {
+    return normalized;
+  }
+  return "audio/webm";
+}
+
 export default function ChatWorkspace({
   userEmail,
   initialTier,
@@ -413,7 +423,7 @@ export default function ChatWorkspace({
       recorder.onstop = () => {
         const chunks = audioChunksRef.current;
         const firstChunkType = chunks[0]?.type;
-        const blobType = recorder.mimeType || firstChunkType || "audio/webm";
+        const blobType = normalizeRecordedMimeType(recorder.mimeType || firstChunkType);
         const blob = new Blob(chunks, { type: blobType });
         const durationMs = recordingStartedAtRef.current ? Date.now() - recordingStartedAtRef.current : 0;
         cleanupRecordingStream();
