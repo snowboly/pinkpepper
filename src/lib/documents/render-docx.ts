@@ -73,7 +73,7 @@ function renderTable(table: GeneratedDocument["tables"][0]): Table {
   });
 }
 
-export async function renderDocx(doc: GeneratedDocument): Promise<Buffer> {
+export async function renderDocx(doc: GeneratedDocument): Promise<Uint8Array> {
   const children: (Paragraph | Table)[] = [
     // Title
     new Paragraph({
@@ -160,5 +160,6 @@ export async function renderDocx(doc: GeneratedDocument): Promise<Buffer> {
     },
   });
 
-  return Packer.toBuffer(document);
+  const buffer = await Packer.toBuffer(document);
+  return new Uint8Array(buffer);
 }
