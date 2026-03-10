@@ -13,6 +13,7 @@
     "attachedPhoto": "Photo jointe",
     "imageAnalysisNote": "{name} - une analyse de sécurité alimentaire sera effectuée sur cette photo.",
     "attachPhotoTitle": "Joindre une photo pour une analyse de sécurité alimentaire",
+    "attachDocumentTitle": "Attach a document (PDF, DOCX, TXT)",
     "upgradePhotoTitle": "Passez à Plus ou Pro pour analyser des photos",
     "upgradePhotoTooltip": "Passez à un plan supérieur pour l'analyse photo",
     "photoNote": "Ajouter une note sur cette photo (facultatif)...",

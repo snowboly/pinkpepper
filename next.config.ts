@@ -30,6 +30,7 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: __dirname,
   },
+
   headers: async () => [
     { source: "/:path*", headers: securityHeaders },
   ],

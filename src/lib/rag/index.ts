@@ -9,7 +9,9 @@ export {
   retrieveGuidanceContext,
   retrieveTemplateContext,
   retrieveCertificationContext,
+  retrieveUserDocumentContext,
   type KnowledgeChunk,
+  type UserDocumentChunk,
   type RetrievalOptions,
 } from "./retriever";
 

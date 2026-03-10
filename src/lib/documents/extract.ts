@@ -1,6 +1,6 @@
 export type DocumentExtractionResult = {
   text: string;
-  strategy: "plain-text" | "unsupported";
+  strategy: "plain-text" | "pdf" | "docx" | "unsupported";
   warning?: string;
 };
 
@@ -23,19 +23,34 @@ export async function extractDocumentText(file: File): Promise<DocumentExtractio
 
   if (UTF8_TEXT_MIME_TYPES.has(mimeType)) {
     const raw = await file.text();
-    return {
-      text: normalizeWhitespace(raw),
-      strategy: "plain-text",
-    };
+    return { text: normalizeWhitespace(raw), strategy: "plain-text" };
   }
 
-  if (mimeType === PDF_MIME_TYPE || mimeType === DOCX_MIME_TYPE) {
-    return {
-      text: "",
-      strategy: "unsupported",
-      warning:
-        "This file type is accepted but text extraction is temporarily disabled in server builds to avoid browser-only runtime dependencies.",
-    };
+  if (mimeType === PDF_MIME_TYPE) {
+    try {
+      const buffer = Buffer.from(await file.arrayBuffer());
+      // Dynamic import avoids bundler issues with pdf-parse test fixtures
+      const pdfParse = (await import("pdf-parse/lib/pdf-parse.js")).default as (
+        buf: Buffer
+      ) => Promise<{ text: string }>;
+      const result = await pdfParse(buffer);
+      return { text: normalizeWhitespace(result.text), strategy: "pdf" };
+    } catch (e) {
+      console.error("PDF extraction failed:", e);
+      return { text: "", strategy: "unsupported", warning: "Failed to extract text from PDF." };
+    }
+  }
+
+  if (mimeType === DOCX_MIME_TYPE) {
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      const mammoth = await import("mammoth");
+      const result = await mammoth.extractRawText({ arrayBuffer });
+      return { text: normalizeWhitespace(result.value), strategy: "docx" };
+    } catch (e) {
+      console.error("DOCX extraction failed:", e);
+      return { text: "", strategy: "unsupported", warning: "Failed to extract text from DOCX." };
+    }
   }
 
   return {
