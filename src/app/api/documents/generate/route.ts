@@ -153,7 +153,7 @@ export async function POST(request: Request) {
   if (format === "docx") {
     const buffer = await renderDocx(doc);
     const fileName = `${doc.documentNumber.replace(/[^a-zA-Z0-9-_]/g, "_")}.docx`;
-    return new Response(buffer, {
+    return new Response(new Blob([buffer]), {
       headers: {
         "Content-Type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         "Content-Disposition": `attachment; filename="${fileName}"`,
@@ -164,7 +164,7 @@ export async function POST(request: Request) {
   // format === 'pdf'
   const pdfBytes = await renderPdf(doc);
   const fileName = `${doc.documentNumber.replace(/[^a-zA-Z0-9-_]/g, "_")}.pdf`;
-  return new Response(pdfBytes, {
+  return new Response(new Blob([pdfBytes]), {
     headers: {
       "Content-Type": "application/pdf",
       "Content-Disposition": `attachment; filename="${fileName}"`,
