@@ -25,14 +25,6 @@ type DocWizard = {
 };
 
 
-function normalizeRecordedMimeType(rawMimeType: string) {
-  if (!rawMimeType) return "audio/webm";
-  const baseMimeType = rawMimeType.split(";")[0]?.trim().toLowerCase();
-  if (baseMimeType === "audio/x-wav") return "audio/wav";
-  if (baseMimeType === "audio/m4a") return "audio/mp4";
-  return baseMimeType || "audio/webm";
-}
-
 const DOC_WIZARDS: Record<string, DocWizard> = {
   "HACCP plan": {
     id: "haccp_plan",
@@ -106,9 +98,9 @@ const ALLOWED_TRANSCRIPTION_MIME_TYPES = new Set(["audio/webm", "audio/mp4", "au
 
 function normalizeRecordedMimeType(mimeType: string | undefined) {
   const normalized = (mimeType ?? "").split(";")[0]?.trim().toLowerCase();
-  if (ALLOWED_TRANSCRIPTION_MIME_TYPES.has(normalized)) {
-    return normalized;
-  }
+  if (normalized === "audio/x-wav") return "audio/wav";
+  if (normalized === "audio/m4a") return "audio/mp4";
+  if (ALLOWED_TRANSCRIPTION_MIME_TYPES.has(normalized)) return normalized;
   return "audio/webm";
 }
 
