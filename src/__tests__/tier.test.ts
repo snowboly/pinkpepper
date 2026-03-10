@@ -3,7 +3,7 @@ import { TIER_CAPABILITIES, normalizeTier } from "@/lib/tier";
 
 describe("TIER_CAPABILITIES", () => {
   it("free tier has correct daily message limit", () => {
-    expect(TIER_CAPABILITIES.free.dailyMessages).toBe(25);
+    expect(TIER_CAPABILITIES.free.dailyMessages).toBe(15);
   });
 
   it("plus tier has correct daily message limit", () => {
