@@ -315,6 +315,11 @@
     "signingOut": "Signing out...",
     "signOut": "Sign out",
     "language": "Language",
-    "languageDescription": "Choose your preferred language for the interface."
+    "languageDescription": "Choose your preferred language for the interface.",
+    "chatbotLanguage": "Chatbot Response Language",
+    "chatbotLanguageDescription": "Choose the language the AI assistant responds in. Defaults to English.",
+    "chatbotLanguageSaved": "Chatbot language updated.",
+    "saving": "Saving...",
+    "save": "Save"
   }
 }

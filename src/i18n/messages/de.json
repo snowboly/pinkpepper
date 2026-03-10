@@ -315,6 +315,11 @@
     "signingOut": "Abmeldung...",
     "signOut": "Abmelden",
     "language": "Sprache",
-    "languageDescription": "Wählen Sie Ihre bevorzugte Sprache für die Benutzeroberfläche."
+    "languageDescription": "Wählen Sie Ihre bevorzugte Sprache für die Benutzeroberfläche.",
+    "chatbotLanguage": "Chatbot-Antwortsprache",
+    "chatbotLanguageDescription": "Wählen Sie die Sprache, in der der KI-Assistent antwortet. Standard: Englisch.",
+    "chatbotLanguageSaved": "Chatbot-Sprache aktualisiert.",
+    "saving": "Speichern...",
+    "save": "Speichern"
   }
 }

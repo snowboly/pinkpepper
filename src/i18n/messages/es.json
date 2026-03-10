@@ -315,6 +315,11 @@
     "signingOut": "Cerrando sesión...",
     "signOut": "Cerrar sesión",
     "language": "Idioma",
-    "languageDescription": "Elige tu idioma preferido para la interfaz."
+    "languageDescription": "Elige tu idioma preferido para la interfaz.",
+    "chatbotLanguage": "Idioma de respuesta del chatbot",
+    "chatbotLanguageDescription": "Elige el idioma en el que responde el asistente de IA. Por defecto: inglés.",
+    "chatbotLanguageSaved": "Idioma del chatbot actualizado.",
+    "saving": "Guardando...",
+    "save": "Guardar"
   }
 }
