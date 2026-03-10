@@ -5,7 +5,8 @@ import { countUsageSince, utcDayStartIso } from "@/lib/policy";
 import { retrieveContext, buildRAGPrompt, formatCitations, type KnowledgeChunk } from "@/lib/rag";
 import { chatLimiter, chatBurstLimiter, checkRateLimit } from "@/lib/ratelimit";
 import { detectQueryMode, detectComplexity } from "@/lib/query-mode";
-import { getPersonaForConversation, getRandomPersona, type Persona } from "@/lib/personas";
+import { getPersonaForConversation, type Persona } from "@/lib/personas";
+import { buildLanguageInstruction } from "@/lib/chat-language";
 
 export const dynamic = "force-dynamic";
 
@@ -39,6 +40,8 @@ export async function POST(request: Request) {
     .maybeSingle();
 
   const { tier, isAdmin } = resolveUserAccess(profile, user.email);
+  const localeCookie = request.headers.get("cookie")?.match(/(?:^|; )locale=([^;]+)/)?.[1];
+  const languageInstruction = buildLanguageInstruction(localeCookie ? decodeURIComponent(localeCookie) : null);
   const caps = TIER_CAPABILITIES[tier];
 
   const body = (await request.json()) as { message?: string; conversationId?: string | null };
@@ -154,7 +157,7 @@ export async function POST(request: Request) {
 
   if (ragEnabled) {
     const ragPrompt = buildRAGPrompt(message, retrievedChunks, mode);
-    systemPrompt = ragPrompt.systemPrompt + `\n\nPERSONA:\n${persona.promptFragment}`;
+    systemPrompt = ragPrompt.systemPrompt + `\n\n${languageInstruction}\n\nPERSONA:\n${persona.promptFragment}`;
     temperature = ragPrompt.temperature;
   } else {
     const modeInstruction =
@@ -205,7 +208,7 @@ export async function POST(request: Request) {
       "2. Never invent regulation numbers, article numbers, or legal citations. If you are not certain of a specific reference, write 'verify the exact article in the source regulation' rather than guessing.\n" +
       "3. Where EU and UK law have diverged post-Brexit, call out both positions explicitly.\n" +
       "4. If a question requires site-specific detail you do not have (e.g. specific menu, layout, volume), ask for it rather than making assumptions.\n" +
-      "5. Respond in the same language the user writes in. If the user writes in French, respond entirely in French. If in German, respond in German. Always match the user's language exactly. Keep legal references (regulation names, article numbers) in their original form.\n\n" +
+      `5. ${languageInstruction} Keep legal references (regulation names, article numbers) in their original form.\n\n` +
       "PERSONA:\n" + persona.promptFragment + "\n\n" +
       modeInstruction;
     temperature = mode === "audit" ? 0.0 : mode === "document" ? 0.2 : 0.1;

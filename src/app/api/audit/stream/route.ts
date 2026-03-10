@@ -4,6 +4,7 @@ import { resolveUserAccess } from "@/lib/access";
 import { countUsageSince, utcDayStartIso } from "@/lib/policy";
 import { retrieveContext, formatCitations, type KnowledgeChunk } from "@/lib/rag";
 import { chatLimiter, checkRateLimit } from "@/lib/ratelimit";
+import { buildLanguageInstruction } from "@/lib/chat-language";
 
 export const dynamic = "force-dynamic";
 
@@ -33,6 +34,8 @@ export async function POST(request: Request) {
     .maybeSingle();
 
   const { tier, isAdmin } = resolveUserAccess(profile, user.email);
+  const localeCookie = request.headers.get("cookie")?.match(/(?:^|; )locale=([^;]+)/)?.[1];
+  const languageInstruction = buildLanguageInstruction(localeCookie ? decodeURIComponent(localeCookie) : null);
   const caps = TIER_CAPABILITIES[tier];
 
   if (!isAdmin && tier !== "pro") {
@@ -140,7 +143,8 @@ export async function POST(request: Request) {
     "- Typical audit areas (adapt to scope): prerequisite programmes, HACCP plan, CCP monitoring, allergen management, traceability, pest control, cleaning & sanitation, supplier approval, training records, complaint handling, recall procedures.\n" +
     "- Always ask for evidence before concluding on any area. If the user says they don't have something, record it as a finding.\n" +
     "- Keep responses concise and auditor-professional. Use bullet points.\n" +
-    "- Track which areas have been covered and which remain. Remind the user of progress.\n\n" +
+    "- Track which areas have been covered and which remain. Remind the user of progress.\n" +
+    `- ${languageInstruction}\n\n` +
     "FINAL REPORT (only when user asks for it):\n" +
     "When the user requests the final report, produce it in this format:\n" +
     "## Virtual Audit Report\n" +
