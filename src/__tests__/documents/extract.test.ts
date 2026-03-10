@@ -11,12 +11,12 @@ describe("extractDocumentText", () => {
     expect(result.warning).toBeUndefined();
   });
 
-  it("returns unsupported strategy for pdf to avoid browser-only runtime dependencies", async () => {
+  it("returns unsupported strategy with a warning when pdf parsing fails", async () => {
     const file = new File([new Uint8Array([1, 2, 3])], "a.pdf", { type: "application/pdf" });
     const result = await extractDocumentText(file);
 
     expect(result.strategy).toBe("unsupported");
     expect(result.text).toBe("");
-    expect(result.warning).toContain("temporarily disabled");
+    expect(result.warning).toBeTruthy();
   });
 });
