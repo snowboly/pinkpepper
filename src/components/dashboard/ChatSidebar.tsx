@@ -303,7 +303,7 @@ export default function ChatSidebar({
     <aside
       className={`${
         sidebarOpen ? "w-72" : "w-0"
-      } flex-shrink-0 transition-[width] duration-200 overflow-hidden border-r border-[#E2E8F0] bg-white flex flex-col`}
+      } relative z-20 md:z-auto flex-shrink-0 transition-[width] duration-200 overflow-hidden border-r border-[#E2E8F0] bg-white flex flex-col`}
     >
       {/* New chat button */}
       <div className="flex-shrink-0 px-3 pt-4 pb-3 border-b border-[#E2E8F0]">
