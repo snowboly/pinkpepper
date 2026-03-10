@@ -95,6 +95,13 @@ const DOC_WIZARDS: Record<string, DocWizard> = {
   },
 };
 
+const DOC_GENERATION_TYPES: Record<DocWizard["id"], string> = {
+  haccp_plan: "haccp_plan",
+  cleaning_sop: "cleaning_sop",
+  temp_log: "temperature_log",
+  supplier_approval: "supplier_approval",
+};
+
 const ALLOWED_TRANSCRIPTION_MIME_TYPES = new Set(["audio/webm", "audio/mp4", "audio/wav"]);
 
 function normalizeRecordedMimeType(mimeType: string | undefined) {
@@ -805,15 +812,64 @@ export default function ChatWorkspace({
     pushAssistantMessage(tw("wizardGenerating"), currentPersona);
 
     const wizardTitle = tw(`wizards.${completedWizard.wizardKey}.title`);
-    const compiledPrompt = completedWizard.buildPrompt(nextAnswers);
+    const displayPrompt = `Generate the ${wizardTitle} document using the provided business details.`;
+    const documentType = DOC_GENERATION_TYPES[completedWizard.id];
+    const userMessage: Message = { role: "user", content: displayPrompt };
+    setMessages((prev) => [...prev, userMessage]);
+    setLoading(true);
+    setError(null);
     trackWorkspaceEvent("document_generation_requested", {
       wizard: completedWizard.id,
       tier,
       source: "document_wizard",
     });
-    await sendPromptValue(compiledPrompt, {
-      displayPrompt: `Generate the ${wizardTitle} document using the provided business details.`,
-    });
+
+    try {
+      const res = await fetch("/api/documents/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          documentType,
+          answers: nextAnswers,
+          format: "json",
+          conversationId,
+          displayPrompt,
+        }),
+      });
+
+      const data = (await res.json()) as {
+        error?: string;
+        assistantMessage?: string;
+        conversationId?: string;
+        usage?: { used: number; limit: number | null; tier: SubscriptionTier; isAdmin?: boolean };
+      };
+
+      if (!res.ok) {
+        if (res.status === 402) {
+          setUpgradeModalTrigger("document_generation");
+        } else {
+          setError(data.error ?? "Document generation failed.");
+        }
+        setMessages((prev) => prev.slice(0, -1));
+        return true;
+      }
+
+      if (data.conversationId) setConversationId(data.conversationId);
+      if (data.assistantMessage) {
+        setMessages((prev) => [...prev, { role: "assistant", content: data.assistantMessage!, persona: currentPersona ?? undefined }]);
+      }
+      if (data.usage) {
+        setUsage(data.usage.used);
+        setTier(data.usage.tier);
+        setIsAdmin(Boolean(data.usage.isAdmin));
+      }
+      await loadConversations(true);
+    } catch {
+      setError("Network error while generating document.");
+      setMessages((prev) => prev.slice(0, -1));
+    } finally {
+      setLoading(false);
+    }
 
     return true;
   }

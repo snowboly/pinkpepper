@@ -213,6 +213,27 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Conversation not found." }, { status: 404 });
     }
   } else {
+    if (!isAdmin && tier === "free") {
+      const sinceIso = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+      const { count: convCount, error: convCountError } = await supabase
+        .from("conversations")
+        .select("id", { count: "exact", head: true })
+        .eq("user_id", user.id)
+        .gte("created_at", sinceIso);
+
+      if (convCountError) {
+        return NextResponse.json({ error: "Unable to read conversations." }, { status: 500 });
+      }
+
+      const maxConversations = caps.maxSavedConversations ?? Number.MAX_SAFE_INTEGER;
+      if ((convCount ?? 0) >= maxConversations) {
+        return NextResponse.json(
+          { error: "Free tier allows up to 10 saved conversations. Delete one or upgrade to Plus/Pro." },
+          { status: 402 }
+        );
+      }
+    }
+
     const title = message.trim() || "Photo analysis";
     const { data: newConv, error: newConvError } = await supabase
       .from("conversations")
