@@ -92,6 +92,16 @@ const DOC_WIZARDS: Record<string, DocWizard> = {
   },
 };
 
+const ALLOWED_TRANSCRIPTION_MIME_TYPES = new Set(["audio/webm", "audio/mp4", "audio/wav"]);
+
+function normalizeRecordedMimeType(mimeType: string | undefined) {
+  const normalized = (mimeType ?? "").split(";")[0]?.trim().toLowerCase();
+  if (ALLOWED_TRANSCRIPTION_MIME_TYPES.has(normalized)) {
+    return normalized;
+  }
+  return "audio/webm";
+}
+
 export default function ChatWorkspace({
   userEmail,
   initialTier,
