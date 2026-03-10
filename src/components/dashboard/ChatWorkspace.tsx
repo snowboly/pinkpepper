@@ -335,6 +335,14 @@ export default function ChatWorkspace({
     }
   }
 
+  function trackWorkspaceEvent(eventName: string, payload: Record<string, string | number | boolean | null>) {
+    try {
+      track(eventName, payload);
+    } catch {
+      // Best-effort telemetry only.
+    }
+  }
+
   async function transcribeAudioBlob(audioBlob: Blob, durationMs: number, retryCount = 0) {
     setIsTranscribing(true);
     setRecordingError(null);
@@ -676,8 +684,12 @@ export default function ChatWorkspace({
 
   function switchMode(nextMode: WorkspaceMode) {
     if (nextMode === "virtual_audit" && !isAdmin && tier !== "pro") {
+      trackWorkspaceEvent("upgrade_gate_hit", { trigger: "audit_mode", tier, source: "workspace_mode_toggle" });
       setUpgradeModalTrigger("audit_mode");
       return;
+    }
+    if (nextMode === "virtual_audit") {
+      trackWorkspaceEvent("virtual_audit_started", { tier, source: "workspace_mode_toggle" });
     }
     setWorkspaceMode(nextMode);
     setActiveDocWizard(null);
@@ -707,14 +719,17 @@ export default function ChatWorkspace({
 
   function openDocumentLauncher() {
     if (!isAdmin && dynamicCapabilities.dailyDocumentGenerations < 1) {
+      trackWorkspaceEvent("upgrade_gate_hit", { trigger: "document_generation", tier, source: "dashboard_action" });
       setUpgradeModalTrigger("document_generation");
       return;
     }
+    trackWorkspaceEvent("premium_action_clicked", { action: "document_launcher", tier, source: "dashboard_action" });
     setShowExportOptions(false);
     setShowDocumentLauncher((prev) => !prev);
   }
 
   function launchDocumentWizard(wizardLabel: keyof typeof DOC_WIZARDS) {
+    trackWorkspaceEvent("document_wizard_started", { wizard: DOC_WIZARDS[wizardLabel].id, tier, source: "dashboard_action" });
     startDocumentWizard({
       category: "document",
       label: wizardLabel,
@@ -729,9 +744,11 @@ export default function ChatWorkspace({
       return;
     }
     if (!reviewEligible) {
+      trackWorkspaceEvent("upgrade_gate_hit", { trigger: "review", tier, source: "dashboard_action" });
       setUpgradeModalTrigger("review");
       return;
     }
+    trackWorkspaceEvent("premium_action_clicked", { action: "request_review", tier, source: "dashboard_action" });
     setShowDocumentLauncher(false);
     setShowExportOptions(false);
     setReviewModalOpen(true);
@@ -739,6 +756,7 @@ export default function ChatWorkspace({
 
   function openExportAction() {
     if (!dynamicCapabilities.allowPdfExport && !dynamicCapabilities.allowWordExport) {
+      trackWorkspaceEvent("upgrade_gate_hit", { trigger: "export", tier, source: "dashboard_action" });
       setUpgradeModalTrigger("export");
       return;
     }
@@ -746,6 +764,7 @@ export default function ChatWorkspace({
       setError("Send at least one message before exporting.");
       return;
     }
+    trackWorkspaceEvent("premium_action_clicked", { action: "export_launcher", tier, source: "dashboard_action" });
     setShowDocumentLauncher(false);
     setShowExportOptions((prev) => !prev);
   }
@@ -787,6 +806,11 @@ export default function ChatWorkspace({
 
     const wizardTitle = tw(`wizards.${completedWizard.wizardKey}.title`);
     const compiledPrompt = completedWizard.buildPrompt(nextAnswers);
+    trackWorkspaceEvent("document_generation_requested", {
+      wizard: completedWizard.id,
+      tier,
+      source: "document_wizard",
+    });
     await sendPromptValue(compiledPrompt, {
       displayPrompt: `Generate the ${wizardTitle} document using the provided business details.`,
     });
@@ -827,6 +851,12 @@ export default function ChatWorkspace({
         setError(data.error ?? "Failed to submit review request.");
         return;
       }
+      trackWorkspaceEvent("review_requested", {
+        tier,
+        documentCategory,
+        source: "review_modal",
+        conversationId: conversationId ?? null,
+      });
       setReviewInfo(data.usage ?? null);
       if (data.request) setReviewRequests((prev) => [data.request!, ...prev]);
       setReviewSubmitted(true);
@@ -848,6 +878,7 @@ export default function ChatWorkspace({
     }
     setExportLoading(format);
     try {
+      trackWorkspaceEvent("export_started", { format, tier, source: "workspace", conversationId: conversationId ?? null });
       const res = await fetch(`/api/export/${format}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -867,6 +898,7 @@ export default function ChatWorkspace({
       a.click();
       a.remove();
       URL.revokeObjectURL(url);
+      trackWorkspaceEvent("export_completed", { format, tier, source: "workspace", conversationId: conversationId ?? null });
     } catch {
       setError("Network error while exporting.");
     } finally {
