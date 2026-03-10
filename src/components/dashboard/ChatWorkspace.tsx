@@ -3,6 +3,7 @@
 import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import { track } from "@vercel/analytics";
 import type { SubscriptionTier } from "@/lib/tier";
 import { TIER_CAPABILITIES } from "@/lib/tier";
 import type { Citation } from "@/lib/rag/citations";
@@ -22,6 +23,15 @@ type DocWizard = {
   questionCount: number;
   buildPrompt: (answers: string[]) => string;
 };
+
+
+function normalizeRecordedMimeType(rawMimeType: string) {
+  if (!rawMimeType) return "audio/webm";
+  const baseMimeType = rawMimeType.split(";")[0]?.trim().toLowerCase();
+  if (baseMimeType === "audio/x-wav") return "audio/wav";
+  if (baseMimeType === "audio/m4a") return "audio/mp4";
+  return baseMimeType || "audio/webm";
+}
 
 const DOC_WIZARDS: Record<string, DocWizard> = {
   "HACCP plan": {
@@ -177,6 +187,7 @@ export default function ChatWorkspace({
   const mediaStreamRef = useRef<MediaStream | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const recordingStartedAtRef = useRef<number | null>(null);
+  const retryableTranscriptionRef = useRef<{ blob: Blob; durationMs: number; retries: number } | null>(null);
 
   const canUploadImages = isAdmin || dailyImageUploads > 0;
 
@@ -315,17 +326,18 @@ export default function ChatWorkspace({
     recordingStartedAtRef.current = null;
   }
 
-  function normalizeRecordedMimeType(mimeType: string | undefined) {
-    const normalized = (mimeType ?? "").split(";")[0]?.trim().toLowerCase();
-    if (normalized === "audio/webm" || normalized === "audio/mp4" || normalized === "audio/wav") {
-      return normalized;
+  function trackTranscriptionTelemetry(eventName: string, payload: Record<string, string | number | boolean>) {
+    try {
+      track(eventName, payload);
+    } catch {
+      // Best-effort telemetry only.
     }
-    return "audio/webm";
   }
 
-  async function transcribeAudioBlob(audioBlob: Blob, durationMs: number) {
+  async function transcribeAudioBlob(audioBlob: Blob, durationMs: number, retryCount = 0) {
     setIsTranscribing(true);
     setRecordingError(null);
+    const startedAt = typeof performance !== "undefined" ? performance.now() : Date.now();
     try {
       const normalizedMimeType = normalizeRecordedMimeType(audioBlob.type);
       const extension = normalizedMimeType === "audio/mp4" ? "mp4" : normalizedMimeType === "audio/wav" ? "wav" : "webm";
@@ -346,20 +358,49 @@ export default function ChatWorkspace({
         throw new Error(tc("transcriptionEmptyError"));
       }
 
+      let promptToSend = "";
       setPrompt((prev) => {
         const trimmed = prev.trimEnd();
-        return trimmed ? `${trimmed} ${transcript}` : transcript;
+        promptToSend = trimmed ? `${trimmed} ${transcript}` : transcript;
+        return promptToSend;
       });
       setRecordingError(null);
+      retryableTranscriptionRef.current = null;
+
+      const latencyMs = Math.round((typeof performance !== "undefined" ? performance.now() : Date.now()) - startedAt);
+      trackTranscriptionTelemetry("chat_transcription_success", {
+        latencyMs,
+        durationMs,
+        retryCount,
+      });
+
+      await sendPromptValue(promptToSend);
     } catch {
+      const latencyMs = Math.round((typeof performance !== "undefined" ? performance.now() : Date.now()) - startedAt);
+      retryableTranscriptionRef.current = { blob: audioBlob, durationMs, retries: retryCount };
       setRecordingError(tc("transcriptionError"));
+      trackTranscriptionTelemetry("chat_transcription_failure", {
+        latencyMs,
+        durationMs,
+        retryCount,
+      });
     } finally {
       setIsTranscribing(false);
     }
   }
 
+  function retryTranscription() {
+    const retry = retryableTranscriptionRef.current;
+    if (!retry || isRecording || isTranscribing) return;
+    void transcribeAudioBlob(retry.blob, retry.durationMs, retry.retries + 1);
+  }
+
   async function startRecording() {
     if (isRecording || isTranscribing) return;
+    if (retryableTranscriptionRef.current) {
+      retryTranscription();
+      return;
+    }
     setRecordingError(null);
     if (typeof window === "undefined" || !navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === "undefined") {
       setRecordingError(tc("recordingUnsupported"));
