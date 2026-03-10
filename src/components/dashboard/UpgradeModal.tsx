@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
+import { track } from "@vercel/analytics";
 import type { SubscriptionTier } from "@/lib/tier";
 
 type UpgradeModalProps = {
@@ -40,7 +41,12 @@ export default function UpgradeModal({ trigger, currentTier, onClose }: UpgradeM
     ? PLAN_DEFS.filter((p) => p.tier === "pro")
     : PLAN_DEFS;
 
+  useEffect(() => {
+    track("upgrade_modal_viewed", { trigger, currentTier });
+  }, [currentTier, trigger]);
+
   async function checkout(plan: SubscriptionTier) {
+    track("checkout_started", { plan, source: "upgrade_modal", trigger, currentTier });
     setLoading(plan);
     setError(null);
     try {
