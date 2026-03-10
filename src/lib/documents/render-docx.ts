@@ -12,7 +12,7 @@ import {
   AlignmentType,
   ShadingType,
 } from "docx";
-import type { GeneratedDocument } from "./types";
+import type { GeneratedDocument, DocumentTable } from "./types";
 
 const BRAND_COLOR = "E11D48"; // PinkPepper red
 
@@ -26,7 +26,7 @@ function metaRow(label: string, value: string): Paragraph {
   });
 }
 
-function renderTable(table: GeneratedDocument["tables"][0]): Table {
+function renderTable(table: DocumentTable): Table {
   const headerRow = new TableRow({
     tableHeader: true,
     children: table.columns.map(
@@ -44,7 +44,7 @@ function renderTable(table: GeneratedDocument["tables"][0]): Table {
   });
 
   const dataRows = table.rows.map(
-    (row) =>
+    (row: Record<string, string>) =>
       new TableRow({
         children: table.columns.map(
           (col) =>
@@ -59,15 +59,15 @@ function renderTable(table: GeneratedDocument["tables"][0]): Table {
       })
   );
 
+  const borderOpts = { style: BorderStyle.SINGLE, size: 1, color: "E2E8F0" };
+
   return new Table({
     width: { size: 100, type: WidthType.PERCENTAGE },
     borders: {
-      top: { style: BorderStyle.SINGLE, size: 1, color: "E2E8F0" },
-      bottom: { style: BorderStyle.SINGLE, size: 1, color: "E2E8F0" },
-      left: { style: BorderStyle.SINGLE, size: 1, color: "E2E8F0" },
-      right: { style: BorderStyle.SINGLE, size: 1, color: "E2E8F0" },
-      insideH: { style: BorderStyle.SINGLE, size: 1, color: "E2E8F0" },
-      insideV: { style: BorderStyle.SINGLE, size: 1, color: "E2E8F0" },
+      top: borderOpts,
+      bottom: borderOpts,
+      left: borderOpts,
+      right: borderOpts,
     },
     rows: [headerRow, ...dataRows],
   });
