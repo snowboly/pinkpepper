@@ -17,7 +17,8 @@ export type UsageEventType =
   | "chat_prompt"
   | "document_generation"
   | "image_upload"
-  | "human_review_request";
+  | "human_review_request"
+  | "audio_transcription";
 
 export function utcDayStartIso(now = new Date()) {
   return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())).toISOString();

@@ -8,7 +8,18 @@ const MODE_TEMPERATURES: Record<RAGMode, number> = {
   audit: 0.0,   // Maximum precision for compliance checks
 };
 
+const PINKPEPPER_PRODUCT_INFO = `ABOUT PINKPEPPER (answer when users ask about you, the product, or their plan):
+PinkPepper is a food safety compliance SaaS that helps food businesses with HACCP plans, SOPs, audit preparation, allergen law, and EU/UK food safety compliance.
+Subscription tiers:
+- Free: 15 messages/day, 1 image upload/day, 10 saved conversations (30-day retention), no PDF/DOCX export, no human reviews.
+- Plus: 100 messages/day, 3 image uploads/day, unlimited conversations, PDF export, no human reviews.
+- Pro: 1000 messages/day, 20 image uploads/day, unlimited conversations, PDF + DOCX export, 3 human expert review credits/month (3–5 working day turnaround).
+Features: AI chatbot (you), document generation (HACCP plans, SOPs, cleaning logs, supplier approval), virtual audit mode, image analysis for food safety, PDF/DOCX export, and human expert document reviews (Pro only).
+If asked about upgrading, direct users to the upgrade option in the sidebar or settings.`;
+
 const SYSTEM_PROMPT_BASE = `You are PinkPepper, an expert AI food safety compliance assistant specialising in EU and UK food law and best practice.
+
+${PINKPEPPER_PRODUCT_INFO}
 
 Your expertise covers:
 - HACCP principles and implementation (Codex Alimentarius CAC/RCP 1-1969, Rev. 4-2003; Codex CXC 1-1969 Rev. 2022 food safety culture)
@@ -33,7 +44,8 @@ RULES:
 3. Never speculate about regulatory requirements; if uncertain, say so explicitly
 4. Always distinguish between EU law and UK post-Brexit retained law where relevant
 5. For certification questions, clarify which standard and edition applies
-6. Use structured, professional formatting: headings, bullet lists, numbered steps`;
+6. Use structured, professional formatting: headings, bullet lists, numbered steps
+7. {LANGUAGE_INSTRUCTION} Keep legal references (regulation names, article numbers) in their original form`;
 
 /**
  * Format retrieved chunks into context for the LLM
@@ -57,13 +69,18 @@ export function formatContext(chunks: KnowledgeChunk[]): string {
  */
 export function buildRAGSystemPrompt(
   chunks: KnowledgeChunk[],
-  mode: RAGMode = "qa"
+  mode: RAGMode = "qa",
+  preferredLanguage = "English"
 ): string {
   const contextSection = formatContext(chunks);
-
   const modeInstructions = getModeInstructions(mode);
+  const languageInstruction = `Respond in ${preferredLanguage}. This is the user's preferred response language. Do not switch to another language unless the user explicitly asks you to.`;
+  const prompt = SYSTEM_PROMPT_BASE.replace(
+    "{LANGUAGE_INSTRUCTION}",
+    languageInstruction
+  );
 
-  return `${SYSTEM_PROMPT_BASE}
+  return `${prompt}
 
 ${modeInstructions}
 
@@ -111,10 +128,11 @@ function getModeInstructions(mode: RAGMode): string {
 export function buildRAGPrompt(
   userMessage: string,
   chunks: KnowledgeChunk[],
-  mode: RAGMode = "qa"
+  mode: RAGMode = "qa",
+  preferredLanguage = "English"
 ): { systemPrompt: string; temperature: number } {
   return {
-    systemPrompt: buildRAGSystemPrompt(chunks, mode),
+    systemPrompt: buildRAGSystemPrompt(chunks, mode, preferredLanguage),
     temperature: MODE_TEMPERATURES[mode],
   };
 }

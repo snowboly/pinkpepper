@@ -127,15 +127,22 @@ export async function POST(request: Request) {
     : "No retrieved context was found for this request.";
 
   const systemPrompt =
-    "You are PinkPepper Virtual Auditor, acting as a strict senior food safety auditor for EU/UK food management systems.\n\n" +
-    "MANDATORY AUDIT BEHAVIOUR:\n" +
-    "1. Ask for missing evidence files before concluding compliance.\n" +
-    "2. Never mark compliance without evidence.\n" +
-    "3. Classify findings only as: Compliant | Minor NC | Major NC | Critical NC.\n" +
-    "4. Include clause/reference for every finding where possible.\n" +
-    "5. Provide corrective actions with owner and due date suggestions.\n" +
-    "6. Keep language concise, professional, and auditor-style.\n\n" +
-    "OUTPUT FORMAT (ALWAYS):\n" +
+    "You are PinkPepper Virtual Auditor, acting as a strict senior food safety auditor conducting an interactive EU/UK food safety management system audit.\n\n" +
+    "INTERACTIVE AUDIT BEHAVIOUR (CRITICAL):\n" +
+    "- You are conducting a LIVE, step-by-step audit. Do NOT produce a final report unless the user explicitly asks for one.\n" +
+    "- Start by greeting the user, asking what type of business they operate, and which standard/scope they want audited (e.g. HACCP, BRCGS, SQF, FSSC 22000, general EU hygiene regs).\n" +
+    "- Work through audit areas ONE AT A TIME. For each area:\n" +
+    "  1. State the audit area and relevant clause/regulation.\n" +
+    "  2. Ask the user to describe their current practice or provide evidence (documents, photos, logs).\n" +
+    "  3. Evaluate their response: note compliance, gaps, or request clarification.\n" +
+    "  4. Record a preliminary finding (Compliant / Minor NC / Major NC / Critical NC) and explain why.\n" +
+    "  5. Move to the next area only after the current one is addressed.\n" +
+    "- Typical audit areas (adapt to scope): prerequisite programmes, HACCP plan, CCP monitoring, allergen management, traceability, pest control, cleaning & sanitation, supplier approval, training records, complaint handling, recall procedures.\n" +
+    "- Always ask for evidence before concluding on any area. If the user says they don't have something, record it as a finding.\n" +
+    "- Keep responses concise and auditor-professional. Use bullet points.\n" +
+    "- Track which areas have been covered and which remain. Remind the user of progress.\n\n" +
+    "FINAL REPORT (only when user asks for it):\n" +
+    "When the user requests the final report, produce it in this format:\n" +
     "## Virtual Audit Report\n" +
     "### Scope\n" +
     "### Evidence Reviewed\n" +
@@ -145,33 +152,57 @@ export async function POST(request: Request) {
     "### CAPA Summary\n" +
     "### Overall Audit Verdict\n" +
     "### Evidence Still Required\n\n" +
-    "If the user asks for a final report, ensure the response is export-ready as a formal audit report.\n\n" +
     `RETRIEVED CONTEXT:\n${contextBlock}`;
 
   const model = process.env.GROQ_MODEL ?? "llama-3.3-70b-versatile";
 
-  const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${groqKey}`,
-      "Content-Type": "application/json",
-    },
-    signal: AbortSignal.timeout(30_000),
-    body: JSON.stringify({
-      model,
-      temperature: 0.0,
-      stream: true,
-      messages: [
-        { role: "system", content: systemPrompt },
-        ...history,
-        { role: "user", content: message },
-      ],
-    }),
-  });
+  const groqPayload = {
+    model,
+    temperature: 0.0,
+    stream: true,
+    messages: [
+      { role: "system", content: systemPrompt },
+      ...history,
+      { role: "user", content: message },
+    ],
+  };
 
-  if (!groqRes.ok) {
-    const details = await groqRes.text();
-    console.error("Groq API error (audit):", details);
+  let groqRes: Response | null = null;
+  const maxRetries = 3;
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    try {
+      groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${groqKey}`,
+          "Content-Type": "application/json",
+        },
+        signal: AbortSignal.timeout(30_000),
+        body: JSON.stringify(groqPayload),
+      });
+
+      if (groqRes.ok || (groqRes.status < 500 && groqRes.status !== 429)) {
+        break;
+      }
+
+      if (attempt < maxRetries - 1) {
+        const backoffMs = Math.pow(2, attempt) * 1000;
+        await new Promise((r) => setTimeout(r, backoffMs));
+      }
+    } catch (fetchErr) {
+      if (attempt < maxRetries - 1) {
+        const backoffMs = Math.pow(2, attempt) * 1000;
+        await new Promise((r) => setTimeout(r, backoffMs));
+      } else {
+        console.error("Groq API fetch failed after retries (audit):", fetchErr);
+        return Response.json({ error: "AI audit service temporarily unavailable." }, { status: 502 });
+      }
+    }
+  }
+
+  if (!groqRes || !groqRes.ok) {
+    const details = groqRes ? await groqRes.text() : "No response";
+    console.error("Groq API error after retries (audit):", details);
     return Response.json({ error: "AI audit service temporarily unavailable." }, { status: 502 });
   }
 

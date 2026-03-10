@@ -11,11 +11,16 @@ export const metadata: Metadata = {
 };
 
 export default async function PricingPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  const isLoggedIn = !!user;
+  let isLoggedIn = false;
+  try {
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    isLoggedIn = !!user;
+  } catch {
+    // Supabase env vars unavailable during build-time prerendering — assume not logged in
+  }
 
   const ctaBase =
     "mt-8 block w-full rounded-xl py-3.5 text-center text-sm font-semibold transition-colors";
@@ -55,7 +60,7 @@ export default async function PricingPage() {
               <ul className="flex-1 space-y-3.5 text-sm text-[#475569]">
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />
-                  25 AI queries per day
+                  15 AI queries per day
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />
@@ -180,7 +185,7 @@ export default async function PricingPage() {
             <div className="rounded-2xl border border-[#E2E8F0] bg-[#F8FAFC] p-6">
               <h3 className="mb-1 font-semibold text-[#0F172A]">Free</h3>
               <p className="text-sm text-[#64748B]">
-                25 daily queries, 1 image upload/day, 10 saved conversations. No export, no document review.
+                15 daily queries, 1 image upload/day, 10 saved conversations. No export, no document review.
               </p>
             </div>
             <div className="rounded-2xl border border-[#E11D48]/20 bg-[#FFF1F2] p-6">

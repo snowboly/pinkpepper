@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 type ReviewRequest = {
   id: string;
   status: string;
@@ -27,24 +29,9 @@ type ReviewModalProps = {
   onSubmit: () => void;
 };
 
-const QUICK_CHECK_OPTIONS = [
-  { value: "async_qa",        label: "Async Q&A",           desc: "Written answer to a specific food safety question." },
-  { value: "process_flow",    label: "Process Flow Review",  desc: "Review of a described production or preparation process." },
-  { value: "log_review",      label: "Log / Record Review",  desc: "Temperature logs, cleaning records, monitoring sheets." },
-  { value: "short_procedure", label: "Short Procedure",      desc: "A single SOP or procedure document (approx. 1–2 pages)." },
-];
-
-const FULL_REVIEW_OPTIONS = [
-  { value: "full_haccp_plan",   label: "Full HACCP Plan",    desc: "Complete 7-principle HACCP plan with CCP analysis." },
-  { value: "ccp_review",        label: "CCP Review",         desc: "Focused review of critical control points." },
-  { value: "prps_review",       label: "PRPs Review",        desc: "Prerequisite programmes: cleaning, pest control, supplier approval, etc." },
-  { value: "operations_manual", label: "Operations Manual",  desc: "Multi-section food safety management manual." },
-];
-
-function categoryLabel(category: string): string {
-  const all = [...QUICK_CHECK_OPTIONS, ...FULL_REVIEW_OPTIONS];
-  return all.find((o) => o.value === category)?.label ?? category;
-}
+const QUICK_CHECK_KEYS = ["async_qa", "process_flow", "log_review", "short_procedure"] as const;
+const FULL_REVIEW_KEYS = ["full_haccp_plan", "ccp_review", "prps_review", "operations_manual"] as const;
+const ALL_CATEGORY_KEYS = [...QUICK_CHECK_KEYS, ...FULL_REVIEW_KEYS];
 
 export default function ReviewModal({
   open,
@@ -52,7 +39,6 @@ export default function ReviewModal({
   isAdmin,
   reviewEligible,
   allowFullDocumentReview,
-  reviewTurnaround: _reviewTurnaround,
   documentCategory,
   reviewNotes,
   reviewLoading,
@@ -64,6 +50,7 @@ export default function ReviewModal({
   onSetReviewNotes,
   onSubmit,
 }: ReviewModalProps) {
+  const t = useTranslations("review");
   if (!open) return null;
 
   // Confirmation state after successful submission
@@ -76,22 +63,22 @@ export default function ReviewModal({
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h3 className="text-lg font-semibold text-[#0F172A] mb-2">Review Request Submitted</h3>
+          <h3 className="text-lg font-semibold text-[#0F172A] mb-2">{t("submitted")}</h3>
           <p className="text-sm text-[#64748B] mb-4">
-            You&apos;ll receive an email when your review is picked up and when it&apos;s complete.
+            {t("submittedBody")}
           </p>
           <div className="flex flex-col gap-2">
             <a
               href="/dashboard/reviews"
               className="rounded-full bg-[#E11D48] px-4 py-2 text-sm font-semibold text-white hover:bg-[#BE123C] inline-block"
             >
-              Track your reviews
+              {t("trackReviews")}
             </a>
             <button
               onClick={onClose}
               className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 text-sm text-[#64748B] hover:bg-[#F8F9FB]"
             >
-              Close
+              {t("close")}
             </button>
           </div>
         </div>
@@ -99,7 +86,7 @@ export default function ReviewModal({
     );
   }
 
-  const isFullReview = FULL_REVIEW_OPTIONS.some((o) => o.value === documentCategory);
+  const isFullReview = FULL_REVIEW_KEYS.some((k) => k === documentCategory);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
@@ -107,7 +94,7 @@ export default function ReviewModal({
 
         {/* Header */}
         <div className="flex items-center justify-between mb-1">
-          <h3 className="text-lg font-semibold text-[#0F172A]">Request Expert Review</h3>
+          <h3 className="text-lg font-semibold text-[#0F172A]">{t("title")}</h3>
           <button onClick={onClose} className="text-[#94A3B8] hover:text-[#64748B]">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -118,7 +105,7 @@ export default function ReviewModal({
         {/* Credit counter */}
         {reviewInfo && !isAdmin && (
           <p className="mt-1 text-xs text-[#64748B]">
-            Credits used this month: <span className="font-semibold">{reviewInfo.used}/{reviewInfo.limit ?? "unlimited"}</span>
+            {t("creditsUsed")} <span className="font-semibold">{reviewInfo.used}/{reviewInfo.limit ?? "unlimited"}</span>
           </p>
         )}
 
@@ -127,7 +114,9 @@ export default function ReviewModal({
           <div className="mt-2 mb-1 flex flex-wrap gap-2">
             {reviewRequests.slice(0, 3).map((r) => (
               <span key={r.id} className="rounded-full border border-[#E2E8F0] bg-[#F8F9FB] px-2 py-0.5 text-xs text-[#64748B]">
-                {r.document_category ? categoryLabel(r.document_category) : (r.review_type === "quick_check" ? "Quick Check" : "Full Review")}: {r.status}
+                {r.document_category && ALL_CATEGORY_KEYS.includes(r.document_category as typeof ALL_CATEGORY_KEYS[number])
+                  ? t(`categories.${r.document_category}.label`)
+                  : (r.review_type === "quick_check" ? t("quickCheck") : t("fullDocumentReview"))}: {r.status}
               </span>
             ))}
           </div>
@@ -135,13 +124,13 @@ export default function ReviewModal({
 
         {/* Disclosure panel */}
         <div className="mt-3 rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] px-4 py-3 text-xs text-[#475569] space-y-1">
-          <p className="font-semibold text-[#334155]">What to expect</p>
-          <p>Reviews are conducted by qualified food safety consultants. Feedback is returned as structured written notes via your dashboard.</p>
-          <p>Reviews are scoped to the content of the selected conversation. Off-topic or out-of-scope requests may be declined.</p>
-          <p>Turnaround: <span className="font-medium">3 working days for quick checks · 5 working days for full document reviews</span>.</p>
+          <p className="font-semibold text-[#334155]">{t("whatToExpect")}</p>
+          <p>{t("whatToExpectBody")}</p>
+          <p>{t("scopeNote")}</p>
+          <p>{t("turnaround")} <span className="font-medium">{t("turnaroundTimes")}</span>.</p>
           {allowFullDocumentReview && (
             <p className="text-[#92400E] bg-[#FFFBEB] rounded px-2 py-1 mt-1">
-              Full document reviews cost all 3 credits and can only be requested once per month. Quick checks cost 1 credit each.
+              {t("fullReviewCostNote")}
             </p>
           )}
         </div>
@@ -149,15 +138,15 @@ export default function ReviewModal({
         <div className="mt-4 space-y-3">
           {/* Category selection */}
           <fieldset>
-            <legend className="mb-2 text-sm font-medium text-[#475569]">Document type</legend>
+            <legend className="mb-2 text-sm font-medium text-[#475569]">{t("documentType")}</legend>
 
             <div className="space-y-1">
-              <p className="text-xs font-semibold uppercase tracking-wide text-[#94A3B8] mb-1">Quick Check <span className="normal-case text-[#64748B]">— 1 credit</span></p>
-              {QUICK_CHECK_OPTIONS.map((opt) => (
+              <p className="text-xs font-semibold uppercase tracking-wide text-[#94A3B8] mb-1">{t("quickCheck")} <span className="normal-case text-[#64748B]">{t("quickCheckCredits")}</span></p>
+              {QUICK_CHECK_KEYS.map((key) => (
                 <label
-                  key={opt.value}
+                  key={key}
                   className={`flex cursor-pointer items-start gap-3 rounded-xl border px-3 py-2.5 transition-colors ${
-                    documentCategory === opt.value
+                    documentCategory === key
                       ? "border-[#E11D48] bg-[#FFF1F2]"
                       : "border-[#E2E8F0] bg-white hover:bg-[#F8F9FB]"
                   }`}
@@ -165,14 +154,14 @@ export default function ReviewModal({
                   <input
                     type="radio"
                     name="documentCategory"
-                    value={opt.value}
-                    checked={documentCategory === opt.value}
-                    onChange={() => onSetDocumentCategory(opt.value)}
+                    value={key}
+                    checked={documentCategory === key}
+                    onChange={() => onSetDocumentCategory(key)}
                     className="mt-0.5 accent-[#E11D48]"
                   />
                   <span>
-                    <span className="block text-sm font-medium text-[#0F172A]">{opt.label}</span>
-                    <span className="block text-xs text-[#64748B]">{opt.desc}</span>
+                    <span className="block text-sm font-medium text-[#0F172A]">{t(`categories.${key}.label`)}</span>
+                    <span className="block text-xs text-[#64748B]">{t(`categories.${key}.desc`)}</span>
                   </span>
                 </label>
               ))}
@@ -180,12 +169,12 @@ export default function ReviewModal({
 
             {allowFullDocumentReview && (
               <div className="mt-3 space-y-1">
-                <p className="text-xs font-semibold uppercase tracking-wide text-[#94A3B8] mb-1">Full Document Review <span className="normal-case text-[#92400E]">— uses all 3 credits</span></p>
-                {FULL_REVIEW_OPTIONS.map((opt) => (
+                <p className="text-xs font-semibold uppercase tracking-wide text-[#94A3B8] mb-1">{t("fullDocumentReview")} <span className="normal-case text-[#92400E]">{t("fullDocumentReviewCredits")}</span></p>
+                {FULL_REVIEW_KEYS.map((key) => (
                   <label
-                    key={opt.value}
+                    key={key}
                     className={`flex cursor-pointer items-start gap-3 rounded-xl border px-3 py-2.5 transition-colors ${
-                      documentCategory === opt.value
+                      documentCategory === key
                         ? "border-[#E11D48] bg-[#FFF1F2]"
                         : "border-[#E2E8F0] bg-white hover:bg-[#F8F9FB]"
                     }`}
@@ -193,14 +182,14 @@ export default function ReviewModal({
                     <input
                       type="radio"
                       name="documentCategory"
-                      value={opt.value}
-                      checked={documentCategory === opt.value}
-                      onChange={() => onSetDocumentCategory(opt.value)}
+                      value={key}
+                      checked={documentCategory === key}
+                      onChange={() => onSetDocumentCategory(key)}
                       className="mt-0.5 accent-[#E11D48]"
                     />
                     <span>
-                      <span className="block text-sm font-medium text-[#0F172A]">{opt.label}</span>
-                      <span className="block text-xs text-[#64748B]">{opt.desc}</span>
+                      <span className="block text-sm font-medium text-[#0F172A]">{t(`categories.${key}.label`)}</span>
+                      <span className="block text-xs text-[#64748B]">{t(`categories.${key}.desc`)}</span>
                     </span>
                   </label>
                 ))}
@@ -211,20 +200,20 @@ export default function ReviewModal({
           {/* Full review cost warning */}
           {isFullReview && (
             <p className="rounded-xl border border-[#FDE68A] bg-[#FFFBEB] px-3 py-2 text-xs text-[#92400E]">
-              This will use all 6 of your monthly review slots. You won&apos;t be able to submit additional reviews this month.
+              {t("fullReviewWarning")}
             </p>
           )}
 
           {/* Notes */}
           <label className="block text-sm">
-            <span className="mb-1 block text-[#475569] font-medium">Notes for reviewer (optional)</span>
+            <span className="mb-1 block text-[#475569] font-medium">{t("notesLabel")}</span>
             <textarea
               value={reviewNotes}
               onChange={(e) => onSetReviewNotes(e.target.value)}
               rows={3}
               maxLength={1000}
               className="w-full rounded-xl border border-[#E2E8F0] bg-white px-3 py-2 text-sm outline-none focus:border-[#E11D48]"
-              placeholder="Tell the reviewer what you want checked."
+              placeholder={t("notesPlaceholder")}
             />
           </label>
         </div>
@@ -235,7 +224,7 @@ export default function ReviewModal({
             onClick={onClose}
             className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 text-sm text-[#64748B] hover:bg-[#F8F9FB]"
           >
-            Cancel
+            {t("close")}
           </button>
           <button
             type="button"
@@ -243,7 +232,7 @@ export default function ReviewModal({
             disabled={reviewLoading || !conversationId || !reviewEligible}
             className="rounded-full bg-[#E11D48] px-4 py-2 text-sm font-semibold text-white hover:bg-[#BE123C] disabled:opacity-50"
           >
-            {reviewLoading ? "Submitting..." : "Submit request"}
+            {reviewLoading ? t("submitting") : t("submitRequest")}
           </button>
         </div>
       </div>

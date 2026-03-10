@@ -1,0 +1,325 @@
+{
+  "chat": {
+    "title": "Asistente de Cumplimiento en Seguridad Alimentaria",
+    "description": "Consulta sobre legislación de seguridad alimentaria de la UE y el Reino Unido, genera planes HACCP, POEs y registros de seguimiento, o audita tus procedimientos actuales.",
+    "descriptionWithImages": "También puedes adjuntar una foto de tu cocina o una etiqueta de alimentos para un análisis de cumplimiento instantáneo.",
+    "descriptionUpgradeImages": "Actualiza a Plus o Pro para adjuntar fotos de cocinas o etiquetas para un análisis instantáneo.",
+    "loadingConversation": "Cargando conversación...",
+    "pinkPepper": "PinkPepper",
+    "copy": "Copiar",
+    "copied": "Copiado",
+    "copyResponse": "Copiar respuesta",
+    "requestExpertReview": "Solicitar revisión de experto",
+    "attachedPhoto": "Foto adjunta",
+    "imageAnalysisNote": "{name} - se realizará un análisis de seguridad alimentaria de esta foto.",
+    "attachPhotoTitle": "Adjunta una foto para análisis de seguridad alimentaria",
+    "attachDocumentTitle": "Attach a document (PDF, DOCX, TXT)",
+    "upgradePhotoTitle": "Actualiza a Plus o Pro para analizar fotos",
+    "upgradePhotoTooltip": "Actualiza para análisis de fotos",
+    "photoNote": "Añade una nota sobre esta foto (opcional)...",
+    "placeholder": "Haz una pregunta sobre seguridad alimentaria... (Shift+Enter para nueva línea)",
+    "stopGenerating": "Detener generación",
+    "reviewBannerTitle": "¿Quieres que un experto humano revise este documento?",
+    "reviewBannerBody": "Nuestros especialistas en seguridad alimentaria revisan tus documentos generados por IA para verificar precisión, brechas de cumplimiento y preparación para auditorías.",
+    "reviewUpsellTitle": "Haz que un experto humano verifique este documento",
+    "reviewUpsellBody": "El plan Pro incluye 3 créditos de revisión experta/mes — especialistas revisan tus documentos para cumplimiento.",
+    "reviewUpsellCta": "Actualizar a Pro",
+    "humanReviewHighlight": "El plan Pro incluye revisiones de documentos por especialistas en seguridad alimentaria.",
+    "suggestions": {
+      "haccpPlan": {
+        "label": "Plan HACCP",
+        "text": "Crea un plan HACCP para una cafetería de 25 plazas que sirve comida caliente incluyendo bocadillos y sopas"
+      },
+      "cleaningSop": {
+        "label": "POE de limpieza",
+        "text": "Redacta un POE de limpieza y desinfección para una cocina comercial incluyendo frecuencia, productos químicos y registros"
+      },
+      "tempLog": {
+        "label": "Registro de control de temperatura",
+        "text": "Genera una plantilla de registro diario de control de temperatura para frigoríficos, congeladores y equipos de mantenimiento en caliente"
+      },
+      "supplierApproval": {
+        "label": "Aprobación de proveedores",
+        "text": "Redacta un procedimiento de aprobación de proveedores para una panadería incluyendo cuestionario y seguimiento continuo"
+      },
+      "brcAudit": {
+        "label": "Preparación auditoría BRC",
+        "text": "Verifica las brechas de cumplimiento para un pequeño fabricante de alimentos que se prepara para una auditoría BRC Global Standard Issue 9"
+      },
+      "allergenAudit": {
+        "label": "Auditoría de alérgenos",
+        "text": "Revisa mi procedimiento de gestión de alérgenos para una unidad de producción de bocadillos conforme a los requisitos de la Ley de Natasha"
+      },
+      "allergenLaw": {
+        "label": "Legislación de alérgenos",
+        "text": "¿Cuáles son los 14 alérgenos que deben declararse según el Reglamento (UE) 1169/2011 y la Ley de Natasha?"
+      },
+      "traceabilityRules": {
+        "label": "Normas de trazabilidad",
+        "text": "¿Qué registros de trazabilidad debe mantener una empresa alimentaria según el Regulation (EC) No 178/2002?"
+      }
+    },
+    "startRecording": "Start recording",
+    "stopRecording": "Stop",
+    "transcribing": "Transcribing…",
+    "recordingInProgress": "Recording… press stop when finished.",
+    "recordingUnsupported": "Voice recording is not supported in this browser.",
+    "recordingPermissionError": "Microphone access is blocked. Please allow microphone permission and try again.",
+    "transcriptionError": "We could not transcribe your recording. Please try again.",
+    "transcriptionEmptyError": "No speech was detected. Please try recording again."
+  },
+  "sidebar": {
+    "newChat": "Nuevo chat",
+    "searchChats": "Buscar chats...",
+    "projects": "Proyectos",
+    "newProject": "Nuevo proyecto",
+    "projectName": "Nombre del proyecto...",
+    "create": "Crear",
+    "cancel": "Cancelar",
+    "noProjectsYet": "Aún no hay proyectos.",
+    "noChatsYet": "Aún no hay chats.",
+    "allChats": "Todos los chats",
+    "loading": "Cargando...",
+    "noMatchesFound": "No se encontraron coincidencias.",
+    "noConversationsYet": "Aún no hay conversaciones.",
+    "untitledConversation": "Conversación sin título",
+    "rename": "Renombrar",
+    "archive": "Archivar",
+    "delete": "Eliminar",
+    "renameProject": "Renombrar proyecto",
+    "deleteProject": "Eliminar proyecto",
+    "deleteConversation": "¿Eliminar conversación?",
+    "deleteConversationBody": "Esto eliminará permanentemente esta conversación y todos sus mensajes. Esta acción no se puede deshacer.",
+    "refreshPlan": "Actualizar plan",
+    "reviewQueue": "Cola de revisiones",
+    "myReviews": "Mis revisiones",
+    "expertReviews": "Revisiones de expertos",
+    "accountSettings": "Configuración de cuenta",
+    "today": "Hoy",
+    "yesterday": "Ayer",
+    "previous7Days": "Últimos 7 días",
+    "previous30Days": "Últimos 30 días",
+    "older": "Anteriores"
+  },
+  "workspace": {
+    "title": "Asistente de Cumplimiento en Seguridad Alimentaria",
+    "wizards": {
+      "haccpPlan": {
+        "title": "Plan HACCP",
+        "intro": "Buena elección. Te haré algunas preguntas rápidas y luego generaré un plan HACCP completo que podrás revisar y exportar.",
+        "q1": "¿Cuál es el tipo de negocio, ubicación (país) y estilo de servicio (p. ej., servicio en mesa, comida para llevar, fabricación)?",
+        "q2": "¿Qué productos o artículos del menú están dentro del alcance de este plan HACCP?",
+        "q3": "Enumera los principales pasos del proceso desde la recepción hasta el servicio/venta.",
+        "q4": "¿Qué peligros son más relevantes en tu operación (biológicos, químicos, físicos, alérgenos)?",
+        "q5": "¿Qué medidas de control y límites críticos utilizas actualmente (temperaturas, tiempos, controles)?",
+        "q6": "¿Quién es responsable del seguimiento, las acciones correctivas y la verificación?"
+      },
+      "cleaningSop": {
+        "title": "POE de Limpieza y Desinfección",
+        "intro": "Perfecto. Recopilaré los datos operativos clave y luego generaré un POE práctico.",
+        "q1": "¿Para qué tipo de instalación o área es este POE (cocina, panadería, línea de producción, etc.)?",
+        "q2": "¿Qué superficies o equipos deben limpiarse y con qué frecuencia?",
+        "q3": "¿Qué productos químicos de limpieza o desinfectantes se utilizan (incluyendo dilución y tiempos de contacto si se conocen)?",
+        "q4": "¿Quién realiza la limpieza y quién verifica la firma de conformidad?",
+        "q5": "¿Qué registros o partes quieres incluir en el POE?"
+      },
+      "tempLog": {
+        "title": "Registro de Control de Temperatura",
+        "intro": "Entendido. Recopilaré la configuración de tu sistema de seguimiento y generaré una plantilla de registro lista para usar.",
+        "q1": "¿Qué equipos o procesos necesitan seguimiento (frigoríficos, congeladores, mantenimiento en caliente, cocción, entregas)?",
+        "q2": "¿Cuáles son los límites objetivo o límites críticos para cada uno?",
+        "q3": "¿Con qué frecuencia deben registrarse los controles (por turno, diariamente, cada hora)?",
+        "q4": "¿Quién registra las lecturas y quién las verifica?"
+      },
+      "supplierApproval": {
+        "title": "Procedimiento de Aprobación de Proveedores",
+        "intro": "Buena elección. Te haré algunas preguntas y luego elaboraré un procedimiento completo de aprobación de proveedores con formularios.",
+        "q1": "¿Qué tipo de negocio tienes y qué categorías de productos compras a proveedores?",
+        "q2": "¿Qué riesgos de proveedores son más importantes para ti (alérgenos, trazabilidad, autenticidad, cadena de frío, etc.)?",
+        "q3": "¿Qué documentos o certificaciones exiges antes de la aprobación?",
+        "q4": "¿Con qué frecuencia revisas a los proveedores y qué desencadena una reevaluación?",
+        "q5": "¿Quién aprueba a los proveedores y dónde se almacenan los registros?"
+      }
+    },
+    "ask": "Preguntar",
+    "virtualAudit": "Auditoría virtual",
+    "adminPanel": "Panel de administración",
+    "requestReview": "Solicitar revisión",
+    "generateReport": "Generar informe",
+    "exporting": "Exportando...",
+    "pdf": "PDF",
+    "docx": "DOCX",
+    "dropPhotoToAnalyse": "Suelta una foto para analizar",
+    "dropPhotoHint": "Cocina, etiqueta o producto alimentario",
+    "collapseSidebar": "Contraer barra lateral",
+    "expandSidebar": "Expandir barra lateral",
+    "wizardCancelled": "Generador de documentos cancelado. Puedes empezar de nuevo desde cualquier tarjeta de inicio.",
+    "wizardGenerating": "Perfecto. Tengo información suficiente. Generando tu documento completo ahora.",
+    "virtualAuditPlaceholder": "Modo Auditoría virtual: describe el alcance, sube evidencias o solicita el informe final de auditoría..."
+  },
+  "onboarding": {
+    "welcome": "Bienvenido a PinkPepper",
+    "tellUs": "Cuéntanos sobre tu negocio para que podamos personalizar la experiencia.",
+    "businessTypeQuestion": "¿Qué tipo de negocio alimentario tienes?",
+    "somethingWentWrong": "Algo salió mal. Por favor, inténtalo de nuevo.",
+    "networkError": "Error de red. Por favor, inténtalo de nuevo.",
+    "saving": "Guardando...",
+    "getStarted": "Comenzar",
+    "personaliseNote": "Esto ayuda a personalizar tu orientación de cumplimiento. Puedes cambiarlo más tarde en la configuración.",
+    "businessTypes": {
+      "restaurant_cafe": "Restaurante / Cafetería",
+      "food_manufacturer": "Fabricante de Alimentos",
+      "retailer_deli": "Minorista / Charcutería",
+      "catering": "Empresa de Catering",
+      "street_food": "Comida Callejera / Mercado",
+      "wholesaler": "Mayorista / Distribuidor",
+      "consultant": "Consultor de Seguridad Alimentaria",
+      "other": "Otro"
+    }
+  },
+  "upgrade": {
+    "triggers": {
+      "message_limit": {
+        "heading": "Has alcanzado tu límite diario de mensajes",
+        "body": "Actualiza para seguir chateando. Plus te da 7 veces más mensajes al día — Pro te da 65 veces más."
+      },
+      "image_limit": {
+        "heading": "Desbloquea el análisis de fotos",
+        "body": "Sube fotos de cocinas, etiquetas o productos alimentarios y obtén comentarios instantáneos sobre seguridad alimentaria."
+      },
+      "export": {
+        "heading": "Exporta tus documentos de cumplimiento",
+        "body": "Descarga planes HACCP, POEs y preparación de auditorías en PDF o Word — listos para usar o compartir."
+      },
+      "review": {
+        "heading": "Obtén revisión de experto",
+        "body": "Un consultor cualificado de seguridad alimentaria revisará tus documentos en un plazo de 72 horas."
+      },
+      "audit_mode": {
+        "heading": "Desbloquea el Modo de Auditoría Virtual",
+        "body": "Ejecuta una auditoría virtual de seguridad alimentaria cláusula por cláusula con hallazgos estructurados, acciones CAPA e informes exportables."
+      }
+    },
+    "plans": {
+      "plus": {
+        "name": "Plus",
+        "price": "€19/mo",
+        "highlights": [
+          "100 mensajes/día",
+          "3 subidas de imágenes/día",
+          "Exportación PDF",
+          "Conversaciones guardadas ilimitadas"
+        ],
+        "cta": "Actualizar a Plus"
+      },
+      "pro": {
+        "name": "Pro",
+        "price": "€99/mo",
+        "highlights": [
+          "1.000 mensajes/día",
+          "20 subidas de imágenes/día",
+          "Exportación PDF + Word",
+          "3 créditos de revisión/mes"
+        ],
+        "cta": "Actualizar a Pro"
+      }
+    },
+    "redirecting": "Redirigiendo...",
+    "unableToCheckout": "No se pudo iniciar el proceso de pago.",
+    "networkError": "Error de red. Por favor, inténtalo de nuevo.",
+    "compareAllPlans": "Comparar todos los planes",
+    "maybeLater": "Quizás más tarde"
+  },
+  "review": {
+    "title": "Solicitar Revisión de Experto",
+    "creditsUsed": "Créditos utilizados este mes:",
+    "whatToExpect": "Qué esperar",
+    "whatToExpectBody": "Las revisiones son realizadas por consultores cualificados de seguridad alimentaria. Los comentarios se devuelven como notas escritas estructuradas a través de tu panel de control.",
+    "scopeNote": "Las revisiones se limitan al contenido de la conversación seleccionada. Las solicitudes fuera de tema o fuera de alcance pueden ser rechazadas.",
+    "turnaround": "Plazo de entrega:",
+    "turnaroundTimes": "3 días laborables para verificaciones rápidas · 5 días laborables para revisiones completas de documentos",
+    "fullReviewCostNote": "Las revisiones completas de documentos cuestan los 3 créditos y solo se pueden solicitar una vez al mes. Las verificaciones rápidas cuestan 1 crédito cada una.",
+    "documentType": "Tipo de documento",
+    "quickCheck": "Verificación Rápida",
+    "quickCheckCredits": "— 1 crédito",
+    "fullDocumentReview": "Revisión Completa de Documento",
+    "fullDocumentReviewCredits": "— usa los 3 créditos",
+    "fullReviewWarning": "Esto usará todos tus 6 turnos de revisión mensuales. No podrás enviar revisiones adicionales este mes.",
+    "notesLabel": "Notas para el revisor (opcional)",
+    "notesPlaceholder": "Indica al revisor qué quieres que verifique.",
+    "submitting": "Enviando...",
+    "submitRequest": "Enviar solicitud",
+    "submitted": "Solicitud de Revisión Enviada",
+    "submittedBody": "Recibirás un correo electrónico cuando tu revisión sea recogida y cuando esté completada.",
+    "trackReviews": "Seguir tus revisiones",
+    "close": "Cerrar",
+    "categories": {
+      "async_qa": {
+        "label": "Consulta Asíncrona",
+        "desc": "Respuesta escrita a una pregunta específica de seguridad alimentaria."
+      },
+      "process_flow": {
+        "label": "Revisión de Flujo de Proceso",
+        "desc": "Revisión de un proceso de producción o preparación descrito."
+      },
+      "log_review": {
+        "label": "Revisión de Registros",
+        "desc": "Registros de temperatura, registros de limpieza, hojas de seguimiento."
+      },
+      "short_procedure": {
+        "label": "Procedimiento Corto",
+        "desc": "Un único POE o documento de procedimiento (aprox. 1–2 páginas)."
+      },
+      "full_haccp_plan": {
+        "label": "Plan HACCP Completo",
+        "desc": "Plan HACCP completo de 7 principios con análisis de PCC."
+      },
+      "ccp_review": {
+        "label": "Revisión de PCC",
+        "desc": "Revisión enfocada en los puntos de control crítico."
+      },
+      "prps_review": {
+        "label": "Revisión de Prerrequisitos",
+        "desc": "Programas de prerrequisitos: limpieza, control de plagas, aprobación de proveedores, etc."
+      },
+      "operations_manual": {
+        "label": "Manual de Operaciones",
+        "desc": "Manual de gestión de seguridad alimentaria con múltiples secciones."
+      }
+    }
+  },
+  "settings": {
+    "profile": "Perfil",
+    "emailAddress": "Dirección de correo electrónico",
+    "plan": "Plan",
+    "changePassword": "Cambiar Contraseña",
+    "currentPassword": "Contraseña actual",
+    "newPassword": "Nueva contraseña",
+    "confirmNewPassword": "Confirmar nueva contraseña",
+    "passwordPlaceholder": "••••••••",
+    "atLeast8Chars": "Al menos 8 caracteres",
+    "passwordTooShort": "La nueva contraseña debe tener al menos 8 caracteres.",
+    "passwordsDoNotMatch": "Las contraseñas no coinciden.",
+    "currentPasswordIncorrect": "La contraseña actual es incorrecta.",
+    "passwordUpdated": "Contraseña actualizada correctamente.",
+    "unexpectedError": "Ha ocurrido un error inesperado.",
+    "updating": "Actualizando...",
+    "updatePassword": "Actualizar contraseña",
+    "billing": "Facturación",
+    "billingDescription": "Gestiona tu suscripción, actualiza los métodos de pago o cancela.",
+    "viewPlans": "Ver planes",
+    "manageBilling": "Gestionar facturación",
+    "opening": "Abriendo...",
+    "unableToOpenPortal": "No se pudo abrir el portal de facturación.",
+    "account": "Cuenta",
+    "signingOut": "Cerrando sesión...",
+    "signOut": "Cerrar sesión",
+    "language": "Idioma",
+    "languageDescription": "Elige tu idioma preferido para la interfaz.",
+    "chatbotLanguage": "Idioma de respuesta del chatbot",
+    "chatbotLanguageDescription": "Elige el idioma en el que responde el asistente de IA. Por defecto: inglés.",
+    "chatbotLanguageSaved": "Idioma del chatbot actualizado.",
+    "saving": "Guardando...",
+    "save": "Guardar"
+  }
+}

@@ -118,3 +118,38 @@ export async function retrieveCertificationContext(
     sourceType: "certification",
   });
 }
+
+export type UserDocumentChunk = {
+  id: string;
+  file_name: string;
+  content: string;
+  chunk_index: number;
+  similarity: number;
+};
+
+/**
+ * Retrieve relevant chunks from a specific user's uploaded documents
+ */
+export async function retrieveUserDocumentContext(
+  query: string,
+  userId: string,
+  options: RetrievalOptions = {}
+): Promise<UserDocumentChunk[]> {
+  const { topK, threshold } = { ...DEFAULT_OPTIONS, ...options };
+
+  const { embedding } = await generateEmbedding(query);
+
+  const { data, error } = await getSupabase().rpc("search_user_document_chunks", {
+    p_user_id: userId,
+    query_embedding: embedding,
+    match_threshold: threshold,
+    match_count: topK,
+  });
+
+  if (error) {
+    console.error("User document retrieval error:", error);
+    throw new Error(`Failed to retrieve user documents: ${error.message}`);
+  }
+
+  return (data as UserDocumentChunk[]) || [];
+}

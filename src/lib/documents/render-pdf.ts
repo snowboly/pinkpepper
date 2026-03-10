@@ -1,0 +1,173 @@
+import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
+import type { GeneratedDocument } from "./types";
+
+const BRAND = rgb(0.882, 0.114, 0.282); // #E11D48
+const DARK = rgb(0.059, 0.09, 0.118);   // #0F172A
+const GRAY = rgb(0.392, 0.455, 0.545);  // #64748B
+const LIGHT = rgb(0.886, 0.906, 0.937); // #E2E8F0
+
+const PAGE_W = 595; // A4 width pts
+const PAGE_H = 842; // A4 height pts
+const MARGIN = 50;
+const CONTENT_W = PAGE_W - MARGIN * 2;
+
+export async function renderPdf(doc: GeneratedDocument): Promise<Uint8Array> {
+  const pdf = await PDFDocument.create();
+  const boldFont = await pdf.embedFont(StandardFonts.HelveticaBold);
+  const regularFont = await pdf.embedFont(StandardFonts.Helvetica);
+
+  let page = pdf.addPage([PAGE_W, PAGE_H]);
+  let y = PAGE_H - MARGIN;
+
+  function ensureSpace(needed: number) {
+    if (y - needed < MARGIN + 20) {
+      page = pdf.addPage([PAGE_W, PAGE_H]);
+      y = PAGE_H - MARGIN;
+    }
+  }
+
+  function drawText(
+    text: string,
+    x: number,
+    fontSize: number,
+    font = regularFont,
+    color = DARK,
+    maxWidth = CONTENT_W
+  ) {
+    // Word-wrap
+    const words = text.split(" ");
+    let line = "";
+    for (const word of words) {
+      const test = line ? `${line} ${word}` : word;
+      const w = font.widthOfTextAtSize(test, fontSize);
+      if (w > maxWidth && line) {
+        ensureSpace(fontSize + 4);
+        page.drawText(line, { x, y, size: fontSize, font, color });
+        y -= fontSize + 4;
+        line = word;
+      } else {
+        line = test;
+      }
+    }
+    if (line) {
+      ensureSpace(fontSize + 4);
+      page.drawText(line, { x, y, size: fontSize, font, color });
+      y -= fontSize + 4;
+    }
+  }
+
+  // ── Header bar ──
+  page.drawRectangle({ x: 0, y: PAGE_H - 60, width: PAGE_W, height: 60, color: BRAND });
+  page.drawText("PinkPepper", { x: MARGIN, y: PAGE_H - 38, size: 18, font: boldFont, color: rgb(1, 1, 1) });
+  page.drawText("Food Safety Compliance", { x: MARGIN, y: PAGE_H - 52, size: 10, font: regularFont, color: rgb(1, 1, 1) });
+
+  y = PAGE_H - 80;
+
+  // ── Title ──
+  drawText(doc.title, MARGIN, 20, boldFont, BRAND);
+  y -= 8;
+
+  // ── Meta table ──
+  const metaItems = [
+    ["Document No.", doc.documentNumber],
+    ["Version", doc.version],
+    ["Date", doc.date],
+    ["Approved By", doc.approvedBy],
+  ];
+  for (const [label, value] of metaItems) {
+    ensureSpace(18);
+    page.drawText(`${label}:`, { x: MARGIN, y, size: 10, font: boldFont, color: GRAY });
+    page.drawText(value, { x: MARGIN + 90, y, size: 10, font: regularFont, color: DARK });
+    y -= 16;
+  }
+
+  y -= 10;
+  // Scope
+  page.drawRectangle({ x: MARGIN, y: y - 2, width: CONTENT_W, height: 1, color: LIGHT });
+  y -= 14;
+  drawText(`Scope: ${doc.scope}`, MARGIN, 10, regularFont, GRAY);
+  y -= 8;
+  page.drawRectangle({ x: MARGIN, y, width: CONTENT_W, height: 1, color: LIGHT });
+  y -= 16;
+
+  // ── Sections ──
+  for (const section of doc.sections) {
+    ensureSpace(30);
+    page.drawRectangle({ x: MARGIN - 4, y: y - 2, width: 4, height: 18, color: BRAND });
+    drawText(section.heading, MARGIN + 6, 13, boldFont, DARK);
+    y -= 4;
+
+    drawText(section.content, MARGIN, 10, regularFont, DARK);
+    y -= 4;
+
+    if (section.subsections) {
+      for (const sub of section.subsections) {
+        ensureSpace(22);
+        drawText(sub.heading, MARGIN + 12, 11, boldFont, GRAY);
+        drawText(sub.content, MARGIN + 12, 10, regularFont, DARK);
+        y -= 2;
+      }
+    }
+    y -= 8;
+  }
+
+  // ── Tables ──
+  if (doc.tables) {
+    for (const table of doc.tables) {
+      if (table.caption) {
+        ensureSpace(20);
+        drawText(table.caption, MARGIN, 11, boldFont, DARK);
+        y -= 4;
+      }
+
+      const colW = CONTENT_W / table.columns.length;
+      const rowH = 20;
+
+      // Header row
+      ensureSpace(rowH + 4);
+      page.drawRectangle({ x: MARGIN, y: y - rowH + 4, width: CONTENT_W, height: rowH, color: BRAND });
+      table.columns.forEach((col, i) => {
+        page.drawText(col.header.slice(0, 20), {
+          x: MARGIN + i * colW + 4,
+          y: y - rowH + 10,
+          size: 9,
+          font: boldFont,
+          color: rgb(1, 1, 1),
+        });
+      });
+      y -= rowH;
+
+      // Data rows
+      for (const row of table.rows) {
+        ensureSpace(rowH);
+        page.drawRectangle({ x: MARGIN, y: y - rowH + 4, width: CONTENT_W, height: rowH, color: LIGHT });
+        table.columns.forEach((col, i) => {
+          const val = (row[col.header] ?? "").slice(0, 25);
+          page.drawText(val, {
+            x: MARGIN + i * colW + 4,
+            y: y - rowH + 10,
+            size: 8,
+            font: regularFont,
+            color: DARK,
+          });
+        });
+        y -= rowH;
+      }
+      y -= 12;
+    }
+  }
+
+  // ── Footer on each page ──
+  const pages = pdf.getPages();
+  pages.forEach((p, idx) => {
+    p.drawText(`Generated by PinkPepper • Page ${idx + 1} of ${pages.length}`, {
+      x: MARGIN,
+      y: 20,
+      size: 8,
+      font: regularFont,
+      color: GRAY,
+    });
+  });
+
+  return pdf.save();
+}

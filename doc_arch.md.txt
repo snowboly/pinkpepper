@@ -1,0 +1,511 @@
+# PinkPepper Document Architecture (DOCX + PDF Generation & Reading)
+
+## Overview
+
+PinkPepper needs a reliable system for:
+
+1. **Generating professional HACCP documents** (DOCX and PDF)
+2. **Reading and analysing uploaded documents** (PDF, DOCX, images)
+3. **Maintaining consistent formatting and structured data**
+
+The core principle is:
+
+**LLM generates structured data, not formatted documents.**
+
+Document layout should always be handled by **templates and deterministic code**, not by the AI.
+
+---
+
+# System Architecture
+
+```
+User Input
+   │
+   ▼
+LLM (Structured JSON Output)
+   │
+   ▼
+Database Storage
+   │
+   ├── Document Generation Pipeline
+   │
+   └── Document Reading Pipeline
+```
+
+---
+
+# 1. Document Generation Pipeline
+
+Goal: produce **clean, professional Word and PDF documents**.
+
+## Flow
+
+```
+User Input
+   │
+   ▼
+LLM generates structured JSON
+   │
+   ▼
+Store structured data in database
+   │
+   ▼
+DOCX Template Engine
+   │
+   ▼
+Generate DOCX
+   │
+   ▼
+Convert DOCX → PDF
+```
+
+---
+
+# Step 1 — LLM Structured Output
+
+The LLM must return **structured JSON**, not free text.
+
+Example:
+
+```json
+{
+  "business_name": "Cafe Roma",
+  "product": "Cooked chicken dishes",
+  "process_steps": [
+    {
+      "step": "Receiving ingredients",
+      "hazard": "Bacterial contamination",
+      "control": "Approved supplier list",
+      "monitoring": "Check delivery temperature"
+    }
+  ],
+  "ccps": [
+    {
+      "name": "Cooking chicken",
+      "critical_limit": "≥75°C",
+      "monitoring": "Temperature probe",
+      "corrective_action": "Continue cooking until limit reached"
+    }
+  ]
+}
+```
+
+Benefits:
+
+* deterministic formatting
+* easy editing
+* easy translation
+* easier validation
+
+---
+
+# Step 2 — Database Storage
+
+Store structured HACCP data.
+
+Example tables:
+
+```
+businesses
+plans
+process_steps
+hazards
+ccps
+monitoring_procedures
+```
+
+Documents should always be **regenerated from stored data**, not from LLM responses.
+
+---
+
+# Step 3 — DOCX Template System
+
+Use a **Word template (.docx)** with placeholders.
+
+Recommended library:
+
+```
+docxtemplater
+```
+
+Alternative:
+
+```
+docx (JS library)
+```
+
+Example template variables:
+
+```
+Business Name: {{business_name}}
+
+Product: {{product}}
+
+Hazard Analysis Table
+
+| Step | Hazard | Control | Monitoring |
+|------|--------|--------|-----------|
+{% for step in process_steps %}
+| {{step.step}} | {{step.hazard}} | {{step.control}} | {{step.monitoring}} |
+{% endfor %}
+```
+
+The template defines:
+
+* headings
+* tables
+* margins
+* styles
+* page numbers
+* logos
+
+---
+
+# Step 4 — DOCX Generation
+
+Application fills the template with structured data.
+
+Example workflow:
+
+```
+template.docx
+   ↓
+docxtemplater
+   ↓
+filled document
+   ↓
+output.docx
+```
+
+This produces **high quality Word documents**.
+
+---
+
+# Step 5 — DOCX → PDF Conversion
+
+Best conversion method:
+
+## Option A (Recommended)
+
+LibreOffice headless conversion:
+
+```
+libreoffice --headless --convert-to pdf document.docx
+```
+
+Advantages:
+
+* accurate layout
+* good table support
+* reliable
+
+## Option B
+
+Cloud conversion services:
+
+* CloudConvert
+* ConvertAPI
+
+## Option C
+
+Direct HTML → PDF (less reliable for complex tables).
+
+---
+
+# 2. Document Reading Pipeline
+
+Goal: analyse uploaded documents and extract structured information.
+
+Supported inputs:
+
+* PDF
+* DOCX
+* Images
+* Scanned documents
+
+---
+
+## Flow
+
+```
+User Upload
+   │
+   ▼
+File Type Detection
+   │
+   ├── DOCX Parser
+   ├── PDF Parser
+   └── OCR Engine
+   │
+   ▼
+Structured Markdown/Text
+   │
+   ▼
+Chunking
+   │
+   ▼
+Embeddings
+   │
+   ▼
+Vector Database
+   │
+   ▼
+LLM Analysis
+```
+
+---
+
+# Step 1 — File Type Detection
+
+Detect document type:
+
+```
+PDF
+DOCX
+Image
+Scanned PDF
+```
+
+---
+
+# Step 2 — Text Extraction
+
+## DOCX
+
+Use:
+
+```
+mammoth
+docx parser
+```
+
+Extract:
+
+* paragraphs
+* tables
+* headings
+
+---
+
+## PDF (text-based)
+
+Use:
+
+```
+pdf-parse
+pdfjs
+```
+
+---
+
+## Scanned PDFs / Images
+
+Use OCR.
+
+Recommended:
+
+```
+Mistral OCR
+```
+
+Advantages:
+
+* structured markdown output
+* tables preserved
+* good accuracy
+* low cost (~$1 per 1000 pages)
+
+---
+
+# Step 3 — Structured Document Output
+
+Convert parsed document to **structured markdown**.
+
+Example:
+
+```
+## Hazard Analysis
+
+| Step | Hazard | Control |
+|------|--------|--------|
+Receiving | Bacteria | Supplier approval
+Cooking | Undercooking | 75°C internal temp
+```
+
+---
+
+# Step 4 — Chunking
+
+Split document into chunks.
+
+Recommended:
+
+```
+500–800 tokens per chunk
+```
+
+Preserve:
+
+* section headings
+* table context
+
+---
+
+# Step 5 — Embeddings
+
+Generate embeddings for each chunk.
+
+Possible models:
+
+```
+text-embedding-3-small
+bge-small
+jina-embeddings
+```
+
+Store in vector database.
+
+---
+
+# Step 6 — Vector Database
+
+Recommended options:
+
+```
+Upstash Vector
+Supabase pgvector
+Pinecone
+```
+
+---
+
+# Step 7 — LLM Document Analysis
+
+User question:
+
+```
+Does this HACCP plan include CCP monitoring?
+```
+
+Pipeline:
+
+```
+User question
+   ↓
+Vector retrieval
+   ↓
+Relevant document chunks
+   ↓
+LLM reasoning
+   ↓
+Answer
+```
+
+---
+
+# 3. Suggested Full Stack
+
+## LLM
+
+```
+Llama 3.3 70B (Groq)
+```
+
+## OCR
+
+```
+Mistral OCR
+```
+
+## Document Templates
+
+```
+docxtemplater
+```
+
+## PDF Conversion
+
+```
+LibreOffice headless
+```
+
+## Embeddings
+
+```
+text-embedding-3-small
+```
+
+## Vector Database
+
+```
+Upstash Vector
+```
+
+---
+
+# 4. Key Design Principles
+
+### 1. Never let the LLM generate document formatting
+
+LLM should produce **data only**.
+
+---
+
+### 2. Templates control visual layout
+
+This guarantees:
+
+* professional documents
+* consistent formatting
+* regulatory-ready output
+
+---
+
+### 3. Always store structured data
+
+Documents should be **regenerated from stored data**, not recreated from AI responses.
+
+---
+
+### 4. Preserve tables during extraction
+
+HACCP plans rely heavily on **tables**, so OCR and parsers must maintain table structure.
+
+---
+
+# 5. Future Improvements
+
+Potential enhancements:
+
+* image analysis for kitchen inspections
+* allergen label scanning
+* HACCP plan validation
+* automatic regulatory checks
+* document diffing for updated plans
+
+---
+
+# Summary
+
+PinkPepper document system should follow this architecture:
+
+```
+LLM → Structured JSON → Database → DOCX Template → DOCX → PDF
+```
+
+For document uploads:
+
+```
+Upload → Parser/OCR → Structured Text → Embeddings → Vector DB → LLM
+```
+
+This approach ensures:
+
+* professional HACCP documents
+* reliable document parsing
+* scalable AI architecture
+* minimal hallucination risk
+* easy future expansion
+
+```
+```

@@ -2,10 +2,12 @@
 
 import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { track } from "@vercel/analytics";
 import type { SubscriptionTier } from "@/lib/tier";
 import { TIER_CAPABILITIES } from "@/lib/tier";
 import type { Citation } from "@/lib/rag/citations";
-import type { Message, Conversation, Project, ChatWorkspaceProps } from "./types";
+import type { Message, Conversation, Project, ChatWorkspaceProps, PersonaInfo } from "./types";
 import ChatSidebar from "./ChatSidebar";
 import ChatMessages, { type StarterSuggestion } from "./ChatMessages";
 import ChatInput from "./ChatInput";
@@ -17,25 +19,18 @@ type StreamUsage = { used: number; limit: number | null; tier: SubscriptionTier;
 type WorkspaceMode = "ask" | "virtual_audit";
 type DocWizard = {
   id: string;
-  title: string;
-  intro: string;
-  questions: string[];
+  wizardKey: string;
+  questionCount: number;
   buildPrompt: (answers: string[]) => string;
 };
+
+
 
 const DOC_WIZARDS: Record<string, DocWizard> = {
   "HACCP plan": {
     id: "haccp_plan",
-    title: "HACCP Plan",
-    intro: "Great choice. I will ask a few quick questions, then generate a complete HACCP plan you can review and export.",
-    questions: [
-      "What is your business type, location (country), and service style (e.g., dine-in, takeaway, manufacturing)?",
-      "What products/menu items are in scope for this HACCP plan?",
-      "List the main process steps from receiving to service/sale.",
-      "Which hazards are most relevant in your operation (biological, chemical, physical, allergens)?",
-      "What control measures and critical limits do you currently use (temperatures, times, checks)?",
-      "Who is responsible for monitoring, corrective actions, and verification?",
-    ],
+    wizardKey: "haccpPlan",
+    questionCount: 6,
     buildPrompt: (answers) =>
       `Create a complete, audit-ready HACCP Plan document using the business details below.\n\n` +
       `Business details:\n` +
@@ -53,15 +48,8 @@ const DOC_WIZARDS: Record<string, DocWizard> = {
   },
   "Cleaning SOP": {
     id: "cleaning_sop",
-    title: "Cleaning and Disinfection SOP",
-    intro: "Perfect. I will collect key operational details and then generate a practical SOP.",
-    questions: [
-      "What type of premises/area is this SOP for (kitchen, bakery, production line, etc.)?",
-      "Which surfaces/equipment must be cleaned and how often?",
-      "What cleaning chemicals/sanitisers are used (including dilution/contact times if known)?",
-      "Who performs cleaning and who verifies sign-off?",
-      "What records/logs do you want included in the SOP?",
-    ],
+    wizardKey: "cleaningSop",
+    questionCount: 5,
     buildPrompt: (answers) =>
       `Draft a complete Cleaning and Disinfection SOP using the following details:\n\n` +
       `1) ${answers[0] ?? ""}\n` +
@@ -76,14 +64,8 @@ const DOC_WIZARDS: Record<string, DocWizard> = {
   },
   "Temp monitoring log": {
     id: "temp_log",
-    title: "Temperature Monitoring Log",
-    intro: "Understood. I will gather your monitoring setup and generate a ready-to-use log template.",
-    questions: [
-      "Which equipment/processes need monitoring (fridges, freezers, hot holding, cooking, deliveries)?",
-      "What are your target limits/critical limits for each?",
-      "How often should checks be recorded (per shift, daily, hourly)?",
-      "Who records readings and who verifies them?",
-    ],
+    wizardKey: "tempLog",
+    questionCount: 4,
     buildPrompt: (answers) =>
       `Generate a practical Temperature Monitoring Log pack based on:\n\n` +
       `1) ${answers[0] ?? ""}\n` +
@@ -97,15 +79,8 @@ const DOC_WIZARDS: Record<string, DocWizard> = {
   },
   "Supplier approval": {
     id: "supplier_approval",
-    title: "Supplier Approval Procedure",
-    intro: "Good choice. I will ask a few details and then produce a complete supplier approval procedure and forms.",
-    questions: [
-      "What type of business and product categories do you buy from suppliers?",
-      "Which supplier risks matter most to you (allergens, traceability, authenticity, chilled chain, etc.)?",
-      "What documents/certifications do you require before approval?",
-      "How often do you review suppliers and what triggers re-evaluation?",
-      "Who approves suppliers and where are records stored?",
-    ],
+    wizardKey: "supplierApproval",
+    questionCount: 5,
     buildPrompt: (answers) =>
       `Create a full Supplier Approval Procedure using:\n\n` +
       `1) ${answers[0] ?? ""}\n` +
@@ -120,6 +95,18 @@ const DOC_WIZARDS: Record<string, DocWizard> = {
   },
 };
 
+const ALLOWED_TRANSCRIPTION_MIME_TYPES = new Set(["audio/webm", "audio/mp4", "audio/wav"]);
+
+function normalizeRecordedMimeType(mimeType: string | undefined) {
+  let normalized = (mimeType ?? "").split(";")[0]?.trim().toLowerCase();
+  if (normalized === "audio/x-wav") normalized = "audio/wav";
+  if (normalized === "audio/m4a") normalized = "audio/mp4";
+  if (ALLOWED_TRANSCRIPTION_MIME_TYPES.has(normalized)) {
+    return normalized;
+  }
+  return "audio/webm";
+}
+
 export default function ChatWorkspace({
   userEmail,
   initialTier,
@@ -131,10 +118,13 @@ export default function ChatWorkspace({
   isAdmin: initialIsAdmin = false,
   onboardingCompleted = false,
 }: ChatWorkspaceProps) {
+  const tw = useTranslations("workspace");
+  const tc = useTranslations("chat");
   // ── Core chat state ──
   const [messages, setMessages] = useState<Message[]>([]);
   const [prompt, setPrompt] = useState("");
   const [conversationId, setConversationId] = useState<string | null>(null);
+  const [currentPersona, setCurrentPersona] = useState<PersonaInfo | null>(null);
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [loadingConversations, setLoadingConversations] = useState(true);
   const [loadingMessages, setLoadingMessages] = useState(false);
@@ -167,6 +157,13 @@ export default function ChatWorkspace({
   const [attachedImage, setAttachedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
+  // ── Document attachment state ──
+  const [attachedDocument, setAttachedDocument] = useState<File | null>(null);
+
+  const [isRecording, setIsRecording] = useState(false);
+  const [isTranscribing, setIsTranscribing] = useState(false);
+  const [recordingError, setRecordingError] = useState<string | null>(null);
+
   // ── Onboarding state ──
   const [showOnboarding, setShowOnboarding] = useState(!onboardingCompleted);
 
@@ -185,11 +182,16 @@ export default function ChatWorkspace({
   const typingQueueRef = useRef("");
   const typingIntervalRef = useRef<number | null>(null);
   const pendingDoneRef = useRef<{ citations?: Citation[]; usage?: StreamUsage } | null>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const mediaStreamRef = useRef<MediaStream | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
+  const recordingStartedAtRef = useRef<number | null>(null);
+  const retryableTranscriptionRef = useRef<{ blob: Blob; durationMs: number; retries: number } | null>(null);
 
   const canUploadImages = isAdmin || dailyImageUploads > 0;
 
-  const pushAssistantMessage = useCallback((content: string) => {
-    setMessages((prev) => [...prev, { role: "assistant", content }]);
+  const pushAssistantMessage = useCallback((content: string, persona?: PersonaInfo | null) => {
+    setMessages((prev) => [...prev, { role: "assistant", content, persona: persona ?? undefined }]);
   }, []);
 
   const clearTypingInterval = useCallback(() => {
@@ -315,6 +317,150 @@ export default function ChatWorkspace({
     setImagePreview(null);
   }
 
+  function cleanupRecordingStream() {
+    mediaStreamRef.current?.getTracks().forEach((track) => track.stop());
+    mediaStreamRef.current = null;
+    mediaRecorderRef.current = null;
+    audioChunksRef.current = [];
+    recordingStartedAtRef.current = null;
+  }
+
+  function trackTranscriptionTelemetry(eventName: string, payload: Record<string, string | number | boolean>) {
+    try {
+      track(eventName, payload);
+    } catch {
+      // Best-effort telemetry only.
+    }
+  }
+
+  async function transcribeAudioBlob(audioBlob: Blob, durationMs: number, retryCount = 0) {
+    setIsTranscribing(true);
+    setRecordingError(null);
+    const startedAt = typeof performance !== "undefined" ? performance.now() : Date.now();
+    try {
+      const normalizedMimeType = normalizeRecordedMimeType(audioBlob.type);
+      const extension = normalizedMimeType === "audio/mp4" ? "mp4" : normalizedMimeType === "audio/wav" ? "wav" : "webm";
+      const audioFile = new File([audioBlob], `recording.${extension}`, { type: normalizedMimeType });
+      const formData = new FormData();
+      formData.append("audio", audioFile);
+      formData.append("durationMs", String(durationMs));
+      formData.append("language", navigator.language || "en");
+
+      const res = await fetch("/api/chat/transcribe", { method: "POST", body: formData });
+      const data = (await res.json()) as { text?: string; error?: { message?: string } };
+      if (!res.ok) {
+        throw new Error(data.error?.message ?? tc("transcriptionError"));
+      }
+
+      const transcript = (data.text ?? "").trim();
+      if (!transcript) {
+        throw new Error(tc("transcriptionEmptyError"));
+      }
+
+      let promptToSend = "";
+      setPrompt((prev) => {
+        const trimmed = prev.trimEnd();
+        promptToSend = trimmed ? `${trimmed} ${transcript}` : transcript;
+        return promptToSend;
+      });
+      setRecordingError(null);
+      retryableTranscriptionRef.current = null;
+
+      const latencyMs = Math.round((typeof performance !== "undefined" ? performance.now() : Date.now()) - startedAt);
+      trackTranscriptionTelemetry("chat_transcription_success", {
+        latencyMs,
+        durationMs,
+        retryCount,
+      });
+
+      await sendPromptValue(promptToSend);
+    } catch {
+      const latencyMs = Math.round((typeof performance !== "undefined" ? performance.now() : Date.now()) - startedAt);
+      retryableTranscriptionRef.current = { blob: audioBlob, durationMs, retries: retryCount };
+      setRecordingError(tc("transcriptionError"));
+      trackTranscriptionTelemetry("chat_transcription_failure", {
+        latencyMs,
+        durationMs,
+        retryCount,
+      });
+    } finally {
+      setIsTranscribing(false);
+    }
+  }
+
+  function retryTranscription() {
+    const retry = retryableTranscriptionRef.current;
+    if (!retry || isRecording || isTranscribing) return;
+    void transcribeAudioBlob(retry.blob, retry.durationMs, retry.retries + 1);
+  }
+
+  async function startRecording() {
+    if (isRecording || isTranscribing) return;
+    if (retryableTranscriptionRef.current) {
+      retryTranscription();
+      return;
+    }
+    setRecordingError(null);
+    if (typeof window === "undefined" || !navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === "undefined") {
+      setRecordingError(tc("recordingUnsupported"));
+      return;
+    }
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaStreamRef.current = stream;
+      const mimeType = ["audio/webm;codecs=opus", "audio/webm", "audio/mp4", "audio/wav"].find((candidate) =>
+        MediaRecorder.isTypeSupported(candidate)
+      );
+      const recorder = mimeType ? new MediaRecorder(stream, { mimeType }) : new MediaRecorder(stream);
+
+      audioChunksRef.current = [];
+      recorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          audioChunksRef.current.push(event.data);
+        }
+      };
+      recorder.onstop = () => {
+        const chunks = audioChunksRef.current;
+        const firstChunkType = chunks[0]?.type;
+        const blobType = normalizeRecordedMimeType(recorder.mimeType || firstChunkType);
+        const blob = new Blob(chunks, { type: blobType });
+        const durationMs = recordingStartedAtRef.current ? Date.now() - recordingStartedAtRef.current : 0;
+        cleanupRecordingStream();
+        if (blob.size > 0) {
+          void transcribeAudioBlob(blob, durationMs);
+        } else {
+          setRecordingError(tc("transcriptionEmptyError"));
+        }
+      };
+
+      mediaRecorderRef.current = recorder;
+      recordingStartedAtRef.current = Date.now();
+      recorder.start();
+      setIsRecording(true);
+    } catch {
+      cleanupRecordingStream();
+      setRecordingError(tc("recordingPermissionError"));
+    }
+  }
+
+  function stopRecording() {
+    const recorder = mediaRecorderRef.current;
+    if (!recorder || recorder.state !== "recording") return;
+    setIsRecording(false);
+    recorder.stop();
+  }
+
+  function cancelRecording() {
+    const recorder = mediaRecorderRef.current;
+    if (recorder && recorder.state === "recording") {
+      recorder.onstop = null;
+      recorder.stop();
+    }
+    setIsRecording(false);
+    setRecordingError(null);
+    cleanupRecordingStream();
+  }
+
   // ── Billing ──
   async function refreshBillingStatus() {
     setBillingError(null);
@@ -336,20 +482,20 @@ export default function ChatWorkspace({
   }
 
   // ── Conversations ──
-  const loadConversations = useCallback(async () => {
-    setLoadingConversations(true);
+  const loadConversations = useCallback(async (silent = false) => {
+    if (!silent) setLoadingConversations(true);
     try {
       const res = await fetch("/api/chat/conversations");
       const data = (await res.json()) as { conversations?: Conversation[]; error?: string };
       if (!res.ok) {
-        setError(data.error ?? "Failed to load conversations.");
+        if (!silent) setError(data.error ?? "Failed to load conversations.");
         return;
       }
       setConversations(data.conversations ?? []);
     } catch {
-      setError("Network error while loading conversations.");
+      if (!silent) setError("Network error while loading conversations.");
     } finally {
-      setLoadingConversations(false);
+      if (!silent) setLoadingConversations(false);
     }
   }, []);
 
@@ -515,9 +661,11 @@ export default function ChatWorkspace({
     setDocWizardStep(0);
     setDocWizardAnswers([]);
     setConversationId(null);
+    setCurrentPersona(null);
     setMessages([]);
     setReviewRequests([]);
     clearImage();
+    setAttachedDocument(null);
     setError(null);
   }
 
@@ -530,6 +678,10 @@ export default function ChatWorkspace({
     setActiveDocWizard(null);
     setDocWizardStep(0);
     setDocWizardAnswers([]);
+    // Start a fresh conversation when entering virtual audit mode
+    if (nextMode === "virtual_audit") {
+      startNewChat();
+    }
   }
 
   function startDocumentWizard(suggestion: StarterSuggestion) {
@@ -541,7 +693,9 @@ export default function ChatWorkspace({
     setActiveDocWizard(wizard);
     setDocWizardStep(0);
     setDocWizardAnswers([]);
-    pushAssistantMessage(`${wizard.intro}\n\nQuestion 1/${wizard.questions.length}: ${wizard.questions[0]}`);
+    const intro = tw(`wizards.${wizard.wizardKey}.intro`);
+    const q1 = tw(`wizards.${wizard.wizardKey}.q1`);
+    pushAssistantMessage(`${intro}\n\nQuestion 1/${wizard.questionCount}: ${q1}`, currentPersona);
     setPrompt("");
     textareaRef.current?.focus();
   }
@@ -560,17 +714,18 @@ export default function ChatWorkspace({
       setActiveDocWizard(null);
       setDocWizardStep(0);
       setDocWizardAnswers([]);
-      pushAssistantMessage("Document builder cancelled. You can start again from any starter card.");
+      pushAssistantMessage(tw("wizardCancelled"), currentPersona);
       return true;
     }
 
     const nextAnswers = [...docWizardAnswers, answer];
     const nextStep = docWizardStep + 1;
 
-    if (nextStep < activeDocWizard.questions.length) {
+    if (nextStep < activeDocWizard.questionCount) {
       setDocWizardAnswers(nextAnswers);
       setDocWizardStep(nextStep);
-      pushAssistantMessage(`Question ${nextStep + 1}/${activeDocWizard.questions.length}: ${activeDocWizard.questions[nextStep]}`);
+      const nextQ = tw(`wizards.${activeDocWizard.wizardKey}.q${nextStep + 1}`);
+      pushAssistantMessage(`Question ${nextStep + 1}/${activeDocWizard.questionCount}: ${nextQ}`, currentPersona);
       return true;
     }
 
@@ -578,11 +733,12 @@ export default function ChatWorkspace({
     setActiveDocWizard(null);
     setDocWizardStep(0);
     setDocWizardAnswers([]);
-    pushAssistantMessage("Perfect. I have enough information. Generating your full document now.");
+    pushAssistantMessage(tw("wizardGenerating"), currentPersona);
 
+    const wizardTitle = tw(`wizards.${completedWizard.wizardKey}.title`);
     const compiledPrompt = completedWizard.buildPrompt(nextAnswers);
     await sendPromptValue(compiledPrompt, {
-      displayPrompt: `Generate the ${completedWizard.title} document using the provided business details.`,
+      displayPrompt: `Generate the ${wizardTitle} document using the provided business details.`,
     });
 
     return true;
@@ -691,7 +847,35 @@ export default function ChatWorkspace({
 
     const currentImage = attachedImage;
     const currentImagePreview = imagePreview;
+    const currentDocument = attachedDocument;
     clearImage();
+    setAttachedDocument(null);
+
+    // Document uploads: send to /api/documents/upload for text extraction + embedding storage
+    if (currentDocument) {
+      try {
+        const fd = new FormData();
+        fd.append("file", currentDocument);
+        const res = await fetch("/api/documents/upload", { method: "POST", body: fd });
+        const data = (await res.json()) as { chunksStored?: number; warning?: string; error?: string };
+        if (res.ok && (data.chunksStored ?? 0) > 0) {
+          pushAssistantMessage(
+            `I've processed **${currentDocument.name}** and indexed ${data.chunksStored} text chunks. I'll use the content of this document to inform my answers. What would you like to know?`
+          );
+          setLoading(false);
+          return;
+        } else if (data.warning) {
+          pushAssistantMessage(`I received **${currentDocument.name}** but couldn't extract its text (${data.warning}). Please try a plain text or supported file format.`);
+          setLoading(false);
+          return;
+        }
+      } catch (e) {
+        console.error("Document upload error:", e);
+        pushAssistantMessage("Sorry, there was an error processing your document. Please try again.");
+        setLoading(false);
+        return;
+      }
+    }
 
     // Image uploads use the existing JSON endpoint
     if (currentImage) {
@@ -724,7 +908,7 @@ export default function ChatWorkspace({
         if (data.assistantMessage) {
           setMessages((prev) => [
             ...prev,
-            { role: "assistant", content: data.assistantMessage!, citations: data.citations },
+            { role: "assistant", content: data.assistantMessage!, citations: data.citations, persona: currentPersona ?? undefined },
           ]);
         }
         if (data.usage) {
@@ -732,7 +916,7 @@ export default function ChatWorkspace({
           setTier(data.usage.tier);
           setIsAdmin(Boolean(data.usage.isAdmin));
         }
-        await loadConversations();
+        await loadConversations(true);
       } catch {
         setError("Network error. Please try again.");
         setMessages((prev) => prev.slice(0, -1));
@@ -748,7 +932,7 @@ export default function ChatWorkspace({
     typingQueueRef.current = "";
     pendingDoneRef.current = null;
     clearTypingInterval();
-    setMessages((prev) => [...prev, { role: "assistant", content: "", isStreaming: true }]);
+    setMessages((prev) => [...prev, { role: "assistant", content: "", isStreaming: true, persona: currentPersona ?? undefined }]);
 
     try {
       const streamEndpoint = workspaceMode === "virtual_audit" ? "/api/audit/stream" : "/api/chat/stream";
@@ -797,15 +981,28 @@ export default function ChatWorkspace({
           const payload = line.slice(6);
           if (payload === "[DONE]") continue;
 
-          let event: { type: string; delta?: string; conversationId?: string; citations?: Citation[]; usage?: StreamUsage };
+          let event: { type: string; delta?: string; conversationId?: string; citations?: Citation[]; usage?: StreamUsage; persona?: PersonaInfo };
           try {
             event = JSON.parse(payload);
           } catch {
             continue;
           }
 
-          if (event.type === "metadata" && event.conversationId) {
-            setConversationId(event.conversationId);
+          if (event.type === "metadata") {
+            if (event.conversationId) setConversationId(event.conversationId);
+            if (event.persona) {
+              const p = event.persona as PersonaInfo;
+              setCurrentPersona(p);
+              // Stamp persona on the streaming assistant message
+              setMessages((prev) => {
+                const updated = [...prev];
+                const last = updated[updated.length - 1];
+                if (last?.isStreaming) {
+                  updated[updated.length - 1] = { ...last, persona: p };
+                }
+                return updated;
+              });
+            }
           } else if (event.type === "content" && event.delta) {
             typingQueueRef.current += event.delta;
             startTypingDrain();
@@ -821,7 +1018,7 @@ export default function ChatWorkspace({
         pendingDoneRef.current = null;
       }
 
-      await loadConversations();
+      await loadConversations(true);
     } catch (err: unknown) {
       if (err instanceof DOMException && err.name === "AbortError") {
         typingQueueRef.current = "";
@@ -866,11 +1063,23 @@ export default function ChatWorkspace({
   useEffect(() => { void loadConversations(); }, [loadConversations]);
   useEffect(() => { void loadProjects(); }, [loadProjects]);
 
+  // Track whether conversationId was set by user clicking sidebar (not by streaming metadata)
+  const loadConvOnSelect = useRef<string | null>(null);
+
+  function selectConversation(id: string) {
+    loadConvOnSelect.current = id;
+    setConversationId(id);
+  }
+
   useEffect(() => {
-    if (conversationId) {
+    if (!conversationId) return;
+    // Only load messages from DB when user explicitly selected a conversation,
+    // NOT when conversationId was set by streaming metadata (which would abort the active stream).
+    if (loadConvOnSelect.current === conversationId) {
+      loadConvOnSelect.current = null;
       void loadConversationMessages(conversationId);
-      void loadReviewRequests(conversationId);
     }
+    void loadReviewRequests(conversationId);
   }, [conversationId]);
 
   useEffect(() => {
@@ -881,6 +1090,17 @@ export default function ChatWorkspace({
   useEffect(() => {
     return () => clearTypingInterval();
   }, [clearTypingInterval]);
+
+  useEffect(() => {
+    return () => {
+      const recorder = mediaRecorderRef.current;
+      if (recorder && recorder.state === "recording") {
+        recorder.onstop = null;
+        recorder.stop();
+      }
+      cleanupRecordingStream();
+    };
+  }, []);
 
   // ── Render ──
   return (
@@ -900,7 +1120,7 @@ export default function ChatWorkspace({
           billingLoading={billingLoading}
           tierColour={tierColour}
           onNewChat={startNewChat}
-          onSelectConversation={(id) => { setConversationId(id); }}
+          onSelectConversation={(id) => { selectConversation(id); }}
           onDeleteConversation={(id) => void removeConversation(id)}
           onArchiveConversation={(id) => void archiveConversation(id)}
           onRenameConversation={(id, title) => void renameConversation(id, title)}
@@ -931,7 +1151,7 @@ export default function ChatWorkspace({
             className={`absolute left-3 top-3 z-30 rounded-lg border border-[#E2E8F0] bg-white p-1.5 text-[#64748B] shadow-sm hover:bg-[#F1F5F9] transition-colors ${
               sidebarOpen ? "md:hidden" : ""
             }`}
-            title={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
+            title={sidebarOpen ? tw("collapseSidebar") : tw("expandSidebar")}
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
@@ -940,8 +1160,8 @@ export default function ChatWorkspace({
           {isDraggingOver && canUploadImages && (
             <div className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center">
               <div className="rounded-2xl border-2 border-dashed border-[#E11D48] bg-white/90 px-8 py-6 text-center shadow-lg">
-                <p className="text-sm font-semibold text-[#E11D48]">Drop photo to analyse</p>
-                <p className="text-xs text-[#64748B] mt-1">Kitchen, label, or food product</p>
+                <p className="text-sm font-semibold text-[#E11D48]">{tw("dropPhotoToAnalyse")}</p>
+                <p className="text-xs text-[#64748B] mt-1">{tw("dropPhotoHint")}</p>
               </div>
             </div>
           )}
@@ -980,6 +1200,8 @@ export default function ChatWorkspace({
               }
             }}
             onRequestReview={() => setReviewModalOpen(true)}
+            onUpgradeForReview={!reviewEligible ? () => setUpgradeModalTrigger("review") : undefined}
+            currentPersona={currentPersona}
           />
 
           <div className="flex-shrink-0 border-t border-[#E2E8F0] bg-white px-4 py-2">
@@ -992,7 +1214,7 @@ export default function ChatWorkspace({
                     workspaceMode === "ask" ? "bg-white text-[#0F172A] shadow-sm" : "text-[#64748B]"
                   }`}
                 >
-                  Ask
+                  {tw("ask")}
                 </button>
                 <button
                   type="button"
@@ -1001,7 +1223,7 @@ export default function ChatWorkspace({
                     workspaceMode === "virtual_audit" ? "bg-white text-[#0F172A] shadow-sm" : "text-[#64748B]"
                   }`}
                 >
-                  Virtual Audit
+                  {tw("virtualAudit")}
                 </button>
               </div>
               <span className={`rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-wide ${tierColour}`}>
@@ -1012,7 +1234,7 @@ export default function ChatWorkspace({
                   href="/admin"
                   className="rounded-full border border-[#7C3AED] bg-[#F5F3FF] px-3 py-1 text-xs font-bold uppercase text-[#5B21B6]"
                 >
-                  Admin panel
+                  {tw("adminPanel")}
                 </Link>
               )}
               {reviewEligible && conversationId && (
@@ -1021,7 +1243,7 @@ export default function ChatWorkspace({
                   disabled={reviewLoading}
                   className="rounded-full border border-[#E2E8F0] bg-white px-3 py-1 text-xs text-[#64748B] hover:bg-[#F8F9FB] disabled:opacity-50"
                 >
-                  Request review
+                  {tw("requestReview")}
                 </button>
               )}
               {workspaceMode === "virtual_audit" && (
@@ -1034,7 +1256,7 @@ export default function ChatWorkspace({
                   disabled={loading}
                   className="rounded-full border border-[#E2E8F0] bg-white px-3 py-1 text-xs text-[#64748B] hover:bg-[#F8F9FB] disabled:opacity-50"
                 >
-                  Generate report
+                  {tw("generateReport")}
                 </button>
               )}
               {dynamicCapabilities.allowPdfExport && (
@@ -1043,7 +1265,7 @@ export default function ChatWorkspace({
                   disabled={exportLoading !== null || !conversationId}
                   className="rounded-full border border-[#E2E8F0] bg-white px-3 py-1 text-xs text-[#64748B] hover:bg-[#F8F9FB] disabled:opacity-50"
                 >
-                  {exportLoading === "pdf" ? "Exporting..." : "PDF"}
+                  {exportLoading === "pdf" ? tw("exporting") : tw("pdf")}
                 </button>
               )}
               {dynamicCapabilities.allowWordExport && (
@@ -1052,7 +1274,7 @@ export default function ChatWorkspace({
                   disabled={exportLoading !== null || !conversationId}
                   className="rounded-full border border-[#E2E8F0] bg-white px-3 py-1 text-xs text-[#64748B] hover:bg-[#F8F9FB] disabled:opacity-50"
                 >
-                  {exportLoading === "docx" ? "Exporting..." : "DOCX"}
+                  {exportLoading === "docx" ? tw("exporting") : tw("docx")}
                 </button>
               )}
             </div>
@@ -1065,17 +1287,26 @@ export default function ChatWorkspace({
             attachedImage={attachedImage}
             imagePreview={imagePreview}
             canUploadImages={canUploadImages}
+            attachedDocument={attachedDocument}
+            isRecording={isRecording}
+            isTranscribing={isTranscribing}
+            recordingError={recordingError}
             onPromptChange={setPrompt}
             onSubmit={sendPrompt}
             onStop={() => abortControllerRef.current?.abort()}
             onImageSelect={handleImageSelect}
             onClearImage={clearImage}
+            onDocumentSelect={(f) => setAttachedDocument(f)}
+            onClearDocument={() => setAttachedDocument(null)}
+            onStartRecording={() => void startRecording()}
+            onStopRecording={stopRecording}
+            onCancelRecording={cancelRecording}
             onKeyDown={handleKeyDown}
             textareaRef={textareaRef}
             onUpgradeForImages={() => setUpgradeModalTrigger("image_limit")}
             placeholder={
               workspaceMode === "virtual_audit"
-                ? "Virtual Audit mode: describe scope, upload evidence, or ask for final audit report..."
+                ? tw("virtualAuditPlaceholder")
                 : undefined
             }
           />

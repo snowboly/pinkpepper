@@ -17,7 +17,7 @@ function getRedis(): Redis {
 
 type LimiterConfig = { window: Parameters<typeof Ratelimit.slidingWindow>[1]; max: number; prefix: string };
 
-let _limiters: Record<string, Ratelimit> = {};
+const _limiters: Record<string, Ratelimit> = {};
 function getLimiter({ window, max, prefix }: LimiterConfig): Ratelimit {
   if (!_limiters[prefix]) {
     _limiters[prefix] = new Ratelimit({
@@ -29,10 +29,12 @@ function getLimiter({ window, max, prefix }: LimiterConfig): Ratelimit {
   return _limiters[prefix];
 }
 
-export const chatLimiter    = { _cfg: { max: 10, window: "1 m" as const, prefix: "rl:chat" } };
-export const visionLimiter  = { _cfg: { max: 5,  window: "1 m" as const, prefix: "rl:vision" } };
-export const exportLimiter  = { _cfg: { max: 5,  window: "1 m" as const, prefix: "rl:export" } };
-export const billingLimiter = { _cfg: { max: 5,  window: "1 m" as const, prefix: "rl:billing" } };
+export const chatLimiter      = { _cfg: { max: 10, window: "1 m" as const, prefix: "rl:chat" } };
+export const chatBurstLimiter = { _cfg: { max: 5,  window: "30 s" as const, prefix: "rl:chat-burst" } };
+export const visionLimiter    = { _cfg: { max: 5,  window: "1 m" as const, prefix: "rl:vision" } };
+export const exportLimiter    = { _cfg: { max: 5,  window: "1 m" as const, prefix: "rl:export" } };
+export const billingLimiter   = { _cfg: { max: 5,  window: "1 m" as const, prefix: "rl:billing" } };
+export const transcribeLimiter = { _cfg: { max: 6,  window: "1 m" as const, prefix: "rl:transcribe" } };
 
 type LazyLimiter = { _cfg: LimiterConfig };
 

@@ -31,12 +31,12 @@ export default function SignupPage() {
       }
 
       const supabase = createClient();
-      const origin = window.location.origin;
+      const origin = process.env.NEXT_PUBLIC_SITE_URL ?? window.location.origin;
       const { error: signUpError } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          emailRedirectTo: `${origin}/auth/confirm?next=/dashboard`,
+          emailRedirectTo: `${origin}/auth/confirm?next=/dashboard&flow=signup`,
         },
       });
 
@@ -62,10 +62,10 @@ export default function SignupPage() {
 
     try {
       const supabase = createClient();
-      const origin = window.location.origin;
+      const origin = process.env.NEXT_PUBLIC_SITE_URL ?? window.location.origin;
       const { error: otpError } = await supabase.auth.signInWithOtp({
         email,
-        options: { emailRedirectTo: `${origin}/auth/confirm?next=/dashboard`, shouldCreateUser: true },
+        options: { emailRedirectTo: `${origin}/auth/confirm?next=/dashboard&flow=signup`, shouldCreateUser: true },
       });
       if (otpError) {
         setError(otpError.message);

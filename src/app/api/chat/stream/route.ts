@@ -3,42 +3,11 @@ import { TIER_CAPABILITIES } from "@/lib/tier";
 import { resolveUserAccess } from "@/lib/access";
 import { countUsageSince, utcDayStartIso } from "@/lib/policy";
 import { retrieveContext, buildRAGPrompt, formatCitations, type KnowledgeChunk } from "@/lib/rag";
-import { chatLimiter, checkRateLimit } from "@/lib/ratelimit";
+import { chatLimiter, chatBurstLimiter, checkRateLimit } from "@/lib/ratelimit";
+import { detectQueryMode, detectComplexity } from "@/lib/query-mode";
+import { getPersonaForConversation, getRandomPersona, type Persona } from "@/lib/personas";
 
 export const dynamic = "force-dynamic";
-
-function detectQueryMode(message: string): "qa" | "document" | "audit" {
-  const lower = message.toLowerCase();
-
-  const auditKeywords = [
-    "audit", "check compliance", "check my compliance", "verify", "gap analysis",
-    "non-conformance", "nonconformance", " nc ", "major nc", "minor nc", "critical nc",
-    "inspection", "review my", "assess my", "evaluate my",
-    "am i compliant", "are we compliant", "is this compliant",
-    "do i need to", "do we need to", "what are we missing",
-    "corrective action", "capa", "due diligence",
-  ];
-  if (auditKeywords.some((kw) => lower.includes(kw))) return "audit";
-
-  const documentKeywords = [
-    "create", "generate", "draft", "write", "produce", "build", "make me", "give me a",
-    "template", "haccp plan", "sop", "standard operating procedure",
-    "procedure", "log", "form", "checklist", "policy", "manual",
-    "monitoring sheet", "cleaning schedule", "risk assessment",
-    "flow diagram", "process flow", "control measure", "critical limit",
-    "recall procedure", "traceability system", "supplier questionnaire",
-    "staff training record", "induction document", "due diligence record",
-    "pest control log", "delivery check", "date labelling", "labelling policy",
-    "waste management plan", "water safety plan", "legionella risk assessment",
-    "personal hygiene policy", "fitness to work policy", "illness policy",
-    "food contact material", "fcm register", "declaration of compliance",
-    "allergen matrix", "allergen chart", "cleaning validation",
-    "return to work", "visitor hygiene", "visitor declaration",
-  ];
-  if (documentKeywords.some((kw) => lower.includes(kw))) return "document";
-
-  return "qa";
-}
 
 export async function POST(request: Request) {
   const groqKey = process.env.GROQ_API_KEY;
@@ -59,13 +28,20 @@ export async function POST(request: Request) {
   const rateLimitRes = await checkRateLimit(chatLimiter, user.id);
   if (rateLimitRes) return rateLimitRes;
 
-  const { data: profile } = await supabase
+  // Burst protection: max 3 messages per 30 seconds
+  const burstLimitRes = await checkRateLimit(chatBurstLimiter, user.id);
+  if (burstLimitRes) return burstLimitRes;
+
+  type ProfileRow = { tier?: string | null; is_admin?: boolean | null; chat_language?: string | null };
+  const profileResult = await supabase
     .from("profiles")
-    .select("tier,is_admin")
+    .select("tier,is_admin,chat_language")
     .eq("id", user.id)
     .maybeSingle();
+  const profile = profileResult.data as ProfileRow | null;
 
   const { tier, isAdmin } = resolveUserAccess(profile, user.email);
+  const chatLanguage = profile?.chat_language ?? "en";
   const caps = TIER_CAPABILITIES[tier];
 
   const body = (await request.json()) as { message?: string; conversationId?: string | null };
@@ -146,6 +122,9 @@ export async function POST(request: Request) {
     conversationId = newConv.id;
   }
 
+  // Assign persona based on conversation ID
+  const persona: Persona = getPersonaForConversation(conversationId!);
+
   // Load conversation history
   const historyLimit = isAdmin || tier === "pro" ? 20 : 10;
   const { data: historyRows } = await supabase
@@ -176,9 +155,20 @@ export async function POST(request: Request) {
   let systemPrompt: string;
   let temperature: number;
 
+  const CHAT_LANGUAGE_NAMES: Record<string, string> = {
+    en: "English",
+    fr: "French",
+    de: "German",
+    es: "Spanish",
+    it: "Italian",
+    pt: "Portuguese",
+  };
+  const preferredLanguage = CHAT_LANGUAGE_NAMES[chatLanguage] ?? "English";
+  const languageInstruction = `Respond in ${preferredLanguage}. This is the user's preferred response language. Do not switch to another language unless the user explicitly asks you to.`;
+
   if (ragEnabled) {
-    const ragPrompt = buildRAGPrompt(message, retrievedChunks, mode);
-    systemPrompt = ragPrompt.systemPrompt;
+    const ragPrompt = buildRAGPrompt(message, retrievedChunks, mode, preferredLanguage);
+    systemPrompt = ragPrompt.systemPrompt + `\n\nPERSONA:\n${persona.promptFragment}`;
     temperature = ragPrompt.temperature;
   } else {
     const modeInstruction =
@@ -205,6 +195,14 @@ export async function POST(request: Request) {
 
     systemPrompt =
       "You are PinkPepper, an expert AI food safety compliance assistant specialising in EU and UK food law and best practice.\n\n" +
+      "ABOUT PINKPEPPER (answer when users ask about you, the product, or their plan):\n" +
+      "PinkPepper is a food safety compliance SaaS that helps food businesses with HACCP plans, SOPs, audit preparation, allergen law, and EU/UK food safety compliance.\n" +
+      "Subscription tiers:\n" +
+      `- Free: ${caps.dailyMessages} messages/day (the user is on the ${tier} plan and has used ${used} of ${caps.dailyMessages} messages today), ${caps.dailyImageUploads} image upload/day, 10 saved conversations (30-day retention), no PDF/DOCX export, no human reviews.\n` +
+      "- Plus: 100 messages/day, 3 image uploads/day, unlimited conversations, PDF export, no human reviews.\n" +
+      "- Pro: 1000 messages/day, 20 image uploads/day, unlimited conversations, PDF + DOCX export, 3 human expert review credits/month (3–5 working day turnaround).\n" +
+      "Features: AI chatbot (you), document generation (HACCP plans, SOPs, cleaning logs, supplier approval), virtual audit mode, image analysis for food safety, PDF/DOCX export, and human expert document reviews (Pro only).\n" +
+      "If asked about upgrading, direct users to the upgrade option in the sidebar or settings.\n\n" +
       "Your expertise covers:\n" +
       "- HACCP principles (Codex Alimentarius CAC/RCP 1-1969, Rev. 2003)\n" +
       "- Food hygiene law: Regulation (EC) No 852/2004, 853/2004, and their retained UK equivalents\n" +
@@ -221,35 +219,75 @@ export async function POST(request: Request) {
       "2. Never invent regulation numbers, article numbers, or legal citations. If you are not certain of a specific reference, write 'verify the exact article in the source regulation' rather than guessing.\n" +
       "3. Where EU and UK law have diverged post-Brexit, call out both positions explicitly.\n" +
       "4. If a question requires site-specific detail you do not have (e.g. specific menu, layout, volume), ask for it rather than making assumptions.\n" +
+      `5. ${languageInstruction} Keep legal references (regulation names, article numbers) in their original form.\n\n` +
+      "PERSONA:\n" + persona.promptFragment + "\n\n" +
       modeInstruction;
     temperature = mode === "audit" ? 0.0 : mode === "document" ? 0.2 : 0.1;
   }
 
-  const model = process.env.GROQ_MODEL ?? "llama-3.3-70b-versatile";
+  // Model routing: simple Q&A → 8B, complex/document/audit → 70B
+  const complexity = detectComplexity(message, mode);
+  const modelOverride = process.env.GROQ_MODEL;
+  const model = modelOverride
+    ? modelOverride
+    : complexity === "simple"
+      ? "llama-3.1-8b-instant"
+      : "llama-3.3-70b-versatile";
 
-  // Call Groq with streaming enabled
-  const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${groqKey}`,
-      "Content-Type": "application/json",
-    },
-    signal: AbortSignal.timeout(30_000),
-    body: JSON.stringify({
-      model,
-      temperature,
-      stream: true,
-      messages: [
-        { role: "system", content: systemPrompt },
-        ...history,
-        { role: "user", content: message },
-      ],
-    }),
-  });
+  const maxTokens = isAdmin ? 8192 : caps.maxResponseTokens;
 
-  if (!groqRes.ok) {
-    const details = await groqRes.text();
-    console.error("Groq API error:", details);
+  // Call Groq with streaming enabled (retry on transient errors)
+  const groqPayload = {
+    model,
+    temperature,
+    max_tokens: maxTokens,
+    stream: true,
+    messages: [
+      { role: "system", content: systemPrompt },
+      ...history,
+      { role: "user", content: message },
+    ],
+  };
+
+  let groqRes: Response | null = null;
+  const maxRetries = 3;
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    try {
+      groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${groqKey}`,
+          "Content-Type": "application/json",
+        },
+        signal: AbortSignal.timeout(30_000),
+        body: JSON.stringify(groqPayload),
+      });
+
+      // Success or non-retryable error — stop retrying
+      if (groqRes.ok || (groqRes.status < 500 && groqRes.status !== 429)) {
+        break;
+      }
+
+      // Retryable error (429, 5xx) — wait and retry
+      if (attempt < maxRetries - 1) {
+        const backoffMs = Math.pow(2, attempt) * 1000; // 1s, 2s
+        await new Promise((r) => setTimeout(r, backoffMs));
+      }
+    } catch (fetchErr) {
+      // Network error or timeout — retry
+      if (attempt < maxRetries - 1) {
+        const backoffMs = Math.pow(2, attempt) * 1000;
+        await new Promise((r) => setTimeout(r, backoffMs));
+      } else {
+        console.error("Groq API fetch failed after retries:", fetchErr);
+        return Response.json({ error: "AI service temporarily unavailable." }, { status: 502 });
+      }
+    }
+  }
+
+  if (!groqRes || !groqRes.ok) {
+    const details = groqRes ? await groqRes.text() : "No response";
+    console.error("Groq API error after retries:", details);
     return Response.json({ error: "AI service temporarily unavailable." }, { status: 502 });
   }
 
@@ -260,7 +298,7 @@ export async function POST(request: Request) {
       // Send metadata event
       controller.enqueue(
         encoder.encode(
-          `data: ${JSON.stringify({ type: "metadata", conversationId, ragEnabled })}\n\n`
+          `data: ${JSON.stringify({ type: "metadata", conversationId, ragEnabled, persona: { id: persona.id, name: persona.name } })}\n\n`
         )
       );
 
@@ -323,7 +361,7 @@ export async function POST(request: Request) {
           user_id: user.id,
           event_type: "chat_prompt",
           event_count: 1,
-          metadata: { conversation_id: conversationId, model, rag_enabled: ragEnabled, mode },
+          metadata: { conversation_id: conversationId, model, complexity, rag_enabled: ragEnabled, mode },
         });
 
         // Send final event with citations and usage

@@ -3,6 +3,8 @@ import { Manrope, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { SiteFooter, SiteHeader } from "@/components/site/chrome";
 import { CookieBanner } from "@/components/site/CookieBanner";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale, getMessages } from "next-intl/server";
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -55,14 +57,19 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const locale = await getLocale();
+  const messages = await getMessages();
+
   return (
-    <html lang="en">
+    <html lang={locale}>
       <body className={`${manrope.variable} ${spaceGrotesk.variable} antialiased`}>
-        <SiteHeader />
-        {children}
-        <SiteFooter />
-        <CookieBanner />
+        <NextIntlClientProvider messages={messages}>
+          <SiteHeader />
+          {children}
+          <SiteFooter />
+          <CookieBanner />
+        </NextIntlClientProvider>
       </body>
     </html>
   );

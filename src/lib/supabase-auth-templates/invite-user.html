@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en" style="margin:0;padding:0;">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>You've been invited to PinkPepper</title>
+  </head>
+  <body style="margin:0;padding:0;background:#f8fafc;font-family:Inter,'Segoe UI',Arial,sans-serif;">
+    <!-- Preheader -->
+    <div style="display:none;max-height:0;overflow:hidden;opacity:0;">
+      You've been invited to join PinkPepper — AI-powered food safety compliance.
+    </div>
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f8fafc;padding:24px 12px;">
+      <tr>
+        <td align="center">
+          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:600px;background:#ffffff;border:1px solid #e2e8f0;border-radius:16px;overflow:hidden;">
+            <!-- Header / Logo -->
+            <tr>
+              <td style="padding:28px 28px 18px;border-bottom:1px solid #e2e8f0;">
+                <img
+                  src="https://klzvpixfslfsrjafbwkc.supabase.co/storage/v1/object/public/assets/LogoV3.png"
+                  alt="PinkPepper"
+                  width="152"
+                  style="display:block;height:auto;border:0;"
+                />
+              </td>
+            </tr>
+            <!-- Content -->
+            <tr>
+              <td style="padding:28px;">
+                <h1 style="margin:0 0 12px;color:#0f172a;font-size:22px;line-height:30px;font-weight:700;">
+                  You've been invited to PinkPepper
+                </h1>
+                <p style="margin:0 0 14px;color:#334155;font-size:15px;line-height:24px;">
+                  Hi there,
+                </p>
+                <p style="margin:0 0 14px;color:#334155;font-size:15px;line-height:24px;">
+                  An administrator has invited you to join PinkPepper — the AI-powered food safety compliance platform. Get instant help with HACCP plans, SOPs, audit prep, and EU/UK food safety regulations.
+                </p>
+                <p style="margin:0 0 20px;color:#334155;font-size:15px;line-height:24px;">
+                  Click the button below to accept your invitation and set up your account. This link will expire in 24 hours.
+                </p>
+                <!-- CTA Button -->
+                <a
+                  href="{{ .ConfirmationURL }}"
+                  style="display:inline-block;background:#0f172a;color:#ffffff;text-decoration:none;font-weight:600;font-size:15px;padding:12px 18px;border-radius:10px;"
+                >
+                  Accept invitation
+                </a>
+                <!-- Fallback link -->
+                <p style="margin:20px 0 0;color:#64748b;font-size:13px;line-height:20px;word-break:break-all;">
+                  If the button doesn't work, copy and paste this URL into your browser:<br />
+                  <a href="{{ .ConfirmationURL }}" style="color:#334155;">{{ .ConfirmationURL }}</a>
+                </p>
+              </td>
+            </tr>
+            <!-- Footer -->
+            <tr>
+              <td style="padding:18px 28px 24px;background:#f8fafc;border-top:1px solid #e2e8f0;">
+                <p style="margin:0 0 10px;color:#64748b;font-size:12px;line-height:18px;">
+                  If you were not expecting this invitation, you can safely ignore this email.
+                </p>
+                <p style="margin:0 0 10px;color:#64748b;font-size:12px;line-height:18px;">
+                  Need help? Contact <a href="mailto:support@pinkpepper.io" style="color:#334155;">support@pinkpepper.io</a>.
+                </p>
+                <p style="margin:0 0 8px;color:#94a3b8;font-size:11px;line-height:16px;">
+                  <a href="https://pinkpepper.io" style="color:#94a3b8;text-decoration:none;">pinkpepper.io</a>
+                  &nbsp;&middot;&nbsp;
+                  <a href="https://pinkpepper.io/legal/privacy" style="color:#94a3b8;text-decoration:none;">Privacy Policy</a>
+                  &nbsp;&middot;&nbsp;
+                  <a href="https://pinkpepper.io/legal/terms" style="color:#94a3b8;text-decoration:none;">Terms of Service</a>
+                </p>
+                <p style="margin:0;color:#94a3b8;font-size:11px;line-height:16px;">
+                  &copy; 2026 PinkPepper. All rights reserved.
+                </p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

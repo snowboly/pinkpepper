@@ -8,9 +8,44 @@ import {
   buildSubscriptionActivatedEmail,
   buildSubscriptionUpdatedEmail,
   buildSubscriptionCancelledEmail,
+  buildPaymentFailedEmail,
 } from "@/lib/billing/email-templates";
 
 export const dynamic = "force-dynamic";
+
+async function handleInvoicePaymentFailed(invoice: Stripe.Invoice) {
+  const admin = createAdminClient();
+
+  const customerId =
+    typeof invoice.customer === "string" ? invoice.customer : invoice.customer?.id;
+
+  if (!customerId) return;
+
+  const { data: row } = await admin
+    .from("subscriptions")
+    .select("user_id, tier")
+    .eq("stripe_customer_id", customerId)
+    .maybeSingle();
+
+  if (!row?.user_id) return;
+
+  const { data: userData } = await admin.auth.admin.getUserById(row.user_id);
+  const email = userData?.user?.email;
+  if (!email) return;
+
+  const nextRetryDate = invoice.next_payment_attempt
+    ? new Date(invoice.next_payment_attempt * 1000).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })
+    : undefined;
+
+  await sendBillingEmail({
+    to: email,
+    ...buildPaymentFailedEmail({ tier: row.tier ?? "free", nextRetryDate }),
+  });
+}
 
 function getCurrentPeriodEndUnix(subscription: Stripe.Subscription): number | null {
   const item = subscription.items.data[0];
@@ -150,6 +185,10 @@ export async function POST(request: Request) {
       case "customer.subscription.updated":
       case "customer.subscription.deleted": {
         await syncSubscriptionFromStripe(event.data.object as Stripe.Subscription, event.type);
+        break;
+      }
+      case "invoice.payment_failed": {
+        await handleInvoicePaymentFailed(event.data.object as Stripe.Invoice);
         break;
       }
       default:

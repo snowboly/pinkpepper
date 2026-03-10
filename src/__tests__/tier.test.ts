@@ -3,7 +3,7 @@ import { TIER_CAPABILITIES, normalizeTier } from "@/lib/tier";
 
 describe("TIER_CAPABILITIES", () => {
   it("free tier has correct daily message limit", () => {
-    expect(TIER_CAPABILITIES.free.dailyMessages).toBe(25);
+    expect(TIER_CAPABILITIES.free.dailyMessages).toBe(15);
   });
 
   it("plus tier has correct daily message limit", () => {
@@ -41,6 +41,12 @@ describe("TIER_CAPABILITIES", () => {
     expect(TIER_CAPABILITIES.free.monthlyHumanReviews).toBe(0);
     expect(TIER_CAPABILITIES.plus.monthlyHumanReviews).toBe(0);
     expect(TIER_CAPABILITIES.pro.monthlyHumanReviews).toBe(3);
+  });
+
+  it("transcription limits are tiered", () => {
+    expect(TIER_CAPABILITIES.free.dailyTranscriptions).toBe(3);
+    expect(TIER_CAPABILITIES.plus.dailyTranscriptions).toBe(25);
+    expect(TIER_CAPABILITIES.pro.dailyTranscriptions).toBe(200);
   });
 });
 
