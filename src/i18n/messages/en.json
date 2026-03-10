@@ -103,6 +103,29 @@
   },
   "workspace": {
     "title": "Food Safety Compliance Assistant",
+    "actions": {
+      "eyebrow": "Premium workflows",
+      "title": "Use PinkPepper for the work operators pay for",
+      "comparePlans": "See plan differences",
+      "locked": "Locked",
+      "proOnly": "Pro only",
+      "generateDocument": {
+        "label": "Generate document",
+        "body": "Create HACCP plans, SOPs, temperature logs, and supplier approval packs faster."
+      },
+      "virtualAudit": {
+        "label": "Run virtual audit",
+        "body": "Simulate an inspection, capture findings, and produce a CAPA-ready report."
+      },
+      "requestReview": {
+        "label": "Request expert review",
+        "body": "Send the current conversation for specialist feedback before you rely on it operationally."
+      },
+      "export": {
+        "label": "Export PDF/DOCX",
+        "body": "Download the current conversation as a working document you can share or file."
+      }
+    },
     "wizards": {
       "haccpPlan": {
         "title": "HACCP Plan",
@@ -187,6 +210,10 @@
         "heading": "Unlock photo analysis",
         "body": "Upload photos of kitchens, labels, or food products and get instant food safety feedback."
       },
+      "document_generation": {
+        "heading": "Unlock document generation",
+        "body": "Create audit-ready HACCP plans, SOPs, logs, and supplier approval documents with Plus or Pro."
+      },
       "transcription_limit": {
         "heading": "Unlock voice transcription",
         "body": "Record questions hands-free and turn speech into chat instantly with Plus or Pro."
@@ -197,11 +224,11 @@
       },
       "review": {
         "heading": "Get expert review",
-        "body": "Have a qualified food safety consultant review your documents within 72 hours."
+        "body": "Have a qualified food safety specialist review your documents before you use them operationally."
       },
       "audit_mode": {
-        "heading": "Unlock Virtual Audit Mode",
-        "body": "Run a clause-by-clause virtual food safety audit with structured findings, CAPA actions, and export-ready reports."
+        "heading": "Unlock Virtual Audit",
+        "body": "Run a structured mock inspection with findings, CAPA actions, and an export-ready report."
       }
     },
     "plans": {

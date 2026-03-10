@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import type { SubscriptionTier } from "@/lib/tier";
 
 type UpgradeModalProps = {
-  trigger: "message_limit" | "image_limit" | "export" | "review" | "audit_mode" | "transcription_limit";
+  trigger: "message_limit" | "image_limit" | "export" | "review" | "audit_mode" | "transcription_limit" | "document_generation";
   currentTier: SubscriptionTier;
   onClose: () => void;
 };

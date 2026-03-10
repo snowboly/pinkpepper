@@ -105,13 +105,13 @@ begin;
 
 select count(*) as before_count
 from usage_events
-where user_id = '77a5b46a-beed-433e-a9a7-3bb11c227725'
+where user_id = 'PUT-USER-ID-HERE'
   and event_type = 'document_generation'
   and created_at >= date_trunc('day', now());
 
 insert into usage_events (user_id, event_type, event_count, metadata)
 values (
-  '77a5b46a-beed-433e-a9a7-3bb11c227725',
+  'PUT-USER-ID-HERE',
   'document_generation',
   1,
   jsonb_build_object('conversation_id', 'debug-export-test', 'format', 'pdf')
@@ -119,7 +119,7 @@ values (
 
 select count(*) as after_count
 from usage_events
-where user_id = '77a5b46a-beed-433e-a9a7-3bb11c227725'
+where user_id = 'PUT-USER-ID-HERE'
   and event_type = 'document_generation'
   and created_at >= date_trunc('day', now());
 
@@ -142,29 +142,7 @@ insert into review_requests (
   priority,
   snapshot_content
 ) values (
-  'begin;
-
-select count(*) as before_count
-from usage_events
-where user_id = '77a5b46a-beed-433e-a9a7-3bb11c227725'
-  and event_type = 'document_generation'
-  and created_at >= date_trunc('day', now());
-
-insert into usage_events (user_id, event_type, event_count, metadata)
-values (
-  '77a5b46a-beed-433e-a9a7-3bb11c227725',
-  'document_generation',
-  1,
-  jsonb_build_object('conversation_id', 'debug-export-test', 'format', 'pdf')
-);
-
-select count(*) as after_count
-from usage_events
-where user_id = '77a5b46a-beed-433e-a9a7-3bb11c227725'
-  and event_type = 'document_generation'
-  and created_at >= date_trunc('day', now());
-
-rollback;',
+  'PUT-USER-ID-HERE',
   'PUT-CONVERSATION-ID-HERE',
   'full_review',
   'full_haccp_plan',
@@ -175,29 +153,7 @@ rollback;',
 
 insert into usage_events (user_id, event_type, event_count, metadata)
 select
-  'begin;
-
-select count(*) as before_count
-from usage_events
-where user_id = '77a5b46a-beed-433e-a9a7-3bb11c227725'
-  and event_type = 'document_generation'
-  and created_at >= date_trunc('day', now());
-
-insert into usage_events (user_id, event_type, event_count, metadata)
-values (
-  '77a5b46a-beed-433e-a9a7-3bb11c227725',
-  'document_generation',
-  1,
-  jsonb_build_object('conversation_id', 'debug-export-test', 'format', 'pdf')
-);
-
-select count(*) as after_count
-from usage_events
-where user_id = '77a5b46a-beed-433e-a9a7-3bb11c227725'
-  and event_type = 'document_generation'
-  and created_at >= date_trunc('day', now());
-
-rollback;',
+  'PUT-USER-ID-HERE',
   'human_review_request',
   1,
   jsonb_build_object('review_type', 'full_review', 'debug', true)
@@ -206,29 +162,7 @@ from generate_series(1,3);
 select
   count(*) filter (where event_type = 'human_review_request') as credits_now
 from usage_events
-where user_id = 'begin;
-
-select count(*) as before_count
-from usage_events
-where user_id = '77a5b46a-beed-433e-a9a7-3bb11c227725'
-  and event_type = 'document_generation'
-  and created_at >= date_trunc('day', now());
-
-insert into usage_events (user_id, event_type, event_count, metadata)
-values (
-  '77a5b46a-beed-433e-a9a7-3bb11c227725',
-  'document_generation',
-  1,
-  jsonb_build_object('conversation_id', 'debug-export-test', 'format', 'pdf')
-);
-
-select count(*) as after_count
-from usage_events
-where user_id = '77a5b46a-beed-433e-a9a7-3bb11c227725'
-  and event_type = 'document_generation'
-  and created_at >= date_trunc('day', now());
-
-rollback;'
+where user_id = 'PUT-USER-ID-HERE'
   and created_at >= date_trunc('month', now());
 
 rollback;
