@@ -305,12 +305,21 @@ export default function ChatWorkspace({
     recordingStartedAtRef.current = null;
   }
 
+  function normalizeRecordedMimeType(mimeType: string | undefined) {
+    const normalized = (mimeType ?? "").split(";")[0]?.trim().toLowerCase();
+    if (normalized === "audio/webm" || normalized === "audio/mp4" || normalized === "audio/wav") {
+      return normalized;
+    }
+    return "audio/webm";
+  }
+
   async function transcribeAudioBlob(audioBlob: Blob, durationMs: number) {
     setIsTranscribing(true);
     setRecordingError(null);
     try {
-      const extension = audioBlob.type.includes("mp4") ? "mp4" : audioBlob.type.includes("wav") ? "wav" : "webm";
-      const audioFile = new File([audioBlob], `recording.${extension}`, { type: audioBlob.type || "audio/webm" });
+      const normalizedMimeType = normalizeRecordedMimeType(audioBlob.type);
+      const extension = normalizedMimeType === "audio/mp4" ? "mp4" : normalizedMimeType === "audio/wav" ? "wav" : "webm";
+      const audioFile = new File([audioBlob], `recording.${extension}`, { type: normalizedMimeType });
       const formData = new FormData();
       formData.append("audio", audioFile);
       formData.append("durationMs", String(durationMs));
@@ -363,7 +372,7 @@ export default function ChatWorkspace({
       recorder.onstop = () => {
         const chunks = audioChunksRef.current;
         const firstChunkType = chunks[0]?.type;
-        const blobType = recorder.mimeType || firstChunkType || "audio/webm";
+        const blobType = normalizeRecordedMimeType(recorder.mimeType || firstChunkType);
         const blob = new Blob(chunks, { type: blobType });
         const durationMs = recordingStartedAtRef.current ? Date.now() - recordingStartedAtRef.current : 0;
         cleanupRecordingStream();
