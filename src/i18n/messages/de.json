@@ -57,7 +57,15 @@
         "label": "Rückverfolgbarkeitsvorschriften",
         "text": "Welche Rückverfolgbarkeitsaufzeichnungen muss ein Lebensmittelunternehmen gemäß Regulation (EC) No 178/2002 führen?"
       }
-    }
+    },
+    "startRecording": "Start recording",
+    "stopRecording": "Stop",
+    "transcribing": "Transcribing…",
+    "recordingInProgress": "Recording… press stop when finished.",
+    "recordingUnsupported": "Voice recording is not supported in this browser.",
+    "recordingPermissionError": "Microphone access is blocked. Please allow microphone permission and try again.",
+    "transcriptionError": "We could not transcribe your recording. Please try again.",
+    "transcriptionEmptyError": "No speech was detected. Please try recording again."
   },
   "sidebar": {
     "newChat": "Neuer Chat",
@@ -195,13 +203,23 @@
       "plus": {
         "name": "Plus",
         "price": "€19/mo",
-        "highlights": ["100 Nachrichten/Tag", "3 Bild-Uploads/Tag", "PDF-Export", "Unbegrenzt gespeicherte Konversationen"],
+        "highlights": [
+          "100 Nachrichten/Tag",
+          "3 Bild-Uploads/Tag",
+          "PDF-Export",
+          "Unbegrenzt gespeicherte Konversationen"
+        ],
         "cta": "Auf Plus upgraden"
       },
       "pro": {
         "name": "Pro",
         "price": "€99/mo",
-        "highlights": ["1.000 Nachrichten/Tag", "20 Bild-Uploads/Tag", "PDF- + Word-Export", "3 Bewertungsguthaben/Monat"],
+        "highlights": [
+          "1.000 Nachrichten/Tag",
+          "20 Bild-Uploads/Tag",
+          "PDF- + Word-Export",
+          "3 Bewertungsguthaben/Monat"
+        ],
         "cta": "Auf Pro upgraden"
       }
     },
@@ -235,14 +253,38 @@
     "trackReviews": "Ihre Bewertungen verfolgen",
     "close": "Schließen",
     "categories": {
-      "async_qa": { "label": "Asynchrone Frage & Antwort", "desc": "Schriftliche Antwort auf eine spezifische Frage zur Lebensmittelsicherheit." },
-      "process_flow": { "label": "Prozessablauf-Überprüfung", "desc": "Überprüfung eines beschriebenen Produktions- oder Zubereitungsprozesses." },
-      "log_review": { "label": "Protokoll-/Aufzeichnungsprüfung", "desc": "Temperaturprotokolle, Reinigungsaufzeichnungen, Überwachungsbögen." },
-      "short_procedure": { "label": "Kurzverfahren", "desc": "Ein einzelnes SOP- oder Verfahrensdokument (ca. 1–2 Seiten)." },
-      "full_haccp_plan": { "label": "Vollständiger HACCP-Plan", "desc": "Vollständiger HACCP-Plan nach den 7 Grundsätzen mit CCP-Analyse." },
-      "ccp_review": { "label": "CCP-Überprüfung", "desc": "Gezielte Überprüfung der kritischen Kontrollpunkte." },
-      "prps_review": { "label": "PRP-Überprüfung", "desc": "Basisprogramme: Reinigung, Schädlingsbekämpfung, Lieferantenfreigabe usw." },
-      "operations_manual": { "label": "Betriebshandbuch", "desc": "Mehrteiliges Handbuch zum Lebensmittelsicherheitsmanagement." }
+      "async_qa": {
+        "label": "Asynchrone Frage & Antwort",
+        "desc": "Schriftliche Antwort auf eine spezifische Frage zur Lebensmittelsicherheit."
+      },
+      "process_flow": {
+        "label": "Prozessablauf-Überprüfung",
+        "desc": "Überprüfung eines beschriebenen Produktions- oder Zubereitungsprozesses."
+      },
+      "log_review": {
+        "label": "Protokoll-/Aufzeichnungsprüfung",
+        "desc": "Temperaturprotokolle, Reinigungsaufzeichnungen, Überwachungsbögen."
+      },
+      "short_procedure": {
+        "label": "Kurzverfahren",
+        "desc": "Ein einzelnes SOP- oder Verfahrensdokument (ca. 1–2 Seiten)."
+      },
+      "full_haccp_plan": {
+        "label": "Vollständiger HACCP-Plan",
+        "desc": "Vollständiger HACCP-Plan nach den 7 Grundsätzen mit CCP-Analyse."
+      },
+      "ccp_review": {
+        "label": "CCP-Überprüfung",
+        "desc": "Gezielte Überprüfung der kritischen Kontrollpunkte."
+      },
+      "prps_review": {
+        "label": "PRP-Überprüfung",
+        "desc": "Basisprogramme: Reinigung, Schädlingsbekämpfung, Lieferantenfreigabe usw."
+      },
+      "operations_manual": {
+        "label": "Betriebshandbuch",
+        "desc": "Mehrteiliges Handbuch zum Lebensmittelsicherheitsmanagement."
+      }
     }
   },
   "settings": {

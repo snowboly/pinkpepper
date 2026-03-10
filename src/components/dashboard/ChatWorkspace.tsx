@@ -104,6 +104,7 @@ export default function ChatWorkspace({
   onboardingCompleted = false,
 }: ChatWorkspaceProps) {
   const tw = useTranslations("workspace");
+  const tc = useTranslations("chat");
   // ── Core chat state ──
   const [messages, setMessages] = useState<Message[]>([]);
   const [prompt, setPrompt] = useState("");
@@ -140,6 +141,9 @@ export default function ChatWorkspace({
   // ── Image attachment state ──
   const [attachedImage, setAttachedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [isRecording, setIsRecording] = useState(false);
+  const [isTranscribing, setIsTranscribing] = useState(false);
+  const [recordingError, setRecordingError] = useState<string | null>(null);
 
   // ── Onboarding state ──
   const [showOnboarding, setShowOnboarding] = useState(!onboardingCompleted);
@@ -159,6 +163,10 @@ export default function ChatWorkspace({
   const typingQueueRef = useRef("");
   const typingIntervalRef = useRef<number | null>(null);
   const pendingDoneRef = useRef<{ citations?: Citation[]; usage?: StreamUsage } | null>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const mediaStreamRef = useRef<MediaStream | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
+  const recordingStartedAtRef = useRef<number | null>(null);
 
   const canUploadImages = isAdmin || dailyImageUploads > 0;
 
@@ -287,6 +295,111 @@ export default function ChatWorkspace({
   function clearImage() {
     setAttachedImage(null);
     setImagePreview(null);
+  }
+
+  function cleanupRecordingStream() {
+    mediaStreamRef.current?.getTracks().forEach((track) => track.stop());
+    mediaStreamRef.current = null;
+    mediaRecorderRef.current = null;
+    audioChunksRef.current = [];
+    recordingStartedAtRef.current = null;
+  }
+
+  async function transcribeAudioBlob(audioBlob: Blob, durationMs: number) {
+    setIsTranscribing(true);
+    setRecordingError(null);
+    try {
+      const extension = audioBlob.type.includes("mp4") ? "mp4" : audioBlob.type.includes("wav") ? "wav" : "webm";
+      const audioFile = new File([audioBlob], `recording.${extension}`, { type: audioBlob.type || "audio/webm" });
+      const formData = new FormData();
+      formData.append("audio", audioFile);
+      formData.append("durationMs", String(durationMs));
+      formData.append("language", navigator.language || "en");
+
+      const res = await fetch("/api/chat/transcribe", { method: "POST", body: formData });
+      const data = (await res.json()) as { text?: string; error?: { message?: string } };
+      if (!res.ok) {
+        throw new Error(data.error?.message ?? tc("transcriptionError"));
+      }
+
+      const transcript = (data.text ?? "").trim();
+      if (!transcript) {
+        throw new Error(tc("transcriptionEmptyError"));
+      }
+
+      setPrompt((prev) => {
+        const trimmed = prev.trimEnd();
+        return trimmed ? `${trimmed} ${transcript}` : transcript;
+      });
+      setRecordingError(null);
+    } catch {
+      setRecordingError(tc("transcriptionError"));
+    } finally {
+      setIsTranscribing(false);
+    }
+  }
+
+  async function startRecording() {
+    if (isRecording || isTranscribing) return;
+    setRecordingError(null);
+    if (typeof window === "undefined" || !navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === "undefined") {
+      setRecordingError(tc("recordingUnsupported"));
+      return;
+    }
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaStreamRef.current = stream;
+      const mimeType = ["audio/webm;codecs=opus", "audio/webm", "audio/mp4", "audio/wav"].find((candidate) =>
+        MediaRecorder.isTypeSupported(candidate)
+      );
+      const recorder = mimeType ? new MediaRecorder(stream, { mimeType }) : new MediaRecorder(stream);
+
+      audioChunksRef.current = [];
+      recorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          audioChunksRef.current.push(event.data);
+        }
+      };
+      recorder.onstop = () => {
+        const chunks = audioChunksRef.current;
+        const firstChunkType = chunks[0]?.type;
+        const blobType = recorder.mimeType || firstChunkType || "audio/webm";
+        const blob = new Blob(chunks, { type: blobType });
+        const durationMs = recordingStartedAtRef.current ? Date.now() - recordingStartedAtRef.current : 0;
+        cleanupRecordingStream();
+        if (blob.size > 0) {
+          void transcribeAudioBlob(blob, durationMs);
+        } else {
+          setRecordingError(tc("transcriptionEmptyError"));
+        }
+      };
+
+      mediaRecorderRef.current = recorder;
+      recordingStartedAtRef.current = Date.now();
+      recorder.start();
+      setIsRecording(true);
+    } catch {
+      cleanupRecordingStream();
+      setRecordingError(tc("recordingPermissionError"));
+    }
+  }
+
+  function stopRecording() {
+    const recorder = mediaRecorderRef.current;
+    if (!recorder || recorder.state !== "recording") return;
+    setIsRecording(false);
+    recorder.stop();
+  }
+
+  function cancelRecording() {
+    const recorder = mediaRecorderRef.current;
+    if (recorder && recorder.state === "recording") {
+      recorder.onstop = null;
+      recorder.stop();
+    }
+    setIsRecording(false);
+    setRecordingError(null);
+    cleanupRecordingStream();
   }
 
   // ── Billing ──
@@ -890,6 +1003,17 @@ export default function ChatWorkspace({
     return () => clearTypingInterval();
   }, [clearTypingInterval]);
 
+  useEffect(() => {
+    return () => {
+      const recorder = mediaRecorderRef.current;
+      if (recorder && recorder.state === "recording") {
+        recorder.onstop = null;
+        recorder.stop();
+      }
+      cleanupRecordingStream();
+    };
+  }, []);
+
   // ── Render ──
   return (
     <>
@@ -1075,11 +1199,17 @@ export default function ChatWorkspace({
             attachedImage={attachedImage}
             imagePreview={imagePreview}
             canUploadImages={canUploadImages}
+            isRecording={isRecording}
+            isTranscribing={isTranscribing}
+            recordingError={recordingError}
             onPromptChange={setPrompt}
             onSubmit={sendPrompt}
             onStop={() => abortControllerRef.current?.abort()}
             onImageSelect={handleImageSelect}
             onClearImage={clearImage}
+            onStartRecording={() => void startRecording()}
+            onStopRecording={stopRecording}
+            onCancelRecording={cancelRecording}
             onKeyDown={handleKeyDown}
             textareaRef={textareaRef}
             onUpgradeForImages={() => setUpgradeModalTrigger("image_limit")}

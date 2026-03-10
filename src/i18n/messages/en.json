@@ -57,7 +57,15 @@
         "label": "Traceability rules",
         "text": "What traceability records must a food business keep under Regulation (EC) No 178/2002?"
       }
-    }
+    },
+    "startRecording": "Start recording",
+    "stopRecording": "Stop",
+    "transcribing": "Transcribing…",
+    "recordingInProgress": "Recording… press stop when finished.",
+    "recordingUnsupported": "Voice recording is not supported in this browser.",
+    "recordingPermissionError": "Microphone access is blocked. Please allow microphone permission and try again.",
+    "transcriptionError": "We could not transcribe your recording. Please try again.",
+    "transcriptionEmptyError": "No speech was detected. Please try recording again."
   },
   "sidebar": {
     "newChat": "New chat",
@@ -195,13 +203,23 @@
       "plus": {
         "name": "Plus",
         "price": "€19/mo",
-        "highlights": ["100 messages/day", "3 image uploads/day", "PDF export", "Unlimited saved conversations"],
+        "highlights": [
+          "100 messages/day",
+          "3 image uploads/day",
+          "PDF export",
+          "Unlimited saved conversations"
+        ],
         "cta": "Upgrade to Plus"
       },
       "pro": {
         "name": "Pro",
         "price": "€99/mo",
-        "highlights": ["1,000 messages/day", "20 image uploads/day", "PDF + Word export", "3 review credits/month"],
+        "highlights": [
+          "1,000 messages/day",
+          "20 image uploads/day",
+          "PDF + Word export",
+          "3 review credits/month"
+        ],
         "cta": "Upgrade to Pro"
       }
     },
@@ -235,14 +253,38 @@
     "trackReviews": "Track your reviews",
     "close": "Close",
     "categories": {
-      "async_qa": { "label": "Async Q&A", "desc": "Written answer to a specific food safety question." },
-      "process_flow": { "label": "Process Flow Review", "desc": "Review of a described production or preparation process." },
-      "log_review": { "label": "Log / Record Review", "desc": "Temperature logs, cleaning records, monitoring sheets." },
-      "short_procedure": { "label": "Short Procedure", "desc": "A single SOP or procedure document (approx. 1–2 pages)." },
-      "full_haccp_plan": { "label": "Full HACCP Plan", "desc": "Complete 7-principle HACCP plan with CCP analysis." },
-      "ccp_review": { "label": "CCP Review", "desc": "Focused review of critical control points." },
-      "prps_review": { "label": "PRPs Review", "desc": "Prerequisite programmes: cleaning, pest control, supplier approval, etc." },
-      "operations_manual": { "label": "Operations Manual", "desc": "Multi-section food safety management manual." }
+      "async_qa": {
+        "label": "Async Q&A",
+        "desc": "Written answer to a specific food safety question."
+      },
+      "process_flow": {
+        "label": "Process Flow Review",
+        "desc": "Review of a described production or preparation process."
+      },
+      "log_review": {
+        "label": "Log / Record Review",
+        "desc": "Temperature logs, cleaning records, monitoring sheets."
+      },
+      "short_procedure": {
+        "label": "Short Procedure",
+        "desc": "A single SOP or procedure document (approx. 1–2 pages)."
+      },
+      "full_haccp_plan": {
+        "label": "Full HACCP Plan",
+        "desc": "Complete 7-principle HACCP plan with CCP analysis."
+      },
+      "ccp_review": {
+        "label": "CCP Review",
+        "desc": "Focused review of critical control points."
+      },
+      "prps_review": {
+        "label": "PRPs Review",
+        "desc": "Prerequisite programmes: cleaning, pest control, supplier approval, etc."
+      },
+      "operations_manual": {
+        "label": "Operations Manual",
+        "desc": "Multi-section food safety management manual."
+      }
     }
   },
   "settings": {

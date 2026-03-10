@@ -57,7 +57,15 @@
         "label": "Règles de traçabilité",
         "text": "Quels registres de traçabilité une entreprise alimentaire doit-elle conserver en vertu du Regulation (EC) No 178/2002 ?"
       }
-    }
+    },
+    "startRecording": "Start recording",
+    "stopRecording": "Stop",
+    "transcribing": "Transcribing…",
+    "recordingInProgress": "Recording… press stop when finished.",
+    "recordingUnsupported": "Voice recording is not supported in this browser.",
+    "recordingPermissionError": "Microphone access is blocked. Please allow microphone permission and try again.",
+    "transcriptionError": "We could not transcribe your recording. Please try again.",
+    "transcriptionEmptyError": "No speech was detected. Please try recording again."
   },
   "sidebar": {
     "newChat": "Nouvelle conversation",
@@ -195,13 +203,23 @@
       "plus": {
         "name": "Plus",
         "price": "€19/mo",
-        "highlights": ["100 messages/jour", "3 photos/jour", "Export PDF", "Conversations sauvegardées illimitées"],
+        "highlights": [
+          "100 messages/jour",
+          "3 photos/jour",
+          "Export PDF",
+          "Conversations sauvegardées illimitées"
+        ],
         "cta": "Passer à Plus"
       },
       "pro": {
         "name": "Pro",
         "price": "€99/mo",
-        "highlights": ["1 000 messages/jour", "20 photos/jour", "Export PDF + Word", "3 crédits d'avis/mois"],
+        "highlights": [
+          "1 000 messages/jour",
+          "20 photos/jour",
+          "Export PDF + Word",
+          "3 crédits d'avis/mois"
+        ],
         "cta": "Passer à Pro"
       }
     },
@@ -235,14 +253,38 @@
     "trackReviews": "Suivre vos avis",
     "close": "Fermer",
     "categories": {
-      "async_qa": { "label": "Q&R asynchrone", "desc": "Réponse écrite à une question spécifique de sécurité alimentaire." },
-      "process_flow": { "label": "Revue du diagramme de flux", "desc": "Examen d'un processus de production ou de préparation décrit." },
-      "log_review": { "label": "Revue des registres", "desc": "Registres de températures, enregistrements de nettoyage, fiches de suivi." },
-      "short_procedure": { "label": "Procédure courte", "desc": "Une POS ou procédure unique (environ 1 à 2 pages)." },
-      "full_haccp_plan": { "label": "Plan HACCP complet", "desc": "Plan HACCP complet selon les 7 principes avec analyse des CCP." },
-      "ccp_review": { "label": "Revue des CCP", "desc": "Examen ciblé des points critiques pour la maîtrise." },
-      "prps_review": { "label": "Revue des PRP", "desc": "Programmes prérequis : nettoyage, lutte contre les nuisibles, agrément des fournisseurs, etc." },
-      "operations_manual": { "label": "Manuel opérationnel", "desc": "Manuel de gestion de la sécurité alimentaire multi-sections." }
+      "async_qa": {
+        "label": "Q&R asynchrone",
+        "desc": "Réponse écrite à une question spécifique de sécurité alimentaire."
+      },
+      "process_flow": {
+        "label": "Revue du diagramme de flux",
+        "desc": "Examen d'un processus de production ou de préparation décrit."
+      },
+      "log_review": {
+        "label": "Revue des registres",
+        "desc": "Registres de températures, enregistrements de nettoyage, fiches de suivi."
+      },
+      "short_procedure": {
+        "label": "Procédure courte",
+        "desc": "Une POS ou procédure unique (environ 1 à 2 pages)."
+      },
+      "full_haccp_plan": {
+        "label": "Plan HACCP complet",
+        "desc": "Plan HACCP complet selon les 7 principes avec analyse des CCP."
+      },
+      "ccp_review": {
+        "label": "Revue des CCP",
+        "desc": "Examen ciblé des points critiques pour la maîtrise."
+      },
+      "prps_review": {
+        "label": "Revue des PRP",
+        "desc": "Programmes prérequis : nettoyage, lutte contre les nuisibles, agrément des fournisseurs, etc."
+      },
+      "operations_manual": {
+        "label": "Manuel opérationnel",
+        "desc": "Manuel de gestion de la sécurité alimentaire multi-sections."
+      }
     }
   },
   "settings": {

@@ -57,7 +57,15 @@
         "label": "Norme sulla tracciabilità",
         "text": "Quali registrazioni di tracciabilità deve conservare un'impresa alimentare ai sensi del Regulation (EC) No 178/2002?"
       }
-    }
+    },
+    "startRecording": "Start recording",
+    "stopRecording": "Stop",
+    "transcribing": "Transcribing…",
+    "recordingInProgress": "Recording… press stop when finished.",
+    "recordingUnsupported": "Voice recording is not supported in this browser.",
+    "recordingPermissionError": "Microphone access is blocked. Please allow microphone permission and try again.",
+    "transcriptionError": "We could not transcribe your recording. Please try again.",
+    "transcriptionEmptyError": "No speech was detected. Please try recording again."
   },
   "sidebar": {
     "newChat": "Nuova chat",
@@ -195,13 +203,23 @@
       "plus": {
         "name": "Plus",
         "price": "€19/mo",
-        "highlights": ["100 messaggi/giorno", "3 caricamenti foto/giorno", "Esportazione PDF", "Conversazioni salvate illimitate"],
+        "highlights": [
+          "100 messaggi/giorno",
+          "3 caricamenti foto/giorno",
+          "Esportazione PDF",
+          "Conversazioni salvate illimitate"
+        ],
         "cta": "Passa a Plus"
       },
       "pro": {
         "name": "Pro",
         "price": "€99/mo",
-        "highlights": ["1.000 messaggi/giorno", "20 caricamenti foto/giorno", "Esportazione PDF + Word", "3 crediti revisione/mese"],
+        "highlights": [
+          "1.000 messaggi/giorno",
+          "20 caricamenti foto/giorno",
+          "Esportazione PDF + Word",
+          "3 crediti revisione/mese"
+        ],
         "cta": "Passa a Pro"
       }
     },
@@ -235,14 +253,38 @@
     "trackReviews": "Monitora le tue revisioni",
     "close": "Chiudi",
     "categories": {
-      "async_qa": { "label": "Q&A Asincrono", "desc": "Risposta scritta a una specifica domanda sulla sicurezza alimentare." },
-      "process_flow": { "label": "Revisione del Flusso di Processo", "desc": "Revisione di un processo produttivo o di preparazione descritto." },
-      "log_review": { "label": "Revisione Registri", "desc": "Registri delle temperature, registrazioni di pulizia, schede di monitoraggio." },
-      "short_procedure": { "label": "Procedura Breve", "desc": "Una singola SOP o documento di procedura (circa 1–2 pagine)." },
-      "full_haccp_plan": { "label": "Piano HACCP Completo", "desc": "Piano HACCP completo basato sui 7 principi con analisi dei CCP." },
-      "ccp_review": { "label": "Revisione CCP", "desc": "Revisione mirata dei punti critici di controllo." },
-      "prps_review": { "label": "Revisione PRP", "desc": "Programmi di prerequisiti: pulizia, controllo infestanti, approvazione fornitori, ecc." },
-      "operations_manual": { "label": "Manuale Operativo", "desc": "Manuale di gestione della sicurezza alimentare composto da più sezioni." }
+      "async_qa": {
+        "label": "Q&A Asincrono",
+        "desc": "Risposta scritta a una specifica domanda sulla sicurezza alimentare."
+      },
+      "process_flow": {
+        "label": "Revisione del Flusso di Processo",
+        "desc": "Revisione di un processo produttivo o di preparazione descritto."
+      },
+      "log_review": {
+        "label": "Revisione Registri",
+        "desc": "Registri delle temperature, registrazioni di pulizia, schede di monitoraggio."
+      },
+      "short_procedure": {
+        "label": "Procedura Breve",
+        "desc": "Una singola SOP o documento di procedura (circa 1–2 pagine)."
+      },
+      "full_haccp_plan": {
+        "label": "Piano HACCP Completo",
+        "desc": "Piano HACCP completo basato sui 7 principi con analisi dei CCP."
+      },
+      "ccp_review": {
+        "label": "Revisione CCP",
+        "desc": "Revisione mirata dei punti critici di controllo."
+      },
+      "prps_review": {
+        "label": "Revisione PRP",
+        "desc": "Programmi di prerequisiti: pulizia, controllo infestanti, approvazione fornitori, ecc."
+      },
+      "operations_manual": {
+        "label": "Manuale Operativo",
+        "desc": "Manuale di gestione della sicurezza alimentare composto da più sezioni."
+      }
     }
   },
   "settings": {
