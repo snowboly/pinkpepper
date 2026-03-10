@@ -11,13 +11,23 @@ export async function POST() {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
   }
 
-  // Only send if the account was confirmed within the last 60 seconds
-  if (user.email_confirmed_at) {
-    const confirmedAt = new Date(user.email_confirmed_at).getTime();
-    if (Date.now() - confirmedAt < 60_000) {
-      sendEmail({ to: user.email, ...buildWelcomeEmail() }).catch(console.error);
-    }
+  if (!user.email_confirmed_at) {
+    return NextResponse.json({ ok: true });
   }
+
+  const welcomeEmailSentAt = user.user_metadata?.welcome_email_sent_at;
+  if (welcomeEmailSentAt) {
+    return NextResponse.json({ ok: true });
+  }
+
+  await sendEmail({ to: user.email, ...buildWelcomeEmail() });
+
+  await supabase.auth.updateUser({
+    data: {
+      ...(user.user_metadata ?? {}),
+      welcome_email_sent_at: new Date().toISOString(),
+    },
+  });
 
   return NextResponse.json({ ok: true });
 }

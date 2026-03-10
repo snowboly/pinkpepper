@@ -65,7 +65,7 @@ export default function LoginPage() {
       const origin = process.env.NEXT_PUBLIC_SITE_URL ?? window.location.origin;
       const { error: otpError } = await supabase.auth.signInWithOtp({
         email,
-        options: { emailRedirectTo: `${origin}/auth/confirm?next=${nextPath}` },
+        options: { emailRedirectTo: `${origin}/auth/confirm?next=${nextPath}&flow=login` },
       });
       if (otpError) {
         setError(otpError.message);
