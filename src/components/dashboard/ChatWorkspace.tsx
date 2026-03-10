@@ -161,6 +161,10 @@ export default function ChatWorkspace({
   // ── Image attachment state ──
   const [attachedImage, setAttachedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+
+  // ── Document attachment state ──
+  const [attachedDocument, setAttachedDocument] = useState<File | null>(null);
+
   const [isRecording, setIsRecording] = useState(false);
   const [isTranscribing, setIsTranscribing] = useState(false);
   const [recordingError, setRecordingError] = useState<string | null>(null);
@@ -666,6 +670,7 @@ export default function ChatWorkspace({
     setMessages([]);
     setReviewRequests([]);
     clearImage();
+    setAttachedDocument(null);
     setError(null);
   }
 
@@ -847,7 +852,35 @@ export default function ChatWorkspace({
 
     const currentImage = attachedImage;
     const currentImagePreview = imagePreview;
+    const currentDocument = attachedDocument;
     clearImage();
+    setAttachedDocument(null);
+
+    // Document uploads: send to /api/documents/upload for text extraction + embedding storage
+    if (currentDocument) {
+      try {
+        const fd = new FormData();
+        fd.append("file", currentDocument);
+        const res = await fetch("/api/documents/upload", { method: "POST", body: fd });
+        const data = (await res.json()) as { chunksStored?: number; warning?: string; error?: string };
+        if (res.ok && (data.chunksStored ?? 0) > 0) {
+          pushAssistantMessage(
+            `I've processed **${currentDocument.name}** and indexed ${data.chunksStored} text chunks. I'll use the content of this document to inform my answers. What would you like to know?`
+          );
+          setLoading(false);
+          return;
+        } else if (data.warning) {
+          pushAssistantMessage(`I received **${currentDocument.name}** but couldn't extract its text (${data.warning}). Please try a plain text or supported file format.`);
+          setLoading(false);
+          return;
+        }
+      } catch (e) {
+        console.error("Document upload error:", e);
+        pushAssistantMessage("Sorry, there was an error processing your document. Please try again.");
+        setLoading(false);
+        return;
+      }
+    }
 
     // Image uploads use the existing JSON endpoint
     if (currentImage) {
@@ -1259,6 +1292,7 @@ export default function ChatWorkspace({
             attachedImage={attachedImage}
             imagePreview={imagePreview}
             canUploadImages={canUploadImages}
+            attachedDocument={attachedDocument}
             isRecording={isRecording}
             isTranscribing={isTranscribing}
             recordingError={recordingError}
@@ -1267,6 +1301,8 @@ export default function ChatWorkspace({
             onStop={() => abortControllerRef.current?.abort()}
             onImageSelect={handleImageSelect}
             onClearImage={clearImage}
+            onDocumentSelect={(f) => setAttachedDocument(f)}
+            onClearDocument={() => setAttachedDocument(null)}
             onStartRecording={() => void startRecording()}
             onStopRecording={stopRecording}
             onCancelRecording={cancelRecording}

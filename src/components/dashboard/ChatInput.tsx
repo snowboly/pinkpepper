@@ -11,6 +11,7 @@ type ChatInputProps = {
   attachedImage: File | null;
   imagePreview: string | null;
   canUploadImages: boolean;
+  attachedDocument: File | null;
   isRecording: boolean;
   isTranscribing: boolean;
   recordingError: string | null;
@@ -19,6 +20,8 @@ type ChatInputProps = {
   onStop: () => void;
   onImageSelect: (f: File) => void;
   onClearImage: () => void;
+  onDocumentSelect: (f: File) => void;
+  onClearDocument: () => void;
   onStartRecording: () => void;
   onStopRecording: () => void;
   onCancelRecording: () => void;
@@ -34,6 +37,7 @@ export default function ChatInput({
   attachedImage,
   imagePreview,
   canUploadImages,
+  attachedDocument,
   isRecording,
   isTranscribing,
   recordingError,
@@ -42,6 +46,8 @@ export default function ChatInput({
   onStop,
   onImageSelect,
   onClearImage,
+  onDocumentSelect,
+  onClearDocument,
   onStartRecording,
   onStopRecording,
   onCancelRecording,
@@ -52,6 +58,7 @@ export default function ChatInput({
 }: ChatInputProps) {
   const t = useTranslations("chat");
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const docInputRef = useRef<HTMLInputElement>(null);
 
   const resizeTextarea = useCallback(() => {
     const el = textareaRef.current;
@@ -98,6 +105,20 @@ export default function ChatInput({
           </div>
         )}
 
+        {attachedDocument && (
+          <div className="mb-2 flex items-center gap-2 rounded-lg border border-[#E2E8F0] bg-[#F8F9FB] px-3 py-2">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 flex-shrink-0 text-[#64748B]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <span className="min-w-0 flex-1 truncate text-sm text-[#0F172A]">{attachedDocument.name}</span>
+            <button type="button" onClick={onClearDocument} className="ml-1 flex-shrink-0 text-[#9CA3AF] hover:text-[#E11D48] transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        )}
+
         <form onSubmit={onSubmit} className="flex items-end gap-2">
           <input
             ref={fileInputRef}
@@ -107,6 +128,17 @@ export default function ChatInput({
             onChange={(e) => {
               const f = e.target.files?.[0];
               if (f) onImageSelect(f);
+            }}
+          />
+          <input
+            ref={docInputRef}
+            type="file"
+            accept=".pdf,.docx,.txt,.md,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain,text/markdown"
+            className="hidden"
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              if (f) onDocumentSelect(f);
+              e.target.value = "";
             }}
           />
 
@@ -136,6 +168,18 @@ export default function ChatInput({
               </span>
             </button>
           )}
+
+          <button
+            type="button"
+            onClick={() => docInputRef.current?.click()}
+            disabled={loading}
+            className="flex-shrink-0 rounded-xl border border-[#E2E8F0] bg-white p-2.5 text-[#64748B] hover:bg-[#F8F9FB] hover:text-[#0F172A] transition-colors h-[44px] w-[44px] flex items-center justify-center disabled:cursor-not-allowed disabled:opacity-60"
+            title={t("attachDocumentTitle")}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+          </button>
 
           <button
             type="button"
@@ -222,7 +266,7 @@ export default function ChatInput({
           ) : (
             <button
               type="submit"
-              disabled={!prompt.trim() && !attachedImage}
+              disabled={!prompt.trim() && !attachedImage && !attachedDocument}
               className="flex-shrink-0 rounded-xl bg-[#E11D48] p-2.5 text-white hover:bg-[#BE123C] disabled:opacity-40 disabled:cursor-not-allowed transition-colors h-[44px] w-[44px] flex items-center justify-center"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

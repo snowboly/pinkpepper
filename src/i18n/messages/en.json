@@ -13,6 +13,7 @@
     "attachedPhoto": "Attached photo",
     "imageAnalysisNote": "{name} - food safety analysis will be performed on this photo.",
     "attachPhotoTitle": "Attach a photo for food safety analysis",
+    "attachDocumentTitle": "Attach a document (PDF, DOCX, TXT)",
     "upgradePhotoTitle": "Upgrade to Plus or Pro to analyse photos",
     "upgradePhotoTooltip": "Upgrade for photo analysis",
     "photoNote": "Add a note about this photo (optional)...",

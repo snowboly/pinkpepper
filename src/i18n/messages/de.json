@@ -13,6 +13,7 @@
     "attachedPhoto": "Angehängtes Foto",
     "imageAnalysisNote": "{name} – dieses Foto wird einer Lebensmittelsicherheitsanalyse unterzogen.",
     "attachPhotoTitle": "Foto für Lebensmittelsicherheitsanalyse anhängen",
+    "attachDocumentTitle": "Attach a document (PDF, DOCX, TXT)",
     "upgradePhotoTitle": "Upgraden Sie auf Plus oder Pro, um Fotos zu analysieren",
     "upgradePhotoTooltip": "Upgrade für Fotoanalyse",
     "photoNote": "Notiz zu diesem Foto hinzufügen (optional)...",
