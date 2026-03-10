@@ -11,11 +11,17 @@ type ChatInputProps = {
   attachedImage: File | null;
   imagePreview: string | null;
   canUploadImages: boolean;
+  isRecording: boolean;
+  isTranscribing: boolean;
+  recordingError: string | null;
   onPromptChange: (s: string) => void;
   onSubmit: (e: FormEvent) => void;
   onStop: () => void;
   onImageSelect: (f: File) => void;
   onClearImage: () => void;
+  onStartRecording: () => void;
+  onStopRecording: () => void;
+  onCancelRecording: () => void;
   onKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
   textareaRef: React.RefObject<HTMLTextAreaElement | null>;
   onUpgradeForImages?: () => void;
@@ -28,11 +34,17 @@ export default function ChatInput({
   attachedImage,
   imagePreview,
   canUploadImages,
+  isRecording,
+  isTranscribing,
+  recordingError,
   onPromptChange,
   onSubmit,
   onStop,
   onImageSelect,
   onClearImage,
+  onStartRecording,
+  onStopRecording,
+  onCancelRecording,
   onKeyDown,
   textareaRef,
   onUpgradeForImages,
@@ -125,6 +137,51 @@ export default function ChatInput({
             </button>
           )}
 
+          <button
+            type="button"
+            onClick={isRecording ? onStopRecording : onStartRecording}
+            onKeyDown={(e) => {
+              if (e.key === "Escape" && isRecording) {
+                e.preventDefault();
+                onCancelRecording();
+              }
+            }}
+            disabled={loading || isTranscribing}
+            aria-label={
+              isTranscribing
+                ? t("transcribing")
+                : isRecording
+                ? t("stopRecording")
+                : t("startRecording")
+            }
+            title={
+              isTranscribing
+                ? t("transcribing")
+                : isRecording
+                ? t("stopRecording")
+                : t("startRecording")
+            }
+            className={`flex-shrink-0 rounded-xl border p-2.5 transition-colors h-[44px] w-[44px] flex items-center justify-center disabled:cursor-not-allowed disabled:opacity-60 ${
+              isTranscribing
+                ? "border-[#FDBA74] bg-[#FFF7ED] text-[#C2410C]"
+                : isRecording
+                ? "border-[#E11D48] bg-[#FEF2F2] text-[#BE123C]"
+                : "border-[#E2E8F0] bg-white text-[#64748B] hover:bg-[#F8F9FB] hover:text-[#0F172A]"
+            }`}
+          >
+            {isTranscribing ? (
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4.75 12a7.25 7.25 0 017.25-7.25M19.25 12A7.25 7.25 0 0112 19.25" />
+              </svg>
+            ) : (
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4a3 3 0 00-3 3v5a3 3 0 106 0V7a3 3 0 00-3-3z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 11a7 7 0 11-14 0" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 18v3" />
+              </svg>
+            )}
+          </button>
+
           <div className="relative flex-1">
             <textarea
               ref={textareaRef}
@@ -174,6 +231,15 @@ export default function ChatInput({
             </button>
           )}
         </form>
+        <div className="mt-1 min-h-[18px] pl-1 text-xs">
+          {isRecording ? (
+            <span className="text-[#BE123C]">{t("recordingInProgress")}</span>
+          ) : isTranscribing ? (
+            <span className="text-[#C2410C]">{t("transcribing")}</span>
+          ) : recordingError ? (
+            <span className="text-[#E11D48]">{recordingError}</span>
+          ) : null}
+        </div>
 
       </div>
     </div>

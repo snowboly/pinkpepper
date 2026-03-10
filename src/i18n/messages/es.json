@@ -57,7 +57,15 @@
         "label": "Normas de trazabilidad",
         "text": "¿Qué registros de trazabilidad debe mantener una empresa alimentaria según el Regulation (EC) No 178/2002?"
       }
-    }
+    },
+    "startRecording": "Start recording",
+    "stopRecording": "Stop",
+    "transcribing": "Transcribing…",
+    "recordingInProgress": "Recording… press stop when finished.",
+    "recordingUnsupported": "Voice recording is not supported in this browser.",
+    "recordingPermissionError": "Microphone access is blocked. Please allow microphone permission and try again.",
+    "transcriptionError": "We could not transcribe your recording. Please try again.",
+    "transcriptionEmptyError": "No speech was detected. Please try recording again."
   },
   "sidebar": {
     "newChat": "Nuevo chat",
@@ -195,13 +203,23 @@
       "plus": {
         "name": "Plus",
         "price": "€19/mo",
-        "highlights": ["100 mensajes/día", "3 subidas de imágenes/día", "Exportación PDF", "Conversaciones guardadas ilimitadas"],
+        "highlights": [
+          "100 mensajes/día",
+          "3 subidas de imágenes/día",
+          "Exportación PDF",
+          "Conversaciones guardadas ilimitadas"
+        ],
         "cta": "Actualizar a Plus"
       },
       "pro": {
         "name": "Pro",
         "price": "€99/mo",
-        "highlights": ["1.000 mensajes/día", "20 subidas de imágenes/día", "Exportación PDF + Word", "3 créditos de revisión/mes"],
+        "highlights": [
+          "1.000 mensajes/día",
+          "20 subidas de imágenes/día",
+          "Exportación PDF + Word",
+          "3 créditos de revisión/mes"
+        ],
         "cta": "Actualizar a Pro"
       }
     },
@@ -235,14 +253,38 @@
     "trackReviews": "Seguir tus revisiones",
     "close": "Cerrar",
     "categories": {
-      "async_qa": { "label": "Consulta Asíncrona", "desc": "Respuesta escrita a una pregunta específica de seguridad alimentaria." },
-      "process_flow": { "label": "Revisión de Flujo de Proceso", "desc": "Revisión de un proceso de producción o preparación descrito." },
-      "log_review": { "label": "Revisión de Registros", "desc": "Registros de temperatura, registros de limpieza, hojas de seguimiento." },
-      "short_procedure": { "label": "Procedimiento Corto", "desc": "Un único POE o documento de procedimiento (aprox. 1–2 páginas)." },
-      "full_haccp_plan": { "label": "Plan HACCP Completo", "desc": "Plan HACCP completo de 7 principios con análisis de PCC." },
-      "ccp_review": { "label": "Revisión de PCC", "desc": "Revisión enfocada en los puntos de control crítico." },
-      "prps_review": { "label": "Revisión de Prerrequisitos", "desc": "Programas de prerrequisitos: limpieza, control de plagas, aprobación de proveedores, etc." },
-      "operations_manual": { "label": "Manual de Operaciones", "desc": "Manual de gestión de seguridad alimentaria con múltiples secciones." }
+      "async_qa": {
+        "label": "Consulta Asíncrona",
+        "desc": "Respuesta escrita a una pregunta específica de seguridad alimentaria."
+      },
+      "process_flow": {
+        "label": "Revisión de Flujo de Proceso",
+        "desc": "Revisión de un proceso de producción o preparación descrito."
+      },
+      "log_review": {
+        "label": "Revisión de Registros",
+        "desc": "Registros de temperatura, registros de limpieza, hojas de seguimiento."
+      },
+      "short_procedure": {
+        "label": "Procedimiento Corto",
+        "desc": "Un único POE o documento de procedimiento (aprox. 1–2 páginas)."
+      },
+      "full_haccp_plan": {
+        "label": "Plan HACCP Completo",
+        "desc": "Plan HACCP completo de 7 principios con análisis de PCC."
+      },
+      "ccp_review": {
+        "label": "Revisión de PCC",
+        "desc": "Revisión enfocada en los puntos de control crítico."
+      },
+      "prps_review": {
+        "label": "Revisión de Prerrequisitos",
+        "desc": "Programas de prerrequisitos: limpieza, control de plagas, aprobación de proveedores, etc."
+      },
+      "operations_manual": {
+        "label": "Manual de Operaciones",
+        "desc": "Manual de gestión de seguridad alimentaria con múltiples secciones."
+      }
     }
   },
   "settings": {
