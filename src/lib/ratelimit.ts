@@ -34,6 +34,7 @@ export const chatBurstLimiter = { _cfg: { max: 5,  window: "30 s" as const, pref
 export const visionLimiter    = { _cfg: { max: 5,  window: "1 m" as const, prefix: "rl:vision" } };
 export const exportLimiter    = { _cfg: { max: 5,  window: "1 m" as const, prefix: "rl:export" } };
 export const billingLimiter   = { _cfg: { max: 5,  window: "1 m" as const, prefix: "rl:billing" } };
+export const transcribeLimiter = { _cfg: { max: 6,  window: "1 m" as const, prefix: "rl:transcribe" } };
 
 type LazyLimiter = { _cfg: LimiterConfig };
 

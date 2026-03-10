@@ -4,6 +4,7 @@ export type TierCapabilities = {
   dailyMessages: number;
   dailyDocumentGenerations: number;
   dailyImageUploads: number;
+  dailyTranscriptions: number;
   maxSavedConversations: number | null;
   conversationRetentionDays: number | null;
   allowPdfExport: boolean;
@@ -20,6 +21,7 @@ export const TIER_CAPABILITIES: Record<SubscriptionTier, TierCapabilities> = {
     dailyMessages: 15,
     dailyDocumentGenerations: 0,
     dailyImageUploads: 1,
+    dailyTranscriptions: 3,
     maxSavedConversations: 10,
     conversationRetentionDays: 30,
     allowPdfExport: false,
@@ -33,6 +35,7 @@ export const TIER_CAPABILITIES: Record<SubscriptionTier, TierCapabilities> = {
     dailyMessages: 100,
     dailyDocumentGenerations: 3,
     dailyImageUploads: 3,
+    dailyTranscriptions: 25,
     maxSavedConversations: null,
     conversationRetentionDays: null,
     allowPdfExport: true,
@@ -46,6 +49,7 @@ export const TIER_CAPABILITIES: Record<SubscriptionTier, TierCapabilities> = {
     dailyMessages: 1000,
     dailyDocumentGenerations: 20,
     dailyImageUploads: 20,
+    dailyTranscriptions: 200,
     maxSavedConversations: null,
     conversationRetentionDays: null,
     allowPdfExport: true,

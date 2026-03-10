@@ -1,5 +1,9 @@
 import { NextResponse } from "next/server";
 import { createClient as createSupabaseServer } from "@/utils/supabase/server";
+import { resolveUserAccess } from "@/lib/access";
+import { TIER_CAPABILITIES } from "@/lib/tier";
+import { countUsageSince, utcDayStartIso } from "@/lib/policy";
+import { checkRateLimit, transcribeLimiter } from "@/lib/ratelimit";
 
 export const dynamic = "force-dynamic";
 
@@ -14,10 +18,13 @@ type ErrorCode =
   | "MISSING_AUDIO"
   | "UNSUPPORTED_FORMAT"
   | "AUDIO_TOO_LARGE"
+  | "PLAN_UPGRADE_REQUIRED"
   | "NOT_CONFIGURED"
+  | "USAGE_READ_FAILED"
+  | "USAGE_WRITE_FAILED"
   | "PROVIDER_FAILURE";
 
-function errorResponse(status: number, code: ErrorCode, message: string, details?: string) {
+function errorResponse(status: number, code: ErrorCode, message: string, details?: string, usage?: unknown) {
   return NextResponse.json(
     {
       error: {
@@ -25,6 +32,7 @@ function errorResponse(status: number, code: ErrorCode, message: string, details
         message,
         ...(details ? { details } : {}),
       },
+      ...(usage ? { usage } : {}),
     },
     { status }
   );
@@ -39,6 +47,53 @@ export async function POST(request: Request) {
 
   if (userError || !user) {
     return errorResponse(401, "UNAUTHORIZED", "Unauthorized");
+  }
+
+  const rateLimitRes = await checkRateLimit(transcribeLimiter, user.id);
+  if (rateLimitRes) return rateLimitRes;
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("tier,is_admin")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  const { tier, isAdmin } = resolveUserAccess(profile, user.email);
+  const caps = TIER_CAPABILITIES[tier];
+
+  const dailyTranscriptionLimit = isAdmin ? Number.MAX_SAFE_INTEGER : caps.dailyTranscriptions;
+  if (dailyTranscriptionLimit <= 0) {
+    return errorResponse(
+      402,
+      "PLAN_UPGRADE_REQUIRED",
+      "Audio transcription is not available on your current plan. Upgrade to Plus or Pro.",
+      undefined,
+      { used: 0, limit: dailyTranscriptionLimit, tier }
+    );
+  }
+
+  let transcriptionsUsed = 0;
+  if (!isAdmin) {
+    try {
+      transcriptionsUsed = await countUsageSince({
+        supabase,
+        userId: user.id,
+        eventType: "audio_transcription",
+        sinceIso: utcDayStartIso(),
+      });
+    } catch {
+      return errorResponse(500, "USAGE_READ_FAILED", "Unable to read usage.");
+    }
+
+    if (transcriptionsUsed >= dailyTranscriptionLimit) {
+      return errorResponse(
+        402,
+        "PLAN_UPGRADE_REQUIRED",
+        `Daily transcription limit reached (${dailyTranscriptionLimit}/day on ${tier} plan). Upgrade to continue.`,
+        undefined,
+        { used: transcriptionsUsed, limit: dailyTranscriptionLimit, tier }
+      );
+    }
   }
 
   const contentType = request.headers.get("content-type") ?? "";
@@ -115,7 +170,7 @@ export async function POST(request: Request) {
       userId: user.id,
       sizeBytes: audio.size,
       durationMs,
-      status: upstreamResponse.status
+      status: upstreamResponse.status,
     });
 
     return errorResponse(502, "PROVIDER_FAILURE", "Transcription provider returned an error.");
@@ -124,5 +179,29 @@ export async function POST(request: Request) {
   const payload = (await upstreamResponse.json()) as { text?: unknown };
   const text = typeof payload.text === "string" ? payload.text : "";
 
-  return NextResponse.json({ text });
+  const { error: usageInsertError } = await supabase.from("usage_events").insert({
+    user_id: user.id,
+    event_type: "audio_transcription",
+    event_count: 1,
+    metadata: {
+      model,
+      duration_ms: durationMs,
+      size_bytes: audio.size,
+      language: typeof language === "string" ? language.trim() || null : null,
+    },
+  });
+
+  if (usageInsertError) {
+    return errorResponse(500, "USAGE_WRITE_FAILED", "Failed to record usage.");
+  }
+
+  return NextResponse.json({
+    text,
+    usage: {
+      used: isAdmin ? null : transcriptionsUsed + 1,
+      limit: isAdmin ? null : dailyTranscriptionLimit,
+      tier,
+      isAdmin,
+    },
+  });
 }
