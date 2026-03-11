@@ -95,6 +95,13 @@ const DOC_WIZARDS: Record<string, DocWizard> = {
   },
 };
 
+const DOC_GENERATION_TYPES: Record<DocWizard["id"], string> = {
+  haccp_plan: "haccp_plan",
+  cleaning_sop: "cleaning_sop",
+  temp_log: "temperature_log",
+  supplier_approval: "supplier_approval",
+};
+
 const ALLOWED_TRANSCRIPTION_MIME_TYPES = new Set(["audio/webm", "audio/mp4", "audio/wav"]);
 
 function normalizeRecordedMimeType(mimeType: string | undefined) {
@@ -168,11 +175,13 @@ export default function ChatWorkspace({
   const [showOnboarding, setShowOnboarding] = useState(!onboardingCompleted);
 
   // ── Upgrade modal state ──
-  const [upgradeModalTrigger, setUpgradeModalTrigger] = useState<"message_limit" | "image_limit" | "export" | "review" | "audit_mode" | null>(null);
+  const [upgradeModalTrigger, setUpgradeModalTrigger] = useState<"message_limit" | "image_limit" | "export" | "review" | "audit_mode" | "transcription_limit" | "document_generation" | null>(null);
   const [workspaceMode, setWorkspaceMode] = useState<WorkspaceMode>("ask");
   const [activeDocWizard, setActiveDocWizard] = useState<DocWizard | null>(null);
   const [docWizardStep, setDocWizardStep] = useState(0);
   const [docWizardAnswers, setDocWizardAnswers] = useState<string[]>([]);
+  const [showDocumentLauncher, setShowDocumentLauncher] = useState(false);
+  const [showExportOptions, setShowExportOptions] = useState(false);
 
   // ── UI state ──
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -333,6 +342,14 @@ export default function ChatWorkspace({
     }
   }
 
+  function trackWorkspaceEvent(eventName: string, payload: Record<string, string | number | boolean | null>) {
+    try {
+      track(eventName, payload);
+    } catch {
+      // Best-effort telemetry only.
+    }
+  }
+
   async function transcribeAudioBlob(audioBlob: Blob, durationMs: number, retryCount = 0) {
     setIsTranscribing(true);
     setRecordingError(null);
@@ -349,6 +366,9 @@ export default function ChatWorkspace({
       const res = await fetch("/api/chat/transcribe", { method: "POST", body: formData });
       const data = (await res.json()) as { text?: string; error?: { message?: string } };
       if (!res.ok) {
+        if (res.status === 402) {
+          setUpgradeModalTrigger("transcription_limit");
+        }
         throw new Error(data.error?.message ?? tc("transcriptionError"));
       }
 
@@ -671,8 +691,12 @@ export default function ChatWorkspace({
 
   function switchMode(nextMode: WorkspaceMode) {
     if (nextMode === "virtual_audit" && !isAdmin && tier !== "pro") {
+      trackWorkspaceEvent("upgrade_gate_hit", { trigger: "audit_mode", tier, source: "workspace_mode_toggle" });
       setUpgradeModalTrigger("audit_mode");
       return;
+    }
+    if (nextMode === "virtual_audit") {
+      trackWorkspaceEvent("virtual_audit_started", { tier, source: "workspace_mode_toggle" });
     }
     setWorkspaceMode(nextMode);
     setActiveDocWizard(null);
@@ -698,6 +722,58 @@ export default function ChatWorkspace({
     pushAssistantMessage(`${intro}\n\nQuestion 1/${wizard.questionCount}: ${q1}`, currentPersona);
     setPrompt("");
     textareaRef.current?.focus();
+  }
+
+  function openDocumentLauncher() {
+    if (!isAdmin && dynamicCapabilities.dailyDocumentGenerations < 1) {
+      trackWorkspaceEvent("upgrade_gate_hit", { trigger: "document_generation", tier, source: "dashboard_action" });
+      setUpgradeModalTrigger("document_generation");
+      return;
+    }
+    trackWorkspaceEvent("premium_action_clicked", { action: "document_launcher", tier, source: "dashboard_action" });
+    setShowExportOptions(false);
+    setShowDocumentLauncher((prev) => !prev);
+  }
+
+  function launchDocumentWizard(wizardLabel: keyof typeof DOC_WIZARDS) {
+    trackWorkspaceEvent("document_wizard_started", { wizard: DOC_WIZARDS[wizardLabel].id, tier, source: "dashboard_action" });
+    startDocumentWizard({
+      category: "document",
+      label: wizardLabel,
+      text: `Generate a ${wizardLabel} document`,
+    });
+    setShowDocumentLauncher(false);
+  }
+
+  function openReviewAction() {
+    if (!conversationId) {
+      setError("Start a conversation before requesting expert review.");
+      return;
+    }
+    if (!reviewEligible) {
+      trackWorkspaceEvent("upgrade_gate_hit", { trigger: "review", tier, source: "dashboard_action" });
+      setUpgradeModalTrigger("review");
+      return;
+    }
+    trackWorkspaceEvent("premium_action_clicked", { action: "request_review", tier, source: "dashboard_action" });
+    setShowDocumentLauncher(false);
+    setShowExportOptions(false);
+    setReviewModalOpen(true);
+  }
+
+  function openExportAction() {
+    if (!dynamicCapabilities.allowPdfExport && !dynamicCapabilities.allowWordExport) {
+      trackWorkspaceEvent("upgrade_gate_hit", { trigger: "export", tier, source: "dashboard_action" });
+      setUpgradeModalTrigger("export");
+      return;
+    }
+    if (!conversationId) {
+      setError("Send at least one message before exporting.");
+      return;
+    }
+    trackWorkspaceEvent("premium_action_clicked", { action: "export_launcher", tier, source: "dashboard_action" });
+    setShowDocumentLauncher(false);
+    setShowExportOptions((prev) => !prev);
   }
 
   async function handleDocWizardInput(rawPrompt: string): Promise<boolean> {
@@ -736,10 +812,64 @@ export default function ChatWorkspace({
     pushAssistantMessage(tw("wizardGenerating"), currentPersona);
 
     const wizardTitle = tw(`wizards.${completedWizard.wizardKey}.title`);
-    const compiledPrompt = completedWizard.buildPrompt(nextAnswers);
-    await sendPromptValue(compiledPrompt, {
-      displayPrompt: `Generate the ${wizardTitle} document using the provided business details.`,
+    const displayPrompt = `Generate the ${wizardTitle} document using the provided business details.`;
+    const documentType = DOC_GENERATION_TYPES[completedWizard.id];
+    const userMessage: Message = { role: "user", content: displayPrompt };
+    setMessages((prev) => [...prev, userMessage]);
+    setLoading(true);
+    setError(null);
+    trackWorkspaceEvent("document_generation_requested", {
+      wizard: completedWizard.id,
+      tier,
+      source: "document_wizard",
     });
+
+    try {
+      const res = await fetch("/api/documents/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          documentType,
+          answers: nextAnswers,
+          format: "json",
+          conversationId,
+          displayPrompt,
+        }),
+      });
+
+      const data = (await res.json()) as {
+        error?: string;
+        assistantMessage?: string;
+        conversationId?: string;
+        usage?: { used: number; limit: number | null; tier: SubscriptionTier; isAdmin?: boolean };
+      };
+
+      if (!res.ok) {
+        if (res.status === 402) {
+          setUpgradeModalTrigger("document_generation");
+        } else {
+          setError(data.error ?? "Document generation failed.");
+        }
+        setMessages((prev) => prev.slice(0, -1));
+        return true;
+      }
+
+      if (data.conversationId) setConversationId(data.conversationId);
+      if (data.assistantMessage) {
+        setMessages((prev) => [...prev, { role: "assistant", content: data.assistantMessage!, persona: currentPersona ?? undefined }]);
+      }
+      if (data.usage) {
+        setUsage(data.usage.used);
+        setTier(data.usage.tier);
+        setIsAdmin(Boolean(data.usage.isAdmin));
+      }
+      await loadConversations(true);
+    } catch {
+      setError("Network error while generating document.");
+      setMessages((prev) => prev.slice(0, -1));
+    } finally {
+      setLoading(false);
+    }
 
     return true;
   }
@@ -777,6 +907,12 @@ export default function ChatWorkspace({
         setError(data.error ?? "Failed to submit review request.");
         return;
       }
+      trackWorkspaceEvent("review_requested", {
+        tier,
+        documentCategory,
+        source: "review_modal",
+        conversationId: conversationId ?? null,
+      });
       setReviewInfo(data.usage ?? null);
       if (data.request) setReviewRequests((prev) => [data.request!, ...prev]);
       setReviewSubmitted(true);
@@ -798,6 +934,7 @@ export default function ChatWorkspace({
     }
     setExportLoading(format);
     try {
+      trackWorkspaceEvent("export_started", { format, tier, source: "workspace", conversationId: conversationId ?? null });
       const res = await fetch(`/api/export/${format}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -817,6 +954,7 @@ export default function ChatWorkspace({
       a.click();
       a.remove();
       URL.revokeObjectURL(url);
+      trackWorkspaceEvent("export_completed", { format, tier, source: "workspace", conversationId: conversationId ?? null });
     } catch {
       setError("Network error while exporting.");
     } finally {
@@ -894,7 +1032,7 @@ export default function ChatWorkspace({
         };
         if (!res.ok) {
           if (res.status === 402) {
-            setUpgradeModalTrigger("message_limit");
+            setUpgradeModalTrigger("image_limit");
           } else {
             setError(data.error ?? "Request failed");
           }
@@ -1177,6 +1315,126 @@ export default function ChatWorkspace({
               </button>
             </div>
           )}
+
+          <div className="flex-shrink-0 border-b border-[#E2E8F0] bg-[#FCFCFD] px-4 py-3">
+            <div className="mx-auto flex max-w-5xl flex-col gap-3">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#64748B]">{tw("actions.eyebrow")}</p>
+                  <h2 className="text-sm font-semibold text-[#0F172A]">{tw("actions.title")}</h2>
+                </div>
+                <Link href="/pricing" className="text-xs font-medium text-[#475569] underline underline-offset-2 hover:text-[#0F172A]">
+                  {tw("actions.comparePlans")}
+                </Link>
+              </div>
+
+              <div className="grid gap-2 md:grid-cols-4">
+                <button
+                  type="button"
+                  onClick={openDocumentLauncher}
+                  className="rounded-2xl border border-[#E2E8F0] bg-white p-4 text-left transition-colors hover:border-[#CBD5E1] hover:bg-[#F8FAFC]"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-semibold text-[#0F172A]">{tw("actions.generateDocument.label")}</span>
+                    {!isAdmin && dynamicCapabilities.dailyDocumentGenerations < 1 && (
+                      <span className="rounded-full bg-[#FFF7ED] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[#C2410C]">
+                        {tw("actions.locked")}
+                      </span>
+                    )}
+                  </div>
+                  <p className="mt-1 text-xs text-[#64748B]">{tw("actions.generateDocument.body")}</p>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => switchMode("virtual_audit")}
+                  className="rounded-2xl border border-[#E2E8F0] bg-white p-4 text-left transition-colors hover:border-[#CBD5E1] hover:bg-[#F8FAFC]"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-semibold text-[#0F172A]">{tw("actions.virtualAudit.label")}</span>
+                    {!isAdmin && tier !== "pro" && (
+                      <span className="rounded-full bg-[#FFF7ED] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[#C2410C]">
+                        {tw("actions.proOnly")}
+                      </span>
+                    )}
+                  </div>
+                  <p className="mt-1 text-xs text-[#64748B]">{tw("actions.virtualAudit.body")}</p>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={openReviewAction}
+                  className="rounded-2xl border border-[#E2E8F0] bg-white p-4 text-left transition-colors hover:border-[#CBD5E1] hover:bg-[#F8FAFC]"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-semibold text-[#0F172A]">{tw("actions.requestReview.label")}</span>
+                    {!isAdmin && !reviewEligible && (
+                      <span className="rounded-full bg-[#FFF7ED] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[#C2410C]">
+                        {tw("actions.proOnly")}
+                      </span>
+                    )}
+                  </div>
+                  <p className="mt-1 text-xs text-[#64748B]">{tw("actions.requestReview.body")}</p>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={openExportAction}
+                  className="rounded-2xl border border-[#E2E8F0] bg-white p-4 text-left transition-colors hover:border-[#CBD5E1] hover:bg-[#F8FAFC]"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-semibold text-[#0F172A]">{tw("actions.export.label")}</span>
+                    {!isAdmin && !dynamicCapabilities.allowPdfExport && !dynamicCapabilities.allowWordExport && (
+                      <span className="rounded-full bg-[#FFF7ED] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[#C2410C]">
+                        {tw("actions.locked")}
+                      </span>
+                    )}
+                  </div>
+                  <p className="mt-1 text-xs text-[#64748B]">{tw("actions.export.body")}</p>
+                </button>
+              </div>
+
+              {showDocumentLauncher && (
+                <div className="flex flex-wrap gap-2 rounded-2xl border border-[#E2E8F0] bg-white p-3">
+                  {Object.keys(DOC_WIZARDS).map((label) => (
+                    <button
+                      key={label}
+                      type="button"
+                      onClick={() => launchDocumentWizard(label as keyof typeof DOC_WIZARDS)}
+                      className="rounded-full border border-[#E2E8F0] bg-[#F8FAFC] px-3 py-1.5 text-xs font-medium text-[#334155] transition-colors hover:border-[#CBD5E1] hover:bg-white"
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {showExportOptions && (
+                <div className="flex flex-wrap gap-2 rounded-2xl border border-[#E2E8F0] bg-white p-3">
+                  {dynamicCapabilities.allowPdfExport && (
+                    <button
+                      type="button"
+                      onClick={() => void exportDocument("pdf")}
+                      disabled={exportLoading !== null}
+                      className="rounded-full border border-[#E2E8F0] bg-[#F8FAFC] px-3 py-1.5 text-xs font-medium text-[#334155] transition-colors hover:border-[#CBD5E1] hover:bg-white disabled:opacity-50"
+                    >
+                      {exportLoading === "pdf" ? tw("exporting") : tw("pdf")}
+                    </button>
+                  )}
+                  {dynamicCapabilities.allowWordExport && (
+                    <button
+                      type="button"
+                      onClick={() => void exportDocument("docx")}
+                      disabled={exportLoading !== null}
+                      className="rounded-full border border-[#E2E8F0] bg-[#F8FAFC] px-3 py-1.5 text-xs font-medium text-[#334155] transition-colors hover:border-[#CBD5E1] hover:bg-white disabled:opacity-50"
+                    >
+                      {exportLoading === "docx" ? tw("exporting") : tw("docx")}
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
 
           {/* Messages */}
           <ChatMessages
