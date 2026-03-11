@@ -1,0 +1,18 @@
+#CHATBOT TESTING PRO USER FINDINGS
+
+1 - The request review card is too long and cant see the submit buttons. The request review should be available ONLY for the following options: Produced PDF, Produced WORD, Async Questions. The request review button on the left side bar should change to "ask an expert" and it opens a form where the user asks a question and is able to upload docs. When a document is produced, a small button should show and say "send to review".
+
+2- Track your reviews dashboard returns an error
+
+3- The first chat window still has examples of 25 seated cafe, bakery etc. It should ONLY show examples like create an SOP, Create a clenaing plan, Create an HACCP plan, etc. Without examples. 
+
+4- The plan shows export to pdf, export to doc the entire conversation. While this is fine, the document creation should only be available for creating documentaion and not conversation exports.
+
+5- The chatbot does not have the personas anymore with slight different tones and randomized.
+
+6- On the PRO chatbot view, the "refesh Plan" does not work
+
+7 - When upload docx i get: I received pinkpepper-export.docx but couldn't extract its text (Failed to extract text from DOCX.). Please try a plain text or supported file format.
+
+8 - For the virtual audit, the user must have the option to upload documentation to projects folders and the chat must be able to locate and read them while auditing. 
+ 
