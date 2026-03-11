@@ -5,7 +5,7 @@ import { countUsageSince, utcDayStartIso } from "@/lib/policy";
 import { retrieveContext, buildRAGPrompt, formatCitations, type KnowledgeChunk } from "@/lib/rag";
 import { chatLimiter, chatBurstLimiter, checkRateLimit } from "@/lib/ratelimit";
 import { detectQueryMode, detectComplexity } from "@/lib/query-mode";
-import { getPersonaForConversation, getRandomPersona, type Persona } from "@/lib/personas";
+import { getPersonaForConversation, type Persona } from "@/lib/personas";
 
 export const dynamic = "force-dynamic";
 
