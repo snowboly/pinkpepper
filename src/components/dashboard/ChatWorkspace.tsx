@@ -11,7 +11,6 @@ import type { Message, Conversation, Project, ChatWorkspaceProps, PersonaInfo } 
 import ChatSidebar from "./ChatSidebar";
 import ChatMessages, { type StarterSuggestion } from "./ChatMessages";
 import ChatInput from "./ChatInput";
-import ReviewModal from "./ReviewModal";
 import OnboardingModal from "./OnboardingModal";
 import UpgradeModal from "./UpgradeModal";
 
@@ -150,17 +149,8 @@ export default function ChatWorkspace({
   const [isAdmin, setIsAdmin] = useState(initialIsAdmin);
 
   // ── Export state ──
-  const [exportLoading, setExportLoading] = useState<"pdf" | "docx" | null>(null);
-  const [lastExportFormat, setLastExportFormat] = useState<"pdf" | "docx" | null>(null);
+  const [exportLoading, setExportLoading] = useState<"pdf" | null>(null);
 
-  // ── Review state ──
-  const [reviewLoading, setReviewLoading] = useState(false);
-  const [reviewSubmitted, setReviewSubmitted] = useState(false);
-  const [reviewModalOpen, setReviewModalOpen] = useState(false);
-  const [documentCategory, setDocumentCategory] = useState("async_qa");
-  const [reviewNotes, setReviewNotes] = useState("");
-  const [reviewInfo, setReviewInfo] = useState<{ used: number; limit: number | null } | null>(null);
-  const [reviewRequests, setReviewRequests] = useState<Array<{ id: string; status: string; review_type: string; document_category?: string; created_at: string }>>([]);
 
   // ── Image attachment state ──
   const [attachedImage, setAttachedImage] = useState<File | null>(null);
@@ -183,7 +173,6 @@ export default function ChatWorkspace({
   const [docWizardStep, setDocWizardStep] = useState(0);
   const [docWizardAnswers, setDocWizardAnswers] = useState<string[]>([]);
   const [showDocumentLauncher, setShowDocumentLauncher] = useState(false);
-  const [showExportOptions, setShowExportOptions] = useState(false);
 
   // ── UI state ──
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -687,7 +676,6 @@ export default function ChatWorkspace({
     setConversationId(null);
     setCurrentPersona(null);
     setMessages([]);
-    setReviewRequests([]);
     clearImage();
     setAttachedDocument(null);
     setError(null);
@@ -735,7 +723,6 @@ export default function ChatWorkspace({
       return;
     }
     trackWorkspaceEvent("premium_action_clicked", { action: "document_launcher", tier, source: "dashboard_action" });
-    setShowExportOptions(false);
     setShowDocumentLauncher((prev) => !prev);
   }
 
@@ -761,12 +748,11 @@ export default function ChatWorkspace({
     }
     trackWorkspaceEvent("premium_action_clicked", { action: "request_review", tier, source: "dashboard_action" });
     setShowDocumentLauncher(false);
-    setShowExportOptions(false);
-    setReviewModalOpen(true);
+    window.location.href = "/dashboard/reviews";
   }
 
   function openExportAction() {
-    if (!dynamicCapabilities.allowPdfExport && !dynamicCapabilities.allowWordExport) {
+    if (!dynamicCapabilities.allowPdfExport) {
       trackWorkspaceEvent("upgrade_gate_hit", { trigger: "export", tier, source: "dashboard_action" });
       setUpgradeModalTrigger("export");
       return;
@@ -775,9 +761,8 @@ export default function ChatWorkspace({
       setError("Send at least one message before exporting.");
       return;
     }
-    trackWorkspaceEvent("premium_action_clicked", { action: "export_launcher", tier, source: "dashboard_action" });
     setShowDocumentLauncher(false);
-    setShowExportOptions((prev) => !prev);
+    void exportDocument("pdf");
   }
 
   async function handleDocWizardInput(rawPrompt: string): Promise<boolean> {
@@ -879,58 +864,9 @@ export default function ChatWorkspace({
   }
 
   // ── Reviews ──
-  async function loadReviewRequests(id: string) {
-    try {
-      const res = await fetch(`/api/reviews?conversationId=${encodeURIComponent(id)}`);
-      const data = (await res.json()) as {
-        requests?: Array<{ id: string; status: string; review_type: string; created_at: string }>;
-      };
-      if (!res.ok) return;
-      setReviewRequests(data.requests ?? []);
-    } catch {
-      // Non-blocking
-    }
-  }
-
-  async function requestHumanReview() {
-    if (!conversationId || reviewLoading) return;
-    setReviewLoading(true);
-    setError(null);
-    try {
-      const res = await fetch("/api/reviews", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ conversationId, documentCategory, notes: reviewNotes }),
-      });
-      const data = (await res.json()) as {
-        error?: string;
-        usage?: { used: number; limit: number | null };
-        request?: { id: string; status: string; review_type: string; document_category?: string; created_at: string };
-      };
-      if (!res.ok) {
-        setError(data.error ?? "Failed to submit review request.");
-        return;
-      }
-      trackWorkspaceEvent("review_requested", {
-        tier,
-        documentCategory,
-        source: "review_modal",
-        conversationId: conversationId ?? null,
-      });
-      setReviewInfo(data.usage ?? null);
-      if (data.request) setReviewRequests((prev) => [data.request!, ...prev]);
-      setReviewSubmitted(true);
-      setDocumentCategory("async_qa");
-      setReviewNotes("");
-    } catch {
-      setError("Network error while requesting review.");
-    } finally {
-      setReviewLoading(false);
-    }
-  }
 
   // ── Export ──
-  async function exportDocument(format: "pdf" | "docx") {
+  async function exportDocument(format: "pdf") {
     setError(null);
     if (!conversationId) {
       setError("Send at least one message before exporting.");
@@ -959,7 +895,6 @@ export default function ChatWorkspace({
       a.remove();
       URL.revokeObjectURL(url);
       trackWorkspaceEvent("export_completed", { format, tier, source: "workspace", conversationId: conversationId ?? null });
-      setLastExportFormat(format);
     } catch {
       setError("Network error while exporting.");
     } finally {
@@ -1222,7 +1157,6 @@ export default function ChatWorkspace({
       loadConvOnSelect.current = null;
       void loadConversationMessages(conversationId);
     }
-    void loadReviewRequests(conversationId);
   }, [conversationId]);
 
   useEffect(() => {
@@ -1260,7 +1194,6 @@ export default function ChatWorkspace({
           tier={tier}
           isAdmin={isAdmin}
           usagePercent={usagePercent}
-          billingLoading={billingLoading}
           tierColour={tierColour}
           onNewChat={startNewChat}
           onSelectConversation={(id) => { selectConversation(id); }}
@@ -1271,10 +1204,8 @@ export default function ChatWorkspace({
           onCreateProject={(name, emoji) => void createProject(name, emoji)}
           onRenameProject={(id, name, emoji) => void renameProject(id, name, emoji)}
           onDeleteProject={(id) => void deleteProject(id)}
-          onRefreshBilling={() => void refreshBillingStatus()}
           onAskExpert={() => {
-            setDocumentCategory("async_qa");
-            setReviewModalOpen(true);
+            window.location.href = "/dashboard/reviews";
           }}
         />
 
@@ -1393,7 +1324,7 @@ export default function ChatWorkspace({
                 >
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-semibold text-[#0F172A]">{tw("actions.export.label")}</span>
-                    {!isAdmin && !dynamicCapabilities.allowPdfExport && !dynamicCapabilities.allowWordExport && (
+                    {!isAdmin && !dynamicCapabilities.allowPdfExport && (
                       <span className="rounded-full bg-[#FFF7ED] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[#C2410C]">
                         {tw("actions.locked")}
                       </span>
@@ -1418,30 +1349,6 @@ export default function ChatWorkspace({
                 </div>
               )}
 
-              {showExportOptions && (
-                <div className="flex flex-wrap gap-2 rounded-2xl border border-[#E2E8F0] bg-white p-3">
-                  {dynamicCapabilities.allowPdfExport && (
-                    <button
-                      type="button"
-                      onClick={() => void exportDocument("pdf")}
-                      disabled={exportLoading !== null}
-                      className="rounded-full border border-[#E2E8F0] bg-[#F8FAFC] px-3 py-1.5 text-xs font-medium text-[#334155] transition-colors hover:border-[#CBD5E1] hover:bg-white disabled:opacity-50"
-                    >
-                      {exportLoading === "pdf" ? tw("exporting") : tw("pdf")}
-                    </button>
-                  )}
-                  {dynamicCapabilities.allowWordExport && (
-                    <button
-                      type="button"
-                      onClick={() => void exportDocument("docx")}
-                      disabled={exportLoading !== null}
-                      className="rounded-full border border-[#E2E8F0] bg-[#F8FAFC] px-3 py-1.5 text-xs font-medium text-[#334155] transition-colors hover:border-[#CBD5E1] hover:bg-white disabled:opacity-50"
-                    >
-                      {exportLoading === "docx" ? tw("exporting") : tw("docx")}
-                    </button>
-                  )}
-                </div>
-              )}
             </div>
           </div>
 
@@ -1468,7 +1375,7 @@ export default function ChatWorkspace({
                 void sendPromptValue(suggestion.text);
               }
             }}
-            onRequestReview={() => setReviewModalOpen(true)}
+            onRequestReview={() => { window.location.href = "/dashboard/reviews"; }}
             onUpgradeForReview={!reviewEligible ? () => setUpgradeModalTrigger("review") : undefined}
             currentPersona={currentPersona}
           />
@@ -1506,15 +1413,6 @@ export default function ChatWorkspace({
                   {tw("adminPanel")}
                 </Link>
               )}
-              {reviewEligible && conversationId && (
-                <button
-                  onClick={() => setReviewModalOpen(true)}
-                  disabled={reviewLoading}
-                  className="rounded-full border border-[#E2E8F0] bg-white px-3 py-1 text-xs text-[#64748B] hover:bg-[#F8F9FB] disabled:opacity-50"
-                >
-                  {tw("requestReview")}
-                </button>
-              )}
               {workspaceMode === "virtual_audit" && (
                 <button
                   onClick={() =>
@@ -1528,34 +1426,13 @@ export default function ChatWorkspace({
                   {tw("generateReport")}
                 </button>
               )}
-              {dynamicCapabilities.allowPdfExport && (
+              {conversationId && (
                 <button
                   onClick={() => void exportDocument("pdf")}
-                  disabled={exportLoading !== null || !conversationId}
+                  disabled={exportLoading !== null}
                   className="rounded-full border border-[#E2E8F0] bg-white px-3 py-1 text-xs text-[#64748B] hover:bg-[#F8F9FB] disabled:opacity-50"
                 >
-                  {exportLoading === "pdf" ? tw("exporting") : tw("pdf")}
-                </button>
-              )}
-              {dynamicCapabilities.allowWordExport && (
-                <button
-                  onClick={() => void exportDocument("docx")}
-                  disabled={exportLoading !== null || !conversationId}
-                  className="rounded-full border border-[#E2E8F0] bg-white px-3 py-1 text-xs text-[#64748B] hover:bg-[#F8F9FB] disabled:opacity-50"
-                >
-                  {exportLoading === "docx" ? tw("exporting") : tw("docx")}
-                </button>
-              )}
-              {lastExportFormat && reviewEligible && (
-                <button
-                  onClick={() => {
-                    setDocumentCategory(lastExportFormat === "pdf" ? "produced_pdf" : "produced_docx");
-                    setReviewModalOpen(true);
-                    setLastExportFormat(null);
-                  }}
-                  className="rounded-full border border-[#059669]/30 bg-[#ECFDF5] px-3 py-1 text-xs font-medium text-[#047857] hover:bg-[#D1FAE5] transition-colors"
-                >
-                  Send to review
+                  {exportLoading === "pdf" ? tw("exporting") : tw("exportConversation")}
                 </button>
               )}
             </div>
@@ -1608,25 +1485,6 @@ export default function ChatWorkspace({
         />
       )}
 
-      {/* Review modal */}
-      <ReviewModal
-        open={reviewModalOpen}
-        conversationId={conversationId}
-        isAdmin={isAdmin}
-        reviewEligible={reviewEligible}
-        allowFullDocumentReview={dynamicCapabilities.allowFullDocumentReview ?? false}
-        reviewTurnaround={dynamicCapabilities.reviewTurnaround}
-        documentCategory={documentCategory}
-        reviewNotes={reviewNotes}
-        reviewLoading={reviewLoading}
-        reviewSubmitted={reviewSubmitted}
-        reviewInfo={reviewInfo}
-        reviewRequests={reviewRequests}
-        onClose={() => { setReviewModalOpen(false); setReviewSubmitted(false); }}
-        onSetDocumentCategory={setDocumentCategory}
-        onSetReviewNotes={setReviewNotes}
-        onSubmit={() => void requestHumanReview()}
-      />
     </>
   );
 }
