@@ -7,6 +7,7 @@ import { track } from "@vercel/analytics";
 import type { SubscriptionTier } from "@/lib/tier";
 import { TIER_CAPABILITIES } from "@/lib/tier";
 import type { Citation } from "@/lib/rag/citations";
+import { getPersonaForConversation } from "@/lib/personas";
 import type { Message, Conversation, Project, ChatWorkspaceProps, PersonaInfo } from "./types";
 import ChatSidebar from "./ChatSidebar";
 import ChatMessages, { type StarterSuggestion } from "./ChatMessages";
@@ -522,8 +523,14 @@ export default function ChatWorkspace({
         setError(data.error ?? "Failed to load messages.");
         return;
       }
+      const persona = getPersonaForConversation(id);
+      setCurrentPersona(persona);
       setConversationId(id);
-      setMessages((data.messages ?? []).map((m) => ({ role: m.role, content: m.content })));
+      setMessages((data.messages ?? []).map((m) => ({
+        role: m.role,
+        content: m.content,
+        ...(m.role === "assistant" ? { persona: { id: persona.id, name: persona.name } } : {}),
+      })));
     } catch {
       setError("Network error while loading messages.");
     } finally {
