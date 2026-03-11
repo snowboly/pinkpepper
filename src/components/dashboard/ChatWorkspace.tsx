@@ -1186,6 +1186,8 @@ export default function ChatWorkspace({
             conversationId={conversationId}
             reviewEligible={reviewEligible}
             canUploadImages={canUploadImages}
+            tier={tier}
+            isAdmin={isAdmin}
             onSetPrompt={setPrompt}
             onFocusInput={() => textareaRef.current?.focus()}
             onQuickSuggestion={(suggestion) => {

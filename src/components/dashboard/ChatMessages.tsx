@@ -3,6 +3,8 @@
 import { useEffect, useRef } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
+import Link from "next/link";
+import type { SubscriptionTier } from "@/lib/tier";
 import type { Message, PersonaInfo } from "./types";
 import MessageItem from "./MessageItem";
 
@@ -19,6 +21,8 @@ type ChatMessagesProps = {
   conversationId: string | null;
   reviewEligible: boolean;
   canUploadImages: boolean;
+  tier: SubscriptionTier;
+  isAdmin: boolean;
   onSetPrompt: (s: string) => void;
   onFocusInput: () => void;
   onQuickSuggestion?: (s: StarterSuggestion) => void;
@@ -51,6 +55,8 @@ export default function ChatMessages({
   conversationId,
   reviewEligible,
   canUploadImages,
+  tier,
+  isAdmin,
   onSetPrompt,
   onFocusInput,
   onQuickSuggestion,
@@ -79,8 +85,40 @@ export default function ChatMessages({
     return -1;
   })();
 
+  const showPremiumWorkflows = !isAdmin && tier !== "pro" && messages.length === 0 && !loadingMessages;
+
   return (
     <div className="flex-1 overflow-y-auto">
+      {/* Premium Workflows upsell — hidden for Pro and Admin users */}
+      {showPremiumWorkflows && (
+        <div className="flex-shrink-0 border-b border-[#E2E8F0] bg-white px-4 py-5">
+          <div className="mx-auto max-w-5xl">
+            <div className="flex items-start justify-between mb-3">
+              <div>
+                <p className="text-[11px] font-black uppercase tracking-widest text-[#7C3AED]">Premium Workflows</p>
+                <p className="mt-0.5 text-sm text-[#475569]">Use PinkPepper for the work operators pay for</p>
+              </div>
+              <Link href="/pricing" className="text-xs font-medium text-[#64748B] hover:text-[#0F172A] transition-colors">
+                See plan differences
+              </Link>
+            </div>
+            <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+              {[
+                { title: "Generate document", desc: "Create HACCP plans, SOPs, temperature logs, and supplier approval packs faster." },
+                { title: "Run virtual audit", desc: "Simulate an inspection, capture findings, and produce a CAPA-ready report." },
+                { title: "Request expert review", desc: "Send the current conversation for specialist feedback before you rely on it operationally." },
+                { title: "Export PDF/DOCX", desc: "Download the current conversation as a working document you can share or file." },
+              ].map((card) => (
+                <div key={card.title} className="rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] p-4">
+                  <p className="text-sm font-semibold text-[#0F172A]">{card.title}</p>
+                  <p className="mt-1 text-xs text-[#64748B] leading-relaxed">{card.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Empty state */}
       {messages.length === 0 && !loadingMessages && (
         <div className="flex flex-col items-center justify-center py-16 text-center px-4">
