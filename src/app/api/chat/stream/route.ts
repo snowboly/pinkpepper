@@ -2,7 +2,7 @@ import { createClient as createSupabaseServer } from "@/utils/supabase/server";
 import { TIER_CAPABILITIES } from "@/lib/tier";
 import { resolveUserAccess } from "@/lib/access";
 import { countUsageSince, utcDayStartIso } from "@/lib/policy";
-import { retrieveContext, buildRAGPrompt, formatCitations, type KnowledgeChunk } from "@/lib/rag";
+import { retrieveContext, retrieveUserDocumentContext, buildRAGPrompt, formatCitations, type KnowledgeChunk } from "@/lib/rag";
 import { chatLimiter, chatBurstLimiter, checkRateLimit } from "@/lib/ratelimit";
 import { detectQueryMode, detectComplexity } from "@/lib/query-mode";
 import { getPersonaForConversation, type Persona } from "@/lib/personas";
@@ -139,13 +139,22 @@ export async function POST(request: Request) {
     content: row.content,
   }));
 
-  // RAG retrieval
+  // RAG retrieval (knowledge base + user uploaded documents)
   let retrievedChunks: KnowledgeChunk[] = [];
+  let userDocContext = "";
   let ragEnabled = false;
 
   try {
-    retrievedChunks = await retrieveContext(message, { topK: 8, threshold: 0.72 });
-    ragEnabled = retrievedChunks.length > 0;
+    const [kChunks, uChunks] = await Promise.all([
+      retrieveContext(message, { topK: 8, threshold: 0.72 }),
+      retrieveUserDocumentContext(message, user.id, { topK: 3, threshold: 0.65 }),
+    ]);
+    retrievedChunks = kChunks;
+    ragEnabled = kChunks.length > 0;
+    if (uChunks.length > 0) {
+      userDocContext = "\n\nUSER UPLOADED DOCUMENTS:\n" +
+        uChunks.map((c, i) => `[${c.file_name}] ${c.content}`).join("\n---\n");
+    }
   } catch (ragError) {
     console.error("RAG retrieval error:", ragError);
   }
@@ -168,7 +177,7 @@ export async function POST(request: Request) {
 
   if (ragEnabled) {
     const ragPrompt = buildRAGPrompt(message, retrievedChunks, mode, preferredLanguage);
-    systemPrompt = ragPrompt.systemPrompt + `\n\nPERSONA:\n${persona.promptFragment}`;
+    systemPrompt = ragPrompt.systemPrompt + userDocContext + `\n\nPERSONA:\n${persona.promptFragment}`;
     temperature = ragPrompt.temperature;
   } else {
     const modeInstruction =
@@ -221,7 +230,7 @@ export async function POST(request: Request) {
       "4. If a question requires site-specific detail you do not have (e.g. specific menu, layout, volume), ask for it rather than making assumptions.\n" +
       `5. ${languageInstruction} Keep legal references (regulation names, article numbers) in their original form.\n\n` +
       "PERSONA:\n" + persona.promptFragment + "\n\n" +
-      modeInstruction;
+      modeInstruction + userDocContext;
     temperature = mode === "audit" ? 0.0 : mode === "document" ? 0.2 : 0.1;
   }
 

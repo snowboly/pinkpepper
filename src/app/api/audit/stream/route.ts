@@ -2,7 +2,7 @@ import { createClient as createSupabaseServer } from "@/utils/supabase/server";
 import { TIER_CAPABILITIES } from "@/lib/tier";
 import { resolveUserAccess } from "@/lib/access";
 import { countUsageSince, utcDayStartIso } from "@/lib/policy";
-import { retrieveContext, formatCitations, type KnowledgeChunk } from "@/lib/rag";
+import { retrieveContext, retrieveUserDocumentContext, formatCitations, type KnowledgeChunk, type UserDocumentChunk } from "@/lib/rag";
 import { chatLimiter, checkRateLimit } from "@/lib/ratelimit";
 
 export const dynamic = "force-dynamic";
@@ -112,19 +112,35 @@ export async function POST(request: Request) {
   }));
 
   let retrievedChunks: KnowledgeChunk[] = [];
+  let userChunks: UserDocumentChunk[] = [];
   let ragEnabled = false;
   try {
-    retrievedChunks = await retrieveContext(message, { topK: 10, threshold: 0.72 });
-    ragEnabled = retrievedChunks.length > 0;
+    const [kChunks, uChunks] = await Promise.all([
+      retrieveContext(message, { topK: 10, threshold: 0.72 }),
+      retrieveUserDocumentContext(message, user.id, { topK: 5, threshold: 0.65 }),
+    ]);
+    retrievedChunks = kChunks;
+    userChunks = uChunks;
+    ragEnabled = retrievedChunks.length > 0 || userChunks.length > 0;
   } catch (ragError) {
     console.error("Audit retrieval error:", ragError);
   }
 
-  const contextBlock = ragEnabled
+  const regulationBlock = retrievedChunks.length > 0
     ? retrievedChunks
         .map((chunk, i) => `[Evidence ${i + 1}: ${chunk.source_name}${chunk.section_ref ? `, ${chunk.section_ref}` : ""}]\n${chunk.content}`)
         .join("\n\n---\n\n")
-    : "No retrieved context was found for this request.";
+    : "No regulation context found.";
+
+  const userDocBlock = userChunks.length > 0
+    ? userChunks
+        .map((chunk, i) => `[User Document ${i + 1}: ${chunk.file_name}]\n${chunk.content}`)
+        .join("\n\n---\n\n")
+    : "";
+
+  const contextBlock = userDocBlock
+    ? `REGULATION CONTEXT:\n${regulationBlock}\n\nUSER UPLOADED DOCUMENTS:\n${userDocBlock}`
+    : regulationBlock;
 
   const systemPrompt =
     "You are PinkPepper Virtual Auditor, acting as a strict senior food safety auditor conducting an interactive EU/UK food safety management system audit.\n\n" +
@@ -138,6 +154,7 @@ export async function POST(request: Request) {
     "  4. Record a preliminary finding (Compliant / Minor NC / Major NC / Critical NC) and explain why.\n" +
     "  5. Move to the next area only after the current one is addressed.\n" +
     "- Typical audit areas (adapt to scope): prerequisite programmes, HACCP plan, CCP monitoring, allergen management, traceability, pest control, cleaning & sanitation, supplier approval, training records, complaint handling, recall procedures.\n" +
+    "- If the user has uploaded documents, reference them as evidence when relevant. Cite the document name.\n" +
     "- Always ask for evidence before concluding on any area. If the user says they don't have something, record it as a finding.\n" +
     "- Keep responses concise and auditor-professional. Use bullet points.\n" +
     "- Track which areas have been covered and which remain. Remind the user of progress.\n\n" +

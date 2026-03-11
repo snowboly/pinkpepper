@@ -70,6 +70,7 @@ type ChatSidebarProps = {
   onRenameProject: (id: string, name: string, emoji: string) => void;
   onDeleteProject: (id: string) => void;
   onRefreshBilling: () => void;
+  onAskExpert?: () => void;
 };
 
 export default function ChatSidebar({
@@ -94,6 +95,7 @@ export default function ChatSidebar({
   onRenameProject,
   onDeleteProject,
   onRefreshBilling,
+  onAskExpert,
 }: ChatSidebarProps) {
   const t = useTranslations("sidebar");
   const userInitials = (() => {
@@ -580,8 +582,8 @@ export default function ChatSidebar({
             {billingLoading ? "..." : t("refreshPlan")}
           </button>
         </div>
-        <a
-          href={isAdmin ? "/admin/reviews" : "/dashboard/reviews"}
+        <button
+          onClick={onAskExpert}
           className={`flex w-full items-center gap-2 rounded-lg border px-2 py-1.5 text-xs transition-colors ${
             isAdmin || tier === "pro"
               ? "border-[#059669]/30 bg-[#ECFDF5] text-[#047857] hover:bg-[#D1FAE5]"
@@ -595,7 +597,7 @@ export default function ChatSidebar({
           {!isAdmin && tier !== "pro" && (
             <span className="rounded bg-[#059669] px-1 py-0.5 text-[9px] font-bold uppercase text-white leading-none">PRO</span>
           )}
-        </a>
+        </button>
         <div className="flex items-center gap-2">
           <div className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[#E11D48] text-[9px] font-bold text-white uppercase">
             {userInitials}

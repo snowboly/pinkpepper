@@ -18,8 +18,23 @@ function normalizeWhitespace(value: string) {
   return value.replace(/\r\n/g, "\n").replace(/\n{3,}/g, "\n\n").trim();
 }
 
+/**
+ * Resolve effective MIME type: prefer the file's declared type, but fall back
+ * to the extension when the browser sends a generic or empty type.
+ */
+function resolveType(file: File): string {
+  const declared = file.type.toLowerCase();
+  if (declared && declared !== "application/octet-stream") return declared;
+
+  const ext = file.name.split(".").pop()?.toLowerCase();
+  if (ext === "pdf") return PDF_MIME_TYPE;
+  if (ext === "docx") return DOCX_MIME_TYPE;
+  if (ext === "txt" || ext === "md" || ext === "csv" || ext === "json") return "text/plain";
+  return declared;
+}
+
 export async function extractDocumentText(file: File): Promise<DocumentExtractionResult> {
-  const mimeType = file.type.toLowerCase();
+  const mimeType = resolveType(file);
 
   if (UTF8_TEXT_MIME_TYPES.has(mimeType)) {
     const raw = await file.text();
@@ -43,9 +58,9 @@ export async function extractDocumentText(file: File): Promise<DocumentExtractio
 
   if (mimeType === DOCX_MIME_TYPE) {
     try {
-      const arrayBuffer = await file.arrayBuffer();
+      const buffer = Buffer.from(await file.arrayBuffer());
       const mammoth = await import("mammoth");
-      const result = await mammoth.extractRawText({ arrayBuffer });
+      const result = await mammoth.extractRawText({ buffer });
       return { text: normalizeWhitespace(result.value), strategy: "docx" };
     } catch (e) {
       console.error("DOCX extraction failed:", e);

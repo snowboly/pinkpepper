@@ -9,22 +9,22 @@ import { buildNewReviewAdminEmail, buildReviewSubmittedEmail } from "@/lib/revie
 
 export const dynamic = "force-dynamic";
 
-const QUICK_CHECK_CATEGORIES = ["async_qa", "process_flow", "log_review", "short_procedure"] as const;
-const FULL_REVIEW_CATEGORIES = ["full_haccp_plan", "ccp_review", "prps_review", "operations_manual"] as const;
+const VALID_CATEGORIES = ["produced_pdf", "produced_docx", "async_qa"] as const;
+// Keep legacy categories valid for existing records
+const LEGACY_CATEGORIES = ["process_flow", "log_review", "short_procedure", "full_haccp_plan", "ccp_review", "prps_review", "operations_manual"] as const;
 
-type DocumentCategory = typeof QUICK_CHECK_CATEGORIES[number] | typeof FULL_REVIEW_CATEGORIES[number];
+type DocumentCategory = typeof VALID_CATEGORIES[number] | typeof LEGACY_CATEGORIES[number];
 type ReviewType = "quick_check" | "full_review";
 
 function normalizeDocumentCategory(input: string | undefined): DocumentCategory | null {
-  if (QUICK_CHECK_CATEGORIES.includes(input as typeof QUICK_CHECK_CATEGORIES[number])) return input as DocumentCategory;
-  if (FULL_REVIEW_CATEGORIES.includes(input as typeof FULL_REVIEW_CATEGORIES[number])) return input as DocumentCategory;
+  if (VALID_CATEGORIES.includes(input as typeof VALID_CATEGORIES[number])) return input as DocumentCategory;
+  if (LEGACY_CATEGORIES.includes(input as typeof LEGACY_CATEGORIES[number])) return input as DocumentCategory;
   return null;
 }
 
 function deriveReviewType(category: DocumentCategory): ReviewType {
-  return FULL_REVIEW_CATEGORIES.includes(category as typeof FULL_REVIEW_CATEGORIES[number])
-    ? "full_review"
-    : "quick_check";
+  // All current categories are quick checks (1 credit)
+  return "quick_check";
 }
 
 export async function GET(request: Request) {

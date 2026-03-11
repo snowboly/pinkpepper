@@ -146,10 +146,12 @@ export default function ChatWorkspace({
   const [billingLoading, setBillingLoading] = useState(false);
   const [tier, setTier] = useState<SubscriptionTier>(initialTier);
   const [usage, setUsage] = useState(initialUsage);
+  const [currentUsageLimit, setUsageLimit] = useState(usageLimit);
   const [isAdmin, setIsAdmin] = useState(initialIsAdmin);
 
   // ── Export state ──
   const [exportLoading, setExportLoading] = useState<"pdf" | "docx" | null>(null);
+  const [lastExportFormat, setLastExportFormat] = useState<"pdf" | "docx" | null>(null);
 
   // ── Review state ──
   const [reviewLoading, setReviewLoading] = useState(false);
@@ -282,8 +284,8 @@ export default function ChatWorkspace({
   // ── Derived values ──
   const usagePercent = useMemo(() => {
     if (isAdmin) return 0;
-    return Math.min(100, Math.round((usage / Math.max(usageLimit, 1)) * 100));
-  }, [isAdmin, usage, usageLimit]);
+    return Math.min(100, Math.round((usage / Math.max(currentUsageLimit, 1)) * 100));
+  }, [isAdmin, usage, currentUsageLimit]);
 
   const dynamicCapabilities = isAdmin
     ? { ...TIER_CAPABILITIES.pro, allowPdfExport: true, allowWordExport: true, monthlyHumanReviews: Number.MAX_SAFE_INTEGER }
@@ -487,13 +489,15 @@ export default function ChatWorkspace({
     setBillingLoading(true);
     try {
       const res = await fetch("/api/billing/status");
-      const data = (await res.json()) as { tier?: SubscriptionTier; isAdmin?: boolean; error?: string };
+      const data = (await res.json()) as { tier?: SubscriptionTier; isAdmin?: boolean; usage?: number; usageLimit?: number; error?: string };
       if (!res.ok || !data.tier) {
         setBillingError(data.error ?? "Failed to refresh billing status.");
         return;
       }
       setTier(data.tier);
       setIsAdmin(Boolean(data.isAdmin));
+      if (typeof data.usage === "number") setUsage(data.usage);
+      if (typeof data.usageLimit === "number") setUsageLimit(data.usageLimit);
     } catch {
       setBillingError("Network error while refreshing billing status.");
     } finally {
@@ -955,6 +959,7 @@ export default function ChatWorkspace({
       a.remove();
       URL.revokeObjectURL(url);
       trackWorkspaceEvent("export_completed", { format, tier, source: "workspace", conversationId: conversationId ?? null });
+      setLastExportFormat(format);
     } catch {
       setError("Network error while exporting.");
     } finally {
@@ -1267,6 +1272,10 @@ export default function ChatWorkspace({
           onRenameProject={(id, name, emoji) => void renameProject(id, name, emoji)}
           onDeleteProject={(id) => void deleteProject(id)}
           onRefreshBilling={() => void refreshBillingStatus()}
+          onAskExpert={() => {
+            setDocumentCategory("async_qa");
+            setReviewModalOpen(true);
+          }}
         />
 
         {/* Mobile sidebar backdrop */}
@@ -1535,6 +1544,18 @@ export default function ChatWorkspace({
                   className="rounded-full border border-[#E2E8F0] bg-white px-3 py-1 text-xs text-[#64748B] hover:bg-[#F8F9FB] disabled:opacity-50"
                 >
                   {exportLoading === "docx" ? tw("exporting") : tw("docx")}
+                </button>
+              )}
+              {lastExportFormat && reviewEligible && (
+                <button
+                  onClick={() => {
+                    setDocumentCategory(lastExportFormat === "pdf" ? "produced_pdf" : "produced_docx");
+                    setReviewModalOpen(true);
+                    setLastExportFormat(null);
+                  }}
+                  className="rounded-full border border-[#059669]/30 bg-[#ECFDF5] px-3 py-1 text-xs font-medium text-[#047857] hover:bg-[#D1FAE5] transition-colors"
+                >
+                  Send to review
                 </button>
               )}
             </div>
