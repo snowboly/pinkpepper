@@ -88,7 +88,8 @@ describe("resolveUserAccess", () => {
   });
 
   it("handles profile with missing tier property", () => {
-    const { tier } = resolveUserAccess({ is_admin: false } as any, "u@x.com");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- intentionally testing missing property
+    const { tier } = resolveUserAccess({ is_admin: false } as Record<string, unknown>, "u@x.com");
     expect(tier).toBe("free");
   });
 

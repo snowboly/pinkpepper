@@ -4,7 +4,6 @@ import {
   canExportDocx,
   enforceDailyDocumentLimit,
 } from "@/lib/export/common";
-import { TIER_CAPABILITIES, type SubscriptionTier } from "@/lib/tier";
 
 /* ──────────────────────────────────────────────────────────────────────────
    canExportPdf
@@ -85,7 +84,7 @@ describe("enforceDailyDocumentLimit", () => {
   it("admin bypasses all limits and returns used: 0, limit: null", async () => {
     // Admin should not even query the DB
     const result = await enforceDailyDocumentLimit({
-      supabase: {} as any,
+      supabase: {} as unknown,
       userId: "admin-1",
       tier: "free",
       isAdmin: true,
