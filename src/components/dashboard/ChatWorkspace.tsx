@@ -172,7 +172,6 @@ export default function ChatWorkspace({
   const [activeDocWizard, setActiveDocWizard] = useState<DocWizard | null>(null);
   const [docWizardStep, setDocWizardStep] = useState(0);
   const [docWizardAnswers, setDocWizardAnswers] = useState<string[]>([]);
-  const [showDocumentLauncher, setShowDocumentLauncher] = useState(false);
 
   // ── UI state ──
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -716,54 +715,6 @@ export default function ChatWorkspace({
     textareaRef.current?.focus();
   }
 
-  function openDocumentLauncher() {
-    if (!isAdmin && dynamicCapabilities.dailyDocumentGenerations < 1) {
-      trackWorkspaceEvent("upgrade_gate_hit", { trigger: "document_generation", tier, source: "dashboard_action" });
-      setUpgradeModalTrigger("document_generation");
-      return;
-    }
-    trackWorkspaceEvent("premium_action_clicked", { action: "document_launcher", tier, source: "dashboard_action" });
-    setShowDocumentLauncher((prev) => !prev);
-  }
-
-  function launchDocumentWizard(wizardLabel: keyof typeof DOC_WIZARDS) {
-    trackWorkspaceEvent("document_wizard_started", { wizard: DOC_WIZARDS[wizardLabel].id, tier, source: "dashboard_action" });
-    startDocumentWizard({
-      category: "document",
-      label: wizardLabel,
-      text: `Generate a ${wizardLabel} document`,
-    });
-    setShowDocumentLauncher(false);
-  }
-
-  function openReviewAction() {
-    if (!conversationId) {
-      setError("Start a conversation before requesting expert review.");
-      return;
-    }
-    if (!reviewEligible) {
-      trackWorkspaceEvent("upgrade_gate_hit", { trigger: "review", tier, source: "dashboard_action" });
-      setUpgradeModalTrigger("review");
-      return;
-    }
-    trackWorkspaceEvent("premium_action_clicked", { action: "request_review", tier, source: "dashboard_action" });
-    setShowDocumentLauncher(false);
-    window.location.href = "/dashboard/reviews";
-  }
-
-  function openExportAction() {
-    if (!dynamicCapabilities.allowPdfExport) {
-      trackWorkspaceEvent("upgrade_gate_hit", { trigger: "export", tier, source: "dashboard_action" });
-      setUpgradeModalTrigger("export");
-      return;
-    }
-    if (!conversationId) {
-      setError("Send at least one message before exporting.");
-      return;
-    }
-    setShowDocumentLauncher(false);
-    void exportDocument("pdf");
-  }
 
   async function handleDocWizardInput(rawPrompt: string): Promise<boolean> {
     if (!activeDocWizard) return false;
@@ -1256,101 +1207,6 @@ export default function ChatWorkspace({
             </div>
           )}
 
-          <div className="flex-shrink-0 border-b border-[#E2E8F0] bg-[#FCFCFD] px-4 py-3">
-            <div className="mx-auto flex max-w-5xl flex-col gap-3">
-              <div className="flex items-center justify-between gap-3">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#64748B]">{tw("actions.eyebrow")}</p>
-                  <h2 className="text-sm font-semibold text-[#0F172A]">{tw("actions.title")}</h2>
-                </div>
-                <Link href="/pricing" className="text-xs font-medium text-[#475569] underline underline-offset-2 hover:text-[#0F172A]">
-                  {tw("actions.comparePlans")}
-                </Link>
-              </div>
-
-              <div className="grid gap-2 md:grid-cols-4">
-                <button
-                  type="button"
-                  onClick={openDocumentLauncher}
-                  className="rounded-2xl border border-[#E2E8F0] bg-white p-4 text-left transition-colors hover:border-[#CBD5E1] hover:bg-[#F8FAFC]"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-semibold text-[#0F172A]">{tw("actions.generateDocument.label")}</span>
-                    {!isAdmin && dynamicCapabilities.dailyDocumentGenerations < 1 && (
-                      <span className="rounded-full bg-[#FFF7ED] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[#C2410C]">
-                        {tw("actions.locked")}
-                      </span>
-                    )}
-                  </div>
-                  <p className="mt-1 text-xs text-[#64748B]">{tw("actions.generateDocument.body")}</p>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => switchMode("virtual_audit")}
-                  className="rounded-2xl border border-[#E2E8F0] bg-white p-4 text-left transition-colors hover:border-[#CBD5E1] hover:bg-[#F8FAFC]"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-semibold text-[#0F172A]">{tw("actions.virtualAudit.label")}</span>
-                    {!isAdmin && tier !== "pro" && (
-                      <span className="rounded-full bg-[#FFF7ED] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[#C2410C]">
-                        {tw("actions.proOnly")}
-                      </span>
-                    )}
-                  </div>
-                  <p className="mt-1 text-xs text-[#64748B]">{tw("actions.virtualAudit.body")}</p>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={openReviewAction}
-                  className="rounded-2xl border border-[#E2E8F0] bg-white p-4 text-left transition-colors hover:border-[#CBD5E1] hover:bg-[#F8FAFC]"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-semibold text-[#0F172A]">{tw("actions.requestReview.label")}</span>
-                    {!isAdmin && !reviewEligible && (
-                      <span className="rounded-full bg-[#FFF7ED] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[#C2410C]">
-                        {tw("actions.proOnly")}
-                      </span>
-                    )}
-                  </div>
-                  <p className="mt-1 text-xs text-[#64748B]">{tw("actions.requestReview.body")}</p>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={openExportAction}
-                  className="rounded-2xl border border-[#E2E8F0] bg-white p-4 text-left transition-colors hover:border-[#CBD5E1] hover:bg-[#F8FAFC]"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-semibold text-[#0F172A]">{tw("actions.export.label")}</span>
-                    {!isAdmin && !dynamicCapabilities.allowPdfExport && (
-                      <span className="rounded-full bg-[#FFF7ED] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[#C2410C]">
-                        {tw("actions.locked")}
-                      </span>
-                    )}
-                  </div>
-                  <p className="mt-1 text-xs text-[#64748B]">{tw("actions.export.body")}</p>
-                </button>
-              </div>
-
-              {showDocumentLauncher && (
-                <div className="flex flex-wrap gap-2 rounded-2xl border border-[#E2E8F0] bg-white p-3">
-                  {Object.keys(DOC_WIZARDS).map((label) => (
-                    <button
-                      key={label}
-                      type="button"
-                      onClick={() => launchDocumentWizard(label as keyof typeof DOC_WIZARDS)}
-                      className="rounded-full border border-[#E2E8F0] bg-[#F8FAFC] px-3 py-1.5 text-xs font-medium text-[#334155] transition-colors hover:border-[#CBD5E1] hover:bg-white"
-                    >
-                      {label}
-                    </button>
-                  ))}
-                </div>
-              )}
-
-            </div>
-          </div>
 
           {/* Messages */}
           <ChatMessages
