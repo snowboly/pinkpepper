@@ -453,7 +453,7 @@ export default function HomePage() {
               <h3 className="text-xl font-bold text-[#0F172A]">Free</h3>
               <p className="mt-2 text-sm text-[#64748B]">Use PinkPepper on real questions before you commit.</p>
               <div className="mt-6 flex items-baseline gap-1">
-                <span className="text-5xl font-bold tracking-tight text-[#0F172A]">EUR 0</span>
+                <span className="text-5xl font-bold tracking-tight text-[#0F172A]">€0</span>
                 <span className="text-base text-[#94A3B8]">/month</span>
               </div>
               <div className="my-6 border-t border-[#F1F5F9]" />
@@ -476,7 +476,7 @@ export default function HomePage() {
               <h3 className="text-xl font-bold text-[#0F172A]">Plus</h3>
               <p className="mt-2 text-sm text-[#64748B]">For teams that need working documents quickly, not just answers in chat.</p>
               <div className="mt-6 flex items-baseline gap-1">
-                <span className="text-5xl font-bold tracking-tight text-[#0F172A]">EUR 19</span>
+                <span className="text-5xl font-bold tracking-tight text-[#0F172A]">€19</span>
                 <span className="text-base text-[#94A3B8]">/month</span>
               </div>
               <div className="my-6 border-t border-[#F1F5F9]" />
@@ -495,7 +495,7 @@ export default function HomePage() {
               <h3 className="text-xl font-bold text-[#0F172A]">Pro</h3>
               <p className="mt-2 text-sm text-[#64748B]">For operators preparing for inspections, customer audits, and higher-risk document decisions.</p>
               <div className="mt-6 flex items-baseline gap-1">
-                <span className="text-5xl font-bold tracking-tight text-[#0F172A]">EUR 99</span>
+                <span className="text-5xl font-bold tracking-tight text-[#0F172A]">€99</span>
                 <span className="text-base text-[#94A3B8]">/month</span>
               </div>
               <div className="my-6 border-t border-[#F1F5F9]" />
