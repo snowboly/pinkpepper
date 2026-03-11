@@ -1,10 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { FormEvent, useState } from "react";
+import { FormEvent, useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 
 export default function SignupPage() {
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -13,6 +15,12 @@ export default function SignupPage() {
   const [loading, setLoading] = useState(false);
   const [magicLoading, setMagicLoading] = useState(false);
   const [magicSent, setMagicSent] = useState(false);
+
+  useEffect(() => {
+    if (searchParams.get("error") === "confirm_email") {
+      setMessage("Please confirm your email address before accessing the dashboard. Check your inbox for the verification link.");
+    }
+  }, [searchParams]);
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
@@ -32,7 +40,7 @@ export default function SignupPage() {
 
       const supabase = createClient();
       const origin = process.env.NEXT_PUBLIC_SITE_URL ?? window.location.origin;
-      const { error: signUpError } = await supabase.auth.signUp({
+      const { data, error: signUpError } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -42,6 +50,13 @@ export default function SignupPage() {
 
       if (signUpError) {
         setError(signUpError.message);
+        return;
+      }
+
+      // Supabase returns a user with no identities when the email is already registered
+      // (to prevent email enumeration). No confirmation email is sent in this case.
+      if (data?.user?.identities?.length === 0) {
+        setError("An account with this email may already exist. Try logging in or resetting your password.");
         return;
       }
 
