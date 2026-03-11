@@ -36,7 +36,7 @@ export default function SignupPage() {
         email,
         password,
         options: {
-          emailRedirectTo: `${origin}/auth/confirm?next=/dashboard&flow=signup`,
+          emailRedirectTo: `${origin}/auth/callback?next=/dashboard&flow=signup`,
         },
       });
 
@@ -65,7 +65,7 @@ export default function SignupPage() {
       const origin = process.env.NEXT_PUBLIC_SITE_URL ?? window.location.origin;
       const { error: otpError } = await supabase.auth.signInWithOtp({
         email,
-        options: { emailRedirectTo: `${origin}/auth/confirm?next=/dashboard&flow=signup`, shouldCreateUser: true },
+        options: { emailRedirectTo: `${origin}/auth/callback?next=/dashboard&flow=signup`, shouldCreateUser: true },
       });
       if (otpError) {
         setError(otpError.message);

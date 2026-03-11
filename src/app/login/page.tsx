@@ -65,7 +65,7 @@ export default function LoginPage() {
       const origin = process.env.NEXT_PUBLIC_SITE_URL ?? window.location.origin;
       const { error: otpError } = await supabase.auth.signInWithOtp({
         email,
-        options: { emailRedirectTo: `${origin}/auth/confirm?next=${nextPath}&flow=login` },
+        options: { emailRedirectTo: `${origin}/auth/callback?next=${nextPath}&flow=login` },
       });
       if (otpError) {
         setError(otpError.message);
@@ -94,7 +94,12 @@ export default function LoginPage() {
 
           {(flashError || error) && (
             <p className="mt-4 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
-              {error ?? (flashError === "invalid_or_expired_link" ? "Your login link has expired or already been used. Request a new one below." : flashError)}
+              {error ??
+                (flashError === "cross_device_link"
+                  ? "Please open the confirmation link on the same device and browser where you signed up."
+                  : flashError === "invalid_or_expired_link"
+                    ? "Your login link has expired or already been used. Request a new one below."
+                    : flashError)}
             </p>
           )}
           {message && <p className="mt-4 rounded-xl border border-[#E8DADA] bg-[#FAF6F5] px-3 py-2 text-sm">{message}</p>}

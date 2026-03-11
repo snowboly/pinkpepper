@@ -36,7 +36,12 @@ export default function ConfirmPage() {
       }
 
       if (!verified) {
-        router.replace("/login?error=invalid_or_expired_link");
+        // PKCE code exchange failed — most likely the user opened the
+        // link on a different device/browser than where they signed up.
+        const errorParam = code
+          ? "cross_device_link"
+          : "invalid_or_expired_link";
+        router.replace(`/login?error=${errorParam}`);
         return;
       }
 
