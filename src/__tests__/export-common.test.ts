@@ -4,6 +4,9 @@ import {
   canExportDocx,
   enforceDailyDocumentLimit,
 } from "@/lib/export/common";
+import type { createClient } from "@/utils/supabase/server";
+
+type SupabaseClient = Awaited<ReturnType<typeof createClient>>;
 
 /* ──────────────────────────────────────────────────────────────────────────
    canExportPdf
@@ -66,7 +69,7 @@ describe("canExportDocx", () => {
    enforceDailyDocumentLimit
    ────────────────────────────────────────────────────────────────────────── */
 
-function buildMockSupabase(count: number | null, error: unknown = null) {
+function buildMockSupabase(count: number | null, error: unknown = null): SupabaseClient {
   return {
     from: vi.fn().mockReturnValue({
       select: vi.fn().mockReturnValue({
@@ -77,14 +80,14 @@ function buildMockSupabase(count: number | null, error: unknown = null) {
         }),
       }),
     }),
-  };
+  } as unknown as SupabaseClient;
 }
 
 describe("enforceDailyDocumentLimit", () => {
   it("admin bypasses all limits and returns used: 0, limit: null", async () => {
     // Admin should not even query the DB
     const result = await enforceDailyDocumentLimit({
-      supabase: {} as unknown,
+      supabase: {} as unknown as SupabaseClient,
       userId: "admin-1",
       tier: "free",
       isAdmin: true,
