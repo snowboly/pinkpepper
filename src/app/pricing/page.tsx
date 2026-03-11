@@ -78,7 +78,7 @@ export default async function PricingPage() {
                 Best for operators testing fit on real questions and small day-to-day checks.
               </p>
               <div className="mt-6 flex items-baseline gap-1">
-                <span className="text-5xl font-bold tracking-tight text-[#0F172A]">EUR 0</span>
+                <span className="text-5xl font-bold tracking-tight text-[#0F172A]">€0</span>
                 <span className="text-base text-[#94A3B8]">/month</span>
               </div>
               <div className="my-6 border-t border-[#F1F5F9]" />
@@ -123,7 +123,7 @@ export default async function PricingPage() {
                 For teams that need working documents quickly, not just answers in chat.
               </p>
               <div className="mt-6 flex items-baseline gap-1">
-                <span className="text-5xl font-bold tracking-tight text-[#0F172A]">EUR 19</span>
+                <span className="text-5xl font-bold tracking-tight text-[#0F172A]">€19</span>
                 <span className="text-base text-[#94A3B8]">/month + VAT</span>
               </div>
               <div className="my-6 border-t border-[#F1F5F9]" />
@@ -167,7 +167,7 @@ export default async function PricingPage() {
                 For operators preparing for inspections, customer audits, and higher-risk document decisions.
               </p>
               <div className="mt-6 flex items-baseline gap-1">
-                <span className="text-5xl font-bold tracking-tight text-[#0F172A]">EUR 99</span>
+                <span className="text-5xl font-bold tracking-tight text-[#0F172A]">€99</span>
                 <span className="text-base text-[#94A3B8]">/month + VAT</span>
               </div>
               <div className="my-6 border-t border-[#F1F5F9]" />
