@@ -58,7 +58,6 @@ type ChatSidebarProps = {
   tier: SubscriptionTier;
   isAdmin: boolean;
   usagePercent: number;
-  billingLoading: boolean;
   tierColour: string;
   onNewChat: () => void;
   onSelectConversation: (id: string) => void;
@@ -69,7 +68,6 @@ type ChatSidebarProps = {
   onCreateProject: (name: string, emoji: string) => void;
   onRenameProject: (id: string, name: string, emoji: string) => void;
   onDeleteProject: (id: string) => void;
-  onRefreshBilling: () => void;
   onAskExpert?: () => void;
 };
 
@@ -83,7 +81,6 @@ export default function ChatSidebar({
   tier,
   isAdmin,
   usagePercent,
-  billingLoading,
   tierColour,
   onNewChat,
   onSelectConversation,
@@ -94,7 +91,6 @@ export default function ChatSidebar({
   onCreateProject,
   onRenameProject,
   onDeleteProject,
-  onRefreshBilling,
   onAskExpert,
 }: ChatSidebarProps) {
   const t = useTranslations("sidebar");
@@ -573,15 +569,6 @@ export default function ChatSidebar({
             <div className="h-full rounded-full bg-[#E11D48]" style={{ width: `${usagePercent}%` }} />
           </div>
         )}
-        <div className="flex">
-          <button
-            onClick={onRefreshBilling}
-            disabled={billingLoading}
-            className="w-full rounded-lg border border-[#E2E8F0] bg-white px-2 py-1 text-xs text-[#64748B] hover:bg-[#F8F9FB] disabled:opacity-50"
-          >
-            {billingLoading ? "..." : t("refreshPlan")}
-          </button>
-        </div>
         <button
           onClick={onAskExpert}
           className={`flex w-full items-center gap-2 rounded-lg border px-2 py-1.5 text-xs transition-colors ${

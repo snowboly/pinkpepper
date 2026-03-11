@@ -162,6 +162,7 @@
     "requestReview": "Request review",
     "generateReport": "Generate report",
     "exporting": "Exporting...",
+    "exportConversation": "Export Conversation",
     "pdf": "Export PDF",
     "docx": "Export DOCX",
     "dropPhotoToAnalyse": "Drop photo to analyse",
