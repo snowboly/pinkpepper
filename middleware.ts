@@ -41,6 +41,14 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(redirectUrl);
   }
 
+  // Block unconfirmed users from protected pages
+  if ((isProtected || isAdminPage) && user && !user.email_confirmed_at) {
+    const redirectUrl = request.nextUrl.clone();
+    redirectUrl.pathname = "/signup";
+    redirectUrl.searchParams.set("error", "confirm_email");
+    return NextResponse.redirect(redirectUrl);
+  }
+
   if (isAdminPage && user) {
     const { data: profile } = await supabase
       .from("profiles")
