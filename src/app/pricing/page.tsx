@@ -78,7 +78,7 @@ export default async function PricingPage() {
                 Best for operators testing fit on real questions and small day-to-day checks.
               </p>
               <div className="mt-6 flex items-baseline gap-1">
-                <span className="text-5xl font-bold tracking-tight text-[#0F172A]">€0</span>
+                <span className="text-5xl font-bold tracking-tight text-[#0F172A]"><span className="text-2xl align-super">€</span>0</span>
                 <span className="text-base text-[#94A3B8]">/month</span>
               </div>
               <div className="my-6 border-t border-[#F1F5F9]" />
@@ -113,40 +113,33 @@ export default async function PricingPage() {
               </Link>
             </div>
 
-            <div className="relative flex flex-col rounded-3xl border-2 border-[#E11D48] bg-white p-8 shadow-lg shadow-[#E11D48]/[0.06]">
-              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-[#E11D48] px-4 py-1 text-xs font-bold uppercase tracking-wide text-white">
-                <Star className="mr-1 inline h-3 w-3" />
-                Most Popular
-              </div>
+            {/* Plus */}
+            <div className="flex flex-col rounded-3xl border border-[#E2E8F0] bg-white p-8 transition-all duration-200 hover:shadow-lg hover:shadow-black/[0.04]">
               <h2 className="text-xl font-bold text-[#0F172A]">Plus</h2>
               <p className="mt-2 text-sm text-[#64748B]">
                 For teams that need working documents quickly, not just answers in chat.
               </p>
               <div className="mt-6 flex items-baseline gap-1">
-                <span className="text-5xl font-bold tracking-tight text-[#0F172A]">€19</span>
+                <span className="text-5xl font-bold tracking-tight text-[#0F172A]"><span className="text-2xl align-super">€</span>19</span>
                 <span className="text-base text-[#94A3B8]">/month + VAT</span>
               </div>
               <div className="my-6 border-t border-[#F1F5F9]" />
               <ul className="flex-1 space-y-3.5 text-sm text-[#475569]">
                 <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />
                   Generate HACCP plans, SOPs, logs, and supplier approval documents
                 </li>
                 <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />
                   Export the work as PDF for handover, filing, or internal review
                 </li>
                 <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />
                   Unlimited saved conversations and longer working context
                 </li>
                 <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />
                   100 AI queries, 3 image uploads, 25 voice transcriptions, and 3 document generations per day
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  Best fit for sites producing documents without specialist sign-off
                 </li>
                 <li className="flex items-start gap-2.5 opacity-50">
                   <XCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#94A3B8]" />
@@ -157,39 +150,44 @@ export default async function PricingPage() {
                 isLoggedIn={isLoggedIn}
                 plan="plus"
                 label="Choose Plus"
-                className={ctaPrimary}
+                className={ctaSecondary}
               />
             </div>
 
-            <div className="flex flex-col rounded-3xl border border-[#E2E8F0] bg-white p-8 transition-all duration-200 hover:shadow-lg hover:shadow-black/[0.04]">
+            {/* Pro — Most Popular */}
+            <div className="relative flex flex-col rounded-3xl border-2 border-[#E11D48] bg-white p-8 shadow-lg shadow-[#E11D48]/[0.06]">
+              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-[#E11D48] px-4 py-1 text-xs font-bold uppercase tracking-wide text-white">
+                <Star className="mr-1 inline h-3 w-3" />
+                Most Popular
+              </div>
               <h2 className="text-xl font-bold text-[#0F172A]">Pro</h2>
               <p className="mt-2 text-sm text-[#64748B]">
                 For operators preparing for inspections, customer audits, and higher-risk document decisions.
               </p>
               <div className="mt-6 flex items-baseline gap-1">
-                <span className="text-5xl font-bold tracking-tight text-[#0F172A]">€99</span>
+                <span className="text-5xl font-bold tracking-tight text-[#0F172A]"><span className="text-2xl align-super">€</span>99</span>
                 <span className="text-base text-[#94A3B8]">/month + VAT</span>
               </div>
               <div className="my-6 border-t border-[#F1F5F9]" />
               <ul className="flex-1 space-y-3.5 text-sm text-[#475569]">
                 <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-600" />
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
                   Run Virtual Audit workflows before inspections or internal reviews
                 </li>
                 <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-600" />
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
                   Export in both PDF and DOCX for internal editing and external sharing
                 </li>
                 <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-600" />
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
                   3 specialist review credits each month for quick checks or one full review
                 </li>
                 <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-600" />
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
                   Highest daily limits for ongoing audit prep and operational use
                 </li>
-                <li className="flex items-start gap-2.5 font-medium text-emerald-700">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-600" />
+                <li className="flex items-start gap-2.5 font-medium text-[#9F1239]">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
                   Built for audit readiness, not just drafting speed
                 </li>
               </ul>
@@ -197,7 +195,7 @@ export default async function PricingPage() {
                 isLoggedIn={isLoggedIn}
                 plan="pro"
                 label="Choose Pro"
-                className={ctaSecondary}
+                className={ctaPrimary}
               />
             </div>
           </div>
