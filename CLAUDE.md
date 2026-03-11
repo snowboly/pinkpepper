@@ -118,8 +118,8 @@ scripts/
 
 | | Free | Plus | Pro |
 |---|---|---|---|
-| Daily messages | 25 | 100 | 1000 |
-| Daily image uploads | 1 | 3 | 20 |
+| Daily messages | 15 | 100 | 1000 |
+| Daily image uploads | 0 | 3 | 20 |
 | PDF export | No | Yes | Yes |
 | DOCX export | No | No | Yes |
 | Review credits/month | 0 | 0 | 3 (1 credit = small doc, 3 credits = full doc) |

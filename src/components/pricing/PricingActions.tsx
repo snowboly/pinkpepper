@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { track } from "@vercel/analytics";
 
 type Plan = "plus" | "pro";
 
@@ -18,13 +19,18 @@ export default function PricingActions({ isLoggedIn, plan, label, className }: P
 
   if (!isLoggedIn) {
     return (
-      <Link href={`/signup?plan=${plan}`} className={className}>
+      <Link
+        href={`/signup?plan=${plan}`}
+        className={className}
+        onClick={() => track("pricing_signup_click", { plan, source: "pricing_page" })}
+      >
         {label}
       </Link>
     );
   }
 
   async function startCheckout() {
+    track("checkout_started", { plan, source: "pricing_page" });
     setLoading(true);
     setError(null);
     try {

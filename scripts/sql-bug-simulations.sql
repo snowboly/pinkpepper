@@ -12,7 +12,7 @@
 -- ============================================================================
 
 -- ████████████████████████████████████████████████████████████████████████████
--- 0. SETUP: helper to assert conditions inside DO blocks
+-- 0. SETUP: helper to assert conditions inside DO blocks - No Rows. 
 -- ████████████████████████████████████████████████████████████████████████████
 
 CREATE OR REPLACE FUNCTION _assert(condition boolean, label text)
@@ -25,7 +25,7 @@ END;
 $$;
 
 -- ████████████████████████████████████████████████████████████████████████████
--- 1. TIER LIMITS vs CLAUDE.md DOCUMENTATION MISMATCH
+-- 1. TIER LIMITS vs CLAUDE.md DOCUMENTATION MISMATCH - 
 -- ████████████████████████████████████████████████████████████████████████████
 -- CLAUDE.md states:  Free = 25 messages/day,  Plus = 100,  Pro = 1000
 -- tier.ts defines:   Free = 15 messages/day,  Plus = 100,  Pro = 1000

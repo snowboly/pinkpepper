@@ -198,10 +198,10 @@ export async function POST(request: Request) {
       "ABOUT PINKPEPPER (answer when users ask about you, the product, or their plan):\n" +
       "PinkPepper is a food safety compliance SaaS that helps food businesses with HACCP plans, SOPs, audit preparation, allergen law, and EU/UK food safety compliance.\n" +
       "Subscription tiers:\n" +
-      `- Free: ${caps.dailyMessages} messages/day (the user is on the ${tier} plan and has used ${used} of ${caps.dailyMessages} messages today), ${caps.dailyImageUploads} image upload/day, 10 saved conversations (30-day retention), no PDF/DOCX export, no human reviews.\n` +
-      "- Plus: 100 messages/day, 3 image uploads/day, unlimited conversations, PDF export, no human reviews.\n" +
-      "- Pro: 1000 messages/day, 20 image uploads/day, unlimited conversations, PDF + DOCX export, 3 human expert review credits/month (3–5 working day turnaround).\n" +
-      "Features: AI chatbot (you), document generation (HACCP plans, SOPs, cleaning logs, supplier approval), virtual audit mode, image analysis for food safety, PDF/DOCX export, and human expert document reviews (Pro only).\n" +
+      `- Free: ${TIER_CAPABILITIES.free.dailyMessages} messages/day (${used} used today on the current ${tier} plan), ${TIER_CAPABILITIES.free.dailyImageUploads} image upload/day, ${TIER_CAPABILITIES.free.dailyTranscriptions} voice transcriptions/day, ${TIER_CAPABILITIES.free.maxSavedConversations} saved conversations with ${TIER_CAPABILITIES.free.conversationRetentionDays}-day retention, no document generation, no export, no virtual audit, no human reviews.\n` +
+      `- Plus: ${TIER_CAPABILITIES.plus.dailyMessages} messages/day, ${TIER_CAPABILITIES.plus.dailyImageUploads} image uploads/day, ${TIER_CAPABILITIES.plus.dailyTranscriptions} voice transcriptions/day, ${TIER_CAPABILITIES.plus.dailyDocumentGenerations} document generations/day, unlimited conversations, PDF export, no virtual audit, no human reviews.\n` +
+      `- Pro: ${TIER_CAPABILITIES.pro.dailyMessages} messages/day, ${TIER_CAPABILITIES.pro.dailyImageUploads} image uploads/day, ${TIER_CAPABILITIES.pro.dailyTranscriptions} voice transcriptions/day, ${TIER_CAPABILITIES.pro.dailyDocumentGenerations} document generations/day, unlimited conversations, PDF + DOCX export, Virtual Audit mode, ${TIER_CAPABILITIES.pro.monthlyHumanReviews} human expert review credits/month (${TIER_CAPABILITIES.pro.reviewTurnaround} turnaround).\n` +
+      "Features: AI chatbot (you), document generation (HACCP plans, SOPs, cleaning logs, supplier approval), virtual audit mode, image analysis for food safety, voice transcription, PDF/DOCX export, and human expert document reviews (Pro only).\n" +
       "If asked about upgrading, direct users to the upgrade option in the sidebar or settings.\n\n" +
       "Your expertise covers:\n" +
       "- HACCP principles (Codex Alimentarius CAC/RCP 1-1969, Rev. 2003)\n" +
@@ -401,3 +401,4 @@ export async function POST(request: Request) {
     },
   });
 }
+

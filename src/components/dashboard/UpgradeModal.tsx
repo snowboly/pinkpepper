@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
+import { track } from "@vercel/analytics";
 import type { SubscriptionTier } from "@/lib/tier";
 
 type UpgradeModalProps = {
-  trigger: "message_limit" | "image_limit" | "export" | "review" | "audit_mode";
+  trigger: "message_limit" | "image_limit" | "export" | "review" | "audit_mode" | "transcription_limit" | "document_generation";
   currentTier: SubscriptionTier;
   onClose: () => void;
 };
@@ -29,12 +30,23 @@ export default function UpgradeModal({ trigger, currentTier, onClose }: UpgradeM
   const t = useTranslations("upgrade");
   const [loading, setLoading] = useState<SubscriptionTier | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const heading = trigger === "transcription_limit"
+    ? "Unlock voice transcription"
+    : t(`triggers.${trigger}.heading`);
+  const body = trigger === "transcription_limit"
+    ? "Record questions hands-free and turn speech into chat instantly with Plus or Pro."
+    : t(`triggers.${trigger}.body`);
 
   const visiblePlans = currentTier === "plus"
     ? PLAN_DEFS.filter((p) => p.tier === "pro")
     : PLAN_DEFS;
 
+  useEffect(() => {
+    track("upgrade_modal_viewed", { trigger, currentTier });
+  }, [currentTier, trigger]);
+
   async function checkout(plan: SubscriptionTier) {
+    track("checkout_started", { plan, source: "upgrade_modal", trigger, currentTier });
     setLoading(plan);
     setError(null);
     try {
@@ -62,8 +74,8 @@ export default function UpgradeModal({ trigger, currentTier, onClose }: UpgradeM
         {/* Header */}
         <div className="flex items-start justify-between border-b border-[#E2E8F0] px-6 py-5">
           <div>
-            <h2 className="text-base font-semibold text-[#0F172A]">{t(`triggers.${trigger}.heading`)}</h2>
-            <p className="mt-1 text-sm text-[#64748B]">{t(`triggers.${trigger}.body`)}</p>
+            <h2 className="text-base font-semibold text-[#0F172A]">{heading}</h2>
+            <p className="mt-1 text-sm text-[#64748B]">{body}</p>
           </div>
           <button
             onClick={onClose}
