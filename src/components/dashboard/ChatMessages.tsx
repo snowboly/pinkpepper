@@ -36,10 +36,8 @@ const SUGGESTION_KEYS = [
   { category: "document" as const, key: "cleaningSop" },
   { category: "document" as const, key: "tempLog" },
   { category: "document" as const, key: "supplierApproval" },
-  { category: "audit" as const, key: "brcAudit" },
-  { category: "audit" as const, key: "allergenAudit" },
-  { category: "qa" as const, key: "allergenLaw" },
-  { category: "qa" as const, key: "traceabilityRules" },
+  { category: "document" as const, key: "allergenPolicy" },
+  { category: "document" as const, key: "cleaningPlan" },
 ];
 
 const CATEGORY_COLOUR: Record<string, string> = {

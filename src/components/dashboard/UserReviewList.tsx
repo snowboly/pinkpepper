@@ -18,7 +18,10 @@ type ReviewRequest = {
 };
 
 const CATEGORY_LABELS: Record<string, string> = {
-  async_qa: "Async Q&A",
+  produced_pdf: "Produced PDF",
+  produced_docx: "Produced DOCX",
+  async_qa: "Ask a Question",
+  // Legacy categories for existing records
   process_flow: "Process Flow Review",
   log_review: "Log / Record Review",
   short_procedure: "Short Procedure",
@@ -67,14 +70,17 @@ export default function UserReviewList() {
     try {
       const params = new URLSearchParams({ page: String(page) });
       const res = await fetch(`/api/reviews?${params}`);
-      if (!res.ok) throw new Error("Failed to load reviews");
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.error ?? `Server returned ${res.status}`);
+      }
       const data = await res.json();
-      // Client-side filter by tab
-      const filtered = tab === "all" ? data.requests : data.requests.filter((r: ReviewRequest) => r.status === tab);
+      const allRequests: ReviewRequest[] = Array.isArray(data.requests) ? data.requests : [];
+      const filtered = tab === "all" ? allRequests : allRequests.filter((r) => r.status === tab);
       setReviews(filtered);
-      setTotal(data.total);
-    } catch {
-      setError("Failed to load reviews.");
+      setTotal(data.total ?? allRequests.length);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to load reviews.");
     } finally {
       setLoading(false);
     }
@@ -118,8 +124,11 @@ export default function UserReviewList() {
 
         {/* Error */}
         {error && (
-          <div className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-            {error}
+          <div className="mb-4 flex items-center justify-between rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+            <span>{error}</span>
+            <button onClick={() => fetchReviews()} className="ml-3 rounded-lg border border-red-300 bg-white px-3 py-1 text-xs font-medium text-red-700 hover:bg-red-50">
+              Retry
+            </button>
           </div>
         )}
 
