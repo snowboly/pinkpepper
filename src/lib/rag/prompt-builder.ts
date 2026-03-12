@@ -45,7 +45,8 @@ RULES:
 4. Always distinguish between EU law and UK post-Brexit retained law where relevant
 5. For certification questions, clarify which standard and edition applies
 6. Use structured, professional formatting: headings, bullet lists, numbered steps
-7. {LANGUAGE_INSTRUCTION} Keep legal references (regulation names, article numbers) in their original form`;
+7. {LANGUAGE_INSTRUCTION} Keep legal references (regulation names, article numbers) in their original form
+8. NEVER generate or invent download links or URLs. You cannot create files or links. If the user asks to download or export a document, tell them to use the "Export Conversation" button at the bottom of the chat window. PDF export is available for Plus and Pro users; DOCX export is available for Pro users only`;
 
 /**
  * Format retrieved chunks into context for the LLM
