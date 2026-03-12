@@ -39,35 +39,38 @@ export async function GET(request: Request) {
 
   const url = new URL(request.url);
   const conversationId = url.searchParams.get("conversationId");
-  const page = Math.max(1, parseInt(url.searchParams.get("page") ?? "1", 10));
+  const parsedPage = parseInt(url.searchParams.get("page") ?? "1", 10);
+  const page = Number.isFinite(parsedPage) && parsedPage >= 1 ? parsedPage : 1;
   const pageSize = 20;
   const offset = (page - 1) * pageSize;
 
-  // When fetching for a specific conversation, return minimal fields (for ReviewModal)
-  // When fetching all reviews, return full details (for /dashboard/reviews)
-  const columns = conversationId
-    ? "id,conversation_id,review_type,document_category,status,created_at"
-    : "id,conversation_id,review_type,document_category,status,notes,reviewer_notes,reviewer_file_id,snapshot_content,created_at,updated_at,completed_at";
-
-  let query = supabase
-    .from("review_requests")
-    .select(columns, { count: conversationId ? undefined : "exact" })
-    .eq("user_id", user.id)
-    .order("created_at", { ascending: false });
-
   if (conversationId) {
-    query = query.eq("conversation_id", conversationId).limit(20);
-  } else {
-    query = query.range(offset, offset + pageSize - 1);
-  }
+    const { data, error } = await supabase
+      .from("review_requests")
+      .select("id,conversation_id,review_type,document_category,status,created_at")
+      .eq("user_id", user.id)
+      .eq("conversation_id", conversationId)
+      .order("created_at", { ascending: false })
+      .limit(20);
 
-  const { data, error, count } = await query;
-  if (error) {
-    return NextResponse.json({ error: "Failed to load review requests." }, { status: 500 });
-  }
+    if (error) {
+      console.error("review_requests query error (conversation):", error.message, error.code, error.details);
+      return NextResponse.json({ error: error.message || "Failed to load review requests." }, { status: 500 });
+    }
 
-  if (conversationId) {
     return NextResponse.json({ requests: data ?? [] });
+  }
+
+  const { data, error, count } = await supabase
+    .from("review_requests")
+    .select("*", { count: "exact" })
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false })
+    .range(offset, offset + pageSize - 1);
+
+  if (error) {
+    console.error("review_requests query error (list):", error.message, error.code, error.details);
+    return NextResponse.json({ error: error.message || "Failed to load review requests." }, { status: 500 });
   }
 
   return NextResponse.json({ requests: data ?? [], total: count ?? 0, page });
