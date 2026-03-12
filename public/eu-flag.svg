@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 40">
+  <defs>
+    <!-- 5-pointed star centred at 0,0 pointing up, outer r=2.2, inner r=0.9 -->
+    <polygon id="s" fill="#FFCC00" points="
+      0,-2.2
+      0.529,-0.728
+      2.092,-0.680
+      0.856,0.278
+      1.293,1.780
+      0,0.900
+      -1.293,1.780
+      -0.856,0.278
+      -2.092,-0.680
+      -0.529,-0.728
+    "/>
+  </defs>
+  <rect width="60" height="40" fill="#003399"/>
+  <!-- 12 stars at 30° intervals on circle r=13.333, centre (30,20) -->
+  <!-- angle measured clockwise from top: x=30+r·sin(a), y=20−r·cos(a) -->
+  <use href="#s" transform="translate(30,6.667)"/>
+  <use href="#s" transform="translate(36.667,8.453)"/>
+  <use href="#s" transform="translate(41.547,13.333)"/>
+  <use href="#s" transform="translate(43.333,20)"/>
+  <use href="#s" transform="translate(41.547,26.667)"/>
+  <use href="#s" transform="translate(36.667,31.547)"/>
+  <use href="#s" transform="translate(30,33.333)"/>
+  <use href="#s" transform="translate(23.333,31.547)"/>
+  <use href="#s" transform="translate(18.453,26.667)"/>
+  <use href="#s" transform="translate(16.667,20)"/>
+  <use href="#s" transform="translate(18.453,13.333)"/>
+  <use href="#s" transform="translate(23.333,8.453)"/>
+</svg>
