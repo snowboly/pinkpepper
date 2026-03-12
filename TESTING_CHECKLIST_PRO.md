@@ -7,44 +7,44 @@ This checklist is for a **PRO subscription user** to manually test all PinkPeppe
 
 ## 1. Authentication & Account
 
-- [ ] **Sign up** with email + password (min 8 chars) — verify confirmation email arrives
-- [ ] **Sign up with magic link** — verify OTP email arrives and logs you in
-- [ ] **Sign up with existing email** — verify no email-enumeration leak (should not say "email taken")
-- [ ] **Log in** with password — redirects to `/dashboard`
-- [ ] **Log in with magic link** — verify OTP flow works end-to-end
-- [ ] **Log in with wrong password** — verify clear error message
-- [ ] **Forgot password** — verify reset email arrives, link works, password updates
-- [ ] **Update password** — min 8 chars enforced, confirm-password must match
-- [ ] **Cross-device magic link** — open magic link on a different device/browser; expect clear error ("use same device")
-- [ ] **Expired auth link** — wait for link to expire; expect "link expired" message
-- [ ] **Sign out** — from Settings page, verify redirect to homepage and session is cleared
+- [ ] **Sign up** with email + password (min 8 chars) — verify confirmation email arrives. YES
+- [ ] **Sign up with magic link** — verify OTP email arrives and logs you in. YES
+- [ ] **Sign up with existing email** — verify no email-enumeration leak (should not say "email taken"). YEs, email already exists.
+- [ ] **Log in** with password — redirects to `/dashboard`. yes, logs to dashboard.
+- [ ] **Log in with magic link** — verify OTP flow works end-to-end. YES
+- [ ] **Log in with wrong password** — verify clear error message. YES, Invalid login credentials.
+- [ ] **Forgot password** — verify reset email arrives, link works, password updates. YES, works.
+- [ ] **Update password** — min 8 chars enforced, confirm-password must match. YES
+- [ ] **Cross-device magic link** — open magic link on a different device/browser; expect clear error ("use same device"). Yes, shows use same device.
+- [ ] **Expired auth link** — wait for link to expire; expect "link expired" message. 
+- [ ] **Sign out** — from Settings page, verify redirect to homepage and session is cleared. Yes, clear signed out. 
 
 ---
 
 ## 2. Onboarding
 
-- [ ] **First login** — OnboardingModal appears asking business type
-- [ ] **Select business type** (e.g. "Restaurant/Cafe") and submit — modal closes, selection persists
-- [ ] **Skip/close without selecting** — verify modal reappears on next page load
-- [ ] **Network error during onboarding** — disconnect network, submit; expect "Network error" message
+- [ ] **First login** — OnboardingModal appears asking business type. Yes
+- [ ] **Select business type** (e.g. "Restaurant/Cafe") and submit — modal closes, selection persists. Yes. (although there is not added value to this answers nor any diff features).
+- [ ] **Skip/close without selecting** — verify modal reappears on next page load. YES
+- [ ] **Network error during onboarding** — disconnect network, submit; expect "Network error" message. YES
 
 ---
 
 ## 3. Chat — Text Messages
 
-- [ ] **Send a simple question** (e.g. "What is HACCP?") — response streams token-by-token
-- [ ] **Send a complex/document query** (e.g. "Write me a cleaning SOP") — verify larger model is used (longer, more detailed response)
-- [ ] **Send an audit-keyword query** (e.g. "Run a gap analysis on my kitchen") — verify audit-mode response style
-- [ ] **Verify RAG citations** — ask about a regulation (e.g. "EC 852/2004"); check SourceCards appear with title, similarity %, excerpt
-- [ ] **Expand/collapse citations** — click chevron on SourceCard
-- [ ] **"Show more sources"** — if >3 citations returned, verify expand button works
-- [ ] **Streaming interruption** — click Stop button mid-stream; verify partial response is preserved and UI is usable
-- [ ] **Empty message** — try submitting with no text/image/doc; send button should be disabled
-- [ ] **Max length (2500 chars)** — type exactly 2500 chars; verify counter shows 0 remaining, send works
-- [ ] **Over max length** — type 2501+ chars; verify counter turns red, submit is blocked or truncated
-- [ ] **Copy assistant message** — click copy icon; verify clipboard has message text, icon changes to checkmark for ~2s
-- [ ] **Persona consistency** — send multiple messages in same conversation; verify same persona avatar/name throughout
-- [ ] **New conversation gets different persona** — start a new chat; persona may differ (hash-based)
+- [ ] **Send a simple question** (e.g. "What is HACCP?") — response streams token-by-token. YES
+- [ ] **Send a complex/document query** (e.g. "Write me a cleaning SOP") — verify larger model is used (longer, more detailed response). YES. Created typed in document (no download).
+- [ ] **Send an audit-keyword query** (e.g. "Run a gap analysis on my kitchen") — verify audit-mode response style. YES, Query in normal chat, it analized the current conversation flow for any info and returned a list of gaps (all gaps since no information was passed thru for that audit. On audit mode, it started the actual audit requesting scope and docs and areas.
+- [ ] **Verify RAG citations** — ask about a regulation (e.g. "EC 852/2004"); check SourceCards appear with title, similarity %, excerpt. No rag citations needed. I removed that. Regarding the regulations, i asked about the arsenic levels in fish. It went to the KB to retrieve info but there are newer regulations from 2025, like the 1891. I asked about that new regulation and it answered "I'm a large language model, my training data only goes up to 2023, and I may not have the latest information on new regulations." I cannot have a model that doesnt know the latest regulations and that says it stopped in 2023. We need to work on that. 
+- [ ] **Expand/collapse citations** — click chevron on SourceCard. no need for the citations cards. It was very clunky. 
+- [ ] **"Show more sources"** — if >3 citations returned, verify expand button works. No need citations.
+- [ ] **Streaming interruption** — click Stop button mid-stream; verify partial response is preserved and UI is usable. Yes, usable. 
+- [ ] **Empty message** — try submitting with no text/image/doc; send button should be disabled. YES
+- [ ] **Max length (2500 chars)** — type exactly 2500 chars; verify counter shows 0 remaining, send works. YES
+- [ ] **Over max length** — type 2501+ chars; verify counter turns red, submit is blocked or truncated. YES
+- [ ] **Copy assistant message** — click copy icon; verify clipboard has message text, icon changes to checkmark for ~2s. YES
+- [ ] **Persona consistency** — send multiple messages in same conversation; verify same persona avatar/name throughout. YES, same persona.
+- [ ] **New conversation gets different persona** — start a new chat; persona may differ (hash-based). Yes, diff persona.
 
 ---
 
