@@ -191,6 +191,15 @@ export default function ChatWorkspace({
 
   const canUploadImages = isAdmin || dailyImageUploads > 0;
 
+  // Never allow API responses to downgrade a paid tier to free (e.g. due to a transient
+  // DB error returning null profile data). Only refreshBillingStatus() should freely
+  // change tier since it queries the authoritative billing endpoint.
+  const TIER_RANK: Record<SubscriptionTier, number> = { free: 0, plus: 1, pro: 2 };
+  const safeTierUpdate = useCallback((incoming: SubscriptionTier) => {
+    setTier((current) => TIER_RANK[incoming] >= TIER_RANK[current] ? incoming : current);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const pushAssistantMessage = useCallback((content: string, persona?: PersonaInfo | null) => {
     setMessages((prev) => [...prev, { role: "assistant", content, persona: persona ?? undefined }]);
   }, []);
@@ -217,10 +226,10 @@ export default function ChatWorkspace({
     });
     if (doneData?.usage) {
       setUsage(doneData.usage.used);
-      setTier(doneData.usage.tier);
+      safeTierUpdate(doneData.usage.tier);
       setIsAdmin(Boolean(doneData.usage.isAdmin));
     }
-  }, []);
+  }, [safeTierUpdate]);
 
   const startTypingDrain = useCallback(() => {
     if (typingIntervalRef.current) return;
@@ -808,7 +817,7 @@ export default function ChatWorkspace({
       }
       if (data.usage) {
         setUsage(data.usage.used);
-        setTier(data.usage.tier);
+        safeTierUpdate(data.usage.tier);
         setIsAdmin(Boolean(data.usage.isAdmin));
       }
       await loadConversations(true);
@@ -950,7 +959,7 @@ export default function ChatWorkspace({
         }
         if (data.usage) {
           setUsage(data.usage.used);
-          setTier(data.usage.tier);
+          safeTierUpdate(data.usage.tier);
           setIsAdmin(Boolean(data.usage.isAdmin));
         }
         await loadConversations(true);

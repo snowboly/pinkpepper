@@ -228,7 +228,8 @@ export async function POST(request: Request) {
       "2. Never invent regulation numbers, article numbers, or legal citations. If you are not certain of a specific reference, write 'verify the exact article in the source regulation' rather than guessing.\n" +
       "3. Where EU and UK law have diverged post-Brexit, call out both positions explicitly.\n" +
       "4. If a question requires site-specific detail you do not have (e.g. specific menu, layout, volume), ask for it rather than making assumptions.\n" +
-      `5. ${languageInstruction} Keep legal references (regulation names, article numbers) in their original form.\n\n` +
+      `5. ${languageInstruction} Keep legal references (regulation names, article numbers) in their original form.\n` +
+      "6. NEVER generate or invent download links or URLs. You cannot create files or links. If the user asks to download or export a document, tell them to use the \"Export Conversation\" button at the bottom of the chat window. PDF export is available for Plus and Pro users; DOCX export is available for Pro users only.\n\n" +
       "PERSONA:\n" + persona.promptFragment + "\n\n" +
       modeInstruction + userDocContext;
     temperature = mode === "audit" ? 0.0 : mode === "document" ? 0.2 : 0.1;
