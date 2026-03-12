@@ -122,6 +122,7 @@ export default function ChatWorkspace({
   dailyImageUploads,
   canExportPdf,
   canExportWord,
+  canReview,
   isAdmin: initialIsAdmin = false,
   onboardingCompleted = false,
 }: ChatWorkspaceProps) {
@@ -284,7 +285,7 @@ export default function ChatWorkspace({
         allowWordExport: TIER_CAPABILITIES[tier].allowWordExport || canExportWord,
       };
 
-  const reviewEligible = isAdmin || dynamicCapabilities.monthlyHumanReviews > 0;
+  const reviewEligible = isAdmin || dynamicCapabilities.monthlyHumanReviews > 0 || canReview;
 
   const tierColour = isAdmin
     ? "border-[#7C3AED] bg-[#F5F3FF] text-[#5B21B6]"

@@ -52,6 +52,7 @@ export default async function DashboardPage() {
       dailyImageUploads={isAdmin ? Number.MAX_SAFE_INTEGER : caps.dailyImageUploads}
       canExportPdf={caps.allowPdfExport}
       canExportWord={caps.allowWordExport}
+      canReview={caps.monthlyHumanReviews > 0}
       isAdmin={isAdmin}
       onboardingCompleted={profile?.onboarding_completed ?? false}
     />
