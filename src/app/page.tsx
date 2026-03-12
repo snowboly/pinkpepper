@@ -487,7 +487,7 @@ export default function HomePage() {
                 <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />Keep up to 10 saved conversations with 30-day history</li>
                 <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />15 AI queries and 3 voice transcriptions per day</li>
               </ul>
-              <Link href="/signup" className="mt-8 block rounded-xl bg-[#0F172A] py-3.5 text-center text-sm font-semibold text-white transition-all duration-200 hover:bg-[#1E293B] hover:-translate-y-0.5 hover:shadow-md active:scale-[0.98]">
+              <Link href="/signup" className="mt-8 block rounded-xl border border-[#E2E8F0] bg-white py-3.5 text-center text-sm font-semibold text-[#0F172A] transition-all duration-200 hover:bg-[#F8FAFC] hover:-translate-y-0.5 hover:shadow-md active:scale-[0.98]">
                 Get started
               </Link>
             </div>
