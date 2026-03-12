@@ -71,7 +71,9 @@ export function formatContext(chunks: KnowledgeChunk[]): string {
 export function buildRAGSystemPrompt(
   chunks: KnowledgeChunk[],
   mode: RAGMode = "qa",
-  preferredLanguage = "English"
+  preferredLanguage = "English",
+  currentDate?: string,
+  businessTypeLabel?: string | null
 ): string {
   const contextSection = formatContext(chunks);
   const modeInstructions = getModeInstructions(mode);
@@ -81,7 +83,20 @@ export function buildRAGSystemPrompt(
     languageInstruction
   );
 
-  return `${prompt}
+  const contextParts: string[] = [];
+  if (currentDate) {
+    contextParts.push(
+      `Today's date is ${currentDate}. Your knowledge base may contain regulations published up to the present day — always check retrieved context documents first before relying on your training weights alone. Do not tell users your training data ends in a specific year; if very recent changes are not found in context, recommend they verify with EUR-Lex, the FSA, or the relevant authority for the latest official text.`
+    );
+  }
+  if (businessTypeLabel) {
+    contextParts.push(
+      `The user operates a ${businessTypeLabel}. Tailor your examples and advice to this business type where relevant.`
+    );
+  }
+  const contextHeader = contextParts.length > 0 ? contextParts.join("\n") + "\n\n" : "";
+
+  return `${contextHeader}${prompt}
 
 ${modeInstructions}
 
@@ -130,10 +145,12 @@ export function buildRAGPrompt(
   userMessage: string,
   chunks: KnowledgeChunk[],
   mode: RAGMode = "qa",
-  preferredLanguage = "English"
+  preferredLanguage = "English",
+  currentDate?: string,
+  businessTypeLabel?: string | null
 ): { systemPrompt: string; temperature: number } {
   return {
-    systemPrompt: buildRAGSystemPrompt(chunks, mode, preferredLanguage),
+    systemPrompt: buildRAGSystemPrompt(chunks, mode, preferredLanguage, currentDate, businessTypeLabel),
     temperature: MODE_TEMPERATURES[mode],
   };
 }
