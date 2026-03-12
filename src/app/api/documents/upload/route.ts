@@ -87,7 +87,7 @@ export async function POST(request: Request) {
       user_id: user.id,
       file_name: file.name,
       content,
-      embedding: embeddings[i],
+      embedding: embeddings[i].embedding,
       chunk_index: i,
     }));
 
