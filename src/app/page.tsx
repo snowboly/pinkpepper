@@ -255,13 +255,28 @@ export default function HomePage() {
                 rel="noopener noreferrer"
                 className="inline-flex max-w-xl flex-wrap items-center justify-center gap-x-3 gap-y-2 rounded-2xl border border-[#FBCFE8] bg-white px-4 py-3 text-center text-sm text-[#475569] shadow-[0_14px_40px_rgba(225,29,72,0.08)] transition-all duration-200 hover:-translate-y-0.5 hover:border-[#FDA4AF] hover:text-[#0F172A] hover:shadow-[0_18px_48px_rgba(225,29,72,0.12)]"
               >
-                <img
-                  src="/eu-flag.svg"
-                  alt="EU flag"
-                  width={24}
-                  height={16}
+                <svg
+                  aria-label="EU flag"
+                  width="24"
+                  height="16"
+                  viewBox="0 0 60 40"
                   className="flex-shrink-0 rounded-sm"
-                />
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <rect width="60" height="40" fill="#003399"/>
+                  {/* 12 stars at 30° intervals, r=13.333, centre (30,20), outer r=2.2, inner r=0.9 */}
+                  {[0,30,60,90,120,150,180,210,240,270,300,330].map((deg) => {
+                    const rad = (deg * Math.PI) / 180;
+                    const cx = 30 + 13.333 * Math.sin(rad);
+                    const cy = 20 - 13.333 * Math.cos(rad);
+                    const pts = [0,1,2,3,4,5,6,7,8,9].map((i) => {
+                      const a = (i * 36 * Math.PI) / 180;
+                      const r = i % 2 === 0 ? 2.2 : 0.9;
+                      return `${cx + r * Math.sin(a)},${cy - r * Math.cos(a)}`;
+                    }).join(" ");
+                    return <polygon key={deg} fill="#FFCC00" points={pts} />;
+                  })}
+                </svg>
                 <span className="leading-relaxed">
                   Regulation data powered by <span className="font-semibold text-[#0F172A]">EUR-Lex CELLAR</span>
                 </span>
