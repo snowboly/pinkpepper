@@ -10,6 +10,7 @@
 import { createHash } from "crypto";
 import { createAdminClient } from "@/utils/supabase/admin";
 import { generateEmbeddings } from "@/lib/rag/embeddings";
+import type { Json } from "@/types/database.types";
 import {
   searchFoodSafetyRegulations,
   fetchRegulationText,
@@ -164,7 +165,7 @@ async function processRegulation(
     source_type: string;
     source_name: string;
     section_ref: string | null;
-    metadata: Record<string, unknown>;
+    metadata: Json;
   }> = [];
 
   for (let i = 0; i < chunks.length; i += EMBEDDING_BATCH_SIZE) {
