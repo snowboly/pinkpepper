@@ -256,7 +256,7 @@ export default function HomePage() {
                 className="inline-flex max-w-xl flex-wrap items-center justify-center gap-x-3 gap-y-2 rounded-2xl border border-[#FBCFE8] bg-white px-4 py-3 text-center text-sm text-[#475569] shadow-[0_14px_40px_rgba(225,29,72,0.08)] transition-all duration-200 hover:-translate-y-0.5 hover:border-[#FDA4AF] hover:text-[#0F172A] hover:shadow-[0_18px_48px_rgba(225,29,72,0.12)]"
               >
                 <span
-                  className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[#E11D48] text-base leading-none text-white"
+                  className="inline-flex items-center justify-center text-xl leading-none"
                   aria-hidden="true"
                 >
                   {String.fromCodePoint(0x1f1ea, 0x1f1fa)}
@@ -496,7 +496,7 @@ export default function HomePage() {
                 <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />Keep up to 10 saved conversations with 30-day history</li>
                 <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />15 AI queries and 3 voice transcriptions per day</li>
               </ul>
-              <Link href="/signup" className="mt-8 block rounded-xl border border-[#E2E8F0] bg-white py-3.5 text-center text-sm font-semibold text-[#0F172A] transition-all duration-200 hover:bg-[#F8FAFC] hover:-translate-y-0.5 hover:shadow-md active:scale-[0.98]">
+              <Link href="/signup" className="mt-8 block rounded-xl bg-[#0F172A] py-3.5 text-center text-sm font-semibold text-white transition-all duration-200 hover:bg-[#1E293B] hover:-translate-y-0.5 hover:shadow-md active:scale-[0.98]">
                 Get started
               </Link>
             </div>
@@ -515,7 +515,7 @@ export default function HomePage() {
                 <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />Improved model memory</li>
                 <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />PDF export</li>
               </ul>
-              <Link href="/signup?plan=plus" className="mt-8 block rounded-xl border border-[#E2E8F0] bg-white py-3.5 text-center text-sm font-semibold text-[#0F172A] transition-all duration-200 hover:bg-[#F8FAFC] hover:-translate-y-0.5 hover:shadow-md active:scale-[0.98]">
+              <Link href="/signup?plan=plus" className="mt-8 block rounded-xl bg-[#475569] py-3.5 text-center text-sm font-semibold text-white transition-all duration-200 hover:bg-[#334155] hover:-translate-y-0.5 hover:shadow-md active:scale-[0.98]">
                 Choose Plus
               </Link>
             </div>
