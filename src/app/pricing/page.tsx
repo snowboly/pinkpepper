@@ -25,7 +25,7 @@ export default async function PricingPage() {
   const ctaBase =
     "mt-8 block w-full rounded-xl py-3.5 text-center text-sm font-semibold transition-colors";
   const ctaPrimary = `${ctaBase} bg-[#FDA4AF] text-white hover:bg-[#FECDD3]`;
-  const ctaSecondary = `${ctaBase} bg-[#E11D48] text-white hover:bg-[#BE123C]`;
+  const ctaSecondary = `${ctaBase} border border-[#E2E8F0] bg-[#F8FAFC] text-[#475569] hover:bg-[#F1F5F9]`;
   const ctaNeutral = `${ctaBase} border border-[#E2E8F0] bg-[#F8FAFC] text-[#475569] hover:bg-[#F1F5F9]`;
 
   return (
