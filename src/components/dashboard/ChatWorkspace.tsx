@@ -561,6 +561,7 @@ export default function ChatWorkspace({
       if (conversationId === id) {
         setConversationId(null);
         setMessages([]);
+        window.history.replaceState(null, "", window.location.pathname);
       }
     } catch {
       setError("Network error while deleting conversation.");
@@ -584,6 +585,7 @@ export default function ChatWorkspace({
       if (conversationId === id) {
         setConversationId(null);
         setMessages([]);
+        window.history.replaceState(null, "", window.location.pathname);
       }
     } catch {
       setError("Network error while archiving conversation.");
@@ -695,6 +697,7 @@ export default function ChatWorkspace({
     clearImage();
     setAttachedDocument(null);
     setError(null);
+    window.history.replaceState(null, "", window.location.pathname);
   }
 
   function switchMode(nextMode: WorkspaceMode) {
@@ -1124,6 +1127,7 @@ export default function ChatWorkspace({
   function selectConversation(id: string) {
     loadConvOnSelect.current = id;
     setConversationId(id);
+    window.history.replaceState(null, "", `?c=${id}`);
   }
 
   useEffect(() => {
@@ -1139,6 +1143,8 @@ export default function ChatWorkspace({
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get("billing") === "success") void refreshBillingStatus();
+    const cId = params.get("c");
+    if (cId) selectConversation(cId);
   }, []);
 
   useEffect(() => {
