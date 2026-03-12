@@ -92,6 +92,14 @@ export async function POST(request: Request) {
     }));
 
     const adminSupabase = getAdminSupabase();
+
+    // Delete any existing chunks for this file before inserting fresh ones
+    await adminSupabase
+      .from("user_document_chunks")
+      .delete()
+      .eq("user_id", user.id)
+      .eq("file_name", file.name);
+
     const { error: insertError } = await adminSupabase
       .from("user_document_chunks")
       .insert(rows);
