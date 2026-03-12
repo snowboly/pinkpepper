@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS public.regulation_sync_log (
   title TEXT NOT NULL,
   source_name TEXT NOT NULL,
   last_modified DATE,
+  content_hash TEXT,
   chunks_ingested INTEGER NOT NULL DEFAULT 0,
   synced_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   status TEXT NOT NULL DEFAULT 'success',

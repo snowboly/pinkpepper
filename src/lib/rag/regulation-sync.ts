@@ -7,6 +7,7 @@
  * Designed to run as a monthly Vercel Cron job.
  */
 
+import { createHash } from "crypto";
 import { createAdminClient } from "@/utils/supabase/admin";
 import { generateEmbeddings } from "@/lib/rag/embeddings";
 import {
@@ -95,36 +96,53 @@ async function getLastSyncDate(): Promise<string> {
 }
 
 /**
- * Check if a regulation has already been synced with the same last_modified date.
+ * SHA-256 hash of regulation text — used to detect amendments
+ * even when the last_modified date hasn't changed.
  */
-async function isAlreadySynced(celex: string, lastModified: string): Promise<boolean> {
+function hashText(text: string): string {
+  return createHash("sha256").update(text).digest("hex");
+}
+
+/**
+ * Check if a regulation has already been synced with an identical content hash.
+ * Falls back to last_modified comparison if no hash is stored yet.
+ */
+async function isAlreadySynced(
+  celex: string,
+  lastModified: string,
+  contentHash: string
+): Promise<boolean> {
   const supabase = createAdminClient();
 
   const { data } = await supabase
     .from("regulation_sync_log")
-    .select("id")
+    .select("content_hash, last_modified")
     .eq("celex_number", celex)
-    .eq("last_modified", lastModified)
     .eq("status", "success")
+    .order("synced_at", { ascending: false })
+    .limit(1)
     .maybeSingle();
 
-  return !!data;
+  if (!data) return false;
+
+  // If a hash is stored, compare hashes (catches amendments with unchanged dates)
+  if (data.content_hash) return data.content_hash === contentHash;
+
+  // Legacy: fall back to date comparison for older log entries without a hash
+  return data.last_modified === lastModified;
 }
 
 /**
- * Process a single regulation: fetch text, chunk, embed, and insert into DB.
+ * Process a single regulation: chunk, embed, and insert into DB.
+ * Accepts pre-fetched text and its hash to avoid double-fetching.
  */
 async function processRegulation(
-  regulation: CellarRegulation
-): Promise<{ chunksCreated: number }> {
+  regulation: CellarRegulation,
+  text: string,
+  contentHash: string
+): Promise<{ chunksCreated: number; contentHash: string }> {
   const supabase = createAdminClient();
   const sourceName = celexToSourceName(regulation.celex);
-
-  // Fetch full text
-  const text = await fetchRegulationText(regulation.celex);
-  if (!text || text.length < 100) {
-    throw new Error(`Regulation text too short or empty (${text.length} chars)`);
-  }
 
   // Chunk the text
   const chunks = chunkText(text, CHUNK_SIZE, CHUNK_OVERLAP);
@@ -184,7 +202,7 @@ async function processRegulation(
     }
   }
 
-  return { chunksCreated: allRows.length };
+  return { chunksCreated: allRows.length, contentHash };
 }
 
 /**
@@ -222,10 +240,18 @@ export async function syncRegulations(): Promise<SyncResult> {
   // Process each regulation
   for (const regulation of regulations) {
     try {
-      // Skip if already synced with same last_modified
+      // Fetch text first so we can hash it for amendment detection
+      const text = await fetchRegulationText(regulation.celex);
+      if (!text || text.length < 100) {
+        throw new Error(`Regulation text too short or empty (${text.length} chars)`);
+      }
+      const contentHash = hashText(text);
+
+      // Skip if already synced with identical content
       const alreadySynced = await isAlreadySynced(
         regulation.celex,
-        regulation.dateLastModified
+        regulation.dateLastModified,
+        contentHash
       );
       if (alreadySynced) {
         result.regulationsSkipped++;
@@ -236,7 +262,7 @@ export async function syncRegulations(): Promise<SyncResult> {
         `[regulation-sync] Processing: ${regulation.celex} — ${regulation.title.slice(0, 80)}`
       );
 
-      const { chunksCreated } = await processRegulation(regulation);
+      const { chunksCreated } = await processRegulation(regulation, text, contentHash);
       result.regulationsProcessed++;
       result.chunksCreated += chunksCreated;
 
@@ -246,6 +272,7 @@ export async function syncRegulations(): Promise<SyncResult> {
         title: regulation.title.slice(0, 500),
         source_name: celexToSourceName(regulation.celex),
         last_modified: regulation.dateLastModified,
+        content_hash: contentHash,
         chunks_ingested: chunksCreated,
         synced_at: syncedAt,
         status: "success",
