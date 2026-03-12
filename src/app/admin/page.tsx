@@ -48,6 +48,7 @@ export default async function AdminDashboardPage() {
       dailyImageUploads={Number.MAX_SAFE_INTEGER}
       canExportPdf
       canExportWord
+      canReview
       isAdmin
     />
   );
