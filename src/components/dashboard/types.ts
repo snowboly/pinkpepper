@@ -40,6 +40,7 @@ export type ChatWorkspaceProps = {
   dailyImageUploads: number;
   canExportPdf: boolean;
   canExportWord: boolean;
+  canReview: boolean;
   isAdmin?: boolean;
   onboardingCompleted?: boolean;
 };
