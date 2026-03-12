@@ -111,9 +111,11 @@ summary:active {
   font-weight: 700;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+@layer base {
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
 }
 
 .pp-container {
