@@ -197,15 +197,23 @@ export default function ChatMessages({
         <div className="py-5">
           <div className="mx-auto max-w-5xl px-4 md:px-6">
             <div className="mb-1.5 flex items-center gap-2">
-              <div className="relative h-5 w-5 rounded-full bg-[#E11D48] animate-pulse">
+              <div
+                className="relative h-5 w-5 rounded-full bg-[#E11D48]"
+                style={{ animation: "thinking-glow 2s ease-in-out infinite" }}
+              >
                 <span className="absolute left-[5px] top-[4px] h-1.5 w-1.5 rounded-full bg-white/80" />
               </div>
               <span className="text-sm font-semibold text-[#0F172A]">{currentPersona ? currentPersona.name : t("pinkPepper")}</span>
             </div>
-            <div className="flex gap-1 ml-7">
-              <span className="h-2 w-2 rounded-full bg-[#9CA3AF] animate-bounce" style={{ animationDelay: "0ms" }} />
-              <span className="h-2 w-2 rounded-full bg-[#9CA3AF] animate-bounce" style={{ animationDelay: "150ms" }} />
-              <span className="h-2 w-2 rounded-full bg-[#9CA3AF] animate-bounce" style={{ animationDelay: "300ms" }} />
+            <div className="flex items-center gap-1.5 ml-7">
+              <span className="text-xs text-[#94A3B8] mr-0.5">{t("thinking")}</span>
+              {([0, 160, 320] as const).map((delay) => (
+                <span
+                  key={delay}
+                  className="h-1.5 w-1.5 rounded-full bg-[#E11D48]"
+                  style={{ animation: "thinking-wave 1.4s ease-in-out infinite", animationDelay: `${delay}ms` }}
+                />
+              ))}
             </div>
           </div>
         </div>
