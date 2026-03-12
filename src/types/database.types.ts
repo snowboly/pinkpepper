@@ -325,6 +325,36 @@ export type Database = {
         }
         Relationships: []
       }
+      regulation_sync_log: {
+        Row: {
+          id: string
+          synced_at: string
+          status: string
+          source_name: string | null
+          chunks_upserted: number | null
+          error_message: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          synced_at?: string
+          status: string
+          source_name?: string | null
+          chunks_upserted?: number | null
+          error_message?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          synced_at?: string
+          status?: string
+          source_name?: string | null
+          chunks_upserted?: number | null
+          error_message?: string | null
+          created_at?: string
+        }
+        Relationships: []
+      }
       usage_events: {
         Row: {
           created_at: string
