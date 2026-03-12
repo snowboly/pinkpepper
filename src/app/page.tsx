@@ -248,6 +248,25 @@ export default function HomePage() {
               Create UK/EU-ready compliance documents that are built for real kitchen and audit workflows.
             </p>
 
+            <div className="mb-8 flex justify-center">
+              <a
+                href="https://eur-lex.europa.eu"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex max-w-xl flex-wrap items-center justify-center gap-x-3 gap-y-2 rounded-2xl border border-[#FBCFE8] bg-white px-4 py-3 text-center text-sm text-[#475569] shadow-[0_14px_40px_rgba(225,29,72,0.08)] transition-all duration-200 hover:-translate-y-0.5 hover:border-[#FDA4AF] hover:text-[#0F172A] hover:shadow-[0_18px_48px_rgba(225,29,72,0.12)]"
+              >
+                <span
+                  className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[#E11D48] text-base leading-none text-white"
+                  aria-hidden="true"
+                >
+                  {String.fromCodePoint(0x1f1ea, 0x1f1fa)}
+                </span>
+                <span className="leading-relaxed">
+                  Regulation data powered by <span className="font-semibold text-[#0F172A]">EUR-Lex CELLAR</span>
+                </span>
+              </a>
+            </div>
+
             <div className="mx-auto mb-10 grid max-w-5xl gap-4 text-left md:grid-cols-3">
               {differentiators.map((item) => (
                 <div key={item.title} className="rounded-2xl border border-[#E2E8F0] bg-white/90 p-5">
@@ -311,7 +330,7 @@ export default function HomePage() {
             href="https://eur-lex.europa.eu"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-md border border-[#E2E8F0] bg-[#F8FAFC] px-3 py-1.5 text-xs text-[#475569] transition-colors hover:border-[#CBD5E1] hover:text-[#0F172A]"
+            className="hidden inline-flex items-center gap-2 rounded-md border border-[#E2E8F0] bg-[#F8FAFC] px-3 py-1.5 text-xs text-[#475569] transition-colors hover:border-[#CBD5E1] hover:text-[#0F172A]"
           >
             <span className="text-sm leading-none" aria-hidden="true">🇪🇺</span>
             <span>Regulation data powered by <span className="font-semibold">EUR-Lex CELLAR</span></span>
@@ -406,7 +425,7 @@ export default function HomePage() {
                       className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-colors ${
                         demoMode === mode
                           ? "bg-[#0F172A] text-white"
-                          : "bg-[#F8FAFC] text-[#64748B] hover:bg-[#F1F5F9]"
+                          : "bg-[#94A3B8] text-white hover:bg-[#64748B]"
                       }`}
                     >
                       {demoMap[mode].label}
