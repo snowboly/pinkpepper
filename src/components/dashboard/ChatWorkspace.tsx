@@ -874,13 +874,18 @@ export default function ChatWorkspace({
   async function sendPromptValue(rawPrompt: string, options?: { displayPrompt?: string }) {
     if (await handleDocWizardInput(rawPrompt)) return;
 
-    const value = rawPrompt.trim();
-    if ((!value && !attachedImage) || loading) return;
+    let value = rawPrompt.trim();
+    if ((!value && !attachedImage && !attachedDocument) || loading) return;
 
     setLoading(true);
     setError(null);
     setPrompt("");
     if (textareaRef.current) textareaRef.current.style.height = "auto";
+
+    // If a document is attached but no text was typed, provide a default query
+    if (attachedDocument && !value) {
+      value = `Please analyse the document I just uploaded (${attachedDocument.name}) and summarise its key points.`;
+    }
 
     const userMessage: Message = {
       role: "user",
@@ -897,24 +902,28 @@ export default function ChatWorkspace({
     clearImage();
     setAttachedDocument(null);
 
-    // Document uploads: send to /api/documents/upload for text extraction + embedding storage
+    // Document uploads: send to /api/documents/upload for text extraction + embedding storage,
+    // then fall through to the streaming chat flow so the LLM responds using the content.
     if (currentDocument) {
       try {
         const fd = new FormData();
         fd.append("file", currentDocument);
         const res = await fetch("/api/documents/upload", { method: "POST", body: fd });
         const data = (await res.json()) as { chunksStored?: number; warning?: string; error?: string };
-        if (res.ok && (data.chunksStored ?? 0) > 0) {
+        if (!res.ok || (data.chunksStored ?? 0) === 0) {
+          const reason = data.warning ?? data.error ?? "could not extract text";
           pushAssistantMessage(
-            `I've processed **${currentDocument.name}** and indexed ${data.chunksStored} text chunks. I'll use the content of this document to inform my answers. What would you like to know?`
+            `I received **${currentDocument.name}** but couldn't process it (${reason}). Please try a plain text or supported file format.`
           );
           setLoading(false);
           return;
-        } else if (data.warning) {
-          pushAssistantMessage(`I received **${currentDocument.name}** but couldn't extract its text (${data.warning}). Please try a plain text or supported file format.`);
-          setLoading(false);
-          return;
         }
+        // Partial extraction warning — inform the LLM so it can caveat its answer
+        if (data.warning) {
+          value += `\n\n[Note: The uploaded document "${currentDocument.name}" was only partially extracted: ${data.warning}]`;
+        }
+        // Success — fall through to the streaming chat flow below.
+        // retrieveUserDocumentContext() in /api/chat/stream will find the just-uploaded chunks.
       } catch (e) {
         console.error("Document upload error:", e);
         pushAssistantMessage("Sorry, there was an error processing your document. Please try again.");
