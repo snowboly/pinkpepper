@@ -32,10 +32,10 @@ export async function POST(request: Request) {
   const burstLimitRes = await checkRateLimit(chatBurstLimiter, user.id);
   if (burstLimitRes) return burstLimitRes;
 
-  type ProfileRow = { tier?: string | null; is_admin?: boolean | null; chat_language?: string | null };
+  type ProfileRow = { tier?: string | null; is_admin?: boolean | null; chat_language?: string | null; business_type?: string | null };
   const profileResult = await supabase
     .from("profiles")
-    .select("tier,is_admin,chat_language")
+    .select("tier,is_admin,chat_language,business_type")
     .eq("id", user.id)
     .maybeSingle();
   const profile = profileResult.data as ProfileRow | null;
@@ -43,6 +43,21 @@ export async function POST(request: Request) {
   const { tier, isAdmin } = resolveUserAccess(profile, user.email);
   const chatLanguage = profile?.chat_language ?? "en";
   const caps = TIER_CAPABILITIES[tier];
+
+  const currentDate = new Date().toISOString().split("T")[0];
+
+  const BUSINESS_TYPE_LABELS: Record<string, string> = {
+    restaurant_cafe: "restaurant or café",
+    food_manufacturer: "food manufacturing business",
+    retailer_deli: "food retailer or delicatessen",
+    catering: "catering business",
+    street_food: "street food business",
+    wholesaler: "food wholesaler",
+    consultant: "food safety consultant",
+  };
+  const businessTypeLabel = profile?.business_type
+    ? (BUSINESS_TYPE_LABELS[profile.business_type] ?? "food business")
+    : null;
 
   const body = (await request.json()) as { message?: string; conversationId?: string | null };
   const message = body.message?.trim() ?? "";
@@ -176,7 +191,7 @@ export async function POST(request: Request) {
   const languageInstruction = `Respond in ${preferredLanguage}. This is the user's preferred response language. Do not switch to another language unless the user explicitly asks you to.`;
 
   if (ragEnabled) {
-    const ragPrompt = buildRAGPrompt(message, retrievedChunks, mode, preferredLanguage);
+    const ragPrompt = buildRAGPrompt(message, retrievedChunks, mode, preferredLanguage, currentDate, businessTypeLabel);
     systemPrompt = ragPrompt.systemPrompt + userDocContext + `\n\nPERSONA:\n${persona.promptFragment}`;
     temperature = ragPrompt.temperature;
   } else {
@@ -202,7 +217,15 @@ export async function POST(request: Request) {
           "- Use bullet points or numbered lists to improve scannability.\n" +
           "- Keep answers focused — do not pad with unnecessary caveats.";
 
+    const fallbackHeader = [
+      `Today's date is ${currentDate}. Your knowledge base may contain regulations published up to the present day — always check retrieved context documents first before relying on your training weights alone. Do not tell users your training data ends in a specific year; if very recent changes are not in context, recommend they verify with EUR-Lex, the FSA, or the relevant authority for the latest official text.`,
+      businessTypeLabel
+        ? `The user operates a ${businessTypeLabel}. Tailor your examples and advice to this business type where relevant.`
+        : "",
+    ].filter(Boolean).join("\n") + "\n\n";
+
     systemPrompt =
+      fallbackHeader +
       "You are PinkPepper, an expert AI food safety compliance assistant specialising in EU and UK food law and best practice.\n\n" +
       "ABOUT PINKPEPPER (answer when users ask about you, the product, or their plan):\n" +
       "PinkPepper is a food safety compliance SaaS that helps food businesses with HACCP plans, SOPs, audit preparation, allergen law, and EU/UK food safety compliance.\n" +
