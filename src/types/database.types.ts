@@ -328,30 +328,42 @@ export type Database = {
       regulation_sync_log: {
         Row: {
           id: string
+          celex_number: string
+          title: string
+          source_name: string
+          last_modified: string | null
+          content_hash: string | null
+          chunks_ingested: number
           synced_at: string
           status: string
-          source_name: string | null
-          chunks_upserted: number | null
           error_message: string | null
-          created_at: string
+          metadata: Json
         }
         Insert: {
           id?: string
+          celex_number: string
+          title: string
+          source_name: string
+          last_modified?: string | null
+          content_hash?: string | null
+          chunks_ingested?: number
           synced_at?: string
-          status: string
-          source_name?: string | null
-          chunks_upserted?: number | null
+          status?: string
           error_message?: string | null
-          created_at?: string
+          metadata?: Json
         }
         Update: {
           id?: string
+          celex_number?: string
+          title?: string
+          source_name?: string
+          last_modified?: string | null
+          content_hash?: string | null
+          chunks_ingested?: number
           synced_at?: string
           status?: string
-          source_name?: string | null
-          chunks_upserted?: number | null
           error_message?: string | null
-          created_at?: string
+          metadata?: Json
         }
         Relationships: []
       }
