@@ -105,6 +105,11 @@ const faqs = [
       "PinkPepper is focused on UK and EU food safety operations, including HACCP-oriented documentation and allergen management workflows. Requirements can vary by country, region, and business type, so final sign-off should be done by your responsible compliance lead.",
   },
   {
+    question: "Where does PinkPepper's regulation data come from?",
+    answer:
+      "PinkPepper's EU regulation knowledge is sourced from EUR-Lex CELLAR, the official open-data repository of the Publications Office of the European Union. This ensures that referenced legislation — such as EC 852/2004, EC 178/2002, and EU 1169/2011 — is drawn from authoritative, publicly accessible EU law.",
+  },
+  {
     question: "Who is responsible for final documents and decisions?",
     answer:
       "Your business remains responsible for implementation, verification, and legal compliance. PinkPepper accelerates preparation, but final approval, staff training, and operational controls must be handled by accountable personnel.",
@@ -301,7 +306,16 @@ export default function HomePage() {
       </section>
 
       <section className="border-b border-[#F1F5F9] bg-white py-5">
-        <div className="pp-container">
+        <div className="pp-container flex flex-col items-center gap-3">
+          <a
+            href="https://eur-lex.europa.eu"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded-md border border-[#E2E8F0] bg-[#F8FAFC] px-3 py-1.5 text-xs text-[#475569] transition-colors hover:border-[#CBD5E1] hover:text-[#0F172A]"
+          >
+            <span className="text-sm leading-none" aria-hidden="true">🇪🇺</span>
+            <span>Regulation data powered by <span className="font-semibold">EUR-Lex CELLAR</span></span>
+          </a>
           <div className="flex flex-wrap items-center justify-center gap-2">
             <span className="text-xs font-medium text-[#94A3B8] mr-1">Grounded in:</span>
             {["EC 852/2004", "EU 1169/2011", "EC 178/2002", "UK FSA Guidance", "Codex HACCP", "BRCGS-Ready"].map((reg) => (

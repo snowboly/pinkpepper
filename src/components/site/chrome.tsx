@@ -177,15 +177,6 @@ export function SiteFooter() {
       <div className="pp-container border-t border-[#F1F5F9] pt-8">
         <div className="flex flex-col items-center justify-between gap-4 text-center text-sm text-[#9B9B9B] md:flex-row md:text-left">
           <p>&copy; {new Date().getFullYear()} PinkPepper.io. All rights reserved.</p>
-          <a
-            href="https://eur-lex.europa.eu"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-md border border-[#E2E8F0] px-3 py-1.5 text-xs text-[#6B6B6B] transition-colors hover:border-[#CBD5E1] hover:text-[#1A1A1A]"
-          >
-            <span className="text-base leading-none" aria-hidden="true">🇪🇺</span>
-            <span>Regulation data powered by <span className="font-medium">EUR-Lex CELLAR</span></span>
-          </a>
         </div>
       </div>
     </footer>
