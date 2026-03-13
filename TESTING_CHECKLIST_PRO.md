@@ -50,18 +50,18 @@ This checklist is for a **PRO subscription user** to manually test all PinkPeppe
 
 ## 4. Chat — Image Analysis (PRO: 20/day)
 
-- [x] **Upload JPEG image** via button — preview thumbnail appears, send; verify OpenAI vision response about food safety. YES, works. Bug fixed: persona (Ryan) was not showing on image responses — fixed by returning persona from image API and consuming it in frontend.
-- [x] **Upload PNG image** — same flow. YES.
-- [x] **Upload WebP image** — same flow. YES.
-- [x] **Upload GIF image** — same flow. YES.
-- [x] **Drag-and-drop image** onto chat area — verify drop zone activates, image attaches. YES, drop zone activates with red ring overlay.
-- [x] **Remove attached image** before sending — click X on preview; verify image cleared. YES.
-- [x] **Unsupported image format** (e.g. .bmp, .tiff) — verify rejection with clear error. YES, clear error message.
-- [x] **Image > 5MB** — verify rejection with size error. YES, rejected with size error.
-- [x] **Send image with text prompt** — verify both are processed. YES.
-- [x] **Send image without text** — verify image-only analysis works. YES, defaults to "Analyse this image for food safety concerns."
-- [x] **Upload 20 images in one day** — all should succeed (PRO limit). YES.
-- [x] **Upload 21st image** — verify 402 error / upgrade modal with "daily image limit reached". YES. Bug fixed: thinking animation and typing cadence were missing during image analysis — fixed by pushing streaming placeholder before fetch and draining response through typing queue, matching text chat behaviour.
+- [ ] **Upload JPEG image** via button — preview thumbnail appears, send; verify OpenAI vision response about food safety. YES, all OK.
+- [ ] **Upload PNG image** — same flow. YES, all OK.
+- [ ] **Upload WebP image** — same flow. YES, all OK.
+- [ ] **Upload GIF image** — same flow. YES, all OK.
+- [ ] **Drag-and-drop image** onto chat area — verify drop zone activates, image attaches. YES, all OK.
+- [ ] **Remove attached image** before sending — click X on preview; verify image cleared. YES, all OK.
+- [ ] **Unsupported image format** (e.g. .bmp, .tiff) — verify rejection with clear error. Yes, all OK.
+- [ ] **Image > 5MB** — verify rejection with size error. YES, all ok.
+- [ ] **Send image with text prompt** — verify both are processed. Yes, all OK.
+- [ ] **Send image without text** — verify image-only analysis works. Yes, all OK.
+- [ ] **Upload 20 images in one day** — all should succeed (PRO limit). Yes, all ok.
+- [ ] **Upload 21st image** — verify 402 error / upgrade modal with "daily image limit reached". Yes, all ok.
 
 ---
 
