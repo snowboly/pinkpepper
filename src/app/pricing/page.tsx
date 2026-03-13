@@ -28,7 +28,7 @@ export default async function PricingPage() {
   const ctaBase =
     "mt-8 block w-full rounded-xl py-3.5 text-center text-sm font-semibold transition-colors";
   const ctaPrimary = `${ctaBase} bg-[#FDA4AF] text-white hover:bg-[#FECDD3]`;
-  const ctaSecondary = `${ctaBase} border border-[#E2E8F0] bg-[#F8FAFC] text-[#475569] hover:bg-[#F1F5F9]`;
+  const ctaSecondary = `${ctaBase} border border-[#FBCFE8] bg-[#FFF1F2] text-[#BE123C] hover:bg-[#FFE4E6]`;
   const ctaNeutral = `${ctaBase} border border-[#E2E8F0] bg-[#F8FAFC] text-[#475569] hover:bg-[#F1F5F9]`;
 
   const softwareApplicationSchema = {
@@ -168,7 +168,7 @@ export default async function PricingPage() {
             </div>
 
             {/* Plus */}
-            <div className="flex flex-col rounded-3xl border border-[#E2E8F0] bg-white p-8 transition-all duration-200 hover:shadow-lg hover:shadow-black/[0.04]">
+            <div className="flex flex-col rounded-3xl border-2 border-[#FBCFE8] bg-white p-8 shadow-md shadow-[#FDA4AF]/[0.08] transition-all duration-200 hover:shadow-lg hover:shadow-[#FDA4AF]/[0.12]">
               <h2 className="text-xl font-bold text-[#0F172A]">Plus</h2>
               <p className="mt-2 text-sm text-[#64748B]">
                 For teams that need working documents quickly, not just answers in chat.
@@ -177,27 +177,27 @@ export default async function PricingPage() {
                 <span className="text-5xl font-bold tracking-tight text-[#0F172A]"><span className="text-2xl align-super">€</span>19</span>
                 <span className="text-base text-[#94A3B8]">/month + VAT</span>
               </div>
-              <div className="my-6 border-t border-[#F1F5F9]" />
+              <div className="my-6 border-t border-[#FCE7F3]" />
               <ul className="flex-1 space-y-3.5 text-sm text-[#475569]">
                 <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />
-                  Generate HACCP plans, SOPs, logs, and supplier approval documents
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
+                  3 document generations per day — HACCP plans, SOPs, logs, and supplier approval documents
                 </li>
                 <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />
-                  Export the work as PDF for handover, filing, or internal review
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
+                  Export work as PDF for handover, filing, or internal review
                 </li>
                 <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />
-                  Unlimited saved conversations and longer working context
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
+                  100 AI queries per day
                 </li>
                 <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />
-                  100 AI queries, 3 image uploads, 25 voice transcriptions, and 3 document generations per day
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
+                  3 image uploads per day for label, kitchen, or product checks
                 </li>
-                <li className="flex items-start gap-2.5 opacity-50">
-                  <XCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#94A3B8]" />
-                  No virtual audit or specialist review
+                <li className="flex items-start gap-2.5">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
+                  Unlimited saved conversations with extended working context
                 </li>
               </ul>
               <PricingActions
