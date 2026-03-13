@@ -948,6 +948,7 @@ export default function ChatWorkspace({
           assistantMessage?: string;
           citations?: Citation[];
           conversationId?: string;
+          persona?: PersonaInfo;
           usage?: { used: number; limit: number | null; tier: SubscriptionTier; isAdmin?: boolean };
         };
         if (!res.ok) {
@@ -963,10 +964,11 @@ export default function ChatWorkspace({
           return;
         }
         if (data.conversationId) setConversationId(data.conversationId);
+        if (data.persona) setCurrentPersona(data.persona);
         if (data.assistantMessage) {
           setMessages((prev) => [
             ...prev,
-            { role: "assistant", content: data.assistantMessage!, citations: data.citations, persona: currentPersona ?? undefined },
+            { role: "assistant", content: data.assistantMessage!, citations: data.citations, persona: data.persona ?? currentPersona ?? undefined },
           ]);
         }
         if (data.usage) {

@@ -5,6 +5,7 @@ import { resolveUserAccess } from "@/lib/access";
 import { countUsageSince, utcDayStartIso } from "@/lib/policy";
 import { FOOD_SAFETY_VISION_SYSTEM_PROMPT } from "@/lib/rag/vision-prompt";
 import { visionLimiter, checkRateLimit } from "@/lib/ratelimit";
+import { getPersonaForConversation } from "@/lib/personas";
 
 export const dynamic = "force-dynamic";
 
@@ -89,12 +90,15 @@ async function handleImageAnalysis(
     return NextResponse.json({ error: "Failed to record usage." }, { status: 500 });
   }
 
+  const persona = getPersonaForConversation(conversationId);
+
   return NextResponse.json({
     conversationId,
     assistantMessage,
     citations: [],
     ragEnabled: false,
     imageAnalysis: true,
+    persona: { id: persona.id, name: persona.name },
     usage: {
       used: usage.used,
       limit: usage.limit,
