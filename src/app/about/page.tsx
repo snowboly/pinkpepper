@@ -13,6 +13,9 @@ export const metadata = {
   title: "About | PinkPepper",
   description:
     "PinkPepper combines AI-powered food safety compliance with expert human review. Founded by Dr Joao, with a background in chemistry and food science.",
+  alternates: {
+    canonical: "https://pinkpepper.io/about",
+  },
 };
 
 export default function AboutPage() {

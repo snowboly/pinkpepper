@@ -18,6 +18,9 @@ const spaceGrotesk = Space_Grotesk({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://pinkpepper.io"),
+  alternates: {
+    canonical: "https://pinkpepper.io",
+  },
   title: "PinkPepper | AI Food Safety Assistant for EU & UK Businesses",
   description:
     "PinkPepper helps food businesses generate HACCP plans, SOPs, monitoring logs, allergen documentation, and traceability procedures.",
@@ -44,6 +47,7 @@ export const metadata: Metadata = {
       "Generate HACCP plans, SOPs, and allergen docs with an AI trained for EU & UK food safety compliance.",
     images: ["/og-image.png"],
   },
+  manifest: "/logo/site.webmanifest",
   icons: {
     icon: [
       { url: "/logo/favicon-32x32.png", sizes: "32x32", type: "image/png" },

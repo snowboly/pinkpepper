@@ -8,6 +8,9 @@ export const metadata: Metadata = {
   title: "Pricing | PinkPepper - AI Food Safety Compliance Software",
   description:
     "Pricing for food safety teams that need faster document production, safer audit prep, and specialist review when the risk is higher.",
+  alternates: {
+    canonical: "https://pinkpepper.io/pricing",
+  },
 };
 
 export default async function PricingPage() {

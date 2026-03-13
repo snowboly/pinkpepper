@@ -5,6 +5,9 @@ export const metadata: Metadata = {
   title: "Security & Trust | PinkPepper",
   description:
     "How PinkPepper protects your food safety data — infrastructure, encryption, AI data handling, subprocessors, and GDPR alignment.",
+  alternates: {
+    canonical: "https://pinkpepper.io/security",
+  },
 };
 
 const subprocessors = [
