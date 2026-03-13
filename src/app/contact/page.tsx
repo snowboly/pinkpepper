@@ -2,6 +2,11 @@ import { Mail } from "lucide-react";
 
 export const metadata = {
   title: "Contact & Support | PinkPepper",
+  description:
+    "Get in touch with PinkPepper for food safety compliance questions, account support, and feedback. We're here to help EU and UK food businesses.",
+  alternates: {
+    canonical: "https://pinkpepper.io/contact",
+  },
 };
 
 export default function ContactPage() {
