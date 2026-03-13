@@ -2,6 +2,8 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
 import SettingsForm from "@/components/dashboard/SettingsForm";
 import { resolveUserAccess } from "@/lib/access";
+import { countUsageSince, utcDayStartIso } from "@/lib/policy";
+import { TIER_CAPABILITIES } from "@/lib/tier";
 
 export const dynamic = "force-dynamic";
 
@@ -25,6 +27,22 @@ export default async function SettingsPage() {
   const { tier, isAdmin } = resolveUserAccess(profile, user.email);
   const chatLanguage = profile?.chat_language ?? "en";
 
+  const caps = TIER_CAPABILITIES[tier as keyof typeof TIER_CAPABILITIES] ?? TIER_CAPABILITIES.free;
+  let usageCount = 0;
+  if (!isAdmin) {
+    try {
+      usageCount = await countUsageSince({
+        supabase,
+        userId: user.id,
+        eventType: "chat_prompt",
+        sinceIso: utcDayStartIso(),
+      });
+    } catch {
+      usageCount = 0;
+    }
+  }
+  const usageLimit = isAdmin ? null : caps.dailyMessages;
+
   return (
     <div className="min-h-screen bg-[#F8F9FB] py-10 px-4">
       <div className="mx-auto max-w-xl">
@@ -47,6 +65,8 @@ export default async function SettingsPage() {
           tier={tier}
           isAdmin={isAdmin}
           chatLanguage={chatLanguage}
+          usage={usageCount}
+          usageLimit={usageLimit}
         />
       </div>
     </div>

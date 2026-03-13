@@ -322,6 +322,8 @@
     "chatbotLanguageDescription": "Escolha o idioma em que o assistente de IA responde. Padrão: inglês.",
     "chatbotLanguageSaved": "Idioma do chatbot atualizado.",
     "saving": "A guardar...",
-    "save": "Guardar"
+    "save": "Guardar",
+    "usage": "Utilização",
+    "dailyMessages": "Mensagens hoje"
   }
 }

@@ -322,6 +322,8 @@
     "chatbotLanguageDescription": "Wählen Sie die Sprache, in der der KI-Assistent antwortet. Standard: Englisch.",
     "chatbotLanguageSaved": "Chatbot-Sprache aktualisiert.",
     "saving": "Speichern...",
-    "save": "Speichern"
+    "save": "Speichern",
+    "usage": "Nutzung",
+    "dailyMessages": "Nachrichten heute"
   }
 }

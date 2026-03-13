@@ -1195,7 +1195,6 @@ export default function ChatWorkspace({
           userEmail={userEmail}
           tier={tier}
           isAdmin={isAdmin}
-          usagePercent={usagePercent}
           tierColour={tierColour}
           onNewChat={startNewChat}
           onSelectConversation={(id) => { selectConversation(id); }}
