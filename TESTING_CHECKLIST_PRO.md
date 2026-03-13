@@ -67,13 +67,13 @@ This checklist is for a **PRO subscription user** to manually test all PinkPeppe
 
 ## 5. Chat — Document Upload & User RAG
 
-- [ ] **Upload PDF document** — verify filename tag appears, document is ingested for RAG
-- [ ] **Upload DOCX document** — same flow
-- [ ] **Upload TXT file** — same flow
-- [ ] **Upload MD file** — same flow
-- [ ] **Upload file > 10MB** — verify rejection
-- [ ] **Ask question referencing uploaded doc** — verify user-doc RAG chunks appear in response (similarity ≥ 0.65)
-- [ ] **Remove attached document** before sending — click X; verify cleared
+- [ ] **Upload PDF document** — verify filename tag appears, document is ingested for RAG. Yes, all ok.
+- [ ] **Upload DOCX document** — same flow. Yes, all ok.
+- [ ] **Upload TXT file** — same flow.Yes, all ok.
+- [ ] **Upload MD file** — same flow. Yes, all ok.
+- [ ] **Upload file > 10MB** — verify rejection. Yes, all ok.
+- [ ] **Ask question referencing uploaded doc** — verify user-doc RAG chunks appear in response (similarity ≥ 0.65). Yes, all ok.
+- [ ] **Remove attached document** before sending — click X; verify cleared. Yes, all ok.
 
 ---
 
