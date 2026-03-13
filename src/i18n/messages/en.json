@@ -325,6 +325,8 @@
     "chatbotLanguageDescription": "Choose the language the AI assistant responds in. Defaults to English.",
     "chatbotLanguageSaved": "Chatbot language updated.",
     "saving": "Saving...",
-    "save": "Save"
+    "save": "Save",
+    "usage": "Usage",
+    "dailyMessages": "Messages today"
   }
 }

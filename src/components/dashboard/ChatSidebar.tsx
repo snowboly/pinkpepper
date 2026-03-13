@@ -57,7 +57,6 @@ type ChatSidebarProps = {
   userEmail: string;
   tier: SubscriptionTier;
   isAdmin: boolean;
-  usagePercent: number;
   tierColour: string;
   onNewChat: () => void;
   onSelectConversation: (id: string) => void;
@@ -80,7 +79,6 @@ export default function ChatSidebar({
   userEmail,
   tier,
   isAdmin,
-  usagePercent,
   tierColour,
   onNewChat,
   onSelectConversation,
@@ -564,11 +562,6 @@ export default function ChatSidebar({
             {isAdmin ? "Admin" : tier}
           </span>
         </div>
-        {!isAdmin && (
-          <div className="h-1 w-full overflow-hidden rounded-full bg-[#E2E8F0]">
-            <div className="h-full rounded-full bg-[#E11D48]" style={{ width: `${usagePercent}%` }} />
-          </div>
-        )}
         <button
           onClick={onAskExpert}
           className={`flex w-full items-center gap-2 rounded-lg border px-2 py-1.5 text-xs transition-colors ${

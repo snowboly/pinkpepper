@@ -19,9 +19,11 @@ type SettingsFormProps = {
   tier: string;
   isAdmin: boolean;
   chatLanguage: string;
+  usage: number;
+  usageLimit: number | null;
 };
 
-export default function SettingsForm({ email, tier, isAdmin, chatLanguage: initialChatLanguage }: SettingsFormProps) {
+export default function SettingsForm({ email, tier, isAdmin, chatLanguage: initialChatLanguage, usage, usageLimit }: SettingsFormProps) {
   const t = useTranslations("settings");
   const currentLocale = useLocale() as Locale;
   const [chatLanguage, setChatLanguage] = useState(initialChatLanguage);
@@ -110,6 +112,25 @@ export default function SettingsForm({ email, tier, isAdmin, chatLanguage: initi
           </div>
         </div>
       </div>
+
+      {/* Usage card */}
+      {!isAdmin && (
+        <div className="rounded-2xl border border-[#E2E8F0] bg-white p-6">
+          <h2 className="text-sm font-semibold text-[#0F172A] mb-4">{t("usage")}</h2>
+          <div className="space-y-2">
+            <div className="flex items-center justify-between text-xs text-[#64748B]">
+              <span>{t("dailyMessages")}</span>
+              <span className="font-medium text-[#0F172A]">{usage} / {usageLimit}</span>
+            </div>
+            <div className="h-1.5 w-full overflow-hidden rounded-full bg-[#E2E8F0]">
+              <div
+                className="h-full rounded-full bg-[#E11D48] transition-all"
+                style={{ width: `${Math.min(100, Math.round((usage / Math.max(usageLimit ?? 1, 1)) * 100))}%` }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Language card */}
       <div className="rounded-2xl border border-[#E2E8F0] bg-white p-6">
