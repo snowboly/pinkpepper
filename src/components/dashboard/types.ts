@@ -10,6 +10,7 @@ export type Message = {
   role: "user" | "assistant";
   content: string;
   imagePreview?: string;
+  documentName?: string;
   citations?: Citation[];
   isStreaming?: boolean;
   persona?: PersonaInfo;

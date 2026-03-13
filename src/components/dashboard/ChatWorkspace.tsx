@@ -14,6 +14,7 @@ import ChatMessages, { type StarterSuggestion } from "./ChatMessages";
 import ChatInput from "./ChatInput";
 import OnboardingModal from "./OnboardingModal";
 import UpgradeModal from "./UpgradeModal";
+import ReviewContactModal from "./ReviewContactModal";
 
 type StreamUsage = { used: number; limit: number | null; tier: SubscriptionTier; isAdmin?: boolean };
 type WorkspaceMode = "ask" | "virtual_audit";
@@ -167,6 +168,9 @@ export default function ChatWorkspace({
 
   // ── Onboarding state ──
   const [showOnboarding, setShowOnboarding] = useState(!onboardingCompleted);
+
+  // ── Review contact modal ──
+  const [showReviewModal, setShowReviewModal] = useState(false);
 
   // ── Upgrade modal state ──
   const [upgradeModalTrigger, setUpgradeModalTrigger] = useState<"message_limit" | "image_limit" | "export" | "review" | "audit_mode" | "transcription_limit" | "document_generation" | null>(null);
@@ -896,6 +900,7 @@ export default function ChatWorkspace({
         ? (value || "Analyse this image for food safety concerns.")
         : (options?.displayPrompt ?? value),
       imagePreview: imagePreview ?? undefined,
+      documentName: attachedDocument?.name ?? undefined,
     };
     setMessages((prev) => [...prev, userMessage]);
 
@@ -1311,6 +1316,15 @@ export default function ChatWorkspace({
               <span className={`rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-wide ${tierColour}`}>
                 {isAdmin ? "Admin" : tier}
               </span>
+              {(reviewEligible) && (
+                <button
+                  type="button"
+                  onClick={() => setShowReviewModal(true)}
+                  className="rounded-full border border-[#059669] bg-[#ECFDF5] px-3 py-1 text-xs font-semibold text-[#047857] hover:bg-[#D1FAE5] transition-colors"
+                >
+                  Send for Review
+                </button>
+              )}
               {isAdmin && (
                 <Link
                   href="/admin"
@@ -1388,6 +1402,14 @@ export default function ChatWorkspace({
           trigger={upgradeModalTrigger}
           currentTier={tier}
           onClose={() => setUpgradeModalTrigger(null)}
+        />
+      )}
+
+      {/* Review contact modal */}
+      {showReviewModal && (
+        <ReviewContactModal
+          userEmail={userEmail}
+          onClose={() => setShowReviewModal(false)}
         />
       )}
 

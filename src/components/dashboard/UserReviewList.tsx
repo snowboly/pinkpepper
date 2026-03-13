@@ -244,12 +244,14 @@ export default function UserReviewList() {
                       )}
 
                       {/* Link to conversation */}
-                      <a
-                        href={`/dashboard?conversation=${r.conversation_id}`}
-                        className="inline-block rounded-full border border-[#E2E8F0] bg-white px-4 py-2 text-sm text-[#64748B] hover:bg-[#F8F9FB]"
-                      >
-                        Open conversation
-                      </a>
+                      {r.conversation_id && (
+                        <a
+                          href={`/dashboard?c=${r.conversation_id}`}
+                          className="inline-block rounded-full border border-[#E2E8F0] bg-white px-4 py-2 text-sm text-[#64748B] hover:bg-[#F8F9FB]"
+                        >
+                          Open conversation
+                        </a>
+                      )}
                     </div>
                   )}
                 </div>

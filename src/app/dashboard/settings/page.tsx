@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
 import SettingsForm from "@/components/dashboard/SettingsForm";
 import { resolveUserAccess } from "@/lib/access";
-import { countUsageSince, utcDayStartIso } from "@/lib/policy";
+import { countUsageSince, utcDayStartIso, utcMonthStartIso } from "@/lib/policy";
 import { TIER_CAPABILITIES } from "@/lib/tier";
 
 export const dynamic = "force-dynamic";
@@ -29,19 +29,21 @@ export default async function SettingsPage() {
 
   const caps = TIER_CAPABILITIES[tier as keyof typeof TIER_CAPABILITIES] ?? TIER_CAPABILITIES.free;
   let usageCount = 0;
+  let docGenCount = 0;
+  let reviewCount = 0;
   if (!isAdmin) {
+    const dayStart = utcDayStartIso();
+    const monthStart = utcMonthStartIso();
     try {
-      usageCount = await countUsageSince({
-        supabase,
-        userId: user.id,
-        eventType: "chat_prompt",
-        sinceIso: utcDayStartIso(),
-      });
+      [usageCount, docGenCount, reviewCount] = await Promise.all([
+        countUsageSince({ supabase, userId: user.id, eventType: "chat_prompt", sinceIso: dayStart }),
+        countUsageSince({ supabase, userId: user.id, eventType: "document_generation", sinceIso: dayStart }),
+        countUsageSince({ supabase, userId: user.id, eventType: "human_review_request", sinceIso: monthStart }),
+      ]);
     } catch {
-      usageCount = 0;
+      // leave counts at 0
     }
   }
-  const usageLimit = isAdmin ? null : caps.dailyMessages;
 
   return (
     <div className="min-h-screen bg-[#F8F9FB] py-10 px-4">
@@ -66,7 +68,11 @@ export default async function SettingsPage() {
           isAdmin={isAdmin}
           chatLanguage={chatLanguage}
           usage={usageCount}
-          usageLimit={usageLimit}
+          usageLimit={isAdmin ? null : caps.dailyMessages}
+          docGenUsage={docGenCount}
+          docGenLimit={isAdmin ? null : caps.dailyDocumentGenerations}
+          reviewUsage={reviewCount}
+          reviewLimit={isAdmin ? null : caps.monthlyHumanReviews}
         />
       </div>
     </div>
