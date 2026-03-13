@@ -1,9 +1,15 @@
 import { Resend } from "resend";
 
+type EmailAttachment = {
+  filename: string;
+  content: Buffer;
+};
+
 type EmailInput = {
   to: string | string[];
   subject: string;
   html: string;
+  attachments?: EmailAttachment[];
 };
 
 export async function sendEmail(input: EmailInput) {
@@ -21,5 +27,6 @@ export async function sendEmail(input: EmailInput) {
     to: input.to,
     subject: input.subject,
     html: input.html,
+    attachments: input.attachments,
   });
 }
