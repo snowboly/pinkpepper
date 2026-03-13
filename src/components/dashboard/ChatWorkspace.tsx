@@ -937,6 +937,12 @@ export default function ChatWorkspace({
 
     // Image uploads use the existing JSON endpoint
     if (currentImage) {
+      // Push a streaming placeholder immediately (matching text chat behaviour) so the
+      // thinking animation shows while waiting and typing cadence works on response.
+      typingQueueRef.current = "";
+      pendingDoneRef.current = null;
+      clearTypingInterval();
+      setMessages((prev) => [...prev, { role: "assistant", content: "", isStreaming: true, persona: currentPersona ?? undefined }]);
       try {
         const fd = new FormData();
         fd.append("image", currentImage);
@@ -957,29 +963,40 @@ export default function ChatWorkspace({
           } else {
             setError(data.error ?? "Request failed");
           }
-          setMessages((prev) => prev.slice(0, -1));
+          setMessages((prev) => prev.slice(0, -2)); // remove user + streaming placeholder
           setPrompt(value);
           setAttachedImage(currentImage);
           setImagePreview(currentImagePreview);
           return;
         }
         if (data.conversationId) setConversationId(data.conversationId);
-        if (data.persona) setCurrentPersona(data.persona);
-        if (data.assistantMessage) {
-          setMessages((prev) => [
-            ...prev,
-            { role: "assistant", content: data.assistantMessage!, citations: data.citations, persona: data.persona ?? currentPersona ?? undefined },
-          ]);
+        if (data.persona) {
+          setCurrentPersona(data.persona);
+          // Stamp persona on the streaming placeholder
+          setMessages((prev) => {
+            const updated = [...prev];
+            const last = updated[updated.length - 1];
+            if (last?.isStreaming) {
+              updated[updated.length - 1] = { ...last, persona: data.persona };
+            }
+            return updated;
+          });
         }
         if (data.usage) {
           setUsage(data.usage.used);
           safeTierUpdate(data.usage.tier);
           setIsAdmin(Boolean(data.usage.isAdmin));
         }
+        if (data.assistantMessage) {
+          // Feed content into typing queue for animated display (matching text chat cadence)
+          typingQueueRef.current = data.assistantMessage;
+          pendingDoneRef.current = { citations: data.citations };
+          startTypingDrain();
+        }
         await loadConversations(true);
       } catch {
         setError("Network error. Please try again.");
-        setMessages((prev) => prev.slice(0, -1));
+        setMessages((prev) => prev.slice(0, -2)); // remove user + streaming placeholder
         setPrompt(value);
       } finally {
         setLoading(false);
