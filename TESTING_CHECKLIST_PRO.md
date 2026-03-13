@@ -50,18 +50,18 @@ This checklist is for a **PRO subscription user** to manually test all PinkPeppe
 
 ## 4. Chat — Image Analysis (PRO: 20/day)
 
-- [ ] **Upload JPEG image** via button — preview thumbnail appears, send; verify OpenAI vision response about food safety
-- [ ] **Upload PNG image** — same flow
-- [ ] **Upload WebP image** — same flow
-- [ ] **Upload GIF image** — same flow
-- [ ] **Drag-and-drop image** onto chat area — verify drop zone activates, image attaches
-- [ ] **Remove attached image** before sending — click X on preview; verify image cleared
-- [ ] **Unsupported image format** (e.g. .bmp, .tiff) — verify rejection with clear error
-- [ ] **Image > 5MB** — verify rejection with size error
-- [ ] **Send image with text prompt** — verify both are processed
-- [ ] **Send image without text** — verify image-only analysis works
-- [ ] **Upload 20 images in one day** — all should succeed (PRO limit)
-- [ ] **Upload 21st image** — verify 402 error / upgrade modal with "daily image limit reached"
+- [ ] **Upload JPEG image** via button — preview thumbnail appears, send; verify OpenAI vision response about food safety. YES, all OK.
+- [ ] **Upload PNG image** — same flow. YES, all OK.
+- [ ] **Upload WebP image** — same flow. YES, all OK.
+- [ ] **Upload GIF image** — same flow. YES, all OK.
+- [ ] **Drag-and-drop image** onto chat area — verify drop zone activates, image attaches. YES, all OK.
+- [ ] **Remove attached image** before sending — click X on preview; verify image cleared. YES, all OK.
+- [ ] **Unsupported image format** (e.g. .bmp, .tiff) — verify rejection with clear error. Yes, all OK.
+- [ ] **Image > 5MB** — verify rejection with size error. YES, all ok.
+- [ ] **Send image with text prompt** — verify both are processed. Yes, all OK.
+- [ ] **Send image without text** — verify image-only analysis works. Yes, all OK.
+- [ ] **Upload 20 images in one day** — all should succeed (PRO limit). Yes, all ok.
+- [ ] **Upload 21st image** — verify 402 error / upgrade modal with "daily image limit reached". Yes, all ok.
 
 ---
 
