@@ -3,6 +3,7 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Terms of Service | PinkPepper",
   description: "Terms governing your use of the PinkPepper AI food safety compliance platform.",
+  alternates: { canonical: "https://pinkpepper.io/legal/terms" },
 };
 
 export default function TermsPage() {
