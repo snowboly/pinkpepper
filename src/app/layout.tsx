@@ -61,12 +61,48 @@ export const metadata: Metadata = {
   },
 };
 
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "PinkPepper",
+  url: "https://pinkpepper.io",
+  logo: "https://pinkpepper.io/logo/android-chrome-512x512.png",
+  description:
+    "AI food safety assistant for EU and UK food businesses. Generate HACCP plans, allergen documentation, SOPs, and audit-ready compliance packs.",
+  contactPoint: {
+    "@type": "ContactPoint",
+    email: "support@pinkpepper.io",
+    contactType: "customer support",
+    availableLanguage: ["English", "German", "French", "Spanish", "Portuguese", "Italian"],
+  },
+};
+
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "PinkPepper",
+  url: "https://pinkpepper.io",
+  description:
+    "Specialised AI food safety assistant for HACCP plans, allergen management, SOP generation, and EU/UK compliance documentation.",
+  inLanguage: ["en", "de", "fr", "es", "pt", "it"],
+};
+
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const locale = await getLocale();
   const messages = await getMessages();
 
   return (
     <html lang={locale}>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+        />
+      </head>
       <body className={`${manrope.variable} ${spaceGrotesk.variable} antialiased`}>
         <NextIntlClientProvider messages={messages}>
           <SiteHeader />

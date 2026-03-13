@@ -31,8 +31,59 @@ export default async function PricingPage() {
   const ctaSecondary = `${ctaBase} border border-[#E2E8F0] bg-[#F8FAFC] text-[#475569] hover:bg-[#F1F5F9]`;
   const ctaNeutral = `${ctaBase} border border-[#E2E8F0] bg-[#F8FAFC] text-[#475569] hover:bg-[#F1F5F9]`;
 
+  const softwareApplicationSchema = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: "PinkPepper",
+    applicationCategory: "BusinessApplication",
+    operatingSystem: "Web",
+    url: "https://pinkpepper.io",
+    description:
+      "AI food safety assistant for EU and UK food businesses. Generate HACCP plans, allergen documentation, SOPs, and audit-ready compliance documentation.",
+    offers: [
+      {
+        "@type": "Offer",
+        name: "Free",
+        price: "0",
+        priceCurrency: "EUR",
+        description: "15 AI queries per day, 3 voice transcriptions, 10 saved conversations.",
+      },
+      {
+        "@type": "Offer",
+        name: "Plus",
+        price: "19",
+        priceCurrency: "EUR",
+        priceSpecification: {
+          "@type": "UnitPriceSpecification",
+          price: "19",
+          priceCurrency: "EUR",
+          unitCode: "MON",
+        },
+        description: "100 messages per day, PDF export, 3 image uploads per day.",
+      },
+      {
+        "@type": "Offer",
+        name: "Pro",
+        price: "99",
+        priceCurrency: "EUR",
+        priceSpecification: {
+          "@type": "UnitPriceSpecification",
+          price: "99",
+          priceCurrency: "EUR",
+          unitCode: "MON",
+        },
+        description:
+          "Virtual audit workflows, PDF and DOCX export, 3 specialist review credits per month.",
+      },
+    ],
+  };
+
   return (
     <main className="overflow-hidden">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareApplicationSchema) }}
+      />
       <section className="py-16 text-center">
         <div className="pp-container max-w-3xl">
           <h1 className="pp-display text-4xl font-black tracking-tight text-[#0F172A] md:text-5xl">
