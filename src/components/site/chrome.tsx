@@ -26,7 +26,7 @@ export async function SiteHeader() {
     const { data } = await supabase.auth.getUser();
     user = data.user;
   } catch {
-    // Supabase env vars unavailable during build-time prerendering — show logged-out state
+    // Supabase env vars unavailable during build-time prerendering; show logged-out state.
   }
   const fullName =
     (typeof user?.user_metadata?.full_name === "string" ? user.user_metadata.full_name : null) ??
