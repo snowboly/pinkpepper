@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
@@ -63,10 +63,29 @@ export default function ChatMessages({
   currentPersona,
 }: ChatMessagesProps) {
   const t = useTranslations("chat");
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const shouldStickToBottomRef = useRef(true);
+  const [showJumpToLatest, setShowJumpToLatest] = useState(false);
+
+  function syncScrollState() {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+    const distanceFromBottom = container.scrollHeight - container.scrollTop - container.clientHeight;
+    const nearBottom = distanceFromBottom < 120;
+    shouldStickToBottomRef.current = nearBottom;
+    setShowJumpToLatest(!nearBottom && messages.length > 0);
+  }
+
+  function jumpToLatest() {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    shouldStickToBottomRef.current = true;
+    setShowJumpToLatest(false);
+  }
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (!shouldStickToBottomRef.current) return;
+    messagesEndRef.current?.scrollIntoView({ behavior: messages.length > 1 ? "smooth" : "auto" });
   }, [messages, loading]);
 
   const suggestions: StarterSuggestion[] = SUGGESTION_KEYS.map((s) => ({
@@ -86,7 +105,7 @@ export default function ChatMessages({
   const showPremiumWorkflows = !isAdmin && tier !== "pro" && messages.length === 0 && !loadingMessages;
 
   return (
-    <div className="flex-1 overflow-y-auto">
+    <div ref={scrollContainerRef} onScroll={syncScrollState} className="relative flex-1 overflow-y-auto">
       {/* Premium Workflows upsell — hidden for Pro and Admin users */}
       {showPremiumWorkflows && (
         <div className="flex-shrink-0 border-b border-[#E2E8F0] bg-white px-4 py-5">
@@ -184,11 +203,6 @@ export default function ChatMessages({
         <MessageItem
           key={`${msg.role}-${idx}`}
           message={msg}
-          isLastAssistantMessage={idx === lastAssistantIdx}
-          reviewEligible={reviewEligible}
-          conversationId={conversationId}
-          onRequestReview={onRequestReview}
-          onUpgradeForReview={onUpgradeForReview}
         />
       ))}
 
@@ -216,6 +230,18 @@ export default function ChatMessages({
               ))}
             </div>
           </div>
+        </div>
+      )}
+
+      {showJumpToLatest && (
+        <div className="sticky bottom-4 z-10 flex justify-center px-4">
+          <button
+            type="button"
+            onClick={jumpToLatest}
+            className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 text-xs font-semibold text-[#0F172A] shadow-lg shadow-black/10 transition-colors hover:bg-[#F8F9FB]"
+          >
+            Jump to latest
+          </button>
         </div>
       )}
 
