@@ -162,26 +162,6 @@ export async function SiteHeader() {
 export function SiteFooter() {
   return (
     <footer className="site-footer border-t border-[#F1F5F9] bg-[linear-gradient(180deg,#fff_0%,#fff7f8_100%)] py-16">
-      <div className="pp-container mb-10">
-        <div className="rounded-3xl border border-[#FBCFE8] bg-white px-6 py-6 shadow-[0_20px_50px_rgba(225,29,72,0.06)] md:px-8">
-          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div className="max-w-2xl">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#BE123C]">Regulation-grounded</p>
-              <h3 className="mt-2 text-2xl font-semibold text-[#0F172A]">Built for operators who need faster documentation and calmer audit preparation.</h3>
-              <p className="mt-3 text-sm leading-relaxed text-[#64748B]">
-                PinkPepper combines HACCP, allergen, SOP, and audit-prep workflows into AI food safety compliance software designed for EU and UK food businesses.
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-2 text-xs font-medium text-[#475569]">
-              {["EC 852/2004", "EU 1169/2011", "Audit-ready exports", "Expert review"].map((tag) => (
-                <span key={tag} className="rounded-full border border-[#E2E8F0] bg-[#F8FAFC] px-3 py-1.5">
-                  {tag}
-                </span>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
       <div className="pp-container mb-12 grid gap-12 sm:grid-cols-2 md:grid-cols-[2fr_1fr_1fr_1.5fr]">
         <div>
           <Link href="/" className="inline-flex items-center leading-none">

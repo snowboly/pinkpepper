@@ -97,12 +97,12 @@ describe("premium quality regressions", () => {
     expect(chrome).toContain("lg:hidden");
   });
 
-  it("adds a premium trust layer in the footer and avoids blanket hover lift motion", () => {
+  it("keeps the premium shared chrome and avoids blanket hover lift motion", () => {
     const chrome = readPage("src/components/site/chrome.tsx");
     const globals = readPage("src/app/globals.css");
 
-    expect(chrome).toContain("Built for operators who need faster documentation");
-    expect(chrome).toContain("Regulation-grounded");
+    expect(chrome).toContain("AI food safety compliance software");
+    expect(chrome).toContain("pp-shell-link");
     expect(globals).not.toContain("a[href]:hover,");
     expect(globals).toContain(".pp-interactive");
   });
