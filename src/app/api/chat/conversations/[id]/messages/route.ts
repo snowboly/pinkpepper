@@ -45,7 +45,7 @@ export async function GET(_request: Request, context: { params: Promise<{ id: st
 
   const { data: messages, error } = await supabase
     .from("chat_messages")
-    .select("id,role,content,created_at")
+    .select("id,role,content,created_at,metadata")
     .eq("conversation_id", id)
     .eq("user_id", user.id)
     .order("created_at", { ascending: true })

@@ -21,31 +21,31 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://pinkpepper.io",
   },
-  title: "PinkPepper | AI Food Safety Assistant for EU & UK Businesses",
+  title: "PinkPepper | AI Food Safety Compliance Software for EU & UK Businesses",
   description:
-    "PinkPepper helps food businesses generate HACCP plans, SOPs, monitoring logs, allergen documentation, and traceability procedures.",
+    "PinkPepper is AI food safety compliance software for EU and UK food businesses that need HACCP plans, allergen documentation, SOPs, audit prep, and food safety records.",
   openGraph: {
-    title: "PinkPepper | AI Food Safety Assistant for EU & UK Businesses",
+    title: "PinkPepper | AI Food Safety Compliance Software for EU & UK Businesses",
     description:
-      "Generate HACCP plans, SOPs, allergen docs, and audit-ready compliance documentation with an AI trained for EU and UK food safety law.",
+      "Generate HACCP plans, allergen documentation, SOPs, and audit-ready compliance records with AI food safety compliance software built for EU and UK businesses.",
     url: "https://pinkpepper.io",
     siteName: "PinkPepper",
     images: [
       {
-        url: "/og-image.png",
+        url: "/og-image",
         width: 1200,
         height: 630,
-        alt: "PinkPepper - AI Food Safety Assistant for EU and UK Businesses",
+        alt: "PinkPepper - AI Food Safety Compliance Software for EU and UK Businesses",
       },
     ],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "PinkPepper | AI Food Safety Assistant",
+    title: "PinkPepper | AI Food Safety Compliance Software",
     description:
-      "Generate HACCP plans, SOPs, and allergen docs with an AI trained for EU and UK food safety compliance.",
-    images: ["/og-image.png"],
+      "Generate HACCP plans, allergen documentation, SOPs, and audit-ready records with AI food safety compliance software for EU and UK businesses.",
+    images: ["/og-image"],
   },
   manifest: "/logo/site.webmanifest",
   robots: {
@@ -70,7 +70,7 @@ const organizationSchema = {
   url: "https://pinkpepper.io",
   logo: "https://pinkpepper.io/logo/android-chrome-512x512.png",
   description:
-    "AI food safety assistant for EU and UK food businesses. Generate HACCP plans, allergen documentation, SOPs, and audit-ready compliance packs.",
+    "AI food safety compliance software for EU and UK food businesses. Generate HACCP plans, allergen documentation, SOPs, and audit-ready compliance packs.",
   contactPoint: {
     "@type": "ContactPoint",
     email: "support@pinkpepper.io",
@@ -85,7 +85,7 @@ const websiteSchema = {
   name: "PinkPepper",
   url: "https://pinkpepper.io",
   description:
-    "Specialised AI food safety assistant for HACCP plans, allergen management, SOP generation, and EU/UK compliance documentation.",
+    "AI food safety compliance software for HACCP plans, allergen management, SOP generation, and EU/UK compliance documentation.",
   inLanguage: ["en", "de", "fr", "es", "pt", "it"],
 };
 

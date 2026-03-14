@@ -92,7 +92,7 @@ export default function ResourcesPage() {
             </p>
             <div className="mt-6 flex flex-wrap gap-4">
               <Link
-                href="/features"
+                href="/features/haccp-plan-generator"
                 className="rounded-full bg-[#E11D48] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#BE123C]"
               >
                 Explore features

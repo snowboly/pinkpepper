@@ -1,9 +1,10 @@
+import Link from "next/link";
 import { Mail } from "lucide-react";
 
 export const metadata = {
-  title: "Contact & Support | PinkPepper",
+  title: "Contact & Support | PinkPepper Food Safety Compliance Software",
   description:
-    "Get in touch with PinkPepper for food safety compliance questions, account support, and feedback. We're here to help EU and UK food businesses.",
+    "Get in touch with PinkPepper for food safety compliance questions, account support, and feedback across EU and UK food businesses.",
   alternates: {
     canonical: "https://pinkpepper.io/contact",
   },
@@ -18,8 +19,19 @@ export default function ContactPage() {
             Contact &amp; Support
           </h1>
           <p className="mt-4 text-lg text-[#6B6B6B]">
-            We&apos;re here to help with food safety compliance questions, account issues, and feedback.
+            We&apos;re here to help with food safety compliance software questions, account issues, and feedback.
           </p>
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-3 text-sm font-medium text-[#475569]">
+            <Link href="/features/haccp-plan-generator" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
+              Explore HACCP workflows
+            </Link>
+            <Link href="/pricing" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
+              View pricing
+            </Link>
+            <Link href="/use-cases/restaurants" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
+              See restaurant workflows
+            </Link>
+          </div>
         </div>
       </section>
 

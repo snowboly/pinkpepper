@@ -20,6 +20,7 @@ export type Database = {
           conversation_id: string
           created_at: string
           id: number
+          metadata: Json
           role: string
           user_id: string
         }
@@ -28,6 +29,7 @@ export type Database = {
           conversation_id: string
           created_at?: string
           id?: number
+          metadata?: Json
           role: string
           user_id: string
         }
@@ -36,6 +38,7 @@ export type Database = {
           conversation_id?: string
           created_at?: string
           id?: number
+          metadata?: Json
           role?: string
           user_id?: string
         }

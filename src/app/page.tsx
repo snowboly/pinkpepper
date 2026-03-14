@@ -233,7 +233,7 @@ export default function HomePage() {
           <div className="mx-auto max-w-5xl text-center">
             <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-[#E2E8F0] bg-[#F8FAFC] px-5 py-2.5 text-sm font-semibold text-[#475569] shadow-sm">
               <Sparkles className="h-4 w-4" />
-              Specialised AI food safety assistant
+              AI food safety compliance software for EU and UK businesses
             </div>
 
             <h1 className="pp-display mx-auto mb-6 max-w-4xl text-5xl leading-[1.04] tracking-[-0.02em] text-[#0F172A] md:text-6xl lg:text-7xl">
@@ -244,9 +244,21 @@ export default function HomePage() {
             </h1>
 
             <p className="mx-auto mb-10 max-w-3xl text-lg leading-relaxed text-[#475569] md:text-xl">
-              PinkPepper is trained for HACCP, allergen management, SOP generation, and inspection prep.
-              Create UK/EU-ready compliance documents that are built for real kitchen and audit workflows.
+              PinkPepper is AI food safety compliance software built for HACCP plans, allergen management, SOP generation, and inspection prep.
+              Create UK and EU-ready compliance documents that fit real kitchen, production, and audit workflows.
             </p>
+
+            <div className="mb-10 flex flex-wrap items-center justify-center gap-3 text-sm font-medium text-[#475569]">
+              <Link href="/features/haccp-plan-generator" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
+                Explore the HACCP plan generator
+              </Link>
+              <Link href="/features/allergen-documentation" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
+                See allergen documentation workflows
+              </Link>
+              <Link href="/pricing" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
+                Compare pricing plans
+              </Link>
+            </div>
 
             <div className="mb-8 flex justify-center">
               <a

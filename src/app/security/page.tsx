@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Security & Trust | PinkPepper",
+  title: "Security & Trust | PinkPepper Food Safety Compliance Software",
   description:
-    "How PinkPepper protects your food safety data — infrastructure, encryption, AI data handling, subprocessors, and GDPR alignment.",
+    "How PinkPepper protects food safety compliance data for EU and UK businesses across infrastructure, encryption, AI data handling, subprocessors, and GDPR alignment.",
   alternates: {
     canonical: "https://pinkpepper.io/security",
   },
@@ -67,6 +67,17 @@ export default function SecurityPage() {
             security of your HACCP plans, SOPs, and operational records
             seriously — because your auditors do too.
           </p>
+          <div className="mt-6 flex flex-wrap gap-3 text-sm font-medium text-[#475569]">
+            <Link href="/pricing" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
+              View pricing
+            </Link>
+            <Link href="/features/food-safety-audit-prep" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
+              Explore audit-prep workflows
+            </Link>
+            <Link href="/contact" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
+              Contact support
+            </Link>
+          </div>
         </div>
 
         {/* Sections */}
