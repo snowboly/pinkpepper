@@ -53,7 +53,37 @@ function getCurrentPeriodEndUnix(subscription: Stripe.Subscription): number | nu
   return typeof item.current_period_end === "number" ? item.current_period_end : null;
 }
 
-async function syncSubscriptionFromStripe(subscription: Stripe.Subscription, eventType: string) {
+async function resolveUserIdForCustomer(customerId: string) {
+  const admin = createAdminClient();
+
+  const { data: row, error: findErr } = await admin
+    .from("subscriptions")
+    .select("user_id")
+    .eq("stripe_customer_id", customerId)
+    .maybeSingle();
+
+  if (findErr) throw findErr;
+  if (row?.user_id) return row.user_id;
+
+  const stripe = getStripe();
+  const customer = await stripe.customers.retrieve(customerId);
+
+  if (!customer || customer.deleted) {
+    throw new Error("Stripe customer not found for subscription sync.");
+  }
+
+  const userId = customer.metadata?.user_id;
+  if (!userId) {
+    throw new Error("Stripe customer is missing user_id metadata.");
+  }
+
+  return userId;
+}
+
+export async function syncSubscriptionFromStripe(
+  subscription: Stripe.Subscription,
+  eventType: string
+) {
   const admin = createAdminClient();
 
   const customerId =
@@ -66,18 +96,7 @@ async function syncSubscriptionFromStripe(subscription: Stripe.Subscription, eve
     priceId,
     currentPeriodEndUnix: getCurrentPeriodEndUnix(subscription),
   });
-
-  const { data: row, error: findErr } = await admin
-    .from("subscriptions")
-    .select("user_id")
-    .eq("stripe_customer_id", customerId)
-    .maybeSingle();
-
-  if (findErr || !row?.user_id) {
-    throw new Error("Subscription row not found for stripe customer.");
-  }
-
-  const userId = row.user_id;
+  const userId = await resolveUserIdForCustomer(customerId);
 
   const { error: upsertErr } = await admin
     .from("subscriptions")
@@ -123,7 +142,7 @@ async function syncSubscriptionFromStripe(subscription: Stripe.Subscription, eve
           })
         : undefined;
       emailContent = buildSubscriptionCancelledEmail({
-        tier: snapshot.tier,
+        tier: snapshot.planTier,
         periodEnd: periodEndDate,
       });
     } else {
