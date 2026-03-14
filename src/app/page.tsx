@@ -29,9 +29,9 @@ const differentiators = [
       "Outputs are structured for EC 852/2004, UK FSA, and operational checks inspectors usually request.",
   },
   {
-    title: "From advice to usable documents",
+    title: "AI speed with specialist human review",
     description:
-      "Get practical plans, SOPs, and logs that your team can review, export, and use in day-to-day compliance.",
+      "Draft practical plans, SOPs, and logs quickly, then escalate critical work to qualified food safety specialists when a higher-risk decision needs human judgement.",
   },
 ];
 
@@ -245,7 +245,7 @@ export default function HomePage() {
 
             <p className="mx-auto mb-10 max-w-3xl text-lg leading-relaxed text-[#475569] md:text-xl">
               PinkPepper is AI food safety compliance software built for HACCP plans, allergen management, SOP generation, and inspection prep.
-              Create UK and EU-ready compliance documents that fit real kitchen, production, and audit workflows.
+              Create UK and EU-ready compliance documents that fit real kitchen, production, and audit workflows, then add qualified food safety specialists when the work needs human review.
             </p>
 
             <div className="mb-10 flex flex-wrap items-center justify-center gap-3 text-sm font-medium text-[#475569]">
@@ -359,7 +359,7 @@ export default function HomePage() {
               Operational trust, not generic AI output
             </p>
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[#64748B]">
-              PinkPepper is structured for the way food businesses actually document, review, and defend compliance work under EU and UK expectations.
+              PinkPepper is structured for the way food businesses actually document, review, and defend compliance work under EU and UK expectations, combining AI drafting speed with specialist human review when risk is higher.
             </p>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-2">
@@ -425,7 +425,7 @@ export default function HomePage() {
                 </div>
                 <h3 className="mb-2 text-xl font-semibold text-[#0F172A]">Expert review loop</h3>
                 <p className="text-[#64748B]">
-                  Route drafts to qualified reviewers before inspection or supplier audits.
+                  Route higher-stakes drafts to qualified food safety specialists before inspection, customer audit, or operational sign-off.
                 </p>
               </div>
             </div>
