@@ -5,6 +5,7 @@ import { createClient } from "@/utils/supabase/server";
 const nav = [
   { href: "/features", label: "Features" },
   { href: "/use-cases", label: "Use Cases" },
+  { href: "/resources", label: "Resources" },
   { href: "/pricing", label: "Pricing" },
   { href: "/security", label: "Security" },
   { href: "/about", label: "About" },
@@ -153,6 +154,7 @@ export function SiteFooter() {
           <ul className="space-y-3 text-sm text-[#6B6B6B]">
             <li><Link href="/features" className="transition-colors hover:text-[#1A1A1A]">Features</Link></li>
             <li><Link href="/use-cases" className="transition-colors hover:text-[#1A1A1A]">Use Cases</Link></li>
+            <li><Link href="/resources" className="transition-colors hover:text-[#1A1A1A]">Resources</Link></li>
             <li><Link href="/about" className="transition-colors hover:text-[#1A1A1A]">About</Link></li>
             <li><Link href="/pricing" className="transition-colors hover:text-[#1A1A1A]">Pricing</Link></li>
             <li><Link href="/login" className="transition-colors hover:text-[#1A1A1A]">Log In</Link></li>
