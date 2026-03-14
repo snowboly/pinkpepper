@@ -125,9 +125,9 @@ export default async function PricingPage() {
             </div>
             <div className="rounded-2xl border border-emerald-100 bg-emerald-50 p-5">
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-700">Pro</p>
-              <h2 className="mt-2 text-lg font-semibold text-[#0F172A]">Reduce audit risk before inspection</h2>
+              <h2 className="mt-2 text-lg font-semibold text-[#0F172A]">AI draft speed with specialist human review</h2>
               <p className="mt-2 text-sm text-[#64748B]">
-                Add virtual audit workflows, richer exports, and expert review when the work matters most.
+                Combine faster AI workflows with qualified food safety specialist review when the work matters most.
               </p>
             </div>
           </div>
@@ -227,7 +227,7 @@ export default async function PricingPage() {
               </div>
               <h2 className="text-xl font-bold text-[#0F172A]">Pro</h2>
               <p className="mt-2 text-sm text-[#64748B]">
-                For operators preparing for inspections, customer audits, and higher-risk document decisions.
+                For operators who want AI speed for drafting and qualified food safety specialist review before higher-risk decisions.
               </p>
               <div className="mt-6 flex items-baseline gap-1">
                 <span className="text-5xl font-bold tracking-tight text-[#0F172A]"><span className="text-2xl align-super">€</span>99</span>
@@ -245,7 +245,7 @@ export default async function PricingPage() {
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  3 specialist review credits each month for quick checks or one full review
+                  3 human specialist review credits each month for quick checks or one full review
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
@@ -253,7 +253,7 @@ export default async function PricingPage() {
                 </li>
                 <li className="flex items-start gap-2.5 font-medium text-[#9F1239]">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  Built for audit readiness, not just drafting speed
+                  AI-generated drafts plus qualified food safety specialist review when confidence matters most
                 </li>
               </ul>
               <PricingActions
@@ -286,7 +286,7 @@ export default async function PricingPage() {
             <div className="rounded-2xl border border-emerald-100 bg-emerald-50 p-6">
               <h3 className="mb-1 font-semibold text-[#0F172A]">Pro</h3>
               <p className="text-sm text-[#64748B]">
-                Add virtual audits, DOCX export, and specialist review when the consequences of getting it wrong are higher.
+                Add virtual audits, DOCX export, and qualified food safety specialist review when the consequences of getting it wrong are higher.
               </p>
             </div>
           </div>

@@ -113,5 +113,15 @@ describe("premium quality regressions", () => {
     expect(homepage).toContain("Operational trust, not generic AI output");
     expect(homepage).toContain("From raw notes to review-ready compliance work");
     expect(homepage).toContain("/features/food-safety-audit-prep");
+    expect(homepage).toContain("AI speed with specialist human review");
+    expect(homepage).toContain("qualified food safety specialists");
+  });
+
+  it("makes the Pro tier clearly about AI plus human specialist review", () => {
+    const pricing = readPage("src/app/pricing/page.tsx");
+
+    expect(pricing).toContain("AI draft speed with specialist human review");
+    expect(pricing).toContain("qualified food safety specialist");
+    expect(pricing).toContain("human specialist review credits");
   });
 });
