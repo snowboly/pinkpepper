@@ -37,7 +37,7 @@ export async function SiteHeader() {
   const initials = getUserInitials(user?.email, fullName);
 
   return (
-    <header className="site-header sticky top-0 z-50 border-b border-[#E2E8F0] bg-white/80 shadow-[0_1px_3px_rgba(0,0,0,0.04)] backdrop-blur-xl">
+    <header className="site-header sticky top-0 z-50 border-b border-[#E2E8F0]/80 bg-white/75 backdrop-blur-xl">
       <div className="pp-container flex h-14 items-center justify-between md:h-16">
         <div className="flex items-center gap-8 lg:gap-12">
           <Link href="/" className="flex items-center leading-none">
@@ -55,7 +55,7 @@ export async function SiteHeader() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="nav-link hover:text-[#0F172A]"
+                className="nav-link pp-shell-link"
                 style={{ animationDelay: `${i * 80}ms` }}
               >
                 {item.label}
@@ -67,7 +67,7 @@ export async function SiteHeader() {
           <details className="relative lg:hidden">
             <summary
               aria-label="Open navigation menu"
-              className="flex h-9 w-9 list-none items-center justify-center rounded-full border border-[#E2E8F0] bg-white text-[#0F172A] transition-all duration-200 hover:border-[#CBD5E1] hover:bg-[#F8FAFC] md:h-10 md:w-10"
+              className="pp-interactive flex h-9 w-9 list-none items-center justify-center rounded-full border border-[#E2E8F0] bg-white text-[#0F172A] hover:border-[#CBD5E1] hover:bg-[#F8FAFC] md:h-10 md:w-10"
             >
               <span className="flex flex-col gap-1">
                 <span className="block h-0.5 w-4 rounded-full bg-current" />
@@ -75,13 +75,13 @@ export async function SiteHeader() {
                 <span className="block h-0.5 w-4 rounded-full bg-current" />
               </span>
             </summary>
-            <div className="absolute right-0 top-[calc(100%+10px)] z-50 w-64 rounded-2xl border border-[#E2E8F0] bg-white p-2 shadow-lg shadow-black/10">
+            <div className="pp-glass-card absolute right-0 top-[calc(100%+10px)] z-50 w-72 rounded-3xl p-3">
               <nav className="flex flex-col">
                 {nav.map((item) => (
                   <Link
                     key={item.href}
                     href={item.href}
-                    className="rounded-xl px-3 py-2.5 text-sm font-medium text-[#0F172A] hover:bg-[#F8FAFC]"
+                    className="rounded-2xl px-3 py-3 text-sm font-medium text-[#0F172A] hover:bg-[#F8FAFC]"
                   >
                     {item.label}
                   </Link>
@@ -90,13 +90,13 @@ export async function SiteHeader() {
                   <>
                     <Link
                       href="/login"
-                      className="rounded-xl px-3 py-2.5 text-sm font-medium text-[#0F172A] hover:bg-[#F8FAFC]"
+                      className="rounded-2xl px-3 py-3 text-sm font-medium text-[#0F172A] hover:bg-[#F8FAFC]"
                     >
                       Log in
                     </Link>
                     <Link
                       href="/signup"
-                      className="mt-1 rounded-xl bg-[#E11D48] px-3 py-2.5 text-center text-sm font-semibold text-white hover:bg-[#BE123C]"
+                      className="pp-interactive mt-2 rounded-2xl bg-[#E11D48] px-3 py-3 text-center text-sm font-semibold text-white hover:bg-[#BE123C]"
                     >
                       Get started
                     </Link>
@@ -109,28 +109,28 @@ export async function SiteHeader() {
             <details className="group relative">
               <summary
                 aria-label="Open account menu"
-                className="flex h-9 w-9 list-none items-center justify-center rounded-full border border-[#E2E8F0] bg-white text-xs font-bold tracking-wide text-[#0F172A] transition-all duration-200 hover:border-[#CBD5E1] hover:bg-[#F8FAFC] md:h-10 md:w-10"
+                className="pp-interactive flex h-9 w-9 list-none items-center justify-center rounded-full border border-[#E2E8F0] bg-white text-xs font-bold tracking-wide text-[#0F172A] hover:border-[#CBD5E1] hover:bg-[#F8FAFC] md:h-10 md:w-10"
                 title={user.email ?? "Account"}
               >
                 {initials}
               </summary>
-              <div className="absolute right-0 top-[calc(100%+10px)] z-50 w-44 rounded-xl border border-[#E2E8F0] bg-white p-1.5 shadow-lg shadow-black/10">
+              <div className="pp-glass-card absolute right-0 top-[calc(100%+10px)] z-50 w-48 rounded-2xl p-1.5">
                 <Link
                   href="/dashboard"
-                  className="block rounded-lg px-3 py-2 text-sm font-medium text-[#0F172A] hover:bg-[#F8FAFC]"
+                  className="block rounded-xl px-3 py-2.5 text-sm font-medium text-[#0F172A] hover:bg-[#F8FAFC]"
                 >
                   Dashboard
                 </Link>
                 <Link
                   href="/dashboard/settings"
-                  className="block rounded-lg px-3 py-2 text-sm font-medium text-[#0F172A] hover:bg-[#F8FAFC]"
+                  className="block rounded-xl px-3 py-2.5 text-sm font-medium text-[#0F172A] hover:bg-[#F8FAFC]"
                 >
                   Settings
                 </Link>
                 <form action="/api/auth/signout" method="POST">
                   <button
                     type="submit"
-                    className="block w-full rounded-lg px-3 py-2 text-left text-sm font-medium text-[#E11D48] hover:bg-[#FFF1F2]"
+                    className="block w-full rounded-xl px-3 py-2.5 text-left text-sm font-medium text-[#E11D48] hover:bg-[#FFF1F2]"
                   >
                     Log out
                   </button>
@@ -141,13 +141,13 @@ export async function SiteHeader() {
             <>
               <Link
                 href="/login"
-                className="hidden text-sm font-semibold text-[#64748B] transition-all duration-200 hover:text-[#0F172A] hover:-translate-y-px sm:block"
+                className="hidden text-sm font-semibold text-[#64748B] transition-all duration-200 hover:text-[#0F172A] sm:block"
               >
                 Log in
               </Link>
               <Link
                 href="/signup"
-                className="rounded-full bg-[#E11D48] px-4 py-2 text-sm font-semibold text-white transition-all duration-200 hover:bg-[#BE123C] hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#E11D48]/30 active:scale-[0.97] md:px-5 md:py-2.5"
+                className="pp-interactive rounded-full bg-[#E11D48] px-4 py-2 text-sm font-semibold text-white hover:bg-[#BE123C] hover:shadow-lg hover:shadow-[#E11D48]/30 active:scale-[0.97] md:px-5 md:py-2.5"
               >
                 Get started
               </Link>
@@ -161,7 +161,27 @@ export async function SiteHeader() {
 
 export function SiteFooter() {
   return (
-    <footer className="site-footer border-t border-[#F1F5F9] bg-white py-16">
+    <footer className="site-footer border-t border-[#F1F5F9] bg-[linear-gradient(180deg,#fff_0%,#fff7f8_100%)] py-16">
+      <div className="pp-container mb-10">
+        <div className="rounded-3xl border border-[#FBCFE8] bg-white px-6 py-6 shadow-[0_20px_50px_rgba(225,29,72,0.06)] md:px-8">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div className="max-w-2xl">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#BE123C]">Regulation-grounded</p>
+              <h3 className="mt-2 text-2xl font-semibold text-[#0F172A]">Built for operators who need faster documentation and calmer audit preparation.</h3>
+              <p className="mt-3 text-sm leading-relaxed text-[#64748B]">
+                PinkPepper combines HACCP, allergen, SOP, and audit-prep workflows into AI food safety compliance software designed for EU and UK food businesses.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2 text-xs font-medium text-[#475569]">
+              {["EC 852/2004", "EU 1169/2011", "Audit-ready exports", "Expert review"].map((tag) => (
+                <span key={tag} className="rounded-full border border-[#E2E8F0] bg-[#F8FAFC] px-3 py-1.5">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
       <div className="pp-container mb-12 grid gap-12 sm:grid-cols-2 md:grid-cols-[2fr_1fr_1fr_1.5fr]">
         <div>
           <Link href="/" className="inline-flex items-center leading-none">
@@ -193,32 +213,32 @@ export function SiteFooter() {
         <div>
           <h4 className="mb-4 text-sm font-semibold text-[#1A1A1A]">Platform</h4>
           <ul className="space-y-3 text-sm text-[#6B6B6B]">
-            <li><Link href="/features" className="transition-colors hover:text-[#1A1A1A]">Features</Link></li>
-            <li><Link href="/use-cases" className="transition-colors hover:text-[#1A1A1A]">Use Cases</Link></li>
-            <li><Link href="/resources" className="transition-colors hover:text-[#1A1A1A]">Resources</Link></li>
-            <li><Link href="/about" className="transition-colors hover:text-[#1A1A1A]">About</Link></li>
-            <li><Link href="/pricing" className="transition-colors hover:text-[#1A1A1A]">Pricing</Link></li>
-            <li><Link href="/login" className="transition-colors hover:text-[#1A1A1A]">Log In</Link></li>
-            <li><Link href="/signup" className="transition-colors hover:text-[#1A1A1A]">Create Account</Link></li>
+            <li><Link href="/features" className="pp-shell-link">Features</Link></li>
+            <li><Link href="/use-cases" className="pp-shell-link">Use Cases</Link></li>
+            <li><Link href="/resources" className="pp-shell-link">Resources</Link></li>
+            <li><Link href="/about" className="pp-shell-link">About</Link></li>
+            <li><Link href="/pricing" className="pp-shell-link">Pricing</Link></li>
+            <li><Link href="/login" className="pp-shell-link">Log In</Link></li>
+            <li><Link href="/signup" className="pp-shell-link">Create Account</Link></li>
           </ul>
         </div>
         <div>
           <h4 className="mb-4 text-sm font-semibold text-[#1A1A1A]">Support</h4>
           <ul className="space-y-3 text-sm text-[#6B6B6B]">
-            <li><Link href="/contact" className="transition-colors hover:text-[#1A1A1A]">Contact & Support</Link></li>
-            <li><Link href="/compare" className="transition-colors hover:text-[#1A1A1A]">Comparisons</Link></li>
+            <li><Link href="/contact" className="pp-shell-link">Contact & Support</Link></li>
+            <li><Link href="/compare" className="pp-shell-link">Comparisons</Link></li>
           </ul>
         </div>
         <div>
           <h4 className="mb-4 text-sm font-semibold text-[#1A1A1A]">Security & Legal</h4>
           <ul className="space-y-3 text-sm text-[#6B6B6B]">
-            <li><Link href="/security" className="transition-colors hover:text-[#1A1A1A]">Security</Link></li>
-            <li><Link href="/legal/terms" className="transition-colors hover:text-[#1A1A1A]">Terms of Service</Link></li>
-            <li><Link href="/legal/privacy" className="transition-colors hover:text-[#1A1A1A]">Privacy Policy</Link></li>
-            <li><Link href="/legal/cookies" className="transition-colors hover:text-[#1A1A1A]">Cookie Policy</Link></li>
-            <li><Link href="/legal/dpa" className="transition-colors hover:text-[#1A1A1A]">DPA</Link></li>
-            <li><Link href="/legal/acceptable-use" className="transition-colors hover:text-[#1A1A1A]">Acceptable Use</Link></li>
-            <li><Link href="/legal/refund" className="transition-colors hover:text-[#1A1A1A]">Refund Policy</Link></li>
+            <li><Link href="/security" className="pp-shell-link">Security</Link></li>
+            <li><Link href="/legal/terms" className="pp-shell-link">Terms of Service</Link></li>
+            <li><Link href="/legal/privacy" className="pp-shell-link">Privacy Policy</Link></li>
+            <li><Link href="/legal/cookies" className="pp-shell-link">Cookie Policy</Link></li>
+            <li><Link href="/legal/dpa" className="pp-shell-link">DPA</Link></li>
+            <li><Link href="/legal/acceptable-use" className="pp-shell-link">Acceptable Use</Link></li>
+            <li><Link href="/legal/refund" className="pp-shell-link">Refund Policy</Link></li>
           </ul>
         </div>
       </div>

@@ -60,47 +60,31 @@ input[type="reset"]:disabled,
   cursor: not-allowed;
 }
 
+.pp-interactive,
 button,
-a[href],
-[role="button"],
-input[type="button"],
-input[type="submit"],
-input[type="reset"],
 summary {
   transition: transform 140ms ease, opacity 140ms ease, box-shadow 180ms ease, filter 180ms ease;
 }
 
 @media (hover: hover) {
+  .pp-interactive:hover,
   button:not(:disabled):hover,
-  a[href]:hover,
-  [role="button"]:hover,
-  input[type="button"]:not(:disabled):hover,
-  input[type="submit"]:not(:disabled):hover,
-  input[type="reset"]:not(:disabled):hover,
   summary:hover {
     transform: translateY(-1px);
     filter: saturate(1.03);
   }
 }
 
+.pp-interactive:active,
 button:not(:disabled):active,
-a[href]:active,
-[role="button"]:active,
-input[type="button"]:not(:disabled):active,
-input[type="submit"]:not(:disabled):active,
-input[type="reset"]:not(:disabled):active,
 summary:active {
   transform: translateY(0);
   opacity: 0.96;
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .pp-interactive,
   button,
-  a[href],
-  [role="button"],
-  input[type="button"],
-  input[type="submit"],
-  input[type="reset"],
   summary {
     transition: none;
   }
@@ -146,6 +130,21 @@ summary:active {
   padding: 10px 18px;
   font-weight: 700;
   border: 1px solid var(--pp-border);
+}
+
+.pp-shell-link {
+  transition: color 180ms ease, opacity 180ms ease;
+}
+
+.pp-shell-link:hover {
+  color: #0F172A;
+}
+
+.pp-glass-card {
+  border: 1px solid rgba(226, 232, 240, 0.7);
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: 0 18px 50px rgba(15, 23, 42, 0.06);
+  backdrop-filter: blur(18px);
 }
 
 /* Navbar link entrance animation */

@@ -237,9 +237,9 @@ export default function HomePage() {
             </div>
 
             <h1 className="pp-display mx-auto mb-6 max-w-4xl text-5xl leading-[1.04] tracking-[-0.02em] text-[#0F172A] md:text-6xl lg:text-7xl">
-              Not another generic chatbot.{" "}
+              Premium food safety compliance software for teams that cannot afford generic output.{" "}
               <span className="bg-gradient-to-r from-[#E11D48] via-[#F43F5E] to-[#E11D48] bg-clip-text text-transparent">
-                A specialised food safety agent.
+                Built for operational trust.
               </span>
             </h1>
 
@@ -249,13 +249,13 @@ export default function HomePage() {
             </p>
 
             <div className="mb-10 flex flex-wrap items-center justify-center gap-3 text-sm font-medium text-[#475569]">
-              <Link href="/features/haccp-plan-generator" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
+              <Link href="/features/haccp-plan-generator" className="pp-interactive rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
                 Explore the HACCP plan generator
               </Link>
-              <Link href="/features/allergen-documentation" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
+              <Link href="/features/allergen-documentation" className="pp-interactive rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
                 See allergen documentation workflows
               </Link>
-              <Link href="/pricing" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
+              <Link href="/pricing" className="pp-interactive rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
                 Compare pricing plans
               </Link>
             </div>
@@ -325,7 +325,7 @@ export default function HomePage() {
                   />
                   <button
                     type="submit"
-                    className="inline-flex items-center gap-2 rounded-xl bg-[#E11D48] px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-[#E11D48]/20 transition-all duration-200 hover:bg-[#BE123C] hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#E11D48]/30 active:scale-[0.97] md:px-5 md:py-3 md:text-base"
+                    className="pp-interactive inline-flex items-center gap-2 rounded-xl bg-[#E11D48] px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-[#E11D48]/20 transition-all duration-200 hover:bg-[#BE123C] hover:shadow-xl hover:shadow-[#E11D48]/30 active:scale-[0.97] md:px-5 md:py-3 md:text-base"
                   >
                     <span className="hidden sm:inline">Start free</span>
                     <ArrowRight className="h-5 w-5" />
@@ -354,6 +354,14 @@ export default function HomePage() {
 
       <section className="border-b border-[#F1F5F9] bg-white py-5">
         <div className="pp-container flex flex-col items-center gap-3">
+          <div className="text-center">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#BE123C]">
+              Operational trust, not generic AI output
+            </p>
+            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[#64748B]">
+              PinkPepper is structured for the way food businesses actually document, review, and defend compliance work under EU and UK expectations.
+            </p>
+          </div>
           <div className="flex flex-wrap items-center justify-center gap-2">
             <span className="text-xs font-medium text-[#94A3B8] mr-1">Grounded in:</span>
             {["EC 852/2004", "EU 1169/2011", "EC 178/2002", "UK FSA Guidance", "Codex HACCP", "BRCGS-Ready"].map((reg) => (
@@ -372,16 +380,16 @@ export default function HomePage() {
         <div className="pp-container">
           <div className="mb-14 max-w-xl">
             <h2 className="pp-display text-4xl font-semibold tracking-[-0.01em] text-[#0F172A] md:text-5xl">
-              Built for operators, not just prompts
+              Built for operators, not prompt theatre
             </h2>
             <p className="mt-4 text-lg text-[#475569]">
-              PinkPepper combines practical generation with traceable references and export-ready structure.
+              PinkPepper combines practical generation with traceable references, reviewable structure, and outputs that fit the rhythm of real compliance work.
             </p>
           </div>
 
           <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
             <div className="grid gap-6 md:grid-cols-2">
-              <div className="group rounded-2xl border border-[#E2E8F0] bg-white p-7 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#CBD5E1] hover:shadow-xl hover:shadow-black/[0.04]">
+              <div className="pp-interactive group rounded-2xl border border-[#E2E8F0] bg-white p-7 transition-all duration-200 hover:border-[#CBD5E1] hover:shadow-xl hover:shadow-black/[0.04]">
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[#FFF1F2] text-[#E11D48]">
                   <BookOpen className="h-6 w-6" />
                 </div>
@@ -391,7 +399,7 @@ export default function HomePage() {
                 </p>
               </div>
 
-              <div className="group rounded-2xl border border-[#E2E8F0] bg-white p-7 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#CBD5E1] hover:shadow-xl hover:shadow-black/[0.04]">
+              <div className="pp-interactive group rounded-2xl border border-[#E2E8F0] bg-white p-7 transition-all duration-200 hover:border-[#CBD5E1] hover:shadow-xl hover:shadow-black/[0.04]">
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[#FFF1F2] text-[#E11D48]">
                   <ClipboardCheck className="h-6 w-6" />
                 </div>
@@ -401,7 +409,7 @@ export default function HomePage() {
                 </p>
               </div>
 
-              <div className="group rounded-2xl border border-[#E2E8F0] bg-white p-7 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#CBD5E1] hover:shadow-xl hover:shadow-black/[0.04]">
+              <div className="pp-interactive group rounded-2xl border border-[#E2E8F0] bg-white p-7 transition-all duration-200 hover:border-[#CBD5E1] hover:shadow-xl hover:shadow-black/[0.04]">
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[#FFF1F2] text-[#E11D48]">
                   <Download className="h-6 w-6" />
                 </div>
@@ -411,7 +419,7 @@ export default function HomePage() {
                 </p>
               </div>
 
-              <div className="group rounded-2xl border border-[#E2E8F0] bg-white p-7 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#CBD5E1] hover:shadow-xl hover:shadow-black/[0.04]">
+              <div className="pp-interactive group rounded-2xl border border-[#E2E8F0] bg-white p-7 transition-all duration-200 hover:border-[#CBD5E1] hover:shadow-xl hover:shadow-black/[0.04]">
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[#FFF1F2] text-[#E11D48]">
                   <Users className="h-6 w-6" />
                 </div>
@@ -422,7 +430,7 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="rounded-3xl border border-[#E2E8F0] bg-white p-4 shadow-[0_25px_60px_rgba(0,0,0,0.08)] md:p-5">
+            <div className="pp-glass-card rounded-3xl p-4 md:p-5">
               <div className="flex items-center gap-3 border-b border-[#F1F5F9] pb-4">
                 <div className="flex gap-2">
                   <div className="h-3 w-3 rounded-full bg-[#FF5F57]" />
@@ -489,6 +497,55 @@ export default function HomePage() {
         </div>
       </section>
 
+      <section className="border-b border-[#F1F5F9] bg-white py-24">
+        <div className="pp-container">
+          <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[0.95fr_1.05fr]">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">Workflow story</p>
+              <h2 className="pp-display mt-4 text-4xl text-[#0F172A] md:text-5xl">
+                From raw notes to review-ready compliance work
+              </h2>
+              <p className="mt-5 max-w-xl text-lg leading-relaxed text-[#475569]">
+                The premium experience is not just faster drafting. It is moving from messy operational context to structured work your team can review, export, audit, and defend.
+              </p>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Link href="/features/food-safety-audit-prep" className="pp-interactive rounded-full bg-[#0F172A] px-5 py-3 text-sm font-semibold text-white hover:bg-[#1E293B]">
+                  Explore audit-prep workflows
+                </Link>
+                <Link href="/features/food-safety-sop-generator" className="pp-interactive rounded-full border border-[#E2E8F0] bg-white px-5 py-3 text-sm font-semibold text-[#0F172A] hover:bg-[#F8FAFC]">
+                  See SOP generation
+                </Link>
+              </div>
+            </div>
+            <div className="grid gap-4 md:grid-cols-3">
+              {[
+                {
+                  step: "01",
+                  title: "Capture the messy reality",
+                  body: "Menus, process steps, supplier notes, temperature risks, and audit pressure start as operational fragments.",
+                },
+                {
+                  step: "02",
+                  title: "Structure the compliance work",
+                  body: "PinkPepper turns those fragments into HACCP logic, SOPs, allergen controls, and reviewable evidence packs.",
+                },
+                {
+                  step: "03",
+                  title: "Ship with more confidence",
+                  body: "Teams export, review, and refine higher-stakes documents before inspections, audits, or internal sign-off.",
+                },
+              ].map((item) => (
+                <div key={item.step} className="rounded-3xl border border-[#E2E8F0] bg-[#F8FAFC] p-6">
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#BE123C]">{item.step}</p>
+                  <h3 className="mt-4 text-xl font-semibold text-[#0F172A]">{item.title}</h3>
+                  <p className="mt-3 text-sm leading-relaxed text-[#64748B]">{item.body}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="border-b border-[#F1F5F9] bg-white py-20">
         <div className="pp-container">
           <div className="mx-auto mb-10 max-w-3xl text-center">
@@ -504,7 +561,7 @@ export default function HomePage() {
           <div className="grid gap-6 md:grid-cols-3">
             <Link
               href="/features"
-              className="rounded-3xl border border-[#E2E8F0] bg-[#FFF7ED] p-8 transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-black/[0.04]"
+              className="pp-interactive rounded-3xl border border-[#E2E8F0] bg-[#FFF7ED] p-8 transition-all hover:shadow-lg hover:shadow-black/[0.04]"
             >
               <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#E11D48]">Features</p>
               <h3 className="mt-3 text-2xl font-semibold text-[#0F172A]">Commercial product pages</h3>
@@ -514,7 +571,7 @@ export default function HomePage() {
             </Link>
             <Link
               href="/use-cases"
-              className="rounded-3xl border border-[#E2E8F0] bg-[#F8FAFC] p-8 transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-black/[0.04]"
+              className="pp-interactive rounded-3xl border border-[#E2E8F0] bg-[#F8FAFC] p-8 transition-all hover:shadow-lg hover:shadow-black/[0.04]"
             >
               <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#E11D48]">Use Cases</p>
               <h3 className="mt-3 text-2xl font-semibold text-[#0F172A]">Pages by business type</h3>
@@ -524,7 +581,7 @@ export default function HomePage() {
             </Link>
             <Link
               href="/resources"
-              className="rounded-3xl border border-[#E2E8F0] bg-[#FFF1F2] p-8 transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-black/[0.04]"
+              className="pp-interactive rounded-3xl border border-[#E2E8F0] bg-[#FFF1F2] p-8 transition-all hover:shadow-lg hover:shadow-black/[0.04]"
             >
               <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#E11D48]">Resources</p>
               <h3 className="mt-3 text-2xl font-semibold text-[#0F172A]">Templates and guides</h3>
@@ -648,7 +705,7 @@ export default function HomePage() {
           </p>
           <Link
             href="/signup"
-            className="inline-flex items-center gap-3 rounded-full bg-[#E11D48] px-10 py-4 text-lg font-semibold text-white shadow-xl shadow-[#E11D48]/20 transition-all duration-200 hover:bg-[#BE123C] hover:-translate-y-1 hover:shadow-2xl hover:shadow-[#E11D48]/30 active:scale-[0.97]"
+            className="pp-interactive inline-flex items-center gap-3 rounded-full bg-[#E11D48] px-10 py-4 text-lg font-semibold text-white shadow-xl shadow-[#E11D48]/20 transition-all duration-200 hover:bg-[#BE123C] hover:shadow-2xl hover:shadow-[#E11D48]/30 active:scale-[0.97]"
           >
             Start for free
             <ArrowRight className="h-5 w-5" />
