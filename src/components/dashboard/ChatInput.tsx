@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { FormEvent, useCallback, useEffect, useRef } from "react";
+import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 
 const MAX_PROMPT_CHARS = 2500;
@@ -59,6 +59,8 @@ export default function ChatInput({
   const t = useTranslations("chat");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const docInputRef = useRef<HTMLInputElement>(null);
+  const actionMenuRef = useRef<HTMLDivElement>(null);
+  const [actionMenuOpen, setActionMenuOpen] = useState(false);
 
   const resizeTextarea = useCallback(() => {
     const el = textareaRef.current;
@@ -78,6 +80,30 @@ export default function ChatInput({
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
   }, [resizeTextarea]);
+
+  useEffect(() => {
+    if (!actionMenuOpen) return;
+
+    const handlePointerDown = (event: MouseEvent) => {
+      if (!actionMenuRef.current?.contains(event.target as Node)) {
+        setActionMenuOpen(false);
+      }
+    };
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setActionMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handlePointerDown);
+    document.addEventListener("keydown", handleEscape);
+
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [actionMenuOpen]);
 
   const remainingChars = MAX_PROMPT_CHARS - prompt.length;
 
@@ -142,44 +168,73 @@ export default function ChatInput({
             }}
           />
 
-          {canUploadImages ? (
+          <div ref={actionMenuRef} className="relative flex-shrink-0">
             <button
               type="button"
-              onClick={() => fileInputRef.current?.click()}
-              className="flex-shrink-0 rounded-xl border border-[#E2E8F0] bg-white p-2.5 text-[#64748B] hover:bg-[#F8F9FB] hover:text-[#0F172A] transition-colors h-[44px] w-[44px] flex items-center justify-center"
-              title={t("attachPhotoTitle")}
+              onClick={() => setActionMenuOpen((open) => !open)}
+              disabled={loading || isTranscribing}
+              className="flex h-[44px] w-[44px] items-center justify-center rounded-xl border border-[#E2E8F0] bg-white p-2.5 text-[#64748B] transition-colors hover:bg-[#F8F9FB] hover:text-[#0F172A] disabled:cursor-not-allowed disabled:opacity-60"
+              title={t("attachDocumentTitle")}
+              aria-expanded={actionMenuOpen}
+              aria-label="Open attachment tools"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.9}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 5v14M5 12h14" />
               </svg>
             </button>
-          ) : (
-            <button
-              type="button"
-              onClick={() => onUpgradeForImages?.()}
-              className="group relative flex-shrink-0 rounded-xl border border-dashed border-[#E2E8F0] bg-[#F8F9FB] p-2.5 text-[#9CA3AF] hover:border-[#E11D48] hover:text-[#E11D48] transition-colors h-[44px] w-[44px] flex items-center justify-center"
-              title={t("upgradePhotoTitle")}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-              <span className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-36 rounded-lg bg-[#0F172A] px-2 py-1.5 text-center text-[10px] text-white opacity-0 group-hover:opacity-100 transition-opacity whitespace-normal">
-                {t("upgradePhotoTooltip")}
-              </span>
-            </button>
-          )}
 
-          <button
-            type="button"
-            onClick={() => docInputRef.current?.click()}
-            disabled={loading}
-            className="flex-shrink-0 rounded-xl border border-[#E2E8F0] bg-white p-2.5 text-[#64748B] hover:bg-[#F8F9FB] hover:text-[#0F172A] transition-colors h-[44px] w-[44px] flex items-center justify-center disabled:cursor-not-allowed disabled:opacity-60"
-            title={t("attachDocumentTitle")}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-          </button>
+            {actionMenuOpen && (
+              <div className="absolute bottom-full left-0 z-20 mb-2 w-56 rounded-2xl border border-[#E2E8F0] bg-white p-2 shadow-xl">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setActionMenuOpen(false);
+                    docInputRef.current?.click();
+                  }}
+                  disabled={loading}
+                  className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-sm text-[#0F172A] transition-colors hover:bg-[#F8F9FB] disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 flex-shrink-0 text-[#64748B]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  <span>{t("attachDocumentTitle")}</span>
+                </button>
+
+                {canUploadImages ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setActionMenuOpen(false);
+                      fileInputRef.current?.click();
+                    }}
+                    className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-sm text-[#0F172A] transition-colors hover:bg-[#F8F9FB]"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 flex-shrink-0 text-[#64748B]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <span>{t("attachPhotoTitle")}</span>
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setActionMenuOpen(false);
+                      onUpgradeForImages?.();
+                    }}
+                    className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-sm text-[#9CA3AF] transition-colors hover:bg-[#FEF2F2] hover:text-[#E11D48]"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <div className="min-w-0">
+                      <div>{t("upgradePhotoTitle")}</div>
+                      <div className="text-[11px]">{t("upgradePhotoTooltip")}</div>
+                    </div>
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
 
           <button
             type="button"

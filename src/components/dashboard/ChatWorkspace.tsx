@@ -15,6 +15,8 @@ import ChatInput from "./ChatInput";
 import OnboardingModal from "./OnboardingModal";
 import UpgradeModal from "./UpgradeModal";
 import ReviewContactModal from "./ReviewContactModal";
+import { useAttachments } from "./useAttachments";
+import { useAudioRecording } from "./useAudioRecording";
 
 type StreamUsage = { used: number; limit: number | null; tier: SubscriptionTier; isAdmin?: boolean };
 type WorkspaceMode = "ask" | "virtual_audit";
@@ -103,16 +105,48 @@ const DOC_GENERATION_TYPES: Record<DocWizard["id"], string> = {
   supplier_approval: "supplier_approval",
 };
 
-const ALLOWED_TRANSCRIPTION_MIME_TYPES = new Set(["audio/webm", "audio/mp4", "audio/wav"]);
-
-function normalizeRecordedMimeType(mimeType: string | undefined) {
-  let normalized = (mimeType ?? "").split(";")[0]?.trim().toLowerCase();
-  if (normalized === "audio/x-wav") normalized = "audio/wav";
-  if (normalized === "audio/m4a") normalized = "audio/mp4";
-  if (ALLOWED_TRANSCRIPTION_MIME_TYPES.has(normalized)) {
-    return normalized;
+function parseMessageArtifact(value: unknown): Message["artifact"] | undefined {
+  if (!value || typeof value !== "object") {
+    return undefined;
   }
-  return "audio/webm";
+
+  const artifact = (value as { artifact?: unknown }).artifact;
+  if (!artifact || typeof artifact !== "object") {
+    return undefined;
+  }
+
+  const candidate = artifact as Record<string, unknown>;
+  if (
+    candidate.kind !== "document" ||
+    typeof candidate.id !== "string" ||
+    typeof candidate.title !== "string" ||
+    (candidate.status !== "draft" && candidate.status !== "ready")
+  ) {
+    return undefined;
+  }
+
+  return {
+    id: candidate.id,
+    kind: "document",
+    title: candidate.title,
+    summary: typeof candidate.summary === "string" ? candidate.summary : undefined,
+    status: candidate.status,
+    documentType: typeof candidate.documentType === "string" ? candidate.documentType : undefined,
+    documentNumber: typeof candidate.documentNumber === "string" ? candidate.documentNumber : undefined,
+  };
+}
+
+function summarizeArtifactContent(content: string) {
+  const flattened = content
+    .replace(/[#*_`>\-\[\]]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  if (flattened.length <= 160) {
+    return flattened;
+  }
+
+  return `${flattened.slice(0, 157).trimEnd()}...`;
 }
 
 export default function ChatWorkspace({
@@ -156,15 +190,9 @@ export default function ChatWorkspace({
 
 
   // ── Image attachment state ──
-  const [attachedImage, setAttachedImage] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   // ── Document attachment state ──
-  const [attachedDocument, setAttachedDocument] = useState<File | null>(null);
 
-  const [isRecording, setIsRecording] = useState(false);
-  const [isTranscribing, setIsTranscribing] = useState(false);
-  const [recordingError, setRecordingError] = useState<string | null>(null);
 
   // ── Onboarding state ──
   const [showOnboarding, setShowOnboarding] = useState(!onboardingCompleted);
@@ -187,11 +215,6 @@ export default function ChatWorkspace({
   const typingQueueRef = useRef("");
   const typingIntervalRef = useRef<number | null>(null);
   const pendingDoneRef = useRef<{ citations?: Citation[]; usage?: StreamUsage } | null>(null);
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const mediaStreamRef = useRef<MediaStream | null>(null);
-  const audioChunksRef = useRef<Blob[]>([]);
-  const recordingStartedAtRef = useRef<number | null>(null);
-  const retryableTranscriptionRef = useRef<{ blob: Blob; durationMs: number; retries: number } | null>(null);
 
   const canUploadImages = isAdmin || dailyImageUploads > 0;
 
@@ -308,45 +331,35 @@ export default function ChatWorkspace({
     ? "border-[#D97706] bg-[#FFFBEB] text-[#92400E]"
     : "border-[#E2E8F0] bg-white text-[#64748B]";
 
+  const modeLabel = workspaceMode === "virtual_audit" ? tw("virtualAudit") : tw("ask");
+  const modeDescription =
+    workspaceMode === "virtual_audit"
+      ? tw("virtualAuditPlaceholder")
+      : tc("placeholder");
+  const modeBadgeClass =
+    workspaceMode === "virtual_audit"
+      ? "border-[#C7D2FE] bg-[#EEF2FF] text-[#4338CA]"
+      : "border-[#E2E8F0] bg-[#F8FAFC] text-[#334155]";
+  const artifacts = useMemo(
+    () =>
+      messages
+        .filter((message) => message.artifact)
+        .map((message) => message.artifact!),
+    [messages]
+  );
+
+  const {
+    attachedImage,
+    imagePreview,
+    attachedDocument,
+    setAttachedDocument,
+    handleImageSelect,
+    clearImage,
+    restoreImage,
+    clearDocument,
+  } = useAttachments({ canUploadImages, setError });
+
   // ── Image helpers ──
-  function handleImageSelect(file: File) {
-    if (!canUploadImages) return;
-    const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
-    if (!allowedTypes.includes(file.type)) {
-      setError("Only JPEG, PNG, WebP, and GIF images are supported.");
-      return;
-    }
-    if (file.size > 5 * 1024 * 1024) {
-      setError("Image must be under 5MB.");
-      return;
-    }
-    setAttachedImage(file);
-    const reader = new FileReader();
-    reader.onload = (e) => setImagePreview(e.target?.result as string);
-    reader.readAsDataURL(file);
-  }
-
-  function clearImage() {
-    setAttachedImage(null);
-    setImagePreview(null);
-  }
-
-  function cleanupRecordingStream() {
-    mediaStreamRef.current?.getTracks().forEach((track) => track.stop());
-    mediaStreamRef.current = null;
-    mediaRecorderRef.current = null;
-    audioChunksRef.current = [];
-    recordingStartedAtRef.current = null;
-  }
-
-  function trackTranscriptionTelemetry(eventName: string, payload: Record<string, string | number | boolean>) {
-    try {
-      track(eventName, payload);
-    } catch {
-      // Best-effort telemetry only.
-    }
-  }
-
   function trackWorkspaceEvent(eventName: string, payload: Record<string, string | number | boolean | null>) {
     try {
       track(eventName, payload);
@@ -355,136 +368,20 @@ export default function ChatWorkspace({
     }
   }
 
-  async function transcribeAudioBlob(audioBlob: Blob, durationMs: number, retryCount = 0) {
-    setIsTranscribing(true);
-    setRecordingError(null);
-    const startedAt = typeof performance !== "undefined" ? performance.now() : Date.now();
-    try {
-      const normalizedMimeType = normalizeRecordedMimeType(audioBlob.type);
-      const extension = normalizedMimeType === "audio/mp4" ? "mp4" : normalizedMimeType === "audio/wav" ? "wav" : "webm";
-      const audioFile = new File([audioBlob], `recording.${extension}`, { type: normalizedMimeType });
-      const formData = new FormData();
-      formData.append("audio", audioFile);
-      formData.append("durationMs", String(durationMs));
-      formData.append("language", navigator.language || "en");
-
-      const res = await fetch("/api/chat/transcribe", { method: "POST", body: formData });
-      const data = (await res.json()) as { text?: string; error?: { message?: string } };
-      if (!res.ok) {
-        if (res.status === 402) {
-          setUpgradeModalTrigger("transcription_limit");
-        }
-        throw new Error(data.error?.message ?? tc("transcriptionError"));
-      }
-
-      const transcript = (data.text ?? "").trim();
-      if (!transcript) {
-        throw new Error(tc("transcriptionEmptyError"));
-      }
-
-      let promptToSend = "";
-      setPrompt((prev) => {
-        const trimmed = prev.trimEnd();
-        promptToSend = trimmed ? `${trimmed} ${transcript}` : transcript;
-        return promptToSend;
-      });
-      setRecordingError(null);
-      retryableTranscriptionRef.current = null;
-
-      const latencyMs = Math.round((typeof performance !== "undefined" ? performance.now() : Date.now()) - startedAt);
-      trackTranscriptionTelemetry("chat_transcription_success", {
-        latencyMs,
-        durationMs,
-        retryCount,
-      });
-
-      await sendPromptValue(promptToSend);
-    } catch {
-      const latencyMs = Math.round((typeof performance !== "undefined" ? performance.now() : Date.now()) - startedAt);
-      retryableTranscriptionRef.current = { blob: audioBlob, durationMs, retries: retryCount };
-      setRecordingError(tc("transcriptionError"));
-      trackTranscriptionTelemetry("chat_transcription_failure", {
-        latencyMs,
-        durationMs,
-        retryCount,
-      });
-    } finally {
-      setIsTranscribing(false);
-    }
-  }
-
-  function retryTranscription() {
-    const retry = retryableTranscriptionRef.current;
-    if (!retry || isRecording || isTranscribing) return;
-    void transcribeAudioBlob(retry.blob, retry.durationMs, retry.retries + 1);
-  }
-
-  async function startRecording() {
-    if (isRecording || isTranscribing) return;
-    if (retryableTranscriptionRef.current) {
-      retryTranscription();
-      return;
-    }
-    setRecordingError(null);
-    if (typeof window === "undefined" || !navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === "undefined") {
-      setRecordingError(tc("recordingUnsupported"));
-      return;
-    }
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      mediaStreamRef.current = stream;
-      const mimeType = ["audio/webm;codecs=opus", "audio/webm", "audio/mp4", "audio/wav"].find((candidate) =>
-        MediaRecorder.isTypeSupported(candidate)
-      );
-      const recorder = mimeType ? new MediaRecorder(stream, { mimeType }) : new MediaRecorder(stream);
-
-      audioChunksRef.current = [];
-      recorder.ondataavailable = (event) => {
-        if (event.data.size > 0) {
-          audioChunksRef.current.push(event.data);
-        }
-      };
-      recorder.onstop = () => {
-        const chunks = audioChunksRef.current;
-        const firstChunkType = chunks[0]?.type;
-        const blobType = normalizeRecordedMimeType(recorder.mimeType || firstChunkType);
-        const blob = new Blob(chunks, { type: blobType });
-        const durationMs = recordingStartedAtRef.current ? Date.now() - recordingStartedAtRef.current : 0;
-        cleanupRecordingStream();
-        if (blob.size > 0) {
-          void transcribeAudioBlob(blob, durationMs);
-        } else {
-          setRecordingError(tc("transcriptionEmptyError"));
-        }
-      };
-
-      mediaRecorderRef.current = recorder;
-      recordingStartedAtRef.current = Date.now();
-      recorder.start();
-      setIsRecording(true);
-    } catch {
-      cleanupRecordingStream();
-      setRecordingError(tc("recordingPermissionError"));
-    }
-  }
-
-  function stopRecording() {
-    const recorder = mediaRecorderRef.current;
-    if (!recorder || recorder.state !== "recording") return;
-    setIsRecording(false);
-    recorder.stop();
-  }
-
-  function cancelRecording() {
-    const recorder = mediaRecorderRef.current;
-    if (recorder && recorder.state === "recording") {
-      recorder.onstop = null;
-      recorder.stop();
-    }
-    setIsRecording(false);
-    setRecordingError(null);
-    cleanupRecordingStream();
-  }
+  const {
+    isRecording,
+    isTranscribing,
+    recordingError,
+    startRecording,
+    stopRecording,
+    cancelRecording,
+  } = useAudioRecording({
+    loading,
+    setPrompt,
+    sendPromptValue,
+    onTranscriptionLimit: () => setUpgradeModalTrigger("transcription_limit"),
+    t: tc,
+  });
 
   // ── Billing ──
   async function refreshBillingStatus() {
@@ -532,7 +429,7 @@ export default function ChatWorkspace({
     setError(null);
     try {
       const res = await fetch(`/api/chat/conversations/${id}/messages`);
-      const data = (await res.json()) as { messages?: Array<{ role: "user" | "assistant"; content: string }>; error?: string };
+      const data = (await res.json()) as { messages?: Array<{ role: "user" | "assistant"; content: string; metadata?: unknown }>; error?: string };
       if (!res.ok) {
         setError(data.error ?? "Failed to load messages.");
         return;
@@ -543,6 +440,7 @@ export default function ChatWorkspace({
       setMessages((data.messages ?? []).map((m) => ({
         role: m.role,
         content: m.content,
+        artifact: parseMessageArtifact(m.metadata),
         ...(m.role === "assistant" ? { persona: { id: persona.id, name: persona.name } } : {}),
       })));
     } catch {
@@ -699,7 +597,7 @@ export default function ChatWorkspace({
     setCurrentPersona(null);
     setMessages([]);
     clearImage();
-    setAttachedDocument(null);
+    clearDocument();
     setError(null);
     window.history.replaceState(null, "", window.location.pathname);
   }
@@ -805,6 +703,7 @@ export default function ChatWorkspace({
         error?: string;
         assistantMessage?: string;
         conversationId?: string;
+        artifact?: Message["artifact"];
         usage?: { used: number; limit: number | null; tier: SubscriptionTier; isAdmin?: boolean };
       };
 
@@ -820,7 +719,22 @@ export default function ChatWorkspace({
 
       if (data.conversationId) setConversationId(data.conversationId);
       if (data.assistantMessage) {
-        setMessages((prev) => [...prev, { role: "assistant", content: data.assistantMessage!, persona: currentPersona ?? undefined }]);
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: "assistant",
+            content: data.assistantMessage!,
+            persona: currentPersona ?? undefined,
+            artifact: data.artifact ?? {
+              id: `${completedWizard.id}-${Date.now()}`,
+              kind: "document",
+              title: wizardTitle,
+              summary: summarizeArtifactContent(data.assistantMessage!),
+              status: "ready",
+              documentType,
+            },
+          },
+        ]);
       }
       if (data.usage) {
         setUsage(data.usage.used);
@@ -908,7 +822,7 @@ export default function ChatWorkspace({
     const currentImagePreview = imagePreview;
     const currentDocument = attachedDocument;
     clearImage();
-    setAttachedDocument(null);
+    clearDocument();
 
     // Document uploads: send to /api/documents/upload for text extraction + embedding storage,
     // then fall through to the streaming chat flow so the LLM responds using the content.
@@ -970,8 +884,7 @@ export default function ChatWorkspace({
           }
           setMessages((prev) => prev.slice(0, -2)); // remove user + streaming placeholder
           setPrompt(value);
-          setAttachedImage(currentImage);
-          setImagePreview(currentImagePreview);
+          restoreImage(currentImage, currentImagePreview);
           return;
         }
         if (data.conversationId) setConversationId(data.conversationId);
@@ -1175,16 +1088,6 @@ export default function ChatWorkspace({
     return () => clearTypingInterval();
   }, [clearTypingInterval]);
 
-  useEffect(() => {
-    return () => {
-      const recorder = mediaRecorderRef.current;
-      if (recorder && recorder.state === "recording") {
-        recorder.onstop = null;
-        recorder.stop();
-      }
-      cleanupRecordingStream();
-    };
-  }, []);
 
   // ── Render ──
   return (
@@ -1264,6 +1167,77 @@ export default function ChatWorkspace({
 
 
           {/* Messages */}
+          {artifacts.length > 0 && (
+            <div className="flex-shrink-0 border-b border-[#E2E8F0] bg-white px-4 py-3">
+              <div className="mx-auto max-w-5xl">
+                <div className="mb-3 flex items-center justify-between gap-3">
+                  <div>
+                    <p className="text-[11px] font-black uppercase tracking-[0.18em] text-[#E11D48]">Artifacts</p>
+                    <p className="mt-1 text-sm text-[#475569]">Reusable outputs generated in this conversation.</p>
+                  </div>
+                  <span className="rounded-full border border-[#E2E8F0] bg-[#F8FAFC] px-3 py-1 text-xs font-medium text-[#64748B]">
+                    {artifacts.length} saved
+                  </span>
+                </div>
+                <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+                  {artifacts.map((artifact) => (
+                    <div key={artifact.id} className="rounded-2xl border border-[#E2E8F0] bg-[#FCFDFE] p-4">
+                      <div className="flex items-center justify-between gap-3">
+                        <span className="rounded-full bg-[#FFF4F6] px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#BE123C]">
+                          {artifact.kind}
+                        </span>
+                        <span className="rounded-full border border-[#E2E8F0] bg-white px-2.5 py-1 text-[11px] font-medium text-[#64748B]">
+                          {artifact.status}
+                        </span>
+                      </div>
+                      <h3 className="mt-3 text-sm font-semibold text-[#0F172A]">{artifact.title}</h3>
+                      {artifact.summary && (
+                        <p className="mt-2 text-sm leading-6 text-[#475569]">{artifact.summary}</p>
+                      )}
+                      <div className="mt-3 text-xs text-[#64748B]">
+                        Use the response card below to copy content, then export the conversation when the draft is ready.
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div className="flex-shrink-0 border-b border-[#E2E8F0] bg-[#FCFDFE] px-4 py-3">
+            <div className="mx-auto flex max-w-5xl items-start justify-between gap-3">
+              <div className="min-w-0">
+                <div className="flex items-center gap-2">
+                  <span className={`rounded-full border px-2.5 py-1 text-[11px] font-bold uppercase tracking-[0.16em] ${modeBadgeClass}`}>
+                    {modeLabel}
+                  </span>
+                  {currentPersona?.name && (
+                    <span className="rounded-full border border-[#E2E8F0] bg-white px-2.5 py-1 text-[11px] font-medium text-[#64748B]">
+                      {currentPersona.name}
+                    </span>
+                  )}
+                </div>
+                <p className="mt-2 max-w-3xl text-sm text-[#475569]">
+                  {modeDescription}
+                </p>
+              </div>
+              {workspaceMode === "virtual_audit" && (
+                <button
+                  type="button"
+                  onClick={() =>
+                    void sendPromptValue(
+                      "Generate the final virtual audit report now with: scope, evidence reviewed, findings table (Compliant/Minor NC/Major NC/Critical NC), CAPA plan, overall verdict, and evidence still required."
+                    )
+                  }
+                  disabled={loading}
+                  className="hidden rounded-full border border-[#E2E8F0] bg-white px-3 py-1.5 text-xs font-semibold text-[#475569] transition-colors hover:bg-[#F8F9FB] disabled:opacity-50 md:inline-flex"
+                >
+                  {tw("generateReport")}
+                </button>
+              )}
+            </div>
+          </div>
+
           <ChatMessages
             messages={messages}
             loading={loading}
@@ -1335,13 +1309,14 @@ export default function ChatWorkspace({
               )}
               {workspaceMode === "virtual_audit" && (
                 <button
+                  type="button"
                   onClick={() =>
                     void sendPromptValue(
                       "Generate the final virtual audit report now with: scope, evidence reviewed, findings table (Compliant/Minor NC/Major NC/Critical NC), CAPA plan, overall verdict, and evidence still required."
                     )
                   }
                   disabled={loading}
-                  className="rounded-full border border-[#E2E8F0] bg-white px-3 py-1 text-xs text-[#64748B] hover:bg-[#F8F9FB] disabled:opacity-50"
+                  className="rounded-full border border-[#E2E8F0] bg-white px-3 py-1 text-xs text-[#64748B] hover:bg-[#F8F9FB] disabled:opacity-50 md:hidden"
                 >
                   {tw("generateReport")}
                 </button>
@@ -1374,8 +1349,8 @@ export default function ChatWorkspace({
             onStop={() => abortControllerRef.current?.abort()}
             onImageSelect={handleImageSelect}
             onClearImage={clearImage}
-            onDocumentSelect={(f) => setAttachedDocument(f)}
-            onClearDocument={() => setAttachedDocument(null)}
+            onDocumentSelect={setAttachedDocument}
+            onClearDocument={clearDocument}
             onStartRecording={() => void startRecording()}
             onStopRecording={stopRecording}
             onCancelRecording={cancelRecording}

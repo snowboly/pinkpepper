@@ -6,6 +6,16 @@ export type PersonaInfo = {
   name: string;
 };
 
+export type MessageArtifact = {
+  id: string;
+  kind: "document";
+  title: string;
+  summary?: string;
+  status: "draft" | "ready";
+  documentType?: string;
+  documentNumber?: string;
+};
+
 export type Message = {
   role: "user" | "assistant";
   content: string;
@@ -14,6 +24,7 @@ export type Message = {
   citations?: Citation[];
   isStreaming?: boolean;
   persona?: PersonaInfo;
+  artifact?: MessageArtifact;
 };
 
 export type Conversation = {
