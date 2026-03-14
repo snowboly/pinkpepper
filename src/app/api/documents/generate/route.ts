@@ -177,10 +177,21 @@ export async function POST(request: Request) {
 
   const assistantMessage = renderDocumentForChat(doc);
   const userMessage = displayPrompt?.trim() || `Generate ${documentType}`;
+  const artifactMetadata = {
+    artifact: {
+      id: `${documentType}-${Date.now()}`,
+      kind: "document",
+      title: doc.title,
+      summary: doc.scope,
+      status: "ready",
+      documentType,
+      documentNumber: doc.documentNumber,
+    },
+  };
 
   const { error: messageInsertError } = await supabase.from("chat_messages").insert([
     { conversation_id: conversationId, user_id: user.id, role: "user", content: userMessage },
-    { conversation_id: conversationId, user_id: user.id, role: "assistant", content: assistantMessage },
+    { conversation_id: conversationId, user_id: user.id, role: "assistant", content: assistantMessage, metadata: artifactMetadata },
   ]);
 
   if (messageInsertError) {
@@ -192,6 +203,7 @@ export async function POST(request: Request) {
       conversationId,
       assistantMessage,
       document: doc,
+      artifact: artifactMetadata.artifact,
       usage: { used: used + 1, limit: caps.dailyDocumentGenerations, tier, isAdmin },
     });
   }
