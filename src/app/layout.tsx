@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { Manrope, Space_Grotesk } from "next/font/google";
-import "./globals.css";
-import { SiteFooter, SiteHeader } from "@/components/site/chrome";
-import { CookieBanner } from "@/components/site/CookieBanner";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
+import { CookieBanner } from "@/components/site/CookieBanner";
+import { SiteFooter, SiteHeader } from "@/components/site/chrome";
+import "./globals.css";
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "PinkPepper — AI Food Safety Assistant for EU & UK Businesses",
+        alt: "PinkPepper - AI Food Safety Assistant for EU and UK Businesses",
       },
     ],
     type: "website",
@@ -44,19 +44,21 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "PinkPepper | AI Food Safety Assistant",
     description:
-      "Generate HACCP plans, SOPs, and allergen docs with an AI trained for EU & UK food safety compliance.",
+      "Generate HACCP plans, SOPs, and allergen docs with an AI trained for EU and UK food safety compliance.",
     images: ["/og-image.png"],
   },
   manifest: "/logo/site.webmanifest",
+  robots: {
+    index: true,
+    follow: true,
+  },
   icons: {
     icon: [
       { url: "/logo/favicon-32x32.png", sizes: "32x32", type: "image/png" },
       { url: "/logo/favicon-64x64.png", sizes: "64x64", type: "image/png" },
       { url: "/logo/favicon-128x128.png", sizes: "128x128", type: "image/png" },
     ],
-    apple: [
-      { url: "/logo/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
-    ],
+    apple: [{ url: "/logo/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
     shortcut: ["/logo/favicon.ico"],
   },
 };
