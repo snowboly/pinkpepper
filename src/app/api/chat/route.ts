@@ -87,7 +87,7 @@ async function handleImageAnalysis(
   });
 
   if (usageInsertError) {
-    return NextResponse.json({ error: "Failed to record usage." }, { status: 500 });
+    console.error("Failed to record image upload usage:", usageInsertError);
   }
 
   const persona = getPersonaForConversation(conversationId);

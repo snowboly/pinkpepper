@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
@@ -17,6 +17,8 @@ import UpgradeModal from "./UpgradeModal";
 import ReviewContactModal from "./ReviewContactModal";
 import { useAttachments } from "./useAttachments";
 import { useAudioRecording } from "./useAudioRecording";
+import { parseMessageArtifact, parseMessageCitations } from "./chat-message-metadata";
+import { applyStreamError } from "./chat-stream-state";
 
 type StreamUsage = { used: number; limit: number | null; tier: SubscriptionTier; isAdmin?: boolean };
 type WorkspaceMode = "ask" | "virtual_audit";
@@ -104,37 +106,6 @@ const DOC_GENERATION_TYPES: Record<DocWizard["id"], string> = {
   temp_log: "temperature_log",
   supplier_approval: "supplier_approval",
 };
-
-function parseMessageArtifact(value: unknown): Message["artifact"] | undefined {
-  if (!value || typeof value !== "object") {
-    return undefined;
-  }
-
-  const artifact = (value as { artifact?: unknown }).artifact;
-  if (!artifact || typeof artifact !== "object") {
-    return undefined;
-  }
-
-  const candidate = artifact as Record<string, unknown>;
-  if (
-    candidate.kind !== "document" ||
-    typeof candidate.id !== "string" ||
-    typeof candidate.title !== "string" ||
-    (candidate.status !== "draft" && candidate.status !== "ready")
-  ) {
-    return undefined;
-  }
-
-  return {
-    id: candidate.id,
-    kind: "document",
-    title: candidate.title,
-    summary: typeof candidate.summary === "string" ? candidate.summary : undefined,
-    status: candidate.status,
-    documentType: typeof candidate.documentType === "string" ? candidate.documentType : undefined,
-    documentNumber: typeof candidate.documentNumber === "string" ? candidate.documentNumber : undefined,
-  };
-}
 
 function summarizeArtifactContent(content: string) {
   const flattened = content
@@ -440,6 +411,7 @@ export default function ChatWorkspace({
       setMessages((data.messages ?? []).map((m) => ({
         role: m.role,
         content: m.content,
+        citations: parseMessageCitations(m.metadata),
         artifact: parseMessageArtifact(m.metadata),
         ...(m.role === "assistant" ? { persona: { id: persona.id, name: persona.name } } : {}),
       })));
@@ -976,7 +948,7 @@ export default function ChatWorkspace({
           const payload = line.slice(6);
           if (payload === "[DONE]") continue;
 
-          let event: { type: string; delta?: string; conversationId?: string; citations?: Citation[]; usage?: StreamUsage; persona?: PersonaInfo };
+          let event: { type: string; delta?: string; conversationId?: string; citations?: Citation[]; usage?: StreamUsage; persona?: PersonaInfo; message?: string };
           try {
             event = JSON.parse(payload);
           } catch {
@@ -1001,6 +973,17 @@ export default function ChatWorkspace({
           } else if (event.type === "content" && event.delta) {
             typingQueueRef.current += event.delta;
             startTypingDrain();
+          } else if (event.type === "error") {
+            typingQueueRef.current = "";
+            pendingDoneRef.current = null;
+            clearTypingInterval();
+            setMessages((prev) => applyStreamError({
+              messages: prev,
+              promptValue: value,
+              errorMessage: event.message,
+            }).messages);
+            setPrompt(value);
+            setError(event.message ?? "Stream interrupted");
           } else if (event.type === "done") {
             pendingDoneRef.current = { citations: event.citations, usage: event.usage };
             startTypingDrain();
@@ -1032,8 +1015,12 @@ export default function ChatWorkspace({
         typingQueueRef.current = "";
         pendingDoneRef.current = null;
         clearTypingInterval();
+        setMessages((prev) => applyStreamError({
+          messages: prev,
+          promptValue: value,
+          errorMessage: "Network error. Please try again.",
+        }).messages);
         setError("Network error. Please try again.");
-        setMessages((prev) => prev.slice(0, -2));
         setPrompt(value);
       }
     } finally {
