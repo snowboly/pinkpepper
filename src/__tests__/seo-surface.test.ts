@@ -96,4 +96,22 @@ describe("premium quality regressions", () => {
     expect(chrome).toContain('aria-label="Open navigation menu"');
     expect(chrome).toContain("lg:hidden");
   });
+
+  it("adds a premium trust layer in the footer and avoids blanket hover lift motion", () => {
+    const chrome = readPage("src/components/site/chrome.tsx");
+    const globals = readPage("src/app/globals.css");
+
+    expect(chrome).toContain("Built for operators who need faster documentation");
+    expect(chrome).toContain("Regulation-grounded");
+    expect(globals).not.toContain("a[href]:hover,");
+    expect(globals).toContain(".pp-interactive");
+  });
+
+  it("recomposes the homepage around trust and workflow narrative sections", () => {
+    const homepage = readPage("src/app/page.tsx");
+
+    expect(homepage).toContain("Operational trust, not generic AI output");
+    expect(homepage).toContain("From raw notes to review-ready compliance work");
+    expect(homepage).toContain("/features/food-safety-audit-prep");
+  });
 });
