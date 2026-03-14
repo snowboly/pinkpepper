@@ -107,7 +107,7 @@ const faqs = [
   {
     question: "Where does PinkPepper's regulation data come from?",
     answer:
-      "PinkPepper's EU regulation knowledge is sourced from EUR-Lex CELLAR, the official open-data repository of the Publications Office of the European Union. This ensures that referenced legislation — such as EC 852/2004, EC 178/2002, and EU 1169/2011 — is drawn from authoritative, publicly accessible EU law.",
+      "PinkPepper's EU regulation knowledge is sourced from EUR-Lex CELLAR, the official open-data repository of the Publications Office of the European Union. This ensures that referenced legislation, such as EC 852/2004, EC 178/2002, and EU 1169/2011, is drawn from authoritative, publicly accessible EU law.",
   },
   {
     question: "Who is responsible for final documents and decisions?",
@@ -133,7 +133,7 @@ const demoMap: Record<
     rawNotes: "Fridge checks happen daily. Team cools soups and stores desserts in display fridge.",
     title: "Audit-ready HACCP controls",
     checklist: [
-      "CCP: Chilled storage at 5°C or below",
+      "CCP: Chilled storage at 5 C or below",
       "Monitoring: Every 4 hours + opening and closing checks",
       "Corrective action: Isolate batch, assess exposure time, discard if unsafe, log incident",
       "Records: Temperature log, corrective action register, calibration checks",
@@ -264,7 +264,7 @@ export default function HomePage() {
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <rect width="60" height="40" fill="#003399"/>
-                  {/* 12 stars at 30° intervals, r=13.333, centre (30,20), outer r=2.2, inner r=0.9 */}
+                  {/* 12 stars at 30 degree intervals, r=13.333, center (30,20), outer r=2.2, inner r=0.9 */}
                   {[0,30,60,90,120,150,180,210,240,270,300,330].map((deg) => {
                     const rad = (deg * Math.PI) / 180;
                     const cx = 30 + 13.333 * Math.sin(rad);
