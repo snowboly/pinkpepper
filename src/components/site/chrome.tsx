@@ -3,6 +3,8 @@ import Link from "next/link";
 import { createClient } from "@/utils/supabase/server";
 
 const nav = [
+  { href: "/features", label: "Features" },
+  { href: "/use-cases", label: "Use Cases" },
   { href: "/pricing", label: "Pricing" },
   { href: "/security", label: "Security" },
   { href: "/about", label: "About" },
@@ -149,6 +151,8 @@ export function SiteFooter() {
         <div>
           <h4 className="mb-4 text-sm font-semibold text-[#1A1A1A]">Platform</h4>
           <ul className="space-y-3 text-sm text-[#6B6B6B]">
+            <li><Link href="/features" className="transition-colors hover:text-[#1A1A1A]">Features</Link></li>
+            <li><Link href="/use-cases" className="transition-colors hover:text-[#1A1A1A]">Use Cases</Link></li>
             <li><Link href="/about" className="transition-colors hover:text-[#1A1A1A]">About</Link></li>
             <li><Link href="/pricing" className="transition-colors hover:text-[#1A1A1A]">Pricing</Link></li>
             <li><Link href="/login" className="transition-colors hover:text-[#1A1A1A]">Log In</Link></li>
@@ -159,6 +163,7 @@ export function SiteFooter() {
           <h4 className="mb-4 text-sm font-semibold text-[#1A1A1A]">Support</h4>
           <ul className="space-y-3 text-sm text-[#6B6B6B]">
             <li><Link href="/contact" className="transition-colors hover:text-[#1A1A1A]">Contact & Support</Link></li>
+            <li><Link href="/compare" className="transition-colors hover:text-[#1A1A1A]">Comparisons</Link></li>
           </ul>
         </div>
         <div>
