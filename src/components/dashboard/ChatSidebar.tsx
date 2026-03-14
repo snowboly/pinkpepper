@@ -1,11 +1,11 @@
-"use client";
+﻿"use client";
 
 import { useState, useRef, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import type { SubscriptionTier } from "@/lib/tier";
 import type { Conversation, Project } from "./types";
 
-// ── Preset emojis for projects ──
+// Preset emojis for projects
 const PRESET_EMOJIS = ["📁", "🍽️", "🧑‍🍳", "📋", "🔬", "🏭", "📊", "🌿"];
 
 type ConversationGroup = {

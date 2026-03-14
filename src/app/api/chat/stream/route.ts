@@ -1,4 +1,4 @@
-import { createClient as createSupabaseServer } from "@/utils/supabase/server";
+﻿import { createClient as createSupabaseServer } from "@/utils/supabase/server";
 import { TIER_CAPABILITIES } from "@/lib/tier";
 import { resolveUserAccess } from "@/lib/access";
 import { countUsageSince, utcDayStartIso } from "@/lib/policy";
@@ -383,10 +383,18 @@ export async function POST(request: Request) {
           }
         }
 
+        const citations = ragEnabled ? formatCitations(retrievedChunks) : [];
+
         // Save messages to database
         await supabase.from("chat_messages").insert([
           { conversation_id: conversationId, user_id: user.id, role: "user", content: message },
-          { conversation_id: conversationId, user_id: user.id, role: "assistant", content: fullContent },
+          {
+            conversation_id: conversationId,
+            user_id: user.id,
+            role: "assistant",
+            content: fullContent,
+            metadata: citations.length > 0 ? { citations } : {},
+          },
         ]);
 
         // Record usage event
@@ -398,7 +406,6 @@ export async function POST(request: Request) {
         });
 
         // Send final event with citations and usage
-        const citations = ragEnabled ? formatCitations(retrievedChunks) : [];
         controller.enqueue(
           encoder.encode(
             `data: ${JSON.stringify({
