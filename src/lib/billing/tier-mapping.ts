@@ -3,6 +3,7 @@ import type { SubscriptionTier } from "@/lib/tier";
 export type StripeSubscriptionSnapshot = {
   status: string;
   tier: SubscriptionTier;
+  planTier: SubscriptionTier;
   stripePriceId: string | null;
   currentPeriodEnd: string | null;
 };
@@ -30,6 +31,7 @@ export function parseStripeSubscription(input: {
   return {
     status: input.status,
     tier: effectiveTier,
+    planTier: inferredTier,
     stripePriceId: input.priceId,
     currentPeriodEnd: input.currentPeriodEndUnix
       ? new Date(input.currentPeriodEndUnix * 1000).toISOString()

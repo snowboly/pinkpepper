@@ -5,6 +5,7 @@ import {
   type SubscriptionTier,
   type TierCapabilities,
 } from "@/lib/tier";
+import { parseStripeSubscription } from "@/lib/billing/tier-mapping";
 
 /* ──────────────────────────────────────────────────────────────────────────
    1. Snapshot-style tests — every capability for every tier
@@ -183,5 +184,24 @@ describe("normalizeTier", () => {
   });
   it("treats Pro (mixed case) as unknown and returns free", () => {
     expect(normalizeTier("Pro")).toBe("free");
+  });
+});
+
+describe("parseStripeSubscription", () => {
+  it("preserves the billed plan tier when access downgrades after cancellation", () => {
+    process.env.STRIPE_PRO_PRICE_ID = "price_pro";
+
+    expect(
+      parseStripeSubscription({
+        status: "canceled",
+        priceId: "price_pro",
+        currentPeriodEndUnix: 1_710_000_000,
+      })
+    ).toMatchObject({
+      planTier: "pro",
+      tier: "free",
+      stripePriceId: "price_pro",
+      status: "canceled",
+    });
   });
 });
