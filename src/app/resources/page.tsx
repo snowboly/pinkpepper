@@ -32,6 +32,11 @@ const resources = [
     title: "Supplier approval questionnaire",
     description: "Questions and evidence points food businesses use when approving or re-approving suppliers.",
   },
+  {
+    href: "/resources/food-safety-document-checklist",
+    title: "EU and UK food safety document checklist",
+    description: "A broader authority asset covering HACCP, SOPs, allergen, traceability, monitoring, and audit-readiness documents.",
+  },
 ];
 
 export const metadata: Metadata = {
