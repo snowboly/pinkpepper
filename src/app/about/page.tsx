@@ -10,9 +10,9 @@ import {
 } from "lucide-react";
 
 export const metadata = {
-  title: "About | PinkPepper",
+  title: "About | PinkPepper Food Safety Compliance Software",
   description:
-    "PinkPepper combines AI-powered food safety compliance with expert human review. Founded by Dr Joao, with a background in chemistry and food science.",
+    "Learn how PinkPepper combines AI food safety compliance software with expert human review for EU and UK food businesses.",
   alternates: {
     canonical: "https://pinkpepper.io/about",
   },
@@ -38,6 +38,17 @@ export default function AboutPage() {
             a specialised AI agent with real food&nbsp;safety scientists so you
             get answers you can trust&nbsp;&mdash; instantly.
           </p>
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3 text-sm font-medium text-[#475569]">
+            <Link href="/pricing" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
+              View pricing
+            </Link>
+            <Link href="/features" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
+              Explore product features
+            </Link>
+            <Link href="/compare/pinkpepper-vs-consultant" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
+              Compare PinkPepper with consultants
+            </Link>
+          </div>
         </div>
       </section>
 

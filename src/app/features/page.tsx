@@ -81,6 +81,16 @@ export default function FeaturesPage() {
             </p>
           </Link>
           <Link
+            href="/pricing"
+            className="rounded-3xl border border-[#FBCFE8] bg-[#FFF1F2] p-8 transition-all hover:-translate-y-0.5 hover:border-[#FDA4AF] hover:shadow-xl hover:shadow-black/[0.04]"
+          >
+            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#E11D48]">Pricing</p>
+            <p className="mt-3 text-2xl font-semibold text-[#0F172A]">Match the feature set to the right plan</p>
+            <p className="mt-4 text-sm leading-relaxed text-[#475569]">
+              Compare Free, Plus, and Pro if you need faster document production, exports, and audit-readiness workflows.
+            </p>
+          </Link>
+          <Link
             href="/compare"
             className="rounded-3xl border border-[#E2E8F0] bg-white p-8 transition-all hover:-translate-y-0.5 hover:border-[#CBD5E1] hover:shadow-xl hover:shadow-black/[0.04]"
           >

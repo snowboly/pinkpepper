@@ -39,7 +39,7 @@ export default async function PricingPage() {
     operatingSystem: "Web",
     url: "https://pinkpepper.io",
     description:
-      "AI food safety assistant for EU and UK food businesses. Generate HACCP plans, allergen documentation, SOPs, and audit-ready compliance documentation.",
+      "AI food safety compliance software for EU and UK food businesses. Generate HACCP plans, allergen documentation, SOPs, and audit-ready compliance documentation.",
     offers: [
       {
         "@type": "Offer",
@@ -87,11 +87,22 @@ export default async function PricingPage() {
       <section className="py-16 text-center">
         <div className="pp-container max-w-3xl">
           <h1 className="pp-display text-4xl font-black tracking-tight text-[#0F172A] md:text-5xl">
-            Pricing that follows the compliance job
+            Pricing for AI food safety compliance software
           </h1>
           <p className="mt-4 text-lg text-[#475569]">
-            Start by asking questions. Upgrade when you need faster document production, audit-ready workflows, and specialist review.
+            Start by asking questions. Upgrade when you need faster document production, audit-ready workflows, and specialist review for EU and UK food businesses.
           </p>
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-3 text-sm font-medium text-[#475569]">
+            <Link href="/features/haccp-plan-generator" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
+              Review HACCP plan workflows
+            </Link>
+            <Link href="/use-cases/restaurants" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
+              See restaurant use cases
+            </Link>
+            <Link href="/resources/food-safety-document-checklist" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
+              Read the document checklist
+            </Link>
+          </div>
         </div>
       </section>
 

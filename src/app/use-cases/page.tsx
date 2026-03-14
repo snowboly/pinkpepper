@@ -67,6 +67,31 @@ export default function UseCasesPage() {
           ))}
         </div>
       </section>
+
+      <section className="bg-white py-16">
+        <div className="pp-container grid gap-6 md:grid-cols-2">
+          <Link
+            href="/features/haccp-plan-generator"
+            className="rounded-3xl border border-[#E2E8F0] bg-white p-8 transition-all hover:-translate-y-0.5 hover:border-[#CBD5E1] hover:shadow-xl hover:shadow-black/[0.04]"
+          >
+            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#E11D48]">Features</p>
+            <p className="mt-3 text-2xl font-semibold text-[#0F172A]">Connect each use case to the right workflow</p>
+            <p className="mt-4 text-sm leading-relaxed text-[#475569]">
+              Move from business-type pages into HACCP, allergen, SOP, and audit-prep feature details.
+            </p>
+          </Link>
+          <Link
+            href="/pricing"
+            className="rounded-3xl border border-[#FBCFE8] bg-[#FFF1F2] p-8 transition-all hover:-translate-y-0.5 hover:border-[#FDA4AF] hover:shadow-xl hover:shadow-black/[0.04]"
+          >
+            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#E11D48]">Pricing</p>
+            <p className="mt-3 text-2xl font-semibold text-[#0F172A]">Choose a plan for your operating model</p>
+            <p className="mt-4 text-sm leading-relaxed text-[#475569]">
+              Compare plans once you know which documents, exports, and audit workflows your team needs most.
+            </p>
+          </Link>
+        </div>
+      </section>
     </main>
   );
 }

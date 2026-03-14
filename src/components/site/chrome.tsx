@@ -64,6 +64,47 @@ export async function SiteHeader() {
           </nav>
         </div>
         <div className="flex items-center gap-3 md:gap-4">
+          <details className="relative lg:hidden">
+            <summary
+              aria-label="Open navigation menu"
+              className="flex h-9 w-9 list-none items-center justify-center rounded-full border border-[#E2E8F0] bg-white text-[#0F172A] transition-all duration-200 hover:border-[#CBD5E1] hover:bg-[#F8FAFC] md:h-10 md:w-10"
+            >
+              <span className="flex flex-col gap-1">
+                <span className="block h-0.5 w-4 rounded-full bg-current" />
+                <span className="block h-0.5 w-4 rounded-full bg-current" />
+                <span className="block h-0.5 w-4 rounded-full bg-current" />
+              </span>
+            </summary>
+            <div className="absolute right-0 top-[calc(100%+10px)] z-50 w-64 rounded-2xl border border-[#E2E8F0] bg-white p-2 shadow-lg shadow-black/10">
+              <nav className="flex flex-col">
+                {nav.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className="rounded-xl px-3 py-2.5 text-sm font-medium text-[#0F172A] hover:bg-[#F8FAFC]"
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+                {!user && (
+                  <>
+                    <Link
+                      href="/login"
+                      className="rounded-xl px-3 py-2.5 text-sm font-medium text-[#0F172A] hover:bg-[#F8FAFC]"
+                    >
+                      Log in
+                    </Link>
+                    <Link
+                      href="/signup"
+                      className="mt-1 rounded-xl bg-[#E11D48] px-3 py-2.5 text-center text-sm font-semibold text-white hover:bg-[#BE123C]"
+                    >
+                      Get started
+                    </Link>
+                  </>
+                )}
+              </nav>
+            </div>
+          </details>
           {user ? (
             <details className="group relative">
               <summary
@@ -133,7 +174,7 @@ export function SiteFooter() {
             />
           </Link>
           <p className="mt-4 text-sm leading-relaxed text-[#6B6B6B]">
-            AI Food Safety and Compliance Assistant for EU and UK food businesses.
+            AI food safety compliance software for EU and UK food businesses.
           </p>
           <div className="mt-5 flex items-center gap-3">
             <a
