@@ -33,14 +33,21 @@ export async function POST(request: Request) {
   if (burstLimitRes) return burstLimitRes;
 
   type ProfileRow = { tier?: string | null; is_admin?: boolean | null; chat_language?: string | null; business_type?: string | null };
-  const profileResult = await supabase
-    .from("profiles")
-    .select("tier,is_admin,chat_language,business_type")
-    .eq("id", user.id)
-    .maybeSingle();
-  const profile = profileResult.data as ProfileRow | null;
+  const [{ data: profileData }, { data: subscription }] = await Promise.all([
+    supabase
+      .from("profiles")
+      .select("tier,is_admin,chat_language,business_type")
+      .eq("id", user.id)
+      .maybeSingle(),
+    supabase
+      .from("subscriptions")
+      .select("tier,status")
+      .eq("user_id", user.id)
+      .maybeSingle(),
+  ]);
+  const profile = profileData as ProfileRow | null;
 
-  const { tier, isAdmin } = resolveUserAccess(profile, user.email);
+  const { tier, isAdmin } = resolveUserAccess(profile, user.email, subscription);
   const chatLanguage = profile?.chat_language ?? "en";
   const caps = TIER_CAPABILITIES[tier];
 

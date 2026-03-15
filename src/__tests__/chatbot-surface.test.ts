@@ -104,4 +104,19 @@ describe("chat workspace chrome", () => {
     expect(sidebar).not.toContain("onAskExpert?: () => void;");
     expect(sidebar).not.toContain("t(\"expertReviews\")");
   });
+
+  it("does not render artifact, evidence, or promo card surfaces", () => {
+    const workspace = readWorkspaceFile("src/components/dashboard/ChatWorkspace.tsx");
+    const messages = readWorkspaceFile("src/components/dashboard/ChatMessages.tsx");
+    const messageItem = readWorkspaceFile("src/components/dashboard/MessageItem.tsx");
+
+    expect(workspace).not.toContain("Reusable outputs generated in this conversation.");
+    expect(workspace).not.toContain("Artifacts");
+    expect(messageItem).not.toContain("Evidence and next steps");
+    expect(messageItem).not.toContain("View evidence");
+    expect(messageItem).not.toContain("Saved artifact");
+    expect(messages).not.toContain("Premium Workflows");
+    expect(messages).not.toContain("Request expert review");
+    expect(messages).not.toContain("humanReviewHighlight");
+  });
 });

@@ -1,14 +1,8 @@
-﻿"use client";
+"use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { useTranslations } from "next-intl";
-import {
-  deduplicateCitations,
-  getSourceTypeLabel,
-  groupCitationsByType,
-  sortCitationsByRelevance,
-} from "@/lib/rag/citations";
 import type { Message } from "./types";
 
 type MessageItemProps = {
@@ -19,13 +13,6 @@ export default function MessageItem({ message }: MessageItemProps) {
   const t = useTranslations("chat");
   const isUser = message.role === "user";
   const [copied, setCopied] = useState(false);
-  const [evidenceOpen, setEvidenceOpen] = useState(false);
-
-  const citations = useMemo(
-    () => deduplicateCitations(sortCitationsByRelevance(message.citations ?? [])),
-    [message.citations]
-  );
-  const citationGroups = useMemo(() => groupCitationsByType(citations), [citations]);
 
   function copyToClipboard() {
     navigator.clipboard.writeText(message.content).then(() => {
@@ -128,32 +115,10 @@ export default function MessageItem({ message }: MessageItemProps) {
           </div>
 
           <div className="px-5 py-5">
-            {message.artifact && (
-              <div className="mb-4 rounded-2xl border border-[#E2E8F0] bg-[#FCFDFE] p-4">
-                <div className="flex flex-wrap items-center justify-between gap-3">
-                  <div>
-                    <p className="text-[11px] font-black uppercase tracking-[0.16em] text-[#E11D48]">Saved artifact</p>
-                    <h3 className="mt-1 text-sm font-semibold text-[#0F172A]">{message.artifact.title}</h3>
-                  </div>
-                  <span className="rounded-full border border-[#E2E8F0] bg-white px-2.5 py-1 text-[11px] font-medium text-[#64748B]">
-                    {message.artifact.status}
-                  </span>
-                </div>
-                {message.artifact.summary && (
-                  <p className="mt-2 text-sm leading-6 text-[#475569]">{message.artifact.summary}</p>
-                )}
-              </div>
-            )}
-
             <div className="mb-4 flex flex-wrap items-center gap-2">
               <span className="rounded-full bg-[#FFF4F6] px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#BE123C]">
                 Response
               </span>
-              {citations.length > 0 && (
-                <span className="rounded-full bg-[#F8FAFC] px-2.5 py-1 text-[11px] font-medium text-[#475569]">
-                  {citations.length} source{citations.length === 1 ? "" : "s"}
-                </span>
-              )}
             </div>
 
             <div className="pp-markdown text-base text-[#0F172A]">
@@ -163,67 +128,6 @@ export default function MessageItem({ message }: MessageItemProps) {
               )}
             </div>
           </div>
-
-          {(citations.length > 0 || !message.isStreaming) && (
-            <div className="border-t border-[#E2E8F0] bg-[#FCFDFE] px-5 py-4">
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <div>
-                  <p className="text-sm font-semibold text-[#0F172A]">Evidence and next steps</p>
-                  <p className="text-xs text-[#64748B]">
-                    {citations.length > 0
-                      ? "Review the source material behind this answer before using it operationally."
-                      : "Use copy or export when this response is ready to move into a document or workflow."}
-                  </p>
-                </div>
-
-                {citations.length > 0 && (
-                  <button
-                    type="button"
-                    onClick={() => setEvidenceOpen((open) => !open)}
-                    className="inline-flex items-center gap-2 rounded-full border border-[#E2E8F0] bg-white px-3 py-1.5 text-sm font-medium text-[#475569] transition-colors hover:bg-[#F8F9FB]"
-                  >
-                    <span>{evidenceOpen ? "Hide evidence" : "View evidence"}</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 transition-transform ${evidenceOpen ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </button>
-                )}
-              </div>
-
-              {evidenceOpen && citations.length > 0 && (
-                <div className="mt-4 space-y-4">
-                  {Object.entries(citationGroups).map(([sourceType, items]) => (
-                    <div key={sourceType} className="rounded-2xl border border-[#E2E8F0] bg-white p-4">
-                      <div className="mb-3 flex items-center justify-between gap-3">
-                        <h4 className="text-sm font-semibold text-[#0F172A]">{getSourceTypeLabel(sourceType)}</h4>
-                        <span className="text-xs text-[#94A3B8]">
-                          {items.length} item{items.length === 1 ? "" : "s"}
-                        </span>
-                      </div>
-
-                      <div className="space-y-3">
-                        {items.map((citation) => (
-                          <div key={citation.id} className="rounded-xl bg-[#F8FAFC] p-3">
-                            <div className="flex flex-wrap items-center gap-2">
-                              <span className="text-sm font-medium text-[#0F172A]">{citation.title}</span>
-                              <span className="rounded-full bg-white px-2 py-0.5 text-[11px] text-[#64748B]">
-                                {Math.round(citation.similarity * 100)}% match
-                              </span>
-                            </div>
-                            <p className="mt-1 text-xs text-[#64748B]">
-                              {citation.sourceName}
-                              {citation.sectionRef ? ` · ${citation.sectionRef}` : ""}
-                            </p>
-                            <p className="mt-2 text-sm leading-6 text-[#334155]">{citation.excerpt}</p>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
         </div>
       </div>
     </div>
