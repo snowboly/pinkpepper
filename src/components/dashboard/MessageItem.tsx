@@ -56,78 +56,54 @@ export default function MessageItem({ message }: MessageItemProps) {
   }
 
   return (
-    <div className="py-5">
+    <div className="group py-5">
       <div className="mx-auto max-w-5xl px-4 md:px-6">
-        <div className="rounded-[28px] border border-[#E2E8F0] bg-white shadow-sm">
-          <div className="border-b border-[#E2E8F0] px-5 py-4">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <div className="flex min-w-0 items-center gap-3">
-                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-2xl bg-[#E11D48] text-sm font-bold text-white shadow-sm shadow-[#E11D48]/20">
-                  PP
-                </div>
-                <div className="min-w-0">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="truncate text-sm font-semibold text-[#0F172A]">
-                      {message.persona ? message.persona.name : t("pinkPepper")}
-                    </span>
-                    <span className="rounded-full border border-[#E2E8F0] bg-[#F8FAFC] px-2 py-0.5 text-[11px] font-medium text-[#64748B]">
-                      Assistant
-                    </span>
-                    {message.isStreaming && (
-                      <span className="rounded-full border border-[#FBCFE8] bg-[#FFF1F2] px-2 py-0.5 text-[11px] font-medium text-[#BE123C]">
-                        {t("thinking")}
-                      </span>
-                    )}
-                  </div>
-                  <p className="mt-1 text-xs text-[#64748B]">
-                    {message.persona ? t("pinkPepper") : "Food safety guidance"}
-                  </p>
-                </div>
-              </div>
+        <div className="mb-2 flex items-center gap-2">
+          <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-[#E11D48] text-[10px] font-bold text-white">
+            PP
+          </div>
+          <span className="text-sm font-semibold text-[#0F172A]">
+            {message.persona ? message.persona.name : t("pinkPepper")}
+          </span>
+          {message.isStreaming && (
+            <span className="text-xs text-[#94A3B8]">{t("thinking")}</span>
+          )}
+        </div>
 
-              {!message.isStreaming && message.content && (
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={copyToClipboard}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-[#E2E8F0] bg-white px-3 py-1.5 text-sm text-[#475569] transition-colors hover:bg-[#F8F9FB]"
-                    title={t("copyResponse")}
-                  >
-                    {copied ? (
-                      <>
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                        </svg>
-                        {t("copied")}
-                      </>
-                    ) : (
-                      <>
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                        </svg>
-                        {t("copy")}
-                      </>
-                    )}
-                  </button>
-                </div>
-              )}
-            </div>
+        <div className="pl-9">
+          <div className="pp-markdown text-base text-[#0F172A]">
+            <ReactMarkdown>{message.content}</ReactMarkdown>
+            {message.isStreaming && (
+              <span className="ml-0.5 inline-block h-4 w-0.5 animate-pulse align-text-bottom bg-[#0F172A]" />
+            )}
           </div>
 
-          <div className="px-5 py-5">
-            <div className="mb-4 flex flex-wrap items-center gap-2">
-              <span className="rounded-full bg-[#FFF4F6] px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#BE123C]">
-                Response
-              </span>
+          {!message.isStreaming && message.content && (
+            <div className="mt-2 opacity-0 transition-opacity group-hover:opacity-100">
+              <button
+                type="button"
+                onClick={copyToClipboard}
+                className="inline-flex items-center gap-1 rounded-md p-1 text-[#94A3B8] transition-colors hover:text-[#475569]"
+                title={t("copyResponse")}
+              >
+                {copied ? (
+                  <>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span className="text-xs">{t("copied")}</span>
+                  </>
+                ) : (
+                  <>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                    <span className="text-xs">{t("copy")}</span>
+                  </>
+                )}
+              </button>
             </div>
-
-            <div className="pp-markdown text-base text-[#0F172A]">
-              <ReactMarkdown>{message.content}</ReactMarkdown>
-              {message.isStreaming && (
-                <span className="ml-0.5 inline-block h-4 w-0.5 animate-pulse align-text-bottom bg-[#0F172A]" />
-              )}
-            </div>
-          </div>
+          )}
         </div>
       </div>
     </div>
