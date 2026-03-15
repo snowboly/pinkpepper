@@ -26,6 +26,7 @@ const EMBEDDING_BATCH_DELAY_MS = 200;
 
 // Default backfill date if no previous sync exists
 const DEFAULT_SINCE_DATE = "2024-01-01";
+export { DEFAULT_SINCE_DATE };
 
 export type SyncResult = {
   regulationsProcessed: number;
@@ -33,7 +34,90 @@ export type SyncResult = {
   chunksCreated: number;
   errors: Array<{ celex: string; error: string }>;
   syncedAt: string;
+  loggingAvailable: boolean;
 };
+
+type SyncLogInsert = {
+  celex_number: string;
+  title: string;
+  source_name: string;
+  last_modified?: string | null;
+  content_hash?: string;
+  chunks_ingested: number;
+  synced_at: string;
+  status: string;
+  error_message?: string;
+  metadata?: Json;
+};
+
+type HealthRow = {
+  source_name: string;
+  metadata: Json | null;
+  updated_at: string;
+};
+
+type SyncHealthSummary = {
+  regulationChunkCount: number;
+  logTableAvailable: boolean;
+  latestSyncedAt: string | null;
+  canonicalSourceCount: number;
+  legacySourceCount: number;
+  distinctSources: string[];
+  defaultSinceDate: string;
+};
+
+function extractMetadataDate(metadata: Json | null): string | null {
+  if (!metadata || typeof metadata !== "object" || Array.isArray(metadata)) return null;
+  const syncedAt = metadata.syncedAt;
+  if (typeof syncedAt === "string") return syncedAt;
+  const processedAt = metadata.processedAt;
+  return typeof processedAt === "string" ? processedAt : null;
+}
+
+function hasCanonicalCelex(metadata: Json | null): boolean {
+  if (!metadata || typeof metadata !== "object" || Array.isArray(metadata)) return false;
+  return typeof metadata.celexNumber === "string";
+}
+
+export function summarizeRegulationSyncHealth(
+  rows: HealthRow[],
+  logTableAvailable: boolean
+): SyncHealthSummary {
+  const distinctSources = [...new Set(rows.map((row) => row.source_name))].sort();
+  const latestSyncedAt = rows
+    .map((row) => extractMetadataDate(row.metadata) ?? row.updated_at)
+    .sort()
+    .at(-1) ?? null;
+
+  return {
+    regulationChunkCount: rows.length,
+    logTableAvailable,
+    latestSyncedAt,
+    canonicalSourceCount: rows.filter((row) => hasCanonicalCelex(row.metadata)).length,
+    legacySourceCount: rows.filter((row) => !hasCanonicalCelex(row.metadata)).length,
+    distinctSources,
+    defaultSinceDate: DEFAULT_SINCE_DATE,
+  };
+}
+
+function isMissingSyncLogTableError(error: unknown): boolean {
+  if (!error || typeof error !== "object") return false;
+  const code = "code" in error ? error.code : undefined;
+  const message = "message" in error ? String(error.message) : "";
+  return code === "PGRST205" || /regulation_sync_log/i.test(message) && /schema cache|does not exist/i.test(message);
+}
+
+export async function writeSyncLogEntry(
+  supabase: ReturnType<typeof createAdminClient>,
+  payload: SyncLogInsert
+): Promise<boolean> {
+  const { error } = await supabase.from("regulation_sync_log").insert(payload);
+  if (!error) return true;
+  if (isMissingSyncLogTableError(error)) {
+    return false;
+  }
+  throw new Error(String("message" in error ? error.message : error));
+}
 
 /**
  * Simple text chunking with overlap.
@@ -81,13 +165,17 @@ function extractSectionRef(content: string): string | null {
 async function getLastSyncDate(): Promise<string> {
   const supabase = createAdminClient();
 
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("regulation_sync_log")
     .select("synced_at")
     .eq("status", "success")
     .order("synced_at", { ascending: false })
     .limit(1)
     .maybeSingle();
+
+  if (error && isMissingSyncLogTableError(error)) {
+    return DEFAULT_SINCE_DATE;
+  }
 
   if (data?.synced_at) {
     return new Date(data.synced_at).toISOString().split("T")[0];
@@ -115,7 +203,7 @@ async function isAlreadySynced(
 ): Promise<boolean> {
   const supabase = createAdminClient();
 
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("regulation_sync_log")
     .select("content_hash, last_modified")
     .eq("celex_number", celex)
@@ -123,6 +211,13 @@ async function isAlreadySynced(
     .order("synced_at", { ascending: false })
     .limit(1)
     .maybeSingle();
+
+  if (error && isMissingSyncLogTableError(error)) {
+    return false;
+  }
+  if (error) {
+    throw new Error(error.message);
+  }
 
   if (!data) return false;
 
@@ -155,8 +250,8 @@ async function processRegulation(
   await supabase
     .from("knowledge_chunks")
     .delete()
-    .eq("source_name", sourceName)
-    .eq("source_type", "regulation");
+    .eq("source_type", "regulation")
+    .in("source_name", [sourceName, ...regulation.legacyAliases]);
 
   // Generate embeddings in batches
   const allRows: Array<{
@@ -181,6 +276,8 @@ async function processRegulation(
         section_ref: extractSectionRef(batch[j]),
         metadata: {
           celexNumber: regulation.celex,
+          baseCelexNumber: regulation.baseCelex,
+          currentVersionDate: regulation.dateLastModified,
           originalTitle: regulation.title,
           dateDocument: regulation.dateDocument,
           syncedAt: new Date().toISOString(),
@@ -220,6 +317,7 @@ export async function syncRegulations(): Promise<SyncResult> {
     chunksCreated: 0,
     errors: [],
     syncedAt,
+    loggingAvailable: true,
   };
 
   // Determine sync window
@@ -268,7 +366,7 @@ export async function syncRegulations(): Promise<SyncResult> {
       result.chunksCreated += chunksCreated;
 
       // Log success
-      await supabase.from("regulation_sync_log").insert({
+      const logged = await writeSyncLogEntry(supabase, {
         celex_number: regulation.celex,
         title: regulation.title.slice(0, 500),
         source_name: celexToSourceName(regulation.celex),
@@ -277,7 +375,12 @@ export async function syncRegulations(): Promise<SyncResult> {
         chunks_ingested: chunksCreated,
         synced_at: syncedAt,
         status: "success",
+        metadata: {
+          baseCelexNumber: regulation.baseCelex,
+          legacyAliases: regulation.legacyAliases,
+        },
       });
+      if (!logged) result.loggingAvailable = false;
 
       console.log(
         `[regulation-sync] ✓ ${regulation.celex}: ${chunksCreated} chunks ingested`
@@ -288,7 +391,7 @@ export async function syncRegulations(): Promise<SyncResult> {
       result.errors.push({ celex: regulation.celex, error: message });
 
       // Log error
-      await supabase.from("regulation_sync_log").insert({
+      const logged = await writeSyncLogEntry(supabase, {
         celex_number: regulation.celex,
         title: regulation.title.slice(0, 500),
         source_name: celexToSourceName(regulation.celex),
@@ -297,7 +400,12 @@ export async function syncRegulations(): Promise<SyncResult> {
         synced_at: syncedAt,
         status: "error",
         error_message: message.slice(0, 1000),
+        metadata: {
+          baseCelexNumber: regulation.baseCelex,
+          legacyAliases: regulation.legacyAliases,
+        },
       });
+      if (!logged) result.loggingAvailable = false;
     }
   }
 
@@ -308,4 +416,31 @@ export async function syncRegulations(): Promise<SyncResult> {
   );
 
   return result;
+}
+
+export async function getRegulationSyncHealth() {
+  const supabase = createAdminClient();
+
+  const rowsResult = await supabase
+    .from("knowledge_chunks")
+    .select("source_name, metadata, updated_at")
+    .eq("source_type", "regulation");
+
+  if (rowsResult.error) {
+    throw new Error(`Failed to inspect regulation chunks: ${rowsResult.error.message}`);
+  }
+
+  const logProbe = await supabase
+    .from("regulation_sync_log")
+    .select("id")
+    .limit(1);
+
+  if (logProbe.error && !isMissingSyncLogTableError(logProbe.error)) {
+    throw new Error(`Failed to inspect sync log: ${logProbe.error.message}`);
+  }
+
+  return summarizeRegulationSyncHealth(
+    (rowsResult.data ?? []) as HealthRow[],
+    !logProbe.error
+  );
 }
