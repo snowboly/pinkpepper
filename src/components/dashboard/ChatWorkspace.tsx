@@ -137,7 +137,6 @@ export default function ChatWorkspace({
 
   // ── Billing state ──
   const [billingError, setBillingError] = useState<string | null>(null);
-  const [billingLoading, setBillingLoading] = useState(false);
   const [tier, setTier] = useState<SubscriptionTier>(initialTier);
   const [usage, setUsage] = useState(initialUsage);
   const [currentUsageLimit, setUsageLimit] = useState(usageLimit);
@@ -266,11 +265,6 @@ export default function ChatWorkspace({
   }
 
   // ── Derived values ──
-  const usagePercent = useMemo(() => {
-    if (isAdmin) return 0;
-    return Math.min(100, Math.round((usage / Math.max(currentUsageLimit, 1)) * 100));
-  }, [isAdmin, usage, currentUsageLimit]);
-
   const dynamicCapabilities = isAdmin
     ? { ...TIER_CAPABILITIES.pro, allowPdfExport: true, allowWordExport: true, monthlyHumanReviews: Number.MAX_SAFE_INTEGER }
     : {
@@ -327,7 +321,6 @@ export default function ChatWorkspace({
   // ── Billing ──
   async function refreshBillingStatus() {
     setBillingError(null);
-    setBillingLoading(true);
     try {
       const res = await fetch("/api/billing/status");
       const data = (await res.json()) as { tier?: SubscriptionTier; isAdmin?: boolean; usage?: number; usageLimit?: number; error?: string };
@@ -341,8 +334,6 @@ export default function ChatWorkspace({
       if (typeof data.usageLimit === "number") setUsageLimit(data.usageLimit);
     } catch {
       setBillingError("Network error while refreshing billing status.");
-    } finally {
-      setBillingLoading(false);
     }
   }
 

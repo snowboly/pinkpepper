@@ -175,7 +175,7 @@ export async function POST(request: Request) {
     ragEnabled = kChunks.length > 0;
     if (uChunks.length > 0) {
       userDocContext = "\n\nUSER UPLOADED DOCUMENTS:\n" +
-        uChunks.map((c, i) => `[${c.file_name}] ${c.content}`).join("\n---\n");
+        uChunks.map((c) => `[${c.file_name}] ${c.content}`).join("\n---\n");
     }
   } catch (ragError) {
     console.error("RAG retrieval error:", ragError);

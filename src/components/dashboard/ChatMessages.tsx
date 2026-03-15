@@ -49,16 +49,10 @@ export default function ChatMessages({
   messages,
   loading,
   loadingMessages,
-  conversationId,
-  reviewEligible,
   canUploadImages,
-  tier,
-  isAdmin,
   onSetPrompt,
   onFocusInput,
   onQuickSuggestion,
-  onRequestReview,
-  onUpgradeForReview,
   currentPersona,
 }: ChatMessagesProps) {
   const t = useTranslations("chat");
