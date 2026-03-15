@@ -195,7 +195,15 @@ export async function POST(request: Request) {
   ]);
 
   if (messageInsertError) {
-    return NextResponse.json({ error: "Failed to save generated document." }, { status: 500 });
+    console.error("chat_messages insert error:", messageInsertError);
+    // Document was generated successfully — return it even if saving to history failed
+    return NextResponse.json({
+      conversationId,
+      assistantMessage,
+      document: doc,
+      artifact: artifactMetadata.artifact,
+      usage: { used: used + 1, limit: caps.dailyDocumentGenerations, tier, isAdmin },
+    });
   }
 
   if (format === "json") {
