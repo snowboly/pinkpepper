@@ -71,6 +71,23 @@ export default function MessageItem({ message }: MessageItemProps) {
         </div>
 
         <div className="pl-9">
+          {message.artifact && (
+            <div className="mb-4 rounded-2xl border border-[#E2E8F0] bg-[#FCFDFE] p-4">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <p className="text-[11px] font-black uppercase tracking-[0.16em] text-[#E11D48]">Saved artifact</p>
+                  <h3 className="mt-1 text-sm font-semibold text-[#0F172A]">{message.artifact.title}</h3>
+                </div>
+                <span className="rounded-full border border-[#E2E8F0] bg-white px-2.5 py-1 text-[11px] font-medium text-[#64748B]">
+                  {message.artifact.status}
+                </span>
+              </div>
+              {message.artifact.summary && (
+                <p className="mt-2 text-sm leading-6 text-[#475569]">{message.artifact.summary}</p>
+              )}
+            </div>
+          )}
+
           <div className="pp-markdown text-base text-[#0F172A]">
             <ReactMarkdown>{message.content}</ReactMarkdown>
             {message.isStreaming && (
@@ -87,19 +104,13 @@ export default function MessageItem({ message }: MessageItemProps) {
                 title={t("copyResponse")}
               >
                 {copied ? (
-                  <>
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span className="text-xs">{t("copied")}</span>
-                  </>
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
                 ) : (
-                  <>
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                    </svg>
-                    <span className="text-xs">{t("copy")}</span>
-                  </>
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
                 )}
               </button>
             </div>
