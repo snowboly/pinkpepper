@@ -85,3 +85,13 @@ describe("chatbot source encoding", () => {
     }
   });
 });
+
+describe("chat workspace chrome", () => {
+  it("does not render the removed top mode banner block", () => {
+    const content = readWorkspaceFile("src/components/dashboard/ChatWorkspace.tsx");
+
+    expect(content).not.toContain("const modeBadgeClass =");
+    expect(content).not.toContain("{modeLabel}");
+    expect(content).not.toContain("{modeDescription}");
+  });
+});

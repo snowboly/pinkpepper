@@ -302,15 +302,6 @@ export default function ChatWorkspace({
     ? "border-[#D97706] bg-[#FFFBEB] text-[#92400E]"
     : "border-[#E2E8F0] bg-white text-[#64748B]";
 
-  const modeLabel = workspaceMode === "virtual_audit" ? tw("virtualAudit") : tw("ask");
-  const modeDescription =
-    workspaceMode === "virtual_audit"
-      ? tw("virtualAuditPlaceholder")
-      : tc("placeholder");
-  const modeBadgeClass =
-    workspaceMode === "virtual_audit"
-      ? "border-[#C7D2FE] bg-[#EEF2FF] text-[#4338CA]"
-      : "border-[#E2E8F0] bg-[#F8FAFC] text-[#334155]";
   const artifacts = useMemo(
     () =>
       messages
@@ -1190,40 +1181,6 @@ export default function ChatWorkspace({
               </div>
             </div>
           )}
-
-          <div className="flex-shrink-0 border-b border-[#E2E8F0] bg-[#FCFDFE] px-4 py-3">
-            <div className="mx-auto flex max-w-5xl items-start justify-between gap-3">
-              <div className="min-w-0">
-                <div className="flex items-center gap-2">
-                  <span className={`rounded-full border px-2.5 py-1 text-[11px] font-bold uppercase tracking-[0.16em] ${modeBadgeClass}`}>
-                    {modeLabel}
-                  </span>
-                  {currentPersona?.name && (
-                    <span className="rounded-full border border-[#E2E8F0] bg-white px-2.5 py-1 text-[11px] font-medium text-[#64748B]">
-                      {currentPersona.name}
-                    </span>
-                  )}
-                </div>
-                <p className="mt-2 max-w-3xl text-sm text-[#475569]">
-                  {modeDescription}
-                </p>
-              </div>
-              {workspaceMode === "virtual_audit" && (
-                <button
-                  type="button"
-                  onClick={() =>
-                    void sendPromptValue(
-                      "Generate the final virtual audit report now with: scope, evidence reviewed, findings table (Compliant/Minor NC/Major NC/Critical NC), CAPA plan, overall verdict, and evidence still required."
-                    )
-                  }
-                  disabled={loading}
-                  className="hidden rounded-full border border-[#E2E8F0] bg-white px-3 py-1.5 text-xs font-semibold text-[#475569] transition-colors hover:bg-[#F8F9FB] disabled:opacity-50 md:inline-flex"
-                >
-                  {tw("generateReport")}
-                </button>
-              )}
-            </div>
-          </div>
 
           <ChatMessages
             messages={messages}
