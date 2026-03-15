@@ -8,14 +8,88 @@
  * No authentication or API key required.
  */
 
-const SPARQL_ENDPOINT = "https://publications.europa.eu/webapi/rdf/sparql";
-
 export type CellarRegulation = {
   celex: string;
+  baseCelex: string;
   title: string;
   dateDocument: string;
   dateLastModified: string;
+  legacyAliases: string[];
 };
+
+type CoreRegulationSeed = {
+  baseCelex: string;
+  title: string;
+  dateDocument: string;
+  eliPath: string;
+  legacyAliases: string[];
+};
+
+const CORE_REGULATION_SEEDS: CoreRegulationSeed[] = [
+  {
+    baseCelex: "32002R0178",
+    title: "Regulation (EC) No 178/2002 laying down the general principles and requirements of food law",
+    dateDocument: "2002-01-28",
+    eliPath: "https://eur-lex.europa.eu/eli/reg/2002/178/oj",
+    legacyAliases: ["EC 178 2002 general food law"],
+  },
+  {
+    baseCelex: "32004R0852",
+    title: "Regulation (EC) No 852/2004 on the hygiene of foodstuffs",
+    dateDocument: "2004-04-29",
+    eliPath: "https://eur-lex.europa.eu/eli/reg/2004/852/oj",
+    legacyAliases: ["EC 852 2004 food hygiene"],
+  },
+  {
+    baseCelex: "32004R0853",
+    title: "Regulation (EC) No 853/2004 laying down specific hygiene rules for food of animal origin",
+    dateDocument: "2004-04-29",
+    eliPath: "https://eur-lex.europa.eu/eli/reg/2004/853/oj",
+    legacyAliases: ["EC 853 2004 food of animal origin"],
+  },
+  {
+    baseCelex: "32004R1935",
+    title: "Regulation (EC) No 1935/2004 on materials and articles intended to come into contact with food",
+    dateDocument: "2004-10-27",
+    eliPath: "https://eur-lex.europa.eu/eli/reg/2004/1935/oj",
+    legacyAliases: ["EC 1935 2004 food contact materials"],
+  },
+  {
+    baseCelex: "32005R2073",
+    title: "Regulation (EC) No 2073/2005 on microbiological criteria for foodstuffs",
+    dateDocument: "2005-11-15",
+    eliPath: "https://eur-lex.europa.eu/eli/reg/2005/2073/oj",
+    legacyAliases: ["EC 2073 2005 microbiological criteria"],
+  },
+  {
+    baseCelex: "32011R1169",
+    title: "Regulation (EU) No 1169/2011 on the provision of food information to consumers",
+    dateDocument: "2011-10-25",
+    eliPath: "https://eur-lex.europa.eu/eli/reg/2011/1169/oj",
+    legacyAliases: ["EU 1169 2011 food information"],
+  },
+];
+
+function toIsoDateFromDisplay(input: string): string | null {
+  const match = input.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+  if (!match) return null;
+  return `${match[3]}-${match[2]}-${match[1]}`;
+}
+
+export function extractCurrentVersionInfo(
+  html: string,
+  fallbackCelex: string
+): { celex: string; currentVersionDate: string | null } {
+  const celexMatch =
+    html.match(/data-celex="(0\d{4}R\d{4,}-\d{8})"/i) ??
+    html.match(/uri=CELEX:(0\d{4}R\d{4,}-\d{8})/i);
+  const dateMatch = html.match(/id="currentConsLeg">(\d{2}\/\d{2}\/\d{4})</i);
+
+  return {
+    celex: celexMatch?.[1] ?? fallbackCelex,
+    currentVersionDate: dateMatch ? toIsoDateFromDisplay(dateMatch[1]) : null,
+  };
+}
 
 /**
  * Search for EU food safety regulations modified since a given date.
@@ -24,83 +98,32 @@ export type CellarRegulation = {
 export async function searchFoodSafetyRegulations(
   sinceDate: string
 ): Promise<CellarRegulation[]> {
-  const query = `
-PREFIX cdm: <http://publications.europa.eu/ontology/cdm#>
-PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+  const resolved = await Promise.all(
+    CORE_REGULATION_SEEDS.map(async (seed) => {
+      const response = await fetch(seed.eliPath, {
+        headers: { Accept: "text/html" },
+        signal: AbortSignal.timeout(30_000),
+      });
 
-SELECT DISTINCT ?celex ?title ?dateDocument ?dateLastModified
-WHERE {
-  ?work cdm:resource_legal_id_celex ?celex .
-  ?work cdm:work_has_resource-type <http://publications.europa.eu/resource/authority/resource-type/REG> .
-  ?work cdm:resource_legal_date_document ?dateDocument .
-  ?work cdm:work_date_document ?dateLastModified .
-  ?exp cdm:expression_belongs_to_work ?work .
-  ?exp cdm:expression_uses_language <http://publications.europa.eu/resource/authority/language/ENG> .
-  ?exp cdm:expression_title ?title .
+      if (!response.ok) {
+        throw new Error(`Failed to resolve current version for ${seed.baseCelex}: ${response.status}`);
+      }
 
-  ?work cdm:work_is_about_concept_eurovoc ?concept .
-  ?concept skos:prefLabel ?conceptLabel .
-  FILTER(LANG(?conceptLabel) = "en")
-  FILTER(
-    CONTAINS(LCASE(?conceptLabel), "food safety") ||
-    CONTAINS(LCASE(?conceptLabel), "food hygiene") ||
-    CONTAINS(LCASE(?conceptLabel), "food contamination") ||
-    CONTAINS(LCASE(?conceptLabel), "food additive") ||
-    CONTAINS(LCASE(?conceptLabel), "food labelling") ||
-    CONTAINS(LCASE(?conceptLabel), "foodstuff") ||
-    CONTAINS(LCASE(?conceptLabel), "animal nutrition") ||
-    CONTAINS(LCASE(?conceptLabel), "food inspection")
-  )
-  FILTER(?dateLastModified >= "${sinceDate}"^^xsd:date)
-}
-ORDER BY DESC(?dateLastModified)
-LIMIT 50
-`.trim();
+      const html = await response.text();
+      const current = extractCurrentVersionInfo(html, seed.baseCelex);
 
-  const params = new URLSearchParams({
-    query,
-    format: "application/sparql-results+json",
-  });
+      return {
+        celex: current.celex,
+        baseCelex: seed.baseCelex,
+        title: seed.title,
+        dateDocument: seed.dateDocument,
+        dateLastModified: current.currentVersionDate ?? sinceDate,
+        legacyAliases: seed.legacyAliases,
+      };
+    })
+  );
 
-  const response = await fetch(`${SPARQL_ENDPOINT}?${params.toString()}`, {
-    headers: { Accept: "application/sparql-results+json" },
-    signal: AbortSignal.timeout(30_000),
-  });
-
-  if (!response.ok) {
-    throw new Error(`SPARQL query failed: ${response.status} ${response.statusText}`);
-  }
-
-  const data = (await response.json()) as {
-    results: {
-      bindings: Array<{
-        celex: { value: string };
-        title: { value: string };
-        dateDocument: { value: string };
-        dateLastModified: { value: string };
-      }>;
-    };
-  };
-
-  // Deduplicate by CELEX number (SPARQL may return duplicates from multiple concept matches)
-  const seen = new Set<string>();
-  const results: CellarRegulation[] = [];
-
-  for (const binding of data.results.bindings) {
-    const celex = binding.celex.value;
-    if (seen.has(celex)) continue;
-    seen.add(celex);
-
-    results.push({
-      celex,
-      title: binding.title.value,
-      dateDocument: binding.dateDocument.value,
-      dateLastModified: binding.dateLastModified.value,
-    });
-  }
-
-  return results;
+  return resolved;
 }
 
 /**
@@ -155,8 +178,8 @@ function stripHtmlToText(html: string): string {
  * e.g. "32004R0852" → "Regulation (EC) No 852/2004"
  */
 export function celexToSourceName(celex: string): string {
-  // CELEX format for regulations: 3{YYYY}R{NNNN}
-  const match = celex.match(/^3(\d{4})R(\d{4,})$/);
+  // Supports both original and consolidated CELEX forms.
+  const match = celex.match(/^[023](\d{4})R(\d{4,})(?:-\d{8})?$/);
   if (!match) return celex;
 
   const year = parseInt(match[1], 10);
