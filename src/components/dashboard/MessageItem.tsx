@@ -71,23 +71,6 @@ export default function MessageItem({ message }: MessageItemProps) {
         </div>
 
         <div className="pl-9">
-          {message.artifact && (
-            <div className="mb-4 rounded-2xl border border-[#E2E8F0] bg-[#FCFDFE] p-4">
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <div>
-                  <p className="text-[11px] font-black uppercase tracking-[0.16em] text-[#E11D48]">Saved artifact</p>
-                  <h3 className="mt-1 text-sm font-semibold text-[#0F172A]">{message.artifact.title}</h3>
-                </div>
-                <span className="rounded-full border border-[#E2E8F0] bg-white px-2.5 py-1 text-[11px] font-medium text-[#64748B]">
-                  {message.artifact.status}
-                </span>
-              </div>
-              {message.artifact.summary && (
-                <p className="mt-2 text-sm leading-6 text-[#475569]">{message.artifact.summary}</p>
-              )}
-            </div>
-          )}
-
           <div className="pp-markdown text-base text-[#0F172A]">
             <ReactMarkdown>{message.content}</ReactMarkdown>
             {message.isStreaming && (

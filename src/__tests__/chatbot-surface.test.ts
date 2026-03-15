@@ -94,4 +94,29 @@ describe("chat workspace chrome", () => {
     expect(content).not.toContain("{modeLabel}");
     expect(content).not.toContain("{modeDescription}");
   });
+
+  it("does not wire the removed expert button or duplicate bottom tier badge", () => {
+    const workspace = readWorkspaceFile("src/components/dashboard/ChatWorkspace.tsx");
+    const sidebar = readWorkspaceFile("src/components/dashboard/ChatSidebar.tsx");
+
+    expect(workspace).not.toContain("onAskExpert={() =>");
+    expect(workspace).not.toContain('{isAdmin ? "Admin" : tier}');
+    expect(sidebar).not.toContain("onAskExpert?: () => void;");
+    expect(sidebar).not.toContain("t(\"expertReviews\")");
+  });
+
+  it("does not render artifact, evidence, or promo card surfaces", () => {
+    const workspace = readWorkspaceFile("src/components/dashboard/ChatWorkspace.tsx");
+    const messages = readWorkspaceFile("src/components/dashboard/ChatMessages.tsx");
+    const messageItem = readWorkspaceFile("src/components/dashboard/MessageItem.tsx");
+
+    expect(workspace).not.toContain("Reusable outputs generated in this conversation.");
+    expect(workspace).not.toContain("Artifacts");
+    expect(messageItem).not.toContain("Evidence and next steps");
+    expect(messageItem).not.toContain("View evidence");
+    expect(messageItem).not.toContain("Saved artifact");
+    expect(messages).not.toContain("Premium Workflows");
+    expect(messages).not.toContain("Request expert review");
+    expect(messages).not.toContain("humanReviewHighlight");
+  });
 });

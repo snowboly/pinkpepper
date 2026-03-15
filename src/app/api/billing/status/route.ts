@@ -24,7 +24,7 @@ export async function GET() {
       .eq("user_id", user.id)
       .maybeSingle(),
   ]);
-  const { tier, isAdmin } = resolveUserAccess(profile, user.email);
+  const { tier, isAdmin } = resolveUserAccess(profile, user.email, subscription);
 
   let usage = 0;
   try {

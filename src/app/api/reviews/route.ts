@@ -22,7 +22,7 @@ function normalizeDocumentCategory(input: string | undefined): DocumentCategory 
   return null;
 }
 
-function deriveReviewType(category: DocumentCategory): ReviewType {
+function deriveReviewType(_category: DocumentCategory): ReviewType {
   // All current categories are quick checks (1 credit)
   return "quick_check";
 }

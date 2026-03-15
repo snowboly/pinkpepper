@@ -107,19 +107,6 @@ const DOC_GENERATION_TYPES: Record<DocWizard["id"], string> = {
   supplier_approval: "supplier_approval",
 };
 
-function summarizeArtifactContent(content: string) {
-  const flattened = content
-    .replace(/[#*_`>\-\[\]]/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-
-  if (flattened.length <= 160) {
-    return flattened;
-  }
-
-  return `${flattened.slice(0, 157).trimEnd()}...`;
-}
-
 export default function ChatWorkspace({
   userEmail,
   initialTier,
@@ -150,7 +137,6 @@ export default function ChatWorkspace({
 
   // ── Billing state ──
   const [billingError, setBillingError] = useState<string | null>(null);
-  const [billingLoading, setBillingLoading] = useState(false);
   const [tier, setTier] = useState<SubscriptionTier>(initialTier);
   const [usage, setUsage] = useState(initialUsage);
   const [currentUsageLimit, setUsageLimit] = useState(usageLimit);
@@ -279,11 +265,6 @@ export default function ChatWorkspace({
   }
 
   // ── Derived values ──
-  const usagePercent = useMemo(() => {
-    if (isAdmin) return 0;
-    return Math.min(100, Math.round((usage / Math.max(currentUsageLimit, 1)) * 100));
-  }, [isAdmin, usage, currentUsageLimit]);
-
   const dynamicCapabilities = isAdmin
     ? { ...TIER_CAPABILITIES.pro, allowPdfExport: true, allowWordExport: true, monthlyHumanReviews: Number.MAX_SAFE_INTEGER }
     : {
@@ -301,14 +282,6 @@ export default function ChatWorkspace({
     : tier === "plus"
     ? "border-[#D97706] bg-[#FFFBEB] text-[#92400E]"
     : "border-[#E2E8F0] bg-white text-[#64748B]";
-
-  const artifacts = useMemo(
-    () =>
-      messages
-        .filter((message) => message.artifact)
-        .map((message) => message.artifact!),
-    [messages]
-  );
 
   const {
     attachedImage,
@@ -348,7 +321,6 @@ export default function ChatWorkspace({
   // ── Billing ──
   async function refreshBillingStatus() {
     setBillingError(null);
-    setBillingLoading(true);
     try {
       const res = await fetch("/api/billing/status");
       const data = (await res.json()) as { tier?: SubscriptionTier; isAdmin?: boolean; usage?: number; usageLimit?: number; error?: string };
@@ -362,8 +334,6 @@ export default function ChatWorkspace({
       if (typeof data.usageLimit === "number") setUsageLimit(data.usageLimit);
     } catch {
       setBillingError("Network error while refreshing billing status.");
-    } finally {
-      setBillingLoading(false);
     }
   }
 
@@ -692,7 +662,7 @@ export default function ChatWorkspace({
               id: `${completedWizard.id}-${Date.now()}`,
               kind: "document",
               title: wizardTitle,
-              summary: summarizeArtifactContent(data.assistantMessage!),
+              summary: data.assistantMessage!,
               status: "ready",
               documentType,
             },
@@ -1091,9 +1061,6 @@ export default function ChatWorkspace({
           onCreateProject={(name, emoji) => void createProject(name, emoji)}
           onRenameProject={(id, name, emoji) => void renameProject(id, name, emoji)}
           onDeleteProject={(id) => void deleteProject(id)}
-          onAskExpert={() => {
-            window.location.href = "/dashboard/reviews";
-          }}
         />
 
         {/* Mobile sidebar backdrop */}
@@ -1144,44 +1111,6 @@ export default function ChatWorkspace({
           )}
 
 
-          {/* Messages */}
-          {artifacts.length > 0 && (
-            <div className="flex-shrink-0 border-b border-[#E2E8F0] bg-white px-4 py-3">
-              <div className="mx-auto max-w-5xl">
-                <div className="mb-3 flex items-center justify-between gap-3">
-                  <div>
-                    <p className="text-[11px] font-black uppercase tracking-[0.18em] text-[#E11D48]">Artifacts</p>
-                    <p className="mt-1 text-sm text-[#475569]">Reusable outputs generated in this conversation.</p>
-                  </div>
-                  <span className="rounded-full border border-[#E2E8F0] bg-[#F8FAFC] px-3 py-1 text-xs font-medium text-[#64748B]">
-                    {artifacts.length} saved
-                  </span>
-                </div>
-                <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-                  {artifacts.map((artifact) => (
-                    <div key={artifact.id} className="rounded-2xl border border-[#E2E8F0] bg-[#FCFDFE] p-4">
-                      <div className="flex items-center justify-between gap-3">
-                        <span className="rounded-full bg-[#FFF4F6] px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#BE123C]">
-                          {artifact.kind}
-                        </span>
-                        <span className="rounded-full border border-[#E2E8F0] bg-white px-2.5 py-1 text-[11px] font-medium text-[#64748B]">
-                          {artifact.status}
-                        </span>
-                      </div>
-                      <h3 className="mt-3 text-sm font-semibold text-[#0F172A]">{artifact.title}</h3>
-                      {artifact.summary && (
-                        <p className="mt-2 text-sm leading-6 text-[#475569]">{artifact.summary}</p>
-                      )}
-                      <div className="mt-3 text-xs text-[#64748B]">
-                        Use the response card below to copy content, then export the conversation when the draft is ready.
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-
           <ChatMessages
             messages={messages}
             loading={loading}
@@ -1231,9 +1160,6 @@ export default function ChatWorkspace({
                   {tw("virtualAudit")}
                 </button>
               </div>
-              <span className={`rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-wide ${tierColour}`}>
-                {isAdmin ? "Admin" : tier}
-              </span>
               {(reviewEligible) && (
                 <button
                   type="button"

@@ -1,5 +1,17 @@
+import { readFileSync } from "node:fs";
+import path from "node:path";
 import { describe, it, expect } from "vitest";
-import { resolveUserAccess, isAdminUser } from "@/lib/access";
+import {
+  resolveEffectiveTier,
+  resolveUserAccess,
+  isAdminUser,
+} from "@/lib/access";
+
+const ROOT = process.cwd();
+
+function readSource(relativePath: string) {
+  return readFileSync(path.join(ROOT, relativePath), "utf8");
+}
 
 /* ──────────────────────────────────────────────────────────────────────────
    isAdminUser
@@ -96,5 +108,55 @@ describe("resolveUserAccess", () => {
   it("non-admin user has isAdmin false", () => {
     const { isAdmin } = resolveUserAccess({ tier: "pro", is_admin: false }, "u@x.com");
     expect(isAdmin).toBe(false);
+  });
+
+  it("uses an active paid subscription when the profile tier is stale", () => {
+    const { tier, isAdmin } = resolveUserAccess(
+      { tier: "free", is_admin: false },
+      "u@x.com",
+      { tier: "pro", status: "active" }
+    );
+    expect(tier).toBe("pro");
+    expect(isAdmin).toBe(false);
+  });
+
+  it("uses an active paid subscription when the profile row has no tier", () => {
+    const { tier } = resolveUserAccess(
+      { tier: null, is_admin: false },
+      "u@x.com",
+      { tier: "plus", status: "active" }
+    );
+    expect(tier).toBe("plus");
+  });
+});
+
+describe("resolveEffectiveTier", () => {
+  it("prefers the higher paid tier between profile and subscription", () => {
+    expect(resolveEffectiveTier("plus", { tier: "pro", status: "active" })).toBe("pro");
+    expect(resolveEffectiveTier("pro", { tier: "plus", status: "active" })).toBe("pro");
+  });
+
+  it("ignores inactive subscription states", () => {
+    expect(resolveEffectiveTier("free", { tier: "pro", status: "canceled" })).toBe("free");
+    expect(resolveEffectiveTier("plus", { tier: "pro", status: "past_due" })).toBe("plus");
+  });
+});
+
+describe("chat access integration", () => {
+  it("uses subscription-backed access in dashboard and chat routes", () => {
+    const files = [
+      "src/app/dashboard/page.tsx",
+      "src/app/api/billing/status/route.ts",
+      "src/app/api/chat/stream/route.ts",
+      "src/app/api/chat/route.ts",
+    ];
+
+    for (const file of files) {
+      const source = readSource(file);
+      expect(source, `${file} should fetch subscription state`).toContain('from("subscriptions")');
+      expect(source, `${file} should pass subscription state into resolveUserAccess`).toContain(
+        "resolveUserAccess(profile, user.email, subscription"
+      );
+    }
   });
 });
