@@ -94,4 +94,14 @@ describe("chat workspace chrome", () => {
     expect(content).not.toContain("{modeLabel}");
     expect(content).not.toContain("{modeDescription}");
   });
+
+  it("does not wire the removed expert button or duplicate bottom tier badge", () => {
+    const workspace = readWorkspaceFile("src/components/dashboard/ChatWorkspace.tsx");
+    const sidebar = readWorkspaceFile("src/components/dashboard/ChatSidebar.tsx");
+
+    expect(workspace).not.toContain("onAskExpert={() =>");
+    expect(workspace).not.toContain('{isAdmin ? "Admin" : tier}');
+    expect(sidebar).not.toContain("onAskExpert?: () => void;");
+    expect(sidebar).not.toContain("t(\"expertReviews\")");
+  });
 });

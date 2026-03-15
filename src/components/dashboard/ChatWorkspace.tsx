@@ -1091,9 +1091,6 @@ export default function ChatWorkspace({
           onCreateProject={(name, emoji) => void createProject(name, emoji)}
           onRenameProject={(id, name, emoji) => void renameProject(id, name, emoji)}
           onDeleteProject={(id) => void deleteProject(id)}
-          onAskExpert={() => {
-            window.location.href = "/dashboard/reviews";
-          }}
         />
 
         {/* Mobile sidebar backdrop */}
@@ -1231,9 +1228,6 @@ export default function ChatWorkspace({
                   {tw("virtualAudit")}
                 </button>
               </div>
-              <span className={`rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-wide ${tierColour}`}>
-                {isAdmin ? "Admin" : tier}
-              </span>
               {(reviewEligible) && (
                 <button
                   type="button"
