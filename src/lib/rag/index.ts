@@ -20,6 +20,7 @@ export {
   buildRAGSystemPrompt,
   formatContext,
   extractSourceReferences,
+  getExportGuidance,
   MODE_TEMPERATURES,
   type RAGMode,
 } from "./prompt-builder";
