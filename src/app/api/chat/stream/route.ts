@@ -2,7 +2,7 @@
 import { TIER_CAPABILITIES } from "@/lib/tier";
 import { resolveUserAccess } from "@/lib/access";
 import { countUsageSince, utcDayStartIso } from "@/lib/policy";
-import { retrieveContext, retrieveUserDocumentContext, buildRAGPrompt, formatCitations, type KnowledgeChunk, getExportGuidance } from "@/lib/rag";
+import { retrieveContext, retrieveRegulationContext, retrieveUserDocumentContext, buildRAGPrompt, formatCitations, type KnowledgeChunk, getExportGuidance } from "@/lib/rag";
 import { chatLimiter, chatBurstLimiter, checkRateLimit } from "@/lib/ratelimit";
 import { detectQueryMode, detectComplexity } from "@/lib/query-mode";
 import { getPersonaForConversation, type Persona } from "@/lib/personas";
@@ -168,9 +168,19 @@ export async function POST(request: Request) {
 
   try {
     const [kChunks, uChunks] = await Promise.all([
-      retrieveContext(message, { topK: 8, threshold: 0.72 }),
+      retrieveContext(message, { topK: 8, threshold: 0.6 }),
       retrieveUserDocumentContext(message, user.id, { topK: 3, threshold: 0.65 }),
     ]);
+
+    // If few general results, try a regulation-focused search with a lower threshold
+    if (kChunks.length < 3) {
+      const regChunks = await retrieveRegulationContext(message, { topK: 5, threshold: 0.55 });
+      const existingIds = new Set(kChunks.map((c) => c.id));
+      for (const chunk of regChunks) {
+        if (!existingIds.has(chunk.id)) kChunks.push(chunk);
+      }
+    }
+
     retrievedChunks = kChunks;
     ragEnabled = kChunks.length > 0;
     if (uChunks.length > 0) {
@@ -227,7 +237,7 @@ export async function POST(request: Request) {
           "- Keep answers focused — do not pad with unnecessary caveats.";
 
     const fallbackHeader = [
-      `Today's date is ${currentDate}. Your knowledge base may contain regulations published up to the present day — always check retrieved context documents first before relying on your training weights alone. Do not tell users your training data ends in a specific year; if very recent changes are not in context, recommend they verify with EUR-Lex, the FSA, or the relevant authority for the latest official text.`,
+      `Today's date is ${currentDate}. No context documents were retrieved for this query. Use your food safety expertise to answer the user's question — you may draw on your knowledge of EU and UK food safety regulations, HACCP principles, and industry best practice. Recommend the user verify with the relevant authority (EUR-Lex, FSA, EFSA) for the most up-to-date official text. Do not tell users your training data ends in a specific year.`,
       businessTypeLabel
         ? `The user operates a ${businessTypeLabel}. Tailor your examples and advice to this business type where relevant.`
         : "",
