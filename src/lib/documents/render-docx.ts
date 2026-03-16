@@ -3,6 +3,7 @@ import {
   Packer,
   Paragraph,
   TextRun,
+  ImageRun,
   HeadingLevel,
   Table,
   TableRow,
@@ -14,12 +15,27 @@ import {
   Header,
   Footer,
   PageNumber,
-  PageBreak,
 } from "docx";
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 import type { GeneratedDocument, DocumentTable } from "./types";
 
 const BRAND_COLOR = "E11D48"; // PinkPepper red
 const GRAY_COLOR = "64748B";
+const ALT_ROW_COLOR = "F1F5F9";
+
+let cachedLogoBuffer: Buffer | null = null;
+
+async function loadLogoBuffer(): Promise<Buffer | null> {
+  if (cachedLogoBuffer) return cachedLogoBuffer;
+  try {
+    const logoPath = join(process.cwd(), "public", "LogoV3.png");
+    cachedLogoBuffer = await readFile(logoPath) as Buffer;
+    return cachedLogoBuffer;
+  } catch {
+    return null;
+  }
+}
 
 function metaRow(label: string, value: string): Paragraph {
   return new Paragraph({
@@ -49,7 +65,7 @@ function renderTable(table: DocumentTable): Table {
   });
 
   const dataRows = table.rows.map(
-    (row: Record<string, string>) =>
+    (row: Record<string, string>, ri: number) =>
       new TableRow({
         children: table.columns.map(
           (col) =>
@@ -59,6 +75,7 @@ function renderTable(table: DocumentTable): Table {
                   children: [new TextRun({ text: row[col.header] ?? "", size: 18 })],
                 }),
               ],
+              shading: ri % 2 === 1 ? { type: ShadingType.SOLID, color: ALT_ROW_COLOR } : undefined,
             })
         ),
       })
@@ -79,6 +96,29 @@ function renderTable(table: DocumentTable): Table {
 }
 
 export async function renderDocx(doc: GeneratedDocument): Promise<ArrayBuffer> {
+  const logoBuffer = await loadLogoBuffer();
+
+  const headerChildren: (TextRun | ImageRun)[] = [];
+  if (logoBuffer) {
+    headerChildren.push(
+      new ImageRun({
+        data: logoBuffer,
+        transformation: { width: 120, height: 32 },
+        type: "png",
+      })
+    );
+    headerChildren.push(
+      new TextRun({ text: "  |  Food Safety Compliance", color: GRAY_COLOR, size: 16 })
+    );
+  } else {
+    headerChildren.push(
+      new TextRun({ text: "PinkPepper", bold: true, color: BRAND_COLOR, size: 20 })
+    );
+    headerChildren.push(
+      new TextRun({ text: "  |  Food Safety Compliance", color: GRAY_COLOR, size: 16 })
+    );
+  }
+
   const children: (Paragraph | Table)[] = [
     // Title
     new Paragraph({
@@ -95,6 +135,13 @@ export async function renderDocx(doc: GeneratedDocument): Promise<ArrayBuffer> {
     metaRow("Approved By", doc.approvedBy),
     metaRow("Scope", doc.scope),
 
+    // Horizontal rule after metadata
+    new Paragraph({
+      children: [],
+      spacing: { before: 100, after: 100 },
+      border: { bottom: { style: BorderStyle.SINGLE, size: 2, color: BRAND_COLOR, space: 4 } },
+    }),
+
     // Disclaimer
     new Paragraph({
       children: [
@@ -105,16 +152,17 @@ export async function renderDocx(doc: GeneratedDocument): Promise<ArrayBuffer> {
           color: GRAY_COLOR,
         }),
       ],
-      spacing: { before: 200, after: 200 },
+      spacing: { before: 100, after: 200 },
     }),
   ];
 
-  for (const section of doc.sections) {
+  for (let si = 0; si < doc.sections.length; si++) {
+    const section = doc.sections[si];
     children.push(
       new Paragraph({
-        text: section.heading,
+        text: `${si + 1}. ${section.heading}`,
         heading: HeadingLevel.HEADING_1,
-        spacing: { before: 300, after: 100 },
+        spacing: { before: 300, after: 120 },
       })
     );
 
@@ -122,25 +170,26 @@ export async function renderDocx(doc: GeneratedDocument): Promise<ArrayBuffer> {
       children.push(
         new Paragraph({
           children: [new TextRun({ text: line, size: 22 })],
-          spacing: { after: 80 },
+          spacing: { after: 100 },
         })
       );
     }
 
     if (section.subsections) {
-      for (const sub of section.subsections) {
+      for (let ssi = 0; ssi < section.subsections.length; ssi++) {
+        const sub = section.subsections[ssi];
         children.push(
           new Paragraph({
-            text: sub.heading,
+            text: `${si + 1}.${ssi + 1} ${sub.heading}`,
             heading: HeadingLevel.HEADING_2,
-            spacing: { before: 200, after: 80 },
+            spacing: { before: 200, after: 100 },
           })
         );
         for (const line of sub.content.split("\n")) {
           children.push(
             new Paragraph({
               children: [new TextRun({ text: line, size: 22 })],
-              spacing: { after: 60 },
+              spacing: { after: 80 },
             })
           );
         }
@@ -185,10 +234,7 @@ export async function renderDocx(doc: GeneratedDocument): Promise<ArrayBuffer> {
           default: new Header({
             children: [
               new Paragraph({
-                children: [
-                  new TextRun({ text: "PinkPepper", bold: true, color: BRAND_COLOR, size: 20 }),
-                  new TextRun({ text: "  |  Food Safety Compliance", color: GRAY_COLOR, size: 16 }),
-                ],
+                children: headerChildren,
               }),
             ],
           }),
@@ -198,6 +244,7 @@ export async function renderDocx(doc: GeneratedDocument): Promise<ArrayBuffer> {
             children: [
               new Paragraph({
                 alignment: AlignmentType.CENTER,
+                border: { top: { style: BorderStyle.SINGLE, size: 1, color: "E2E8F0", space: 4 } },
                 children: [
                   new TextRun({ text: "Generated by PinkPepper — AI-assisted draft  •  Page ", size: 16, color: GRAY_COLOR }),
                   new TextRun({ children: [PageNumber.CURRENT], size: 16, color: GRAY_COLOR }),

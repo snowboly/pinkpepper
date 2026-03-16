@@ -1,4 +1,6 @@
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 import { NextResponse } from "next/server";
 import {
   canExportPdf,
@@ -14,6 +16,7 @@ export const dynamic = "force-dynamic";
 
 const BRAND = rgb(0.882, 0.114, 0.282); // #E11D48
 const GRAY = rgb(0.392, 0.455, 0.545);
+const LIGHT = rgb(0.886, 0.906, 0.937);
 
 function wrapText(text: string, maxLineLength = 95) {
   const words = text.replace(/\r\n/g, "\n").split(/\s+/);
@@ -72,10 +75,34 @@ export async function POST(request: Request) {
       const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
       const bold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
-      // Header bar
-      page.drawRectangle({ x: 0, y: 841.89 - 60, width: 595.28, height: 60, color: BRAND });
-      page.drawText("PinkPepper", { x: 40, y: 841.89 - 38, size: 18, font: bold, color: rgb(1, 1, 1) });
-      page.drawText("Food Safety Compliance", { x: 40, y: 841.89 - 52, size: 10, font, color: rgb(1, 1, 1) });
+      // Header bar with logo
+      const headerH = 60;
+      page.drawRectangle({ x: 0, y: 841.89 - headerH, width: 595.28, height: headerH, color: BRAND });
+      let logoEmbedded = false;
+      try {
+        const logoPath = join(process.cwd(), "public", "LogoV3.png");
+        const logoBytes = await readFile(logoPath);
+        const logoImage = await pdfDoc.embedPng(logoBytes);
+        const logoDims = logoImage.scale(1);
+        const logoH = 32;
+        const logoW = (logoDims.width / logoDims.height) * logoH;
+        page.drawImage(logoImage, {
+          x: 40,
+          y: 841.89 - headerH + (headerH - logoH) / 2,
+          width: logoW,
+          height: logoH,
+        });
+        page.drawText("Food Safety Compliance", {
+          x: 40 + logoW + 12,
+          y: 841.89 - headerH + (headerH - 10) / 2,
+          size: 10, font, color: rgb(1, 1, 1),
+        });
+        logoEmbedded = true;
+      } catch { /* logo not available */ }
+      if (!logoEmbedded) {
+        page.drawText("PinkPepper", { x: 40, y: 841.89 - 38, size: 18, font: bold, color: rgb(1, 1, 1) });
+        page.drawText("Food Safety Compliance", { x: 40, y: 841.89 - 52, size: 10, font, color: rgb(1, 1, 1) });
+      }
 
       let y = 760;
 
