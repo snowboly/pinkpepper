@@ -67,7 +67,7 @@ const DOC_WIZARDS: Record<string, DocWizard> = {
       `- Include example cleaning schedule and sign-off log table.\n` +
       `- Keep wording operational and audit-friendly.`,
   },
-  "Temp monitoring log": {
+  "Temperature log": {
     id: "temp_log",
     wizardKey: "tempLog",
     questionCount: 4,
@@ -98,6 +98,21 @@ const DOC_WIZARDS: Record<string, DocWizard> = {
       `- Include a supplier questionnaire/checklist template.\n` +
       `- Include record-keeping table and responsibilities.`,
   },
+  "Allergen policy": {
+    id: "allergen_policy",
+    wizardKey: "allergenPolicy",
+    questionCount: 4,
+    buildPrompt: (answers) =>
+      `Create a comprehensive Allergen Management Policy using:\n\n` +
+      `1) ${answers[0] ?? ""}\n` +
+      `2) ${answers[1] ?? ""}\n` +
+      `3) ${answers[2] ?? ""}\n` +
+      `4) ${answers[3] ?? ""}\n\n` +
+      `Requirements:\n` +
+      `- Include policy statement, scope, the 14 major allergens (EU/UK), labelling requirements.\n` +
+      `- Include cross-contamination controls, staff training, customer communication, and emergency response.\n` +
+      `- Reference Natasha's Law (PPDS) and Regulation 1169/2011 where relevant.`,
+  },
 };
 
 const DOC_GENERATION_TYPES: Record<DocWizard["id"], string> = {
@@ -105,6 +120,7 @@ const DOC_GENERATION_TYPES: Record<DocWizard["id"], string> = {
   cleaning_sop: "cleaning_sop",
   temp_log: "temperature_log",
   supplier_approval: "supplier_approval",
+  allergen_policy: "allergen_policy",
 };
 
 export default function ChatWorkspace({

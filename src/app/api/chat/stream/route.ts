@@ -406,8 +406,9 @@ export async function POST(request: Request) {
         const citations = ragEnabled ? formatCitations(retrievedChunks) : [];
 
         // Save messages to database
+        // All rows must include the same columns so PostgREST includes metadata in the INSERT
         await supabase.from("chat_messages").insert([
-          { conversation_id: conversationId, user_id: user.id, role: "user", content: message },
+          { conversation_id: conversationId, user_id: user.id, role: "user", content: message, metadata: {} },
           {
             conversation_id: conversationId,
             user_id: user.id,

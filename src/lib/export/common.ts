@@ -66,7 +66,7 @@ export async function getLatestAssistantMessageForConversation(input: {
     throw new Error("CONVERSATION_NOT_FOUND");
   }
 
-  const { data: latestAssistant } = await supabase
+  const { data: latestAssistant, error: msgError } = await supabase
     .from("chat_messages")
     .select("content,created_at,metadata")
     .eq("conversation_id", conversationId)
@@ -75,6 +75,11 @@ export async function getLatestAssistantMessageForConversation(input: {
     .order("created_at", { ascending: false })
     .limit(1)
     .maybeSingle();
+
+  if (msgError) {
+    console.error("[export] chat_messages query error:", msgError);
+    throw new Error("NO_ASSISTANT_CONTENT");
+  }
 
   if (!latestAssistant?.content) {
     throw new Error("NO_ASSISTANT_CONTENT");
