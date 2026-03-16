@@ -2,7 +2,7 @@
 import { TIER_CAPABILITIES } from "@/lib/tier";
 import { resolveUserAccess } from "@/lib/access";
 import { countUsageSince, utcDayStartIso } from "@/lib/policy";
-import { retrieveContext, retrieveUserDocumentContext, buildRAGPrompt, formatCitations, type KnowledgeChunk } from "@/lib/rag";
+import { retrieveContext, retrieveUserDocumentContext, buildRAGPrompt, formatCitations, type KnowledgeChunk, getExportGuidance } from "@/lib/rag";
 import { chatLimiter, chatBurstLimiter, checkRateLimit } from "@/lib/ratelimit";
 import { detectQueryMode, detectComplexity } from "@/lib/query-mode";
 import { getPersonaForConversation, type Persona } from "@/lib/personas";
@@ -198,7 +198,7 @@ export async function POST(request: Request) {
   const languageInstruction = `Respond in ${preferredLanguage}. This is the user's preferred response language. Do not switch to another language unless the user explicitly asks you to.`;
 
   if (ragEnabled) {
-    const ragPrompt = buildRAGPrompt(message, retrievedChunks, mode, preferredLanguage, currentDate, businessTypeLabel);
+    const ragPrompt = buildRAGPrompt(message, retrievedChunks, mode, preferredLanguage, currentDate, businessTypeLabel, tier);
     systemPrompt = ragPrompt.systemPrompt + userDocContext + `\n\nPERSONA:\n${persona.promptFragment}`;
     temperature = ragPrompt.temperature;
   } else {
@@ -216,7 +216,9 @@ export async function POST(request: Request) {
           "- Use tables where appropriate (e.g. monitoring logs, temperature records, supplier lists).\n" +
           "- All measurable criteria must be specific: temperatures in °C, times in minutes or hours, frequencies as 'daily/weekly/monthly'.\n" +
           "- Include a version control block at the top: Document No., Version, Date, Approved by.\n" +
-          "- Do not truncate — if the document is long, complete it fully."
+          "- Do not truncate — if the document is long, complete it fully.\n" +
+          '- When a user says they want to "attach", "add", or "append" a document (e.g. a log, form, or checklist) to a previously generated document, interpret this as a request to CREATE that new document as a companion to the earlier one. Do not interpret "attach" as a file upload request.\n' +
+          "- After generating a document, briefly remind the user of their available export options based on their plan."
         : "You are in Q&A MODE.\n" +
           "- Lead with a direct, practical answer in the first sentence.\n" +
           "- Follow with regulatory context: cite specific regulations and articles.\n" +
@@ -229,6 +231,7 @@ export async function POST(request: Request) {
       businessTypeLabel
         ? `The user operates a ${businessTypeLabel}. Tailor your examples and advice to this business type where relevant.`
         : "",
+      `The user is on the ${tier.charAt(0).toUpperCase() + tier.slice(1)} plan.`,
     ].filter(Boolean).join("\n") + "\n\n";
 
     systemPrompt =
@@ -259,7 +262,7 @@ export async function POST(request: Request) {
       "3. Where EU and UK law have diverged post-Brexit, call out both positions explicitly.\n" +
       "4. If a question requires site-specific detail you do not have (e.g. specific menu, layout, volume), ask for it rather than making assumptions.\n" +
       `5. ${languageInstruction} Keep legal references (regulation names, article numbers) in their original form.\n` +
-      "6. NEVER generate or invent download links or URLs. You cannot create files or links. If the user asks to download or export a document, tell them to use the \"Export Conversation\" button at the bottom of the chat window. PDF export is available for Plus and Pro users; DOCX export is available for Pro users only.\n\n" +
+      `6. ${getExportGuidance(tier)}\n\n` +
       "PERSONA:\n" + persona.promptFragment + "\n\n" +
       modeInstruction + userDocContext;
     temperature = mode === "audit" ? 0.0 : mode === "document" ? 0.2 : 0.1;

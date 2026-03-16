@@ -1,4 +1,5 @@
 import type { KnowledgeChunk } from "./retriever";
+import type { SubscriptionTier } from "@/lib/tier";
 
 export type RAGMode = "qa" | "document" | "audit";
 
@@ -46,7 +47,26 @@ RULES:
 5. For certification questions, clarify which standard and edition applies
 6. Use structured, professional formatting: headings, bullet lists, numbered steps
 7. {LANGUAGE_INSTRUCTION} Keep legal references (regulation names, article numbers) in their original form
-8. NEVER generate or invent download links or URLs. You cannot create files or links. If the user asks to download or export a document, tell them to use the "Export Conversation" button at the bottom of the chat window. PDF export is available for Plus and Pro users; DOCX export is available for Pro users only`;
+8. {EXPORT_INSTRUCTION}`;
+
+/**
+ * Return tier-aware export guidance for the system prompt.
+ */
+export function getExportGuidance(tier?: SubscriptionTier): string {
+  const base =
+    "NEVER generate or invent download links or URLs. You cannot create files or links.";
+
+  switch (tier) {
+    case "pro":
+      return `${base} The user is on the Pro plan and can export conversations as PDF or Word (DOCX). After generating a document, remind them they can use the "Export Conversation" button at the bottom of the chat window to download it as PDF or Word.`;
+    case "plus":
+      return `${base} The user is on the Plus plan and can export conversations as PDF. After generating a document, remind them they can use the "Export Conversation" button at the bottom of the chat window to download it as PDF. For Word (DOCX) export, they would need to upgrade to Pro.`;
+    case "free":
+      return `${base} The user is on the Free plan and cannot export conversations. If they ask about exporting, let them know PDF export is available on Plus and Pro plans, and DOCX export on Pro. Direct them to the upgrade option in the sidebar or settings.`;
+    default:
+      return `${base} If the user asks to download or export a document, tell them to use the "Export Conversation" button at the bottom of the chat window. PDF export is available for Plus and Pro users; DOCX export is available for Pro users only.`;
+  }
+}
 
 /**
  * Format retrieved chunks into context for the LLM
@@ -73,15 +93,15 @@ export function buildRAGSystemPrompt(
   mode: RAGMode = "qa",
   preferredLanguage = "English",
   currentDate?: string,
-  businessTypeLabel?: string | null
+  businessTypeLabel?: string | null,
+  tier?: SubscriptionTier
 ): string {
   const contextSection = formatContext(chunks);
   const modeInstructions = getModeInstructions(mode);
   const languageInstruction = `Respond in ${preferredLanguage}. This is the user's preferred response language. Do not switch to another language unless the user explicitly asks you to.`;
-  const prompt = SYSTEM_PROMPT_BASE.replace(
-    "{LANGUAGE_INSTRUCTION}",
-    languageInstruction
-  );
+  const prompt = SYSTEM_PROMPT_BASE
+    .replace("{LANGUAGE_INSTRUCTION}", languageInstruction)
+    .replace("{EXPORT_INSTRUCTION}", getExportGuidance(tier));
 
   const contextParts: string[] = [];
   if (currentDate) {
@@ -92,6 +112,11 @@ export function buildRAGSystemPrompt(
   if (businessTypeLabel) {
     contextParts.push(
       `The user operates a ${businessTypeLabel}. Tailor your examples and advice to this business type where relevant.`
+    );
+  }
+  if (tier) {
+    contextParts.push(
+      `The user is on the ${tier.charAt(0).toUpperCase() + tier.slice(1)} plan.`
     );
   }
   const contextHeader = contextParts.length > 0 ? contextParts.join("\n") + "\n\n" : "";
@@ -125,7 +150,9 @@ function getModeInstructions(mode: RAGMode): string {
 - Required structure for SOPs: Purpose → Scope → Responsible persons → Equipment/materials → Step-by-step procedure → Frequency → Records → Review date
 - Use numbered sections, clear tables, and specific measurable criteria (temperatures in °C, times in minutes/hours)
 - Include version control fields: Document No., Revision, Date, Approved by
-- All limits must cite their regulatory or scientific basis`;
+- All limits must cite their regulatory or scientific basis
+- When a user says they want to "attach", "add", or "append" a document (e.g. a log, form, or checklist) to a previously generated document, interpret this as a request to CREATE that new document as a companion to the earlier one. Do not interpret "attach" as a file upload request.
+- After generating a document, briefly remind the user of their available export options based on their plan (as described in the rules above).`;
 
     case "qa":
     default:
@@ -147,10 +174,11 @@ export function buildRAGPrompt(
   mode: RAGMode = "qa",
   preferredLanguage = "English",
   currentDate?: string,
-  businessTypeLabel?: string | null
+  businessTypeLabel?: string | null,
+  tier?: SubscriptionTier
 ): { systemPrompt: string; temperature: number } {
   return {
-    systemPrompt: buildRAGSystemPrompt(chunks, mode, preferredLanguage, currentDate, businessTypeLabel),
+    systemPrompt: buildRAGSystemPrompt(chunks, mode, preferredLanguage, currentDate, businessTypeLabel, tier),
     temperature: MODE_TEMPERATURES[mode],
   };
 }
