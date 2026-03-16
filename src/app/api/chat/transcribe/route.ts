@@ -52,13 +52,20 @@ export async function POST(request: Request) {
   const rateLimitRes = await checkRateLimit(transcribeLimiter, user.id);
   if (rateLimitRes) return rateLimitRes;
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("tier,is_admin")
-    .eq("id", user.id)
-    .maybeSingle();
+  const [{ data: profile }, { data: subscription }] = await Promise.all([
+    supabase
+      .from("profiles")
+      .select("tier,is_admin")
+      .eq("id", user.id)
+      .maybeSingle(),
+    supabase
+      .from("subscriptions")
+      .select("tier,status")
+      .eq("user_id", user.id)
+      .maybeSingle(),
+  ]);
 
-  const { tier, isAdmin } = resolveUserAccess(profile, user.email);
+  const { tier, isAdmin } = resolveUserAccess(profile, user.email, subscription);
   const caps = TIER_CAPABILITIES[tier];
 
   const dailyTranscriptionLimit = isAdmin ? Number.MAX_SAFE_INTEGER : caps.dailyTranscriptions;
