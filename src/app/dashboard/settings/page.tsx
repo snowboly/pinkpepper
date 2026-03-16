@@ -18,13 +18,20 @@ export default async function SettingsPage() {
   }
 
   type ProfileRow = { tier?: string | null; is_admin?: boolean | null; chat_language?: string | null };
-  const profileResult = await supabase
-    .from("profiles")
-    .select("tier,is_admin,chat_language")
-    .eq("id", user.id)
-    .maybeSingle();
+  const [profileResult, subscriptionResult] = await Promise.all([
+    supabase
+      .from("profiles")
+      .select("tier,is_admin,chat_language")
+      .eq("id", user.id)
+      .maybeSingle(),
+    supabase
+      .from("subscriptions")
+      .select("tier,status")
+      .eq("user_id", user.id)
+      .maybeSingle(),
+  ]);
   const profile = profileResult.data as ProfileRow | null;
-  const { tier, isAdmin } = resolveUserAccess(profile, user.email);
+  const { tier, isAdmin } = resolveUserAccess(profile, user.email, subscriptionResult.data);
   const chatLanguage = profile?.chat_language ?? "en";
 
   const caps = TIER_CAPABILITIES[tier as keyof typeof TIER_CAPABILITIES] ?? TIER_CAPABILITIES.free;
