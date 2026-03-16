@@ -143,26 +143,26 @@ export default function ChatMessages({
       ))}
 
       {loading && (messages.length === 0 || !messages[messages.length - 1]?.isStreaming) && (
-        <div className="py-5">
+        <div className="py-5" style={{ animation: "thinking-fade-in 0.18s ease-out both" }}>
           <div className="mx-auto max-w-5xl px-4 md:px-6">
-            <div className="mb-1.5 flex items-center gap-2">
-              <div
-                className="relative h-5 w-5 rounded-full bg-[#E11D48]"
-                style={{ animation: "thinking-glow 2s ease-in-out infinite" }}
-              >
-                <span className="absolute left-[5px] top-[4px] h-1.5 w-1.5 rounded-full bg-white/80" />
+            <div className="mb-2 flex items-center gap-2">
+              <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-[#E11D48] text-[10px] font-bold text-white">
+                PP
               </div>
-              <span className="text-sm font-semibold text-[#0F172A]">{currentPersona ? currentPersona.name : t("pinkPepper")}</span>
+              <span className="text-sm font-semibold text-[#0F172A]">
+                {currentPersona ? currentPersona.name : t("pinkPepper")}
+              </span>
             </div>
-            <div className="flex items-center gap-1.5 ml-7">
-              <span className="text-xs text-[#94A3B8] mr-0.5">{t("thinking")}</span>
-              {([0, 160, 320] as const).map((delay) => (
-                <span
-                  key={delay}
-                  className="h-1.5 w-1.5 rounded-full bg-[#E11D48]"
-                  style={{ animation: "thinking-wave 1.4s ease-in-out infinite", animationDelay: `${delay}ms` }}
-                />
-              ))}
+            <div className="pl-9">
+              <div className="inline-flex items-center gap-1.5 rounded-2xl rounded-tl-sm border border-[#E2E8F0] bg-[#F8F9FB] px-4 py-3">
+                {([0, 150, 300] as const).map((delay) => (
+                  <span
+                    key={delay}
+                    className="h-2 w-2 rounded-full bg-[#CBD5E1]"
+                    style={{ animation: "thinking-wave 1.3s ease-in-out infinite", animationDelay: `${delay}ms` }}
+                  />
+                ))}
+              </div>
             </div>
           </div>
         </div>
