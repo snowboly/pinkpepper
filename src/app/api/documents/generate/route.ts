@@ -187,6 +187,7 @@ export async function POST(request: Request) {
       documentType,
       documentNumber: doc.documentNumber,
     },
+    generatedDocument: doc,
   };
 
   const { error: messageInsertError } = await supabase.from("chat_messages").insert([

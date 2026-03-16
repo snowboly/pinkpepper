@@ -61,7 +61,7 @@ export async function getLatestAssistantMessageForConversation(input: {
 
   const { data: latestAssistant } = await supabase
     .from("chat_messages")
-    .select("content,created_at")
+    .select("content,created_at,metadata")
     .eq("conversation_id", conversationId)
     .eq("user_id", userId)
     .eq("role", "assistant")
@@ -77,6 +77,7 @@ export async function getLatestAssistantMessageForConversation(input: {
     conversationTitle: conv.title ?? "PinkPepper Document",
     content: latestAssistant.content,
     createdAt: latestAssistant.created_at,
+    metadata: (latestAssistant as Record<string, unknown>).metadata as Record<string, unknown> | null,
   };
 }
 
