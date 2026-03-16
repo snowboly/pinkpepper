@@ -31,6 +31,9 @@ for insert with check (auth.uid() = user_id);
 create policy "conversations_update_own" on public.conversations
 for update using (auth.uid() = user_id);
 
+create policy "conversations_delete_own" on public.conversations
+for delete using (auth.uid() = user_id);
+
 create policy "chat_messages_select_own" on public.chat_messages
 for select using (auth.uid() = user_id);
 
