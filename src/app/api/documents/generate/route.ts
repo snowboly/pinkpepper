@@ -197,8 +197,9 @@ export async function POST(request: Request) {
     generatedDocument: doc,
   };
 
+  // All rows must include the same columns so PostgREST includes metadata in the INSERT
   const { error: messageInsertError } = await supabase.from("chat_messages").insert([
-    { conversation_id: conversationId, user_id: user.id, role: "user", content: userMessage },
+    { conversation_id: conversationId, user_id: user.id, role: "user", content: userMessage, metadata: {} },
     { conversation_id: conversationId, user_id: user.id, role: "assistant", content: assistantMessage, metadata: artifactMetadata },
   ]);
 

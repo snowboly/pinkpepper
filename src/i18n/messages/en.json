@@ -155,6 +155,14 @@
         "q3": "What documents/certifications do you require before approval?",
         "q4": "How often do you review suppliers and what triggers re-evaluation?",
         "q5": "Who approves suppliers and where are records stored?"
+      },
+      "allergenPolicy": {
+        "title": "Allergen Management Policy",
+        "intro": "I will ask a few questions about your business and allergen handling, then generate a comprehensive allergen management policy.",
+        "q1": "What is your business type, location, and service style (e.g., restaurant, manufacturer, retailer)?",
+        "q2": "Which of the 14 major allergens are present or handled in your operation?",
+        "q3": "How do you communicate allergen information to customers (menus, labels, verbal, etc.)?",
+        "q4": "What cross-contamination controls and staff training measures are currently in place?"
       }
     },
     "ask": "Ask",

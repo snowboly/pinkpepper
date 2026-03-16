@@ -70,9 +70,10 @@ async function handleImageAnalysis(
 
   // Save messages — store a note that this was an image message
   const userContent = `[Photo attached] ${userText}`;
+  // All rows must include the same columns so PostgREST includes metadata in the INSERT
   const { error: insertMsgError } = await supabase.from("chat_messages").insert([
-    { conversation_id: conversationId, user_id: userId, role: "user", content: userContent },
-    { conversation_id: conversationId, user_id: userId, role: "assistant", content: assistantMessage },
+    { conversation_id: conversationId, user_id: userId, role: "user", content: userContent, metadata: {} },
+    { conversation_id: conversationId, user_id: userId, role: "assistant", content: assistantMessage, metadata: {} },
   ]);
 
   if (insertMsgError) {
