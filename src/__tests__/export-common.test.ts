@@ -109,21 +109,8 @@ describe("enforceDailyDocumentLimit", () => {
     ).rejects.toThrow("DOC_DAILY_LIMIT_REACHED");
   });
 
-  it("plus tier allows when under limit", async () => {
-    const mockSupabase = buildMockSupabase(2); // 2 used out of 3
-
-    const result = await enforceDailyDocumentLimit({
-      supabase: mockSupabase,
-      userId: "user-1",
-      tier: "plus",
-      isAdmin: false,
-    });
-
-    expect(result).toEqual({ used: 2, limit: 3 });
-  });
-
-  it("plus tier throws when at limit", async () => {
-    const mockSupabase = buildMockSupabase(3); // 3 used, limit is 3
+  it("plus tier throws immediately because document generation is Pro only", async () => {
+    const mockSupabase = buildMockSupabase(0);
 
     await expect(
       enforceDailyDocumentLimit({

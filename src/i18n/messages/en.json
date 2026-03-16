@@ -303,7 +303,7 @@
       },
       "document_generation": {
         "heading": "Unlock document generation",
-        "body": "Create audit-ready HACCP plans, SOPs, logs, and supplier approval documents with Plus or Pro."
+        "body": "Create audit-ready HACCP plans, SOPs, logs, and supplier approval documents with Pro."
       },
       "transcription_limit": {
         "heading": "Unlock voice transcription",
@@ -327,8 +327,8 @@
         "name": "Plus",
         "price": "€19/mo",
         "highlights": [
-          "Generate compliance documents faster",
-          "PDF export for working drafts",
+          "Analyse uploads and get faster answers",
+          "PDF export for chat conversations",
           "Unlimited saved conversations",
           "Higher daily chat, image, and voice limits"
         ],
@@ -338,6 +338,7 @@
         "name": "Pro",
         "price": "€99/mo",
         "highlights": [
+          "All document generation",
           "Virtual Audit workflows",
           "PDF + DOCX export",
           "3 specialist review credits/month",
@@ -427,3 +428,4 @@
     "dailyMessages": "Messages today"
   }
 }
+

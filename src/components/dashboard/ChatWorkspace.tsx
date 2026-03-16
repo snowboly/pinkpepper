@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { track } from "@vercel/analytics";
 import type { SubscriptionTier } from "@/lib/tier";
 import { TIER_CAPABILITIES } from "@/lib/tier";
+import { buildHaccpWizardDefinition } from "@/lib/documents/haccp-wizard";
 import type { Citation } from "@/lib/rag/citations";
 import { getPersonaForConversation } from "@/lib/personas";
 import type { Message, Conversation, Project, ChatWorkspaceProps, PersonaInfo } from "./types";
@@ -27,29 +28,33 @@ type DocWizard = {
   wizardKey: string;
   questionCount: number;
   buildPrompt: (answers: string[]) => string;
+  questions?: string[];
 };
 
-
+const HACCP_WIZARD = buildHaccpWizardDefinition();
 
 const DOC_WIZARDS: Record<string, DocWizard> = {
   "HACCP plan": {
     id: "haccp_plan",
     wizardKey: "haccpPlan",
-    questionCount: 6,
+    questionCount: HACCP_WIZARD.questions.length,
+    questions: HACCP_WIZARD.questions.map((question) => question.prompt),
     buildPrompt: (answers) =>
-      `Create a complete, audit-ready HACCP Plan document using the business details below.\n\n` +
-      `Business details:\n` +
-      `1) ${answers[0] ?? ""}\n` +
-      `2) ${answers[1] ?? ""}\n` +
-      `3) ${answers[2] ?? ""}\n` +
-      `4) ${answers[3] ?? ""}\n` +
-      `5) ${answers[4] ?? ""}\n` +
-      `6) ${answers[5] ?? ""}\n\n` +
+      `Create a lean, operational HACCP plan using the structured details below.\n\n` +
+      `Document metadata:\n` +
+      `- Company Name: ${answers[0] ?? ""}\n` +
+      `- Version: ${answers[1] ?? ""}\n` +
+      `- Date: ${answers[2] ?? ""}\n` +
+      `- Created by: ${answers[3] ?? ""}\n` +
+      `- Approved by: ${answers[4] ?? ""}\n\n` +
+      `Core content:\n` +
+      `- Process flow:\n${answers[5] ?? ""}\n\n` +
+      `- Hazard analysis input:\n${answers[6] ?? ""}\n\n` +
+      `- CCP details:\n${answers[7] ?? ""}\n\n` +
       `Output requirements:\n` +
-      `- Full HACCP structure: scope, product/process description, flow, hazard analysis, CCPs, critical limits, monitoring, corrective actions, verification, records.\n` +
-      `- Use clear headings and practical tables.\n` +
-      `- Use EU/UK compliant temperature and allergen control language where relevant.\n` +
-      `- Include version control block (Document No, Version, Date, Approved by).`,
+      `- Use only these sections: Process Flow, Process Steps Table, Hazard Analysis Table, and CCP Table only if needed.\n` +
+      `- Keep the format operational and audit-ready, not manual-style.\n` +
+      `- Use visible Yes/No values for CCP decisions.`,
   },
   "Cleaning SOP": {
     id: "cleaning_sop",
@@ -694,7 +699,7 @@ export default function ChatWorkspace({
     setDocWizardStep(0);
     setDocWizardAnswers([]);
     const intro = tw(`wizards.${wizard.wizardKey}.intro`);
-    const q1 = tw(`wizards.${wizard.wizardKey}.q1`);
+    const q1 = wizard.questions?.[0] ?? tw(`wizards.${wizard.wizardKey}.q1`);
     pushAssistantMessage(`${intro}\n\nQuestion 1/${wizard.questionCount}: ${q1}`, currentPersona);
     setPrompt("");
     textareaRef.current?.focus();
@@ -725,7 +730,7 @@ export default function ChatWorkspace({
     if (nextStep < activeDocWizard.questionCount) {
       setDocWizardAnswers(nextAnswers);
       setDocWizardStep(nextStep);
-      const nextQ = tw(`wizards.${activeDocWizard.wizardKey}.q${nextStep + 1}`);
+      const nextQ = activeDocWizard.questions?.[nextStep] ?? tw(`wizards.${activeDocWizard.wizardKey}.q${nextStep + 1}`);
       pushAssistantMessage(`Question ${nextStep + 1}/${activeDocWizard.questionCount}: ${nextQ}`, currentPersona);
       return true;
     }

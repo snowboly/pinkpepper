@@ -123,5 +123,8 @@ describe("premium quality regressions", () => {
     expect(pricing).toContain("AI draft speed with specialist human review");
     expect(pricing).toContain("qualified food safety specialist");
     expect(pricing).toContain("human specialist review credits");
+    expect(pricing).toContain("Advanced HACCP generation with DOCX and PDF export");
+    expect(pricing).toContain("Analyse faster and keep your working context");
+    expect(pricing).toContain("No generated compliance documents on Plus");
   });
 });

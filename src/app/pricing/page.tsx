@@ -90,7 +90,7 @@ export default async function PricingPage() {
             Pricing for AI food safety compliance software
           </h1>
           <p className="mt-4 text-lg text-[#475569]">
-            Start by asking questions. Upgrade when you need faster document production, audit-ready workflows, and specialist review for EU and UK food businesses.
+            Start by asking questions. Upgrade when you need deeper analysis, conversation export, audit-ready workflows, and specialist review for EU and UK food businesses.
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3 text-sm font-medium text-[#475569]">
             <Link href="/features/haccp-plan-generator" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
@@ -118,16 +118,16 @@ export default async function PricingPage() {
             </div>
             <div className="rounded-2xl border border-[#FBCFE8] bg-[#FFF1F2] p-5">
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#BE123C]">Plus</p>
-              <h2 className="mt-2 text-lg font-semibold text-[#0F172A]">Produce usable documents faster</h2>
+              <h2 className="mt-2 text-lg font-semibold text-[#0F172A]">Analyse faster and keep your working context</h2>
               <p className="mt-2 text-sm text-[#64748B]">
-                Build HACCP plans, SOPs, and logs without starting from a blank page.
+                Upload, analyse, and export chat conversations without losing your working context.
               </p>
             </div>
             <div className="rounded-2xl border border-emerald-100 bg-emerald-50 p-5">
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-700">Pro</p>
               <h2 className="mt-2 text-lg font-semibold text-[#0F172A]">AI draft speed with specialist human review</h2>
               <p className="mt-2 text-sm text-[#64748B]">
-                Combine faster AI workflows with qualified food safety specialist review when the work matters most.
+                Advanced HACCP generation with DOCX and PDF export, plus qualified food safety specialist review when the work matters most.
               </p>
             </div>
           </div>
@@ -182,7 +182,7 @@ export default async function PricingPage() {
             <div className="flex flex-col rounded-3xl border-2 border-[#FBCFE8] bg-white p-8 shadow-md shadow-[#FDA4AF]/[0.08] transition-all duration-200 hover:shadow-lg hover:shadow-[#FDA4AF]/[0.12]">
               <h2 className="text-xl font-bold text-[#0F172A]">Plus</h2>
               <p className="mt-2 text-sm text-[#64748B]">
-                For teams that need working documents quickly, not just answers in chat.
+                For teams that need deeper operational analysis, not just a basic free chat.
               </p>
               <div className="mt-6 flex items-baseline gap-1">
                 <span className="text-5xl font-bold tracking-tight text-[#0F172A]"><span className="text-2xl align-super">€</span>19</span>
@@ -192,7 +192,7 @@ export default async function PricingPage() {
               <ul className="flex-1 space-y-3.5 text-sm text-[#475569]">
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  3 document generations per day — HACCP plans, SOPs, logs, and supplier approval documents
+                  No generated compliance documents on Plus - use chat, uploads, and conversation export instead
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
@@ -280,13 +280,13 @@ export default async function PricingPage() {
             <div className="rounded-2xl border border-[#E11D48]/20 bg-[#FFF1F2] p-6">
               <h3 className="mb-1 font-semibold text-[#0F172A]">Plus</h3>
               <p className="text-sm text-[#64748B]">
-                Move from chat answers to usable documents with daily generation credits and PDF export.
+                Move from basic chat to stronger analysis, file uploads, and PDF export for chat conversations.
               </p>
             </div>
             <div className="rounded-2xl border border-emerald-100 bg-emerald-50 p-6">
               <h3 className="mb-1 font-semibold text-[#0F172A]">Pro</h3>
               <p className="text-sm text-[#64748B]">
-                Add virtual audits, DOCX export, and qualified food safety specialist review when the consequences of getting it wrong are higher.
+                Add advanced HACCP generation, DOCX export, virtual audits, and qualified food safety specialist review when the consequences of getting it wrong are higher.
               </p>
             </div>
           </div>
@@ -299,11 +299,11 @@ export default async function PricingPage() {
               </div>
               <div>
                 <p className="font-medium text-[#334155]">Plus</p>
-                <p className="mt-1">100 queries/day, 3 images/day, 25 transcriptions/day, 3 document generations/day, PDF export.</p>
+                <p className="mt-1">100 queries/day, 3 images/day, 25 transcriptions/day, no document generation, PDF export for chat conversations.</p>
               </div>
               <div>
                 <p className="font-medium text-[#334155]">Pro</p>
-                <p className="mt-1">1,000 queries/day, 20 images/day, 200 transcriptions/day, 20 document generations/day, PDF/DOCX export, 3 review credits/month.</p>
+                <p className="mt-1">1,000 queries/day, 20 images/day, 200 transcriptions/day, 20 document generations/day, advanced HACCP DOCX/PDF export, 3 review credits/month.</p>
               </div>
             </div>
           </div>
@@ -377,3 +377,4 @@ export default async function PricingPage() {
     </main>
   );
 }
+
