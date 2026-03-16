@@ -20,13 +20,20 @@ export async function getExportContext(): Promise<ExportContext> {
     throw new Error("UNAUTHORIZED");
   }
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("tier,is_admin")
-    .eq("id", user.id)
-    .maybeSingle();
+  const [{ data: profile }, { data: subscription }] = await Promise.all([
+    supabase
+      .from("profiles")
+      .select("tier,is_admin")
+      .eq("id", user.id)
+      .maybeSingle(),
+    supabase
+      .from("subscriptions")
+      .select("tier,status")
+      .eq("user_id", user.id)
+      .maybeSingle(),
+  ]);
 
-  const { tier, isAdmin } = resolveUserAccess(profile, user.email);
+  const { tier, isAdmin } = resolveUserAccess(profile, user.email, subscription);
 
   return { supabase, userId: user.id, tier, isAdmin };
 }

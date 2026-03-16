@@ -17,13 +17,20 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("tier,is_admin")
-    .eq("id", user.id)
-    .maybeSingle();
+  const [{ data: profile }, { data: subscription }] = await Promise.all([
+    supabase
+      .from("profiles")
+      .select("tier,is_admin")
+      .eq("id", user.id)
+      .maybeSingle(),
+    supabase
+      .from("subscriptions")
+      .select("tier,status")
+      .eq("user_id", user.id)
+      .maybeSingle(),
+  ]);
 
-  const { isAdmin } = resolveUserAccess(profile, user.email);
+  const { isAdmin } = resolveUserAccess(profile, user.email, subscription);
   if (!isAdmin) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
