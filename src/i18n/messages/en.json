@@ -47,10 +47,41 @@
         "label": "Allergen policy",
         "text": "Create an allergen management policy"
       },
-      "cleaningPlan": {
-        "label": "Cleaning plan",
+      "foodSafetyPolicy": {
+        "label": "Food safety policy",
+        "text": "Create a food safety policy"
+      },
+      "traceabilityProcedure": {
+        "label": "Traceability procedure",
+        "text": "Create a traceability procedure"
+      },
+      "pestControlProcedure": {
+        "label": "Pest control procedure",
+        "text": "Create a pest control procedure"
+      },
+      "staffTrainingRecord": {
+        "label": "Staff training record",
+        "text": "Create a staff training record and matrix"
+      },
+      "wasteManagementProcedure": {
+        "label": "Waste management procedure",
+        "text": "Create a waste management procedure"
+      },
+      "personalHygienePolicy": {
+        "label": "Personal hygiene policy",
+        "text": "Create a personal hygiene policy"
+      },
+      "cleaningSchedule": {
+        "label": "Cleaning schedule",
         "text": "Create a cleaning schedule and plan"
       }
+    },
+    "createDocument": "Create Document",
+    "docCategories": {
+      "corePlans": "Core Plans",
+      "procedures": "SOPs & Procedures",
+      "logsRecords": "Logs & Records",
+      "policies": "Policies"
     },
     "startRecording": "Start recording",
     "stopRecording": "Stop",
@@ -163,6 +194,64 @@
         "q2": "Which of the 14 major allergens are present or handled in your operation?",
         "q3": "How do you communicate allergen information to customers (menus, labels, verbal, etc.)?",
         "q4": "What cross-contamination controls and staff training measures are currently in place?"
+      },
+      "foodSafetyPolicy": {
+        "title": "Food Safety Policy",
+        "intro": "I will ask a few questions about your business, then generate a comprehensive food safety policy.",
+        "q1": "What is your business name, type, and location?",
+        "q2": "How many sites/premises do you operate and how many staff?",
+        "q3": "What are your key products or services?",
+        "q4": "Any specific standards or certifications you work to (BRCGS, SQF, etc.)?"
+      },
+      "traceabilityProcedure": {
+        "title": "Traceability Procedure",
+        "intro": "I will gather details about your supply chain, then generate a complete traceability procedure with recall plan.",
+        "q1": "What is your business name and type (manufacturer, retailer, caterer, etc.)?",
+        "q2": "What products do you handle (raw materials, finished goods, ingredients)?",
+        "q3": "What batch coding or labelling system do you currently use (if any)?",
+        "q4": "Any additional requirements or known supply chain risks?"
+      },
+      "pestControlProcedure": {
+        "title": "Pest Control Procedure",
+        "intro": "I will ask about your premises and pest risks, then generate a complete pest control procedure.",
+        "q1": "What is your business name and type?",
+        "q2": "Describe your premises type and surroundings (urban, rural, near water, etc.).",
+        "q3": "What pest risks or past issues have you experienced?",
+        "q4": "Do you use an external pest control contractor? If so, who?",
+        "q5": "Any specific monitoring equipment in place (bait stations, fly units, etc.)?"
+      },
+      "staffTrainingRecord": {
+        "title": "Staff Training Record",
+        "intro": "I will ask about your team structure, then generate a training matrix and record templates.",
+        "q1": "What is your business name and type?",
+        "q2": "How many staff do you have and what are the main roles (food handlers, supervisors, managers)?",
+        "q3": "What training do you currently provide (induction, food hygiene certificates, etc.)?",
+        "q4": "Any specific training gaps or topics you want covered?"
+      },
+      "wasteManagementProcedure": {
+        "title": "Waste Management Procedure",
+        "intro": "I will collect details about your waste streams, then generate a complete waste management procedure.",
+        "q1": "What is your business name and type?",
+        "q2": "What types of waste does your operation generate (food waste, packaging, oils, hazardous)?",
+        "q3": "What are your current waste collection arrangements and frequency?",
+        "q4": "Any specific waste reduction goals or local authority requirements?"
+      },
+      "personalHygienePolicy": {
+        "title": "Personal Hygiene Policy",
+        "intro": "I will ask about your staff and facilities, then generate a comprehensive personal hygiene policy.",
+        "q1": "What is your business name and type?",
+        "q2": "How many staff and what roles are covered (food handlers, servers, delivery, etc.)?",
+        "q3": "What protective clothing and handwashing facilities do you provide?",
+        "q4": "Any current policies or issues around illness reporting or fitness to work?"
+      },
+      "cleaningSchedule": {
+        "title": "Cleaning Schedule",
+        "intro": "I will gather details about your premises and cleaning needs, then generate a complete cleaning schedule and plan.",
+        "q1": "What is your business name and type?",
+        "q2": "What areas/zones need to be covered (kitchen, storage, service, toilets, external)?",
+        "q3": "What cleaning chemicals and equipment are available?",
+        "q4": "What cleaning frequencies do you need (after each use, daily, weekly, monthly)?",
+        "q5": "Who is responsible for cleaning and who verifies it?"
       }
     },
     "ask": "Ask",
