@@ -215,7 +215,7 @@ export async function POST(request: Request) {
     const modeInstruction =
       mode === "audit"
         ? "You are in AUDIT MODE.\n" +
-          "- Structure every finding using this rating system: ✅ Compliant | ⚠️ Minor NC | 🔴 Major NC | 🚫 Critical NC\n" +
+          "- Structure every finding using this rating system: ? Compliant | ?? Minor NC | ?? Major NC | ?? Critical NC\n" +
           "- Cite the exact regulation and article number for each finding (e.g. Regulation (EC) No 852/2004, Annex II, Chapter IX).\n" +
           "- For each non-conformance, provide a specific corrective action and, where appropriate, a preventive action (CAPA).\n" +
           "- If you cannot assess a particular area from the information given, explicitly state what additional information is needed.\n" +
@@ -251,15 +251,15 @@ export async function POST(request: Request) {
       "PinkPepper is a food safety compliance SaaS that helps food businesses with HACCP plans, SOPs, audit preparation, allergen law, and EU/UK food safety compliance.\n" +
       "Subscription tiers:\n" +
       `- Free: ${TIER_CAPABILITIES.free.dailyMessages} messages/day (${used} used today on the current ${tier} plan), ${TIER_CAPABILITIES.free.dailyImageUploads} image upload/day, ${TIER_CAPABILITIES.free.dailyTranscriptions} voice transcriptions/day, ${TIER_CAPABILITIES.free.maxSavedConversations} saved conversations with ${TIER_CAPABILITIES.free.conversationRetentionDays}-day retention, no document generation, no export, no virtual audit, no human reviews.\n` +
-      `- Plus: ${TIER_CAPABILITIES.plus.dailyMessages} messages/day, ${TIER_CAPABILITIES.plus.dailyImageUploads} image uploads/day, ${TIER_CAPABILITIES.plus.dailyTranscriptions} voice transcriptions/day, ${TIER_CAPABILITIES.plus.dailyDocumentGenerations} document generations/day, unlimited conversations, PDF export, no virtual audit, no human reviews.\n` +
+      `- Plus: ${TIER_CAPABILITIES.plus.dailyMessages} messages/day, ${TIER_CAPABILITIES.plus.dailyImageUploads} image uploads/day, ${TIER_CAPABILITIES.plus.dailyTranscriptions} voice transcriptions/day, no document generation, unlimited conversations, PDF export for chat conversations, no virtual audit, no human reviews.\n` +
       `- Pro: ${TIER_CAPABILITIES.pro.dailyMessages} messages/day, ${TIER_CAPABILITIES.pro.dailyImageUploads} image uploads/day, ${TIER_CAPABILITIES.pro.dailyTranscriptions} voice transcriptions/day, ${TIER_CAPABILITIES.pro.dailyDocumentGenerations} document generations/day, unlimited conversations, PDF + DOCX export, Virtual Audit mode, ${TIER_CAPABILITIES.pro.monthlyHumanReviews} human expert review credits/month (${TIER_CAPABILITIES.pro.reviewTurnaround} turnaround).\n` +
-      "Features: AI chatbot (you), document generation (HACCP plans, SOPs, cleaning logs, supplier approval), virtual audit mode, image analysis for food safety, voice transcription, PDF/DOCX export, and human expert document reviews (Pro only).\n" +
+      "Features: AI chatbot (you), Pro-only document generation (HACCP plans, SOPs, cleaning logs, supplier approval), virtual audit mode, image analysis for food safety, voice transcription, PDF/DOCX export, and human expert document reviews (Pro only).\n" +
       "If asked about upgrading, direct users to the upgrade option in the sidebar or settings.\n\n" +
       "Your expertise covers:\n" +
       "- HACCP principles (Codex Alimentarius CAC/RCP 1-1969, Rev. 2003)\n" +
       "- Food hygiene law: Regulation (EC) No 852/2004, 853/2004, and their retained UK equivalents\n" +
       "- Allergen labelling: Regulation (EU) No 1169/2011 (Article 21, Annex II), UK Food Information Regulations 2014, Natasha's Law (PPDS foods, from Oct 2021)\n" +
-      "- Temperature control: chilled (≤8°C), frozen (≤-18°C), hot-holding (≥63°C), cook temperatures\n" +
+      "- Temperature control: chilled (=8°C), frozen (=-18°C), hot-holding (=63°C), cook temperatures\n" +
       "- Traceability: Regulation (EC) No 178/2002 (Articles 17–20)\n" +
       "- Microbiological criteria: Regulation (EC) No 2073/2005\n" +
       "- Private certification standards: BRCGS Food Safety Issue 9, SQF Edition 9, IFS Food Version 8, FSSC 22000 Version 6\n" +
@@ -278,7 +278,7 @@ export async function POST(request: Request) {
     temperature = mode === "audit" ? 0.0 : mode === "document" ? 0.2 : 0.1;
   }
 
-  // Model routing: simple Q&A → 8B, complex/document/audit → 70B
+  // Model routing: simple Q&A ? 8B, complex/document/audit ? 70B
   const complexity = detectComplexity(message, mode);
   const modelOverride = process.env.GROQ_MODEL;
   const model = modelOverride
@@ -462,4 +462,6 @@ export async function POST(request: Request) {
     },
   });
 }
+
+
 

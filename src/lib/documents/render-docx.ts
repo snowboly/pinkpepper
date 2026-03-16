@@ -19,6 +19,7 @@ import {
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import type { GeneratedDocument, DocumentTable } from "./types";
+import { renderHaccpDocx } from "./render-haccp-docx";
 
 const BRAND_COLOR = "E11D48"; // PinkPepper red
 const GRAY_COLOR = "64748B";
@@ -96,6 +97,10 @@ function renderTable(table: DocumentTable): Table {
 }
 
 export async function renderDocx(doc: GeneratedDocument): Promise<ArrayBuffer> {
+  if (doc.documentType === "haccp_plan" && doc.haccpData) {
+    return renderHaccpDocx(doc.haccpData);
+  }
+
   const logoBuffer = await loadLogoBuffer();
 
   const headerChildren: (TextRun | ImageRun)[] = [];

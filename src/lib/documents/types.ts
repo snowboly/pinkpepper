@@ -1,3 +1,5 @@
+import type { HaccpDocumentData } from "./haccp-schema";
+
 export type DocumentType =
   | "haccp_plan"
   | "cleaning_sop"
@@ -36,4 +38,5 @@ export type GeneratedDocument = {
   scope: string;
   sections: DocumentSection[];
   tables?: DocumentTable[];
+  haccpData?: HaccpDocumentData;
 };

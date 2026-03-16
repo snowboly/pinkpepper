@@ -4,6 +4,7 @@ import { resolveUserAccess } from "@/lib/access";
 import { countUsageSince, utcDayStartIso } from "@/lib/policy";
 import { TIER_CAPABILITIES } from "@/lib/tier";
 import { buildGenerateSystemPrompt, buildGenerateUserPrompt } from "@/lib/documents/generate-prompt";
+import { buildHaccpDocumentDataFromAnswers, buildHaccpModelPrompt } from "@/lib/documents/haccp-generation";
 import { renderDocx } from "@/lib/documents/render-docx";
 import { renderPdf } from "@/lib/documents/render-pdf";
 import { renderDocumentForChat } from "@/lib/documents/render-chat";
@@ -61,7 +62,7 @@ export async function POST(request: Request) {
 
   if (!isAdmin && caps.dailyDocumentGenerations === 0) {
     return NextResponse.json(
-      { error: "Document generation is not available on the Free plan. Upgrade to Plus or Pro." },
+      { error: "Document generation is available on Pro." },
       { status: 402 }
     );
   }
@@ -108,6 +109,13 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "format must be json, pdf, or docx" }, { status: 400 });
   }
 
+  if (documentType === "haccp_plan" && !isAdmin && !caps.advancedHaccpGeneration) {
+    return NextResponse.json(
+      { error: "Advanced HACCP generation is available on Pro." },
+      { status: 403 }
+    );
+  }
+
   let conversationId = requestedConversationId;
   if (conversationId) {
     const { data: existingConv } = await supabase
@@ -136,8 +144,12 @@ export async function POST(request: Request) {
     conversationId = newConversation.id;
   }
 
-  const systemPrompt = buildGenerateSystemPrompt(documentType as DocumentType);
-  const userPrompt = buildGenerateUserPrompt(documentType as DocumentType, answers);
+  const systemPrompt = documentType === "haccp_plan"
+    ? "Return valid JSON for a structured HACCP document."
+    : buildGenerateSystemPrompt(documentType as DocumentType);
+  const userPrompt = documentType === "haccp_plan"
+    ? buildHaccpModelPrompt(buildHaccpDocumentDataFromAnswers(answers))
+    : buildGenerateUserPrompt(documentType as DocumentType, answers);
 
   const groqModel = process.env.GROQ_MODEL ?? "llama-3.3-70b-versatile";
 
@@ -175,11 +187,18 @@ export async function POST(request: Request) {
   }
 
   let doc: GeneratedDocument;
+  const haccpData = documentType === "haccp_plan"
+    ? buildHaccpDocumentDataFromAnswers(answers)
+    : undefined;
   try {
     doc = JSON.parse(rawJson) as GeneratedDocument;
   } catch {
     console.error("Failed to parse LLM JSON:", rawJson.slice(0, 200));
     return NextResponse.json({ error: "LLM returned invalid JSON." }, { status: 502 });
+  }
+
+  if (haccpData) {
+    doc.haccpData = haccpData;
   }
 
   // Track usage

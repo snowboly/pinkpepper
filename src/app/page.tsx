@@ -601,7 +601,7 @@ export default function HomePage() {
         <div className="pp-container relative z-10">
           <div className="mx-auto mb-16 max-w-2xl text-center">
             <h2 className="pp-display mb-4 text-4xl text-[#0F172A] md:text-5xl">Pricing that follows the compliance job</h2>
-            <p className="text-lg text-[#64748B]">Start with questions, upgrade for document production, then move to audit readiness when the stakes are higher.</p>
+            <p className="text-lg text-[#64748B]">Start with questions, upgrade for deeper analysis and conversation export, then move to audit readiness when the stakes are higher.</p>
           </div>
 
           <div className="mx-auto grid max-w-5xl gap-6 lg:grid-cols-3">
@@ -626,14 +626,14 @@ export default function HomePage() {
 
             <div className="flex flex-col rounded-3xl border-2 border-[#FBCFE8] bg-white p-8 shadow-md shadow-[#FDA4AF]/[0.08] transition-all duration-200 hover:shadow-lg hover:shadow-[#FDA4AF]/[0.12]">
               <h3 className="text-xl font-bold text-[#0F172A]">Plus</h3>
-              <p className="mt-2 text-sm text-[#64748B]">For teams that need working documents quickly, not just answers in chat.</p>
+              <p className="mt-2 text-sm text-[#64748B]">For teams that need deeper operational analysis, uploads, and conversation export beyond the free plan.</p>
               <div className="mt-6 flex items-baseline gap-1">
                 <span className="text-5xl font-bold tracking-tight text-[#0F172A]"><span className="text-2xl align-super">€</span>19</span>
                 <span className="text-base text-[#94A3B8]">/month</span>
               </div>
               <div className="my-6 border-t border-[#FCE7F3]" />
               <ul className="flex-1 space-y-3.5 text-sm text-[#475569]">
-                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />3 document generations per day — HACCP plans, SOPs, logs, and supplier approval documents</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />No generated compliance documents on Plus - use chat, uploads, and conversation export instead</li>
                 <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />Export work as PDF for handover, filing, or internal review</li>
                 <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />100 AI queries per day</li>
                 <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />3 image uploads per day for label, kitchen, or product checks</li>
@@ -715,3 +715,4 @@ export default function HomePage() {
     </main>
   );
 }
+
