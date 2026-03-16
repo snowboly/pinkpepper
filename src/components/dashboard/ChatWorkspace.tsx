@@ -113,6 +113,113 @@ const DOC_WIZARDS: Record<string, DocWizard> = {
       `- Include cross-contamination controls, staff training, customer communication, and emergency response.\n` +
       `- Reference Natasha's Law (PPDS) and Regulation 1169/2011 where relevant.`,
   },
+  "Food safety policy": {
+    id: "food_safety_policy",
+    wizardKey: "foodSafetyPolicy",
+    questionCount: 4,
+    buildPrompt: (answers) =>
+      `Create a comprehensive Food Safety Policy using:\n\n` +
+      `1) ${answers[0] ?? ""}\n` +
+      `2) ${answers[1] ?? ""}\n` +
+      `3) ${answers[2] ?? ""}\n` +
+      `4) ${answers[3] ?? ""}\n\n` +
+      `Requirements:\n` +
+      `- Include policy statement, management commitment, legal obligations, organisational responsibilities.\n` +
+      `- Include HACCP commitment, training requirements, monitoring and review schedule.\n` +
+      `- Reference Reg (EC) 852/2004 and Food Safety Act 1990 where relevant.`,
+  },
+  "Traceability procedure": {
+    id: "traceability_procedure",
+    wizardKey: "traceabilityProcedure",
+    questionCount: 4,
+    buildPrompt: (answers) =>
+      `Create a complete Traceability Procedure using:\n\n` +
+      `1) ${answers[0] ?? ""}\n` +
+      `2) ${answers[1] ?? ""}\n` +
+      `3) ${answers[2] ?? ""}\n` +
+      `4) ${answers[3] ?? ""}\n\n` +
+      `Requirements:\n` +
+      `- Include one-up/one-down traceability, batch coding, incoming goods recording, dispatch records.\n` +
+      `- Include recall/withdrawal procedure with decision tree and mock recall schedule.\n` +
+      `- Reference Reg (EC) 178/2002 Articles 17-20.`,
+  },
+  "Pest control procedure": {
+    id: "pest_control_procedure",
+    wizardKey: "pestControlProcedure",
+    questionCount: 5,
+    buildPrompt: (answers) =>
+      `Create a complete Pest Control Procedure using:\n\n` +
+      `1) ${answers[0] ?? ""}\n` +
+      `2) ${answers[1] ?? ""}\n` +
+      `3) ${answers[2] ?? ""}\n` +
+      `4) ${answers[3] ?? ""}\n` +
+      `5) ${answers[4] ?? ""}\n\n` +
+      `Requirements:\n` +
+      `- Cover rodents, insects, birds, and stored product insects.\n` +
+      `- Include prevention measures, monitoring methods, pest sighting log, corrective actions.\n` +
+      `- Include contractor management requirements and record-keeping.`,
+  },
+  "Staff training record": {
+    id: "staff_training_record",
+    wizardKey: "staffTrainingRecord",
+    questionCount: 4,
+    buildPrompt: (answers) =>
+      `Create a Staff Training Record and Matrix using:\n\n` +
+      `1) ${answers[0] ?? ""}\n` +
+      `2) ${answers[1] ?? ""}\n` +
+      `3) ${answers[2] ?? ""}\n` +
+      `4) ${answers[3] ?? ""}\n\n` +
+      `Requirements:\n` +
+      `- Include training requirements by role, induction checklist, ongoing training schedule.\n` +
+      `- Cover food hygiene, allergens, HACCP, cleaning, personal hygiene, pest awareness.\n` +
+      `- Include a training matrix table and individual training record template.`,
+  },
+  "Waste management procedure": {
+    id: "waste_management_procedure",
+    wizardKey: "wasteManagementProcedure",
+    questionCount: 4,
+    buildPrompt: (answers) =>
+      `Create a Waste Management Procedure using:\n\n` +
+      `1) ${answers[0] ?? ""}\n` +
+      `2) ${answers[1] ?? ""}\n` +
+      `3) ${answers[2] ?? ""}\n` +
+      `4) ${answers[3] ?? ""}\n\n` +
+      `Requirements:\n` +
+      `- Include waste categories, segregation/storage requirements, collection schedules.\n` +
+      `- Include waste carrier licensing, duty of care, and record-keeping.\n` +
+      `- Reference Annex II Reg (EC) 852/2004 and Environmental Protection Act 1990.`,
+  },
+  "Personal hygiene policy": {
+    id: "personal_hygiene_policy",
+    wizardKey: "personalHygienePolicy",
+    questionCount: 4,
+    buildPrompt: (answers) =>
+      `Create a Personal Hygiene Policy using:\n\n` +
+      `1) ${answers[0] ?? ""}\n` +
+      `2) ${answers[1] ?? ""}\n` +
+      `3) ${answers[2] ?? ""}\n` +
+      `4) ${answers[3] ?? ""}\n\n` +
+      `Requirements:\n` +
+      `- Include handwashing procedure, protective clothing, illness reporting, cuts/wounds procedure.\n` +
+      `- Include jewellery policy, visitor hygiene rules, and monitoring/enforcement.\n` +
+      `- Reference Reg (EC) 852/2004 Annex II Chapter VIII. Include return-to-work fitness form.`,
+  },
+  "Cleaning schedule": {
+    id: "cleaning_schedule",
+    wizardKey: "cleaningSchedule",
+    questionCount: 5,
+    buildPrompt: (answers) =>
+      `Create a Cleaning Schedule and Plan using:\n\n` +
+      `1) ${answers[0] ?? ""}\n` +
+      `2) ${answers[1] ?? ""}\n` +
+      `3) ${answers[2] ?? ""}\n` +
+      `4) ${answers[3] ?? ""}\n` +
+      `5) ${answers[4] ?? ""}\n\n` +
+      `Requirements:\n` +
+      `- Include area-by-area cleaning schedule with method, chemical, frequency, and responsibility.\n` +
+      `- Include deep cleaning schedule and equipment cleaning procedures.\n` +
+      `- Include daily/weekly tables and a cleaning verification log.`,
+  },
 };
 
 const DOC_GENERATION_TYPES: Record<DocWizard["id"], string> = {
@@ -121,6 +228,13 @@ const DOC_GENERATION_TYPES: Record<DocWizard["id"], string> = {
   temp_log: "temperature_log",
   supplier_approval: "supplier_approval",
   allergen_policy: "allergen_policy",
+  food_safety_policy: "food_safety_policy",
+  traceability_procedure: "traceability_procedure",
+  pest_control_procedure: "pest_control_procedure",
+  staff_training_record: "staff_training_record",
+  waste_management_procedure: "waste_management_procedure",
+  personal_hygiene_policy: "personal_hygiene_policy",
+  cleaning_schedule: "cleaning_schedule",
 };
 
 export default function ChatWorkspace({

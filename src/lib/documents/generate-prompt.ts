@@ -33,6 +33,34 @@ Include a supplier questionnaire/checklist template table.`,
   allergen_policy: `Generate a comprehensive Allergen Management Policy.
 Include: policy statement, scope, the 14 major allergens (EU/UK), labelling requirements, cross-contamination controls, staff training, customer communication, and emergency response.
 Reference Natasha's Law (PPDS) and Regulation 1169/2011 where relevant.`,
+
+  food_safety_policy: `Generate a comprehensive Food Safety Policy document.
+Include: policy statement, scope, management commitment, legal obligations (Reg (EC) 852/2004, Food Safety Act 1990), organisational responsibilities, HACCP commitment, training requirements, monitoring and review schedule, and document control.
+This is the overarching policy that underpins the entire food safety management system.`,
+
+  traceability_procedure: `Generate a complete Traceability Procedure.
+Include: purpose, scope, legal basis (Reg (EC) 178/2002 Articles 17-20), one-up/one-down traceability requirements, batch coding and labelling, incoming goods recording, internal traceability during processing, dispatch records, recall/withdrawal procedure with decision tree, mock recall testing schedule, and record retention periods.
+Include a traceability record template table and a recall contact list template.`,
+
+  pest_control_procedure: `Generate a complete Pest Control Procedure.
+Include: purpose, scope, responsibilities, types of pests covered (rodents, insects, birds, stored product insects), prevention measures, monitoring methods (bait stations, fly units, inspection schedule), pest sighting log, corrective actions, contractor management requirements, and record-keeping.
+Include a pest monitoring checklist table and pest sighting report template.`,
+
+  staff_training_record: `Generate a Staff Training Record and Matrix document.
+Include: purpose, scope, training requirements by role (food handlers, supervisors, managers), induction training checklist, ongoing training schedule, training topics (food hygiene, allergens, HACCP, cleaning, personal hygiene, pest awareness), competency assessment method, and record-keeping requirements.
+Include a training matrix table and individual training record template.`,
+
+  waste_management_procedure: `Generate a Waste Management Procedure.
+Include: purpose, scope, legal requirements (Annex II Reg (EC) 852/2004, Environmental Protection Act 1990), waste categories (general, food, recyclable, hazardous/oil), segregation and storage requirements, collection frequency and schedules, waste carrier licensing, duty of care requirements, and record-keeping.
+Include a waste disposal log template table.`,
+
+  personal_hygiene_policy: `Generate a Personal Hygiene Policy document.
+Include: policy statement, scope, handwashing procedure and frequency, protective clothing requirements, illness reporting procedure (fitness to work), cuts and wounds procedure, jewellery and personal items policy, visitor hygiene rules, and monitoring/enforcement.
+Reference Reg (EC) 852/2004 Annex II Chapter VIII. Include a return-to-work fitness assessment form template.`,
+
+  cleaning_schedule: `Generate a Cleaning Schedule and Plan document.
+Include: purpose, scope, area-by-area cleaning schedule (kitchen, storage, service areas, toilets, external), cleaning method for each item/area (what to clean, chemical/dilution, method, frequency, responsible person), deep cleaning schedule, equipment cleaning procedures, and verification/sign-off requirements.
+Include a daily cleaning schedule table, weekly deep clean schedule table, and a cleaning verification log.`,
 };
 
 export function buildGenerateSystemPrompt(documentType: DocumentType): string {
@@ -60,6 +88,13 @@ export function buildGenerateUserPrompt(documentType: DocumentType, answers: str
     temperature_log: ["Business name and type", "Equipment to monitor (fridges, freezers, hot-holding, etc.)", "Monitoring frequency", "Additional requirements"],
     supplier_approval: ["Business name and type", "Types of suppliers (raw materials, packaging, etc.)", "Approval criteria priorities", "Monitoring frequency", "Additional requirements"],
     allergen_policy: ["Business name and type", "Allergens present or handled", "Customer-facing context (menu, labels, etc.)", "Additional requirements"],
+    food_safety_policy: ["Business name and type", "Number of sites/premises", "Key products or services", "Additional requirements"],
+    traceability_procedure: ["Business name and type", "Products handled (raw materials, finished goods, etc.)", "Current batch coding/labelling system", "Additional requirements"],
+    pest_control_procedure: ["Business name and type", "Premises type and surroundings", "Known pest risks or history", "Current pest control contractor (if any)", "Additional requirements"],
+    staff_training_record: ["Business name and type", "Number of staff and roles", "Current training practices", "Additional requirements"],
+    waste_management_procedure: ["Business name and type", "Types of waste generated", "Current waste collection arrangements", "Additional requirements"],
+    personal_hygiene_policy: ["Business name and type", "Staff roles and numbers", "Protective clothing provided", "Additional requirements"],
+    cleaning_schedule: ["Business name and type", "Areas/zones to cover", "Cleaning chemicals available", "Cleaning frequency requirements", "Additional requirements"],
   };
 
   const fields = labels[documentType] ?? [];
