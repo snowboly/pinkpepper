@@ -5,8 +5,8 @@ import { countUsageSince, utcDayStartIso } from "@/lib/policy";
 import { TIER_CAPABILITIES } from "@/lib/tier";
 import { buildGenerateSystemPrompt, buildGenerateUserPrompt } from "@/lib/documents/generate-prompt";
 import { buildHaccpDocumentDataFromAnswers, buildHaccpModelPrompt } from "@/lib/documents/haccp-generation";
-import { buildCleaningScheduleDataFromAnswers, buildCleaningScheduleModelPrompt } from "@/lib/documents/cleaning-schedule-generation";
-import { buildTemperatureLogDataFromAnswers, buildTemperatureLogModelPrompt } from "@/lib/documents/temperature-log-generation";
+import { buildCleaningScheduleDataFromAnswers } from "@/lib/documents/cleaning-schedule-generation";
+import { buildTemperatureLogDataFromAnswers } from "@/lib/documents/temperature-log-generation";
 import { buildSopDataFromAnswers } from "@/lib/documents/sop-generation";
 import { renderDocx } from "@/lib/documents/render-docx";
 import { renderPdf } from "@/lib/documents/render-pdf";
@@ -150,19 +150,11 @@ export async function POST(request: Request) {
   const systemPrompt =
     documentType === "haccp_plan"
       ? "Return valid JSON for a structured HACCP document."
-      : documentType === "cleaning_schedule"
-        ? "Return valid JSON for a structured Cleaning and Disinfection Schedule document."
-        : documentType === "temperature_log"
-          ? "Return valid JSON for a Temperature Monitoring Log document."
-          : buildGenerateSystemPrompt(documentType as DocumentType);
+      : buildGenerateSystemPrompt(documentType as DocumentType);
   const userPrompt =
     documentType === "haccp_plan"
       ? buildHaccpModelPrompt(buildHaccpDocumentDataFromAnswers(answers))
-      : documentType === "cleaning_schedule"
-        ? buildCleaningScheduleModelPrompt(buildCleaningScheduleDataFromAnswers(answers))
-        : documentType === "temperature_log"
-          ? buildTemperatureLogModelPrompt(buildTemperatureLogDataFromAnswers(answers))
-          : buildGenerateUserPrompt(documentType as DocumentType, answers);
+      : buildGenerateUserPrompt(documentType as DocumentType, answers);
 
   const groqModel = process.env.GROQ_MODEL ?? "llama-3.3-70b-versatile";
 
