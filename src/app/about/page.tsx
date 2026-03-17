@@ -290,8 +290,7 @@ export default function AboutPage() {
             Ready to simplify compliance?
           </h2>
           <p className="mt-4 text-lg text-[#475569]">
-            Join hundreds of food businesses already using PinkPepper for
-            smarter, faster food safety management.
+            Ready to cut compliance costs and boost accuracy? Combine AI speed with real food safety expertise.
           </p>
           <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
             <Link
