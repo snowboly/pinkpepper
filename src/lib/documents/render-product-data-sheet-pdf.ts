@@ -157,7 +157,7 @@ export async function renderProductDataSheetPdf(data: ProductDataSheetData): Pro
   const allergenColW = [CONTENT_W * 0.4, CONTENT_W * 0.2, CONTENT_W * 0.2, CONTENT_W * 0.2];
   drawTable(
     ["Allergen", "Intentionally Added", "Cross-contamination Risk", "Not Present"],
-    ALLERGENS_14.map((a) => [a, "☐", "☐", "☐"]),
+    ALLERGENS_14.map((a) => [a, "[ ]", "[ ]", "[ ]"]),
     allergenColW
   );
   drawDivider();
