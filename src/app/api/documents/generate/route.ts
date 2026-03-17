@@ -6,6 +6,7 @@ import { TIER_CAPABILITIES } from "@/lib/tier";
 import { buildGenerateSystemPrompt, buildGenerateUserPrompt } from "@/lib/documents/generate-prompt";
 import { buildHaccpDocumentDataFromAnswers, buildHaccpModelPrompt } from "@/lib/documents/haccp-generation";
 import { buildCleaningScheduleDataFromAnswers, buildCleaningScheduleModelPrompt } from "@/lib/documents/cleaning-schedule-generation";
+import { buildTemperatureLogDataFromAnswers, buildTemperatureLogModelPrompt } from "@/lib/documents/temperature-log-generation";
 import { buildSopDataFromAnswers } from "@/lib/documents/sop-generation";
 import { renderDocx } from "@/lib/documents/render-docx";
 import { renderPdf } from "@/lib/documents/render-pdf";
@@ -151,13 +152,17 @@ export async function POST(request: Request) {
       ? "Return valid JSON for a structured HACCP document."
       : documentType === "cleaning_schedule"
         ? "Return valid JSON for a structured Cleaning and Disinfection Schedule document."
-        : buildGenerateSystemPrompt(documentType as DocumentType);
+        : documentType === "temperature_log"
+          ? "Return valid JSON for a Temperature Monitoring Log document."
+          : buildGenerateSystemPrompt(documentType as DocumentType);
   const userPrompt =
     documentType === "haccp_plan"
       ? buildHaccpModelPrompt(buildHaccpDocumentDataFromAnswers(answers))
       : documentType === "cleaning_schedule"
         ? buildCleaningScheduleModelPrompt(buildCleaningScheduleDataFromAnswers(answers))
-        : buildGenerateUserPrompt(documentType as DocumentType, answers);
+        : documentType === "temperature_log"
+          ? buildTemperatureLogModelPrompt(buildTemperatureLogDataFromAnswers(answers))
+          : buildGenerateUserPrompt(documentType as DocumentType, answers);
 
   const groqModel = process.env.GROQ_MODEL ?? "llama-3.3-70b-versatile";
 
@@ -197,7 +202,8 @@ export async function POST(request: Request) {
   let doc: GeneratedDocument;
   const haccpData = documentType === "haccp_plan" ? buildHaccpDocumentDataFromAnswers(answers) : undefined;
   const cleaningScheduleData = documentType === "cleaning_schedule" ? buildCleaningScheduleDataFromAnswers(answers) : undefined;
-  const sopData = documentType !== "haccp_plan" && documentType !== "cleaning_schedule"
+  const temperatureLogData = documentType === "temperature_log" ? buildTemperatureLogDataFromAnswers(answers) : undefined;
+  const sopData = documentType !== "haccp_plan" && documentType !== "cleaning_schedule" && documentType !== "temperature_log"
     ? buildSopDataFromAnswers(documentType as DocumentType, answers)
     : undefined;
   try {
@@ -209,6 +215,7 @@ export async function POST(request: Request) {
 
   if (haccpData) doc.haccpData = haccpData;
   if (cleaningScheduleData) doc.cleaningScheduleData = cleaningScheduleData;
+  if (temperatureLogData) doc.temperatureLogData = temperatureLogData;
   if (sopData) doc.sopData = sopData;
 
   // Track usage

@@ -1,5 +1,6 @@
 import type { HaccpDocumentData } from "./haccp-schema";
 import type { CleaningScheduleData } from "./cleaning-schedule-schema";
+import type { TemperatureLogData } from "./temperature-log-schema";
 import type { SopDocumentData } from "./sop-schema";
 
 export type DocumentType =
@@ -42,5 +43,6 @@ export type GeneratedDocument = {
   tables?: DocumentTable[];
   haccpData?: HaccpDocumentData;
   cleaningScheduleData?: CleaningScheduleData;
+  temperatureLogData?: TemperatureLogData;
   sopData?: SopDocumentData;
 };

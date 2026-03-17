@@ -21,6 +21,7 @@ import { join } from "node:path";
 import type { GeneratedDocument, DocumentTable } from "./types";
 import { renderHaccpDocx } from "./render-haccp-docx";
 import { renderCleaningScheduleDocx } from "./render-cleaning-schedule-docx";
+import { renderTemperatureLogDocx } from "./render-temperature-log-docx";
 import { renderSopDocx } from "./render-sop-docx";
 
 const BRAND_COLOR = "E11D48"; // PinkPepper red
@@ -104,6 +105,9 @@ export async function renderDocx(doc: GeneratedDocument): Promise<ArrayBuffer> {
   }
   if (doc.documentType === "cleaning_schedule" && doc.cleaningScheduleData) {
     return renderCleaningScheduleDocx(doc.cleaningScheduleData);
+  }
+  if (doc.documentType === "temperature_log" && doc.temperatureLogData) {
+    return renderTemperatureLogDocx(doc.temperatureLogData);
   }
   if (doc.sopData) {
     return renderSopDocx(doc, doc.sopData);
