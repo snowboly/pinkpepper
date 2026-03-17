@@ -6,7 +6,10 @@ import {
   DEFAULT_CHEMICAL_REFERENCE,
   DEFAULT_ATP_TARGETS,
 } from "@/lib/documents/cleaning-schedule-schema";
-import { buildCleaningScheduleDataFromAnswers } from "@/lib/documents/cleaning-schedule-generation";
+import {
+  buildCleaningScheduleDataFromAnswers,
+  buildCleaningScheduleDataFromBuilder,
+} from "@/lib/documents/cleaning-schedule-generation";
 
 describe("buildCleaningScheduleDataFromAnswers", () => {
   it("uses first answer as premises", () => {
@@ -95,5 +98,93 @@ describe("DEFAULT_MONTHLY_TASKS", () => {
   it("includes deep clean of kitchen equipment", () => {
     const deepClean = DEFAULT_MONTHLY_TASKS.find((r) => r.item.includes("Deep clean"));
     expect(deepClean).toBeDefined();
+  });
+});
+
+describe("buildCleaningScheduleDataFromBuilder", () => {
+  it("maps structured metadata and row tables into the cleaning schedule data", () => {
+    const data = buildCleaningScheduleDataFromBuilder({
+      businessName: "PinkPepper Production Kitchen",
+      approvedBy: "Operations Manager",
+      reviewDate: "2026-12-31",
+      chemicalReference: [
+        {
+          chemicalName: "Surface sanitiser",
+          product: "Saniclean",
+          dilution: "1:50",
+          contactTime: "30 sec",
+          activeIngredient: "QAC",
+          coshhLocation: "COSHH folder",
+        },
+      ],
+      dailyTasks: [
+        {
+          item: "Prep tables",
+          method: "M1",
+          chemical: "Surface sanitiser",
+          dilution: "1:50",
+          contactTime: "30 sec",
+          frequency: "After use",
+          responsible: "Kitchen porter",
+          verification: "Supervisor sign-off",
+        },
+      ],
+      weeklyTasks: [
+        {
+          item: "Cold room shelving",
+          method: "M1",
+          chemical: "Surface sanitiser",
+          dilution: "1:50",
+          contactTime: "30 sec",
+          responsible: "Kitchen porter",
+          verification: "Supervisor sign-off",
+        },
+      ],
+      monthlyTasks: [
+        {
+          item: "Deep clean extraction canopy",
+          method: "M2",
+          chemical: "Degreaser",
+          responsible: "Contractor",
+          verification: "Manager check",
+        },
+      ],
+      atpTargets: [
+        {
+          surfaceCategory: "Food-contact",
+          pass: "<10 RLU",
+          borderline: "10-25 RLU",
+          fail: ">25 RLU",
+        },
+      ],
+    });
+
+    expect(data.metadata.premises).toBe("PinkPepper Production Kitchen");
+    expect(data.metadata.approvedBy).toBe("Operations Manager");
+    expect(data.metadata.reviewDate).toBe("2026-12-31");
+    expect(data.chemicalReference).toHaveLength(1);
+    expect(data.dailyTasks[0].item).toBe("Prep tables");
+    expect(data.weeklyTasks[0].item).toBe("Cold room shelving");
+    expect(data.monthlyTasks[0].item).toBe("Deep clean extraction canopy");
+    expect(data.atpTargets[0].surfaceCategory).toBe("Food-contact");
+  });
+
+  it("keeps defaults only when the builder leaves row tables empty", () => {
+    const data = buildCleaningScheduleDataFromBuilder({
+      businessName: "PinkPepper Production Kitchen",
+      approvedBy: "Operations Manager",
+      reviewDate: "2026-12-31",
+      chemicalReference: [],
+      dailyTasks: [],
+      weeklyTasks: [],
+      monthlyTasks: [],
+      atpTargets: [],
+    });
+
+    expect(data.chemicalReference).toEqual(DEFAULT_CHEMICAL_REFERENCE);
+    expect(data.dailyTasks).toEqual(DEFAULT_DAILY_TASKS);
+    expect(data.weeklyTasks).toEqual(DEFAULT_WEEKLY_TASKS);
+    expect(data.monthlyTasks).toEqual(DEFAULT_MONTHLY_TASKS);
+    expect(data.atpTargets).toEqual(DEFAULT_ATP_TARGETS);
   });
 });

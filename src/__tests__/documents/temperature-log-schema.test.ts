@@ -8,7 +8,10 @@ import {
   currentMonth,
   currentYear,
 } from "@/lib/documents/temperature-log-schema";
-import { buildTemperatureLogDataFromAnswers } from "@/lib/documents/temperature-log-generation";
+import {
+  buildTemperatureLogDataFromAnswers,
+  buildTemperatureLogDataFromBuilder,
+} from "@/lib/documents/temperature-log-generation";
 
 describe("temperature-log-schema", () => {
   it("defaults: checksPerDay=2, probeCount=2", () => {
@@ -65,5 +68,52 @@ describe("buildTemperatureLogDataFromAnswers", () => {
     const d = buildTemperatureLogDataFromAnswers([]);
     expect(d.metadata.premises).toBe("");
     expect(d.metadata.docNo).toBe("TL-001");
+  });
+});
+
+describe("buildTemperatureLogDataFromBuilder", () => {
+  it("maps structured builder fields into the temperature log document data", () => {
+    const data = buildTemperatureLogDataFromBuilder({
+      businessName: "PinkPepper Cafe",
+      createdBy: "Joao",
+      approvedBy: "Maria",
+      logType: "Fridge",
+      targetRange: "0C to 4C",
+      unitId: "Walk-in chiller 1",
+      checksPerDay: "2",
+      probeCount: "2",
+      probeLocation: "Top and bottom shelf",
+      month: "March",
+      year: "2026",
+    });
+
+    expect(data.metadata.premises).toBe("PinkPepper Cafe");
+    expect(data.metadata.createdBy).toBe("Joao");
+    expect(data.metadata.approvedBy).toBe("Maria");
+    expect(data.metadata.targetRange).toBe("0C to 4C");
+    expect(data.metadata.unitId).toBe("Walk-in chiller 1");
+    expect(data.metadata.probeLocation).toBe("Top and bottom shelf");
+    expect(data.metadata.checksPerDay).toBe(2);
+    expect(data.metadata.probeCount).toBe(2);
+    expect(data.metadata.month).toBe("March");
+    expect(data.metadata.year).toBe("2026");
+  });
+
+  it("keeps the approved fridge preset when the builder uses fridge mode", () => {
+    const data = buildTemperatureLogDataFromBuilder({
+      businessName: "PinkPepper Cafe",
+      createdBy: "Joao",
+      approvedBy: "Maria",
+      logType: "Fridge",
+      targetRange: "",
+      unitId: "Display fridge",
+      checksPerDay: "1",
+      probeCount: "1",
+      probeLocation: "Centre shelf",
+      month: "March",
+      year: "2026",
+    });
+
+    expect(data.metadata.targetRange).toBe("0C to 4C");
   });
 });
