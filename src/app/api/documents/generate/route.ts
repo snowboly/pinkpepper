@@ -200,7 +200,6 @@ export async function POST(request: Request) {
   const sopData = documentType !== "haccp_plan" && documentType !== "cleaning_schedule"
     ? buildSopDataFromAnswers(documentType as DocumentType, answers)
     : undefined;
-
   try {
     doc = JSON.parse(rawJson) as GeneratedDocument;
   } catch {
