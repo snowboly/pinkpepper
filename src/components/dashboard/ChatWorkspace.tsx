@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { track } from "@vercel/analytics";
@@ -244,8 +244,8 @@ export default function ChatWorkspace({
   // ── Billing state ──
   const [billingError, setBillingError] = useState<string | null>(null);
   const [tier, setTier] = useState<SubscriptionTier>(initialTier);
-  const [usage, setUsage] = useState(initialUsage);
-  const [currentUsageLimit, setUsageLimit] = useState(usageLimit);
+  const [, setUsage] = useState(initialUsage);
+  const [, setUsageLimit] = useState(usageLimit);
   const [isAdmin, setIsAdmin] = useState(initialIsAdmin);
 
   // ── Export state ──

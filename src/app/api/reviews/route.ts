@@ -22,7 +22,7 @@ function normalizeDocumentCategory(input: string | undefined): DocumentCategory 
   return null;
 }
 
-function deriveReviewType(_category: DocumentCategory): ReviewType {
+function deriveReviewType(): ReviewType {
   // All current categories are quick checks (1 credit)
   return "quick_check";
 }
@@ -104,7 +104,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "A valid documentCategory is required." }, { status: 400 });
   }
 
-  const reviewType = deriveReviewType(documentCategory);
+  const reviewType = deriveReviewType();
 
   const [{ data: profile }, { data: subscription }] = await Promise.all([
     supabase

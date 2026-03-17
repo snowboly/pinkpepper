@@ -145,7 +145,6 @@ export async function renderCleaningSopPdf(data: CleaningSopData): Promise<Uint8
   // 5. Materials and Chemicals
   drawSectionTitle("5. Materials and Chemicals");
   drawCaption("Table 3. Cleaning Chemicals Reference");
-  const chemW = [130, 100, 80, 80, 130, CONTENT_W - 520];
   // Trim to 5 cols for landscape
   drawTable(
     ["Chemical / Product", "Purpose", "Dilution", "Contact Time", "Active Ingredient"],

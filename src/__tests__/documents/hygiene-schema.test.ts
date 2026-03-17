@@ -3,7 +3,6 @@ import {
   DEFAULT_ILLNESS_REPORTING,
   DEFAULT_MONITORING,
   DEFAULT_PROTECTIVE_CLOTHING,
-  type HygienePolicyData,
 } from "@/lib/documents/hygiene-schema";
 import { buildHygienePolicyDataFromAnswers } from "@/lib/documents/hygiene-generation";
 
