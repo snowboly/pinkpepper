@@ -8,17 +8,18 @@ const TIER_NAMES: Record<string, string> = {
 
 const TIER_FEATURES: Record<string, string[]> = {
   plus: [
-    "Up to 3 expert quick-check reviews per month",
-    "Priority queue over Free users",
-    "Full AI chat history",
-    "PDF &amp; DOCX document export",
+    "100 AI queries per day",
+    "PDF conversation export",
+    "Document and photo uploads",
+    "Unlimited saved conversations",
+    "25 voice transcriptions per day",
   ],
   pro: [
-    "Up to 5 expert reviews per month (including full document reviews)",
-    "Priority review queue",
-    "Full HACCP plan &amp; operations manual reviews",
-    "PDF &amp; DOCX document export",
-    "Dedicated food safety consultant support",
+    "3 hours of food safety consultancy per month",
+    "Document generation (HACCP plans, SOPs, logs, and more)",
+    "PDF &amp; DOCX export",
+    "Virtual Audit workflows",
+    "Extra consultancy hours available pay-as-you-go",
   ],
 };
 
@@ -60,7 +61,7 @@ export function buildSubscriptionActivatedEmail(input: {
       }
 
       <p style="font-size:14px;color:#64748B;line-height:1.6;margin:16px 0 0;">
-        Head to your dashboard to start using your expert reviews and all ${name} features.
+        Head to your dashboard to start using all your ${name} features.
       </p>
 
       ${btn(`${APP_URL}/dashboard`, "Go to Dashboard")}
@@ -186,7 +187,7 @@ export function buildSubscriptionCancelledEmail(input: {
 
       ${infoCard(
         `<p style="margin:0 0 4px;font-size:13px;color:#92400E;text-transform:uppercase;letter-spacing:0.05em;font-weight:600;">Reactivate anytime</p>
-        <p style="margin:0;font-size:14px;color:#0F172A;line-height:1.6;">Changed your mind? You can reactivate your subscription at any time from your dashboard and instantly regain access to all expert review features.</p>`,
+        <p style="margin:0;font-size:14px;color:#0F172A;line-height:1.6;">Changed your mind? You can reactivate your subscription at any time from your dashboard and instantly regain access to all your plan features.</p>`,
         { bg: "#FFFBEB", border: "#FDE68A" }
       )}
 

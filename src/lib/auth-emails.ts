@@ -17,7 +17,7 @@ export function buildWelcomeEmail(): { subject: string; html: string } {
           <li>Chat with our AI food safety expert</li>
           <li>Generate HACCP plans, procedures, and records</li>
           <li>Export documents as PDF or DOCX</li>
-          <li>Upgrade to Plus or Pro for expert human reviews</li>
+          <li>Upgrade to Pro for food safety consultancy</li>
         </ul>`,
         { bg: "#FDEAEA", border: "#FECDD3" }
       )}

@@ -19,7 +19,7 @@ export default function PinkPepperVsConsultantPage() {
       primaryCta="Start with PinkPepper"
       painPoints={[
         "Consultants are valuable, but many teams cannot afford to use them for every draft and routine update.",
-        "Pure software buyers still need a path to specialist review when documents carry higher risk.",
+        "Pure software buyers still need a path to food safety consultancy when documents carry higher risk.",
         "Commercial intent pages need a clear argument for when PinkPepper is the right first step.",
       ]}
       outcomes={[
@@ -41,7 +41,7 @@ export default function PinkPepperVsConsultantPage() {
         {
           title: "Why the combination is credible",
           body:
-            "The strongest commercial argument is not AI instead of experts. It is AI to accelerate preparation plus optional expert review where the work needs more confidence.",
+            "The strongest commercial argument is not AI instead of experts. It is AI to accelerate preparation plus optional food safety consultancy where the work needs more confidence.",
         },
       ]}
       relatedLinks={[

@@ -58,7 +58,7 @@ export default function AllergenDocumentationPage() {
         {
           href: "/pricing",
           label: "Pricing",
-          description: "Compare plans for document generation, export, and specialist review.",
+          description: "Compare plans for document generation, export, and food safety consultancy.",
         },
       ]}
     />

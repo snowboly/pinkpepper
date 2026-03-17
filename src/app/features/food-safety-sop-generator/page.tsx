@@ -58,7 +58,7 @@ export default function FoodSafetySopGeneratorPage() {
         {
           href: "/pricing",
           label: "Pricing",
-          description: "See which plan covers document generation, exports, and specialist review.",
+          description: "See which plan covers document generation, exports, and food safety consultancy.",
         },
       ]}
     />

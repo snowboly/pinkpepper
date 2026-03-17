@@ -29,9 +29,9 @@ const differentiators = [
       "Outputs are structured for EC 852/2004, UK FSA, and operational checks inspectors usually request.",
   },
   {
-    title: "AI speed with specialist human review",
+    title: "AI speed with food safety consultancy",
     description:
-      "Draft practical plans, SOPs, and logs quickly, then escalate critical work to qualified food safety specialists when a higher-risk decision needs human judgement.",
+      "Draft practical plans, SOPs, and logs quickly, then escalate critical work to qualified food safety consultants when a higher-risk decision needs specialist judgement.",
   },
 ];
 
@@ -245,7 +245,7 @@ export default function HomePage() {
 
             <p className="mx-auto mb-10 max-w-3xl text-lg leading-relaxed text-[#475569] md:text-xl">
               PinkPepper is AI food safety compliance software built for HACCP plans, allergen management, SOP generation, and inspection prep.
-              Create UK and EU-ready compliance documents that fit real kitchen, production, and audit workflows, then add qualified food safety specialists when the work needs human review.
+              Create UK and EU-ready compliance documents that fit real kitchen, production, and audit workflows, then add food safety consultancy when the work needs specialist input.
             </p>
 
             <div className="mb-10 flex flex-wrap items-center justify-center gap-3 text-sm font-medium text-[#475569]">
@@ -359,7 +359,7 @@ export default function HomePage() {
               Operational trust, not generic AI output
             </p>
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[#64748B]">
-              PinkPepper is structured for the way food businesses actually document, review, and defend compliance work under EU and UK expectations, combining AI drafting speed with specialist human review when risk is higher.
+              PinkPepper is structured for the way food businesses actually document, review, and defend compliance work under EU and UK expectations, combining AI drafting speed with food safety consultancy when risk is higher.
             </p>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-2">
@@ -423,9 +423,9 @@ export default function HomePage() {
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[#FFF1F2] text-[#E11D48]">
                   <Users className="h-6 w-6" />
                 </div>
-                <h3 className="mb-2 text-xl font-semibold text-[#0F172A]">Expert review loop</h3>
+                <h3 className="mb-2 text-xl font-semibold text-[#0F172A]">Food safety consultancy</h3>
                 <p className="text-[#64748B]">
-                  Route higher-stakes drafts to qualified food safety specialists before inspection, customer audit, or operational sign-off.
+                  Route higher-stakes drafts to qualified food safety consultants for review, generation support, and specialist guidance.
                 </p>
               </div>
             </div>
@@ -659,7 +659,7 @@ export default function HomePage() {
               <ul className="flex-1 space-y-3.5 text-sm text-[#475569]">
                 <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />Run Virtual Audit workflows before inspections or internal reviews</li>
                 <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />Export in both PDF and DOCX for internal editing and external sharing</li>
-                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />3 specialist review credits each month for quick checks or one full review</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />3 hours of food safety consultancy each month — document review, generation support, and async Q&A</li>
                 <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />Highest daily limits for ongoing audit prep and operational use</li>
               </ul>
               <Link href="/signup?plan=pro" className="mt-8 block rounded-xl bg-[#E11D48] py-3.5 text-center text-sm font-semibold text-white transition-all duration-200 hover:bg-[#BE123C] hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#E11D48]/25 active:scale-[0.98]">

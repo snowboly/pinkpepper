@@ -23,9 +23,9 @@
     "reviewBannerTitle": "Quer que um especialista humano verifique este documento?",
     "reviewBannerBody": "Os nossos especialistas em segurança alimentar analisam os seus documentos gerados por IA quanto a precisão, lacunas de conformidade e preparação para auditorias.",
     "reviewUpsellTitle": "Faça este documento ser verificado por um especialista humano",
-    "reviewUpsellBody": "O plano Pro inclui 3 créditos de revisão especializada/mês — especialistas verificam os seus documentos quanto à conformidade.",
+    "reviewUpsellBody": "O plano Pro inclui 3 horas de consultoria em segurança alimentar/mês — revisão de documentos, apoio à geração e Q&A assíncrono.",
     "reviewUpsellCta": "Atualizar para Pro",
-    "humanReviewHighlight": "O plano Pro inclui revisões de documentos por especialistas em segurança alimentar.",
+    "humanReviewHighlight": "O plano Pro inclui 3 horas de consultoria em segurança alimentar por mês com um especialista qualificado.",
     "suggestions": {
       "haccpPlan": {
         "label": "Plano HACCP",
@@ -194,8 +194,8 @@
         "body": "Descarregue planos HACCP, PON e preparação para auditorias em PDF ou Word — prontos a utilizar ou partilhar."
       },
       "review": {
-        "heading": "Obtenha revisão especializada",
-        "body": "Tenha um consultor qualificado de segurança alimentar a rever os seus documentos num prazo de 72 horas."
+        "heading": "Obtenha consultoria em segurança alimentar",
+        "body": "Obtenha revisão de documentos, apoio à geração e Q&A assíncrono de um especialista qualificado em segurança alimentar."
       },
       "audit_mode": {
         "heading": "Desbloqueie o Modo de Auditoria Virtual",
@@ -221,7 +221,8 @@
           "1.000 mensagens/dia",
           "20 carregamentos de imagens/dia",
           "Exportação PDF + Word",
-          "3 créditos de revisão/mês"
+          "3h de consultoria em segurança alimentar/mês",
+          "Horas de consultoria adicionais a pedido"
         ],
         "cta": "Atualizar para Pro"
       }
@@ -233,14 +234,14 @@
     "maybeLater": "Talvez mais tarde"
   },
   "review": {
-    "title": "Solicitar Revisão Especializada",
-    "creditsUsed": "Créditos utilizados este mês:",
+    "title": "Solicitar Consultoria",
+    "creditsUsed": "Horas utilizadas este mês:",
     "whatToExpect": "O que esperar",
-    "whatToExpectBody": "As revisões são realizadas por consultores qualificados de segurança alimentar. O feedback é devolvido sob a forma de notas escritas estruturadas através do seu painel de controlo.",
-    "scopeNote": "As revisões estão limitadas ao conteúdo da conversa selecionada. Pedidos fora do âmbito podem ser recusados.",
-    "turnaround": "Prazo de resposta:",
-    "turnaroundTimes": "3 dias úteis para verificações rápidas · 5 dias úteis para revisões completas de documentos",
-    "fullReviewCostNote": "As revisões completas de documentos custam todos os 3 créditos e só podem ser solicitadas uma vez por mês. As verificações rápidas custam 1 crédito cada.",
+    "whatToExpectBody": "A consultoria é prestada por profissionais qualificados em segurança alimentar. O feedback é entregue sob a forma de notas escritas estruturadas através do seu painel de controlo.",
+    "scopeNote": "A consultoria limita-se ao conteúdo da conversa selecionada. Pedidos fora do tema ou fora do âmbito podem ser recusados.",
+    "turnaround": "Tempo de resposta:",
+    "turnaroundTimes": "Respostas em 2 dias úteis",
+    "fullReviewCostNote": "A consultoria é contabilizada em incrementos de 15 minutos contra as suas 3 horas mensais.",
     "documentType": "Tipo de documento",
     "quickCheck": "Verificação Rápida",
     "quickCheckCredits": "— 1 crédito",

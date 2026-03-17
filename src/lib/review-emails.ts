@@ -42,7 +42,7 @@ export function buildNewReviewAdminEmail(input: {
     subject: `[PinkPepper] New review request: ${cat}${isPriority ? " 🔴" : ""}`,
     html: wrapEmail(`
       <h1 style="margin:0 0 4px;font-size:22px;font-weight:700;color:#0F172A;">New Review Request</h1>
-      <p style="margin:0 0 20px;font-size:14px;color:#64748B;">A new expert review has been submitted and is awaiting action.</p>
+      <p style="margin:0 0 20px;font-size:14px;color:#64748B;">A new consultancy request has been submitted and is awaiting action.</p>
 
       ${divider()}
 

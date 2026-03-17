@@ -12,7 +12,7 @@ import {
 export const metadata = {
   title: "About | PinkPepper Food Safety Compliance Software",
   description:
-    "Learn how PinkPepper combines AI food safety compliance software with expert human review for EU and UK food businesses.",
+    "Learn how PinkPepper combines AI food safety compliance software with food safety consultancy for EU and UK food businesses.",
   alternates: {
     canonical: "https://pinkpepper.io/about",
   },
@@ -136,8 +136,8 @@ export default function AboutPage() {
               },
               {
                 icon: Users,
-                title: "Human Expert Review",
-                body: "Critical documents deserve expert eyes. Our Pro tier includes human review credits — your AI-generated documents are checked by qualified food safety professionals.",
+                title: "Food Safety Consultancy",
+                body: "Critical documents deserve expert eyes. Our Pro tier includes 3 hours of food safety consultancy each month — document review, generation support, and async Q&A from qualified professionals.",
               },
               {
                 icon: ShieldCheck,
@@ -189,8 +189,8 @@ export default function AboutPage() {
               },
               {
                 step: "3",
-                title: "Expert review & sign-off",
-                desc: "Submit critical documents for human review by food safety professionals. Get feedback, corrections, and confidence before your next audit.",
+                title: "Consultancy & sign-off",
+                desc: "Submit critical documents for review by food safety professionals. Get feedback, corrections, and confidence before your next audit.",
               },
             ].map((item) => (
               <div

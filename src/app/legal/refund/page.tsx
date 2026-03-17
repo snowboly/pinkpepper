@@ -68,10 +68,10 @@ export default function RefundPage() {
         </section>
 
         <section>
-          <h2 className="mb-3 text-xl font-semibold text-[#0F172A]">5. Review credits</h2>
+          <h2 className="mb-3 text-xl font-semibold text-[#0F172A]">5. Consultancy hours</h2>
           <p>
-            Review credits (included in the Pro plan) reset monthly and do not carry over or attract
-            individual refunds. If your subscription is cancelled mid-month, unused review credits are
+            Consultancy hours (included in the Pro plan) reset monthly and do not carry over or attract
+            individual refunds. If your subscription is cancelled mid-month, unused consultancy hours are
             forfeited.
           </p>
         </section>

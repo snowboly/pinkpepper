@@ -41,7 +41,7 @@ export default function CafeUseCasePage() {
         {
           title: "A better first draft for review",
           body:
-            "Where expert review is needed, the product helps generate a stronger first version so review time is spent improving the document rather than inventing it.",
+            "Where consultancy is needed, the product helps generate a stronger first version so specialist time is spent improving the document rather than inventing it.",
         },
       ]}
       relatedLinks={[

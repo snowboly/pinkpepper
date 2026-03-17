@@ -6,7 +6,7 @@ const comparisons = [
     href: "/compare/pinkpepper-vs-consultant",
     title: "PinkPepper vs consultant",
     description:
-      "Explain when AI-assisted documentation is enough to accelerate work and when specialist review still matters.",
+      "Explain when AI-assisted documentation is enough to accelerate work and when food safety consultancy still matters.",
   },
   {
     href: "/compare/haccp-software-alternatives",

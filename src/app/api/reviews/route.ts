@@ -177,7 +177,7 @@ export async function POST(request: Request) {
     }
 
     if (used >= caps.monthlyHumanReviews) {
-      return NextResponse.json({ error: "Monthly review credits exhausted. Credits reset at the start of your next billing month." }, { status: 402 });
+      return NextResponse.json({ error: "Monthly consultancy hours exhausted. Hours reset at the start of your next billing month." }, { status: 402 });
     }
   }
 
