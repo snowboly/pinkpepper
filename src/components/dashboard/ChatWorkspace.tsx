@@ -249,7 +249,8 @@ export default function ChatWorkspace({
   const [isAdmin, setIsAdmin] = useState(initialIsAdmin);
 
   // ── Export state ──
-  const [exportLoading, setExportLoading] = useState<"pdf" | null>(null);
+  const [exportLoading, setExportLoading] = useState<"pdf" | "docx" | null>(null);
+  const [showExportMenu, setShowExportMenu] = useState(false);
 
 
   // ── Image attachment state ──
@@ -794,8 +795,9 @@ export default function ChatWorkspace({
   // ── Reviews ──
 
   // ── Export ──
-  async function exportDocument(format: "pdf") {
+  async function exportDocument(format: "pdf" | "docx") {
     setError(null);
+    setShowExportMenu(false);
     if (!conversationId) {
       setError("Send at least one message before exporting.");
       return;
@@ -1142,6 +1144,13 @@ export default function ChatWorkspace({
     return () => clearTypingInterval();
   }, [clearTypingInterval]);
 
+  // Close export menu on outside click
+  useEffect(() => {
+    if (!showExportMenu) return;
+    const handler = () => setShowExportMenu(false);
+    document.addEventListener("click", handler);
+    return () => document.removeEventListener("click", handler);
+  }, [showExportMenu]);
 
   // ── Render ──
   return (
@@ -1298,13 +1307,38 @@ export default function ChatWorkspace({
                 </button>
               )}
               {conversationId && (
-                <button
-                  onClick={() => void exportDocument("pdf")}
-                  disabled={exportLoading !== null}
-                  className="rounded-full border border-[#E2E8F0] bg-white px-3 py-1 text-xs text-[#64748B] hover:bg-[#F8F9FB] disabled:opacity-50"
-                >
-                  {exportLoading === "pdf" ? tw("exporting") : tw("exportConversation")}
-                </button>
+                <div className="relative">
+                  <button
+                    onClick={(e) => { e.stopPropagation(); setShowExportMenu((prev) => !prev); }}
+                    disabled={exportLoading !== null}
+                    className="rounded-full border border-[#E2E8F0] bg-white px-3 py-1 text-xs text-[#64748B] hover:bg-[#F8F9FB] disabled:opacity-50"
+                  >
+                    {exportLoading ? tw("exporting") : tw("exportConversation")}
+                  </button>
+                  {showExportMenu && (
+                    <div className="absolute bottom-full left-0 mb-1 rounded-lg border border-[#E2E8F0] bg-white py-1 shadow-lg z-50 min-w-[140px]">
+                      <button
+                        onClick={() => void exportDocument("pdf")}
+                        className="block w-full px-4 py-2 text-left text-xs text-[#475569] hover:bg-[#F8F9FB]"
+                      >
+                        {tw("pdf")}
+                      </button>
+                      <button
+                        onClick={() => {
+                          if (tier === "free" || tier === "plus") {
+                            setShowExportMenu(false);
+                            setUpgradeModalTrigger("export");
+                          } else {
+                            void exportDocument("docx");
+                          }
+                        }}
+                        className="block w-full px-4 py-2 text-left text-xs text-[#475569] hover:bg-[#F8F9FB]"
+                      >
+                        {tw("docx")} {tier !== "pro" && !isAdmin ? <span className="text-[10px] text-[#E11D48]">(Pro)</span> : null}
+                      </button>
+                    </div>
+                  )}
+                </div>
               )}
             </div>
           </div>
