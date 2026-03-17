@@ -54,7 +54,7 @@ export async function renderTrainingRecordPdf(data: TrainingRecordData): Promise
 
   function drawCheckItem(label: string) {
     ensureSpace(14);
-    page.drawText(`☐  ${label}`, { x: MARGIN + 8, y, size: 9, font: regular, color: TEXT });
+    page.drawText(`[ ]  ${label}`, { x: MARGIN + 8, y, size: 9, font: regular, color: TEXT });
     y -= 13;
   }
 
@@ -98,7 +98,7 @@ export async function renderTrainingRecordPdf(data: TrainingRecordData): Promise
 
   // Induction
   drawSectionHeading("Induction Training");
-  drawLabel("Induction Completed", "☐ Yes   ☐ No");
+  drawLabel("Induction Completed", "[ ] Yes   [ ] No");
   drawLabel("Date");
   drawLabel("Trainer");
   y -= 4;
@@ -120,7 +120,7 @@ export async function renderTrainingRecordPdf(data: TrainingRecordData): Promise
   for (const topic of inductionTopics) drawCheckItem(topic);
 
   y -= 4;
-  drawLabel("Assessment", "☐ Competent   ☐ Requires further training");
+  drawLabel("Assessment", "[ ] Competent   [ ] Requires further training");
   drawLabel("Employee Signature");
   drawLabel("Trainer Signature");
   y -= 4;
