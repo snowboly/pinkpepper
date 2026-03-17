@@ -5,6 +5,8 @@ import { countUsageSince, utcDayStartIso } from "@/lib/policy";
 import { TIER_CAPABILITIES } from "@/lib/tier";
 import { buildGenerateSystemPrompt, buildGenerateUserPrompt } from "@/lib/documents/generate-prompt";
 import { buildHaccpDocumentDataFromAnswers, buildHaccpModelPrompt } from "@/lib/documents/haccp-generation";
+import { buildCleaningScheduleDataFromAnswers, buildCleaningScheduleModelPrompt } from "@/lib/documents/cleaning-schedule-generation";
+import { buildSopDataFromAnswers } from "@/lib/documents/sop-generation";
 import { renderDocx } from "@/lib/documents/render-docx";
 import { renderPdf } from "@/lib/documents/render-pdf";
 import { renderDocumentForChat } from "@/lib/documents/render-chat";
@@ -144,12 +146,18 @@ export async function POST(request: Request) {
     conversationId = newConversation.id;
   }
 
-  const systemPrompt = documentType === "haccp_plan"
-    ? "Return valid JSON for a structured HACCP document."
-    : buildGenerateSystemPrompt(documentType as DocumentType);
-  const userPrompt = documentType === "haccp_plan"
-    ? buildHaccpModelPrompt(buildHaccpDocumentDataFromAnswers(answers))
-    : buildGenerateUserPrompt(documentType as DocumentType, answers);
+  const systemPrompt =
+    documentType === "haccp_plan"
+      ? "Return valid JSON for a structured HACCP document."
+      : documentType === "cleaning_schedule"
+        ? "Return valid JSON for a structured Cleaning and Disinfection Schedule document."
+        : buildGenerateSystemPrompt(documentType as DocumentType);
+  const userPrompt =
+    documentType === "haccp_plan"
+      ? buildHaccpModelPrompt(buildHaccpDocumentDataFromAnswers(answers))
+      : documentType === "cleaning_schedule"
+        ? buildCleaningScheduleModelPrompt(buildCleaningScheduleDataFromAnswers(answers))
+        : buildGenerateUserPrompt(documentType as DocumentType, answers);
 
   const groqModel = process.env.GROQ_MODEL ?? "llama-3.3-70b-versatile";
 
@@ -187,9 +195,12 @@ export async function POST(request: Request) {
   }
 
   let doc: GeneratedDocument;
-  const haccpData = documentType === "haccp_plan"
-    ? buildHaccpDocumentDataFromAnswers(answers)
+  const haccpData = documentType === "haccp_plan" ? buildHaccpDocumentDataFromAnswers(answers) : undefined;
+  const cleaningScheduleData = documentType === "cleaning_schedule" ? buildCleaningScheduleDataFromAnswers(answers) : undefined;
+  const sopData = documentType !== "haccp_plan" && documentType !== "cleaning_schedule"
+    ? buildSopDataFromAnswers(documentType as DocumentType, answers)
     : undefined;
+
   try {
     doc = JSON.parse(rawJson) as GeneratedDocument;
   } catch {
@@ -197,9 +208,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "LLM returned invalid JSON." }, { status: 502 });
   }
 
-  if (haccpData) {
-    doc.haccpData = haccpData;
-  }
+  if (haccpData) doc.haccpData = haccpData;
+  if (cleaningScheduleData) doc.cleaningScheduleData = cleaningScheduleData;
+  if (sopData) doc.sopData = sopData;
 
   // Track usage
   await supabase.from("usage_events").insert({

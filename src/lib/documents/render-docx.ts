@@ -20,6 +20,8 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import type { GeneratedDocument, DocumentTable } from "./types";
 import { renderHaccpDocx } from "./render-haccp-docx";
+import { renderCleaningScheduleDocx } from "./render-cleaning-schedule-docx";
+import { renderSopDocx } from "./render-sop-docx";
 
 const BRAND_COLOR = "E11D48"; // PinkPepper red
 const GRAY_COLOR = "64748B";
@@ -99,6 +101,12 @@ function renderTable(table: DocumentTable): Table {
 export async function renderDocx(doc: GeneratedDocument): Promise<ArrayBuffer> {
   if (doc.documentType === "haccp_plan" && doc.haccpData) {
     return renderHaccpDocx(doc.haccpData);
+  }
+  if (doc.documentType === "cleaning_schedule" && doc.cleaningScheduleData) {
+    return renderCleaningScheduleDocx(doc.cleaningScheduleData);
+  }
+  if (doc.sopData) {
+    return renderSopDocx(doc, doc.sopData);
   }
 
   const logoBuffer = await loadLogoBuffer();
