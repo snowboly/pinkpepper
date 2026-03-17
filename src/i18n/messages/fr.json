@@ -23,9 +23,9 @@
     "reviewBannerTitle": "Souhaitez-vous qu'un expert humain vérifie ce document ?",
     "reviewBannerBody": "Nos spécialistes en sécurité alimentaire examinent vos documents générés par l'IA pour en vérifier l'exactitude, les lacunes de conformité et la préparation à l'audit.",
     "reviewUpsellTitle": "Faites vérifier ce document par un expert humain",
-    "reviewUpsellBody": "Le plan Pro inclut 3 crédits de révision d'expert/mois — des spécialistes vérifient vos documents pour la conformité.",
+    "reviewUpsellBody": "Le plan Pro inclut 3 heures de consultation en sécurité alimentaire/mois — révision de documents, aide à la génération et questions-réponses asynchrones.",
     "reviewUpsellCta": "Passer au plan Pro",
-    "humanReviewHighlight": "Le plan Pro inclut des révisions de documents par des experts en sécurité alimentaire.",
+    "humanReviewHighlight": "Le plan Pro inclut 3 heures de consultation en sécurité alimentaire par mois avec un spécialiste qualifié.",
     "suggestions": {
       "haccpPlan": {
         "label": "Plan HACCP",
@@ -194,8 +194,8 @@
         "body": "Téléchargez vos plans HACCP, POS et préparations d'audit en PDF ou Word — prêts à l'emploi ou au partage."
       },
       "review": {
-        "heading": "Obtenez un avis d'expert",
-        "body": "Faites examiner vos documents par un consultant qualifié en sécurité alimentaire sous 72 heures."
+        "heading": "Obtenez une consultation en sécurité alimentaire",
+        "body": "Bénéficiez de la révision de documents, de l'aide à la génération et de questions-réponses asynchrones avec un spécialiste qualifié en sécurité alimentaire."
       },
       "audit_mode": {
         "heading": "Débloquez le mode Audit Virtuel",
@@ -221,7 +221,8 @@
           "1 000 messages/jour",
           "20 photos/jour",
           "Export PDF + Word",
-          "3 crédits d'avis/mois"
+          "3h de consultation en sécurité alimentaire/mois",
+          "Heures de consultation supplémentaires à la demande"
         ],
         "cta": "Passer à Pro"
       }
@@ -233,14 +234,14 @@
     "maybeLater": "Peut-être plus tard"
   },
   "review": {
-    "title": "Demander un avis d'expert",
-    "creditsUsed": "Crédits utilisés ce mois-ci :",
+    "title": "Demander une consultation",
+    "creditsUsed": "Heures utilisées ce mois-ci :",
     "whatToExpect": "À quoi s'attendre",
-    "whatToExpectBody": "Les avis sont réalisés par des consultants qualifiés en sécurité alimentaire. Les retours sont transmis sous forme de notes écrites structurées via votre tableau de bord.",
-    "scopeNote": "Les avis portent sur le contenu de la conversation sélectionnée. Les demandes hors sujet ou hors périmètre peuvent être refusées.",
-    "turnaround": "Délai de traitement :",
-    "turnaroundTimes": "3 jours ouvrés pour les vérifications rapides · 5 jours ouvrés pour les examens complets de documents",
-    "fullReviewCostNote": "Les examens complets de documents coûtent les 3 crédits et ne peuvent être demandés qu'une fois par mois. Les vérifications rapides coûtent 1 crédit chacune.",
+    "whatToExpectBody": "Les consultations sont assurées par des professionnels qualifiés en sécurité alimentaire. Les retours sont transmis sous forme de notes écrites structurées via votre tableau de bord.",
+    "scopeNote": "La consultation porte sur le contenu de la conversation sélectionnée. Les demandes hors sujet ou hors périmètre peuvent être refusées.",
+    "turnaround": "Délai de réponse :",
+    "turnaroundTimes": "Réponses sous 5 jours ouvrés",
+    "fullReviewCostNote": "La consultation est comptabilisée par tranches de 15 minutes, déduites de vos 3 heures mensuelles.",
     "documentType": "Type de document",
     "quickCheck": "Vérification rapide",
     "quickCheckCredits": "— 1 crédit",

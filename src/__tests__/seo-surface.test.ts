@@ -113,18 +113,18 @@ describe("premium quality regressions", () => {
     expect(homepage).toContain("Operational trust, not generic AI output");
     expect(homepage).toContain("From raw notes to review-ready compliance work");
     expect(homepage).toContain("/features/food-safety-audit-prep");
-    expect(homepage).toContain("AI speed with specialist human review");
-    expect(homepage).toContain("qualified food safety specialists");
+    expect(homepage).toContain("AI speed with food safety consultancy");
+    expect(homepage).toContain("qualified food safety consultants");
   });
 
-  it("makes the Pro tier clearly about AI plus human specialist review", () => {
+  it("makes the Pro tier clearly about AI plus food safety consultancy", () => {
     const pricing = readPage("src/app/pricing/page.tsx");
 
-    expect(pricing).toContain("AI draft speed with specialist human review");
-    expect(pricing).toContain("qualified food safety specialist");
-    expect(pricing).toContain("human specialist review credits");
-    expect(pricing).toContain("Advanced HACCP generation with DOCX and PDF export");
+    expect(pricing).toContain("AI draft speed with specialist consultancy");
+    expect(pricing).toContain("qualified specialist");
+    expect(pricing).toContain("3 hours of food safety consultancy each month");
+    expect(pricing).toContain("Document generation, DOCX and PDF export");
     expect(pricing).toContain("Analyse faster and keep your working context");
-    expect(pricing).toContain("No generated compliance documents on Plus");
+    expect(pricing).toContain("100 AI queries per day");
   });
 });

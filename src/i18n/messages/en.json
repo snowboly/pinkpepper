@@ -23,9 +23,9 @@
     "reviewBannerTitle": "Want a human expert to check this document?",
     "reviewBannerBody": "Our food safety specialists review your AI-generated documents for accuracy, compliance gaps, and audit readiness.",
     "reviewUpsellTitle": "Get this document verified by a human expert",
-    "reviewUpsellBody": "Pro plan includes 3 expert review credits/month — specialists check your documents for compliance.",
+    "reviewUpsellBody": "Pro plan includes 3 hours of food safety consultancy/month — document review, generation support, and async Q&A.",
     "reviewUpsellCta": "Upgrade to Pro",
-    "humanReviewHighlight": "Pro plan includes human expert document reviews by food safety specialists.",
+    "humanReviewHighlight": "Pro plan includes 3 hours of food safety consultancy each month with a qualified specialist.",
     "suggestions": {
       "haccpPlan": {
         "label": "HACCP plan",
@@ -314,8 +314,8 @@
         "body": "Download HACCP plans, SOPs, and audit prep as PDF or Word — ready to use or share."
       },
       "review": {
-        "heading": "Get expert review",
-        "body": "Have a qualified food safety specialist review your documents before you use them operationally."
+        "heading": "Get food safety consultancy",
+        "body": "Get document review, generation support, and async Q&A from a qualified food safety specialist."
       },
       "audit_mode": {
         "heading": "Unlock Virtual Audit",
@@ -341,8 +341,8 @@
           "All document generation",
           "Virtual Audit workflows",
           "PDF + DOCX export",
-          "3 specialist review credits/month",
-          "Highest daily usage limits"
+          "3h food safety consultancy/month",
+          "Highest daily limits for audit prep and operational use"
         ],
         "cta": "Upgrade to Pro"
       }
@@ -354,14 +354,14 @@
     "maybeLater": "Maybe later"
   },
   "review": {
-    "title": "Request Expert Review",
-    "creditsUsed": "Credits used this month:",
+    "title": "Request Consultancy",
+    "creditsUsed": "Hours used this month:",
     "whatToExpect": "What to expect",
-    "whatToExpectBody": "Reviews are conducted by qualified food safety consultants. Feedback is returned as structured written notes via your dashboard.",
-    "scopeNote": "Reviews are scoped to the content of the selected conversation. Off-topic or out-of-scope requests may be declined.",
-    "turnaround": "Turnaround:",
-    "turnaroundTimes": "3 working days for quick checks · 5 working days for full document reviews",
-    "fullReviewCostNote": "Full document reviews cost all 3 credits and can only be requested once per month. Quick checks cost 1 credit each.",
+    "whatToExpectBody": "Consultancy is delivered by qualified food safety professionals. Feedback is returned as structured written notes via your dashboard.",
+    "scopeNote": "Consultancy is scoped to the content of the selected conversation. Off-topic or out-of-scope requests may be declined.",
+    "turnaround": "Response time:",
+    "turnaroundTimes": "Responses within 5 working days",
+    "fullReviewCostNote": "Consultancy is tracked in 15-minute increments against your 3 monthly hours.",
     "documentType": "Document type",
     "quickCheck": "Quick Check",
     "quickCheckCredits": "— 1 credit",

@@ -23,9 +23,9 @@
     "reviewBannerTitle": "Möchten Sie dieses Dokument von einem Experten prüfen lassen?",
     "reviewBannerBody": "Unsere Lebensmittelsicherheitsexperten überprüfen Ihre KI-generierten Dokumente auf Genauigkeit, Compliance-Lücken und Audit-Bereitschaft.",
     "reviewUpsellTitle": "Lassen Sie dieses Dokument von einem menschlichen Experten verifizieren",
-    "reviewUpsellBody": "Der Pro-Plan enthält 3 Experten-Review-Credits/Monat — Spezialisten prüfen Ihre Dokumente auf Compliance.",
+    "reviewUpsellBody": "Der Pro-Plan enthält 3 Stunden Lebensmittelsicherheitsberatung/Monat — Dokumentenprüfung, Unterstützung bei der Erstellung und asynchrone Fragen & Antworten.",
     "reviewUpsellCta": "Auf Pro upgraden",
-    "humanReviewHighlight": "Der Pro-Plan umfasst Dokumentenprüfungen durch Lebensmittelsicherheitsexperten.",
+    "humanReviewHighlight": "Der Pro-Plan umfasst 3 Stunden Lebensmittelsicherheitsberatung pro Monat mit einem qualifizierten Spezialisten.",
     "suggestions": {
       "haccpPlan": {
         "label": "HACCP-Plan",
@@ -194,8 +194,8 @@
         "body": "Laden Sie HACCP-Pläne, SOPs und Auditvorbereitungen als PDF oder Word herunter – sofort einsatzbereit oder zum Teilen."
       },
       "review": {
-        "heading": "Expertenbewertung erhalten",
-        "body": "Lassen Sie Ihre Dokumente innerhalb von 72 Stunden von einem qualifizierten Berater für Lebensmittelsicherheit überprüfen."
+        "heading": "Lebensmittelsicherheitsberatung erhalten",
+        "body": "Erhalten Sie Dokumentenprüfung, Unterstützung bei der Erstellung und asynchrone Fragen & Antworten von einem qualifizierten Spezialisten für Lebensmittelsicherheit."
       },
       "audit_mode": {
         "heading": "Virtuellen Auditmodus freischalten",
@@ -221,7 +221,8 @@
           "1.000 Nachrichten/Tag",
           "20 Bild-Uploads/Tag",
           "PDF- + Word-Export",
-          "3 Bewertungsguthaben/Monat"
+          "3 Std. Lebensmittelsicherheitsberatung/Monat",
+          "Zusätzliche Beratungsstunden nach Bedarf"
         ],
         "cta": "Auf Pro upgraden"
       }
@@ -233,14 +234,14 @@
     "maybeLater": "Vielleicht später"
   },
   "review": {
-    "title": "Expertenbewertung anfordern",
-    "creditsUsed": "Diesen Monat verwendete Guthaben:",
+    "title": "Beratung anfordern",
+    "creditsUsed": "Diesen Monat genutzte Stunden:",
     "whatToExpect": "Was Sie erwartet",
-    "whatToExpectBody": "Bewertungen werden von qualifizierten Beratern für Lebensmittelsicherheit durchgeführt. Feedback wird als strukturierte schriftliche Anmerkungen über Ihr Dashboard zurückgegeben.",
-    "scopeNote": "Bewertungen beziehen sich auf den Inhalt der ausgewählten Konversation. Themenfremde oder nicht abgedeckte Anfragen können abgelehnt werden.",
-    "turnaround": "Bearbeitungszeit:",
-    "turnaroundTimes": "3 Werktage für Schnellprüfungen · 5 Werktage für vollständige Dokumentenbewertungen",
-    "fullReviewCostNote": "Vollständige Dokumentenbewertungen kosten alle 3 Guthaben und können nur einmal pro Monat angefordert werden. Schnellprüfungen kosten jeweils 1 Guthaben.",
+    "whatToExpectBody": "Die Beratung wird von qualifizierten Fachleuten für Lebensmittelsicherheit durchgeführt. Feedback wird als strukturierte schriftliche Anmerkungen über Ihr Dashboard zurückgegeben.",
+    "scopeNote": "Die Beratung bezieht sich auf den Inhalt der ausgewählten Konversation. Themenfremde oder nicht abgedeckte Anfragen können abgelehnt werden.",
+    "turnaround": "Antwortzeit:",
+    "turnaroundTimes": "Antworten innerhalb von 5 Werktagen",
+    "fullReviewCostNote": "Die Beratung wird in 15-Minuten-Schritten erfasst und von Ihren 3 monatlichen Stunden abgezogen.",
     "documentType": "Dokumententyp",
     "quickCheck": "Schnellprüfung",
     "quickCheckCredits": "— 1 Guthaben",

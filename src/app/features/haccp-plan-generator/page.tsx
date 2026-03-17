@@ -36,7 +36,7 @@ export default function HaccpPlanGeneratorPage() {
         {
           title: "Structured around review and export",
           body:
-            "Once the draft exists, teams can refine the wording, export the result, and route higher-stakes documents for specialist review instead of rebuilding everything manually.",
+            "Once the draft exists, teams can refine the wording, export the result, and route higher-stakes documents for food safety consultancy instead of rebuilding everything manually.",
         },
         {
           title: "Useful for multiple business types",
