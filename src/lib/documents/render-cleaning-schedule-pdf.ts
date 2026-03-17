@@ -37,29 +37,6 @@ export async function renderCleaningSchedulePdf(data: CleaningScheduleData): Pro
     );
   }
 
-  function drawLine(value: string, size = 9, font = regular, color = TEXT, xOffset = 0) {
-    const x = MARGIN + xOffset;
-    const maxW = CONTENT_W - xOffset;
-    const words = value.split(" ");
-    let line = "";
-    for (const word of words) {
-      const test = line ? `${line} ${word}` : word;
-      if (font.widthOfTextAtSize(test, size) > maxW && line) {
-        ensureSpace(size + 4);
-        page.drawText(line, { x, y, size, font, color });
-        y -= size + 4;
-        line = word;
-      } else {
-        line = test;
-      }
-    }
-    if (line) {
-      ensureSpace(size + 4);
-      page.drawText(line, { x, y, size, font, color });
-      y -= size + 4;
-    }
-  }
-
   function drawSectionTitle(title: string) {
     ensureSpace(20);
     y -= 6;

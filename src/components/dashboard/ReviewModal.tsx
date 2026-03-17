@@ -2,27 +2,17 @@
 
 import { useTranslations } from "next-intl";
 
-type ReviewRequest = {
-  id: string;
-  status: string;
-  review_type: string;
-  document_category?: string;
-  created_at: string;
-};
-
 type ReviewModalProps = {
   open: boolean;
   conversationId: string | null;
   isAdmin: boolean;
   reviewEligible: boolean;
-  allowFullDocumentReview?: boolean;
   reviewTurnaround?: string;
   documentCategory: string;
   reviewNotes: string;
   reviewLoading: boolean;
   reviewSubmitted: boolean;
   reviewInfo: { used: number; limit: number | null } | null;
-  reviewRequests: ReviewRequest[];
   onClose: () => void;
   onSetDocumentCategory: (category: string) => void;
   onSetReviewNotes: (notes: string) => void;
@@ -30,20 +20,17 @@ type ReviewModalProps = {
 };
 
 const CATEGORY_KEYS = ["produced_pdf", "produced_docx", "async_qa"] as const;
-const ALL_CATEGORY_KEYS = [...CATEGORY_KEYS];
 
 export default function ReviewModal({
   open,
   conversationId,
   isAdmin,
   reviewEligible,
-  allowFullDocumentReview,
   documentCategory,
   reviewNotes,
   reviewLoading,
   reviewSubmitted,
   reviewInfo,
-  reviewRequests,
   onClose,
   onSetDocumentCategory,
   onSetReviewNotes,

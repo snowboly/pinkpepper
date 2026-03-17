@@ -4,6 +4,7 @@ import {
   Document,
   Footer,
   Header,
+  ImageRun,
   Packer,
   PageNumber,
   PageOrientation,
@@ -15,6 +16,8 @@ import {
   TextRun,
   WidthType,
 } from "docx";
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 import type { HaccpDocumentData } from "./haccp-schema";
 
 const CALIBRI = "Calibri";
@@ -22,6 +25,36 @@ const LIGHT_BLUE = "DCEEFF";
 const BORDER = "CBD5E1";
 const TEXT = "0F172A";
 const MUTED = "475569";
+
+type DocxLogo = {
+  data: Buffer;
+  type: "png" | "jpg";
+};
+
+async function loadOptionalLogo(logoUrl: string | null | undefined): Promise<DocxLogo | null> {
+  if (!logoUrl) return null;
+
+  if (logoUrl.startsWith("data:image/")) {
+    const match = logoUrl.match(/^data:image\/(png|jpeg);base64,(.+)$/);
+    if (!match) return null;
+
+    return {
+      data: Buffer.from(match[2], "base64"),
+      type: match[1] === "jpeg" ? "jpg" : "png",
+    };
+  }
+
+  if (!logoUrl.startsWith("/")) return null;
+
+  try {
+    const filePath = join(process.cwd(), "public", logoUrl.replace(/^\/+/, ""));
+    const data = await readFile(filePath);
+    const type = logoUrl.toLowerCase().endsWith(".jpg") || logoUrl.toLowerCase().endsWith(".jpeg") ? "jpg" : "png";
+    return { data, type };
+  } catch {
+    return null;
+  }
+}
 
 function text(textValue: string, size = 20, bold = false): TextRun {
   return new TextRun({
@@ -112,6 +145,7 @@ function buildTable(headers: string[], rows: string[][]): Table {
 }
 
 export async function renderHaccpDocx(data: HaccpDocumentData): Promise<ArrayBuffer> {
+  const logo = await loadOptionalLogo(data.metadata.logoUrl);
   const processFlowText = data.processFlow.length > 0
     ? data.processFlow.map((step, index) => `${index + 1}. ${step}`).join("\n")
     : "No process flow provided.";
@@ -173,6 +207,14 @@ export async function renderHaccpDocx(data: HaccpDocumentData): Promise<ArrayBuf
               new Paragraph({
                 alignment: AlignmentType.CENTER,
                 children: [
+                  ...(logo ? [
+                    new ImageRun({
+                      data: logo.data,
+                      transformation: { width: 64, height: 32 },
+                      type: logo.type,
+                    }),
+                    new TextRun({ text: "   ", font: CALIBRI, size: 20 }),
+                  ] : []),
                   text(`${data.metadata.companyName} | Version ${data.metadata.version} | ${data.metadata.date}`, 20, true),
                 ],
               }),
