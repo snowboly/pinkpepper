@@ -87,37 +87,6 @@ const DOC_WIZARDS: Record<string, DocWizard> = {
       `- Include date, time, item/equipment, reading, limit, pass/fail, corrective action, initials/sign-off.\n` +
       `- Add concise guidance on what to do when limits are breached.`,
   },
-  "Supplier approval": {
-    id: "supplier_approval",
-    wizardKey: "supplierApproval",
-    questionCount: 5,
-    buildPrompt: (answers) =>
-      `Create a full Supplier Approval Procedure using:\n\n` +
-      `1) ${answers[0] ?? ""}\n` +
-      `2) ${answers[1] ?? ""}\n` +
-      `3) ${answers[2] ?? ""}\n` +
-      `4) ${answers[3] ?? ""}\n` +
-      `5) ${answers[4] ?? ""}\n\n` +
-      `Requirements:\n` +
-      `- Include onboarding checks, approval criteria, ongoing monitoring, non-conformance handling, and reapproval.\n` +
-      `- Include a supplier questionnaire/checklist template.\n` +
-      `- Include record-keeping table and responsibilities.`,
-  },
-  "Allergen policy": {
-    id: "allergen_policy",
-    wizardKey: "allergenPolicy",
-    questionCount: 4,
-    buildPrompt: (answers) =>
-      `Create a comprehensive Allergen Management Policy using:\n\n` +
-      `1) ${answers[0] ?? ""}\n` +
-      `2) ${answers[1] ?? ""}\n` +
-      `3) ${answers[2] ?? ""}\n` +
-      `4) ${answers[3] ?? ""}\n\n` +
-      `Requirements:\n` +
-      `- Include policy statement, scope, the 14 major allergens (EU/UK), labelling requirements.\n` +
-      `- Include cross-contamination controls, staff training, customer communication, and emergency response.\n` +
-      `- Reference Natasha's Law (PPDS) and Regulation 1169/2011 where relevant.`,
-  },
   "Food safety policy": {
     id: "food_safety_policy",
     wizardKey: "foodSafetyPolicy",
@@ -194,21 +163,6 @@ const DOC_WIZARDS: Record<string, DocWizard> = {
       `- Include waste carrier licensing, duty of care, and record-keeping.\n` +
       `- Reference Annex II Reg (EC) 852/2004 and Environmental Protection Act 1990.`,
   },
-  "Personal hygiene policy": {
-    id: "personal_hygiene_policy",
-    wizardKey: "personalHygienePolicy",
-    questionCount: 4,
-    buildPrompt: (answers) =>
-      `Create a Personal Hygiene Policy using:\n\n` +
-      `1) ${answers[0] ?? ""}\n` +
-      `2) ${answers[1] ?? ""}\n` +
-      `3) ${answers[2] ?? ""}\n` +
-      `4) ${answers[3] ?? ""}\n\n` +
-      `Requirements:\n` +
-      `- Include handwashing procedure, protective clothing, illness reporting, cuts/wounds procedure.\n` +
-      `- Include jewellery policy, visitor hygiene rules, and monitoring/enforcement.\n` +
-      `- Reference Reg (EC) 852/2004 Annex II Chapter VIII. Include return-to-work fitness form.`,
-  },
   "Cleaning schedule": {
     id: "cleaning_schedule",
     wizardKey: "cleaningSchedule",
@@ -225,21 +179,38 @@ const DOC_WIZARDS: Record<string, DocWizard> = {
       `- Include deep cleaning schedule and equipment cleaning procedures.\n` +
       `- Include daily/weekly tables and a cleaning verification log.`,
   },
+  "Product data sheet": {
+    id: "product_data_sheet",
+    wizardKey: "productDataSheet",
+    questionCount: 7,
+    buildPrompt: (answers) =>
+      `Create a Product Data Sheet using:\n\n` +
+      `1) ${answers[0] ?? ""}\n` +
+      `2) ${answers[1] ?? ""}\n` +
+      `3) ${answers[2] ?? ""}\n` +
+      `4) ${answers[3] ?? ""}\n` +
+      `5) ${answers[4] ?? ""}\n` +
+      `6) ${answers[5] ?? ""}\n` +
+      `7) ${answers[6] ?? ""}\n\n` +
+      `Requirements:\n` +
+      `- Include product name/code, description, country of origin, ingredients (by weight), allergen declaration.\n` +
+      `- Include storage conditions, shelf life (opened/unopened), packaging, net weight.\n` +
+      `- Include nutritional information table and microbiological specification.\n` +
+      `- Reference Regulation 1169/2011 and Natasha's Law where relevant.`,
+  },
 };
 
 const DOC_GENERATION_TYPES: Record<DocWizard["id"], string> = {
   haccp_plan: "haccp_plan",
   cleaning_sop: "cleaning_sop",
   temp_log: "temperature_log",
-  supplier_approval: "supplier_approval",
-  allergen_policy: "allergen_policy",
   food_safety_policy: "food_safety_policy",
   traceability_procedure: "traceability_procedure",
   pest_control_procedure: "pest_control_procedure",
   staff_training_record: "staff_training_record",
   waste_management_procedure: "waste_management_procedure",
-  personal_hygiene_policy: "personal_hygiene_policy",
   cleaning_schedule: "cleaning_schedule",
+  product_data_sheet: "product_data_sheet",
 };
 
 export default function ChatWorkspace({

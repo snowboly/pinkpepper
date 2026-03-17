@@ -8,6 +8,8 @@ import { buildHaccpDocumentDataFromAnswers, buildHaccpModelPrompt } from "@/lib/
 import { buildCleaningScheduleDataFromAnswers } from "@/lib/documents/cleaning-schedule-generation";
 import { buildTemperatureLogDataFromAnswers } from "@/lib/documents/temperature-log-generation";
 import { buildSopDataFromAnswers } from "@/lib/documents/sop-generation";
+import { buildTrainingRecordDataFromAnswers } from "@/lib/documents/training-record-generation";
+import { buildProductDataSheetDataFromAnswers } from "@/lib/documents/product-data-sheet-generation";
 import { renderDocx } from "@/lib/documents/render-docx";
 import { renderPdf } from "@/lib/documents/render-pdf";
 import { renderDocumentForChat } from "@/lib/documents/render-chat";
@@ -20,15 +22,13 @@ const VALID_TYPES: DocumentType[] = [
   "haccp_plan",
   "cleaning_sop",
   "temperature_log",
-  "supplier_approval",
-  "allergen_policy",
   "food_safety_policy",
   "traceability_procedure",
   "pest_control_procedure",
   "staff_training_record",
   "waste_management_procedure",
-  "personal_hygiene_policy",
   "cleaning_schedule",
+  "product_data_sheet",
 ];
 
 export async function POST(request: Request) {
@@ -195,7 +195,10 @@ export async function POST(request: Request) {
   const haccpData = documentType === "haccp_plan" ? buildHaccpDocumentDataFromAnswers(answers) : undefined;
   const cleaningScheduleData = documentType === "cleaning_schedule" ? buildCleaningScheduleDataFromAnswers(answers) : undefined;
   const temperatureLogData = documentType === "temperature_log" ? buildTemperatureLogDataFromAnswers(answers) : undefined;
-  const sopData = documentType !== "haccp_plan" && documentType !== "cleaning_schedule" && documentType !== "temperature_log"
+  const trainingRecordData = documentType === "staff_training_record" ? buildTrainingRecordDataFromAnswers(answers) : undefined;
+  const productDataSheetData = documentType === "product_data_sheet" ? buildProductDataSheetDataFromAnswers(answers) : undefined;
+  const sopTypes: DocumentType[] = ["food_safety_policy", "traceability_procedure", "pest_control_procedure", "waste_management_procedure", "cleaning_sop"];
+  const sopData = sopTypes.includes(documentType as DocumentType)
     ? buildSopDataFromAnswers(documentType as DocumentType, answers)
     : undefined;
   try {
@@ -208,6 +211,8 @@ export async function POST(request: Request) {
   if (haccpData) doc.haccpData = haccpData;
   if (cleaningScheduleData) doc.cleaningScheduleData = cleaningScheduleData;
   if (temperatureLogData) doc.temperatureLogData = temperatureLogData;
+  if (trainingRecordData) doc.trainingRecordData = trainingRecordData;
+  if (productDataSheetData) doc.productDataSheetData = productDataSheetData;
   if (sopData) doc.sopData = sopData;
 
   // Track usage

@@ -23,6 +23,9 @@ import { renderHaccpDocx } from "./render-haccp-docx";
 import { renderCleaningScheduleDocx } from "./render-cleaning-schedule-docx";
 import { renderTemperatureLogDocx } from "./render-temperature-log-docx";
 import { renderSopDocx } from "./render-sop-docx";
+import { renderFoodSafetyPolicyDocx } from "./render-food-safety-policy-docx";
+import { renderTrainingRecordDocx } from "./render-training-record-docx";
+import { renderProductDataSheetDocx } from "./render-product-data-sheet-docx";
 
 const BRAND_COLOR = "E11D48"; // PinkPepper red
 const GRAY_COLOR = "64748B";
@@ -108,6 +111,15 @@ export async function renderDocx(doc: GeneratedDocument): Promise<ArrayBuffer> {
   }
   if (doc.documentType === "temperature_log" && doc.temperatureLogData) {
     return renderTemperatureLogDocx(doc.temperatureLogData);
+  }
+  if (doc.documentType === "food_safety_policy" && doc.sopData) {
+    return renderFoodSafetyPolicyDocx(doc, doc.sopData);
+  }
+  if (doc.documentType === "staff_training_record" && doc.trainingRecordData) {
+    return renderTrainingRecordDocx(doc.trainingRecordData);
+  }
+  if (doc.documentType === "product_data_sheet" && doc.productDataSheetData) {
+    return renderProductDataSheetDocx(doc.productDataSheetData);
   }
   if (doc.sopData) {
     return renderSopDocx(doc, doc.sopData);

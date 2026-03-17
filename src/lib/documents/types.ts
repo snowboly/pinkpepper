@@ -2,20 +2,20 @@ import type { HaccpDocumentData } from "./haccp-schema";
 import type { CleaningScheduleData } from "./cleaning-schedule-schema";
 import type { TemperatureLogData } from "./temperature-log-schema";
 import type { SopDocumentData } from "./sop-schema";
+import type { TrainingRecordData } from "./training-record-schema";
+import type { ProductDataSheetData } from "./product-data-sheet-schema";
 
 export type DocumentType =
   | "haccp_plan"
   | "cleaning_sop"
   | "temperature_log"
-  | "supplier_approval"
-  | "allergen_policy"
   | "food_safety_policy"
   | "traceability_procedure"
   | "pest_control_procedure"
   | "staff_training_record"
   | "waste_management_procedure"
-  | "personal_hygiene_policy"
-  | "cleaning_schedule";
+  | "cleaning_schedule"
+  | "product_data_sheet";
 
 export type DocumentSection = {
   heading: string;
@@ -45,4 +45,6 @@ export type GeneratedDocument = {
   cleaningScheduleData?: CleaningScheduleData;
   temperatureLogData?: TemperatureLogData;
   sopData?: SopDocumentData;
+  trainingRecordData?: TrainingRecordData;
+  productDataSheetData?: ProductDataSheetData;
 };
