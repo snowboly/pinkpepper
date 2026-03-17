@@ -110,7 +110,7 @@ describe("premium quality regressions", () => {
   it("recomposes the homepage around trust and workflow narrative sections", () => {
     const homepage = readPage("src/app/page.tsx");
 
-    expect(homepage).toContain("Operational trust, not generic AI output");
+    expect(homepage).toContain("Built for operators, not prompt theatre");
     expect(homepage).toContain("From raw notes to review-ready compliance work");
     expect(homepage).toContain("/features/food-safety-audit-prep");
     expect(homepage).toContain("AI speed with food safety consultancy");
