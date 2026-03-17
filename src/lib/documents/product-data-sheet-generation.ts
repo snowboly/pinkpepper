@@ -117,3 +117,12 @@ export function buildProductDataSheetDataFromBuilder(
     microbiologyRows: builder.microbiologyRows ?? [],
   };
 }
+
+export function buildProductDataSheetModelPrompt(data: ProductDataSheetData): string {
+  return [
+    "Create a Product Data Sheet document from the structured data below.",
+    "Preserve the provided product identity, allergen declaration, storage, packaging, nutrition rows, and microbiological specification exactly where supplied.",
+    "Only draft the surrounding professional document structure and user-facing section wording.",
+    JSON.stringify(data),
+  ].join("\n\n");
+}

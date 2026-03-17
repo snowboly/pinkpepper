@@ -4,6 +4,7 @@ import { join } from "node:path";
 import type { GeneratedDocument } from "./types";
 import { renderHaccpPdf } from "./render-haccp-pdf";
 import { renderCleaningSchedulePdf } from "./render-cleaning-schedule-pdf";
+import { renderCleaningSopPdf } from "./render-cleaning-sop-pdf";
 import { renderTemperatureLogPdf } from "./render-temperature-log-pdf";
 import { renderSopPdf } from "./render-sop-pdf";
 import { renderFoodSafetyPolicyPdf } from "./render-food-safety-policy-pdf";
@@ -40,6 +41,9 @@ export async function renderPdf(doc: GeneratedDocument): Promise<Uint8Array> {
   }
   if (doc.documentType === "cleaning_schedule" && doc.cleaningScheduleData) {
     return renderCleaningSchedulePdf(doc.cleaningScheduleData);
+  }
+  if (doc.documentType === "cleaning_sop" && doc.cleaningSopData) {
+    return renderCleaningSopPdf(doc.cleaningSopData);
   }
   if (doc.documentType === "temperature_log" && doc.temperatureLogData) {
     return renderTemperatureLogPdf(doc.temperatureLogData);

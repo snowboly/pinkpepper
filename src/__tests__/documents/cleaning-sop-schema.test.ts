@@ -4,7 +4,10 @@ import {
   DEFAULT_FREQUENCY_SCHEDULE,
   DEFAULT_VERIFICATION_ATP,
 } from "@/lib/documents/cleaning-sop-schema";
-import { buildCleaningSopDataFromAnswers } from "@/lib/documents/cleaning-sop-generation";
+import {
+  buildCleaningSopDataFromAnswers,
+  buildCleaningSopDataFromBuilder,
+} from "@/lib/documents/cleaning-sop-generation";
 
 describe("buildCleaningSopDataFromAnswers", () => {
   it("extracts premises type from first answer", () => {
@@ -51,5 +54,79 @@ describe("DEFAULT_CLEANING_SOP_RECORDS", () => {
   it("includes daily cleaning sign-off record", () => {
     const signOff = DEFAULT_CLEANING_SOP_RECORDS.find((r) => r.record.includes("sign-off"));
     expect(signOff).toBeDefined();
+  });
+});
+
+describe("buildCleaningSopDataFromBuilder", () => {
+  it("maps structured cleaning SOP fields into the dedicated schema", () => {
+    const data = buildCleaningSopDataFromBuilder({
+      businessName: "PinkPepper Foods",
+      approvedBy: "Operations Manager",
+      reviewDate: "2026-12-31",
+      premises: "Main kitchen",
+      scope: "Cleaning and disinfection of food-contact surfaces and equipment",
+      responsibleRole: "Kitchen staff on shift",
+      verificationRole: "Shift supervisor",
+      chemicals: [
+        {
+          chemical: "Surface sanitiser",
+          purpose: "Food-contact disinfection",
+          dilution: "1:50",
+          contactTime: "30 sec",
+          activeIngredient: "QAC",
+        },
+      ],
+      frequencySchedule: [
+        {
+          itemArea: "Prep tables",
+          method: "Two-stage clean",
+          frequency: "After use",
+          responsible: "Kitchen porter",
+        },
+      ],
+      corrective: [
+        "Re-clean and re-verify before service resumes",
+      ],
+      records: [
+        {
+          record: "Cleaning sign-off log",
+          location: "Kitchen folder",
+          retention: "3 months",
+        },
+      ],
+    });
+
+    expect(data.metadata.businessName).toBe("PinkPepper Foods");
+    expect(data.metadata.approvedBy).toBe("Operations Manager");
+    expect(data.metadata.reviewDate).toBe("2026-12-31");
+    expect(data.metadata.premises).toBe("Main kitchen");
+    expect(data.scope).toContain("food-contact surfaces");
+    expect(data.scope).toContain("Kitchen staff on shift");
+    expect(data.scope).toContain("Shift supervisor");
+    expect(data.chemicals).toHaveLength(1);
+    expect(data.frequencySchedule).toHaveLength(1);
+    expect(data.corrective).toEqual(["Re-clean and re-verify before service resumes"]);
+    expect(data.records).toHaveLength(1);
+  });
+
+  it("falls back to default SOP tables only when structured sections are omitted", () => {
+    const data = buildCleaningSopDataFromBuilder({
+      businessName: "PinkPepper Foods",
+      approvedBy: "Operations Manager",
+      reviewDate: "",
+      premises: "Main kitchen",
+      scope: "Cleaning and disinfection of food-contact surfaces and equipment",
+      responsibleRole: "",
+      verificationRole: "",
+      chemicals: [],
+      frequencySchedule: [],
+      corrective: [],
+      records: [],
+    });
+
+    expect(data.chemicals).not.toEqual([]);
+    expect(data.frequencySchedule).toEqual(DEFAULT_FREQUENCY_SCHEDULE);
+    expect(data.verificationAtp).toEqual(DEFAULT_VERIFICATION_ATP);
+    expect(data.records).toEqual(DEFAULT_CLEANING_SOP_RECORDS);
   });
 });
