@@ -5,6 +5,8 @@ import { countUsageSince, utcDayStartIso } from "@/lib/policy";
 import { TIER_CAPABILITIES } from "@/lib/tier";
 import { buildGenerateSystemPrompt, buildGenerateUserPrompt } from "@/lib/documents/generate-prompt";
 import { buildHaccpDocumentDataFromAnswers, buildHaccpModelPrompt } from "@/lib/documents/haccp-generation";
+import { buildHygienePolicyDataFromAnswers, buildHygienePolicyModelPrompt } from "@/lib/documents/hygiene-generation";
+import { buildCleaningSopDataFromAnswers, buildCleaningSopModelPrompt } from "@/lib/documents/cleaning-sop-generation";
 import { renderDocx } from "@/lib/documents/render-docx";
 import { renderPdf } from "@/lib/documents/render-pdf";
 import { renderDocumentForChat } from "@/lib/documents/render-chat";
@@ -144,12 +146,22 @@ export async function POST(request: Request) {
     conversationId = newConversation.id;
   }
 
-  const systemPrompt = documentType === "haccp_plan"
-    ? "Return valid JSON for a structured HACCP document."
-    : buildGenerateSystemPrompt(documentType as DocumentType);
-  const userPrompt = documentType === "haccp_plan"
-    ? buildHaccpModelPrompt(buildHaccpDocumentDataFromAnswers(answers))
-    : buildGenerateUserPrompt(documentType as DocumentType, answers);
+  const systemPrompt =
+    documentType === "haccp_plan"
+      ? "Return valid JSON for a structured HACCP document."
+      : documentType === "personal_hygiene_policy"
+        ? "Return valid JSON for a structured Personal Hygiene Policy document."
+        : documentType === "cleaning_sop"
+          ? "Return valid JSON for a structured Cleaning and Disinfection SOP document."
+          : buildGenerateSystemPrompt(documentType as DocumentType);
+  const userPrompt =
+    documentType === "haccp_plan"
+      ? buildHaccpModelPrompt(buildHaccpDocumentDataFromAnswers(answers))
+      : documentType === "personal_hygiene_policy"
+        ? buildHygienePolicyModelPrompt(buildHygienePolicyDataFromAnswers(answers))
+        : documentType === "cleaning_sop"
+          ? buildCleaningSopModelPrompt(buildCleaningSopDataFromAnswers(answers))
+          : buildGenerateUserPrompt(documentType as DocumentType, answers);
 
   const groqModel = process.env.GROQ_MODEL ?? "llama-3.3-70b-versatile";
 
@@ -187,9 +199,9 @@ export async function POST(request: Request) {
   }
 
   let doc: GeneratedDocument;
-  const haccpData = documentType === "haccp_plan"
-    ? buildHaccpDocumentDataFromAnswers(answers)
-    : undefined;
+  const haccpData = documentType === "haccp_plan" ? buildHaccpDocumentDataFromAnswers(answers) : undefined;
+  const hygienePolicyData = documentType === "personal_hygiene_policy" ? buildHygienePolicyDataFromAnswers(answers) : undefined;
+  const cleaningSopData = documentType === "cleaning_sop" ? buildCleaningSopDataFromAnswers(answers) : undefined;
   try {
     doc = JSON.parse(rawJson) as GeneratedDocument;
   } catch {
@@ -197,9 +209,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "LLM returned invalid JSON." }, { status: 502 });
   }
 
-  if (haccpData) {
-    doc.haccpData = haccpData;
-  }
+  if (haccpData) doc.haccpData = haccpData;
+  if (hygienePolicyData) doc.hygienePolicyData = hygienePolicyData;
+  if (cleaningSopData) doc.cleaningSopData = cleaningSopData;
 
   // Track usage
   await supabase.from("usage_events").insert({

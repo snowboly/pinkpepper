@@ -3,6 +3,8 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import type { GeneratedDocument } from "./types";
 import { renderHaccpPdf } from "./render-haccp-pdf";
+import { renderHygienePdf } from "./render-hygiene-pdf";
+import { renderCleaningSopPdf } from "./render-cleaning-sop-pdf";
 
 const BRAND = rgb(0.882, 0.114, 0.282); // #E11D48
 const DARK = rgb(0.059, 0.09, 0.118);   // #0F172A
@@ -31,6 +33,12 @@ async function loadLogoBytes(): Promise<Uint8Array | null> {
 export async function renderPdf(doc: GeneratedDocument): Promise<Uint8Array> {
   if (doc.documentType === "haccp_plan" && doc.haccpData) {
     return renderHaccpPdf(doc.haccpData);
+  }
+  if (doc.documentType === "personal_hygiene_policy" && doc.hygienePolicyData) {
+    return renderHygienePdf(doc.hygienePolicyData);
+  }
+  if (doc.documentType === "cleaning_sop" && doc.cleaningSopData) {
+    return renderCleaningSopPdf(doc.cleaningSopData);
   }
 
   const pdf = await PDFDocument.create();
