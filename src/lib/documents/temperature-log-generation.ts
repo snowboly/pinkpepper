@@ -21,6 +21,8 @@ export function buildTemperatureLogDataFromAnswers(answers: string[]): Temperatu
       unitId: "",
       probeLocation: "",
       targetRange: DEFAULT_TARGET_RANGE,
+      createdBy: "",
+      approvedBy: "",
       checksPerDay: DEFAULT_CHECKS_PER_DAY,
       probeCount: DEFAULT_PROBE_COUNT,
     },

@@ -8,6 +8,8 @@ export type TemperatureLogMetadata = {
   unitId: string;         // Chamber / Cold Store ID — filled in on the form
   probeLocation: string;  // (*) probe location note — filled in on the form
   targetRange: string;    // e.g. "0°C to 5°C (fridge) | ≤ −18°C (freezer)"
+  createdBy: string;
+  approvedBy: string;
   checksPerDay: number;   // how many readings per day (1–4)
   probeCount: number;     // how many probe/sensor columns per reading (1–4)
 };

@@ -200,12 +200,9 @@ export async function renderTemperatureLogDocx(data: TemperatureLogData): Promis
             children: [
               new Paragraph({
                 alignment: AlignmentType.CENTER,
-                spacing: { after: 20 },
-                children: [t("TEMPERATURE MONITORING LOG", 22, true)],
-              }),
-              new Paragraph({
-                alignment: AlignmentType.CENTER,
-                children: [t(`${m.docNo}  |  Rev. ${m.revision}  |  Issued: ${m.issueDate}`, 15, false, MUTED)],
+                children: [
+                  t(`${m.premises || "Premises"} — Temperature Monitoring Log  |  ${m.docNo}  |  ${m.issueDate}`, 18, true),
+                ],
               }),
             ],
           }),
@@ -215,12 +212,10 @@ export async function renderTemperatureLogDocx(data: TemperatureLogData): Promis
             children: [
               new Paragraph({
                 alignment: AlignmentType.CENTER,
+                border: { top: { style: BorderStyle.SINGLE, size: 1, color: BORDER_COLOR, space: 4 } },
                 children: [
-                  new TextRun({ text: "Page ", size: 15, color: MUTED, font: CALIBRI }),
-                  new TextRun({ children: [PageNumber.CURRENT], size: 15, color: MUTED, font: CALIBRI }),
-                  new TextRun({ text: " of ", size: 15, color: MUTED, font: CALIBRI }),
-                  new TextRun({ children: [PageNumber.TOTAL_PAGES], size: 15, color: MUTED, font: CALIBRI }),
-                  new TextRun({ text: `   |   ${m.docNo}`, size: 15, color: MUTED, font: CALIBRI }),
+                  new TextRun({ text: `Created by: ${m.createdBy || "_______________"}   Approved by: ${m.approvedBy || "_______________"}   Page `, size: 18, color: MUTED, font: CALIBRI }),
+                  new TextRun({ children: [PageNumber.CURRENT], size: 18, color: MUTED, font: CALIBRI }),
                 ],
               }),
             ],

@@ -65,12 +65,17 @@ export async function renderTemperatureLogPdf(data: TemperatureLogData): Promise
   }
 
   function drawDocHeader() {
-    txt("TEMPERATURE MONITORING LOG", MARGIN_X, PAGE_HEIGHT - 14, 10, bold, TEXT);
-    txt(`${m.docNo}  |  Rev. ${m.revision}  |  ${m.issueDate}`, PAGE_WIDTH / 2, PAGE_HEIGHT - 14, 8, regular, MUTED);
+    txt(
+      `${m.premises || "Premises"} — Temperature Monitoring Log  |  ${m.docNo}  |  ${m.issueDate}`,
+      MARGIN_X, PAGE_HEIGHT - 16, 8, bold, TEXT
+    );
   }
 
   function drawDocFooter() {
-    txt(`Page ${pageNum}  |  ${m.docNo}`, MARGIN_X, 8, 7, regular, MUTED);
+    txt(
+      `Created by: ${m.createdBy || "_______________"}   Approved by: ${m.approvedBy || "_______________"}   Page ${pageNum}`,
+      MARGIN_X, 12, 8, regular, MUTED
+    );
   }
 
   function drawRow(yTop: number, h: number, shade?: typeof LIGHT_BLUE) {
