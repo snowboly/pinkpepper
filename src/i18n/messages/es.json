@@ -222,7 +222,7 @@
           "20 subidas de imágenes/día",
           "Exportación PDF + Word",
           "3h de consultoría en seguridad alimentaria/mes",
-          "Horas de consultoría adicionales bajo demanda"
+          "Límites diarios más altos para preparación de auditorías"
         ],
         "cta": "Actualizar a Pro"
       }
@@ -240,7 +240,7 @@
     "whatToExpectBody": "La consultoría es proporcionada por profesionales cualificados en seguridad alimentaria. Los comentarios se entregan como notas escritas estructuradas a través de tu panel de control.",
     "scopeNote": "La consultoría se limita al contenido de la conversación seleccionada. Las solicitudes fuera de tema o fuera de alcance pueden ser rechazadas.",
     "turnaround": "Tiempo de respuesta:",
-    "turnaroundTimes": "Respuestas en un plazo de 2 días laborables",
+    "turnaroundTimes": "Respuestas en un plazo de 5 días laborables",
     "fullReviewCostNote": "La consultoría se registra en incrementos de 15 minutos contra tus 3 horas mensuales.",
     "documentType": "Tipo de documento",
     "quickCheck": "Verificación Rápida",

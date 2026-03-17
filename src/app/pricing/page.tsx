@@ -247,9 +247,9 @@ export default async function PricingPage() {
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
                   Run Virtual Audit workflows before inspections or internal reviews
                 </li>
-                <li className="flex items-start gap-2.5 font-medium text-[#9F1239]">
+                <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  Extra consultancy hours available pay-as-you-go
+                  Highest daily limits for ongoing audit prep and operational use
                 </li>
               </ul>
               <PricingActions
@@ -299,7 +299,7 @@ export default async function PricingPage() {
               </div>
               <div>
                 <p className="font-medium text-[#334155]">Pro</p>
-                <p className="mt-1">1,000 queries/day, 20 images/day, 200 transcriptions/day, 20 document generations/day, DOCX/PDF export, 3 consultancy hours/month. Extra hours available pay-as-you-go.</p>
+                <p className="mt-1">1,000 queries/day, 20 images/day, 200 transcriptions/day, 20 document generations/day, DOCX/PDF export, 3 consultancy hours/month.</p>
               </div>
             </div>
           </div>
@@ -321,7 +321,7 @@ export default async function PricingPage() {
               },
               {
                 q: "Can I buy extra consultancy hours?",
-                a: "Yes. Additional consultancy is available pay-as-you-go on an hourly basis. Contact us or request extra hours from your dashboard.",
+                a: "Yes. Additional consultancy is available on an hourly basis. Contact us or request extra hours from your dashboard.",
               },
               {
                 q: "Do unused consultancy hours roll over?",

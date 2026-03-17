@@ -222,7 +222,7 @@
           "20 caricamenti foto/giorno",
           "Esportazione PDF + Word",
           "3h di consulenza in sicurezza alimentare/mese",
-          "Ore di consulenza aggiuntive a consumo"
+          "Limiti giornalieri più alti per preparazione audit"
         ],
         "cta": "Passa a Pro"
       }
@@ -240,7 +240,7 @@
     "whatToExpectBody": "La consulenza è fornita da professionisti qualificati in sicurezza alimentare. Il feedback viene restituito sotto forma di note scritte strutturate tramite la tua dashboard.",
     "scopeNote": "La consulenza riguarda il contenuto della conversazione selezionata. Richieste fuori tema o fuori ambito potrebbero essere rifiutate.",
     "turnaround": "Tempo di risposta:",
-    "turnaroundTimes": "Risposte entro 2 giorni lavorativi",
+    "turnaroundTimes": "Risposte entro 5 giorni lavorativi",
     "fullReviewCostNote": "La consulenza viene conteggiata in incrementi di 15 minuti sulle tue 3 ore mensili.",
     "documentType": "Tipo di documento",
     "quickCheck": "Controllo Rapido",

@@ -19,7 +19,7 @@ const TIER_FEATURES: Record<string, string[]> = {
     "Document generation (HACCP plans, SOPs, logs, and more)",
     "PDF &amp; DOCX export",
     "Virtual Audit workflows",
-    "Extra consultancy hours available pay-as-you-go",
+    "Highest daily limits for audit prep and operational use",
   ],
 };
 

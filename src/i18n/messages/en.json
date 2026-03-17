@@ -342,7 +342,7 @@
           "Virtual Audit workflows",
           "PDF + DOCX export",
           "3h food safety consultancy/month",
-          "Extra consultancy hours pay-as-you-go"
+          "Highest daily limits for audit prep and operational use"
         ],
         "cta": "Upgrade to Pro"
       }
@@ -360,7 +360,7 @@
     "whatToExpectBody": "Consultancy is delivered by qualified food safety professionals. Feedback is returned as structured written notes via your dashboard.",
     "scopeNote": "Consultancy is scoped to the content of the selected conversation. Off-topic or out-of-scope requests may be declined.",
     "turnaround": "Response time:",
-    "turnaroundTimes": "Responses within 2 working days",
+    "turnaroundTimes": "Responses within 5 working days",
     "fullReviewCostNote": "Consultancy is tracked in 15-minute increments against your 3 monthly hours.",
     "documentType": "Document type",
     "quickCheck": "Quick Check",

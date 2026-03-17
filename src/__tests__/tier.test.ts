@@ -61,7 +61,7 @@ describe("TIER_CAPABILITIES – pro tier", () => {
   it("allowWordExport is true", () => expect(pro.allowWordExport).toBe(true));
   it("allowFullDocumentReview is true", () => expect(pro.allowFullDocumentReview).toBe(true));
   it("monthlyHumanReviews is 3", () => expect(pro.monthlyHumanReviews).toBe(3));
-  it("reviewTurnaround is within 2 working days", () => expect(pro.reviewTurnaround).toBe("within 2 working days"));
+  it("reviewTurnaround is within 5 working days", () => expect(pro.reviewTurnaround).toBe("within 5 working days"));
   it("maxResponseTokens is 8192", () => expect(pro.maxResponseTokens).toBe(8192));
 });
 
