@@ -352,29 +352,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="border-b border-[#F1F5F9] bg-white py-5">
-        <div className="pp-container flex flex-col items-center gap-3">
-          <div className="text-center">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#BE123C]">
-              Operational trust, not generic AI output
-            </p>
-            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[#64748B]">
-              PinkPepper is structured for the way food businesses actually document, review, and defend compliance work under EU and UK expectations, combining AI drafting speed with food safety consultancy when risk is higher.
-            </p>
-          </div>
-          <div className="flex flex-wrap items-center justify-center gap-2">
-            <span className="text-xs font-medium text-[#94A3B8] mr-1">Grounded in:</span>
-            {["EC 852/2004", "EU 1169/2011", "EC 178/2002", "UK FSA Guidance", "Codex HACCP", "BRCGS-Ready"].map((reg) => (
-              <span
-                key={reg}
-                className="rounded-full border border-[#E2E8F0] bg-[#F8FAFC] px-3 py-1 text-xs font-medium text-[#475569]"
-              >
-                {reg}
-              </span>
-            ))}
-          </div>
-        </div>
-      </section>
 
       <section className="relative overflow-hidden border-y border-[#F1F5F9] bg-[#F8FAFC] py-24">
         <div className="pp-container">
