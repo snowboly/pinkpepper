@@ -26,6 +26,22 @@ const MICRO_ROWS = [
   "Salmonella spp.", "Listeria monocytogenes", "Yeast & Mould",
 ];
 
+export function getNutritionPdfRows(data: ProductDataSheetData): string[][] {
+  if (data.nutritionRows.length > 0) {
+    return data.nutritionRows.map((row) => [row.nutrient, row.per100g, row.perServing]);
+  }
+
+  return NUTRITIONAL_ROWS.map((nutrient) => [nutrient, "", ""]);
+}
+
+export function getMicrobiologyPdfRows(data: ProductDataSheetData): string[][] {
+  if (data.microbiologyRows.length > 0) {
+    return data.microbiologyRows.map((row) => [row.parameter, row.limit, row.method, row.frequency]);
+  }
+
+  return MICRO_ROWS.map((parameter) => [parameter, "", "", ""]);
+}
+
 export async function renderProductDataSheetPdf(data: ProductDataSheetData): Promise<Uint8Array> {
   const pdf = await PDFDocument.create();
   const regular = await pdf.embedFont(StandardFonts.Helvetica);
@@ -180,7 +196,7 @@ export async function renderProductDataSheetPdf(data: ProductDataSheetData): Pro
   const nutriColW = [CONTENT_W * 0.6, CONTENT_W * 0.2, CONTENT_W * 0.2];
   drawTable(
     ["Nutrient", "Per 100g", "Per Serving"],
-    NUTRITIONAL_ROWS.map((n) => [n, "", ""]),
+    getNutritionPdfRows(data),
     nutriColW
   );
   drawDivider();
@@ -189,7 +205,7 @@ export async function renderProductDataSheetPdf(data: ProductDataSheetData): Pro
   drawSectionHeading("Microbiological Specification");
   drawTable(
     ["Parameter", "Limit (cfu/g)", "Method", "Frequency"],
-    MICRO_ROWS.map((m) => [m, "", "", ""])
+    getMicrobiologyPdfRows(data)
   );
 
   // Page numbers

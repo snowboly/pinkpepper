@@ -21,6 +21,7 @@ import { join } from "node:path";
 import type { GeneratedDocument, DocumentTable } from "./types";
 import { renderHaccpDocx } from "./render-haccp-docx";
 import { renderCleaningScheduleDocx } from "./render-cleaning-schedule-docx";
+import { renderCleaningSopDocx } from "./render-cleaning-sop-docx";
 import { renderTemperatureLogDocx } from "./render-temperature-log-docx";
 import { renderSopDocx } from "./render-sop-docx";
 import { renderFoodSafetyPolicyDocx } from "./render-food-safety-policy-docx";
@@ -108,6 +109,9 @@ export async function renderDocx(doc: GeneratedDocument): Promise<ArrayBuffer> {
   }
   if (doc.documentType === "cleaning_schedule" && doc.cleaningScheduleData) {
     return renderCleaningScheduleDocx(doc.cleaningScheduleData);
+  }
+  if (doc.documentType === "cleaning_sop" && doc.cleaningSopData) {
+    return renderCleaningSopDocx(doc.cleaningSopData);
   }
   if (doc.documentType === "temperature_log" && doc.temperatureLogData) {
     return renderTemperatureLogDocx(doc.temperatureLogData);

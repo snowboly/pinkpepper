@@ -8,8 +8,15 @@ const {
   buildHaccpDocumentDataFromAnswersMock,
   buildHaccpModelPromptMock,
   buildCleaningScheduleDataFromBuilderMock,
+  buildCleaningScheduleModelPromptMock,
+  buildCleaningSopDataFromBuilderMock,
+  buildCleaningSopModelPromptMock,
   buildProductDataSheetDataFromBuilderMock,
+  buildProductDataSheetModelPromptMock,
   buildTemperatureLogDataFromBuilderMock,
+  buildTemperatureLogModelPromptMock,
+  buildTrainingRecordDataFromBuilderMock,
+  buildTrainingRecordModelPromptMock,
   renderDocumentForChatMock,
 } = vi.hoisted(() => ({
   routeState: {
@@ -23,8 +30,15 @@ const {
   buildHaccpDocumentDataFromAnswersMock: vi.fn(),
   buildHaccpModelPromptMock: vi.fn(),
   buildCleaningScheduleDataFromBuilderMock: vi.fn(),
+  buildCleaningScheduleModelPromptMock: vi.fn(),
+  buildCleaningSopDataFromBuilderMock: vi.fn(),
+  buildCleaningSopModelPromptMock: vi.fn(),
   buildProductDataSheetDataFromBuilderMock: vi.fn(),
+  buildProductDataSheetModelPromptMock: vi.fn(),
   buildTemperatureLogDataFromBuilderMock: vi.fn(),
+  buildTemperatureLogModelPromptMock: vi.fn(),
+  buildTrainingRecordDataFromBuilderMock: vi.fn(),
+  buildTrainingRecordModelPromptMock: vi.fn(),
   renderDocumentForChatMock: vi.fn(),
 }));
 
@@ -109,19 +123,34 @@ vi.mock("@/lib/documents/haccp-generation", () => ({
   buildHaccpModelPrompt: buildHaccpModelPromptMock,
 }));
 
+vi.mock("@/lib/documents/cleaning-sop-generation", () => ({
+  buildCleaningSopDataFromAnswers: vi.fn(),
+  buildCleaningSopDataFromBuilder: buildCleaningSopDataFromBuilderMock,
+  buildCleaningSopModelPrompt: buildCleaningSopModelPromptMock,
+}));
+
 vi.mock("@/lib/documents/cleaning-schedule-generation", () => ({
   buildCleaningScheduleDataFromAnswers: vi.fn(),
   buildCleaningScheduleDataFromBuilder: buildCleaningScheduleDataFromBuilderMock,
+  buildCleaningScheduleModelPrompt: buildCleaningScheduleModelPromptMock,
 }));
 
 vi.mock("@/lib/documents/product-data-sheet-generation", () => ({
   buildProductDataSheetDataFromAnswers: vi.fn(),
   buildProductDataSheetDataFromBuilder: buildProductDataSheetDataFromBuilderMock,
+  buildProductDataSheetModelPrompt: buildProductDataSheetModelPromptMock,
+}));
+
+vi.mock("@/lib/documents/training-record-generation", () => ({
+  buildTrainingRecordDataFromAnswers: vi.fn(),
+  buildTrainingRecordDataFromBuilder: buildTrainingRecordDataFromBuilderMock,
+  buildTrainingRecordModelPrompt: buildTrainingRecordModelPromptMock,
 }));
 
 vi.mock("@/lib/documents/temperature-log-generation", () => ({
   buildTemperatureLogDataFromAnswers: vi.fn(),
   buildTemperatureLogDataFromBuilder: buildTemperatureLogDataFromBuilderMock,
+  buildTemperatureLogModelPrompt: buildTemperatureLogModelPromptMock,
 }));
 
 vi.mock("@/lib/documents/render-chat", () => ({
@@ -152,8 +181,15 @@ describe("HACCP document generation route", () => {
     buildHaccpDocumentDataFromAnswersMock.mockReset();
     buildHaccpModelPromptMock.mockReset();
     buildCleaningScheduleDataFromBuilderMock.mockReset();
+    buildCleaningScheduleModelPromptMock.mockReset();
+    buildCleaningSopDataFromBuilderMock.mockReset();
+    buildCleaningSopModelPromptMock.mockReset();
     buildProductDataSheetDataFromBuilderMock.mockReset();
+    buildProductDataSheetModelPromptMock.mockReset();
     buildTemperatureLogDataFromBuilderMock.mockReset();
+    buildTemperatureLogModelPromptMock.mockReset();
+    buildTrainingRecordDataFromBuilderMock.mockReset();
+    buildTrainingRecordModelPromptMock.mockReset();
     renderDocumentForChatMock.mockReset();
     fetchMock.mockReset();
     process.env.GROQ_API_KEY = "test-key";
@@ -173,6 +209,11 @@ describe("HACCP document generation route", () => {
       ccps: [],
     });
     buildHaccpModelPromptMock.mockReturnValue("structured haccp prompt");
+    buildCleaningScheduleModelPromptMock.mockReturnValue("structured cleaning schedule prompt");
+    buildCleaningSopModelPromptMock.mockReturnValue("structured cleaning sop prompt");
+    buildProductDataSheetModelPromptMock.mockReturnValue("structured product data sheet prompt");
+    buildTemperatureLogModelPromptMock.mockReturnValue("structured temperature log prompt");
+    buildTrainingRecordModelPromptMock.mockReturnValue("structured training record prompt");
     buildCleaningScheduleDataFromBuilderMock.mockReturnValue({
       metadata: {
         premises: "PinkPepper Production Kitchen",
@@ -187,6 +228,28 @@ describe("HACCP document generation route", () => {
       weeklyTasks: [],
       monthlyTasks: [],
       atpTargets: [],
+    });
+    buildCleaningSopDataFromBuilderMock.mockReturnValue({
+      metadata: {
+        businessName: "PinkPepper Foods",
+        premises: "Main kitchen",
+        docNo: "CL-SOP-001",
+        revision: "1",
+        date: "17 March 2026",
+        approvedBy: "Operations Manager",
+        reviewDate: "2026-12-31",
+      },
+      scope: "Cleaning and disinfection of food-contact surfaces and equipment",
+      responsibilities: [],
+      definitions: [],
+      chemicals: [],
+      standardProcedure: [],
+      nonFoodContactProcedure: [],
+      frequencySchedule: [],
+      verificationVisual: [],
+      verificationAtp: [],
+      corrective: [],
+      records: [],
     });
     buildProductDataSheetDataFromBuilderMock.mockReturnValue({
       metadata: {
@@ -212,6 +275,26 @@ describe("HACCP document generation route", () => {
       packagingType: "Printed film wrap",
       nutritionRows: [],
       microbiologyRows: [],
+    });
+    buildTrainingRecordDataFromBuilderMock.mockReturnValue({
+      metadata: {
+        businessName: "PinkPepper Foods",
+        docNo: "TR-REC-001",
+        version: "1",
+        date: "17 March 2026",
+        approvedBy: "Operations Manager",
+      },
+      employeeName: "Ana Costa",
+      jobRole: "Chef de Partie",
+      department: "Kitchen",
+      startDate: "2026-03-01",
+      inductionCompleted: true,
+      inductionDate: "2026-03-02",
+      trainerName: "Joao Silva",
+      inductionTopics: ["personal hygiene"],
+      inductionAssessment: "Competent",
+      qualifications: [],
+      trainingLogRows: [],
     });
     buildTemperatureLogDataFromBuilderMock.mockReturnValue({
       metadata: {
@@ -351,6 +434,8 @@ describe("HACCP document generation route", () => {
       month: "March",
       year: "2026",
     });
+    expect(buildTemperatureLogModelPromptMock).toHaveBeenCalled();
+    expect(buildGenerateUserPromptMock).not.toHaveBeenCalled();
     expect(payload.document?.temperatureLogData).toBeTruthy();
   });
 
@@ -391,7 +476,55 @@ describe("HACCP document generation route", () => {
       monthlyTasks: [],
       atpTargets: [],
     });
+    expect(buildCleaningScheduleModelPromptMock).toHaveBeenCalled();
+    expect(buildGenerateUserPromptMock).not.toHaveBeenCalled();
     expect(payload.document?.cleaningScheduleData).toBeTruthy();
+  });
+
+  it("uses structured builder data for cleaning SOP generation when provided", async () => {
+    routeState.tier = "pro";
+
+    const response = await POST(
+      new Request("http://localhost/api/documents/generate", {
+        method: "POST",
+        body: JSON.stringify({
+          documentType: "cleaning_sop",
+          format: "json",
+          builderKey: "cleaningSop",
+          builderData: {
+            businessName: "PinkPepper Foods",
+            approvedBy: "Operations Manager",
+            reviewDate: "2026-12-31",
+            premises: "Main kitchen",
+            scope: "Cleaning and disinfection of food-contact surfaces and equipment",
+            responsibleRole: "Kitchen staff on shift",
+            verificationRole: "Shift supervisor",
+            chemicals: [],
+            frequencySchedule: [],
+            corrective: [],
+            records: [],
+          },
+        }),
+      }),
+    );
+
+    const payload = await response.json() as { document?: { cleaningSopData?: unknown } };
+
+    expect(response.status).toBe(200);
+    expect(buildCleaningSopDataFromBuilderMock).toHaveBeenCalledWith({
+      businessName: "PinkPepper Foods",
+      approvedBy: "Operations Manager",
+      reviewDate: "2026-12-31",
+      premises: "Main kitchen",
+      scope: "Cleaning and disinfection of food-contact surfaces and equipment",
+      responsibleRole: "Kitchen staff on shift",
+      verificationRole: "Shift supervisor",
+      chemicals: [],
+      frequencySchedule: [],
+      corrective: [],
+      records: [],
+    });
+    expect(payload.document?.cleaningSopData).toBeTruthy();
   });
 
   it("uses structured builder data for product data sheet generation when provided", async () => {
@@ -451,6 +584,60 @@ describe("HACCP document generation route", () => {
       nutritionRows: [],
       microbiologyRows: [],
     });
+    expect(buildProductDataSheetModelPromptMock).toHaveBeenCalled();
+    expect(buildGenerateUserPromptMock).not.toHaveBeenCalled();
     expect(payload.document?.productDataSheetData).toBeTruthy();
+  });
+
+  it("uses structured builder data for training record generation when provided", async () => {
+    routeState.tier = "pro";
+
+    const response = await POST(
+      new Request("http://localhost/api/documents/generate", {
+        method: "POST",
+        body: JSON.stringify({
+          documentType: "staff_training_record",
+          format: "json",
+          builderKey: "staffTrainingRecord",
+          builderData: {
+            businessName: "PinkPepper Foods",
+            approvedBy: "Operations Manager",
+            employeeName: "Ana Costa",
+            jobRole: "Chef de Partie",
+            department: "Kitchen",
+            startDate: "2026-03-01",
+            inductionCompleted: "Yes",
+            inductionDate: "2026-03-02",
+            trainerName: "Joao Silva",
+            inductionTopics: ["personal hygiene"],
+            inductionAssessment: "Competent",
+            qualifications: [],
+            trainingLogRows: [],
+          },
+        }),
+      }),
+    );
+
+    const payload = await response.json() as { document?: { trainingRecordData?: unknown } };
+
+    expect(response.status).toBe(200);
+    expect(buildTrainingRecordDataFromBuilderMock).toHaveBeenCalledWith({
+      businessName: "PinkPepper Foods",
+      approvedBy: "Operations Manager",
+      employeeName: "Ana Costa",
+      jobRole: "Chef de Partie",
+      department: "Kitchen",
+      startDate: "2026-03-01",
+      inductionCompleted: "Yes",
+      inductionDate: "2026-03-02",
+      trainerName: "Joao Silva",
+      inductionTopics: ["personal hygiene"],
+      inductionAssessment: "Competent",
+      qualifications: [],
+      trainingLogRows: [],
+    });
+    expect(buildTrainingRecordModelPromptMock).toHaveBeenCalled();
+    expect(buildGenerateUserPromptMock).not.toHaveBeenCalled();
+    expect(payload.document?.trainingRecordData).toBeTruthy();
   });
 });

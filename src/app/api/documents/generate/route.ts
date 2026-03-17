@@ -8,16 +8,28 @@ import { buildHaccpDocumentDataFromAnswers, buildHaccpModelPrompt } from "@/lib/
 import {
   buildCleaningScheduleDataFromAnswers,
   buildCleaningScheduleDataFromBuilder,
+  buildCleaningScheduleModelPrompt,
 } from "@/lib/documents/cleaning-schedule-generation";
+import {
+  buildCleaningSopDataFromAnswers,
+  buildCleaningSopDataFromBuilder,
+  buildCleaningSopModelPrompt,
+} from "@/lib/documents/cleaning-sop-generation";
 import {
   buildTemperatureLogDataFromAnswers,
   buildTemperatureLogDataFromBuilder,
+  buildTemperatureLogModelPrompt,
 } from "@/lib/documents/temperature-log-generation";
 import { buildSopDataFromAnswers } from "@/lib/documents/sop-generation";
-import { buildTrainingRecordDataFromAnswers } from "@/lib/documents/training-record-generation";
+import {
+  buildTrainingRecordDataFromAnswers,
+  buildTrainingRecordDataFromBuilder,
+  buildTrainingRecordModelPrompt,
+} from "@/lib/documents/training-record-generation";
 import {
   buildProductDataSheetDataFromAnswers,
   buildProductDataSheetDataFromBuilder,
+  buildProductDataSheetModelPrompt,
 } from "@/lib/documents/product-data-sheet-generation";
 import { renderDocx } from "@/lib/documents/render-docx";
 import { renderPdf } from "@/lib/documents/render-pdf";
@@ -105,7 +117,7 @@ export async function POST(request: Request) {
     documentType?: string;
     answers?: string[];
     builderKey?: string;
-    builderData?: Record<string, string>;
+    builderData?: Record<string, unknown>;
     format?: string;
     conversationId?: string | null;
     displayPrompt?: string;
@@ -171,13 +183,44 @@ export async function POST(request: Request) {
     conversationId = newConversation.id;
   }
 
+  const haccpData = documentType === "haccp_plan" ? buildHaccpDocumentDataFromAnswers(answers) : undefined;
+  const cleaningScheduleData = documentType === "cleaning_schedule"
+    ? (builderData ? buildCleaningScheduleDataFromBuilder(builderData) : buildCleaningScheduleDataFromAnswers(answers))
+    : undefined;
+  const cleaningSopData = documentType === "cleaning_sop"
+    ? (builderData ? buildCleaningSopDataFromBuilder(builderData) : buildCleaningSopDataFromAnswers(answers))
+    : undefined;
+  const temperatureLogData = documentType === "temperature_log"
+    ? (builderData ? buildTemperatureLogDataFromBuilder(builderData) : buildTemperatureLogDataFromAnswers(answers))
+    : undefined;
+  const trainingRecordData = documentType === "staff_training_record"
+    ? (builderData ? buildTrainingRecordDataFromBuilder(builderData) : buildTrainingRecordDataFromAnswers(answers))
+    : undefined;
+  const productDataSheetData = documentType === "product_data_sheet"
+    ? (builderData ? buildProductDataSheetDataFromBuilder(builderData) : buildProductDataSheetDataFromAnswers(answers))
+    : undefined;
+  const sopTypes: DocumentType[] = ["food_safety_policy", "traceability_procedure", "pest_control_procedure", "waste_management_procedure"];
+  const sopData = sopTypes.includes(documentType as DocumentType)
+    ? buildSopDataFromAnswers(documentType as DocumentType, answers)
+    : undefined;
+
   const systemPrompt =
     documentType === "haccp_plan"
       ? "Return valid JSON for a structured HACCP document."
       : buildGenerateSystemPrompt(documentType as DocumentType);
   const userPrompt =
-    documentType === "haccp_plan"
-      ? buildHaccpModelPrompt(buildHaccpDocumentDataFromAnswers(answers))
+    documentType === "haccp_plan" && haccpData
+      ? buildHaccpModelPrompt(haccpData)
+      : documentType === "cleaning_schedule" && cleaningScheduleData
+      ? buildCleaningScheduleModelPrompt(cleaningScheduleData)
+      : documentType === "cleaning_sop" && cleaningSopData
+      ? buildCleaningSopModelPrompt(cleaningSopData)
+      : documentType === "temperature_log" && temperatureLogData
+      ? buildTemperatureLogModelPrompt(temperatureLogData)
+      : documentType === "staff_training_record" && trainingRecordData
+      ? buildTrainingRecordModelPrompt(trainingRecordData)
+      : documentType === "product_data_sheet" && productDataSheetData
+      ? buildProductDataSheetModelPrompt(productDataSheetData)
       : buildGenerateUserPrompt(documentType as DocumentType, answers);
 
   const groqModel = process.env.GROQ_MODEL ?? "llama-3.3-70b-versatile";
@@ -216,21 +259,6 @@ export async function POST(request: Request) {
   }
 
   let doc: GeneratedDocument;
-  const haccpData = documentType === "haccp_plan" ? buildHaccpDocumentDataFromAnswers(answers) : undefined;
-  const cleaningScheduleData = documentType === "cleaning_schedule"
-    ? (builderData ? buildCleaningScheduleDataFromBuilder(builderData) : buildCleaningScheduleDataFromAnswers(answers))
-    : undefined;
-  const temperatureLogData = documentType === "temperature_log"
-    ? (builderData ? buildTemperatureLogDataFromBuilder(builderData) : buildTemperatureLogDataFromAnswers(answers))
-    : undefined;
-  const trainingRecordData = documentType === "staff_training_record" ? buildTrainingRecordDataFromAnswers(answers) : undefined;
-  const productDataSheetData = documentType === "product_data_sheet"
-    ? (builderData ? buildProductDataSheetDataFromBuilder(builderData) : buildProductDataSheetDataFromAnswers(answers))
-    : undefined;
-  const sopTypes: DocumentType[] = ["food_safety_policy", "traceability_procedure", "pest_control_procedure", "waste_management_procedure", "cleaning_sop"];
-  const sopData = sopTypes.includes(documentType as DocumentType)
-    ? buildSopDataFromAnswers(documentType as DocumentType, answers)
-    : undefined;
   try {
     doc = JSON.parse(rawJson) as GeneratedDocument;
   } catch {
@@ -240,6 +268,7 @@ export async function POST(request: Request) {
 
   if (haccpData) doc.haccpData = haccpData;
   if (cleaningScheduleData) doc.cleaningScheduleData = cleaningScheduleData;
+  if (cleaningSopData) doc.cleaningSopData = cleaningSopData;
   if (temperatureLogData) doc.temperatureLogData = temperatureLogData;
   if (trainingRecordData) doc.trainingRecordData = trainingRecordData;
   if (productDataSheetData) doc.productDataSheetData = productDataSheetData;
