@@ -6,6 +6,9 @@ import { renderHaccpPdf } from "./render-haccp-pdf";
 import { renderCleaningSchedulePdf } from "./render-cleaning-schedule-pdf";
 import { renderTemperatureLogPdf } from "./render-temperature-log-pdf";
 import { renderSopPdf } from "./render-sop-pdf";
+import { renderFoodSafetyPolicyPdf } from "./render-food-safety-policy-pdf";
+import { renderTrainingRecordPdf } from "./render-training-record-pdf";
+import { renderProductDataSheetPdf } from "./render-product-data-sheet-pdf";
 
 const BRAND = rgb(0.882, 0.114, 0.282); // #E11D48
 const DARK = rgb(0.059, 0.09, 0.118);   // #0F172A
@@ -40,6 +43,15 @@ export async function renderPdf(doc: GeneratedDocument): Promise<Uint8Array> {
   }
   if (doc.documentType === "temperature_log" && doc.temperatureLogData) {
     return renderTemperatureLogPdf(doc.temperatureLogData);
+  }
+  if (doc.documentType === "food_safety_policy" && doc.sopData) {
+    return renderFoodSafetyPolicyPdf(doc, doc.sopData);
+  }
+  if (doc.documentType === "staff_training_record" && doc.trainingRecordData) {
+    return renderTrainingRecordPdf(doc.trainingRecordData);
+  }
+  if (doc.documentType === "product_data_sheet" && doc.productDataSheetData) {
+    return renderProductDataSheetPdf(doc.productDataSheetData);
   }
   if (doc.sopData) {
     return renderSopPdf(doc, doc.sopData);

@@ -11,8 +11,8 @@ describe("getDefaultDocNo", () => {
     expect(getDefaultDocNo("pest_control_procedure")).toBe("PC-001");
   });
 
-  it("returns AL-POL-001 for allergen_policy", () => {
-    expect(getDefaultDocNo("allergen_policy")).toBe("AL-POL-001");
+  it("returns FS-POL-001 for food_safety_policy", () => {
+    expect(getDefaultDocNo("food_safety_policy")).toBe("FS-POL-001");
   });
 
   it("falls back to SOP-001 for unknown types", () => {
@@ -36,7 +36,7 @@ describe("buildSopDataFromAnswers", () => {
   });
 
   it("sets revision to 1", () => {
-    const data = buildSopDataFromAnswers("allergen_policy", ["Test Business"]);
+    const data = buildSopDataFromAnswers("food_safety_policy", ["Test Business"]);
     expect(data.metadata.revision).toBe("1");
   });
 
