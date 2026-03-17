@@ -1,25 +1,25 @@
 # HACCP Plan Template
 
-**Document No.:** HACCP-001
-**Revision:** 1
-**Date:** _______________
-**Approved by:** _______________
+**Document No.:** HACCP-001  
+**Revision:** 1  
+**Date:** _______________  
+**Approved by:** _______________  
 **Review Date:** _______________
 
 ---
 
 ## 1. Scope
 
-**Product(s) covered by this HACCP plan:**
+**Product(s) covered by this HACCP plan:**  
 _[Describe the specific product or range of products this plan applies to]_
 
-**Process covered:**
+**Process covered:**  
 _[Describe the process from receipt of raw materials to despatch/serving]_
 
-**Premises:**
+**Premises:**  
 _[Name and address of the food business]_
 
-**This HACCP plan does not cover:**
+**This HACCP plan does not cover:**  
 _[Identify any processes or products explicitly excluded]_
 
 ---
@@ -67,27 +67,27 @@ _[Identify any processes or products explicitly excluded]_
 
 _[Draw or describe the complete process flow. Example for a ready meal:]_
 
-```
+```text
 1. RECEIPT OF INGREDIENTS (ambient, chilled, frozen)
-        ↓
-2. INGREDIENT STORAGE (ambient store / chill ≤5°C / freezer ≤-18°C)
-        ↓
+   ↓
+2. INGREDIENT STORAGE (ambient store / chill <= 5C / freezer <= -18C)
+   ↓
 3. PREPARATION (portioning, chopping, mixing)
-        ↓
-4. COOKING (core temperature ≥75°C)
-        ↓
-5. COOLING (≥63°C → ≤8°C within 90 min; blast chiller)
-        ↓
-6. CHILLED STORAGE (≤5°C)
-        ↓
+   ↓
+4. COOKING (core temperature >= 75C)
+   ↓
+5. COOLING (>= 63C -> <= 8C within 90 min; blast chiller)
+   ↓
+6. CHILLED STORAGE (<= 5C)
+   ↓
 7. PORTIONING / ASSEMBLY
-        ↓
+   ↓
 8. PACKAGING
-        ↓
+   ↓
 9. LABELLING (date, use-by, allergens)
-        ↓
-10. CHILLED DISTRIBUTION (≤5°C)
-        ↓
+   ↓
+10. CHILLED DISTRIBUTION (<= 5C)
+   ↓
 11. CONSUMER
 ```
 
@@ -100,11 +100,12 @@ _[Draw or describe the complete process flow. Example for a ready meal:]_
 For each process step, identify hazards and determine whether they are significant (requiring a CCP or prerequisite programme).
 
 ### Hazard Categories
+
 - **B** = Biological (pathogens, spoilage organisms, parasites)
 - **C** = Chemical (cleaning chemicals, allergens, pesticides, mycotoxins, migration from FCMs)
 - **P** = Physical (foreign bodies: metal, glass, bone, hard plastic, stone)
 
-### Significance Scoring (Risk = Likelihood × Severity)
+### Significance Scoring (Risk = Likelihood x Severity)
 
 | Score | Likelihood | Severity |
 |---|---|---|
@@ -113,7 +114,7 @@ For each process step, identify hazards and determine whether they are significa
 | 3 | Likely | Severe (hospitalisation, long-term harm) |
 | 4 | Very likely | Critical (fatality, mass casualty) |
 
-**Risk ≥ 4 = Significant hazard → proceed to CCP Decision Tree**
+**Risk >= 4 = Significant hazard -> proceed to CCP Decision Tree**
 
 ### Hazard Analysis Table
 
@@ -122,9 +123,9 @@ For each process step, identify hazards and determine whether they are significa
 | 1. Receipt | Pathogens in raw meat | B | Contaminated supplier | 2 | 4 | 8 | Yes | Supplier approval, delivery temp check | CCP1 |
 | 1. Receipt | Foreign body in ingredient | P | Supplier contamination | 1 | 2 | 2 | No | Supplier approval, visual inspection | PRP |
 | 1. Receipt | Allergen cross-contact | C | Mislabelled ingredient | 2 | 4 | 8 | Yes | Allergen declaration, check spec | PRP + allergen control |
-| 2. Storage | Pathogen growth in chilled ingredient | B | Temp abuse | 2 | 3 | 6 | Yes | Temp monitoring, chill at ≤5°C | CCP (temp) |
-| 4. Cooking | Survival of pathogens | B | Insufficient heat | 3 | 4 | 12 | Yes | Core temp probe: ≥75°C | CCP2 |
-| 5. Cooling | Pathogen growth during cooling | B | Slow cooling | 2 | 4 | 8 | Yes | Blast chill; ≥63°C → ≤8°C ≤90 min | CCP3 |
+| 2. Storage | Pathogen growth in chilled ingredient | B | Temp abuse | 2 | 3 | 6 | Yes | Temp monitoring, chill at <= 5C | CCP (temp) |
+| 4. Cooking | Survival of pathogens | B | Insufficient heat | 3 | 4 | 12 | Yes | Core temp probe: >= 75C | CCP2 |
+| 5. Cooling | Pathogen growth during cooling | B | Slow cooling | 2 | 4 | 8 | Yes | Blast chill; >= 63C -> <= 8C <= 90 min | CCP3 |
 | _[Add all process steps]_ | | | | | | | | | |
 
 ---
@@ -133,19 +134,19 @@ For each process step, identify hazards and determine whether they are significa
 
 Apply to each significant hazard:
 
-```
+```text
 Q1: Do control measures exist for this hazard?
-      Yes → Q2    No → Modify step/product to introduce controls; then Q2
+    Yes -> Q2    No -> Modify step/product to introduce controls; then Q2
 
 Q2: Is this step specifically designed to eliminate or reduce the hazard to an acceptable level?
-      Yes → CCP   No → Q3
+    Yes -> CCP   No -> Q3
 
 Q3: Could contamination occur or increase to unacceptable levels at this step?
-      No → Not a CCP   Yes → Q4
+    No -> Not a CCP   Yes -> Q4
 
 Q4: Will a subsequent step eliminate or reduce the hazard to an acceptable level?
-      Yes → Not a CCP (control at that subsequent step)
-      No → CCP
+    Yes -> Not a CCP (control at that subsequent step)
+    No -> CCP
 ```
 
 ---
@@ -154,10 +155,10 @@ Q4: Will a subsequent step eliminate or reduce the hazard to an acceptable level
 
 | CCP No. | Process Step | Hazard | Critical Limit | Monitoring (What / How / Frequency / Who) | Corrective Action | Records | Verification |
 |---|---|---|---|---|---|---|---|
-| CCP1 | Receipt of raw meat/poultry | Pathogens — temperature abuse in transit | Delivery temp ≤7°C (raw meat) / ≤4°C (poultry) | Probe each delivery; visual check / calibrated thermometer / every delivery / delivery operatives | Reject delivery if above limit; document; notify supplier | Delivery temperature log | EHO inspection; micro testing of incoming raw materials quarterly |
-| CCP2 | Cooking | Survival of pathogens (Salmonella, Campylobacter, E. coli) | Core temperature ≥75°C for ≥2 minutes (England/Wales/NI) or ≥82°C (Scotland) | Probe in thickest part of product / calibrated needle probe / every batch / chef | Re-cook to achieve critical limit; if batch cannot be re-cooked, discard | Cooking temperature log | Probe calibration log; periodic test cooking validation |
-| CCP3 | Cooling | Growth of pathogens during cooling (Bacillus cereus, Clostridium perfringens, Listeria) | ≥63°C → ≤8°C within 90 minutes | Temperature at start and end of cooling cycle / calibrated probe / every cooling event / production operative | Discard product if >90 minutes; review blast chiller performance | Cooling log | Blast chiller validation; probe calibration log |
-| CCP4 | Chilled storage | Pathogen growth (Listeria, C. perfringens) | Storage temperature ≤5°C (≤8°C legal) | Fridge temperature check / digital probe or logger / twice daily + continuous logger / operative | Move product to compliant fridge; investigate cause; discard product if >8°C for unknown period | Temperature log; corrective action record | Thermometer calibration; chiller service records |
+| CCP1 | Receipt of raw meat/poultry | Pathogens - temperature abuse in transit | Delivery temp <= 7C (raw meat) / <= 4C (poultry) | Probe each delivery; visual check / calibrated thermometer / every delivery / delivery operatives | Reject delivery if above limit; document; notify supplier | Delivery temperature log | EHO inspection; micro testing of incoming raw materials quarterly |
+| CCP2 | Cooking | Survival of pathogens (Salmonella, Campylobacter, E. coli) | Core temperature >= 75C for >= 2 minutes (England/Wales/NI) or >= 82C (Scotland) | Probe in thickest part of product / calibrated needle probe / every batch / chef | Re-cook to achieve critical limit; if batch cannot be re-cooked, discard | Cooking temperature log | Probe calibration log; periodic test cooking validation |
+| CCP3 | Cooling | Growth of pathogens during cooling (Bacillus cereus, Clostridium perfringens, Listeria) | >= 63C -> <= 8C within 90 minutes | Temperature at start and end of cooling cycle / calibrated probe / every cooling event / production operative | Discard product if > 90 minutes; review blast chiller performance | Cooling log | Blast chiller validation; probe calibration log |
+| CCP4 | Chilled storage | Pathogen growth (Listeria, C. perfringens) | Storage temperature <= 5C (<= 8C legal) | Fridge temperature check / digital probe or logger / twice daily + continuous logger / operative | Move product to compliant fridge; investigate cause; discard product if > 8C for unknown period | Temperature log; corrective action record | Thermometer calibration; chiller service records |
 | _[Add further CCPs as identified in hazard analysis]_ | | | | | | | |
 
 ---
@@ -201,6 +202,7 @@ The following prerequisite programmes support the HACCP plan by controlling back
 ## 11. HACCP Review
 
 This HACCP plan must be reviewed:
+
 - Annually as a minimum
 - When a new product or process is introduced
 - When a raw material or supplier changes

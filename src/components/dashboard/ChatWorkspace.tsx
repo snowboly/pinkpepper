@@ -34,7 +34,7 @@ type DocWizard = {
 const HACCP_WIZARD = buildHaccpWizardDefinition();
 
 const DOC_WIZARDS: Record<string, DocWizard> = {
-  "HACCP plan": {
+  haccpPlan: {
     id: "haccp_plan",
     wizardKey: "haccpPlan",
     questionCount: HACCP_WIZARD.questions.length,
@@ -56,7 +56,7 @@ const DOC_WIZARDS: Record<string, DocWizard> = {
       `- Keep the format operational and audit-ready, not manual-style.\n` +
       `- Use visible Yes/No values for CCP decisions.`,
   },
-  "Cleaning SOP": {
+  cleaningSop: {
     id: "cleaning_sop",
     wizardKey: "cleaningSop",
     questionCount: 5,
@@ -72,7 +72,7 @@ const DOC_WIZARDS: Record<string, DocWizard> = {
       `- Include example cleaning schedule and sign-off log table.\n` +
       `- Keep wording operational and audit-friendly.`,
   },
-  "Temperature log": {
+  tempLog: {
     id: "temp_log",
     wizardKey: "tempLog",
     questionCount: 4,
@@ -87,7 +87,7 @@ const DOC_WIZARDS: Record<string, DocWizard> = {
       `- Include date, time, item/equipment, reading, limit, pass/fail, corrective action, initials/sign-off.\n` +
       `- Add concise guidance on what to do when limits are breached.`,
   },
-  "Food safety policy": {
+  foodSafetyPolicy: {
     id: "food_safety_policy",
     wizardKey: "foodSafetyPolicy",
     questionCount: 4,
@@ -102,7 +102,7 @@ const DOC_WIZARDS: Record<string, DocWizard> = {
       `- Include HACCP commitment, training requirements, monitoring and review schedule.\n` +
       `- Reference Reg (EC) 852/2004 and Food Safety Act 1990 where relevant.`,
   },
-  "Traceability procedure": {
+  traceabilityProcedure: {
     id: "traceability_procedure",
     wizardKey: "traceabilityProcedure",
     questionCount: 4,
@@ -117,7 +117,7 @@ const DOC_WIZARDS: Record<string, DocWizard> = {
       `- Include recall/withdrawal procedure with decision tree and mock recall schedule.\n` +
       `- Reference Reg (EC) 178/2002 Articles 17-20.`,
   },
-  "Pest control procedure": {
+  pestControlProcedure: {
     id: "pest_control_procedure",
     wizardKey: "pestControlProcedure",
     questionCount: 5,
@@ -133,7 +133,7 @@ const DOC_WIZARDS: Record<string, DocWizard> = {
       `- Include prevention measures, monitoring methods, pest sighting log, corrective actions.\n` +
       `- Include contractor management requirements and record-keeping.`,
   },
-  "Staff training record": {
+  staffTrainingRecord: {
     id: "staff_training_record",
     wizardKey: "staffTrainingRecord",
     questionCount: 4,
@@ -148,7 +148,7 @@ const DOC_WIZARDS: Record<string, DocWizard> = {
       `- Cover food hygiene, allergens, HACCP, cleaning, personal hygiene, pest awareness.\n` +
       `- Include a training matrix table and individual training record template.`,
   },
-  "Waste management procedure": {
+  wasteManagementProcedure: {
     id: "waste_management_procedure",
     wizardKey: "wasteManagementProcedure",
     questionCount: 4,
@@ -163,7 +163,7 @@ const DOC_WIZARDS: Record<string, DocWizard> = {
       `- Include waste carrier licensing, duty of care, and record-keeping.\n` +
       `- Reference Annex II Reg (EC) 852/2004 and Environmental Protection Act 1990.`,
   },
-  "Cleaning schedule": {
+  cleaningSchedule: {
     id: "cleaning_schedule",
     wizardKey: "cleaningSchedule",
     questionCount: 5,
@@ -179,7 +179,7 @@ const DOC_WIZARDS: Record<string, DocWizard> = {
       `- Include deep cleaning schedule and equipment cleaning procedures.\n` +
       `- Include daily/weekly tables and a cleaning verification log.`,
   },
-  "Product data sheet": {
+  productDataSheet: {
     id: "product_data_sheet",
     wizardKey: "productDataSheet",
     questionCount: 7,
@@ -662,7 +662,7 @@ export default function ChatWorkspace({
   }
 
   function startDocumentWizard(suggestion: StarterSuggestion) {
-    const wizard = DOC_WIZARDS[suggestion.label];
+    const wizard = suggestion.key ? DOC_WIZARDS[suggestion.key] : undefined;
     if (!wizard) {
       void sendPromptValue(suggestion.text);
       return;

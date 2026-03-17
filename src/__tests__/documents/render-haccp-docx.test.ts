@@ -9,7 +9,7 @@ const sample: HaccpDocumentData = {
     date: "2026-03-16",
     createdBy: "Joao",
     approvedBy: "QA Manager",
-    logoUrl: null,
+    logoUrl: "/logo/LogoV3.png",
   },
   processFlow: ["Receive", "Store chilled", "Prepare", "Serve"],
   steps: [

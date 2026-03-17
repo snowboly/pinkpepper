@@ -84,6 +84,22 @@ describe("chatbot source encoding", () => {
       }
     }
   });
+
+  it("keeps the new template assets free of common mojibake markers", () => {
+    const files = [
+      "knowledge-docs/templates/HACCP-plan-template.md",
+      "knowledge-docs/templates/allergen-declaration-form-template.md",
+    ];
+
+    const badFragments = ["â˜", "â†“", "â‰¤", "â‰¥", "Ã—", "â€”"];
+
+    for (const file of files) {
+      const content = readWorkspaceFile(file);
+      for (const fragment of badFragments) {
+        expect(content, `${file} should not contain ${fragment}`).not.toContain(fragment);
+      }
+    }
+  });
 });
 
 describe("chat workspace chrome", () => {
@@ -118,5 +134,18 @@ describe("chat workspace chrome", () => {
     expect(messages).not.toContain("Premium Workflows");
     expect(messages).not.toContain("Request expert review");
     expect(messages).not.toContain("humanReviewHighlight");
+  });
+
+  it("uses stable document keys for the builder and hides unsupported document starters", () => {
+    const workspace = readWorkspaceFile("src/components/dashboard/ChatWorkspace.tsx");
+    const messages = readWorkspaceFile("src/components/dashboard/ChatMessages.tsx");
+
+    expect(workspace).toContain("const wizard = suggestion.key ? DOC_WIZARDS[suggestion.key] : undefined;");
+    expect(workspace).not.toContain("DOC_WIZARDS[suggestion.label]");
+
+    expect(messages).toContain("key?: string;");
+    expect(messages).not.toContain('{ key: "supplierApproval" }');
+    expect(messages).not.toContain('{ key: "allergenPolicy" }');
+    expect(messages).not.toContain('{ key: "personalHygienePolicy" }');
   });
 });

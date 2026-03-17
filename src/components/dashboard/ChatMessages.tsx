@@ -9,6 +9,7 @@ import MessageItem from "./MessageItem";
 
 export type StarterSuggestion = {
   category: "document" | "audit" | "qa";
+  key?: string;
   label: string;
   text: string;
 };
@@ -49,7 +50,6 @@ const DOC_CATEGORIES: DocCategory[] = [
       { key: "cleaningSop" },
       { key: "traceabilityProcedure" },
       { key: "pestControlProcedure" },
-      { key: "supplierApproval" },
       { key: "wasteManagementProcedure" },
     ],
   },
@@ -59,13 +59,6 @@ const DOC_CATEGORIES: DocCategory[] = [
       { key: "tempLog" },
       { key: "cleaningSchedule" },
       { key: "staffTrainingRecord" },
-    ],
-  },
-  {
-    titleKey: "docCategories.policies",
-    items: [
-      { key: "allergenPolicy" },
-      { key: "personalHygienePolicy" },
     ],
   },
 ];
@@ -124,6 +117,7 @@ export default function ChatMessages({
     setDocMenuOpen(false);
     const suggestion: StarterSuggestion = {
       category: "document",
+      key,
       label: t(`suggestions.${key}.label`),
       text: t(`suggestions.${key}.text`),
     };

@@ -1,4 +1,6 @@
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 import type { HaccpDocumentData } from "./haccp-schema";
 
 const PAGE_WIDTH = 842;
@@ -9,10 +11,46 @@ const BORDER = rgb(0.796, 0.835, 0.882);
 const TEXT = rgb(0.059, 0.09, 0.118);
 const MUTED = rgb(0.278, 0.341, 0.404);
 
+type PdfLogo = {
+  bytes: Uint8Array;
+  type: "png" | "jpg";
+};
+
+async function loadOptionalLogo(logoUrl: string | null | undefined): Promise<PdfLogo | null> {
+  if (!logoUrl) return null;
+
+  if (logoUrl.startsWith("data:image/")) {
+    const match = logoUrl.match(/^data:image\/(png|jpeg);base64,(.+)$/);
+    if (!match) return null;
+
+    return {
+      bytes: Buffer.from(match[2], "base64"),
+      type: match[1] === "jpeg" ? "jpg" : "png",
+    };
+  }
+
+  if (!logoUrl.startsWith("/")) return null;
+
+  try {
+    const filePath = join(process.cwd(), "public", logoUrl.replace(/^\/+/, ""));
+    const bytes = await readFile(filePath);
+    const type = logoUrl.toLowerCase().endsWith(".jpg") || logoUrl.toLowerCase().endsWith(".jpeg") ? "jpg" : "png";
+    return { bytes, type };
+  } catch {
+    return null;
+  }
+}
+
 export async function renderHaccpPdf(data: HaccpDocumentData): Promise<Uint8Array> {
   const pdf = await PDFDocument.create();
   const regular = await pdf.embedFont(StandardFonts.Helvetica);
   const bold = await pdf.embedFont(StandardFonts.HelveticaBold);
+  const logo = await loadOptionalLogo(data.metadata.logoUrl);
+  const logoImage = logo
+    ? logo.type === "png"
+      ? await pdf.embedPng(logo.bytes)
+      : await pdf.embedJpg(logo.bytes)
+    : null;
 
   let page = pdf.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
   let y = PAGE_HEIGHT - MARGIN;
@@ -26,8 +64,21 @@ export async function renderHaccpPdf(data: HaccpDocumentData): Promise<Uint8Arra
   }
 
   function drawFrame() {
+    let headerX = MARGIN;
+    if (logoImage) {
+      const logoHeight = 24;
+      const logoWidth = (logoImage.width / logoImage.height) * logoHeight;
+      page.drawImage(logoImage, {
+        x: MARGIN,
+        y: PAGE_HEIGHT - 30,
+        width: logoWidth,
+        height: logoHeight,
+      });
+      headerX += logoWidth + 10;
+    }
+
     page.drawText(`${data.metadata.companyName} | Version ${data.metadata.version} | ${data.metadata.date}`, {
-      x: MARGIN,
+      x: headerX,
       y: PAGE_HEIGHT - 22,
       size: 10,
       font: bold,
