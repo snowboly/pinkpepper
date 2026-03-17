@@ -123,6 +123,13 @@ const MICRO_ROWS = [
 ];
 
 export async function renderProductDataSheetDocx(data: ProductDataSheetData): Promise<ArrayBuffer> {
+  const nutritionRows = data.nutritionRows.length > 0
+    ? data.nutritionRows.map((row) => [row.nutrient, row.per100g, row.perServing])
+    : NUTRITIONAL_ROWS;
+  const microbiologyRows = data.microbiologyRows.length > 0
+    ? data.microbiologyRows.map((row) => [row.parameter, row.limit, row.method, row.frequency])
+    : MICRO_ROWS;
+
   const children: (Paragraph | Table)[] = [
     // Product identity
     new Paragraph({
@@ -176,7 +183,7 @@ export async function renderProductDataSheetDocx(data: ProductDataSheetData): Pr
     sectionHeading("Nutritional Information (per 100g / 100ml)"),
     buildTable(
       ["Nutrient", "Per 100g", "Per Serving"],
-      NUTRITIONAL_ROWS
+      nutritionRows
     ),
     new Paragraph({ text: "", spacing: { after: 120 } }),
     divider(),
@@ -185,7 +192,7 @@ export async function renderProductDataSheetDocx(data: ProductDataSheetData): Pr
     sectionHeading("Microbiological Specification"),
     buildTable(
       ["Parameter", "Limit (cfu/g)", "Method", "Frequency"],
-      MICRO_ROWS
+      microbiologyRows
     ),
     new Paragraph({ text: "", spacing: { after: 160 } }),
   ];

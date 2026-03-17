@@ -1,4 +1,29 @@
-import type { ProductDataSheetData } from "./product-data-sheet-schema";
+import type {
+  ProductDataSheetData,
+  ProductMicrobiologyRow,
+  ProductNutritionRow,
+} from "./product-data-sheet-schema";
+
+type ProductDataSheetBuilderData = {
+  businessName?: string;
+  approvedBy?: string;
+  productName?: string;
+  productCode?: string;
+  category?: string;
+  description?: string;
+  countryOfOrigin?: string;
+  ingredients?: string;
+  contains?: string;
+  mayContain?: string;
+  freeFrom?: string;
+  storageConditions?: string;
+  shelfLifeUnopened?: string;
+  shelfLifeOpened?: string;
+  netWeight?: string;
+  packagingType?: string;
+  nutritionRows?: ProductNutritionRow[];
+  microbiologyRows?: ProductMicrobiologyRow[];
+};
 
 function todayIso(): string {
   return new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "long", year: "numeric" });
@@ -58,5 +83,37 @@ export function buildProductDataSheetDataFromAnswers(answers: string[]): Product
     shelfLifeOpened,
     netWeight,
     packagingType,
+    nutritionRows: [],
+    microbiologyRows: [],
+  };
+}
+
+export function buildProductDataSheetDataFromBuilder(
+  builder: ProductDataSheetBuilderData,
+): ProductDataSheetData {
+  return {
+    metadata: {
+      businessName: builder.businessName?.trim() ?? "",
+      docNo: "PDS-001",
+      version: "1",
+      date: todayIso(),
+      approvedBy: builder.approvedBy?.trim() ?? "",
+    },
+    productName: builder.productName?.trim() ?? "",
+    productCode: builder.productCode?.trim() ?? "",
+    category: builder.category?.trim() ?? "",
+    description: builder.description?.trim() ?? "",
+    countryOfOrigin: builder.countryOfOrigin?.trim() ?? "",
+    ingredients: builder.ingredients?.trim() ?? "",
+    allergenContains: builder.contains?.trim() ?? "",
+    allergenMayContain: builder.mayContain?.trim() ?? "",
+    allergenFreeFrom: builder.freeFrom?.trim() ?? "",
+    storageConditions: builder.storageConditions?.trim() ?? "",
+    shelfLifeUnopened: builder.shelfLifeUnopened?.trim() ?? "",
+    shelfLifeOpened: builder.shelfLifeOpened?.trim() ?? "",
+    netWeight: builder.netWeight?.trim() ?? "",
+    packagingType: builder.packagingType?.trim() ?? "",
+    nutritionRows: builder.nutritionRows ?? [],
+    microbiologyRows: builder.microbiologyRows ?? [],
   };
 }

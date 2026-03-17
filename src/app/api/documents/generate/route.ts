@@ -5,11 +5,20 @@ import { countUsageSince, utcDayStartIso } from "@/lib/policy";
 import { TIER_CAPABILITIES } from "@/lib/tier";
 import { buildGenerateSystemPrompt, buildGenerateUserPrompt } from "@/lib/documents/generate-prompt";
 import { buildHaccpDocumentDataFromAnswers, buildHaccpModelPrompt } from "@/lib/documents/haccp-generation";
-import { buildCleaningScheduleDataFromAnswers } from "@/lib/documents/cleaning-schedule-generation";
-import { buildTemperatureLogDataFromAnswers } from "@/lib/documents/temperature-log-generation";
+import {
+  buildCleaningScheduleDataFromAnswers,
+  buildCleaningScheduleDataFromBuilder,
+} from "@/lib/documents/cleaning-schedule-generation";
+import {
+  buildTemperatureLogDataFromAnswers,
+  buildTemperatureLogDataFromBuilder,
+} from "@/lib/documents/temperature-log-generation";
 import { buildSopDataFromAnswers } from "@/lib/documents/sop-generation";
 import { buildTrainingRecordDataFromAnswers } from "@/lib/documents/training-record-generation";
-import { buildProductDataSheetDataFromAnswers } from "@/lib/documents/product-data-sheet-generation";
+import {
+  buildProductDataSheetDataFromAnswers,
+  buildProductDataSheetDataFromBuilder,
+} from "@/lib/documents/product-data-sheet-generation";
 import { renderDocx } from "@/lib/documents/render-docx";
 import { renderPdf } from "@/lib/documents/render-pdf";
 import { renderDocumentForChat } from "@/lib/documents/render-chat";
@@ -92,14 +101,29 @@ export async function POST(request: Request) {
     );
   }
 
-  let body: { documentType?: string; answers?: string[]; format?: string; conversationId?: string | null; displayPrompt?: string };
+  let body: {
+    documentType?: string;
+    answers?: string[];
+    builderKey?: string;
+    builderData?: Record<string, string>;
+    format?: string;
+    conversationId?: string | null;
+    displayPrompt?: string;
+  };
   try {
     body = await request.json();
   } catch {
     return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 });
   }
 
-  const { documentType, answers = [], format = "json", conversationId: requestedConversationId = null, displayPrompt } = body;
+  const {
+    documentType,
+    answers = [],
+    builderData,
+    format = "json",
+    conversationId: requestedConversationId = null,
+    displayPrompt,
+  } = body;
 
   if (!documentType || !VALID_TYPES.includes(documentType as DocumentType)) {
     return NextResponse.json(
@@ -193,10 +217,16 @@ export async function POST(request: Request) {
 
   let doc: GeneratedDocument;
   const haccpData = documentType === "haccp_plan" ? buildHaccpDocumentDataFromAnswers(answers) : undefined;
-  const cleaningScheduleData = documentType === "cleaning_schedule" ? buildCleaningScheduleDataFromAnswers(answers) : undefined;
-  const temperatureLogData = documentType === "temperature_log" ? buildTemperatureLogDataFromAnswers(answers) : undefined;
+  const cleaningScheduleData = documentType === "cleaning_schedule"
+    ? (builderData ? buildCleaningScheduleDataFromBuilder(builderData) : buildCleaningScheduleDataFromAnswers(answers))
+    : undefined;
+  const temperatureLogData = documentType === "temperature_log"
+    ? (builderData ? buildTemperatureLogDataFromBuilder(builderData) : buildTemperatureLogDataFromAnswers(answers))
+    : undefined;
   const trainingRecordData = documentType === "staff_training_record" ? buildTrainingRecordDataFromAnswers(answers) : undefined;
-  const productDataSheetData = documentType === "product_data_sheet" ? buildProductDataSheetDataFromAnswers(answers) : undefined;
+  const productDataSheetData = documentType === "product_data_sheet"
+    ? (builderData ? buildProductDataSheetDataFromBuilder(builderData) : buildProductDataSheetDataFromAnswers(answers))
+    : undefined;
   const sopTypes: DocumentType[] = ["food_safety_policy", "traceability_procedure", "pest_control_procedure", "waste_management_procedure", "cleaning_sop"];
   const sopData = sopTypes.includes(documentType as DocumentType)
     ? buildSopDataFromAnswers(documentType as DocumentType, answers)

@@ -7,6 +7,9 @@ const {
   buildGenerateUserPromptMock,
   buildHaccpDocumentDataFromAnswersMock,
   buildHaccpModelPromptMock,
+  buildCleaningScheduleDataFromBuilderMock,
+  buildProductDataSheetDataFromBuilderMock,
+  buildTemperatureLogDataFromBuilderMock,
   renderDocumentForChatMock,
 } = vi.hoisted(() => ({
   routeState: {
@@ -19,6 +22,9 @@ const {
   buildGenerateUserPromptMock: vi.fn(),
   buildHaccpDocumentDataFromAnswersMock: vi.fn(),
   buildHaccpModelPromptMock: vi.fn(),
+  buildCleaningScheduleDataFromBuilderMock: vi.fn(),
+  buildProductDataSheetDataFromBuilderMock: vi.fn(),
+  buildTemperatureLogDataFromBuilderMock: vi.fn(),
   renderDocumentForChatMock: vi.fn(),
 }));
 
@@ -103,6 +109,21 @@ vi.mock("@/lib/documents/haccp-generation", () => ({
   buildHaccpModelPrompt: buildHaccpModelPromptMock,
 }));
 
+vi.mock("@/lib/documents/cleaning-schedule-generation", () => ({
+  buildCleaningScheduleDataFromAnswers: vi.fn(),
+  buildCleaningScheduleDataFromBuilder: buildCleaningScheduleDataFromBuilderMock,
+}));
+
+vi.mock("@/lib/documents/product-data-sheet-generation", () => ({
+  buildProductDataSheetDataFromAnswers: vi.fn(),
+  buildProductDataSheetDataFromBuilder: buildProductDataSheetDataFromBuilderMock,
+}));
+
+vi.mock("@/lib/documents/temperature-log-generation", () => ({
+  buildTemperatureLogDataFromAnswers: vi.fn(),
+  buildTemperatureLogDataFromBuilder: buildTemperatureLogDataFromBuilderMock,
+}));
+
 vi.mock("@/lib/documents/render-chat", () => ({
   renderDocumentForChat: renderDocumentForChatMock,
 }));
@@ -130,6 +151,9 @@ describe("HACCP document generation route", () => {
     buildGenerateUserPromptMock.mockReset();
     buildHaccpDocumentDataFromAnswersMock.mockReset();
     buildHaccpModelPromptMock.mockReset();
+    buildCleaningScheduleDataFromBuilderMock.mockReset();
+    buildProductDataSheetDataFromBuilderMock.mockReset();
+    buildTemperatureLogDataFromBuilderMock.mockReset();
     renderDocumentForChatMock.mockReset();
     fetchMock.mockReset();
     process.env.GROQ_API_KEY = "test-key";
@@ -149,6 +173,63 @@ describe("HACCP document generation route", () => {
       ccps: [],
     });
     buildHaccpModelPromptMock.mockReturnValue("structured haccp prompt");
+    buildCleaningScheduleDataFromBuilderMock.mockReturnValue({
+      metadata: {
+        premises: "PinkPepper Production Kitchen",
+        docNo: "CL-001",
+        revision: "1",
+        date: "17 March 2026",
+        approvedBy: "Operations Manager",
+        reviewDate: "2026-12-31",
+      },
+      chemicalReference: [],
+      dailyTasks: [],
+      weeklyTasks: [],
+      monthlyTasks: [],
+      atpTargets: [],
+    });
+    buildProductDataSheetDataFromBuilderMock.mockReturnValue({
+      metadata: {
+        businessName: "PinkPepper Foods",
+        docNo: "PDS-001",
+        version: "1",
+        date: "17 March 2026",
+        approvedBy: "QA Manager",
+      },
+      productName: "Chicken Caesar Wrap",
+      productCode: "WRAP-001",
+      category: "Ready-to-eat wrap",
+      description: "Chilled tortilla wrap with chicken and Caesar dressing",
+      countryOfOrigin: "Portugal",
+      ingredients: "Tortilla, chicken, dressing, lettuce",
+      allergenContains: "Milk, Egg, Wheat",
+      allergenMayContain: "Mustard",
+      allergenFreeFrom: "Peanuts",
+      storageConditions: "Keep refrigerated at 0C to 4C",
+      shelfLifeUnopened: "3 days",
+      shelfLifeOpened: "Consume immediately",
+      netWeight: "220g",
+      packagingType: "Printed film wrap",
+      nutritionRows: [],
+      microbiologyRows: [],
+    });
+    buildTemperatureLogDataFromBuilderMock.mockReturnValue({
+      metadata: {
+        premises: "PinkPepper Cafe",
+        docNo: "TL-001",
+        revision: "1",
+        issueDate: "2026-03-17",
+        month: "March",
+        year: "2026",
+        unitId: "Walk-in chiller 1",
+        probeLocation: "Top and bottom shelf",
+        targetRange: "0C to 4C",
+        createdBy: "Joao",
+        approvedBy: "Maria",
+        checksPerDay: 2,
+        probeCount: 2,
+      },
+    });
     fetchMock.mockResolvedValue({
       ok: true,
       json: async () => ({
@@ -225,5 +306,151 @@ describe("HACCP document generation route", () => {
     expect(buildGenerateSystemPromptMock).not.toHaveBeenCalled();
     expect(buildGenerateUserPromptMock).not.toHaveBeenCalled();
     expect(payload.document?.haccpData).toBeTruthy();
+  });
+
+  it("uses structured builder data for temperature log generation when provided", async () => {
+    routeState.tier = "pro";
+
+    const response = await POST(
+      new Request("http://localhost/api/documents/generate", {
+        method: "POST",
+        body: JSON.stringify({
+          documentType: "temperature_log",
+          format: "json",
+          builderKey: "tempLog",
+          builderData: {
+            businessName: "PinkPepper Cafe",
+            createdBy: "Joao",
+            approvedBy: "Maria",
+            logType: "Fridge",
+            targetRange: "0C to 4C",
+            unitId: "Walk-in chiller 1",
+            checksPerDay: "2",
+            probeCount: "2",
+            probeLocation: "Top and bottom shelf",
+            month: "March",
+            year: "2026",
+          },
+        }),
+      }),
+    );
+
+    const payload = await response.json() as { document?: { temperatureLogData?: unknown } };
+
+    expect(response.status).toBe(200);
+    expect(buildTemperatureLogDataFromBuilderMock).toHaveBeenCalledWith({
+      businessName: "PinkPepper Cafe",
+      createdBy: "Joao",
+      approvedBy: "Maria",
+      logType: "Fridge",
+      targetRange: "0C to 4C",
+      unitId: "Walk-in chiller 1",
+      checksPerDay: "2",
+      probeCount: "2",
+      probeLocation: "Top and bottom shelf",
+      month: "March",
+      year: "2026",
+    });
+    expect(payload.document?.temperatureLogData).toBeTruthy();
+  });
+
+  it("uses structured builder data for cleaning schedule generation when provided", async () => {
+    routeState.tier = "pro";
+
+    const response = await POST(
+      new Request("http://localhost/api/documents/generate", {
+        method: "POST",
+        body: JSON.stringify({
+          documentType: "cleaning_schedule",
+          format: "json",
+          builderKey: "cleaningSchedule",
+          builderData: {
+            businessName: "PinkPepper Production Kitchen",
+            approvedBy: "Operations Manager",
+            reviewDate: "2026-12-31",
+            chemicalReference: [],
+            dailyTasks: [],
+            weeklyTasks: [],
+            monthlyTasks: [],
+            atpTargets: [],
+          },
+        }),
+      }),
+    );
+
+    const payload = await response.json() as { document?: { cleaningScheduleData?: unknown } };
+
+    expect(response.status).toBe(200);
+    expect(buildCleaningScheduleDataFromBuilderMock).toHaveBeenCalledWith({
+      businessName: "PinkPepper Production Kitchen",
+      approvedBy: "Operations Manager",
+      reviewDate: "2026-12-31",
+      chemicalReference: [],
+      dailyTasks: [],
+      weeklyTasks: [],
+      monthlyTasks: [],
+      atpTargets: [],
+    });
+    expect(payload.document?.cleaningScheduleData).toBeTruthy();
+  });
+
+  it("uses structured builder data for product data sheet generation when provided", async () => {
+    routeState.tier = "pro";
+
+    const response = await POST(
+      new Request("http://localhost/api/documents/generate", {
+        method: "POST",
+        body: JSON.stringify({
+          documentType: "product_data_sheet",
+          format: "json",
+          builderKey: "productDataSheet",
+          builderData: {
+            businessName: "PinkPepper Foods",
+            approvedBy: "QA Manager",
+            productName: "Chicken Caesar Wrap",
+            productCode: "WRAP-001",
+            category: "Ready-to-eat wrap",
+            description: "Chilled tortilla wrap with chicken and Caesar dressing",
+            countryOfOrigin: "Portugal",
+            ingredients: "Tortilla, chicken, dressing, lettuce",
+            contains: "Milk, Egg, Wheat",
+            mayContain: "Mustard",
+            freeFrom: "Peanuts",
+            storageConditions: "Keep refrigerated at 0C to 4C",
+            shelfLifeUnopened: "3 days",
+            shelfLifeOpened: "Consume immediately",
+            netWeight: "220g",
+            packagingType: "Printed film wrap",
+            nutritionRows: [],
+            microbiologyRows: [],
+          },
+        }),
+      }),
+    );
+
+    const payload = await response.json() as { document?: { productDataSheetData?: unknown } };
+
+    expect(response.status).toBe(200);
+    expect(buildProductDataSheetDataFromBuilderMock).toHaveBeenCalledWith({
+      businessName: "PinkPepper Foods",
+      approvedBy: "QA Manager",
+      productName: "Chicken Caesar Wrap",
+      productCode: "WRAP-001",
+      category: "Ready-to-eat wrap",
+      description: "Chilled tortilla wrap with chicken and Caesar dressing",
+      countryOfOrigin: "Portugal",
+      ingredients: "Tortilla, chicken, dressing, lettuce",
+      contains: "Milk, Egg, Wheat",
+      mayContain: "Mustard",
+      freeFrom: "Peanuts",
+      storageConditions: "Keep refrigerated at 0C to 4C",
+      shelfLifeUnopened: "3 days",
+      shelfLifeOpened: "Consume immediately",
+      netWeight: "220g",
+      packagingType: "Printed film wrap",
+      nutritionRows: [],
+      microbiologyRows: [],
+    });
+    expect(payload.document?.productDataSheetData).toBeTruthy();
   });
 });
