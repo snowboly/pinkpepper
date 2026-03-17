@@ -3,8 +3,9 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import type { GeneratedDocument } from "./types";
 import { renderHaccpPdf } from "./render-haccp-pdf";
-import { renderHygienePdf } from "./render-hygiene-pdf";
-import { renderCleaningSopPdf } from "./render-cleaning-sop-pdf";
+import { renderCleaningSchedulePdf } from "./render-cleaning-schedule-pdf";
+import { renderTemperatureLogPdf } from "./render-temperature-log-pdf";
+import { renderSopPdf } from "./render-sop-pdf";
 
 const BRAND = rgb(0.882, 0.114, 0.282); // #E11D48
 const DARK = rgb(0.059, 0.09, 0.118);   // #0F172A
@@ -34,11 +35,14 @@ export async function renderPdf(doc: GeneratedDocument): Promise<Uint8Array> {
   if (doc.documentType === "haccp_plan" && doc.haccpData) {
     return renderHaccpPdf(doc.haccpData);
   }
-  if (doc.documentType === "personal_hygiene_policy" && doc.hygienePolicyData) {
-    return renderHygienePdf(doc.hygienePolicyData);
+  if (doc.documentType === "cleaning_schedule" && doc.cleaningScheduleData) {
+    return renderCleaningSchedulePdf(doc.cleaningScheduleData);
   }
-  if (doc.documentType === "cleaning_sop" && doc.cleaningSopData) {
-    return renderCleaningSopPdf(doc.cleaningSopData);
+  if (doc.documentType === "temperature_log" && doc.temperatureLogData) {
+    return renderTemperatureLogPdf(doc.temperatureLogData);
+  }
+  if (doc.sopData) {
+    return renderSopPdf(doc, doc.sopData);
   }
 
   const pdf = await PDFDocument.create();

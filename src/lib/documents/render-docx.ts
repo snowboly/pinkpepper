@@ -20,8 +20,9 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import type { GeneratedDocument, DocumentTable } from "./types";
 import { renderHaccpDocx } from "./render-haccp-docx";
-import { renderHygieneDocx } from "./render-hygiene-docx";
-import { renderCleaningSopDocx } from "./render-cleaning-sop-docx";
+import { renderCleaningScheduleDocx } from "./render-cleaning-schedule-docx";
+import { renderTemperatureLogDocx } from "./render-temperature-log-docx";
+import { renderSopDocx } from "./render-sop-docx";
 
 const BRAND_COLOR = "E11D48"; // PinkPepper red
 const GRAY_COLOR = "64748B";
@@ -102,11 +103,14 @@ export async function renderDocx(doc: GeneratedDocument): Promise<ArrayBuffer> {
   if (doc.documentType === "haccp_plan" && doc.haccpData) {
     return renderHaccpDocx(doc.haccpData);
   }
-  if (doc.documentType === "personal_hygiene_policy" && doc.hygienePolicyData) {
-    return renderHygieneDocx(doc.hygienePolicyData);
+  if (doc.documentType === "cleaning_schedule" && doc.cleaningScheduleData) {
+    return renderCleaningScheduleDocx(doc.cleaningScheduleData);
   }
-  if (doc.documentType === "cleaning_sop" && doc.cleaningSopData) {
-    return renderCleaningSopDocx(doc.cleaningSopData);
+  if (doc.documentType === "temperature_log" && doc.temperatureLogData) {
+    return renderTemperatureLogDocx(doc.temperatureLogData);
+  }
+  if (doc.sopData) {
+    return renderSopDocx(doc, doc.sopData);
   }
 
   const logoBuffer = await loadLogoBuffer();
