@@ -1,4 +1,6 @@
 import type { HaccpDocumentData } from "./haccp-schema";
+import type { HygienePolicyData } from "./hygiene-schema";
+import type { CleaningSopData } from "./cleaning-sop-schema";
 
 export type DocumentType =
   | "haccp_plan"
@@ -39,4 +41,6 @@ export type GeneratedDocument = {
   sections: DocumentSection[];
   tables?: DocumentTable[];
   haccpData?: HaccpDocumentData;
+  hygienePolicyData?: HygienePolicyData;
+  cleaningSopData?: CleaningSopData;
 };
