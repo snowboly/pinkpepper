@@ -131,8 +131,8 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           error:
-            "You have used all of your included consultancy hours for this month. " +
-            "Please contact us to purchase additional hours.",
+            "You have reached your consultancy review limit for this billing period. " +
+            "Please email us at support@pinkpepper.io to arrange additional reviews.",
         },
         { status: 429 },
       );
