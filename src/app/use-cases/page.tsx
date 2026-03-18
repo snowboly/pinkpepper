@@ -44,11 +44,11 @@ export default function UseCasesPage() {
         <div className="pp-container max-w-4xl">
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">Use-case hub</p>
           <h1 className="pp-display mt-4 text-4xl text-[#0F172A] md:text-6xl">
-            Food safety software pages mapped to real business types
+            Food safety workflows mapped to the way different food businesses operate
           </h1>
           <p className="mt-6 max-w-3xl text-lg leading-relaxed text-[#475569]">
-            PinkPepper is easier to buy when prospects can see their own workflow on the page. These use-case pages
-            translate product features into restaurant, cafe, catering, and manufacturing contexts.
+            Restaurants, cafes, caterers, and manufacturers do not need the same controls, records, or review cycles.
+            These pages show how PinkPepper fits each operating model so teams can start from workflows that feel familiar.
           </p>
         </div>
       </section>

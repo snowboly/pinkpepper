@@ -32,11 +32,11 @@ export default function ComparePage() {
         <div className="pp-container max-w-4xl">
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">Comparison hub</p>
           <h1 className="pp-display mt-4 text-4xl text-[#0F172A] md:text-6xl">
-            Commercial comparison pages for buyers already evaluating options
+            Compare PinkPepper with other ways food businesses handle compliance work
           </h1>
           <p className="mt-6 max-w-3xl text-lg leading-relaxed text-[#475569]">
-            Search traffic converts faster when buyers can compare categories clearly. These pages position PinkPepper
-            against consultants and alternative HACCP software paths without pretending every option serves the same need.
+            Some teams need software, some need consultancy, and many need a mix of both. These comparison pages explain
+            where PinkPepper fits, what it replaces well, and where specialist review still adds value.
           </p>
         </div>
       </section>

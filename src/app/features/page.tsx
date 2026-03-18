@@ -44,11 +44,12 @@ export default function FeaturesPage() {
         <div className="pp-container max-w-4xl">
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">Feature hub</p>
           <h1 className="pp-display mt-4 text-4xl text-[#0F172A] md:text-6xl">
-            Food safety compliance features built for revenue-driving search intent
+            Product workflows for food safety teams that need practical compliance work
           </h1>
           <p className="mt-6 max-w-3xl text-lg leading-relaxed text-[#475569]">
-            PinkPepper is not one generic chat screen. These pages explain how the product handles HACCP plans,
-            allergen documentation, SOP generation, and audit preparation for EU and UK food businesses.
+            PinkPepper is built around the jobs food businesses actually need to complete: HACCP planning, allergen
+            documentation, SOP drafting, and audit preparation. Use this hub to find the workflow that matches the
+            document or control you need to produce next.
           </p>
         </div>
       </section>
@@ -85,9 +86,9 @@ export default function FeaturesPage() {
             className="rounded-3xl border border-[#FBCFE8] bg-[#FFF1F2] p-8 transition-all hover:-translate-y-0.5 hover:border-[#FDA4AF] hover:shadow-xl hover:shadow-black/[0.04]"
           >
             <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#E11D48]">Pricing</p>
-            <p className="mt-3 text-2xl font-semibold text-[#0F172A]">Match the feature set to the right plan</p>
+            <p className="mt-3 text-2xl font-semibold text-[#0F172A]">See which plan unlocks the workflows you need</p>
             <p className="mt-4 text-sm leading-relaxed text-[#475569]">
-              Compare Free, Plus, and Pro if you need faster document production, exports, and audit-readiness workflows.
+              Compare Free, Plus, and Pro for analysis, document generation, exports, and specialist support.
             </p>
           </Link>
           <Link
@@ -95,9 +96,9 @@ export default function FeaturesPage() {
             className="rounded-3xl border border-[#E2E8F0] bg-white p-8 transition-all hover:-translate-y-0.5 hover:border-[#CBD5E1] hover:shadow-xl hover:shadow-black/[0.04]"
           >
             <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#E11D48]">Comparisons</p>
-            <p className="mt-3 text-2xl font-semibold text-[#0F172A]">Read commercial comparison pages</p>
+            <p className="mt-3 text-2xl font-semibold text-[#0F172A]">Compare PinkPepper with other ways of working</p>
             <p className="mt-4 text-sm leading-relaxed text-[#475569]">
-              Compare PinkPepper with consultants and broader HACCP software alternatives.
+              Understand where AI-assisted drafting fits, where consultancy still matters, and how broader HACCP tools compare.
             </p>
           </Link>
         </div>

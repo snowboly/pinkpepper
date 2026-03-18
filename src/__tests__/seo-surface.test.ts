@@ -70,6 +70,34 @@ describe("public SEO copy and linking", () => {
     expect(compare).toContain("/pricing");
     expect(resources).toContain("/features/");
   });
+
+  it("keeps hub-page copy user-facing instead of talking about SEO strategy", () => {
+    const features = readPage("src/app/features/page.tsx");
+    const useCases = readPage("src/app/use-cases/page.tsx");
+    const compare = readPage("src/app/compare/page.tsx");
+    const resources = readPage("src/app/resources/page.tsx");
+
+    expect(features).not.toContain("revenue-driving search intent");
+    expect(useCases).not.toContain("prospects can see their own workflow");
+    expect(compare).not.toContain("buyers already evaluating options");
+    expect(resources).not.toContain("long-tail questions and template searches");
+  });
+
+  it("keeps current public marketing pages fresh in the sitemap", () => {
+    const entries = sitemap();
+    const currentPages = [
+      "https://pinkpepper.io",
+      "https://pinkpepper.io/about",
+      "https://pinkpepper.io/pricing",
+      "https://pinkpepper.io/contact",
+      "https://pinkpepper.io/security",
+    ];
+
+    for (const url of currentPages) {
+      const entry = entries.find((item) => item.url === url);
+      expect(new Date(entry?.lastModified ?? "").toISOString()).toContain("2026-03-18");
+    }
+  });
 });
 
 describe("premium quality regressions", () => {

@@ -55,11 +55,12 @@ export default function ResourcesPage() {
         <div className="pp-container max-w-4xl">
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">Resources</p>
           <h1 className="pp-display mt-4 text-4xl text-[#0F172A] md:text-6xl">
-            Supporting content for HACCP, allergen, SOP, and audit search intent
+            Practical templates and guides for HACCP, allergen, SOP, and audit work
           </h1>
           <p className="mt-6 max-w-3xl text-lg leading-relaxed text-[#475569]">
-            These resource pages target the long-tail questions and template searches that support PinkPepper&apos;s
-            commercial pages. They are designed to educate, capture demand, and route qualified visitors into product pages.
+            Use these resources to understand what good food safety documents should contain before you turn them into
+            site-specific drafts. Each page is designed to help teams move from a blank template or checklist to
+            something they can review, adapt, and use in practice.
           </p>
         </div>
       </section>
@@ -84,11 +85,12 @@ export default function ResourcesPage() {
           <div className="mx-auto max-w-4xl rounded-3xl border border-[#FBCFE8] bg-[#FFF1F2] p-8 md:p-10">
             <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#BE123C]">From template to workflow</p>
             <h2 className="mt-4 text-3xl font-semibold text-[#0F172A] md:text-4xl">
-              Use the resource pages as entry points, then move into product workflows
+              Move from a reference template into a working draft
             </h2>
             <p className="mt-4 max-w-3xl text-base leading-relaxed text-[#475569]">
-              These guides answer search intent clearly, but the higher-value next step is turning a template or checklist
-              into a usable draft for your operation. PinkPepper helps teams do that faster across HACCP, allergen, SOP, and audit work.
+              A template is only useful if it helps your team produce a document that matches the way your site actually
+              runs. PinkPepper helps operators turn reference material into practical drafts for HACCP, allergens, SOPs,
+              and audit preparation.
             </p>
             <div className="mt-6 flex flex-wrap gap-4">
               <Link
