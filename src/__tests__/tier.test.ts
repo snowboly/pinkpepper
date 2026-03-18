@@ -24,7 +24,7 @@ describe("TIER_CAPABILITIES – free tier", () => {
   it("allowPdfExport is false", () => expect(free.allowPdfExport).toBe(false));
   it("allowWordExport is false", () => expect(free.allowWordExport).toBe(false));
   it("allowFullDocumentReview is false", () => expect(free.allowFullDocumentReview).toBe(false));
-  it("monthlyHumanReviews is 0", () => expect(free.monthlyHumanReviews).toBe(0));
+  it("hasConsultancy is false", () => expect(free.hasConsultancy).toBe(false));
   it("reviewTurnaround is N/A", () => expect(free.reviewTurnaround).toBe("N/A"));
   it("maxResponseTokens is 2048", () => expect(free.maxResponseTokens).toBe(2048));
 });
@@ -42,7 +42,7 @@ describe("TIER_CAPABILITIES – plus tier", () => {
   it("allowPdfExport is true", () => expect(plus.allowPdfExport).toBe(true));
   it("allowWordExport is false", () => expect(plus.allowWordExport).toBe(false));
   it("allowFullDocumentReview is false", () => expect(plus.allowFullDocumentReview).toBe(false));
-  it("monthlyHumanReviews is 0", () => expect(plus.monthlyHumanReviews).toBe(0));
+  it("hasConsultancy is false", () => expect(plus.hasConsultancy).toBe(false));
   it("reviewTurnaround is N/A", () => expect(plus.reviewTurnaround).toBe("N/A"));
   it("maxResponseTokens is 4096", () => expect(plus.maxResponseTokens).toBe(4096));
 });
@@ -60,7 +60,7 @@ describe("TIER_CAPABILITIES – pro tier", () => {
   it("allowPdfExport is true", () => expect(pro.allowPdfExport).toBe(true));
   it("allowWordExport is true", () => expect(pro.allowWordExport).toBe(true));
   it("allowFullDocumentReview is true", () => expect(pro.allowFullDocumentReview).toBe(true));
-  it("monthlyHumanReviews is 3", () => expect(pro.monthlyHumanReviews).toBe(3));
+  it("hasConsultancy is true", () => expect(pro.hasConsultancy).toBe(true));
   it("reviewTurnaround is within 5 working days", () => expect(pro.reviewTurnaround).toBe("within 5 working days"));
   it("maxResponseTokens is 8192", () => expect(pro.maxResponseTokens).toBe(8192));
 });
@@ -77,7 +77,6 @@ describe("cross-tier invariants", () => {
     "dailyMessages",
     "dailyImageUploads",
     "dailyTranscriptions",
-    "monthlyHumanReviews",
     "maxResponseTokens",
   ];
 
@@ -130,6 +129,12 @@ describe("cross-tier invariants", () => {
     expect(TIER_CAPABILITIES.plus.allowFullDocumentReview).toBe(false);
     expect(TIER_CAPABILITIES.pro.allowFullDocumentReview).toBe(true);
   });
+
+  it("consultancy is exclusive to pro", () => {
+    expect(TIER_CAPABILITIES.free.hasConsultancy).toBe(false);
+    expect(TIER_CAPABILITIES.plus.hasConsultancy).toBe(false);
+    expect(TIER_CAPABILITIES.pro.hasConsultancy).toBe(true);
+  });
 });
 
 /* ──────────────────────────────────────────────────────────────────────────
@@ -153,7 +158,7 @@ describe("TIER_CAPABILITIES structure", () => {
       "allowPdfExport",
       "allowWordExport",
       "allowFullDocumentReview",
-      "monthlyHumanReviews",
+      "hasConsultancy",
       "reviewTurnaround",
       "maxResponseTokens",
     ];
@@ -172,7 +177,6 @@ describe("TIER_CAPABILITIES structure", () => {
       expect(caps.dailyDocumentGenerations).toBeGreaterThanOrEqual(0);
       expect(caps.dailyImageUploads).toBeGreaterThanOrEqual(0);
       expect(caps.dailyTranscriptions).toBeGreaterThanOrEqual(0);
-      expect(caps.monthlyHumanReviews).toBeGreaterThanOrEqual(0);
       expect(caps.maxResponseTokens).toBeGreaterThan(0);
     }
   });

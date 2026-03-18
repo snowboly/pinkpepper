@@ -20,7 +20,6 @@ function categoryLabel(category: string): string {
 export function buildNewReviewAdminEmail(input: {
   userEmail: string;
   documentCategory: string;
-  reviewType: string;
   priority: string;
   notes: string | null;
 }): { subject: string; html: string } {
@@ -59,10 +58,6 @@ export function buildNewReviewAdminEmail(input: {
           <td style="padding:8px 0;color:#64748B;border-top:1px solid #F1F5F9;vertical-align:top;">Category</td>
           <td style="padding:8px 0;border-top:1px solid #F1F5F9;">${cat}</td>
         </tr>
-        <tr>
-          <td style="padding:8px 0;color:#64748B;border-top:1px solid #F1F5F9;vertical-align:top;">Type</td>
-          <td style="padding:8px 0;border-top:1px solid #F1F5F9;">${input.reviewType === "full_review" ? "Full Review" : "Quick Check"}</td>
-        </tr>
       </table>
 
       ${notesSection}
@@ -75,11 +70,10 @@ export function buildNewReviewAdminEmail(input: {
 
 export function buildReviewSubmittedEmail(input: {
   documentCategory: string;
-  reviewType: string;
   priority: string;
 }): { subject: string; html: string } {
   const cat = categoryLabel(input.documentCategory);
-  const turnaround = input.reviewType === "full_review" ? "within 5 working days" : "within 3 working days";
+  const turnaround = "within 5 working days";
 
   return {
     subject: `Review request received: ${cat}`,
@@ -99,10 +93,6 @@ export function buildReviewSubmittedEmail(input: {
         <tr>
           <td style="padding:8px 0;color:#64748B;width:110px;">Category</td>
           <td style="padding:8px 0;font-weight:500;">${cat}</td>
-        </tr>
-        <tr>
-          <td style="padding:8px 0;color:#64748B;border-top:1px solid #F1F5F9;">Type</td>
-          <td style="padding:8px 0;border-top:1px solid #F1F5F9;">${input.reviewType === "full_review" ? "Full Review" : "Quick Check"}</td>
         </tr>
         <tr>
           <td style="padding:8px 0;color:#64748B;border-top:1px solid #F1F5F9;">Priority</td>
@@ -195,7 +185,7 @@ export function buildReviewRejectedEmail(input: {
       )}
 
       <p style="font-size:14px;color:#64748B;line-height:1.6;margin:0;">
-        This decline <strong>does not count</strong> against your monthly review quota. You're welcome to revise your content and submit a new request at any time.
+        You're welcome to revise your content and submit a new request at any time.
       </p>
 
       ${btn(`${APP_URL}/dashboard/reviews`, "View Your Reviews")}

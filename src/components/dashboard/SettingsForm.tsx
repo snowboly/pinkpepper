@@ -23,11 +23,9 @@ type SettingsFormProps = {
   usageLimit: number | null;
   docGenUsage: number;
   docGenLimit: number | null;
-  reviewUsage: number;
-  reviewLimit: number | null;
 };
 
-export default function SettingsForm({ email, tier, isAdmin, chatLanguage: initialChatLanguage, usage, usageLimit, docGenUsage, docGenLimit, reviewUsage, reviewLimit }: SettingsFormProps) {
+export default function SettingsForm({ email, tier, isAdmin, chatLanguage: initialChatLanguage, usage, usageLimit, docGenUsage, docGenLimit }: SettingsFormProps) {
   const t = useTranslations("settings");
   const currentLocale = useLocale() as Locale;
   const [chatLanguage, setChatLanguage] = useState(initialChatLanguage);
@@ -135,14 +133,6 @@ export default function SettingsForm({ email, tier, isAdmin, chatLanguage: initi
                 used={docGenUsage}
                 limit={docGenLimit}
                 color="#7C3AED"
-              />
-            )}
-            {(reviewLimit ?? 0) > 0 && (
-              <UsageBar
-                label="Expert reviews this month"
-                used={reviewUsage}
-                limit={reviewLimit}
-                color="#059669"
               />
             )}
           </div>

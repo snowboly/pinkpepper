@@ -373,14 +373,14 @@ export default function ChatWorkspace({
 
   // ── Derived values ──
   const dynamicCapabilities = isAdmin
-    ? { ...TIER_CAPABILITIES.pro, allowPdfExport: true, allowWordExport: true, monthlyHumanReviews: Number.MAX_SAFE_INTEGER }
+    ? { ...TIER_CAPABILITIES.pro, allowPdfExport: true, allowWordExport: true, hasConsultancy: true }
     : {
         ...TIER_CAPABILITIES[tier],
         allowPdfExport: TIER_CAPABILITIES[tier].allowPdfExport || canExportPdf,
         allowWordExport: TIER_CAPABILITIES[tier].allowWordExport || canExportWord,
       };
 
-  const reviewEligible = isAdmin || dynamicCapabilities.monthlyHumanReviews > 0 || canReview;
+  const reviewEligible = isAdmin || dynamicCapabilities.hasConsultancy || canReview;
 
   const tierColour = isAdmin
     ? "border-[#7C3AED] bg-[#F5F3FF] text-[#5B21B6]"
