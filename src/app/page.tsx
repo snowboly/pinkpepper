@@ -357,7 +357,7 @@ export default function HomePage() {
         <div className="pp-container">
           <div className="mb-14 max-w-xl">
             <h2 className="pp-display text-4xl font-semibold tracking-[-0.01em] text-[#0F172A] md:text-5xl">
-              Built for operators, not prompt theatre
+              Where AI meets real compliance work
             </h2>
             <p className="mt-4 text-lg text-[#475569]">
               PinkPepper combines practical generation with traceable references, reviewable structure, and outputs that fit the rhythm of real compliance work.
