@@ -170,7 +170,6 @@ export default function UserReviewList() {
                         </span>
                       </div>
                       <div className="flex flex-wrap gap-3 text-xs text-[#94A3B8]">
-                        <span>{r.review_type === "full_review" ? "Full Review" : "Quick Check"}</span>
                         <span>Submitted {formatDate(r.created_at)}</span>
                         {r.completed_at && <span>Completed {formatDate(r.completed_at)}</span>}
                       </div>

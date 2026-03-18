@@ -221,7 +221,6 @@ export default function AdminReviewQueue() {
                       </div>
                       <div className="flex flex-wrap gap-3 text-xs text-[#94A3B8]">
                         <span>{r.user_email}</span>
-                        <span>{r.review_type === "full_review" ? "Full Review" : "Quick Check"}</span>
                         <span>{timeAgo(r.created_at)}</span>
                       </div>
                       {r.notes && !isExpanded && (

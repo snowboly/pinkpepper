@@ -86,12 +86,6 @@ export default function ReviewModal({
           </button>
         </div>
 
-        {/* Credit counter */}
-        {reviewInfo && !isAdmin && (
-          <p className="text-xs text-[#64748B] mb-3">
-            {t("creditsUsed")} <span className="font-semibold">{reviewInfo.used}/{reviewInfo.limit ?? "unlimited"}</span>
-          </p>
-        )}
 
         {/* Category selection — simplified to 3 options */}
         <fieldset className="space-y-2">

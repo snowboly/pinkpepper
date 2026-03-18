@@ -11,7 +11,7 @@ export type TierCapabilities = {
   allowPdfExport: boolean;
   allowWordExport: boolean;
   allowFullDocumentReview: boolean;
-  monthlyHumanReviews: number;
+  hasConsultancy: boolean;
   reviewTurnaround: string;
   /** Max tokens for LLM response */
   maxResponseTokens: number;
@@ -29,7 +29,7 @@ export const TIER_CAPABILITIES: Record<SubscriptionTier, TierCapabilities> = {
     allowPdfExport: false,
     allowWordExport: false,
     allowFullDocumentReview: false,
-    monthlyHumanReviews: 0,
+    hasConsultancy: false,
     reviewTurnaround: "N/A",
     maxResponseTokens: 2048,
   },
@@ -44,7 +44,7 @@ export const TIER_CAPABILITIES: Record<SubscriptionTier, TierCapabilities> = {
     allowPdfExport: true,
     allowWordExport: false,
     allowFullDocumentReview: false,
-    monthlyHumanReviews: 0,
+    hasConsultancy: false,
     reviewTurnaround: "N/A",
     maxResponseTokens: 4096,
   },
@@ -59,7 +59,7 @@ export const TIER_CAPABILITIES: Record<SubscriptionTier, TierCapabilities> = {
     allowPdfExport: true,
     allowWordExport: true,
     allowFullDocumentReview: true,
-    monthlyHumanReviews: 3,
+    hasConsultancy: true,
     reviewTurnaround: "within 5 working days",
     maxResponseTokens: 8192,
   },
