@@ -222,40 +222,43 @@ export default function HomePage() {
   return (
     <main className="overflow-hidden">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      <section className="relative overflow-hidden pb-20 pt-16 md:pb-24 md:pt-24">
+      <section className="relative overflow-hidden pb-20 pt-16 md:pb-28 md:pt-28">
+        {/* Background image + dark overlay */}
         <div className="absolute inset-0 -z-10">
-          <div className="absolute inset-0 bg-white" />
-          <div className="absolute left-1/2 top-0 h-[800px] w-[800px] -translate-x-1/2 -translate-y-1/3 rounded-full bg-gradient-to-b from-[#FFF1F2] to-transparent blur-[120px] opacity-70" />
-          <div className="absolute -right-40 top-20 h-[400px] w-[400px] rounded-full bg-[#E11D48]/[0.04] blur-[100px]" />
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: "url('/hero-bg.jpg'), linear-gradient(135deg, #1e1b2e 0%, #2d1f3d 40%, #3b1a2a 70%, #1a1020 100%)" }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/65 via-black/55 to-black/70" />
         </div>
 
         <div className="pp-container relative z-10">
           <div className="mx-auto max-w-5xl text-center">
-            <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-[#E2E8F0] bg-[#F8FAFC] px-5 py-2.5 text-sm font-semibold text-[#475569] shadow-sm">
+            <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-5 py-2.5 text-sm font-semibold text-white/90 shadow-sm backdrop-blur-sm">
               <Sparkles className="h-4 w-4" />
               AI food safety compliance software for EU and UK businesses
             </div>
 
-            <h1 className="pp-display mx-auto mb-6 max-w-4xl text-5xl leading-[1.04] tracking-[-0.02em] text-[#0F172A] md:text-6xl lg:text-7xl">
+            <h1 className="pp-display mx-auto mb-6 max-w-4xl text-5xl leading-[1.04] tracking-[-0.02em] text-white md:text-6xl lg:text-7xl">
               Food safety compliance, faster and at a fraction of the cost.{" "}
-              <span className="bg-gradient-to-r from-[#E11D48] via-[#F43F5E] to-[#E11D48] bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-[#FDA4AF] via-[#FB7185] to-[#FDA4AF] bg-clip-text text-transparent">
                 AI-powered, with expert consultants when you need them.
               </span>
             </h1>
 
-            <p className="mx-auto mb-10 max-w-3xl text-lg leading-relaxed text-[#475569] md:text-xl">
+            <p className="mx-auto mb-10 max-w-3xl text-lg leading-relaxed text-white/80 md:text-xl">
               PinkPepper is AI food safety compliance software built for HACCP plans, allergen management, SOP generation, and inspection prep.
               Create UK and EU-ready compliance documents that fit real kitchen, production, and audit workflows, then add food safety consultancy when the work needs specialist input.
             </p>
 
-            <div className="mb-10 flex flex-wrap items-center justify-center gap-3 text-sm font-medium text-[#475569]">
-              <Link href="/features/haccp-plan-generator" className="pp-interactive rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
+            <div className="mb-10 flex flex-wrap items-center justify-center gap-3 text-sm font-medium text-white/80">
+              <Link href="/features/haccp-plan-generator" className="pp-interactive rounded-full border border-white/20 bg-white/10 px-4 py-2 backdrop-blur-sm transition-colors hover:border-white/40 hover:bg-white/20 hover:text-white">
                 Explore the HACCP plan generator
               </Link>
-              <Link href="/features/allergen-documentation" className="pp-interactive rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
+              <Link href="/features/allergen-documentation" className="pp-interactive rounded-full border border-white/20 bg-white/10 px-4 py-2 backdrop-blur-sm transition-colors hover:border-white/40 hover:bg-white/20 hover:text-white">
                 See allergen documentation workflows
               </Link>
-              <Link href="/pricing" className="pp-interactive rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
+              <Link href="/pricing" className="pp-interactive rounded-full border border-white/20 bg-white/10 px-4 py-2 backdrop-blur-sm transition-colors hover:border-white/40 hover:bg-white/20 hover:text-white">
                 Compare pricing plans
               </Link>
             </div>
@@ -265,7 +268,7 @@ export default function HomePage() {
                 href="https://eur-lex.europa.eu"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex max-w-xl flex-wrap items-center justify-center gap-x-3 gap-y-2 rounded-2xl border border-[#FBCFE8] bg-white px-4 py-3 text-center text-sm text-[#475569] shadow-[0_14px_40px_rgba(225,29,72,0.08)] transition-all duration-200 hover:-translate-y-0.5 hover:border-[#FDA4AF] hover:text-[#0F172A] hover:shadow-[0_18px_48px_rgba(225,29,72,0.12)]"
+                className="inline-flex max-w-xl flex-wrap items-center justify-center gap-x-3 gap-y-2 rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-center text-sm text-white/80 backdrop-blur-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-white/30 hover:bg-white/15 hover:text-white"
               >
                 <svg
                   aria-label="EU flag"
@@ -290,16 +293,16 @@ export default function HomePage() {
                   })}
                 </svg>
                 <span className="leading-relaxed">
-                  Regulation data powered by <span className="font-semibold text-[#0F172A]">EUR-Lex CELLAR</span>
+                  Regulation data powered by <span className="font-semibold text-white">EUR-Lex CELLAR</span>
                 </span>
               </a>
             </div>
 
             <div className="mx-auto mb-10 grid max-w-5xl gap-4 text-left md:grid-cols-3">
               {differentiators.map((item) => (
-                <div key={item.title} className="rounded-2xl border border-[#E2E8F0] bg-white/90 p-5">
-                  <p className="text-sm font-semibold text-[#0F172A]">{item.title}</p>
-                  <p className="mt-2 text-sm leading-relaxed text-[#64748B]">{item.description}</p>
+                <div key={item.title} className="rounded-2xl border border-white/15 bg-white/10 p-5 backdrop-blur-sm">
+                  <p className="text-sm font-semibold text-white">{item.title}</p>
+                  <p className="mt-2 text-sm leading-relaxed text-white/70">{item.description}</p>
                 </div>
               ))}
             </div>
@@ -334,17 +337,17 @@ export default function HomePage() {
               </div>
             </form>
 
-            <div className="mt-7 flex flex-wrap items-center justify-center gap-5 text-sm text-[#64748B]">
+            <div className="mt-7 flex flex-wrap items-center justify-center gap-5 text-sm text-white/70">
               <span className="inline-flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                <CheckCircle2 className="h-4 w-4 text-emerald-400" />
                 No credit card required
               </span>
               <span className="inline-flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                <CheckCircle2 className="h-4 w-4 text-emerald-400" />
                 EU and UK regulations
               </span>
               <span className="inline-flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                <CheckCircle2 className="h-4 w-4 text-emerald-400" />
                 PDF and Word export
               </span>
             </div>
