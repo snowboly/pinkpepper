@@ -19,7 +19,12 @@ import {
   buildDocumentGenerationPayload,
   type DocumentBuilderAnswerMap,
 } from "./document-builders/document-builder-payload";
-import { getDocumentBuilderDefinition } from "./document-builders/document-builder-definitions";
+import {
+  getInitialLightweightDocWizardAnswers,
+  getLightweightDocWizards,
+  shouldShowDocumentStarters,
+  type LightweightDocWizard,
+} from "./document-builders/lightweight-doc-wizard";
 import { useAttachments } from "./useAttachments";
 import { useAudioRecording } from "./useAudioRecording";
 import { parseMessageArtifact, parseMessageCitations } from "./chat-message-metadata";
@@ -27,53 +32,9 @@ import { applyStreamError } from "./chat-stream-state";
 
 type StreamUsage = { used: number; limit: number | null; tier: SubscriptionTier; isAdmin?: boolean };
 type WorkspaceMode = "ask" | "virtual_audit";
-type DocWizard = {
-  builderKey: string;
-  documentType: string;
-  wizardKey: string;
-  questionCount: number;
-  title: string;
-  questions: Array<{ key: string; prompt: string }>;
-};
+type DocWizard = LightweightDocWizard;
 
-const LIGHTWEIGHT_DOC_WIZARD_KEYS = [
-  "haccpPlan",
-  "tempLog",
-  "foodSafetyPolicy",
-  "traceabilityProcedure",
-  "pestControlProcedure",
-  "wasteManagementProcedure",
-] as const;
-
-const DOC_WIZARDS: Record<string, DocWizard> = Object.fromEntries(
-  LIGHTWEIGHT_DOC_WIZARD_KEYS.map((builderKey) => {
-    const definition = getDocumentBuilderDefinition(builderKey);
-    if (!definition) {
-      throw new Error(`Missing document builder definition for ${builderKey}`);
-    }
-
-    const questions = definition.sections.flatMap((section) =>
-      section.fields
-        .filter((field) => field.type !== "rows")
-        .map((field) => ({
-          key: field.key,
-          prompt: field.description ? `${field.label}\n\n${field.description}` : field.label,
-        })),
-    );
-
-    return [
-      builderKey,
-      {
-        builderKey,
-        documentType: definition.documentType,
-        wizardKey: definition.wizardKey,
-        title: definition.title,
-        questionCount: questions.length,
-        questions,
-      } satisfies DocWizard,
-    ];
-  }),
-);
+const DOC_WIZARDS: Record<string, DocWizard> = getLightweightDocWizards();
 
 export default function ChatWorkspace({
   userEmail,
@@ -529,9 +490,10 @@ export default function ChatWorkspace({
       void sendPromptValue(suggestion.text);
       return;
     }
+    const initialAnswers = getInitialLightweightDocWizardAnswers(wizard.builderKey);
     setActiveDocWizard(wizard);
     setDocWizardStep(0);
-    setDocWizardAnswers({});
+    setDocWizardAnswers(initialAnswers);
     const intro = tw(`wizards.${wizard.wizardKey}.intro`);
     const q1 = wizard.questions[0]?.prompt ?? tw(`wizards.${wizard.wizardKey}.q1`);
     pushAssistantMessage(`${intro}\n\nQuestion 1/${wizard.questionCount}: ${q1}`, currentPersona);
@@ -1135,6 +1097,7 @@ export default function ChatWorkspace({
             onRequestReview={() => { window.location.href = "/dashboard/reviews"; }}
             onUpgradeForReview={!reviewEligible ? () => setUpgradeModalTrigger("review") : undefined}
             currentPersona={currentPersona}
+            showDocumentStarters={shouldShowDocumentStarters(workspaceMode)}
           />
 
           <div className="flex-shrink-0 border-t border-[#E2E8F0] bg-white px-4 py-2">

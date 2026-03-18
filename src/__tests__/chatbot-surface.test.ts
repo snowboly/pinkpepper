@@ -141,11 +141,14 @@ describe("chat workspace chrome", () => {
     const messages = readWorkspaceFile("src/components/dashboard/ChatMessages.tsx");
 
     expect(workspace).toContain("buildDocumentGenerationPayload");
-    expect(workspace).toContain("getDocumentBuilderDefinition");
+    expect(workspace).toContain("getLightweightDocWizards");
+    expect(workspace).toContain("getInitialLightweightDocWizardAnswers");
     expect(workspace).not.toContain("DOC_WIZARDS[suggestion.label]");
     expect(workspace).not.toContain("const DOC_GENERATION_TYPES");
+    expect(workspace).toContain("showDocumentStarters={shouldShowDocumentStarters(workspaceMode)}");
 
     expect(messages).toContain("key?: string;");
+    expect(messages).toContain("showDocumentStarters && (");
     expect(messages).not.toContain('{ key: "supplierApproval" }');
     expect(messages).not.toContain('{ key: "allergenPolicy" }');
     expect(messages).not.toContain('{ key: "personalHygienePolicy" }');
