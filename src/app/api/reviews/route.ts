@@ -3,6 +3,7 @@ import { createClient } from "@/utils/supabase/server";
 import { createAdminClient } from "@/utils/supabase/admin";
 import { resolveUserAccess } from "@/lib/access";
 import { TIER_CAPABILITIES } from "@/lib/tier";
+import { countUsageSince, utcMonthStartIso } from "@/lib/policy";
 import { sendEmail } from "@/lib/email";
 import { buildNewReviewAdminEmail, buildReviewSubmittedEmail } from "@/lib/review-emails";
 
@@ -115,6 +116,27 @@ export async function POST(request: Request) {
 
   if (!isAdmin && !caps.hasConsultancy) {
     return NextResponse.json({ error: "Expert document review is available on Pro." }, { status: 403 });
+  }
+
+  // Enforce monthly consultancy-hour cap (admins are exempt)
+  if (!isAdmin && caps.monthlyConsultancyRequests > 0) {
+    const usedThisMonth = await countUsageSince({
+      supabase,
+      userId: user.id,
+      eventType: "human_review_request",
+      sinceIso: utcMonthStartIso(),
+    });
+
+    if (usedThisMonth >= caps.monthlyConsultancyRequests) {
+      return NextResponse.json(
+        {
+          error:
+            "You have used all of your included consultancy hours for this month. " +
+            "Please contact us to purchase additional hours.",
+        },
+        { status: 429 },
+      );
+    }
   }
 
   const { data: conv } = await supabase

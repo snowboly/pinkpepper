@@ -25,6 +25,7 @@ describe("TIER_CAPABILITIES – free tier", () => {
   it("allowWordExport is false", () => expect(free.allowWordExport).toBe(false));
   it("allowFullDocumentReview is false", () => expect(free.allowFullDocumentReview).toBe(false));
   it("hasConsultancy is false", () => expect(free.hasConsultancy).toBe(false));
+  it("monthlyConsultancyRequests is 0", () => expect(free.monthlyConsultancyRequests).toBe(0));
   it("reviewTurnaround is N/A", () => expect(free.reviewTurnaround).toBe("N/A"));
   it("maxResponseTokens is 2048", () => expect(free.maxResponseTokens).toBe(2048));
 });
@@ -43,6 +44,7 @@ describe("TIER_CAPABILITIES – plus tier", () => {
   it("allowWordExport is false", () => expect(plus.allowWordExport).toBe(false));
   it("allowFullDocumentReview is false", () => expect(plus.allowFullDocumentReview).toBe(false));
   it("hasConsultancy is false", () => expect(plus.hasConsultancy).toBe(false));
+  it("monthlyConsultancyRequests is 0", () => expect(plus.monthlyConsultancyRequests).toBe(0));
   it("reviewTurnaround is N/A", () => expect(plus.reviewTurnaround).toBe("N/A"));
   it("maxResponseTokens is 4096", () => expect(plus.maxResponseTokens).toBe(4096));
 });
@@ -61,6 +63,7 @@ describe("TIER_CAPABILITIES – pro tier", () => {
   it("allowWordExport is true", () => expect(pro.allowWordExport).toBe(true));
   it("allowFullDocumentReview is true", () => expect(pro.allowFullDocumentReview).toBe(true));
   it("hasConsultancy is true", () => expect(pro.hasConsultancy).toBe(true));
+  it("monthlyConsultancyRequests is 3", () => expect(pro.monthlyConsultancyRequests).toBe(3));
   it("reviewTurnaround is within 5 working days", () => expect(pro.reviewTurnaround).toBe("within 5 working days"));
   it("maxResponseTokens is 8192", () => expect(pro.maxResponseTokens).toBe(8192));
 });
@@ -159,6 +162,7 @@ describe("TIER_CAPABILITIES structure", () => {
       "allowWordExport",
       "allowFullDocumentReview",
       "hasConsultancy",
+      "monthlyConsultancyRequests",
       "reviewTurnaround",
       "maxResponseTokens",
     ];
