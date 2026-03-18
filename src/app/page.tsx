@@ -239,7 +239,7 @@ export default function HomePage() {
             <h1 className="pp-display mx-auto mb-6 max-w-4xl text-5xl leading-[1.04] tracking-[-0.02em] text-[#0F172A] md:text-6xl lg:text-7xl">
               Food safety compliance, faster and at a fraction of the cost.{" "}
               <span className="bg-gradient-to-r from-[#E11D48] via-[#F43F5E] to-[#E11D48] bg-clip-text text-transparent">
-                AI-powered, expert-backed.
+                With expert consultants when you need them.
               </span>
             </h1>
 
