@@ -230,7 +230,7 @@ export async function POST(request: Request) {
       : documentType === "product_data_sheet" && productDataSheetData
       ? buildProductDataSheetModelPrompt(productDataSheetData)
       : sopTypes.includes(documentType as DocumentType) && sopData && builderData
-      ? buildSopModelPrompt(documentType, sopData, builderData)
+      ? buildSopModelPrompt(documentType as DocumentType, sopData, builderData)
       : buildGenerateUserPrompt(documentType as DocumentType, answers);
 
   const groqModel = process.env.GROQ_MODEL ?? "llama-3.3-70b-versatile";

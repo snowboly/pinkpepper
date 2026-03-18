@@ -176,4 +176,20 @@ describe("document builder definitions", () => {
       reviewDate: "",
     });
   });
+
+  it("keeps the HACCP conversational wizard aligned to the legacy 8-question flow", () => {
+    const haccp = getDocumentBuilderDefinition("haccpPlan");
+    const keys = haccp?.sections.flatMap((section) => section.fields.map((field) => field.key)) ?? [];
+
+    expect(keys).toEqual([
+      "companyName",
+      "version",
+      "date",
+      "createdBy",
+      "approvedBy",
+      "processSteps",
+      "hazards",
+      "ccpDetails",
+    ]);
+  });
 });

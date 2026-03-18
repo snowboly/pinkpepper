@@ -20,14 +20,6 @@ function createMetadataSection(fields: DocumentBuilderField[]): DocumentBuilderS
 
 const HACCP_WIZARD = buildHaccpWizardDefinition();
 
-const HACCP_METADATA_FIELDS = buildSharedDocumentMetadataFields({
-  includeVersion: true,
-  includeDate: true,
-  includeCreatedBy: true,
-  includeApprovedBy: true,
-  includeReviewDate: false,
-});
-
 const TEMPERATURE_LOG_METADATA_FIELDS = buildSharedDocumentMetadataFields({
   includeVersion: false,
   includeDate: false,
@@ -373,7 +365,6 @@ export const DOCUMENT_BUILDERS: Record<string, DocumentBuilderDefinition> = {
     documentType: "haccp_plan",
     title: "HACCP plan",
     sections: [
-      createMetadataSection(HACCP_METADATA_FIELDS),
       createSection(
         "content",
         "HACCP content",
