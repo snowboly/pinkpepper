@@ -29,6 +29,7 @@ type ChatMessagesProps = {
   onRequestReview: () => void;
   onUpgradeForReview?: () => void;
   currentPersona?: PersonaInfo | null;
+  showDocumentStarters?: boolean;
 };
 
 type DocCategory = {
@@ -69,6 +70,7 @@ export default function ChatMessages({
   onFocusInput,
   onQuickSuggestion,
   currentPersona,
+  showDocumentStarters = true,
 }: ChatMessagesProps) {
   const t = useTranslations("chat");
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -145,51 +147,52 @@ export default function ChatMessages({
             {canUploadImages ? t("descriptionWithImages") : t("descriptionUpgradeImages")}
           </p>
 
-          {/* Create Document dropdown */}
-          <div ref={menuRef} className="relative mt-6">
-            <button
-              type="button"
-              onClick={() => setDocMenuOpen((prev) => !prev)}
-              className="inline-flex items-center gap-2 rounded-xl border border-[#E2E8F0] bg-white px-5 py-3 text-sm font-semibold text-[#0F172A] shadow-sm hover:bg-[#F8F9FB] hover:border-[#CBD5E1] transition-colors"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#7C3AED]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-              {t("createDocument")}
-              <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 text-[#94A3B8] transition-transform ${docMenuOpen ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
+          {showDocumentStarters && (
+            <div ref={menuRef} className="relative mt-6">
+              <button
+                type="button"
+                onClick={() => setDocMenuOpen((prev) => !prev)}
+                className="inline-flex items-center gap-2 rounded-xl border border-[#E2E8F0] bg-white px-5 py-3 text-sm font-semibold text-[#0F172A] shadow-sm hover:bg-[#F8F9FB] hover:border-[#CBD5E1] transition-colors"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#7C3AED]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                {t("createDocument")}
+                <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 text-[#94A3B8] transition-transform ${docMenuOpen ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
 
-            {docMenuOpen && (
-              <div className="absolute left-1/2 -translate-x-1/2 mt-2 w-80 max-h-96 overflow-y-auto rounded-xl border border-[#E2E8F0] bg-white shadow-lg z-20">
-                {DOC_CATEGORIES.map((cat) => (
-                  <div key={cat.titleKey}>
-                    <div className="px-4 pt-3 pb-1">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-[#94A3B8]">
-                        {t(cat.titleKey)}
-                      </span>
+              {docMenuOpen && (
+                <div className="absolute left-1/2 -translate-x-1/2 mt-2 w-80 max-h-96 overflow-y-auto rounded-xl border border-[#E2E8F0] bg-white shadow-lg z-20">
+                  {DOC_CATEGORIES.map((cat) => (
+                    <div key={cat.titleKey}>
+                      <div className="px-4 pt-3 pb-1">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-[#94A3B8]">
+                          {t(cat.titleKey)}
+                        </span>
+                      </div>
+                      {cat.items.map((item) => (
+                        <button
+                          key={item.key}
+                          type="button"
+                          onClick={() => handleDocSelect(item.key)}
+                          className="w-full px-4 py-2 text-left hover:bg-[#F8F9FB] transition-colors"
+                        >
+                          <span className="block text-sm font-medium text-[#0F172A]">
+                            {t(`suggestions.${item.key}.label`)}
+                          </span>
+                          <span className="block text-xs text-[#64748B]">
+                            {t(`suggestions.${item.key}.text`)}
+                          </span>
+                        </button>
+                      ))}
                     </div>
-                    {cat.items.map((item) => (
-                      <button
-                        key={item.key}
-                        type="button"
-                        onClick={() => handleDocSelect(item.key)}
-                        className="w-full px-4 py-2 text-left hover:bg-[#F8F9FB] transition-colors"
-                      >
-                        <span className="block text-sm font-medium text-[#0F172A]">
-                          {t(`suggestions.${item.key}.label`)}
-                        </span>
-                        <span className="block text-xs text-[#64748B]">
-                          {t(`suggestions.${item.key}.text`)}
-                        </span>
-                      </button>
-                    ))}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
         </div>
       )}
 
