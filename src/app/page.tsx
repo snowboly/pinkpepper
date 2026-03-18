@@ -302,7 +302,7 @@ export default function HomePage() {
               {differentiators.map((item) => (
                 <div key={item.title} className="rounded-2xl border border-white/15 bg-white/10 p-5 backdrop-blur-sm">
                   <p className="text-sm font-semibold text-white">{item.title}</p>
-                  <p className="mt-2 text-sm leading-relaxed text-white/70">{item.description}</p>
+                  <p className="mt-2 text-sm leading-relaxed text-white/85">{item.description}</p>
                 </div>
               ))}
             </div>
