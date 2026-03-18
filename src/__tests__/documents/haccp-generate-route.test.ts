@@ -13,6 +13,8 @@ const {
   buildCleaningSopModelPromptMock,
   buildProductDataSheetDataFromBuilderMock,
   buildProductDataSheetModelPromptMock,
+  buildSopDataFromBuilderMock,
+  buildSopModelPromptMock,
   buildTemperatureLogDataFromBuilderMock,
   buildTemperatureLogModelPromptMock,
   buildTrainingRecordDataFromBuilderMock,
@@ -35,6 +37,8 @@ const {
   buildCleaningSopModelPromptMock: vi.fn(),
   buildProductDataSheetDataFromBuilderMock: vi.fn(),
   buildProductDataSheetModelPromptMock: vi.fn(),
+  buildSopDataFromBuilderMock: vi.fn(),
+  buildSopModelPromptMock: vi.fn(),
   buildTemperatureLogDataFromBuilderMock: vi.fn(),
   buildTemperatureLogModelPromptMock: vi.fn(),
   buildTrainingRecordDataFromBuilderMock: vi.fn(),
@@ -147,6 +151,12 @@ vi.mock("@/lib/documents/training-record-generation", () => ({
   buildTrainingRecordModelPrompt: buildTrainingRecordModelPromptMock,
 }));
 
+vi.mock("@/lib/documents/sop-generation", () => ({
+  buildSopDataFromAnswers: vi.fn(),
+  buildSopDataFromBuilder: buildSopDataFromBuilderMock,
+  buildSopModelPrompt: buildSopModelPromptMock,
+}));
+
 vi.mock("@/lib/documents/temperature-log-generation", () => ({
   buildTemperatureLogDataFromAnswers: vi.fn(),
   buildTemperatureLogDataFromBuilder: buildTemperatureLogDataFromBuilderMock,
@@ -186,6 +196,8 @@ describe("HACCP document generation route", () => {
     buildCleaningSopModelPromptMock.mockReset();
     buildProductDataSheetDataFromBuilderMock.mockReset();
     buildProductDataSheetModelPromptMock.mockReset();
+    buildSopDataFromBuilderMock.mockReset();
+    buildSopModelPromptMock.mockReset();
     buildTemperatureLogDataFromBuilderMock.mockReset();
     buildTemperatureLogModelPromptMock.mockReset();
     buildTrainingRecordDataFromBuilderMock.mockReset();
@@ -212,6 +224,7 @@ describe("HACCP document generation route", () => {
     buildCleaningScheduleModelPromptMock.mockReturnValue("structured cleaning schedule prompt");
     buildCleaningSopModelPromptMock.mockReturnValue("structured cleaning sop prompt");
     buildProductDataSheetModelPromptMock.mockReturnValue("structured product data sheet prompt");
+    buildSopModelPromptMock.mockReturnValue("structured traceability prompt");
     buildTemperatureLogModelPromptMock.mockReturnValue("structured temperature log prompt");
     buildTrainingRecordModelPromptMock.mockReturnValue("structured training record prompt");
     buildCleaningScheduleDataFromBuilderMock.mockReturnValue({
@@ -295,6 +308,16 @@ describe("HACCP document generation route", () => {
       inductionAssessment: "Competent",
       qualifications: [],
       trainingLogRows: [],
+    });
+    buildSopDataFromBuilderMock.mockReturnValue({
+      metadata: {
+        businessName: "PinkPepper Foods",
+        docNo: "TR-001",
+        revision: "1",
+        date: "17 March 2026",
+        approvedBy: "Operations Manager",
+      },
+      documentType: "traceability_procedure",
     });
     buildTemperatureLogDataFromBuilderMock.mockReturnValue({
       metadata: {
@@ -639,5 +662,178 @@ describe("HACCP document generation route", () => {
     expect(buildTrainingRecordModelPromptMock).toHaveBeenCalled();
     expect(buildGenerateUserPromptMock).not.toHaveBeenCalled();
     expect(payload.document?.trainingRecordData).toBeTruthy();
+  });
+
+  it("uses structured builder data for traceability procedure generation when provided", async () => {
+    routeState.tier = "pro";
+
+    const response = await POST(
+      new Request("http://localhost/api/documents/generate", {
+        method: "POST",
+        body: JSON.stringify({
+          documentType: "traceability_procedure",
+          format: "json",
+          builderKey: "traceabilityProcedure",
+          builderData: {
+            businessName: "PinkPepper Foods",
+            approvedBy: "Operations Manager",
+            operationType: "Manufacturer",
+            productCategories: "Sandwiches, salads",
+            supplierInputs: "Cooked chicken, sauces, bread",
+            identificationSystem: "Batch codes",
+            incomingRecords: "Delivery notes and supplier lot codes",
+            internalTraceability: "Batch sheet and label print log",
+            outgoingRecords: "Dispatch log and invoices",
+            traceabilityOwner: "Technical manager",
+            recallLead: "Operations manager",
+            recallContacts: "QA lead, managing director",
+            retentionPeriod: "12 months",
+            mockRecallFrequency: "Quarterly",
+          },
+        }),
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(buildSopDataFromBuilderMock).toHaveBeenCalledWith("traceability_procedure", {
+      businessName: "PinkPepper Foods",
+      approvedBy: "Operations Manager",
+      operationType: "Manufacturer",
+      productCategories: "Sandwiches, salads",
+      supplierInputs: "Cooked chicken, sauces, bread",
+      identificationSystem: "Batch codes",
+      incomingRecords: "Delivery notes and supplier lot codes",
+      internalTraceability: "Batch sheet and label print log",
+      outgoingRecords: "Dispatch log and invoices",
+      traceabilityOwner: "Technical manager",
+      recallLead: "Operations manager",
+      recallContacts: "QA lead, managing director",
+      retentionPeriod: "12 months",
+      mockRecallFrequency: "Quarterly",
+    });
+    expect(buildSopModelPromptMock).toHaveBeenCalled();
+    expect(buildGenerateUserPromptMock).not.toHaveBeenCalled();
+  });
+
+  it("uses structured builder data for pest control procedure generation when provided", async () => {
+    fetchMock.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        choices: [
+          {
+            message: {
+              content: JSON.stringify({
+                title: "Pest control procedure",
+                documentType: "pest_control_procedure",
+                documentNumber: "PC-001",
+                version: "1",
+                effectiveDate: "2026-03-17",
+                reviewDate: "2027-03-17",
+                approvedBy: "Operations Manager",
+                scope: "Pest controls for the site",
+                purpose: "Keep pests out of food areas",
+                responsibilities: [],
+                definitions: [],
+                procedure: [],
+                monitoring: [],
+                correctiveActions: [],
+                records: [],
+              }),
+            },
+          },
+        ],
+      }),
+    });
+
+    const request = new Request("http://localhost/api/documents/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        documentType: "pest_control_procedure",
+        builderData: {
+          businessName: "PinkPepper Foods",
+          approvedBy: "Operations Manager",
+          operationType: "Bakery",
+          premisesAndSurroundings: "Urban bakery with rear delivery yard",
+          pestRisks: "Rodents, flying insects",
+          externalContractor: "Shield Pest Control monthly visits",
+        },
+      }),
+    });
+
+    routeState.tier = "pro";
+    const response = await POST(request);
+
+    expect(response.status).toBe(200);
+    expect(buildSopDataFromBuilderMock).toHaveBeenCalledWith("pest_control_procedure", {
+      businessName: "PinkPepper Foods",
+      approvedBy: "Operations Manager",
+      operationType: "Bakery",
+      premisesAndSurroundings: "Urban bakery with rear delivery yard",
+      pestRisks: "Rodents, flying insects",
+      externalContractor: "Shield Pest Control monthly visits",
+    });
+    expect(buildSopModelPromptMock).toHaveBeenCalled();
+    expect(buildGenerateUserPromptMock).not.toHaveBeenCalled();
+  });
+
+  it("uses structured builder data for food safety policy generation when provided", async () => {
+    fetchMock.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        choices: [
+          {
+            message: {
+              content: JSON.stringify({
+                title: "Food safety policy",
+                documentType: "food_safety_policy",
+                documentNumber: "FS-POL-001",
+                version: "1",
+                effectiveDate: "2026-03-17",
+                reviewDate: "2027-03-17",
+                approvedBy: "Managing Director",
+                scope: "Food safety management policy",
+                purpose: "Define management commitments",
+                responsibilities: [],
+                definitions: [],
+                procedure: [],
+                monitoring: [],
+                correctiveActions: [],
+                records: [],
+              }),
+            },
+          },
+        ],
+      }),
+    });
+
+    const request = new Request("http://localhost/api/documents/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        documentType: "food_safety_policy",
+        builderData: {
+          businessName: "PinkPepper Foods",
+          approvedBy: "Managing Director",
+          operationType: "Multi-site caterer",
+          siteScope: "Two production kitchens",
+          productCategories: "Corporate catering and ready meals",
+        },
+      }),
+    });
+
+    routeState.tier = "pro";
+    const response = await POST(request);
+
+    expect(response.status).toBe(200);
+    expect(buildSopDataFromBuilderMock).toHaveBeenCalledWith("food_safety_policy", {
+      businessName: "PinkPepper Foods",
+      approvedBy: "Managing Director",
+      operationType: "Multi-site caterer",
+      siteScope: "Two production kitchens",
+      productCategories: "Corporate catering and ready meals",
+    });
+    expect(buildSopModelPromptMock).toHaveBeenCalled();
+    expect(buildGenerateUserPromptMock).not.toHaveBeenCalled();
   });
 });

@@ -107,6 +107,13 @@ describe("document builder definitions", () => {
     expect(getDocumentBuilderDefinition("haccpPlan")?.documentType).toBe("haccp_plan");
     expect(getDocumentBuilderDefinition("tempLog")?.documentType).toBe("temperature_log");
     expect(getDocumentBuilderDefinition("cleaningSchedule")?.documentType).toBe("cleaning_schedule");
+    expect(getDocumentBuilderDefinition("foodSafetyPolicy")?.documentType).toBe("food_safety_policy");
+    expect(getDocumentBuilderDefinition("traceabilityProcedure")?.documentType).toBe("traceability_procedure");
+    expect(getDocumentBuilderDefinition("pestControlProcedure")?.documentType).toBe("pest_control_procedure");
+    expect(getDocumentBuilderDefinition("wasteManagementProcedure")?.documentType).toBe("waste_management_procedure");
+    expect(getDocumentBuilderDefinition("cleaningSop")?.documentType).toBe("cleaning_sop");
+    expect(getDocumentBuilderDefinition("staffTrainingRecord")?.documentType).toBe("staff_training_record");
+    expect(getDocumentBuilderDefinition("productDataSheet")?.documentType).toBe("product_data_sheet");
     expect(DOCUMENT_BUILDERS.tempLog.wizardKey).toBe("tempLog");
   });
 
@@ -138,5 +145,51 @@ describe("document builder definitions", () => {
       .flatMap((section) => section.fields.map((field) => field.type));
 
     expect(rowFieldTypes).toEqual(["rows", "rows", "rows", "rows", "rows"]);
+  });
+
+  it("defines structured row-based fields for cleaning SOP and policy builders", () => {
+    const cleaningSop = getDocumentBuilderDefinition("cleaningSop");
+    const traceabilityProcedure = getDocumentBuilderDefinition("traceabilityProcedure");
+
+    expect(cleaningSop?.sections.some((section) => section.key === "chemicals")).toBe(true);
+    expect(cleaningSop?.sections.some((section) => section.key === "records")).toBe(true);
+    expect(
+      traceabilityProcedure?.sections
+        .flatMap((section) => section.fields)
+        .some((field) => field.key === "identificationSystem"),
+    ).toBe(true);
+    expect(
+      traceabilityProcedure?.sections
+        .flatMap((section) => section.fields)
+        .some((field) => field.key === "mockRecallFrequency"),
+    ).toBe(true);
+  });
+
+  it("builds metadata defaults for product sheets and policy builders", () => {
+    expect(getDocumentBuilderDefaults("productDataSheet")).toMatchObject({
+      businessName: "",
+      approvedBy: "",
+    });
+    expect(getDocumentBuilderDefaults("foodSafetyPolicy")).toMatchObject({
+      businessName: "",
+      approvedBy: "",
+      reviewDate: "",
+    });
+  });
+
+  it("keeps the HACCP conversational wizard aligned to the legacy 8-question flow", () => {
+    const haccp = getDocumentBuilderDefinition("haccpPlan");
+    const keys = haccp?.sections.flatMap((section) => section.fields.map((field) => field.key)) ?? [];
+
+    expect(keys).toEqual([
+      "companyName",
+      "version",
+      "date",
+      "createdBy",
+      "approvedBy",
+      "processSteps",
+      "hazards",
+      "ccpDetails",
+    ]);
   });
 });

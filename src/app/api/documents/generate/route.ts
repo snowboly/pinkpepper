@@ -20,7 +20,11 @@ import {
   buildTemperatureLogDataFromBuilder,
   buildTemperatureLogModelPrompt,
 } from "@/lib/documents/temperature-log-generation";
-import { buildSopDataFromAnswers } from "@/lib/documents/sop-generation";
+import {
+  buildSopDataFromAnswers,
+  buildSopDataFromBuilder,
+  buildSopModelPrompt,
+} from "@/lib/documents/sop-generation";
 import {
   buildTrainingRecordDataFromAnswers,
   buildTrainingRecordDataFromBuilder,
@@ -201,7 +205,11 @@ export async function POST(request: Request) {
     : undefined;
   const sopTypes: DocumentType[] = ["food_safety_policy", "traceability_procedure", "pest_control_procedure", "waste_management_procedure"];
   const sopData = sopTypes.includes(documentType as DocumentType)
-    ? buildSopDataFromAnswers(documentType as DocumentType, answers)
+    ? (
+        builderData
+          ? buildSopDataFromBuilder(documentType as DocumentType, builderData)
+          : buildSopDataFromAnswers(documentType as DocumentType, answers)
+      )
     : undefined;
 
   const systemPrompt =
@@ -221,6 +229,8 @@ export async function POST(request: Request) {
       ? buildTrainingRecordModelPrompt(trainingRecordData)
       : documentType === "product_data_sheet" && productDataSheetData
       ? buildProductDataSheetModelPrompt(productDataSheetData)
+      : sopTypes.includes(documentType as DocumentType) && sopData && builderData
+      ? buildSopModelPrompt(documentType as DocumentType, sopData, builderData)
       : buildGenerateUserPrompt(documentType as DocumentType, answers);
 
   const groqModel = process.env.GROQ_MODEL ?? "llama-3.3-70b-versatile";

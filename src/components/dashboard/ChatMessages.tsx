@@ -47,7 +47,6 @@ const DOC_CATEGORIES: DocCategory[] = [
   {
     titleKey: "docCategories.procedures",
     items: [
-      { key: "cleaningSop" },
       { key: "traceabilityProcedure" },
       { key: "pestControlProcedure" },
       { key: "wasteManagementProcedure" },
@@ -57,8 +56,6 @@ const DOC_CATEGORIES: DocCategory[] = [
     titleKey: "docCategories.logsRecords",
     items: [
       { key: "tempLog" },
-      { key: "cleaningSchedule" },
-      { key: "staffTrainingRecord" },
     ],
   },
 ];

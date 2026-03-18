@@ -6,7 +6,6 @@ import { useTranslations } from "next-intl";
 import { track } from "@vercel/analytics";
 import type { SubscriptionTier } from "@/lib/tier";
 import { TIER_CAPABILITIES } from "@/lib/tier";
-import { buildHaccpWizardDefinition } from "@/lib/documents/haccp-wizard";
 import type { Citation } from "@/lib/rag/citations";
 import { getPersonaForConversation } from "@/lib/personas";
 import type { Message, Conversation, Project, ChatWorkspaceProps, PersonaInfo } from "./types";
@@ -16,6 +15,11 @@ import ChatInput from "./ChatInput";
 import OnboardingModal from "./OnboardingModal";
 import UpgradeModal from "./UpgradeModal";
 import ReviewContactModal from "./ReviewContactModal";
+import {
+  buildDocumentGenerationPayload,
+  type DocumentBuilderAnswerMap,
+} from "./document-builders/document-builder-payload";
+import { getDocumentBuilderDefinition } from "./document-builders/document-builder-definitions";
 import { useAttachments } from "./useAttachments";
 import { useAudioRecording } from "./useAudioRecording";
 import { parseMessageArtifact, parseMessageCitations } from "./chat-message-metadata";
@@ -24,194 +28,52 @@ import { applyStreamError } from "./chat-stream-state";
 type StreamUsage = { used: number; limit: number | null; tier: SubscriptionTier; isAdmin?: boolean };
 type WorkspaceMode = "ask" | "virtual_audit";
 type DocWizard = {
-  id: string;
+  builderKey: string;
+  documentType: string;
   wizardKey: string;
   questionCount: number;
-  buildPrompt: (answers: string[]) => string;
-  questions?: string[];
+  title: string;
+  questions: Array<{ key: string; prompt: string }>;
 };
 
-const HACCP_WIZARD = buildHaccpWizardDefinition();
+const LIGHTWEIGHT_DOC_WIZARD_KEYS = [
+  "haccpPlan",
+  "tempLog",
+  "foodSafetyPolicy",
+  "traceabilityProcedure",
+  "pestControlProcedure",
+  "wasteManagementProcedure",
+] as const;
 
-const DOC_WIZARDS: Record<string, DocWizard> = {
-  haccpPlan: {
-    id: "haccp_plan",
-    wizardKey: "haccpPlan",
-    questionCount: HACCP_WIZARD.questions.length,
-    questions: HACCP_WIZARD.questions.map((question) => question.prompt),
-    buildPrompt: (answers) =>
-      `Create a lean, operational HACCP plan using the structured details below.\n\n` +
-      `Document metadata:\n` +
-      `- Company Name: ${answers[0] ?? ""}\n` +
-      `- Version: ${answers[1] ?? ""}\n` +
-      `- Date: ${answers[2] ?? ""}\n` +
-      `- Created by: ${answers[3] ?? ""}\n` +
-      `- Approved by: ${answers[4] ?? ""}\n\n` +
-      `Core content:\n` +
-      `- Process flow:\n${answers[5] ?? ""}\n\n` +
-      `- Hazard analysis input:\n${answers[6] ?? ""}\n\n` +
-      `- CCP details:\n${answers[7] ?? ""}\n\n` +
-      `Output requirements:\n` +
-      `- Use only these sections: Process Flow, Process Steps Table, Hazard Analysis Table, and CCP Table only if needed.\n` +
-      `- Keep the format operational and audit-ready, not manual-style.\n` +
-      `- Use visible Yes/No values for CCP decisions.`,
-  },
-  cleaningSop: {
-    id: "cleaning_sop",
-    wizardKey: "cleaningSop",
-    questionCount: 5,
-    buildPrompt: (answers) =>
-      `Draft a complete Cleaning and Disinfection SOP using the following details:\n\n` +
-      `1) ${answers[0] ?? ""}\n` +
-      `2) ${answers[1] ?? ""}\n` +
-      `3) ${answers[2] ?? ""}\n` +
-      `4) ${answers[3] ?? ""}\n` +
-      `5) ${answers[4] ?? ""}\n\n` +
-      `Requirements:\n` +
-      `- Structure: Purpose, Scope, Responsibilities, Materials/Chemicals, Procedure, Frequency, Verification, Corrective Action, Records.\n` +
-      `- Include example cleaning schedule and sign-off log table.\n` +
-      `- Keep wording operational and audit-friendly.`,
-  },
-  tempLog: {
-    id: "temp_log",
-    wizardKey: "tempLog",
-    questionCount: 4,
-    buildPrompt: (answers) =>
-      `Generate a practical Temperature Monitoring Log pack based on:\n\n` +
-      `1) ${answers[0] ?? ""}\n` +
-      `2) ${answers[1] ?? ""}\n` +
-      `3) ${answers[2] ?? ""}\n` +
-      `4) ${answers[3] ?? ""}\n\n` +
-      `Requirements:\n` +
-      `- Provide separate tables where useful (fridge/freezer/hot-hold/cooking/delivery).\n` +
-      `- Include date, time, item/equipment, reading, limit, pass/fail, corrective action, initials/sign-off.\n` +
-      `- Add concise guidance on what to do when limits are breached.`,
-  },
-  foodSafetyPolicy: {
-    id: "food_safety_policy",
-    wizardKey: "foodSafetyPolicy",
-    questionCount: 4,
-    buildPrompt: (answers) =>
-      `Create a comprehensive Food Safety Policy using:\n\n` +
-      `1) ${answers[0] ?? ""}\n` +
-      `2) ${answers[1] ?? ""}\n` +
-      `3) ${answers[2] ?? ""}\n` +
-      `4) ${answers[3] ?? ""}\n\n` +
-      `Requirements:\n` +
-      `- Include policy statement, management commitment, legal obligations, organisational responsibilities.\n` +
-      `- Include HACCP commitment, training requirements, monitoring and review schedule.\n` +
-      `- Reference Reg (EC) 852/2004 and Food Safety Act 1990 where relevant.`,
-  },
-  traceabilityProcedure: {
-    id: "traceability_procedure",
-    wizardKey: "traceabilityProcedure",
-    questionCount: 4,
-    buildPrompt: (answers) =>
-      `Create a complete Traceability Procedure using:\n\n` +
-      `1) ${answers[0] ?? ""}\n` +
-      `2) ${answers[1] ?? ""}\n` +
-      `3) ${answers[2] ?? ""}\n` +
-      `4) ${answers[3] ?? ""}\n\n` +
-      `Requirements:\n` +
-      `- Include one-up/one-down traceability, batch coding, incoming goods recording, dispatch records.\n` +
-      `- Include recall/withdrawal procedure with decision tree and mock recall schedule.\n` +
-      `- Reference Reg (EC) 178/2002 Articles 17-20.`,
-  },
-  pestControlProcedure: {
-    id: "pest_control_procedure",
-    wizardKey: "pestControlProcedure",
-    questionCount: 5,
-    buildPrompt: (answers) =>
-      `Create a complete Pest Control Procedure using:\n\n` +
-      `1) ${answers[0] ?? ""}\n` +
-      `2) ${answers[1] ?? ""}\n` +
-      `3) ${answers[2] ?? ""}\n` +
-      `4) ${answers[3] ?? ""}\n` +
-      `5) ${answers[4] ?? ""}\n\n` +
-      `Requirements:\n` +
-      `- Cover rodents, insects, birds, and stored product insects.\n` +
-      `- Include prevention measures, monitoring methods, pest sighting log, corrective actions.\n` +
-      `- Include contractor management requirements and record-keeping.`,
-  },
-  staffTrainingRecord: {
-    id: "staff_training_record",
-    wizardKey: "staffTrainingRecord",
-    questionCount: 4,
-    buildPrompt: (answers) =>
-      `Create a Staff Training Record and Matrix using:\n\n` +
-      `1) ${answers[0] ?? ""}\n` +
-      `2) ${answers[1] ?? ""}\n` +
-      `3) ${answers[2] ?? ""}\n` +
-      `4) ${answers[3] ?? ""}\n\n` +
-      `Requirements:\n` +
-      `- Include training requirements by role, induction checklist, ongoing training schedule.\n` +
-      `- Cover food hygiene, allergens, HACCP, cleaning, personal hygiene, pest awareness.\n` +
-      `- Include a training matrix table and individual training record template.`,
-  },
-  wasteManagementProcedure: {
-    id: "waste_management_procedure",
-    wizardKey: "wasteManagementProcedure",
-    questionCount: 4,
-    buildPrompt: (answers) =>
-      `Create a Waste Management Procedure using:\n\n` +
-      `1) ${answers[0] ?? ""}\n` +
-      `2) ${answers[1] ?? ""}\n` +
-      `3) ${answers[2] ?? ""}\n` +
-      `4) ${answers[3] ?? ""}\n\n` +
-      `Requirements:\n` +
-      `- Include waste categories, segregation/storage requirements, collection schedules.\n` +
-      `- Include waste carrier licensing, duty of care, and record-keeping.\n` +
-      `- Reference Annex II Reg (EC) 852/2004 and Environmental Protection Act 1990.`,
-  },
-  cleaningSchedule: {
-    id: "cleaning_schedule",
-    wizardKey: "cleaningSchedule",
-    questionCount: 5,
-    buildPrompt: (answers) =>
-      `Create a Cleaning Schedule and Plan using:\n\n` +
-      `1) ${answers[0] ?? ""}\n` +
-      `2) ${answers[1] ?? ""}\n` +
-      `3) ${answers[2] ?? ""}\n` +
-      `4) ${answers[3] ?? ""}\n` +
-      `5) ${answers[4] ?? ""}\n\n` +
-      `Requirements:\n` +
-      `- Include area-by-area cleaning schedule with method, chemical, frequency, and responsibility.\n` +
-      `- Include deep cleaning schedule and equipment cleaning procedures.\n` +
-      `- Include daily/weekly tables and a cleaning verification log.`,
-  },
-  productDataSheet: {
-    id: "product_data_sheet",
-    wizardKey: "productDataSheet",
-    questionCount: 7,
-    buildPrompt: (answers) =>
-      `Create a Product Data Sheet using:\n\n` +
-      `1) ${answers[0] ?? ""}\n` +
-      `2) ${answers[1] ?? ""}\n` +
-      `3) ${answers[2] ?? ""}\n` +
-      `4) ${answers[3] ?? ""}\n` +
-      `5) ${answers[4] ?? ""}\n` +
-      `6) ${answers[5] ?? ""}\n` +
-      `7) ${answers[6] ?? ""}\n\n` +
-      `Requirements:\n` +
-      `- Include product name/code, description, country of origin, ingredients (by weight), allergen declaration.\n` +
-      `- Include storage conditions, shelf life (opened/unopened), packaging, net weight.\n` +
-      `- Include nutritional information table and microbiological specification.\n` +
-      `- Reference Regulation 1169/2011 and Natasha's Law where relevant.`,
-  },
-};
+const DOC_WIZARDS: Record<string, DocWizard> = Object.fromEntries(
+  LIGHTWEIGHT_DOC_WIZARD_KEYS.map((builderKey) => {
+    const definition = getDocumentBuilderDefinition(builderKey);
+    if (!definition) {
+      throw new Error(`Missing document builder definition for ${builderKey}`);
+    }
 
-const DOC_GENERATION_TYPES: Record<DocWizard["id"], string> = {
-  haccp_plan: "haccp_plan",
-  cleaning_sop: "cleaning_sop",
-  temp_log: "temperature_log",
-  food_safety_policy: "food_safety_policy",
-  traceability_procedure: "traceability_procedure",
-  pest_control_procedure: "pest_control_procedure",
-  staff_training_record: "staff_training_record",
-  waste_management_procedure: "waste_management_procedure",
-  cleaning_schedule: "cleaning_schedule",
-  product_data_sheet: "product_data_sheet",
-};
+    const questions = definition.sections.flatMap((section) =>
+      section.fields
+        .filter((field) => field.type !== "rows")
+        .map((field) => ({
+          key: field.key,
+          prompt: field.description ? `${field.label}\n\n${field.description}` : field.label,
+        })),
+    );
+
+    return [
+      builderKey,
+      {
+        builderKey,
+        documentType: definition.documentType,
+        wizardKey: definition.wizardKey,
+        title: definition.title,
+        questionCount: questions.length,
+        questions,
+      } satisfies DocWizard,
+    ];
+  }),
+);
 
 export default function ChatWorkspace({
   userEmail,
@@ -269,7 +131,7 @@ export default function ChatWorkspace({
   const [workspaceMode, setWorkspaceMode] = useState<WorkspaceMode>("ask");
   const [activeDocWizard, setActiveDocWizard] = useState<DocWizard | null>(null);
   const [docWizardStep, setDocWizardStep] = useState(0);
-  const [docWizardAnswers, setDocWizardAnswers] = useState<string[]>([]);
+  const [docWizardAnswers, setDocWizardAnswers] = useState<DocumentBuilderAnswerMap>({});
 
   // ── UI state ──
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -632,7 +494,7 @@ export default function ChatWorkspace({
     clearTypingInterval();
     setActiveDocWizard(null);
     setDocWizardStep(0);
-    setDocWizardAnswers([]);
+    setDocWizardAnswers({});
     setConversationId(null);
     setCurrentPersona(null);
     setMessages([]);
@@ -654,7 +516,7 @@ export default function ChatWorkspace({
     setWorkspaceMode(nextMode);
     setActiveDocWizard(null);
     setDocWizardStep(0);
-    setDocWizardAnswers([]);
+    setDocWizardAnswers({});
     // Start a fresh conversation when entering virtual audit mode
     if (nextMode === "virtual_audit") {
       startNewChat();
@@ -669,9 +531,9 @@ export default function ChatWorkspace({
     }
     setActiveDocWizard(wizard);
     setDocWizardStep(0);
-    setDocWizardAnswers([]);
+    setDocWizardAnswers({});
     const intro = tw(`wizards.${wizard.wizardKey}.intro`);
-    const q1 = wizard.questions?.[0] ?? tw(`wizards.${wizard.wizardKey}.q1`);
+    const q1 = wizard.questions[0]?.prompt ?? tw(`wizards.${wizard.wizardKey}.q1`);
     pushAssistantMessage(`${intro}\n\nQuestion 1/${wizard.questionCount}: ${q1}`, currentPersona);
     setPrompt("");
     textareaRef.current?.focus();
@@ -691,18 +553,30 @@ export default function ChatWorkspace({
     if (["cancel", "/cancel", "stop"].includes(answer.toLowerCase())) {
       setActiveDocWizard(null);
       setDocWizardStep(0);
-      setDocWizardAnswers([]);
+      setDocWizardAnswers({});
       pushAssistantMessage(tw("wizardCancelled"), currentPersona);
       return true;
     }
 
-    const nextAnswers = [...docWizardAnswers, answer];
+    const currentQuestion = activeDocWizard.questions[docWizardStep];
+    if (!currentQuestion) {
+      setActiveDocWizard(null);
+      setDocWizardStep(0);
+      setDocWizardAnswers({});
+      pushAssistantMessage(tw("wizardCancelled"), currentPersona);
+      return true;
+    }
+
+    const nextAnswers = {
+      ...docWizardAnswers,
+      [currentQuestion.key]: answer,
+    };
     const nextStep = docWizardStep + 1;
 
     if (nextStep < activeDocWizard.questionCount) {
       setDocWizardAnswers(nextAnswers);
       setDocWizardStep(nextStep);
-      const nextQ = activeDocWizard.questions?.[nextStep] ?? tw(`wizards.${activeDocWizard.wizardKey}.q${nextStep + 1}`);
+      const nextQ = activeDocWizard.questions[nextStep]?.prompt ?? tw(`wizards.${activeDocWizard.wizardKey}.q${nextStep + 1}`);
       pushAssistantMessage(`Question ${nextStep + 1}/${activeDocWizard.questionCount}: ${nextQ}`, currentPersona);
       return true;
     }
@@ -710,29 +584,39 @@ export default function ChatWorkspace({
     const completedWizard = activeDocWizard;
     setActiveDocWizard(null);
     setDocWizardStep(0);
-    setDocWizardAnswers([]);
+    setDocWizardAnswers({});
     pushAssistantMessage(tw("wizardGenerating"), currentPersona);
 
-    const wizardTitle = tw(`wizards.${completedWizard.wizardKey}.title`);
+    const wizardTitle = completedWizard.title;
     const displayPrompt = `Generate the ${wizardTitle} document using the provided business details.`;
-    const documentType = DOC_GENERATION_TYPES[completedWizard.id];
+    const documentType = completedWizard.documentType;
     const userMessage: Message = { role: "user", content: displayPrompt };
     setMessages((prev) => [...prev, userMessage]);
     setLoading(true);
     setError(null);
     trackWorkspaceEvent("document_generation_requested", {
-      wizard: completedWizard.id,
+      wizard: completedWizard.documentType,
       tier,
       source: "document_wizard",
     });
 
     try {
+      const requestPayload =
+        completedWizard.documentType === "haccp_plan"
+          ? {
+              documentType,
+              answers: completedWizard.questions.map((question) => {
+                const value = nextAnswers[question.key];
+                return typeof value === "string" ? value : "";
+              }),
+            }
+          : buildDocumentGenerationPayload(completedWizard.builderKey, nextAnswers);
+
       const res = await fetch("/api/documents/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          documentType,
-          answers: nextAnswers,
+          ...requestPayload,
           format: "json",
           conversationId,
           displayPrompt,
@@ -766,7 +650,7 @@ export default function ChatWorkspace({
             content: data.assistantMessage!,
             persona: currentPersona ?? undefined,
             artifact: data.artifact ?? {
-              id: `${completedWizard.id}-${Date.now()}`,
+              id: `${completedWizard.documentType}-${Date.now()}`,
               kind: "document",
               title: wizardTitle,
               summary: data.assistantMessage!,
