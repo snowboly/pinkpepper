@@ -140,12 +140,18 @@ describe("chat workspace chrome", () => {
     const workspace = readWorkspaceFile("src/components/dashboard/ChatWorkspace.tsx");
     const messages = readWorkspaceFile("src/components/dashboard/ChatMessages.tsx");
 
-    expect(workspace).toContain("const wizard = suggestion.key ? DOC_WIZARDS[suggestion.key] : undefined;");
+    expect(workspace).toContain("buildDocumentGenerationPayload");
+    expect(workspace).toContain("getDocumentBuilderDefinition");
     expect(workspace).not.toContain("DOC_WIZARDS[suggestion.label]");
+    expect(workspace).not.toContain("const DOC_GENERATION_TYPES");
 
     expect(messages).toContain("key?: string;");
     expect(messages).not.toContain('{ key: "supplierApproval" }');
     expect(messages).not.toContain('{ key: "allergenPolicy" }');
     expect(messages).not.toContain('{ key: "personalHygienePolicy" }');
+    expect(messages).not.toContain('{ key: "productDataSheet" }');
+    expect(messages).not.toContain('{ key: "cleaningSchedule" }');
+    expect(messages).not.toContain('{ key: "cleaningSop" }');
+    expect(messages).not.toContain('{ key: "staffTrainingRecord" }');
   });
 });
