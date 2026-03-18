@@ -95,7 +95,7 @@ describe("public SEO copy and linking", () => {
 
     for (const url of currentPages) {
       const entry = entries.find((item) => item.url === url);
-      expect(entry?.lastModified?.toISOString()).toContain("2026-03-18");
+      expect(new Date(entry?.lastModified ?? "").toISOString()).toContain("2026-03-18");
     }
   });
 });
