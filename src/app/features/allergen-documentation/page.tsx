@@ -44,6 +44,10 @@ export default function AllergenDocumentationPage() {
             "The value is not limited to a single allergen chart. Teams can also draft SOPs, verification checklists, training notes, and supporting records that make allergen controls more operationally credible.",
         },
       ]}
+      heroImage={{
+        src: "https://images.unsplash.com/photo-1590846406792-0adc7f938f1d?w=1200&q=80",
+        alt: "Chef checking ingredients during food preparation",
+      }}
       relatedLinks={[
         {
           href: "/features/haccp-plan-generator",

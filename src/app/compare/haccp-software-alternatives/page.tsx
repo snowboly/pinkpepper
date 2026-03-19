@@ -13,35 +13,35 @@ export const metadata: Metadata = {
 export default function HaccpSoftwareAlternativesPage() {
   return (
     <FeatureTemplate
-      eyebrow="Alternative page"
+      eyebrow="HACCP software alternatives"
       title="PinkPepper among HACCP software alternatives"
-      description="Most HACCP software alternatives focus on record storage, form completion, or broad compliance management. PinkPepper's angle is different: AI-assisted drafting and review acceleration for food safety documentation teams still need to produce and improve."
+      description="Most HACCP software alternatives focus on record storage, digital checklists, and form workflows. PinkPepper's angle is different: AI-assisted drafting for teams that still need to create or rebuild their documentation — not just capture what already exists."
       primaryCta="Evaluate PinkPepper"
       painPoints={[
-        "Buyers comparing software categories often struggle to separate recordkeeping tools from drafting tools.",
-        "Many alternatives are strong for completed systems but weaker for creating new documentation quickly.",
-        "PinkPepper needs pages that explain its differentiated position without sounding generic.",
+        "Most HACCP software is built for storing completed records, not for teams still working out what their documents should say.",
+        "Many alternatives are strong once your system is mature — weaker when the documentation gap is what's actually slowing you down.",
+        "Generic AI tools can generate text but don't understand CCP logic, monitoring frequency, or the evidence auditors expect to see.",
       ]}
       outcomes={[
-        "Clarify PinkPepper's category position for comparison traffic.",
-        "Attract buyers looking for faster document generation rather than only record storage.",
-        "Route evaluation traffic into pricing and feature pages with stronger intent.",
+        "Understand whether your gap is record storage or document creation — they need different tools.",
+        "Get to a first HACCP plan, SOP, or allergen record faster without starting from a blank template.",
+        "Evaluate PinkPepper against your current compliance stage, not a hypothetical mature system.",
       ]}
       sections={[
         {
-          title: "Where PinkPepper fits",
+          title: "Where other HACCP software tends to focus",
           body:
-            "PinkPepper is best understood as AI food safety compliance software for drafting and improving documentation: HACCP plans, allergen records, SOPs, audit checklists, and corrective action workflows.",
+            "Record capture, digital forms, workflow approval chains, and compliance dashboards. These tools are well suited for teams that already have mature documentation and want to go paperless or manage at scale.",
         },
         {
-          title: "Where other tools may fit better",
+          title: "Where PinkPepper is different",
           body:
-            "If a buyer already has mature documents and mainly needs record capture or enterprise workflow control, a different type of system may be a better primary tool. This page should make that distinction clear.",
+            "PinkPepper is built for drafting and improving documentation: HACCP plans, allergen records, SOPs, audit checklists, corrective action workflows. If the gap is that these documents don't exist yet, or need rebuilding, that's what the product is designed for.",
         },
         {
-          title: "Why this comparison matters",
+          title: "Picking the right tool for your stage",
           body:
-            "Comparison traffic is usually lower volume than broad informational traffic, but it is often much closer to signup intent. These pages are worth shipping early because they can convert sooner.",
+            "If you're in the documentation-creation phase, PinkPepper accelerates that work. If you're in the record-digitisation phase with mature docs, you may want a different primary tool — or both. We'd rather you know that than oversell the fit.",
         },
       ]}
       relatedLinks={[

@@ -44,6 +44,10 @@ export default function FoodSafetyAuditPrepPage() {
             "Where the work has real compliance risk, PinkPepper's positioning is not 'publish AI output and hope'. It is 'draft faster, review better, export cleanly, and escalate to food safety consultancy when necessary.'",
         },
       ]}
+      heroImage={{
+        src: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1200&q=80",
+        alt: "Organised commercial kitchen ready for inspection",
+      }}
       relatedLinks={[
         {
           href: "/features/food-safety-sop-generator",

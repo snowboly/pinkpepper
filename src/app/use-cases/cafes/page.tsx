@@ -13,37 +13,41 @@ export const metadata: Metadata = {
 export default function CafeUseCasePage() {
   return (
     <FeatureTemplate
-      eyebrow="Cafe use case"
-      title="Food safety software for cafes, coffee shops, and bakery-led operations"
-      description="Cafe operators often need lighter-weight systems than large manufacturers, but the compliance burden is still real. PinkPepper helps smaller teams draft HACCP plans, cleaning SOPs, allergen records, and opening or closing checks faster."
-      primaryCta="Start cafe documentation"
+      eyebrow="Cafes & bakeries"
+      title="Food safety docs for cafes and bakeries where one person does everything"
+      description="You don't have a compliance manager. You have an owner-operator who also makes coffee, bakes scones, and restocks the display fridge. PinkPepper gives small teams the same documentation quality as bigger operations — opening checks, allergen records, cleaning SOPs, HACCP — without needing a consultant for every document."
+      primaryCta="Start your cafe HACCP"
       painPoints={[
-        "Smaller teams still need strong documentation but usually do not have dedicated compliance staff.",
-        "Cafes often manage mixed workflows: beverages, chilled foods, reheating, pastries, and front-counter service.",
-        "Simple sites still need credible records for allergens, hygiene, cleaning, and temperature control.",
+        "You need HACCP, allergen records, and cleaning schedules — but nobody's job title is 'compliance officer.'",
+        "Cafes mix beverage prep, ambient pastry, chilled sandwiches, reheated soups, and front-counter service all in one small space.",
+        "EHO inspectors expect the same documentation rigour from a 12-seat cafe as a 200-cover restaurant.",
       ]}
       outcomes={[
-        "Reduce time spent adapting generic templates.",
-        "Document mixed cafe and bakery workflows more clearly.",
-        "Maintain lighter systems without losing compliance structure.",
+        "A HACCP plan sized for your operation — not a 40-page document designed for a factory.",
+        "Opening and closing checklists your team will actually complete every shift.",
+        "Allergen records that cover baked goods, display items, and counter service in one place.",
       ]}
       sections={[
         {
-          title: "Built for smaller operational teams",
+          title: "Small space, mixed risks",
           body:
-            "Cafe operators need documents that are fast to create and easy to maintain. PinkPepper is positioned for that middle ground between expensive consultancy and weak copy-paste templates.",
+            "A cafe handles ambient pastries, chilled grab-and-go, reheated soups, milk-based drinks, and display-fridge storage — often with shared equipment and one prep area. PinkPepper structures HACCP controls around that reality instead of treating it like a simplified restaurant.",
         },
         {
-          title: "Useful for repeatable routine controls",
+          title: "Daily routines that actually get done",
           body:
-            "Opening checks, display-fridge temperatures, cleaning schedules, allergen matrices, and staff hygiene SOPs are exactly the kinds of documents this workflow can accelerate.",
+            "The biggest compliance gap in cafes isn't missing a HACCP plan — it's that the opening checks, fridge logs, and cleaning records aren't getting filled in. PinkPepper generates short, clear checklists designed to survive a morning rush.",
         },
         {
-          title: "A better first draft for review",
+          title: "Bakery-specific allergen complexity",
           body:
-            "Where consultancy is needed, the product helps generate a stronger first version so specialist time is spent improving the document rather than inventing it.",
+            "Flour dust, nut toppings, shared ovens, egg wash cross-contact — bakery allergen risks are different from restaurant risks. PinkPepper generates allergen matrices and cross-contact SOPs that account for baking-specific hazards, not just menu-level declarations.",
         },
       ]}
+      heroImage={{
+        src: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=1200&q=80",
+        alt: "Cafe interior with pastry display and coffee counter",
+      }}
       relatedLinks={[
         {
           href: "/features/food-safety-sop-generator",

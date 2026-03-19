@@ -198,6 +198,8 @@ export function SiteFooter() {
             <li><Link href="/resources" className="pp-shell-link">Resources</Link></li>
             <li><Link href="/about" className="pp-shell-link">About</Link></li>
             <li><Link href="/pricing" className="pp-shell-link">Pricing</Link></li>
+            <li><Link href="/compare/pinkpepper-vs-consultant" className="pp-shell-link">PinkPepper vs Consultant</Link></li>
+            <li><Link href="/compare/haccp-software-alternatives" className="pp-shell-link">HACCP Software Alternatives</Link></li>
             <li><Link href="/login" className="pp-shell-link">Log In</Link></li>
             <li><Link href="/signup" className="pp-shell-link">Create Account</Link></li>
           </ul>
@@ -206,7 +208,6 @@ export function SiteFooter() {
           <h4 className="mb-4 text-sm font-semibold text-[#1A1A1A]">Support</h4>
           <ul className="space-y-3 text-sm text-[#6B6B6B]">
             <li><Link href="/contact" className="pp-shell-link">Contact & Support</Link></li>
-            <li><Link href="/compare" className="pp-shell-link">Comparisons</Link></li>
           </ul>
         </div>
         <div>
