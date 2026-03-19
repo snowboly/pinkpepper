@@ -60,6 +60,12 @@
         "text": "¿Qué registros de trazabilidad debe mantener una empresa alimentaria según el Regulation (EC) No 178/2002?"
       }
     },
+    "createDocument": "Crear documento",
+    "docCategories": {
+      "quickDocuments": "Documentos rápidos",
+      "advancedDocuments": "Documentos avanzados",
+      "structuredBuilder": "Constructor estructurado"
+    },
     "startRecording": "Start recording",
     "stopRecording": "Stop",
     "transcribing": "Transcribing…",
@@ -96,6 +102,7 @@
     "myReviews": "Mis revisiones",
     "expertReviews": "Revisiones de expertos",
     "accountSettings": "Configuración de cuenta",
+    "viewPlans": "Ver planes",
     "today": "Hoy",
     "yesterday": "Ayer",
     "previous7Days": "Últimos 7 días",

@@ -60,6 +60,12 @@
         "text": "Welche Rückverfolgbarkeitsaufzeichnungen muss ein Lebensmittelunternehmen gemäß Regulation (EC) No 178/2002 führen?"
       }
     },
+    "createDocument": "Dokument erstellen",
+    "docCategories": {
+      "quickDocuments": "Schnelle Dokumente",
+      "advancedDocuments": "Erweiterte Dokumente",
+      "structuredBuilder": "Strukturierter Builder"
+    },
     "startRecording": "Start recording",
     "stopRecording": "Stop",
     "transcribing": "Transcribing…",
@@ -96,6 +102,7 @@
     "myReviews": "Meine Bewertungen",
     "expertReviews": "Expertenbewertungen",
     "accountSettings": "Kontoeinstellungen",
+    "viewPlans": "Tarife anzeigen",
     "today": "Heute",
     "yesterday": "Gestern",
     "previous7Days": "Letzte 7 Tage",

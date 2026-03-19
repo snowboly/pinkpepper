@@ -114,7 +114,7 @@ export default function ChatInput({
           <div className="mb-2 flex items-start gap-2">
             <div className="relative">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={imagePreview} alt="Attached" className="h-16 w-16 rounded-lg object-cover border border-[#E2E8F0]" />
+              <img src={imagePreview} alt={t("attachedPhoto")} className="h-16 w-16 rounded-lg object-cover border border-[#E2E8F0]" />
               <button
                 type="button"
                 onClick={onClearImage}
@@ -176,7 +176,7 @@ export default function ChatInput({
               className="flex h-[44px] w-[44px] items-center justify-center rounded-xl border border-[#E2E8F0] bg-white p-2.5 text-[#64748B] transition-colors hover:bg-[#F8F9FB] hover:text-[#0F172A] disabled:cursor-not-allowed disabled:opacity-60"
               title={t("attachDocumentTitle")}
               aria-expanded={actionMenuOpen}
-              aria-label="Open attachment tools"
+              aria-label={t("attachDocumentTitle")}
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.9}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 5v14M5 12h14" />

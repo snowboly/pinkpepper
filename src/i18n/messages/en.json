@@ -81,7 +81,10 @@
       "corePlans": "Core Plans",
       "procedures": "SOPs & Procedures",
       "logsRecords": "Logs & Records",
-      "policies": "Policies"
+      "policies": "Policies",
+      "quickDocuments": "Quick documents",
+      "advancedDocuments": "Advanced documents",
+      "structuredBuilder": "Structured builder"
     },
     "startRecording": "Start recording",
     "stopRecording": "Stop",
@@ -119,6 +122,7 @@
     "myReviews": "My Reviews",
     "expertReviews": "Ask an expert",
     "accountSettings": "Account settings",
+    "viewPlans": "View plans",
     "today": "Today",
     "yesterday": "Yesterday",
     "previous7Days": "Previous 7 Days",

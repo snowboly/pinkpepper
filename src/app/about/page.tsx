@@ -45,8 +45,8 @@ export default function AboutPage() {
             <Link href="/features" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
               Explore product features
             </Link>
-            <Link href="/compare/pinkpepper-vs-consultant" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
-              Compare PinkPepper with consultants
+            <Link href="/features/haccp-plan-generator" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
+              Explore HACCP workflows
             </Link>
           </div>
         </div>
