@@ -16,6 +16,12 @@ import {
   WidthType,
 } from "docx";
 import type { TrainingRecordData } from "./training-record-schema";
+import {
+  getTrainingInductionCompletedLabel,
+  getTrainingInductionTopics,
+  getTrainingLogRows,
+  getTrainingQualificationRows,
+} from "./training-record-render-helpers";
 
 const CALIBRI = "Calibri";
 const LIGHT_BLUE = "DCEEFF";
@@ -49,19 +55,7 @@ function sectionHeading(value: string): Paragraph {
   });
 }
 
-function blankRows(count: number, cols: string[]): TableRow[] {
-  return Array.from({ length: count }, () =>
-    new TableRow({
-      children: cols.map(() =>
-        new TableCell({
-          children: [para("", 18)],
-        })
-      ),
-    })
-  );
-}
-
-function buildFixedTable(headers: string[], rowCount: number): Table {
+function buildTable(headers: string[], rows: string[][]): Table {
   const border = { style: BorderStyle.SINGLE, size: 1, color: BORDER };
 
   const headerRow = new TableRow({
@@ -76,23 +70,33 @@ function buildFixedTable(headers: string[], rowCount: number): Table {
               children: [new TextRun({ text: h, size: 18, bold: true, color: TEXT, font: CALIBRI })],
             }),
           ],
-        })
+        }),
     ),
   });
 
+  const dataRows = rows.map(
+    (row) =>
+      new TableRow({
+        children: row.map((value) => new TableCell({ children: [para(value, 18)] })),
+      }),
+  );
+
   return new Table({
     width: { size: 100, type: WidthType.PERCENTAGE },
-    rows: [headerRow, ...blankRows(rowCount, headers)],
+    rows: [headerRow, ...dataRows],
     borders: {
-      top: border, bottom: border, left: border, right: border,
-      insideHorizontal: border, insideVertical: border,
+      top: border,
+      bottom: border,
+      left: border,
+      right: border,
+      insideHorizontal: border,
+      insideVertical: border,
     },
   });
 }
 
 export async function renderTrainingRecordDocx(data: TrainingRecordData): Promise<ArrayBuffer> {
   const children: (Paragraph | Table)[] = [
-    // Employee info block
     new Paragraph({
       text: "Individual Training Record",
       heading: HeadingLevel.HEADING_1,
@@ -109,23 +113,13 @@ export async function renderTrainingRecordDocx(data: TrainingRecordData): Promis
       border: { bottom: { style: BorderStyle.SINGLE, size: 1, color: BORDER, space: 4 } },
     }),
 
-    // Induction
     sectionHeading("Induction Training"),
-    infoRow("Induction Completed", "☐ Yes  ☐ No"),
-    infoRow("Date"),
-    infoRow("Trainer"),
+    infoRow("Induction Completed", getTrainingInductionCompletedLabel(data)),
+    infoRow("Date", data.inductionDate || "_______________"),
+    infoRow("Trainer", data.trainerName || "_______________"),
     para("Topics Covered:", 20, true),
-    para("☐ Personal hygiene and handwashing", 18),
-    para("☐ Protective clothing requirements", 18),
-    para("☐ Illness reporting and exclusion", 18),
-    para("☐ Cross-contamination prevention", 18),
-    para("☐ Temperature control", 18),
-    para("☐ Allergen awareness", 18),
-    para("☐ Cleaning and sanitation", 18),
-    para("☐ Pest awareness", 18),
-    para("☐ Emergency procedures", 18),
-    para("☐ Site-specific hazards and controls", 18),
-    infoRow("Assessment", "☐ Competent  ☐ Requires further training"),
+    ...getTrainingInductionTopics(data).map((topic) => para(`- ${topic}`, 18)),
+    infoRow("Assessment", data.inductionAssessment || "_______________"),
     infoRow("Employee Signature"),
     infoRow("Trainer Signature"),
 
@@ -135,38 +129,34 @@ export async function renderTrainingRecordDocx(data: TrainingRecordData): Promis
       border: { bottom: { style: BorderStyle.SINGLE, size: 1, color: BORDER, space: 4 } },
     }),
 
-    // Formal qualifications
     sectionHeading("Formal Food Safety Qualifications"),
-    buildFixedTable(
+    buildTable(
       ["Qualification", "Level", "Provider", "Date Achieved", "Certificate No.", "Expiry Date"],
-      4
+      getTrainingQualificationRows(data),
     ),
 
     new Paragraph({ text: "", spacing: { after: 160 } }),
 
-    // On-the-job training log
     sectionHeading("On-the-Job Training Log"),
-    buildFixedTable(
+    buildTable(
       ["Date", "Task / Topic", "Trainer", "Duration", "Assessment", "Signature"],
-      8
+      getTrainingLogRows(data),
     ),
 
     new Paragraph({ text: "", spacing: { after: 160 } }),
 
-    // Annual refresher
     sectionHeading("Annual Refresher Training"),
-    buildFixedTable(
+    buildTable(
       ["Date", "Topics Covered", "Duration", "Trainer", "Employee Signature"],
-      4
+      Array.from({ length: 4 }, () => ["", "", "", "", ""]),
     ),
 
     new Paragraph({ text: "", spacing: { after: 160 } }),
 
-    // Competency assessments
     sectionHeading("Competency Assessments"),
-    buildFixedTable(
+    buildTable(
       ["Date", "Task Assessed", "Assessor", "Outcome", "Comments"],
-      4
+      Array.from({ length: 4 }, () => ["", "", "", "", ""]),
     ),
 
     new Paragraph({ text: "", spacing: { after: 160 } }),
@@ -208,7 +198,7 @@ export async function renderTrainingRecordDocx(data: TrainingRecordData): Promis
                 alignment: AlignmentType.CENTER,
                 border: { top: { style: BorderStyle.SINGLE, size: 1, color: BORDER, space: 4 } },
                 children: [
-                  new TextRun({ text: `Approved by: ${data.metadata.approvedBy || "_______________"}   •   Page `, size: 18, color: MUTED, font: CALIBRI }),
+                  new TextRun({ text: `Approved by: ${data.metadata.approvedBy || "_______________"}   |   Page `, size: 18, color: MUTED, font: CALIBRI }),
                   new TextRun({ children: [PageNumber.CURRENT], size: 18, color: MUTED, font: CALIBRI }),
                 ],
               }),

@@ -63,94 +63,87 @@ function buildTable(headers: string[], rows: string[][]): Table {
                   children: [new TextRun({ text: h, size: 18, bold: true, color: TEXT, font: CALIBRI })],
                 }),
               ],
-            })
+            }),
         ),
       }),
       ...rows.map(
         (row) =>
           new TableRow({
-            children: row.map(
-              (value) =>
-                new TableCell({ children: [para(value, 18)] })
-            ),
-          })
+            children: row.map((value) => new TableCell({ children: [para(value, 18)] })),
+          }),
       ),
     ],
     borders: {
-      top: border, bottom: border, left: border, right: border,
-      insideHorizontal: border, insideVertical: border,
+      top: border,
+      bottom: border,
+      left: border,
+      right: border,
+      insideHorizontal: border,
+      insideVertical: border,
     },
   });
 }
 
 export async function renderCleaningScheduleDocx(data: CleaningScheduleData): Promise<ArrayBuffer> {
   const children: (Paragraph | Table)[] = [
-    // Metadata block
     para(`Premises: ${data.metadata.premises || "_______________"}`, 18),
     para(`Document No.: ${data.metadata.docNo}   Revision: ${data.metadata.revision}   Date: ${data.metadata.date}`, 18),
     para(`Approved by: ${data.metadata.approvedBy || "_______________"}   Review Date: ${data.metadata.reviewDate || "_______________"}`, 18),
     new Paragraph({ text: "", spacing: { after: 80 } }),
 
-    // Cleaning Method Key
     sectionTitle("Cleaning Method Key"),
     buildTable(
       ["Code", "Method"],
       [
-        ["M1", "Manual wash: hot water (≥60°C) + detergent; rinse; apply disinfectant; contact time; rinse if required"],
+        ["M1", "Manual wash: hot water (>=60C) + detergent; rinse; apply disinfectant; contact time; rinse if required"],
         ["M2", "Foam application: apply foam detergent; dwell time; rinse; apply disinfectant; contact time; rinse if required"],
-        ["M3", "Dishwasher: minimum 60°C wash cycle"],
+        ["M3", "Dishwasher: minimum 60C wash cycle"],
         ["M4", "CIP (Clean in Place): automated detergent + rinse + disinfectant cycle"],
         ["M5", "Dry clean only: brush off debris; wipe with damp sanitiser-impregnated cloth; no water immersion"],
         ["M6", "External surfaces: damp wipe with all-purpose cleaner or disinfectant"],
-      ]
+      ],
     ),
 
-    // Chemical Reference
     sectionTitle("Cleaning Chemical Reference"),
     caption("Table 1. Approved Cleaning Chemicals"),
     buildTable(
       ["Chemical Name", "Product", "Dilution", "Contact Time", "Active Ingredient", "COSHH Sheet Location"],
-      data.chemicalReference.map((r) => [r.chemicalName, r.product, r.dilution, r.contactTime, r.activeIngredient, r.coshhLocation])
+      data.chemicalReference.map((r) => [r.chemicalName, r.product, r.dilution, r.contactTime, r.activeIngredient, r.coshhLocation]),
     ),
 
-    // Daily Tasks
     sectionTitle("Daily Cleaning Tasks"),
-    caption("Table 2. Daily Cleaning Schedule — Fixed Columns"),
+    caption("Table 2. Daily Cleaning Schedule - Fixed Columns"),
     buildTable(
       ["Item", "Method", "Chemical", "Dilution", "Contact Time", "Frequency", "Responsible", "Verification"],
-      data.dailyTasks.map((r) => [r.item, r.method, r.chemical, r.dilution, r.contactTime, r.frequency, r.responsible, r.verification])
+      data.dailyTasks.map((r) => [r.item, r.method, r.chemical, r.dilution, r.contactTime, r.frequency, r.responsible, r.verification]),
     ),
 
-    // Weekly Tasks
     sectionTitle("Weekly Cleaning Tasks"),
-    caption("Table 3. Weekly Cleaning Schedule — Fixed Columns"),
+    caption("Table 3. Weekly Cleaning Schedule - Fixed Columns"),
     buildTable(
       ["Item", "Method", "Chemical", "Dilution", "Contact Time", "Responsible", "Verification"],
-      data.weeklyTasks.map((r) => [r.item, r.method, r.chemical, r.dilution, r.contactTime, r.responsible, r.verification])
+      data.weeklyTasks.map((r) => [r.item, r.method, r.chemical, r.dilution, r.contactTime, r.responsible, r.verification]),
     ),
 
-    // Monthly Tasks
     sectionTitle("Monthly Cleaning Tasks"),
-    caption("Table 4. Monthly Cleaning Schedule — Fixed Columns"),
+    caption("Table 4. Monthly Cleaning Schedule - Fixed Columns"),
     buildTable(
       ["Item", "Method", "Chemical", "Responsible", "Verification"],
-      data.monthlyTasks.map((r) => [r.item, r.method, r.chemical, r.responsible, r.verification])
+      data.monthlyTasks.map((r) => [r.item, r.method, r.chemical, r.responsible, r.verification]),
     ),
 
-    // ATP Targets
-    sectionTitle("Verification — ATP Cleaning Pass/Fail Targets"),
+    sectionTitle("Verification - ATP Cleaning Pass/Fail Targets"),
     caption("Table 5. ATP Bioluminescence Targets"),
     buildTable(
       ["Surface Category", "Pass", "Borderline", "Fail"],
-      data.atpTargets.map((r) => [r.surfaceCategory, r.pass, r.borderline, r.fail])
+      data.atpTargets.map((r) => [r.surfaceCategory, r.pass, r.borderline, r.fail]),
     ),
 
-    // Cleaning Records Log
     sectionTitle("Cleaning Records Log"),
-    caption("Table 6. Daily Cleaning Log — Sign-Off Sheet"),
+    caption("Table 6. Daily Cleaning Log - Sign-Off Sheet"),
     buildTable(
       ["Date", "Task", "Time Completed", "Operative (initials)", "Supervisor Check (initials)", "Issues / Corrective Action"],
-      Array.from({ length: 8 }, () => ["", "", "", "", "", ""])
+      Array.from({ length: 8 }, () => ["", "", "", "", "", ""]),
     ),
 
     new Paragraph({ text: "", spacing: { before: 120 } }),
@@ -173,7 +166,7 @@ export async function renderCleaningScheduleDocx(data: CleaningScheduleData): Pr
               new Paragraph({
                 alignment: AlignmentType.CENTER,
                 children: [
-                  text(`${data.metadata.premises || "Premises"} — Cleaning and Disinfection Schedule | ${data.metadata.docNo} | ${data.metadata.date}`, 18, true),
+                  text(`${data.metadata.premises || "Premises"} - Cleaning and Disinfection Schedule | ${data.metadata.docNo} | ${data.metadata.date}`, 18, true),
                 ],
               }),
             ],

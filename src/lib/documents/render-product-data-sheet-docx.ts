@@ -72,26 +72,27 @@ function buildTable(headers: string[], rows: string[][]): Table {
               children: [new TextRun({ text: h, size: 18, bold: true, color: TEXT, font: CALIBRI })],
             }),
           ],
-        })
+        }),
     ),
   });
 
   const dataRows = rows.map(
     (row) =>
       new TableRow({
-        children: row.map(
-          (cell) =>
-            new TableCell({ children: [para(cell, 18)] })
-        ),
-      })
+        children: row.map((cell) => new TableCell({ children: [para(cell, 18)] })),
+      }),
   );
 
   return new Table({
     width: { size: 100, type: WidthType.PERCENTAGE },
     rows: [headerRow, ...dataRows],
     borders: {
-      top: border, bottom: border, left: border, right: border,
-      insideHorizontal: border, insideVertical: border,
+      top: border,
+      bottom: border,
+      left: border,
+      right: border,
+      insideHorizontal: border,
+      insideVertical: border,
     },
   });
 }
@@ -131,7 +132,6 @@ export async function renderProductDataSheetDocx(data: ProductDataSheetData): Pr
     : MICRO_ROWS;
 
   const children: (Paragraph | Table)[] = [
-    // Product identity
     new Paragraph({
       text: data.productName || "Product Data Sheet",
       heading: HeadingLevel.HEADING_1,
@@ -143,17 +143,14 @@ export async function renderProductDataSheetDocx(data: ProductDataSheetData): Pr
     infoRow("Country of Origin", data.countryOfOrigin),
     divider(),
 
-    // Description
     sectionHeading("Product Description"),
     para(data.description || "_______________", 20),
     divider(),
 
-    // Ingredients
     sectionHeading("Ingredients"),
     para(data.ingredients || "_______________", 20),
     divider(),
 
-    // Allergens
     sectionHeading("Allergen Declaration (Regulation 1169/2011 / Natasha's Law)"),
     infoRow("Contains", data.allergenContains || "_______________"),
     infoRow("May Contain (cross-contamination)", data.allergenMayContain || "_______________"),
@@ -161,39 +158,29 @@ export async function renderProductDataSheetDocx(data: ProductDataSheetData): Pr
     new Paragraph({ text: "", spacing: { after: 80 } }),
     buildTable(
       ["Allergen", "Intentionally Added", "Cross-contamination Risk", "Not Present"],
-      ALLERGENS_14.map((a) => [a, "☐", "☐", "☐"])
+      ALLERGENS_14.map((a) => [a, "[ ]", "[ ]", "[ ]"]),
     ),
     new Paragraph({ text: "", spacing: { after: 120 } }),
     divider(),
 
-    // Storage & shelf life
     sectionHeading("Storage Conditions & Shelf Life"),
     infoRow("Storage Conditions", data.storageConditions),
     infoRow("Shelf Life (Unopened)", data.shelfLifeUnopened),
     infoRow("Shelf Life (Once Opened)", data.shelfLifeOpened),
     divider(),
 
-    // Packaging
     sectionHeading("Packaging & Net Weight"),
     infoRow("Net Weight / Volume", data.netWeight),
     infoRow("Packaging Type", data.packagingType),
     divider(),
 
-    // Nutritional info
     sectionHeading("Nutritional Information (per 100g / 100ml)"),
-    buildTable(
-      ["Nutrient", "Per 100g", "Per Serving"],
-      nutritionRows
-    ),
+    buildTable(["Nutrient", "Per 100g", "Per Serving"], nutritionRows),
     new Paragraph({ text: "", spacing: { after: 120 } }),
     divider(),
 
-    // Microbiological spec
     sectionHeading("Microbiological Specification"),
-    buildTable(
-      ["Parameter", "Limit (cfu/g)", "Method", "Frequency"],
-      microbiologyRows
-    ),
+    buildTable(["Parameter", "Limit (cfu/g)", "Method", "Frequency"], microbiologyRows),
     new Paragraph({ text: "", spacing: { after: 160 } }),
   ];
 
@@ -231,7 +218,7 @@ export async function renderProductDataSheetDocx(data: ProductDataSheetData): Pr
                 alignment: AlignmentType.CENTER,
                 border: { top: { style: BorderStyle.SINGLE, size: 1, color: BORDER, space: 4 } },
                 children: [
-                  new TextRun({ text: `Approved by: ${data.metadata.approvedBy || "_______________"}   •   Page `, size: 18, color: MUTED, font: CALIBRI }),
+                  new TextRun({ text: `Approved by: ${data.metadata.approvedBy || "_______________"}   |   Page `, size: 18, color: MUTED, font: CALIBRI }),
                   new TextRun({ children: [PageNumber.CURRENT], size: 18, color: MUTED, font: CALIBRI }),
                 ],
               }),

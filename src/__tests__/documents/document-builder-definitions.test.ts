@@ -4,6 +4,7 @@ import {
   DOCUMENT_BUILDERS,
   getDocumentBuilderDefaults,
   getDocumentBuilderDefinition,
+  getDocumentBuilderRowConfig,
 } from "@/components/dashboard/document-builders/document-builder-definitions";
 import {
   buildSharedDocumentMetadataFields,
@@ -191,5 +192,12 @@ describe("document builder definitions", () => {
       "hazards",
       "ccpDetails",
     ]);
+  });
+
+  it("uses the training log signature key expected by the training schema", () => {
+    const trainingLog = getDocumentBuilderRowConfig("trainingLogRows");
+
+    expect(trainingLog?.columns.map((column) => column.key)).toContain("signature");
+    expect(trainingLog?.columns.map((column) => column.key)).not.toContain("status");
   });
 });
