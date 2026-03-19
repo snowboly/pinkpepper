@@ -89,7 +89,7 @@ export const DEFAULT_STANDARD_PROCEDURE: string[] = [
   "Rinse thoroughly with clean water to remove detergent",
   "Apply disinfectant at correct dilution; allow full contact time as per product label",
   "Final rinse (if required by product instructions)",
-  "Air-dry — do not use tea towels on sanitised surfaces",
+  "Air-dry - do not use tea towels on sanitised surfaces",
 ];
 
 export const DEFAULT_NON_FOOD_CONTACT_PROCEDURE: string[] = [
@@ -103,7 +103,7 @@ export const DEFAULT_NON_FOOD_CONTACT_PROCEDURE: string[] = [
 export const DEFAULT_FREQUENCY_SCHEDULE: CleaningSopFrequencyRow[] = [
   { itemArea: "Food preparation worktops", method: "Two-stage clean", frequency: "Between tasks and end of day", responsible: "Food handlers" },
   { itemArea: "Chopping boards", method: "Dishwasher or two-stage clean", frequency: "After each use", responsible: "Food handlers" },
-  { itemArea: "Knives and utensils", method: "Dishwasher (≥60°C)", frequency: "After each use", responsible: "Food handlers" },
+  { itemArea: "Knives and utensils", method: "Dishwasher (>=60C)", frequency: "After each use", responsible: "Food handlers" },
   { itemArea: "Floors (kitchen / production)", method: "Sweep + mop with degreaser + disinfect", frequency: "Daily (end of operations)", responsible: "Cleaning operative" },
   { itemArea: "Fridge interior", method: "Sanitiser wipe; full clean weekly", frequency: "Daily spills / weekly full", responsible: "Cleaning operative" },
   { itemArea: "Freezer interior", method: "Wipe exterior; defrost and clean as needed", frequency: "Weekly exterior / periodic full", responsible: "Cleaning operative" },
@@ -117,13 +117,13 @@ export const DEFAULT_FREQUENCY_SCHEDULE: CleaningSopFrequencyRow[] = [
 
 export const DEFAULT_VERIFICATION_VISUAL: string[] = [
   "Supervisors must visually inspect cleaned surfaces after each shift",
-  "Any visible soil, grease, or residues = fail → re-clean before production",
+  "Any visible soil, grease, or residues = fail -> re-clean before production",
 ];
 
 export const DEFAULT_VERIFICATION_ATP: CleaningSopAtpRow[] = [
-  { surfaceCategory: "Food-contact (high-risk)", pass: "<10 RLU", borderline: "10–25 RLU", fail: ">25 RLU" },
-  { surfaceCategory: "Food-contact (general)", pass: "<50 RLU", borderline: "50–100 RLU", fail: ">100 RLU" },
-  { surfaceCategory: "Environmental", pass: "<100 RLU", borderline: "100–200 RLU", fail: ">200 RLU" },
+  { surfaceCategory: "Food-contact (high-risk)", pass: "<10 RLU", borderline: "10-25 RLU", fail: ">25 RLU" },
+  { surfaceCategory: "Food-contact (general)", pass: "<50 RLU", borderline: "50-100 RLU", fail: ">100 RLU" },
+  { surfaceCategory: "Environmental", pass: "<100 RLU", borderline: "100-200 RLU", fail: ">200 RLU" },
 ];
 
 export const DEFAULT_CORRECTIVE: string[] = [

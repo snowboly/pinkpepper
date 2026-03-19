@@ -199,7 +199,7 @@ const TRAINING_LOG_ROWS = createRowBuilderConfig({
     { key: "trainer", label: "Trainer", required: true },
     { key: "duration", label: "Duration", required: false },
     { key: "assessment", label: "Assessment", required: false },
-    { key: "status", label: "Signature / status", required: false },
+    { key: "signature", label: "Signature / status", required: false },
   ],
 });
 

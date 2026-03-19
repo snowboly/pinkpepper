@@ -53,7 +53,7 @@ function caption(value: string): Paragraph {
 }
 
 function bullet(value: string): Paragraph {
-  return new Paragraph({ children: [text(`• ${value}`, 20)], spacing: { after: 40 } });
+  return new Paragraph({ children: [text(`- ${value}`, 20)], spacing: { after: 40 } });
 }
 
 function numberedItem(index: number, value: string): Paragraph {
@@ -78,17 +78,14 @@ function buildTable(headers: string[], rows: string[][]): Table {
                   children: [new TextRun({ text: header, size: 20, bold: true, color: TEXT, font: CALIBRI })],
                 }),
               ],
-            })
+            }),
         ),
       }),
       ...rows.map(
         (row) =>
           new TableRow({
-            children: row.map(
-              (value) =>
-                new TableCell({ children: [paragraph(value, 18)] })
-            ),
-          })
+            children: row.map((value) => new TableCell({ children: [paragraph(value, 18)] })),
+          }),
       ),
     ],
     borders: {
@@ -104,49 +101,36 @@ function buildTable(headers: string[], rows: string[][]): Table {
 
 export async function renderCleaningSopDocx(data: CleaningSopData): Promise<ArrayBuffer> {
   const children: (Paragraph | Table)[] = [
-    // Metadata block
     paragraph(`Document No.: ${data.metadata.docNo}   Revision: ${data.metadata.revision}   Date: ${data.metadata.date}`, 18),
     paragraph(`Approved by: ${data.metadata.approvedBy || "_______________"}   Review Date: ${data.metadata.reviewDate || "_______________"}`, 18),
     paragraph(`Premises: ${data.metadata.premises || "_______________"}`, 18),
     new Paragraph({ text: "", spacing: { after: 80 } }),
 
-    // 1. Purpose
     sectionTitle("1. Purpose"),
     paragraph(
       "This SOP defines the cleaning and disinfection procedures required to maintain food safety and hygiene standards across all operational areas. It ensures compliance with Regulation (EC) 852/2004, Annex II, Chapter I and supports the premises' HACCP plan.",
-      20
+      20,
     ),
 
-    // 2. Scope
     sectionTitle("2. Scope"),
     paragraph(data.scope, 20),
 
-    // 3. Responsibilities
     sectionTitle("3. Responsibilities"),
     caption("Table 1. Roles and Responsibilities"),
-    buildTable(
-      ["Role", "Responsibility"],
-      data.responsibilities.map((r) => [r.role, r.responsibility])
-    ),
+    buildTable(["Role", "Responsibility"], data.responsibilities.map((r) => [r.role, r.responsibility])),
 
-    // 4. Definitions
     sectionTitle("4. Definitions"),
     caption("Table 2. Key Definitions"),
-    buildTable(
-      ["Term", "Definition"],
-      data.definitions.map((r) => [r.term, r.definition])
-    ),
+    buildTable(["Term", "Definition"], data.definitions.map((r) => [r.term, r.definition])),
 
-    // 5. Materials and Chemicals
     sectionTitle("5. Materials and Chemicals"),
     caption("Table 3. Cleaning Chemicals Reference"),
     buildTable(
       ["Chemical / Product", "Purpose", "Dilution", "Contact Time", "Active Ingredient"],
-      data.chemicals.map((r) => [r.chemical, r.purpose, r.dilution, r.contactTime, r.activeIngredient])
+      data.chemicals.map((r) => [r.chemical, r.purpose, r.dilution, r.contactTime, r.activeIngredient]),
     ),
     paragraph("All chemicals must be stored securely, used at the correct dilution, and never mixed. COSHH data sheets must be accessible.", 18),
 
-    // 6. Step-by-Step Cleaning Procedure
     sectionTitle("6. Step-by-Step Cleaning Procedure"),
     subsectionTitle("6.1 Standard Two-Stage Clean (Food-Contact Surfaces)"),
     ...data.standardProcedure.map((step, i) => numberedItem(i, step)),
@@ -154,15 +138,13 @@ export async function renderCleaningSopDocx(data: CleaningSopData): Promise<Arra
     subsectionTitle("6.2 Non-Food-Contact Surfaces (Floors, Walls, External Equipment)"),
     ...data.nonFoodContactProcedure.map((step, i) => numberedItem(i, step)),
 
-    // 7. Cleaning Frequency Schedule
     sectionTitle("7. Cleaning Frequency Schedule"),
     caption("Table 4. Cleaning Frequency Schedule"),
     buildTable(
       ["Item / Area", "Method", "Frequency", "Responsible"],
-      data.frequencySchedule.map((r) => [r.itemArea, r.method, r.frequency, r.responsible])
+      data.frequencySchedule.map((r) => [r.itemArea, r.method, r.frequency, r.responsible]),
     ),
 
-    // 8. Verification
     sectionTitle("8. Verification"),
     subsectionTitle("8.1 Visual Inspection"),
     ...data.verificationVisual.map((item) => bullet(item)),
@@ -171,31 +153,25 @@ export async function renderCleaningSopDocx(data: CleaningSopData): Promise<Arra
     caption("Table 5. ATP Verification Limits"),
     buildTable(
       ["Surface Category", "Pass (RLU)", "Borderline (RLU)", "Fail (RLU)"],
-      data.verificationAtp.map((r) => [r.surfaceCategory, r.pass, r.borderline, r.fail])
+      data.verificationAtp.map((r) => [r.surfaceCategory, r.pass, r.borderline, r.fail]),
     ),
 
     subsectionTitle("8.3 Microbiological Swabbing"),
     paragraph("Environmental swabs (Listeria, E. coli, TVC) in high-care areas. Results reviewed by Technical / QA Manager.", 20),
 
-    // 9. Corrective Actions
     sectionTitle("9. Corrective Actions"),
     paragraph("If a surface fails visual or ATP/swab verification:", 20),
     ...data.corrective.map((step, i) => numberedItem(i, step)),
 
-    // 10. Records
     sectionTitle("10. Records"),
     caption("Table 6. Record-Keeping Requirements"),
-    buildTable(
-      ["Record", "Location", "Retention"],
-      data.records.map((r) => [r.record, r.location, r.retention])
-    ),
+    buildTable(["Record", "Location", "Retention"], data.records.map((r) => [r.record, r.location, r.retention])),
 
-    // 11. Sign-Off Log
     sectionTitle("11. Sign-Off Log"),
     caption("Table 7. Cleaning Sign-Off Log"),
     buildTable(
       ["Date", "Task Completed", "Time", "Operative (Initials)", "Supervisor Check", "Issues / Corrective Action"],
-      Array.from({ length: 5 }, () => ["", "", "", "", "", ""])
+      Array.from({ length: 5 }, () => ["", "", "", "", "", ""]),
     ),
 
     new Paragraph({ text: "", spacing: { before: 120 } }),
@@ -217,7 +193,7 @@ export async function renderCleaningSopDocx(data: CleaningSopData): Promise<Arra
               new Paragraph({
                 alignment: AlignmentType.CENTER,
                 children: [
-                  text(`${data.metadata.businessName} — Cleaning and Disinfection SOP | ${data.metadata.docNo} | ${data.metadata.date}`, 18, true),
+                  text(`${data.metadata.businessName} - Cleaning and Disinfection SOP | ${data.metadata.docNo} | ${data.metadata.date}`, 18, true),
                 ],
               }),
             ],
