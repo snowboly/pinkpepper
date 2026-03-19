@@ -1,21 +1,16 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import {
   ArrowRight,
   BookOpen,
   CheckCircle2,
   ClipboardCheck,
   Download,
-  MessageSquare,
   Sparkles,
   Star,
   Users,
 } from "lucide-react";
-
-type DemoMode = "haccp" | "allergen" | "audit";
+import { DemoTabSwitcher } from "@/components/homepage/DemoTabSwitcher";
+import { HeroChatForm } from "@/components/homepage/HeroChatForm";
 
 const differentiators = [
   {
@@ -33,59 +28,6 @@ const differentiators = [
     description:
       "Draft practical plans, SOPs, and logs quickly, then escalate critical work to qualified food safety consultants when a higher-risk decision needs specialist judgement.",
   },
-];
-
-const HOMEPAGE_CHAT_EXAMPLES = [
-  "Create a HACCP plan for a 32-seat bistro in Lisbon with hot and cold service.",
-  "Draft a daily opening and closing hygiene checklist for a burger kitchen.",
-  "Build a cleaning and disinfection SOP for a pastry production room.",
-  "Generate a fridge, freezer, and hot-hold temperature log template.",
-  "Create an allergen matrix for pizzas, pastas, and desserts.",
-  "Write a supplier approval questionnaire for chilled meat and dairy vendors.",
-  "Draft a traceability procedure for batch-coded sauces and dressings.",
-  "Prepare a monthly internal food safety audit checklist for a cafe.",
-  "Create a corrective action form for temperature deviations.",
-  "Generate a goods-inward inspection checklist for fresh produce deliveries.",
-  "Draft a personal hygiene policy for kitchen and front-of-house teams.",
-  "Create a staff induction checklist focused on food safety basics.",
-  "Write a handwashing SOP with visual verification points.",
-  "Build a pest control monitoring log with escalation triggers.",
-  "Create a waste management and bin hygiene procedure.",
-  "Draft a glass and hard plastic control policy for production areas.",
-  "Generate a calibration log for probe thermometers and scales.",
-  "Create a cooked-chill cooling procedure for soups and stews.",
-  "Draft a reheating standard for ready-made meals.",
-  "Write an allergen change-control process for menu updates.",
-  "Generate a product recall and withdrawal procedure.",
-  "Create a mock recall exercise template for quarterly testing.",
-  "Draft a supplier non-conformance report template.",
-  "Write a visitor and contractor hygiene policy for food sites.",
-  "Generate a cleaning verification checklist with ATP/swab references.",
-  "Create a sanitation schedule for a sandwich production line.",
-  "Draft a shelf-life verification checklist for ready-to-eat items.",
-  "Write a PPDS allergen label verification workflow for UK operations.",
-  "Create a cross-contact prevention SOP for a bakery with nut products.",
-  "Generate a CCP monitoring sheet for cooking and hot holding.",
-  "Draft an incident report form for foreign body complaints.",
-  "Create a food defense awareness checklist for small manufacturers.",
-  "Write a training matrix for hygiene, allergens, and HACCP refresher sessions.",
-  "Generate a handover checklist between day and night shifts.",
-  "Create an equipment cleaning SOP for slicers, mixers, and blenders.",
-  "Draft a transport temperature checklist for chilled deliveries.",
-  "Write a due diligence file index for audit preparation.",
-  "Generate a supplier re-approval schedule based on risk levels.",
-  "Create a microbiological sampling plan for RTE products.",
-  "Draft a corrective and preventive action (CAPA) tracker.",
-  "Write a freezer defrost and maintenance record template.",
-  "Generate a high-risk/high-care zoning checklist.",
-  "Create an allergen-aware recipe control sheet.",
-  "Draft a cleaning chemical control and dilution register.",
-  "Write a stock rotation (FIFO/FEFO) verification checklist.",
-  "Generate a hot display monitoring log for deli counters.",
-  "Create a chilled prep room environmental monitoring checklist.",
-  "Draft a food handler illness reporting and return-to-work policy.",
-  "Write a supplier delivery rejection log with root-cause fields.",
-  "Generate an annual food safety management review template.",
 ];
 
 const faqs = [
@@ -116,90 +58,7 @@ const faqs = [
   },
 ];
 
-const demoMap: Record<
-  DemoMode,
-  {
-    label: string;
-    prompt: string;
-    rawNotes: string;
-    title: string;
-    checklist: string[];
-    tags: string[];
-  }
-> = {
-  haccp: {
-    label: "HACCP (Cafe)",
-    prompt: "Create a HACCP plan for a 40-seat cafe serving soups, sandwiches, and chilled desserts.",
-    rawNotes: "Fridge checks happen daily. Team cools soups and stores desserts in display fridge.",
-    title: "Audit-ready HACCP controls",
-    checklist: [
-      "CCP: Chilled storage at 5 C or below",
-      "Monitoring: Every 4 hours + opening and closing checks",
-      "Corrective action: Isolate batch, assess exposure time, discard if unsafe, log incident",
-      "Records: Temperature log, corrective action register, calibration checks",
-    ],
-    tags: ["EC 852/2004", "FSA Guidance", "Audit-ready"],
-  },
-  allergen: {
-    label: "Allergen Matrix",
-    prompt: "Create an allergen matrix for bakery products with cross-contact controls.",
-    rawNotes: "Nut toppings used at the pastry station. Shared utensils between plain and nut products.",
-    title: "Allergen cross-contact controls",
-    checklist: [
-      "Separate utensils and storage bins for allergen ingredients",
-      "Color-coded prep tools and verified end-of-shift sanitation",
-      "Label verification before service with supervisor sign-off",
-      "Daily allergen training reminder for front-of-house handoff",
-    ],
-    tags: ["EU 1169/2011", "Kitchen SOP"],
-  },
-  audit: {
-    label: "Audit Pack",
-    prompt: "Prepare an audit-ready checklist for monthly internal food safety review.",
-    rawNotes: "Need one place for SOP files, temperature logs, and open corrective actions.",
-    title: "Inspection checklist and evidence set",
-    checklist: [
-      "SOP evidence bundle with latest revision dates",
-      "Temperature record spot-check with signed verifier",
-      "Corrective action table with owner, due date, and closure proof",
-      "Traceability sample run with supplier and batch references",
-    ],
-    tags: ["BRCGS Ready", "Traceability"],
-  },
-};
-
 export default function HomePage() {
-  const router = useRouter();
-  const [inputValue, setInputValue] = useState("");
-  const [isFocused, setIsFocused] = useState(false);
-  const [demoMode, setDemoMode] = useState<DemoMode>("haccp");
-  const [exampleIndex, setExampleIndex] = useState(0);
-
-  useEffect(() => {
-    const pickNext = (current: number) => {
-      if (HOMEPAGE_CHAT_EXAMPLES.length <= 1) return 0;
-      let next = current;
-      while (next === current) {
-        next = Math.floor(Math.random() * HOMEPAGE_CHAT_EXAMPLES.length);
-      }
-      return next;
-    };
-
-    const kickoffId = window.setTimeout(() => {
-      setExampleIndex(Math.floor(Math.random() * HOMEPAGE_CHAT_EXAMPLES.length));
-    }, 120);
-
-    const id = window.setInterval(() => {
-      setExampleIndex((prev) => pickNext(prev));
-    }, 3200);
-
-    return () => {
-      window.clearTimeout(kickoffId);
-      window.clearInterval(id);
-    };
-  }, []);
-
-  const demo = demoMap[demoMode];
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -211,12 +70,6 @@ export default function HomePage() {
         text: faq.answer,
       },
     })),
-  };
-
-  const handleChatSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const prompt = encodeURIComponent(inputValue || "Create a HACCP plan for my food business");
-    router.push(`/signup?prompt=${prompt}`);
   };
 
   return (
@@ -307,35 +160,7 @@ export default function HomePage() {
               ))}
             </div>
 
-            <form onSubmit={handleChatSubmit} className="mx-auto w-full max-w-3xl">
-              <div
-                className={`group relative overflow-hidden rounded-2xl border bg-white shadow-[0_20px_70px_rgba(15,23,42,0.10)] transition-all duration-300 ${
-                  isFocused ? "border-[#E11D48]/40 shadow-[0_20px_70px_rgba(225,29,72,0.18)]" : "border-[#E2E8F0] hover:border-[#CBD5E1]"
-                }`}
-              >
-                <div className="flex items-center gap-3 p-3 md:gap-4 md:p-4">
-                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-[#F8FAFC]">
-                    <MessageSquare className="h-5 w-5 text-[#94A3B8]" />
-                  </div>
-                  <input
-                    type="text"
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
-                    onFocus={() => setIsFocused(true)}
-                    onBlur={() => setIsFocused(false)}
-                    placeholder={HOMEPAGE_CHAT_EXAMPLES[exampleIndex]}
-                    className="flex-1 bg-transparent text-base text-[#0F172A] placeholder-[#94A3B8] outline-none md:text-lg"
-                  />
-                  <button
-                    type="submit"
-                    className="pp-interactive inline-flex items-center gap-2 rounded-xl bg-[#E11D48] px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-[#E11D48]/20 transition-all duration-200 hover:bg-[#BE123C] hover:shadow-xl hover:shadow-[#E11D48]/30 active:scale-[0.97] md:px-5 md:py-3 md:text-base"
-                  >
-                    <span className="hidden sm:inline">Start free</span>
-                    <ArrowRight className="h-5 w-5" />
-                  </button>
-                </div>
-              </div>
-            </form>
+            <HeroChatForm />
 
             <div className="mt-7 flex flex-wrap items-center justify-center gap-5 text-sm text-white/70">
               <span className="inline-flex items-center gap-2">
@@ -410,69 +235,7 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="pp-glass-card rounded-3xl p-4 md:p-5">
-              <div className="flex items-center gap-3 border-b border-[#F1F5F9] pb-4">
-                <div className="flex gap-2">
-                  <div className="h-3 w-3 rounded-full bg-[#FF5F57]" />
-                  <div className="h-3 w-3 rounded-full bg-[#FEBC2E]" />
-                  <div className="h-3 w-3 rounded-full bg-[#28C840]" />
-                </div>
-                <div className="rounded-md bg-[#F8FAFC] px-3 py-1 text-xs font-medium text-[#64748B]">
-                  pinkpepper.io/live-preview
-                </div>
-              </div>
-
-              <div className="mt-4 space-y-4">
-                <div className="flex flex-wrap gap-2">
-                  {(Object.keys(demoMap) as DemoMode[]).map((mode) => (
-                    <button
-                      key={mode}
-                      type="button"
-                      onClick={() => setDemoMode(mode)}
-                      className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-colors ${
-                        demoMode === mode
-                          ? "bg-[#0F172A] text-white"
-                          : "bg-[#F8FAFC] text-[#64748B] hover:bg-[#F1F5F9]"
-                      }`}
-                    >
-                      {demoMap[mode].label}
-                    </button>
-                  ))}
-                </div>
-
-                <div className="rounded-2xl bg-[#F8FAFC] p-4 text-sm text-[#334155]">
-                  <div className="mb-2 font-semibold text-[#0F172A]">User prompt</div>
-                  {demo.prompt}
-                </div>
-
-                <div className="rounded-2xl border border-[#FDE68A] bg-[#FFFBEB] p-4 text-sm text-[#78350F]">
-                  <div className="mb-2 font-semibold text-[#92400E]">Raw notes (before)</div>
-                  {demo.rawNotes}
-                </div>
-
-                <div className="rounded-2xl border border-[#E2E8F0] bg-white p-4 transition-all duration-500">
-                  <div className="mb-2 text-sm font-semibold text-[#0F172A]">{demo.title}</div>
-                  <ul className="space-y-2 text-sm leading-relaxed text-[#475569]">
-                    {demo.checklist.map((item) => (
-                      <li key={item} className="flex gap-2">
-                        <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-600" />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {demo.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="rounded-full border border-[#E2E8F0] bg-[#F8FAFC] px-2.5 py-1 text-xs font-medium text-[#475569]"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
+            <DemoTabSwitcher />
           </div>
         </div>
       </section>
