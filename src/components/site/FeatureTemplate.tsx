@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { CheckCircle2, ArrowRight } from "lucide-react";
 
@@ -15,6 +16,7 @@ type FeatureTemplateProps = {
   outcomes: string[];
   sections: Section[];
   relatedLinks: Array<{ href: string; label: string; description: string }>;
+  heroImage?: { src: string; alt: string };
 };
 
 export function FeatureTemplate({
@@ -26,6 +28,7 @@ export function FeatureTemplate({
   outcomes,
   sections,
   relatedLinks,
+  heroImage,
 }: FeatureTemplateProps) {
   return (
     <main className="overflow-hidden">
@@ -66,6 +69,23 @@ export function FeatureTemplate({
           </div>
         </div>
       </section>
+
+      {heroImage && (
+        <section className="border-b border-[#F1F5F9] bg-[#F8FAFC] py-12">
+          <div className="pp-container">
+            <div className="relative mx-auto aspect-[21/9] max-w-5xl overflow-hidden rounded-3xl">
+              <Image
+                src={heroImage.src}
+                alt={heroImage.alt}
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 1120px"
+                priority
+              />
+            </div>
+          </div>
+        </section>
+      )}
 
       <section className="bg-white py-16">
         <div className="pp-container">

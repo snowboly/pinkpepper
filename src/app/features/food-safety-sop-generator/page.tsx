@@ -44,6 +44,10 @@ export default function FoodSafetySopGeneratorPage() {
             "SOP generation is more useful when it connects to HACCP plans, allergen controls, and audit readiness. PinkPepper is positioned around that wider workflow instead of isolated document creation.",
         },
       ]}
+      heroImage={{
+        src: "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=1200&q=80",
+        alt: "Kitchen staff following hygiene procedures during food preparation",
+      }}
       relatedLinks={[
         {
           href: "/features/haccp-plan-generator",

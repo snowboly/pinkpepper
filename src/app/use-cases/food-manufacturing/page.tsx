@@ -44,6 +44,10 @@ export default function FoodManufacturingUseCasePage() {
             "For smaller or growing manufacturers, there is often a gap between manual documents and larger compliance suites. PinkPepper fits that middle space well.",
         },
       ]}
+      heroImage={{
+        src: "https://images.unsplash.com/photo-1581093458791-9d42e3c2fd7a?w=1200&q=80",
+        alt: "Food production line in a manufacturing facility",
+      }}
       relatedLinks={[
         {
           href: "/features/haccp-plan-generator",
