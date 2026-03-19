@@ -81,7 +81,10 @@
       "corePlans": "Core Plans",
       "procedures": "SOPs & Procedures",
       "logsRecords": "Logs & Records",
-      "policies": "Policies"
+      "policies": "Policies",
+      "quickDocuments": "Quick documents",
+      "advancedDocuments": "Advanced documents",
+      "structuredBuilder": "Structured builder"
     },
     "startRecording": "Start recording",
     "stopRecording": "Stop",

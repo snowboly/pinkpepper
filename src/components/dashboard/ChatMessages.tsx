@@ -28,29 +28,30 @@ type ChatMessagesProps = {
 
 type DocCategory = {
   titleKey: string;
+  hintKey?: string;
   items: { key: string }[];
 };
 
 const DOC_CATEGORIES: DocCategory[] = [
   {
-    titleKey: "docCategories.corePlans",
+    titleKey: "docCategories.quickDocuments",
     items: [
       { key: "haccpPlan" },
       { key: "foodSafetyPolicy" },
-    ],
-  },
-  {
-    titleKey: "docCategories.procedures",
-    items: [
       { key: "traceabilityProcedure" },
       { key: "pestControlProcedure" },
       { key: "wasteManagementProcedure" },
+      { key: "tempLog" },
     ],
   },
   {
-    titleKey: "docCategories.logsRecords",
+    titleKey: "docCategories.advancedDocuments",
+    hintKey: "docCategories.structuredBuilder",
     items: [
-      { key: "tempLog" },
+      { key: "cleaningSchedule" },
+      { key: "productDataSheet" },
+      { key: "staffTrainingRecord" },
+      { key: "cleaningSop" },
     ],
   },
 ];
@@ -165,6 +166,11 @@ export default function ChatMessages({
                         <span className="text-[10px] font-bold uppercase tracking-wider text-[#94A3B8]">
                           {t(cat.titleKey)}
                         </span>
+                        {cat.hintKey ? (
+                          <span className="ml-2 text-[10px] font-medium text-[#64748B]">
+                            {t(cat.hintKey)}
+                          </span>
+                        ) : null}
                       </div>
                       {cat.items.map((item) => (
                         <button

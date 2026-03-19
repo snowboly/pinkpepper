@@ -7,6 +7,7 @@ import { createRowBuilderConfig } from "./shared-row-builder";
 import type {
   DocumentBuilderDefinition,
   DocumentBuilderField,
+  DocumentBuilderRowConfig,
   DocumentBuilderSection,
 } from "./document-builder-types";
 
@@ -526,8 +527,26 @@ export const DOCUMENT_BUILDERS: Record<string, DocumentBuilderDefinition> = {
   },
 };
 
+const DOCUMENT_BUILDER_ROW_CONFIGS: Record<string, DocumentBuilderRowConfig> = {
+  [CHEMICAL_REFERENCE_ROWS.key]: CHEMICAL_REFERENCE_ROWS,
+  [DAILY_TASK_ROWS.key]: DAILY_TASK_ROWS,
+  [WEEKLY_TASK_ROWS.key]: WEEKLY_TASK_ROWS,
+  [MONTHLY_TASK_ROWS.key]: MONTHLY_TASK_ROWS,
+  [ATP_TARGET_ROWS.key]: ATP_TARGET_ROWS,
+  [STANDARD_CHEMICAL_ROWS.key]: STANDARD_CHEMICAL_ROWS,
+  [SIMPLE_RECORD_ROWS.key]: SIMPLE_RECORD_ROWS,
+  [QUALIFICATION_ROWS.key]: QUALIFICATION_ROWS,
+  [TRAINING_LOG_ROWS.key]: TRAINING_LOG_ROWS,
+  [NUTRITION_ROWS.key]: NUTRITION_ROWS,
+  [MICROBIOLOGY_ROWS.key]: MICROBIOLOGY_ROWS,
+};
+
 export function getDocumentBuilderDefinition(key: string): DocumentBuilderDefinition | undefined {
   return DOCUMENT_BUILDERS[key];
+}
+
+export function getDocumentBuilderRowConfig(key: string): DocumentBuilderRowConfig | undefined {
+  return DOCUMENT_BUILDER_ROW_CONFIGS[key];
 }
 
 export function getDocumentBuilderDefaults(key: string): Record<string, string> {

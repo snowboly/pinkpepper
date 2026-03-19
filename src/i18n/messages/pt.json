@@ -60,6 +60,12 @@
         "text": "Que registos de rastreabilidade deve uma empresa alimentar manter ao abrigo do Regulation (EC) No 178/2002?"
       }
     },
+    "createDocument": "Criar documento",
+    "docCategories": {
+      "quickDocuments": "Documentos rápidos",
+      "advancedDocuments": "Documentos avançados",
+      "structuredBuilder": "Construtor estruturado"
+    },
     "startRecording": "Start recording",
     "stopRecording": "Stop",
     "transcribing": "Transcribing…",

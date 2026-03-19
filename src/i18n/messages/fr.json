@@ -60,6 +60,12 @@
         "text": "Quels registres de traçabilité une entreprise alimentaire doit-elle conserver en vertu du Regulation (EC) No 178/2002 ?"
       }
     },
+    "createDocument": "Créer un document",
+    "docCategories": {
+      "quickDocuments": "Documents rapides",
+      "advancedDocuments": "Documents avancés",
+      "structuredBuilder": "Assistant structuré"
+    },
     "startRecording": "Start recording",
     "stopRecording": "Stop",
     "transcribing": "Transcribing…",

@@ -25,6 +25,13 @@ import {
   shouldShowDocumentStarters,
   type LightweightDocWizard,
 } from "./document-builders/lightweight-doc-wizard";
+import {
+  getInitialAdvancedBuilderAnswers,
+  getAdvancedDocumentBuilder,
+  isAdvancedDocumentBuilderKey,
+} from "./document-builders/advanced-doc-builder";
+import AdvancedDocumentBuilderModal from "./document-builders/AdvancedDocumentBuilderModal";
+import type { DocumentBuilderDefinition } from "./document-builders/document-builder-types";
 import { useAttachments } from "./useAttachments";
 import { useAudioRecording } from "./useAudioRecording";
 import { parseMessageArtifact, parseMessageCitations } from "./chat-message-metadata";
@@ -93,6 +100,10 @@ export default function ChatWorkspace({
   const [activeDocWizard, setActiveDocWizard] = useState<DocWizard | null>(null);
   const [docWizardStep, setDocWizardStep] = useState(0);
   const [docWizardAnswers, setDocWizardAnswers] = useState<DocumentBuilderAnswerMap>({});
+  const [activeAdvancedBuilder, setActiveAdvancedBuilder] = useState<DocumentBuilderDefinition | null>(null);
+  const [advancedBuilderAnswers, setAdvancedBuilderAnswers] = useState<DocumentBuilderAnswerMap>({});
+  const [advancedBuilderLoading, setAdvancedBuilderLoading] = useState(false);
+  const [advancedBuilderError, setAdvancedBuilderError] = useState<string | null>(null);
 
   // ── UI state ──
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -456,6 +467,10 @@ export default function ChatWorkspace({
     setActiveDocWizard(null);
     setDocWizardStep(0);
     setDocWizardAnswers({});
+    setActiveAdvancedBuilder(null);
+    setAdvancedBuilderAnswers({});
+    setAdvancedBuilderLoading(false);
+    setAdvancedBuilderError(null);
     setConversationId(null);
     setCurrentPersona(null);
     setMessages([]);
@@ -478,6 +493,10 @@ export default function ChatWorkspace({
     setActiveDocWizard(null);
     setDocWizardStep(0);
     setDocWizardAnswers({});
+    setActiveAdvancedBuilder(null);
+    setAdvancedBuilderAnswers({});
+    setAdvancedBuilderLoading(false);
+    setAdvancedBuilderError(null);
     // Start a fresh conversation when entering virtual audit mode
     if (nextMode === "virtual_audit") {
       startNewChat();
@@ -499,6 +518,110 @@ export default function ChatWorkspace({
     pushAssistantMessage(`${intro}\n\nQuestion 1/${wizard.questionCount}: ${q1}`, currentPersona);
     setPrompt("");
     textareaRef.current?.focus();
+  }
+
+  function startAdvancedBuilder(builderKey: string) {
+    const definition = getAdvancedDocumentBuilder(builderKey);
+    if (!definition) return;
+
+    setActiveAdvancedBuilder(definition);
+    setAdvancedBuilderAnswers(getInitialAdvancedBuilderAnswers(builderKey));
+    setAdvancedBuilderLoading(false);
+    setAdvancedBuilderError(null);
+  }
+
+  async function submitAdvancedBuilder() {
+    if (!activeAdvancedBuilder) return;
+
+    const builderKey = activeAdvancedBuilder.wizardKey;
+    const documentType = activeAdvancedBuilder.documentType;
+    const wizardTitle = activeAdvancedBuilder.title;
+    const displayPrompt = `Generate the ${wizardTitle} document using the provided business details.`;
+    const userMessage: Message = { role: "user", content: displayPrompt };
+
+    setMessages((prev) => [...prev, userMessage]);
+    setLoading(true);
+    setAdvancedBuilderLoading(true);
+    setAdvancedBuilderError(null);
+    setError(null);
+    trackWorkspaceEvent("document_generation_requested", {
+      wizard: documentType,
+      tier,
+      source: "advanced_document_builder",
+    });
+
+    try {
+      const requestPayload = buildDocumentGenerationPayload(builderKey, advancedBuilderAnswers);
+
+      const res = await fetch("/api/documents/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...requestPayload,
+          format: "json",
+          conversationId,
+          displayPrompt,
+        }),
+      });
+
+      const data = (await res.json()) as {
+        error?: string;
+        assistantMessage?: string;
+        conversationId?: string;
+        artifact?: Message["artifact"];
+        usage?: { used: number; limit: number | null; tier: SubscriptionTier; isAdmin?: boolean };
+      };
+
+      if (!res.ok) {
+        if (res.status === 402) {
+          setUpgradeModalTrigger("document_generation");
+        }
+        const nextError = data.error ?? "Document generation failed.";
+        setAdvancedBuilderError(nextError);
+        if (res.status !== 402) {
+          setError(nextError);
+        }
+        setMessages((prev) => prev.slice(0, -1));
+        return;
+      }
+
+      if (data.conversationId) setConversationId(data.conversationId);
+      if (data.assistantMessage) {
+        const assistantMessage = data.assistantMessage;
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: "assistant",
+            content: assistantMessage,
+            persona: currentPersona ?? undefined,
+            artifact: data.artifact ?? {
+              id: `${documentType}-${Date.now()}`,
+              kind: "document",
+              title: wizardTitle,
+              summary: assistantMessage,
+              status: "ready",
+              documentType,
+            },
+          },
+        ]);
+      }
+      if (data.usage) {
+        setUsage(data.usage.used);
+        safeTierUpdate(data.usage.tier);
+        setIsAdmin(Boolean(data.usage.isAdmin));
+      }
+      setActiveAdvancedBuilder(null);
+      setAdvancedBuilderAnswers({});
+      setAdvancedBuilderError(null);
+      await loadConversations(true);
+    } catch {
+      setAdvancedBuilderError("Network error while generating document.");
+      setError("Network error while generating document.");
+      setMessages((prev) => prev.slice(0, -1));
+    } finally {
+      setLoading(false);
+      setAdvancedBuilderLoading(false);
+    }
   }
 
 
@@ -1085,6 +1208,10 @@ export default function ChatWorkspace({
                 if (workspaceMode === "virtual_audit") {
                   return;
                 }
+                if (suggestion.key && isAdvancedDocumentBuilderKey(suggestion.key)) {
+                  startAdvancedBuilder(suggestion.key);
+                  return;
+                }
                 startDocumentWizard(suggestion);
                 return;
               }
@@ -1242,6 +1369,24 @@ export default function ChatWorkspace({
           onClose={() => setShowReviewModal(false)}
         />
       )}
+
+      <AdvancedDocumentBuilderModal
+        open={Boolean(activeAdvancedBuilder)}
+        definition={activeAdvancedBuilder}
+        answers={advancedBuilderAnswers}
+        loading={advancedBuilderLoading}
+        error={advancedBuilderError}
+        onClose={() => {
+          setActiveAdvancedBuilder(null);
+          setAdvancedBuilderAnswers({});
+          setAdvancedBuilderLoading(false);
+          setAdvancedBuilderError(null);
+        }}
+        onChange={(key, value) => {
+          setAdvancedBuilderAnswers((prev) => ({ ...prev, [key]: value }));
+        }}
+        onSubmit={() => void submitAdvancedBuilder()}
+      />
 
     </>
   );
