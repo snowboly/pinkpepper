@@ -16,6 +16,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE_URL}/use-cases/cafes`, lastModified: new Date("2026-03-14"), changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE_URL}/use-cases/catering`, lastModified: new Date("2026-03-14"), changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE_URL}/use-cases/food-manufacturing`, lastModified: new Date("2026-03-14"), changeFrequency: "monthly", priority: 0.8 },
+    { url: `${BASE_URL}/compare`, lastModified: new Date("2026-03-19"), changeFrequency: "monthly", priority: 0.9 },
     { url: `${BASE_URL}/compare/pinkpepper-vs-consultant`, lastModified: new Date("2026-03-19"), changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE_URL}/compare/haccp-software-alternatives`, lastModified: new Date("2026-03-14"), changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE_URL}/resources`, lastModified: new Date("2026-03-14"), changeFrequency: "weekly", priority: 0.8 },
