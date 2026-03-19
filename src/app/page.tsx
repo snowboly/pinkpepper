@@ -227,7 +227,7 @@ export default function HomePage() {
         <div className="absolute inset-0 -z-10">
           <div
             className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: "url('/hero-a.jpg'), linear-gradient(135deg, #1e1b2e 0%, #2d1f3d 40%, #3b1a2a 70%, #1a1020 100%)" }}
+            style={{ backgroundImage: "url('/hero-b.jpg'), linear-gradient(135deg, #1e1b2e 0%, #2d1f3d 40%, #3b1a2a 70%, #1a1020 100%)" }}
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/65 via-black/55 to-black/70" />
         </div>
