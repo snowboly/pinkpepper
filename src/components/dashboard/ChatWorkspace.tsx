@@ -510,8 +510,6 @@ export default function ChatWorkspace({
     setPrompt("");
     if (textareaRef.current) textareaRef.current.style.height = "auto";
 
-    setMessages((prev) => [...prev, { role: "user", content: answer }]);
-
     if (["cancel", "/cancel", "stop"].includes(answer.toLowerCase())) {
       setActiveDocWizard(null);
       setDocWizardStep(0);
@@ -519,6 +517,8 @@ export default function ChatWorkspace({
       pushAssistantMessage(tw("wizardCancelled"), currentPersona);
       return true;
     }
+
+    setMessages((prev) => [...prev, { role: "user", content: answer }]);
 
     const currentQuestion = activeDocWizard.questions[docWizardStep];
     if (!currentQuestion) {
@@ -1077,25 +1077,23 @@ export default function ChatWorkspace({
             loading={loading}
             loadingMessages={loadingMessages}
             conversationId={conversationId}
-            reviewEligible={reviewEligible}
             canUploadImages={canUploadImages}
-            tier={tier}
-            isAdmin={isAdmin}
             onSetPrompt={setPrompt}
             onFocusInput={() => textareaRef.current?.focus()}
             onQuickSuggestion={(suggestion) => {
+              if (suggestion.category === "document") {
+                if (workspaceMode === "virtual_audit") {
+                  return;
+                }
+                startDocumentWizard(suggestion);
+                return;
+              }
               if (workspaceMode === "virtual_audit") {
                 void sendPromptValue(`Start virtual audit focus: ${suggestion.text}`);
                 return;
               }
-              if (suggestion.category === "document") {
-                startDocumentWizard(suggestion);
-              } else {
-                void sendPromptValue(suggestion.text);
-              }
+              void sendPromptValue(suggestion.text);
             }}
-            onRequestReview={() => { window.location.href = "/dashboard/reviews"; }}
-            onUpgradeForReview={!reviewEligible ? () => setUpgradeModalTrigger("review") : undefined}
             currentPersona={currentPersona}
             showDocumentStarters={shouldShowDocumentStarters(workspaceMode)}
           />
@@ -1128,7 +1126,7 @@ export default function ChatWorkspace({
                   onClick={() => setShowReviewModal(true)}
                   className="rounded-full border border-[#059669] bg-[#ECFDF5] px-3 py-1 text-xs font-semibold text-[#047857] hover:bg-[#D1FAE5] transition-colors"
                 >
-                  Send for Review
+                  {tw("requestReview")}
                 </button>
               )}
               {isAdmin && (

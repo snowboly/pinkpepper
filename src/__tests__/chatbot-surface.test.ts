@@ -157,4 +157,38 @@ describe("chat workspace chrome", () => {
     expect(messages).not.toContain('{ key: "cleaningSop" }');
     expect(messages).not.toContain('{ key: "staffTrainingRecord" }');
   });
+
+  it("does not append cancel as a fake user answer in the lightweight wizard", () => {
+    const workspace = readWorkspaceFile("src/components/dashboard/ChatWorkspace.tsx");
+
+    const cancelIndex = workspace.indexOf('if (["cancel", "/cancel", "stop"].includes(answer.toLowerCase()))');
+    const appendIndex = workspace.indexOf('setMessages((prev) => [...prev, { role: "user", content: answer }]);');
+
+    expect(cancelIndex).toBeGreaterThan(-1);
+    expect(appendIndex).toBeGreaterThan(-1);
+    expect(cancelIndex).toBeLessThan(appendIndex);
+  });
+
+  it("keeps workspace shell strings localized and removes stale review prop wiring", () => {
+    const workspace = readWorkspaceFile("src/components/dashboard/ChatWorkspace.tsx");
+    const messages = readWorkspaceFile("src/components/dashboard/ChatMessages.tsx");
+    const input = readWorkspaceFile("src/components/dashboard/ChatInput.tsx");
+    const sidebar = readWorkspaceFile("src/components/dashboard/ChatSidebar.tsx");
+    const reviewModal = readWorkspaceFile("src/components/dashboard/ReviewModal.tsx");
+
+    expect(workspace).not.toContain("Send for Review");
+
+    expect(messages).not.toContain("reviewEligible:");
+    expect(messages).not.toContain("tier:");
+    expect(messages).not.toContain("isAdmin:");
+    expect(messages).not.toContain("onRequestReview:");
+    expect(messages).not.toContain("onUpgradeForReview");
+
+    expect(input).not.toContain('alt="Attached"');
+    expect(input).not.toContain('aria-label="Open attachment tools"');
+
+    expect(sidebar).not.toContain("View plans");
+
+    expect(reviewModal).not.toContain("reviewTurnaround?: string;");
+  });
 });

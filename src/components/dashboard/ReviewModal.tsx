@@ -6,7 +6,6 @@ type ReviewModalProps = {
   open: boolean;
   conversationId: string | null;
   reviewEligible: boolean;
-  reviewTurnaround?: string;
   documentCategory: string;
   reviewNotes: string;
   reviewLoading: boolean;

@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import type { SubscriptionTier } from "@/lib/tier";
 import type { Message, PersonaInfo } from "./types";
 import MessageItem from "./MessageItem";
 
@@ -19,15 +18,10 @@ type ChatMessagesProps = {
   loading: boolean;
   loadingMessages: boolean;
   conversationId: string | null;
-  reviewEligible: boolean;
   canUploadImages: boolean;
-  tier: SubscriptionTier;
-  isAdmin: boolean;
   onSetPrompt: (s: string) => void;
   onFocusInput: () => void;
   onQuickSuggestion?: (s: StarterSuggestion) => void;
-  onRequestReview: () => void;
-  onUpgradeForReview?: () => void;
   currentPersona?: PersonaInfo | null;
   showDocumentStarters?: boolean;
 };

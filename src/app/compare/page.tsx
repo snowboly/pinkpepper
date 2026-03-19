@@ -1,21 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-const comparisons = [
-  {
-    href: "/compare/pinkpepper-vs-consultant",
-    title: "PinkPepper vs consultant",
-    description:
-      "Explain when AI-assisted documentation is enough to accelerate work and when food safety consultancy still matters.",
-  },
-  {
-    href: "/compare/haccp-software-alternatives",
-    title: "HACCP software alternatives",
-    description:
-      "Frame PinkPepper against broader HACCP and food safety software categories for commercial comparison intent.",
-  },
-];
-
 export const metadata: Metadata = {
   title: "Comparisons | PinkPepper",
   description:
@@ -42,17 +27,32 @@ export default function ComparePage() {
       </section>
 
       <section className="bg-[#F8FAFC] py-16">
-        <div className="pp-container grid gap-6 md:grid-cols-2">
-          {comparisons.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="rounded-3xl border border-[#E2E8F0] bg-white p-8 transition-all hover:-translate-y-0.5 hover:border-[#CBD5E1] hover:shadow-xl hover:shadow-black/[0.04]"
-            >
-              <p className="text-2xl font-semibold text-[#0F172A]">{item.title}</p>
-              <p className="mt-4 text-sm leading-relaxed text-[#475569]">{item.description}</p>
-            </Link>
-          ))}
+        <div className="pp-container">
+          <div className="mx-auto max-w-4xl rounded-3xl border border-[#E2E8F0] bg-white p-8 md:p-10">
+            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#E11D48]">Comparison note</p>
+            <h2 className="mt-4 text-3xl font-semibold text-[#0F172A] md:text-4xl">
+              We are keeping comparison content deliberately narrow for now
+            </h2>
+            <p className="mt-4 max-w-3xl text-base leading-relaxed text-[#475569]">
+              PinkPepper is still refining how it presents detailed comparisons with consultants and broader software
+              categories. For now, the clearest way to evaluate fit is through the product workflows, pricing, and
+              resource pages.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-4">
+              <Link
+                href="/features"
+                className="rounded-full bg-[#E11D48] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#BE123C]"
+              >
+                Explore features
+              </Link>
+              <Link
+                href="/pricing"
+                className="rounded-full border border-[#E2E8F0] bg-white px-6 py-3 text-sm font-semibold text-[#0F172A] transition-colors hover:bg-[#F8FAFC]"
+              >
+                View pricing
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
 

@@ -34,6 +34,8 @@ describe("SEO surface", () => {
     expect(entries).toContain("https://pinkpepper.io/use-cases");
     expect(entries).toContain("https://pinkpepper.io/compare");
     expect(entries).toContain("https://pinkpepper.io/resources");
+    expect(entries).not.toContain("https://pinkpepper.io/compare/pinkpepper-vs-consultant");
+    expect(entries).not.toContain("https://pinkpepper.io/compare/haccp-software-alternatives");
     expect(entries).not.toContain("https://pinkpepper.io/login");
     expect(entries).not.toContain("https://pinkpepper.io/dashboard");
     expect(disallowLists).toEqual(
@@ -97,6 +99,17 @@ describe("public SEO copy and linking", () => {
       const entry = entries.find((item) => item.url === url);
       expect(new Date(entry?.lastModified ?? "").toISOString()).toContain("2026-03-18");
     }
+  });
+
+  it("does not keep links to the removed comparison leaf pages", () => {
+    const compare = readPage("src/app/compare/page.tsx");
+    const about = readPage("src/app/about/page.tsx");
+    const auditChecklist = readPage("src/app/resources/food-safety-audit-checklist/page.tsx");
+
+    expect(compare).not.toContain("/compare/pinkpepper-vs-consultant");
+    expect(compare).not.toContain("/compare/haccp-software-alternatives");
+    expect(about).not.toContain("/compare/pinkpepper-vs-consultant");
+    expect(auditChecklist).not.toContain("/compare/pinkpepper-vs-consultant");
   });
 });
 
