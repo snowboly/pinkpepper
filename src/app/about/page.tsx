@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 
 export const metadata = {
-  title: "About | PinkPepper Food Safety Compliance Software",
+  title: "About PinkPepper | AI Food Safety Software Built by a Food Scientist",
   description:
     "Learn how PinkPepper combines AI food safety compliance software with food safety consultancy for EU and UK food businesses.",
   alternates: {
@@ -287,10 +287,10 @@ export default function AboutPage() {
         <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_80%_50%_at_50%_110%,#FFF1F2,transparent)]" />
         <div className="pp-container max-w-2xl">
           <h2 className="text-3xl font-bold tracking-tight text-[#0F172A]">
-            Ready to simplify compliance?
+            Put this to work in your operation
           </h2>
           <p className="mt-4 text-lg text-[#475569]">
-            Ready to cut compliance costs and boost accuracy? Combine AI speed with real food safety expertise.
+            Start generating HACCP plans, SOPs, and allergen records today. Upgrade to Pro when you need a qualified food safety consultant to review the work.
           </p>
           <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
             <Link

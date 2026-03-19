@@ -40,9 +40,9 @@ const resources = [
 ];
 
 export const metadata: Metadata = {
-  title: "Resources | PinkPepper",
+  title: "HACCP Templates, Allergen Matrices & Food Safety Guides | PinkPepper Resources",
   description:
-    "Explore PinkPepper resources and templates for HACCP plans, allergen matrices, SOPs, audit checklists, temperature logs, and supplier approval.",
+    "Free templates and guides for HACCP plans, allergen matrices, audit checklists, SOPs, temperature logs, and supplier approval for EU and UK food businesses.",
   alternates: {
     canonical: "https://pinkpepper.io/resources",
   },

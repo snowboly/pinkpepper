@@ -54,7 +54,7 @@ export function FeatureTemplate({
           </div>
 
           <div className="rounded-3xl border border-[#E2E8F0] bg-[#F8FAFC] p-6">
-            <p className="text-sm font-semibold text-[#0F172A]">Why this page exists</p>
+            <p className="text-sm font-semibold text-[#0F172A]">Common challenges</p>
             <ul className="mt-4 space-y-3 text-sm leading-relaxed text-[#475569]">
               {painPoints.map((point) => (
                 <li key={point} className="flex gap-3">

@@ -29,7 +29,7 @@ const features = [
 ];
 
 export const metadata: Metadata = {
-  title: "Features | PinkPepper Food Safety Compliance Software",
+  title: "HACCP Plans, Allergen Records, SOPs & Audit Prep | PinkPepper Features",
   description:
     "Explore PinkPepper features for HACCP plans, allergen documentation, SOP generation, and food safety audit preparation.",
   alternates: {

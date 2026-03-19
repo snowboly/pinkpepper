@@ -4,6 +4,7 @@ export const metadata: Metadata = {
   title: "Refund Policy | PinkPepper",
   description: "PinkPepper's refund and cancellation policy for subscription plans.",
   alternates: { canonical: "https://pinkpepper.io/legal/refund" },
+  robots: { index: false, follow: false },
 };
 
 export default function RefundPage() {

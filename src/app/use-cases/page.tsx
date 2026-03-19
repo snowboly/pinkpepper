@@ -29,7 +29,7 @@ const useCases = [
 ];
 
 export const metadata: Metadata = {
-  title: "Use Cases | PinkPepper Food Safety Software",
+  title: "Food Safety Software for Restaurants, Cafes, Caterers & Manufacturers | PinkPepper",
   description:
     "See how PinkPepper supports restaurants, cafes, caterers, and food manufacturers with food safety compliance workflows.",
   alternates: {

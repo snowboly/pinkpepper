@@ -13,35 +13,35 @@ export const metadata: Metadata = {
 export default function PinkPepperVsConsultantPage() {
   return (
     <FeatureTemplate
-      eyebrow="Comparison page"
+      eyebrow="PinkPepper vs consultant"
       title="PinkPepper vs a traditional food safety consultant"
-      description="This is not a claim that software replaces specialist expertise. It is a claim that PinkPepper can reduce the amount of expensive expert time spent on first drafts, repetitive SOP writing, and early-stage audit prep."
+      description="Not a claim that software replaces specialist expertise. A claim that PinkPepper reduces the expensive consultant time spent on first drafts, routine SOP updates, and early-stage audit prep — so specialist hours go where they actually matter."
       primaryCta="Start with PinkPepper"
       painPoints={[
-        "Consultants are valuable, but many teams cannot afford to use them for every draft and routine update.",
-        "Pure software buyers still need a path to food safety consultancy when documents carry higher risk.",
-        "Commercial intent pages need a clear argument for when PinkPepper is the right first step.",
+        "Hiring a consultant for every SOP refresh, routine checklist, or first draft isn't realistic for most food operations.",
+        "Waiting weeks for consultant availability slows teams that need to move faster than their inspection calendar allows.",
+        "Some decisions genuinely need specialist expertise — knowing which ones do, and which don't, is where most teams waste time and money.",
       ]}
       outcomes={[
-        "Lower the cost of getting to a strong first draft.",
-        "Reserve expert time for higher-value review and sign-off work.",
-        "Give buyers a clearer middle ground between DIY and consultancy-only models.",
+        "Lower the cost of getting to a usable first draft.",
+        "Reserve expert time for review, sign-off, and enforcement-level decisions.",
+        "Access qualified food safety consultancy when work genuinely needs it — included in Pro.",
       ]}
       sections={[
         {
           title: "Where a consultant still wins",
           body:
-            "Complex enforcement issues, major site changes, certification preparation, and formal sign-off still benefit from qualified human expertise. PinkPepper should be positioned honestly around that fact.",
+            "Certification audits, enforcement responses, major process changes, formal sign-off, and high-stakes HACCP decisions still need qualified human expertise. PinkPepper doesn't change that, and we're clear about it.",
         },
         {
-          title: "Where PinkPepper is stronger",
+          title: "Where PinkPepper is faster",
           body:
-            "For repeated drafting work, SOP refreshes, internal checklists, allergen documents, and early audit-prep structure, PinkPepper gives teams speed and consistency without waiting on consultant availability.",
+            "HACCP first drafts, SOP refreshes, allergen matrices, audit prep checklists, temperature logs, and routine documentation updates. Speed and repeatability matter here more than consultant judgement — and that's where AI pays off.",
         },
         {
-          title: "Why the combination is credible",
+          title: "Why Pro bundles both",
           body:
-            "The strongest commercial argument is not AI instead of experts. It is AI to accelerate preparation plus optional food safety consultancy where the work needs more confidence.",
+            "The Pro plan includes 3 hours of food safety consultancy per month. AI speed for the work that can be accelerated, specialist review for the work that can't. That combination is more useful than choosing between them.",
         },
       ]}
       relatedLinks={[
