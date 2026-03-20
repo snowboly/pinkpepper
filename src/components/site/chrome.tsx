@@ -249,23 +249,25 @@ export function SiteFooter() {
           </div>
         </div>
         <div>
-          <h4 className="mb-4 text-sm font-semibold text-[#1A1A1A]">Platform</h4>
+          <h4 className="mb-4 text-sm font-semibold text-[#1A1A1A]">Product</h4>
           <ul className="space-y-3 text-sm text-[#6B6B6B]">
             <li><Link href="/features" className="pp-shell-link">Features</Link></li>
             <li><Link href="/use-cases" className="pp-shell-link">Use Cases</Link></li>
-            <li><Link href="/resources" className="pp-shell-link">Resources</Link></li>
-            <li><Link href="/about" className="pp-shell-link">About</Link></li>
             <li><Link href="/pricing" className="pp-shell-link">Pricing</Link></li>
-            <li><Link href="/compare/pinkpepper-vs-consultant" className="pp-shell-link">PinkPepper vs Consultant</Link></li>
-            <li><Link href="/compare/haccp-software-alternatives" className="pp-shell-link">HACCP Software Alternatives</Link></li>
+            <li><Link href="/about" className="pp-shell-link">About</Link></li>
             <li><Link href="/login" className="pp-shell-link">Log In</Link></li>
             <li><Link href="/signup" className="pp-shell-link">Create Account</Link></li>
           </ul>
         </div>
         <div>
-          <h4 className="mb-4 text-sm font-semibold text-[#1A1A1A]">Support</h4>
+          <h4 className="mb-4 text-sm font-semibold text-[#1A1A1A]">Resources</h4>
           <ul className="space-y-3 text-sm text-[#6B6B6B]">
+            <li><Link href="/resources" className="pp-shell-link">Free Templates</Link></li>
+            <li><Link href="/articles" className="pp-shell-link">Articles</Link></li>
+            <li><Link href="/faqs" className="pp-shell-link">FAQs</Link></li>
             <li><Link href="/contact" className="pp-shell-link">Contact & Support</Link></li>
+            <li><Link href="/compare/pinkpepper-vs-consultant" className="pp-shell-link">PinkPepper vs Consultant</Link></li>
+            <li><Link href="/compare/haccp-software-alternatives" className="pp-shell-link">HACCP Alternatives</Link></li>
           </ul>
         </div>
         <div>
