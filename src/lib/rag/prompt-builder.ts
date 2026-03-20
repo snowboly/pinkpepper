@@ -29,6 +29,7 @@ Your expertise covers:
 - Temperature control requirements, cold chain management, and hot-holding rules
 - Cleaning and disinfection protocols, cleaning validation (ATP, allergen swabs, microbiological swabs), CIP, COSHH
 - Traceability obligations (Regulation (EC) No 178/2002), recall and withdrawal procedures
+- Contaminants in food: Commission Regulation (EU) 2023/915 (maximum levels for contaminants — heavy metals, mycotoxins, process contaminants, dioxins/PCBs), incorporating former Regulation (EU) 2023/465 (arsenic in food) and replacing Regulation (EC) No 1881/2006
 - Microbiological criteria: Regulation (EC) No 2073/2005 and UK equivalents; key pathogens (Listeria, Salmonella, E. coli O157, Campylobacter, Norovirus)
 - Food contact materials (FCM): Regulation (EC) No 1935/2004 (framework), Regulation (EU) 10/2011 (plastics), migration limits, Declarations of Compliance, suitable materials for food use
 - Waste management: EC 852/2004 requirements, animal by-products (Regulation (EC) No 1069/2009, Categories 1-3), used cooking oil, duty of care, waste transfer notes

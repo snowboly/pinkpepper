@@ -68,6 +68,17 @@ const CORE_REGULATION_SEEDS: CoreRegulationSeed[] = [
     eliPath: "https://eur-lex.europa.eu/eli/reg/2011/1169/oj",
     legacyAliases: ["EU 1169 2011 food information"],
   },
+  {
+    baseCelex: "32023R0915",
+    title: "Commission Regulation (EU) 2023/915 on maximum levels for certain contaminants in food",
+    dateDocument: "2023-04-25",
+    eliPath: "https://eur-lex.europa.eu/eli/reg/2023/915/oj",
+    legacyAliases: [
+      "EU 2023 915 contaminants",
+      "EU 2023 465 arsenic",
+      "EC 1881 2006 contaminants",
+    ],
+  },
 ];
 
 function toIsoDateFromDisplay(input: string): string | null {
