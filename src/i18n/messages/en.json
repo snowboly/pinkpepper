@@ -429,7 +429,15 @@
     "saving": "Saving...",
     "save": "Save",
     "usage": "Usage",
-    "dailyMessages": "Messages today"
+    "dailyMessages": "Messages today",
+    "dangerZone": "Danger Zone",
+    "deleteAccount": "Delete account",
+    "deleteAccountDescription": "Permanently delete your account and all associated data. This action cannot be undone.",
+    "deleteAccountConfirmTitle": "Delete your account?",
+    "deleteAccountConfirmBody": "This will permanently delete your account and all your data, including conversations, documents, and settings. This action cannot be undone.",
+    "deleteAccountConfirm": "Yes, delete my account",
+    "cancel": "Cancel",
+    "deleting": "Deleting..."
   }
 }
 
