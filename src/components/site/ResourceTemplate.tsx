@@ -1,7 +1,7 @@
 import Link from "next/link";
-import Image from "next/image";
 import { Suspense } from "react";
 import { TemplateDownloadCard } from "./TemplateDownloadCard";
+import { TemplateThumbnail } from "./TemplateThumbnail";
 
 type ResourceSection = {
   title: string;
@@ -57,14 +57,9 @@ export function ResourceTemplate({
             <div className="grid gap-8 md:grid-cols-[1fr_320px] items-start">
               {/* Document thumbnail — always uses the first slug */}
               <div className="relative overflow-hidden rounded-2xl border border-[#E2E8F0] bg-white shadow-sm">
-                <Image
-                  src={`/templates/thumbnails/${slugs[0]}.svg`}
-                  alt={`${title} preview`}
-                  width={600}
-                  height={780}
-                  className="w-full h-auto"
-                  priority
-                />
+                <Suspense fallback={<div className="aspect-[600/780] bg-[#F1F5F9] animate-pulse" />}>
+                  <TemplateThumbnail slug={slugs[0]} alt={`${title} preview`} />
+                </Suspense>
               </div>
 
               {/* Download card(s) — one per slug, stacked */}
