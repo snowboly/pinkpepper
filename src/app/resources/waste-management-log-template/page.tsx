@@ -37,6 +37,7 @@ export default function WasteManagementLogTemplatePage() {
       ]}
       ctaTitle="Create a waste management procedure for your site"
       ctaBody="PinkPepper can help you draft a waste management log and disposal procedure appropriate to your operation size, waste categories, and contractor arrangements."
+      templateSlug="waste-management-log-template"
       relatedLinks={[
         { href: "/resources/corrective-action-log-template", label: "Corrective action log" },
         { href: "/resources/traceability-log-template", label: "Traceability log template" },

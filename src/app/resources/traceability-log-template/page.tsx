@@ -37,6 +37,7 @@ export default function TraceabilityLogTemplatePage() {
       ]}
       ctaTitle="Build a traceability system for your operation"
       ctaBody="PinkPepper can help you draft traceability procedures and log templates that match the way your operation actually receives, produces, and dispatches food."
+      templateSlug="traceability-log-template"
       relatedLinks={[
         { href: "/resources/product-recall-procedure-template", label: "Product recall procedure" },
         { href: "/resources/supplier-approval-questionnaire", label: "Supplier approval questionnaire" },

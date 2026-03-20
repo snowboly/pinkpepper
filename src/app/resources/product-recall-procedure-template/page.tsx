@@ -37,6 +37,7 @@ export default function ProductRecallProcedureTemplatePage() {
       ]}
       ctaTitle="Draft a recall procedure matched to your operation"
       ctaBody="PinkPepper can help you produce a product recall and withdrawal procedure that reflects your distribution chain, lot coding system, and notification contacts."
+      templateSlug="product-recall-procedure-template"
       relatedLinks={[
         { href: "/resources/traceability-log-template", label: "Traceability log template" },
         { href: "/resources/haccp-plan-template", label: "HACCP plan template" },

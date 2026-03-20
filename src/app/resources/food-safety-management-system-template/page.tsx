@@ -37,6 +37,7 @@ export default function FoodSafetyManagementSystemTemplatePage() {
       ]}
       ctaTitle="Build a complete FSMS document structure"
       ctaBody="PinkPepper can help you create an FSMS framework document that connects your HACCP plan, SOPs, allergen policy, and monitoring records into a coherent, inspection-ready system."
+      templateSlug="food-safety-management-system-template"
       relatedLinks={[
         { href: "/resources/haccp-plan-template", label: "HACCP plan template" },
         { href: "/resources/food-safety-audit-checklist", label: "Food safety audit checklist" },

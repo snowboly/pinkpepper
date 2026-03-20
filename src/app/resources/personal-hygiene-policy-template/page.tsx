@@ -37,6 +37,7 @@ export default function PersonalHygienePolicyTemplatePage() {
       ]}
       ctaTitle="Draft a personal hygiene policy for your team"
       ctaBody="PinkPepper can help you create a personal hygiene policy that is specific to your operation, appropriate to your food safety risks, and written in a format your team will actually read."
+      templateSlug="personal-hygiene-policy-template"
       relatedLinks={[
         { href: "/resources/employee-food-safety-training-record", label: "Staff training records" },
         { href: "/resources/cleaning-and-disinfection-sop", label: "Cleaning and disinfection SOP" },

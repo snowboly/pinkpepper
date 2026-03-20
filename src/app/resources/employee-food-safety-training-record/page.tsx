@@ -37,6 +37,7 @@ export default function EmployeeFoodSafetyTrainingRecordPage() {
       ]}
       ctaTitle="Create a training record system for your team"
       ctaBody="PinkPepper can help you draft a food safety training record template and induction checklist appropriate for your team size, roles, and the hazards present in your operation."
+      templateSlug="employee-food-safety-training-record"
       relatedLinks={[
         { href: "/resources/personal-hygiene-policy-template", label: "Personal hygiene policy" },
         { href: "/resources/allergen-matrix-template", label: "Allergen matrix template" },

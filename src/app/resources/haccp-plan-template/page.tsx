@@ -40,6 +40,7 @@ export default function HaccpPlanTemplatePage() {
       ]}
       ctaTitle="Turn a HACCP template into a real first draft"
       ctaBody="PinkPepper can help you move from abstract template sections to a site-specific HACCP draft with hazards, CCPs, monitoring logic, and corrective actions."
+      templateSlug="haccp-plan-template"
       relatedLinks={[
         { href: "/features/haccp-plan-generator", label: "HACCP plan generator" },
         { href: "/use-cases/restaurants", label: "Restaurant use case" },

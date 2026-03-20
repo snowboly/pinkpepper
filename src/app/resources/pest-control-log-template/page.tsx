@@ -37,6 +37,7 @@ export default function PestControlLogTemplatePage() {
       ]}
       ctaTitle="Build a pest control record system for your site"
       ctaBody="PinkPepper can help you create a pest control log and supporting SOP that reflects your site layout, contractor schedule, and monitoring point locations."
+      templateSlug="pest-control-log-template"
       relatedLinks={[
         { href: "/resources/cleaning-and-disinfection-sop", label: "Cleaning and disinfection SOP" },
         { href: "/resources/food-safety-audit-checklist", label: "Food safety audit checklist" },

@@ -40,6 +40,7 @@ export default function FoodSafetyAuditChecklistPage() {
       ]}
       ctaTitle="Create audit prep documents before inspection pressure builds"
       ctaBody="PinkPepper helps teams draft audit checklists, evidence summaries, and corrective action tracking so internal review becomes more structured."
+      templateSlug="food-safety-audit-checklist"
       relatedLinks={[
         { href: "/features/food-safety-audit-prep", label: "Food safety audit prep" },
         { href: "/pricing", label: "Pricing" },

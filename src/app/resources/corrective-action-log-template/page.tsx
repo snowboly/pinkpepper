@@ -37,6 +37,7 @@ export default function CorrectiveActionLogTemplatePage() {
       ]}
       ctaTitle="Generate a corrective action log for your site"
       ctaBody="PinkPepper can help you produce a corrective action log that matches your HACCP plan, with fields appropriate to your process steps and monitoring frequencies."
+      templateSlug="corrective-action-log-template"
       relatedLinks={[
         { href: "/resources/haccp-plan-template", label: "HACCP plan template" },
         { href: "/resources/food-safety-audit-checklist", label: "Food safety audit checklist" },
