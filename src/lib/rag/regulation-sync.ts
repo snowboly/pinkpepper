@@ -195,19 +195,26 @@ function hashText(text: string): string {
 /**
  * Check if a regulation has already been synced with an identical content hash.
  * Falls back to last_modified comparison if no hash is stored yet.
+ *
+ * Queries by both the exact consolidated CELEX and the base CELEX number,
+ * because the consolidated suffix (date) changes whenever EUR-Lex publishes
+ * a new consolidated version — without this, every sync re-ingests everything.
  */
 async function isAlreadySynced(
   celex: string,
+  baseCelex: string,
   lastModified: string,
   contentHash: string
 ): Promise<boolean> {
   const supabase = createAdminClient();
 
+  // Try exact consolidated CELEX first, then fall back to base CELEX prefix.
+  // The base CELEX is stored in metadata->baseCelexNumber.
   const { data, error } = await supabase
     .from("regulation_sync_log")
     .select("content_hash, last_modified")
-    .eq("celex_number", celex)
     .eq("status", "success")
+    .or(`celex_number.eq.${celex},celex_number.like.${baseCelex}%`)
     .order("synced_at", { ascending: false })
     .limit(1)
     .maybeSingle();
@@ -349,6 +356,7 @@ export async function syncRegulations(): Promise<SyncResult> {
       // Skip if already synced with identical content
       const alreadySynced = await isAlreadySynced(
         regulation.celex,
+        regulation.baseCelex,
         regulation.dateLastModified,
         contentHash
       );
