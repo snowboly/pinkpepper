@@ -332,6 +332,14 @@
     "saving": "Salvataggio...",
     "save": "Salva",
     "usage": "Utilizzo",
-    "dailyMessages": "Messaggi oggi"
+    "dailyMessages": "Messaggi oggi",
+    "dangerZone": "Zona pericolosa",
+    "deleteAccount": "Elimina account",
+    "deleteAccountDescription": "Elimina definitivamente il tuo account e tutti i dati associati. Questa azione non può essere annullata.",
+    "deleteAccountConfirmTitle": "Eliminare il tuo account?",
+    "deleteAccountConfirmBody": "Questo eliminerà definitivamente il tuo account e tutti i tuoi dati, incluse conversazioni, documenti e impostazioni. Questa azione non può essere annullata.",
+    "deleteAccountConfirm": "Sì, elimina il mio account",
+    "cancel": "Annulla",
+    "deleting": "Eliminazione..."
   }
 }

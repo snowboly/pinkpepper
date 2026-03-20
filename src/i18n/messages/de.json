@@ -332,6 +332,14 @@
     "saving": "Speichern...",
     "save": "Speichern",
     "usage": "Nutzung",
-    "dailyMessages": "Nachrichten heute"
+    "dailyMessages": "Nachrichten heute",
+    "dangerZone": "Gefahrenbereich",
+    "deleteAccount": "Konto löschen",
+    "deleteAccountDescription": "Löschen Sie Ihr Konto und alle zugehörigen Daten dauerhaft. Diese Aktion kann nicht rückgängig gemacht werden.",
+    "deleteAccountConfirmTitle": "Konto löschen?",
+    "deleteAccountConfirmBody": "Dadurch werden Ihr Konto und alle Ihre Daten dauerhaft gelöscht, einschließlich Gespräche, Dokumente und Einstellungen. Diese Aktion kann nicht rückgängig gemacht werden.",
+    "deleteAccountConfirm": "Ja, mein Konto löschen",
+    "cancel": "Abbrechen",
+    "deleting": "Löschen..."
   }
 }
