@@ -265,6 +265,56 @@ const CORE_REGULATION_SEEDS: CoreRegulationSeed[] = [
     legacyAliases: ["EU 2019 1793 import controls third countries"],
   },
 
+  // === Contaminants – 2024 Amendments ===
+  {
+    baseCelex: "32024R1022",
+    title: "Commission Regulation (EU) 2024/1022 amending Regulation (EU) 2023/915 as regards maximum levels of deoxynivalenol in food",
+    dateDocument: "2024-04-08",
+    eliPath: "https://eur-lex.europa.eu/eli/reg/2024/1022/oj",
+    legacyAliases: ["EU 2024 1022 deoxynivalenol", "DON mycotoxin limits"],
+  },
+  {
+    baseCelex: "32024R1756",
+    title: "Commission Regulation (EU) 2024/1756 amending and correcting Regulation (EU) 2023/915 on maximum levels for certain contaminants in food",
+    dateDocument: "2024-06-25",
+    eliPath: "https://eur-lex.europa.eu/eli/reg/2024/1756/oj",
+    legacyAliases: ["EU 2024 1756 contaminants amendment"],
+  },
+
+  // === Microbiological Criteria – 2024 Amendment ===
+  {
+    baseCelex: "32024R2895",
+    title: "Commission Regulation (EU) 2024/2895 amending Regulation (EC) No 2073/2005 on microbiological criteria for foodstuffs as regards Listeria monocytogenes",
+    dateDocument: "2024-11-20",
+    eliPath: "https://eur-lex.europa.eu/eli/reg/2024/2895/oj",
+    legacyAliases: ["EU 2024 2895 listeria RTE", "microbiological criteria listeria"],
+  },
+
+  // === Food Contact Materials – 2024/2025 ===
+  {
+    baseCelex: "32024R3190",
+    title: "Commission Regulation (EU) 2024/3190 on the use of bisphenol A and other bisphenols in materials and articles intended to come into contact with food",
+    dateDocument: "2024-12-19",
+    eliPath: "https://eur-lex.europa.eu/eli/reg/2024/3190/oj",
+    legacyAliases: ["EU 2024 3190 BPA ban", "bisphenol food contact"],
+  },
+  {
+    baseCelex: "32025R0351",
+    title: "Commission Regulation (EU) 2025/351 amending Regulation (EU) No 10/2011 on plastic materials intended to come into contact with food and Regulation (EU) 2022/1616 on recycled plastic food contact materials",
+    dateDocument: "2025-02-21",
+    eliPath: "https://eur-lex.europa.eu/eli/reg/2025/351/oj",
+    legacyAliases: ["EU 2025 351 plastic FCM reform", "plastic food contact 2025"],
+  },
+
+  // === Pesticide Controls – 2024 ===
+  {
+    baseCelex: "32024R0989",
+    title: "Commission Implementing Regulation (EU) 2024/989 concerning a coordinated multiannual control programme for 2025, 2026 and 2027 for pesticide residues in food",
+    dateDocument: "2024-04-02",
+    eliPath: "https://eur-lex.europa.eu/eli/reg_impl/2024/989/oj",
+    legacyAliases: ["EU 2024 989 pesticide control programme"],
+  },
+
   // === Extraction Solvents ===
   {
     baseCelex: "32009L0032",
