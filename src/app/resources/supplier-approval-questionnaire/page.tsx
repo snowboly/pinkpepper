@@ -40,6 +40,7 @@ export default function SupplierApprovalQuestionnairePage() {
       ]}
       ctaTitle="Create supplier approval documents more efficiently"
       ctaBody="PinkPepper helps teams draft supplier approval questionnaires, non-conformance reports, and re-approval records faster."
+      templateSlug="supplier-approval-questionnaire"
       relatedLinks={[
         { href: "/features/food-safety-sop-generator", label: "Food safety SOP generator" },
         { href: "/use-cases/catering", label: "Catering use case" },

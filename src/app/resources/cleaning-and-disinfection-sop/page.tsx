@@ -40,6 +40,7 @@ export default function CleaningAndDisinfectionSopPage() {
       ]}
       ctaTitle="Generate cleaning SOP drafts faster"
       ctaBody="PinkPepper helps operators create cleaning and disinfection SOPs, schedules, and supporting records that can be reviewed and exported."
+      templateSlug="cleaning-and-disinfection-sop"
       relatedLinks={[
         { href: "/features/food-safety-sop-generator", label: "Food safety SOP generator" },
         { href: "/resources/allergen-matrix-template", label: "Allergen matrix template" },

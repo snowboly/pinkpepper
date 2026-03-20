@@ -40,6 +40,7 @@ export default function TemperatureMonitoringLogTemplatePage() {
       ]}
       ctaTitle="Draft better monitoring logs and corrective action records"
       ctaBody="PinkPepper helps food businesses generate temperature logs and related SOPs that are easier to review and maintain."
+      templateSlug="temperature-monitoring-log-template"
       relatedLinks={[
         { href: "/features/food-safety-sop-generator", label: "Food safety SOP generator" },
         { href: "/resources/food-safety-audit-checklist", label: "Food safety audit checklist" },
