@@ -2,6 +2,8 @@ import { describe, expect, it, vi } from "vitest";
 import {
   celexToSourceName,
   extractCurrentVersionInfo,
+  discoverNewRegulations,
+  EUROVOC_FOOD_SAFETY_CONCEPTS,
 } from "@/lib/rag/cellar-client";
 import {
   DEFAULT_SINCE_DATE,
@@ -91,6 +93,86 @@ describe("writeSyncLogEntry", () => {
         status: "success",
       })
     ).rejects.toThrow("duplicate key value violates unique constraint");
+  });
+});
+
+describe("discoverNewRegulations", () => {
+  const SPARQL_RESPONSE = {
+    results: {
+      bindings: [
+        {
+          celex: { value: "32025R0500" },
+          title: { value: "Some new 2025 regulation on food safety" },
+          dateDocument: { value: "2025-03-01" },
+        },
+        {
+          // Already in seeds — should be filtered out
+          celex: { value: "32002R0178" },
+          title: { value: "Regulation (EC) No 178/2002 general food law" },
+          dateDocument: { value: "2002-01-28" },
+        },
+      ],
+    },
+  };
+
+  it("returns discovered regulations excluding seeds", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+        json: () => Promise.resolve(SPARQL_RESPONSE),
+      })
+    );
+
+    const results = await discoverNewRegulations("2024-01-01");
+
+    expect(results).toHaveLength(1);
+    expect(results[0]).toMatchObject({
+      celex: "32025R0500",
+      baseCelex: "32025R0500",
+      title: "Some new 2025 regulation on food safety",
+      dateDocument: "2025-03-01",
+      legacyAliases: [],
+      discovered: true,
+    });
+
+    vi.unstubAllGlobals();
+  });
+
+  it("throws on non-200 SPARQL response", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({ ok: false, status: 503 })
+    );
+
+    await expect(discoverNewRegulations("2024-01-01")).rejects.toThrow(
+      "SPARQL endpoint returned 503"
+    );
+
+    vi.unstubAllGlobals();
+  });
+
+  it("throws on invalid sinceDate format", async () => {
+    await expect(discoverNewRegulations("not-a-date")).rejects.toThrow(
+      "Invalid sinceDate format"
+    );
+  });
+
+  it("includes all EuroVoc food safety concepts in the query", async () => {
+    const mockFetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ results: { bindings: [] } }),
+    });
+    vi.stubGlobal("fetch", mockFetch);
+
+    await discoverNewRegulations("2024-01-01");
+
+    const url = decodeURIComponent(mockFetch.mock.calls[0][0] as string);
+    for (const concept of EUROVOC_FOOD_SAFETY_CONCEPTS) {
+      expect(url).toContain(`eurovoc.europa.eu/${concept}`);
+    }
+
+    vi.unstubAllGlobals();
   });
 });
 

@@ -13,6 +13,7 @@ import { generateEmbeddings } from "@/lib/rag/embeddings";
 import type { Json } from "@/types/database.types";
 import {
   searchFoodSafetyRegulations,
+  discoverNewRegulations,
   fetchRegulationText,
   celexToSourceName,
   type CellarRegulation,
@@ -331,17 +332,36 @@ export async function syncRegulations(): Promise<SyncResult> {
   const sinceDate = await getLastSyncDate();
   console.log(`[regulation-sync] Searching for regulations modified since ${sinceDate}`);
 
-  // Search CELLAR for food safety regulations
-  let regulations: CellarRegulation[];
+  // Search CELLAR for curated seed regulations
+  let seedRegulations: CellarRegulation[];
   try {
-    regulations = await searchFoodSafetyRegulations(sinceDate);
-    console.log(`[regulation-sync] Found ${regulations.length} regulations`);
+    seedRegulations = await searchFoodSafetyRegulations(sinceDate);
+    console.log(`[regulation-sync] Found ${seedRegulations.length} seed regulations`);
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
-    console.error(`[regulation-sync] SPARQL search failed: ${message}`);
-    result.errors.push({ celex: "SPARQL_SEARCH", error: message });
+    console.error(`[regulation-sync] Seed search failed: ${message}`);
+    result.errors.push({ celex: "SEED_SEARCH", error: message });
     return result;
   }
+
+  // Discover new regulations via EUR-Lex SPARQL (non-fatal)
+  let discoveredRegulations: CellarRegulation[] = [];
+  try {
+    discoveredRegulations = await discoverNewRegulations(sinceDate);
+    console.log(`[regulation-sync] Discovered ${discoveredRegulations.length} new regulations via SPARQL`);
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.error(`[regulation-sync] SPARQL discovery failed (non-fatal): ${message}`);
+    result.errors.push({ celex: "SPARQL_DISCOVERY", error: message });
+  }
+
+  // Merge: seeds take priority over discovered
+  const seenCelex = new Set(seedRegulations.map((r) => r.baseCelex));
+  const regulations = [
+    ...seedRegulations,
+    ...discoveredRegulations.filter((r) => !seenCelex.has(r.baseCelex)),
+  ];
+  console.log(`[regulation-sync] Total: ${regulations.length} regulations to process`);
 
   // Process each regulation
   for (const regulation of regulations) {
@@ -386,6 +406,7 @@ export async function syncRegulations(): Promise<SyncResult> {
         metadata: {
           baseCelexNumber: regulation.baseCelex,
           legacyAliases: regulation.legacyAliases,
+          ...(regulation.discovered && { discoveredViaSparql: true }),
         },
       });
       if (!logged) result.loggingAvailable = false;
@@ -411,6 +432,7 @@ export async function syncRegulations(): Promise<SyncResult> {
         metadata: {
           baseCelexNumber: regulation.baseCelex,
           legacyAliases: regulation.legacyAliases,
+          ...(regulation.discovered && { discoveredViaSparql: true }),
         },
       });
       if (!logged) result.loggingAvailable = false;

@@ -15,6 +15,8 @@ export type CellarRegulation = {
   dateDocument: string;
   dateLastModified: string;
   legacyAliases: string[];
+  /** True when auto-discovered via SPARQL rather than from the curated seed list. */
+  discovered?: boolean;
 };
 
 type CoreRegulationSeed = {
@@ -435,6 +437,94 @@ function stripHtmlToText(html: string): string {
     .replace(/[ \t]+/g, " ")
     .replace(/\n\s*\n/g, "\n\n")
     .trim();
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   Auto-discovery via EUR-Lex SPARQL
+   ────────────────────────────────────────────────────────────────────────── */
+
+/** EuroVoc concept IDs used to filter food-safety-related regulations. */
+export const EUROVOC_FOOD_SAFETY_CONCEPTS = [
+  "2735",  // food safety
+  "1893",  // food hygiene
+  "2477",  // food contamination
+  "5765",  // foodstuff
+  "3730",  // food additive
+  "3135",  // food inspection
+] as const;
+
+const SPARQL_ENDPOINT = "https://eur-lex.europa.eu/EURLex-WS/sparql";
+
+function buildDiscoverySparql(sinceDate: string): string {
+  const values = EUROVOC_FOOD_SAFETY_CONCEPTS
+    .map((id) => `<http://eurovoc.europa.eu/${id}>`)
+    .join(" ");
+
+  return `
+PREFIX cdm: <http://publications.europa.eu/ontology/cdm#>
+
+SELECT DISTINCT ?celex ?title ?dateDocument WHERE {
+  ?work cdm:resource_legal_id_celex ?celex .
+  ?work cdm:work_date_document ?dateDocument .
+  ?work cdm:is_about ?concept .
+  ?exp cdm:expression_belongs_to_work ?work .
+  ?exp cdm:expression_uses_language <http://publications.europa.eu/resource/authority/language/ENG> .
+  ?exp cdm:expression_title ?title .
+  VALUES ?concept { ${values} }
+  FILTER(?dateDocument >= "${sinceDate}"^^xsd:date)
+}
+ORDER BY DESC(?dateDocument)
+LIMIT 200`.trim();
+}
+
+/**
+ * Query the EUR-Lex SPARQL endpoint for EU food safety regulations
+ * published since `sinceDate`, excluding any already present in CORE_REGULATION_SEEDS.
+ *
+ * Failures are non-fatal — the caller should catch and log.
+ */
+export async function discoverNewRegulations(
+  sinceDate: string
+): Promise<CellarRegulation[]> {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(sinceDate)) {
+    throw new Error(`Invalid sinceDate format: ${sinceDate}`);
+  }
+
+  const query = buildDiscoverySparql(sinceDate);
+  const url = `${SPARQL_ENDPOINT}?query=${encodeURIComponent(query)}`;
+
+  const response = await fetch(url, {
+    headers: { Accept: "application/sparql-results+json" },
+    signal: AbortSignal.timeout(60_000),
+  });
+
+  if (!response.ok) {
+    throw new Error(`SPARQL endpoint returned ${response.status}`);
+  }
+
+  const json = (await response.json()) as {
+    results: {
+      bindings: Array<{
+        celex: { value: string };
+        title: { value: string };
+        dateDocument: { value: string };
+      }>;
+    };
+  };
+
+  const seedCelexSet = new Set(CORE_REGULATION_SEEDS.map((s) => s.baseCelex));
+
+  return json.results.bindings
+    .filter((b) => !seedCelexSet.has(b.celex.value))
+    .map((b) => ({
+      celex: b.celex.value,
+      baseCelex: b.celex.value,
+      title: b.title.value,
+      dateDocument: b.dateDocument.value,
+      dateLastModified: b.dateDocument.value,
+      legacyAliases: [],
+      discovered: true,
+    }));
 }
 
 /**
