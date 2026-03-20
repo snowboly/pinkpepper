@@ -1,7 +1,7 @@
 import Link from "next/link";
-import Image from "next/image";
 import { Suspense } from "react";
 import { TemplateDownloadCard } from "./TemplateDownloadCard";
+import { TemplateThumbnail } from "./TemplateThumbnail";
 
 type ResourceSection = {
   title: string;
@@ -17,8 +17,10 @@ type ResourceTemplateProps = {
   ctaTitle: string;
   ctaBody: string;
   relatedLinks: Array<{ href: string; label: string }>;
-  /** When provided, shows the thumbnail preview + download card section */
+  /** Single downloadable file — shows thumbnail + one download card */
   templateSlug?: string;
+  /** Multiple downloadable files — shows thumbnail from first slug + stacked download cards */
+  templateSlugs?: string[];
 };
 
 export function ResourceTemplate({
@@ -31,7 +33,12 @@ export function ResourceTemplate({
   ctaBody,
   relatedLinks,
   templateSlug,
+  templateSlugs,
 }: ResourceTemplateProps) {
+  // Normalise to an array; templateSlugs takes precedence
+  const slugs = templateSlugs ?? (templateSlug ? [templateSlug] : []);
+  const hasSlugs = slugs.length > 0;
+
   return (
     <main className="overflow-hidden">
       {/* Hero */}
@@ -43,28 +50,25 @@ export function ResourceTemplate({
         </div>
       </section>
 
-      {/* Thumbnail preview + download card */}
-      {templateSlug && (
+      {/* Thumbnail preview + download card(s) */}
+      {hasSlugs && (
         <section className="bg-[#F8FAFC] py-14">
           <div className="pp-container max-w-4xl">
             <div className="grid gap-8 md:grid-cols-[1fr_320px] items-start">
-              {/* Document thumbnail */}
+              {/* Document thumbnail — always uses the first slug */}
               <div className="relative overflow-hidden rounded-2xl border border-[#E2E8F0] bg-white shadow-sm">
-                <Image
-                  src={`/templates/thumbnails/${templateSlug}.svg`}
-                  alt={`${title} preview`}
-                  width={600}
-                  height={780}
-                  className="w-full h-auto"
-                  priority
-                />
+                <Suspense fallback={<div className="aspect-[600/780] bg-[#F1F5F9] animate-pulse" />}>
+                  <TemplateThumbnail slug={slugs[0]} alt={`${title} preview`} />
+                </Suspense>
               </div>
 
-              {/* Download card — server-rendered with auth/tier state */}
-              <div className="md:sticky md:top-24">
-                <Suspense fallback={<DownloadCardSkeleton />}>
-                  <TemplateDownloadCard slug={templateSlug} title={title} />
-                </Suspense>
+              {/* Download card(s) — one per slug, stacked */}
+              <div className="md:sticky md:top-24 flex flex-col gap-4">
+                {slugs.map((slug) => (
+                  <Suspense key={slug} fallback={<DownloadCardSkeleton />}>
+                    <TemplateDownloadCard slug={slug} title={slug === slugs[0] ? title : undefined} />
+                  </Suspense>
+                ))}
               </div>
             </div>
           </div>
