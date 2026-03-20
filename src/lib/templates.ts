@@ -13,7 +13,8 @@ export type TemplateEntry = {
 
 export const TEMPLATES: TemplateEntry[] = [
   // HACCP
-  { slug: "haccp-plan-template",                  title: "HACCP plan template",                    category: "HACCP" },
+  { slug: "haccp-plan-template_hazzards",         title: "HACCP hazards register",                 category: "HACCP" },
+  { slug: "haccp-plan-template_steps",            title: "HACCP step descriptions",                category: "HACCP" },
   { slug: "corrective-action-log-template",       title: "Corrective action log",                  category: "HACCP" },
   { slug: "product-recall-procedure-template",    title: "Product recall procedure",               category: "HACCP" },
   // Allergen

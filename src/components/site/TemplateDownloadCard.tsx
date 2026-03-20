@@ -1,13 +1,16 @@
 import Link from "next/link";
 import { createClient } from "@/utils/supabase/server";
 import { resolveEffectiveTier } from "@/lib/access";
+import { TEMPLATES } from "@/lib/templates";
 
 type Props = {
   slug: string;
-  title: string;
+  /** Falls back to the registry title when omitted */
+  title?: string;
 };
 
-export async function TemplateDownloadCard({ slug, title }: Props) {
+export async function TemplateDownloadCard({ slug, title: titleProp }: Props) {
+  const title = titleProp ?? TEMPLATES.find((t) => t.slug === slug)?.title ?? slug;
   // Read auth + tier server-side — no round trip from client
   const supabase = await createClient();
   const {
