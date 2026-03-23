@@ -7,6 +7,7 @@ import { track } from "@vercel/analytics";
 import type { SubscriptionTier } from "@/lib/tier";
 import { TIER_CAPABILITIES } from "@/lib/tier";
 import type { Citation } from "@/lib/rag/citations";
+import type { VerificationState } from "@/lib/rag/verification";
 import { getPersonaForConversation } from "@/lib/personas";
 import type { Message, Conversation, Project, ChatWorkspaceProps, PersonaInfo } from "./types";
 import ChatSidebar from "./ChatSidebar";
@@ -34,10 +35,15 @@ import AdvancedDocumentBuilderModal from "./document-builders/AdvancedDocumentBu
 import type { DocumentBuilderDefinition } from "./document-builders/document-builder-types";
 import { useAttachments } from "./useAttachments";
 import { useAudioRecording } from "./useAudioRecording";
-import { parseMessageArtifact, parseMessageCitations } from "./chat-message-metadata";
+import {
+  parseMessageArtifact,
+  parseMessageCitations,
+  parseMessageVerificationState,
+} from "./chat-message-metadata";
 import { applyStreamError } from "./chat-stream-state";
 
 type StreamUsage = { used: number; limit: number | null; tier: SubscriptionTier; isAdmin?: boolean };
+type StreamDoneData = { citations?: Citation[]; verificationState?: VerificationState; usage?: StreamUsage };
 type WorkspaceMode = "ask" | "virtual_audit";
 type DocWizard = LightweightDocWizard;
 
@@ -112,7 +118,7 @@ export default function ChatWorkspace({
   const abortControllerRef = useRef<AbortController | null>(null);
   const typingQueueRef = useRef("");
   const typingIntervalRef = useRef<number | null>(null);
-  const pendingDoneRef = useRef<{ citations?: Citation[]; usage?: StreamUsage } | null>(null);
+  const pendingDoneRef = useRef<StreamDoneData | null>(null);
 
   const canUploadImages = isAdmin || dailyImageUploads > 0;
 
@@ -136,7 +142,7 @@ export default function ChatWorkspace({
     }
   }, []);
 
-  const finalizeStreamingMessage = useCallback((doneData: { citations?: Citation[]; usage?: StreamUsage } | null) => {
+  const finalizeStreamingMessage = useCallback((doneData: StreamDoneData | null) => {
     setMessages((prev) => {
       const updated = [...prev];
       const last = updated[updated.length - 1];
@@ -145,6 +151,7 @@ export default function ChatWorkspace({
           ...last,
           isStreaming: false,
           citations: doneData?.citations,
+          verificationState: doneData?.verificationState ?? null,
         };
       }
       return updated;
@@ -314,6 +321,7 @@ export default function ChatWorkspace({
         role: m.role,
         content: m.content,
         citations: parseMessageCitations(m.metadata),
+        verificationState: parseMessageVerificationState(m.metadata),
         artifact: parseMessageArtifact(m.metadata),
         ...(m.role === "assistant" ? { persona: { id: persona.id, name: persona.name } } : {}),
       })));
@@ -986,7 +994,16 @@ export default function ChatWorkspace({
           const payload = line.slice(6);
           if (payload === "[DONE]") continue;
 
-          let event: { type: string; delta?: string; conversationId?: string; citations?: Citation[]; usage?: StreamUsage; persona?: PersonaInfo; message?: string };
+          let event: {
+            type: string;
+            delta?: string;
+            conversationId?: string;
+            citations?: Citation[];
+            verificationState?: VerificationState;
+            usage?: StreamUsage;
+            persona?: PersonaInfo;
+            message?: string;
+          };
           try {
             event = JSON.parse(payload);
           } catch {
@@ -1023,7 +1040,11 @@ export default function ChatWorkspace({
             setPrompt(value);
             setError(event.message ?? "Stream interrupted");
           } else if (event.type === "done") {
-            pendingDoneRef.current = { citations: event.citations, usage: event.usage };
+            pendingDoneRef.current = {
+              citations: event.citations,
+              verificationState: event.verificationState,
+              usage: event.usage,
+            };
             startTypingDrain();
           }
         }

@@ -1,4 +1,5 @@
 import type { Citation } from "@/lib/rag/citations";
+import type { VerificationState } from "@/lib/rag/verification";
 import type { Message } from "./types";
 
 export function parseMessageArtifact(value: unknown): Message["artifact"] | undefined {
@@ -60,4 +61,43 @@ export function parseMessageCitations(value: unknown): Citation[] | undefined {
   });
 
   return parsed.length > 0 ? parsed : undefined;
+}
+
+export function parseMessageVerificationState(value: unknown): VerificationState | null {
+  if (!value || typeof value !== "object") {
+    return null;
+  }
+
+  const verificationState = (value as { verificationState?: unknown }).verificationState;
+  if (
+    verificationState === "verified" ||
+    verificationState === "partial" ||
+    verificationState === "unverified"
+  ) {
+    return verificationState;
+  }
+
+  return null;
+}
+
+export function formatVerificationLabel(state: VerificationState): string {
+  switch (state) {
+    case "verified":
+      return "Verified";
+    case "partial":
+      return "Partially verified";
+    case "unverified":
+      return "Not verified";
+  }
+}
+
+export function getVerificationBadgeClassName(state: VerificationState): string {
+  switch (state) {
+    case "verified":
+      return "border-[#059669] bg-[#ECFDF5] text-[#047857]";
+    case "partial":
+      return "border-[#D97706] bg-[#FFFBEB] text-[#92400E]";
+    case "unverified":
+      return "border-[#CBD5E1] bg-[#F8FAFC] text-[#475569]";
+  }
 }

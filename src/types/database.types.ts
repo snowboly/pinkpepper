@@ -420,6 +420,26 @@ export type Database = {
           source_type: string
         }[]
       }
+      search_knowledge_chunks_authority_aware: {
+        Args: {
+          filter_jurisdiction?: string
+          filter_source_classes?: string[]
+          filter_source_name?: string
+          filter_source_type?: string
+          match_count?: number
+          match_threshold?: number
+          query_embedding: string
+        }
+        Returns: {
+          content: string
+          id: string
+          metadata: Json
+          section_ref: string
+          similarity: number
+          source_name: string
+          source_type: string
+        }[]
+      }
     }
     Enums: {
       review_priority: "standard" | "priority"

@@ -3,11 +3,27 @@ import { TIER_CAPABILITIES } from "@/lib/tier";
 import { resolveUserAccess } from "@/lib/access";
 import { countUsageSince, utcDayStartIso } from "@/lib/policy";
 import { retrieveContext, retrieveRegulationContext, retrieveUserDocumentContext, buildRAGPrompt, formatCitations, type KnowledgeChunk, getExportGuidance } from "@/lib/rag";
+import { getVerificationState } from "@/lib/rag/verification";
+import { inferQueryJurisdiction } from "@/lib/rag/source-taxonomy";
 import { chatLimiter, chatBurstLimiter, checkRateLimit } from "@/lib/ratelimit";
 import { detectQueryMode, detectComplexity } from "@/lib/query-mode";
 import { getPersonaForConversation, type Persona } from "@/lib/personas";
 
 export const dynamic = "force-dynamic";
+
+function shouldPreferAuthoritativeSources(message: string, mode: "qa" | "document" | "audit"): boolean {
+  if (mode === "audit") {
+    return true;
+  }
+
+  if (mode === "document") {
+    return false;
+  }
+
+  return /\b(law|legal|regulation|regulations|compliance|requirement|requirements|must|shall|approval|register|registration)\b/i.test(
+    message
+  );
+}
 
 export async function POST(request: Request) {
   const groqKey = process.env.GROQ_API_KEY;
@@ -161,20 +177,35 @@ export async function POST(request: Request) {
     content: row.content,
   }));
 
+  const mode = detectQueryMode(message);
+
   // RAG retrieval (knowledge base + user uploaded documents)
   let retrievedChunks: KnowledgeChunk[] = [];
   let userDocContext = "";
   let ragEnabled = false;
+  const queryJurisdiction = inferQueryJurisdiction(message);
+  const useAuthorityFilters = shouldPreferAuthoritativeSources(message, mode);
 
   try {
     const [kChunks, uChunks] = await Promise.all([
-      retrieveContext(message, { topK: 8, threshold: 0.6 }),
+      retrieveContext(message, {
+        topK: 8,
+        threshold: 0.6,
+        ...(queryJurisdiction !== "unknown" ? { jurisdiction: queryJurisdiction } : {}),
+        ...(useAuthorityFilters
+          ? { sourceClasses: ["primary_law", "official_guidance"] as const }
+          : {}),
+      }),
       retrieveUserDocumentContext(message, user.id, { topK: 3, threshold: 0.65 }),
     ]);
 
     // If few general results, try a regulation-focused search with a lower threshold
     if (kChunks.length < 3) {
-      const regChunks = await retrieveRegulationContext(message, { topK: 5, threshold: 0.55 });
+      const regChunks = await retrieveRegulationContext(message, {
+        topK: 5,
+        threshold: 0.55,
+        ...(queryJurisdiction !== "unknown" ? { jurisdiction: queryJurisdiction } : {}),
+      });
       const existingIds = new Set(kChunks.map((c) => c.id));
       for (const chunk of regChunks) {
         if (!existingIds.has(chunk.id)) kChunks.push(chunk);
@@ -190,8 +221,6 @@ export async function POST(request: Request) {
   } catch (ragError) {
     console.error("RAG retrieval error:", ragError);
   }
-
-  const mode = detectQueryMode(message);
 
   let systemPrompt: string;
   let temperature: number;
@@ -404,6 +433,14 @@ export async function POST(request: Request) {
         }
 
         const citations = ragEnabled ? formatCitations(retrievedChunks) : [];
+        const verificationState = getVerificationState(
+          retrievedChunks.map((chunk) => ({
+            source_class:
+              typeof chunk.metadata?.source_class === "string"
+                ? chunk.metadata.source_class
+                : undefined,
+          }))
+        );
 
         // Save messages to database
         // All rows must include the same columns so PostgREST includes metadata in the INSERT
@@ -414,7 +451,10 @@ export async function POST(request: Request) {
             user_id: user.id,
             role: "assistant",
             content: fullContent,
-            metadata: citations.length > 0 ? { citations } : {},
+            metadata: {
+              ...(citations.length > 0 ? { citations } : {}),
+              verificationState,
+            },
           },
         ]);
 
@@ -432,6 +472,7 @@ export async function POST(request: Request) {
             `data: ${JSON.stringify({
               type: "done",
               citations,
+              verificationState,
               usage: {
                 used: used + 1,
                 limit: isAdmin ? null : caps.dailyMessages,
