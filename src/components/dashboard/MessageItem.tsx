@@ -4,6 +4,10 @@ import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { useTranslations } from "next-intl";
 import type { Message } from "./types";
+import {
+  formatVerificationLabel,
+  getVerificationBadgeClassName,
+} from "./chat-message-metadata";
 
 type MessageItemProps = {
   message: Message;
@@ -65,6 +69,13 @@ export default function MessageItem({ message }: MessageItemProps) {
           <span className="text-sm font-semibold text-[#0F172A]">
             {message.persona ? message.persona.name : t("pinkPepper")}
           </span>
+          {message.verificationState ? (
+            <span
+              className={`rounded-full border px-2 py-0.5 text-[11px] font-semibold ${getVerificationBadgeClassName(message.verificationState)}`}
+            >
+              {formatVerificationLabel(message.verificationState)}
+            </span>
+          ) : null}
           {message.isStreaming && (
             <span className="text-xs text-[#94A3B8]">{t("thinking")}</span>
           )}

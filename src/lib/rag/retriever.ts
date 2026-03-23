@@ -1,5 +1,6 @@
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { generateEmbedding } from "./embeddings";
+import { type Jurisdiction, type SourceClass } from "./source-taxonomy";
 
 let supabaseClient: SupabaseClient | null = null;
 
@@ -28,12 +29,85 @@ export type RetrievalOptions = {
   threshold?: number;
   sourceType?: string;
   sourceName?: string;
+  jurisdiction?: Jurisdiction;
+  sourceClasses?: SourceClass[];
 };
 
 const DEFAULT_OPTIONS: Required<Omit<RetrievalOptions, "sourceType" | "sourceName">> = {
   topK: 5,
   threshold: 0.7,
 };
+
+const SOURCE_CLASS_WEIGHT: Record<SourceClass, number> = {
+  primary_law: 4,
+  official_guidance: 3,
+  reference_standard: 2,
+  internal_practice: 1,
+};
+
+export function rankRetrievedChunks(chunks: KnowledgeChunk[]): KnowledgeChunk[] {
+  return [...chunks].sort((a, b) => {
+    const aSourceClass = String(a.metadata?.source_class ?? "internal_practice") as SourceClass;
+    const bSourceClass = String(b.metadata?.source_class ?? "internal_practice") as SourceClass;
+    const aWeight = SOURCE_CLASS_WEIGHT[aSourceClass] ?? 0;
+    const bWeight = SOURCE_CLASS_WEIGHT[bSourceClass] ?? 0;
+
+    return bWeight - aWeight || b.similarity - a.similarity;
+  });
+}
+
+type SearchKnowledgeRpcName =
+  | "search_knowledge_chunks"
+  | "search_knowledge_chunks_authority_aware";
+
+type SearchKnowledgeRpcArgs = {
+  query_embedding: number[];
+  match_threshold: number;
+  match_count: number;
+  filter_source_type: string | null;
+  filter_source_name: string | null;
+  filter_jurisdiction?: Jurisdiction | null;
+  filter_source_classes?: SourceClass[] | null;
+};
+
+export function buildKnowledgeSearchRequest(
+  options: RetrievalOptions & { queryEmbedding?: number[] }
+): { rpcName: SearchKnowledgeRpcName; rpcArgs: SearchKnowledgeRpcArgs } {
+  const { topK, threshold, sourceType, sourceName, jurisdiction, sourceClasses, queryEmbedding = [] } = {
+    ...DEFAULT_OPTIONS,
+    ...options,
+  };
+
+  const useAuthorityAwareSearch = Boolean(
+    (jurisdiction && jurisdiction !== "unknown") || (sourceClasses && sourceClasses.length > 0)
+  );
+
+  if (useAuthorityAwareSearch) {
+    return {
+      rpcName: "search_knowledge_chunks_authority_aware",
+      rpcArgs: {
+        query_embedding: queryEmbedding,
+        match_threshold: threshold,
+        match_count: topK,
+        filter_source_type: sourceType ?? null,
+        filter_source_name: sourceName ?? null,
+        filter_jurisdiction: jurisdiction ?? null,
+        filter_source_classes: sourceClasses ?? null,
+      },
+    };
+  }
+
+  return {
+    rpcName: "search_knowledge_chunks",
+    rpcArgs: {
+      query_embedding: queryEmbedding,
+      match_threshold: threshold,
+      match_count: topK,
+      filter_source_type: sourceType ?? null,
+      filter_source_name: sourceName ?? null,
+    },
+  };
+}
 
 /**
  * Retrieve relevant knowledge chunks for a user query
@@ -42,29 +116,22 @@ export async function retrieveContext(
   query: string,
   options: RetrievalOptions = {}
 ): Promise<KnowledgeChunk[]> {
-  const { topK, threshold, sourceType, sourceName } = {
-    ...DEFAULT_OPTIONS,
-    ...options,
-  };
-
   // Generate embedding for the query
   const { embedding } = await generateEmbedding(query);
+  const { rpcName, rpcArgs } = buildKnowledgeSearchRequest({
+    ...options,
+    queryEmbedding: embedding,
+  });
 
   // Call the search function in Supabase
-  const { data, error } = await getSupabase().rpc("search_knowledge_chunks", {
-    query_embedding: embedding,
-    match_threshold: threshold,
-    match_count: topK,
-    filter_source_type: sourceType ?? null,
-    filter_source_name: sourceName ?? null,
-  });
+  const { data, error } = await getSupabase().rpc(rpcName, rpcArgs);
 
   if (error) {
     console.error("Knowledge retrieval error:", error);
     throw new Error(`Failed to retrieve knowledge: ${error.message}`);
   }
 
-  return (data as KnowledgeChunk[]) || [];
+  return rankRetrievedChunks((data as KnowledgeChunk[]) || []);
 }
 
 /**
