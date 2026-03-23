@@ -25,6 +25,7 @@ export const TEMPLATES: TemplateEntry[] = [
   { slug: "temperature-monitoring-log-template",  title: "Temperature monitoring log",             category: "Monitoring" },
   { slug: "pest-control-log-template",            title: "Pest control log",                       category: "Monitoring" },
   { slug: "waste-management-log-template",        title: "Waste management log",                   category: "Monitoring" },
+  { slug: "waste-management-sop-template",        title: "Waste management SOP",                   category: "Monitoring" },
   // Traceability
   { slug: "traceability-log-template",            title: "Traceability log",                       category: "Traceability" },
   // Supplier

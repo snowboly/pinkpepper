@@ -63,6 +63,13 @@ const resources: ResourceEntry[] = [
     category: "monitoring",
     categoryLabel: "Monitoring",
   },
+  {
+    href: "/resources/waste-management-sop-template",
+    title: "Waste management SOP template",
+    description: "How to write a waste management procedure covering segregation, storage, contractor arrangements, and compliance.",
+    category: "monitoring",
+    categoryLabel: "Monitoring",
+  },
   // Traceability
   {
     href: "/resources/traceability-log-template",
