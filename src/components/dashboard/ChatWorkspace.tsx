@@ -1209,11 +1209,24 @@ export default function ChatWorkspace({
                   setUpgradeModalTrigger("template_download");
                   return;
                 }
-                const a = document.createElement("a");
-                a.href = `/api/templates/${suggestion.key}/download`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
+                void (async () => {
+                  try {
+                    const res = await fetch(`/api/templates/${suggestion.key}/download`, { redirect: "manual" });
+                    if (res.type === "opaqueredirect") {
+                      // 302 to Supabase signed URL — trigger download
+                      const a = document.createElement("a");
+                      a.href = `/api/templates/${suggestion.key}/download`;
+                      document.body.appendChild(a);
+                      a.click();
+                      document.body.removeChild(a);
+                    } else if (!res.ok) {
+                      const data = (await res.json().catch(() => ({}))) as { error?: string };
+                      setError(data.error ?? "This template isn't available for download yet.");
+                    }
+                  } catch {
+                    setError("Could not download the template. Please try again.");
+                  }
+                })();
                 return;
               }
               if (suggestion.category === "document") {
