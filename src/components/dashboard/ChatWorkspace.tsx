@@ -95,7 +95,7 @@ export default function ChatWorkspace({
   const [showReviewModal, setShowReviewModal] = useState(false);
 
   // ── Upgrade modal state ──
-  const [upgradeModalTrigger, setUpgradeModalTrigger] = useState<"message_limit" | "image_limit" | "export" | "review" | "audit_mode" | "transcription_limit" | "document_generation" | null>(null);
+  const [upgradeModalTrigger, setUpgradeModalTrigger] = useState<"message_limit" | "image_limit" | "export" | "review" | "audit_mode" | "transcription_limit" | "document_generation" | "template_download" | null>(null);
   const [workspaceMode, setWorkspaceMode] = useState<WorkspaceMode>("ask");
   const [activeDocWizard, setActiveDocWizard] = useState<DocWizard | null>(null);
   const [docWizardStep, setDocWizardStep] = useState(0);
@@ -1204,6 +1204,18 @@ export default function ChatWorkspace({
             onSetPrompt={setPrompt}
             onFocusInput={() => textareaRef.current?.focus()}
             onQuickSuggestion={(suggestion) => {
+              if (suggestion.category === "template_download" && suggestion.key) {
+                if (tier === "free") {
+                  setUpgradeModalTrigger("template_download");
+                  return;
+                }
+                const a = document.createElement("a");
+                a.href = `/api/templates/${suggestion.key}/download`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                return;
+              }
               if (suggestion.category === "document") {
                 if (workspaceMode === "virtual_audit") {
                   return;
@@ -1223,6 +1235,7 @@ export default function ChatWorkspace({
             }}
             currentPersona={currentPersona}
             showDocumentStarters={shouldShowDocumentStarters(workspaceMode)}
+            tier={tier}
           />
 
           <div className="flex-shrink-0 border-t border-[#E2E8F0] bg-white px-4 py-2">

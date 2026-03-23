@@ -64,7 +64,9 @@
     "docCategories": {
       "quickDocuments": "Documenti rapidi",
       "advancedDocuments": "Documenti avanzati",
-      "structuredBuilder": "Builder strutturato"
+      "structuredBuilder": "Builder strutturato",
+      "downloadTemplates": "Scarica modelli",
+      "downloadTemplatesHint": "DOCX · Plus & Pro"
     },
     "startRecording": "Start recording",
     "stopRecording": "Stop",
