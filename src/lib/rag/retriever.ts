@@ -33,7 +33,7 @@ export type RetrievalOptions = {
   sourceClasses?: SourceClass[];
 };
 
-const DEFAULT_OPTIONS: Required<Omit<RetrievalOptions, "sourceType" | "sourceName">> = {
+const DEFAULT_OPTIONS: Pick<Required<RetrievalOptions>, "topK" | "threshold"> = {
   topK: 5,
   threshold: 0.7,
 };
