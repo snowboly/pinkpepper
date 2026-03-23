@@ -12,7 +12,7 @@ export async function TemplateThumbnail({ slug, alt }: Props) {
 
   const { data } = await admin.storage
     .from(BUCKETS.templates)
-    .createSignedUrl(`thumbnails/${slug}.png`, 300); // 5-min expiry
+    .createSignedUrl(`Thumbnails/${slug}.png`, 300); // 5-min expiry
 
   if (!data?.signedUrl) {
     // Fall back to the local SVG placeholder if no PNG yet
