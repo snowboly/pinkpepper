@@ -95,7 +95,7 @@ export default function ChatWorkspace({
   const [showReviewModal, setShowReviewModal] = useState(false);
 
   // ── Upgrade modal state ──
-  const [upgradeModalTrigger, setUpgradeModalTrigger] = useState<"message_limit" | "image_limit" | "export" | "review" | "audit_mode" | "transcription_limit" | "document_generation" | null>(null);
+  const [upgradeModalTrigger, setUpgradeModalTrigger] = useState<"message_limit" | "image_limit" | "export" | "review" | "audit_mode" | "transcription_limit" | "document_generation" | "template_download" | null>(null);
   const [workspaceMode, setWorkspaceMode] = useState<WorkspaceMode>("ask");
   const [activeDocWizard, setActiveDocWizard] = useState<DocWizard | null>(null);
   const [docWizardStep, setDocWizardStep] = useState(0);
@@ -1204,6 +1204,31 @@ export default function ChatWorkspace({
             onSetPrompt={setPrompt}
             onFocusInput={() => textareaRef.current?.focus()}
             onQuickSuggestion={(suggestion) => {
+              if (suggestion.category === "template_download" && suggestion.key) {
+                if (tier === "free") {
+                  setUpgradeModalTrigger("template_download");
+                  return;
+                }
+                void (async () => {
+                  try {
+                    const res = await fetch(`/api/templates/${suggestion.key}/download`, { redirect: "manual" });
+                    if (res.type === "opaqueredirect") {
+                      // 302 to Supabase signed URL — trigger download
+                      const a = document.createElement("a");
+                      a.href = `/api/templates/${suggestion.key}/download`;
+                      document.body.appendChild(a);
+                      a.click();
+                      document.body.removeChild(a);
+                    } else if (!res.ok) {
+                      const data = (await res.json().catch(() => ({}))) as { error?: string };
+                      setError(data.error ?? "This template isn't available for download yet.");
+                    }
+                  } catch {
+                    setError("Could not download the template. Please try again.");
+                  }
+                })();
+                return;
+              }
               if (suggestion.category === "document") {
                 if (workspaceMode === "virtual_audit") {
                   return;
@@ -1223,6 +1248,7 @@ export default function ChatWorkspace({
             }}
             currentPersona={currentPersona}
             showDocumentStarters={shouldShowDocumentStarters(workspaceMode)}
+            tier={tier}
           />
 
           <div className="flex-shrink-0 border-t border-[#E2E8F0] bg-white px-4 py-2">

@@ -3,11 +3,13 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
+import type { SubscriptionTier } from "@/lib/tier";
 import type { Message, PersonaInfo } from "./types";
 import MessageItem from "./MessageItem";
+import { TEMPLATES } from "@/lib/templates";
 
 export type StarterSuggestion = {
-  category: "document" | "audit" | "qa";
+  category: "document" | "audit" | "qa" | "template_download";
   key?: string;
   label: string;
   text: string;
@@ -24,6 +26,7 @@ type ChatMessagesProps = {
   onQuickSuggestion?: (s: StarterSuggestion) => void;
   currentPersona?: PersonaInfo | null;
   showDocumentStarters?: boolean;
+  tier?: SubscriptionTier;
 };
 
 type DocCategory = {
@@ -66,6 +69,7 @@ export default function ChatMessages({
   onQuickSuggestion,
   currentPersona,
   showDocumentStarters = true,
+  tier = "free",
 }: ChatMessagesProps) {
   const t = useTranslations("chat");
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -189,6 +193,67 @@ export default function ChatMessages({
                       ))}
                     </div>
                   ))}
+
+                  {/* Downloadable DOCX templates, grouped by category */}
+                  {(() => {
+                    const grouped = TEMPLATES.reduce<Record<string, typeof TEMPLATES>>((acc, tpl) => {
+                      (acc[tpl.category] ??= []).push(tpl);
+                      return acc;
+                    }, {});
+                    return (
+                      <div>
+                        <div className="px-4 pt-3 pb-1 flex items-center gap-2">
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-[#94A3B8]">
+                            {t("docCategories.downloadTemplates")}
+                          </span>
+                          <span className="text-[10px] font-medium text-[#64748B]">
+                            {t("docCategories.downloadTemplatesHint")}
+                          </span>
+                        </div>
+                        {Object.entries(grouped).map(([category, items]) => (
+                          <div key={category}>
+                            <div className="px-4 py-1">
+                              <span className="text-[9px] font-bold uppercase tracking-wider text-[#CBD5E1]">
+                                {category}
+                              </span>
+                            </div>
+                            {items.map((tpl) => {
+                              const locked = tier === "free";
+                              return (
+                                <button
+                                  key={tpl.slug}
+                                  type="button"
+                                  onClick={() => {
+                                    setDocMenuOpen(false);
+                                    onQuickSuggestion?.({
+                                      category: "template_download",
+                                      key: tpl.slug,
+                                      label: tpl.title,
+                                      text: "",
+                                    });
+                                  }}
+                                  className={`w-full px-4 py-2 text-left transition-colors flex items-center justify-between gap-2 ${locked ? "opacity-50" : "hover:bg-[#F8F9FB]"}`}
+                                >
+                                  <span className={`text-sm font-medium ${locked ? "text-[#94A3B8]" : "text-[#0F172A]"}`}>
+                                    {tpl.title}
+                                  </span>
+                                  {locked ? (
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 flex-shrink-0 text-[#CBD5E1]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                    </svg>
+                                  ) : (
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 flex-shrink-0 text-[#94A3B8]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                      <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                    </svg>
+                                  )}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        ))}
+                      </div>
+                    );
+                  })()}
                 </div>
               )}
             </div>

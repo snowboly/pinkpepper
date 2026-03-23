@@ -84,7 +84,9 @@
       "policies": "Policies",
       "quickDocuments": "Quick documents",
       "advancedDocuments": "Advanced documents",
-      "structuredBuilder": "Structured builder"
+      "structuredBuilder": "Structured builder",
+      "downloadTemplates": "Download templates",
+      "downloadTemplatesHint": "DOCX · Plus & Pro"
     },
     "startRecording": "Start recording",
     "stopRecording": "Stop",
