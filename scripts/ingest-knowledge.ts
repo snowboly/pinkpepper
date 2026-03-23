@@ -17,6 +17,8 @@ import { createClient } from "@supabase/supabase-js";
 import OpenAI from "openai";
 import * as fs from "fs";
 import * as path from "path";
+import { buildChunkMetadata } from "../src/lib/rag/source-taxonomy";
+import { replaceKnowledgeChunksForSource } from "../src/lib/rag/knowledge-ingestion";
 
 // Configuration
 const CHUNK_SIZE = 500; // Target tokens per chunk
@@ -160,6 +162,7 @@ async function processDocument(filePath: string): Promise<DocumentChunk[]> {
     metadata: {
       originalFile: path.basename(filePath),
       processedAt: new Date().toISOString(),
+      ...buildChunkMetadata(filePath),
     },
   }));
 }
@@ -214,15 +217,19 @@ async function insertChunks(
     metadata: chunk.metadata,
   }));
 
-  // Insert in batches to avoid payload limits
-  for (let i = 0; i < rows.length; i += 100) {
-    const batch = rows.slice(i, i + 100);
-    const { error } = await supabase.from("knowledge_chunks").insert(batch);
+  const sourceType = rows[0]?.source_type;
+  const sourceName = rows[0]?.source_name;
 
-    if (error) {
-      throw new Error(`Database insert failed: ${error.message}`);
-    }
+  if (!sourceType || !sourceName) {
+    return;
   }
+
+  await replaceKnowledgeChunksForSource(supabase as never, {
+    sourceType,
+    sourceName,
+    rows,
+    batchSize: 100,
+  });
 
   console.log(`  Successfully inserted ${rows.length} chunks`);
 }
