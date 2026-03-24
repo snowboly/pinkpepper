@@ -15,23 +15,6 @@ import ChatInput from "./ChatInput";
 import OnboardingModal from "./OnboardingModal";
 import UpgradeModal from "./UpgradeModal";
 import ReviewContactModal from "./ReviewContactModal";
-import {
-  buildDocumentGenerationPayload,
-  type DocumentBuilderAnswerMap,
-} from "./document-builders/document-builder-payload";
-import {
-  getInitialLightweightDocWizardAnswers,
-  getLightweightDocWizards,
-  shouldShowDocumentStarters,
-  type LightweightDocWizard,
-} from "./document-builders/lightweight-doc-wizard";
-import {
-  getInitialAdvancedBuilderAnswers,
-  getAdvancedDocumentBuilder,
-  isAdvancedDocumentBuilderKey,
-} from "./document-builders/advanced-doc-builder";
-import AdvancedDocumentBuilderModal from "./document-builders/AdvancedDocumentBuilderModal";
-import type { DocumentBuilderDefinition } from "./document-builders/document-builder-types";
 import { useAttachments } from "./useAttachments";
 import { useAudioRecording } from "./useAudioRecording";
 import { parseMessageArtifact, parseMessageCitations } from "./chat-message-metadata";
@@ -39,9 +22,6 @@ import { applyStreamError } from "./chat-stream-state";
 
 type StreamUsage = { used: number; limit: number | null; tier: SubscriptionTier; isAdmin?: boolean };
 type WorkspaceMode = "ask" | "virtual_audit";
-type DocWizard = LightweightDocWizard;
-
-const DOC_WIZARDS: Record<string, DocWizard> = getLightweightDocWizards();
 
 export default function ChatWorkspace({
   userEmail,
@@ -95,15 +75,8 @@ export default function ChatWorkspace({
   const [showReviewModal, setShowReviewModal] = useState(false);
 
   // ── Upgrade modal state ──
-  const [upgradeModalTrigger, setUpgradeModalTrigger] = useState<"message_limit" | "image_limit" | "export" | "review" | "audit_mode" | "transcription_limit" | "document_generation" | "template_download" | null>(null);
+  const [upgradeModalTrigger, setUpgradeModalTrigger] = useState<"message_limit" | "image_limit" | "export" | "review" | "audit_mode" | "transcription_limit" | "template_download" | null>(null);
   const [workspaceMode, setWorkspaceMode] = useState<WorkspaceMode>("ask");
-  const [activeDocWizard, setActiveDocWizard] = useState<DocWizard | null>(null);
-  const [docWizardStep, setDocWizardStep] = useState(0);
-  const [docWizardAnswers, setDocWizardAnswers] = useState<DocumentBuilderAnswerMap>({});
-  const [activeAdvancedBuilder, setActiveAdvancedBuilder] = useState<DocumentBuilderDefinition | null>(null);
-  const [advancedBuilderAnswers, setAdvancedBuilderAnswers] = useState<DocumentBuilderAnswerMap>({});
-  const [advancedBuilderLoading, setAdvancedBuilderLoading] = useState(false);
-  const [advancedBuilderError, setAdvancedBuilderError] = useState<string | null>(null);
 
   // ── UI state ──
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -464,13 +437,6 @@ export default function ChatWorkspace({
     typingQueueRef.current = "";
     pendingDoneRef.current = null;
     clearTypingInterval();
-    setActiveDocWizard(null);
-    setDocWizardStep(0);
-    setDocWizardAnswers({});
-    setActiveAdvancedBuilder(null);
-    setAdvancedBuilderAnswers({});
-    setAdvancedBuilderLoading(false);
-    setAdvancedBuilderError(null);
     setConversationId(null);
     setCurrentPersona(null);
     setMessages([]);
@@ -490,275 +456,10 @@ export default function ChatWorkspace({
       trackWorkspaceEvent("virtual_audit_started", { tier, source: "workspace_mode_toggle" });
     }
     setWorkspaceMode(nextMode);
-    setActiveDocWizard(null);
-    setDocWizardStep(0);
-    setDocWizardAnswers({});
-    setActiveAdvancedBuilder(null);
-    setAdvancedBuilderAnswers({});
-    setAdvancedBuilderLoading(false);
-    setAdvancedBuilderError(null);
     // Start a fresh conversation when entering virtual audit mode
     if (nextMode === "virtual_audit") {
       startNewChat();
     }
-  }
-
-  function startDocumentWizard(suggestion: StarterSuggestion) {
-    const wizard = suggestion.key ? DOC_WIZARDS[suggestion.key] : undefined;
-    if (!wizard) {
-      void sendPromptValue(suggestion.text);
-      return;
-    }
-    const initialAnswers = getInitialLightweightDocWizardAnswers(wizard.builderKey);
-    setActiveDocWizard(wizard);
-    setDocWizardStep(0);
-    setDocWizardAnswers(initialAnswers);
-    const intro = tw(`wizards.${wizard.wizardKey}.intro`);
-    const q1 = wizard.questions[0]?.prompt ?? tw(`wizards.${wizard.wizardKey}.q1`);
-    pushAssistantMessage(`${intro}\n\nQuestion 1/${wizard.questionCount}: ${q1}`, currentPersona);
-    setPrompt("");
-    textareaRef.current?.focus();
-  }
-
-  function startAdvancedBuilder(builderKey: string) {
-    const definition = getAdvancedDocumentBuilder(builderKey);
-    if (!definition) return;
-
-    setActiveAdvancedBuilder(definition);
-    setAdvancedBuilderAnswers(getInitialAdvancedBuilderAnswers(builderKey));
-    setAdvancedBuilderLoading(false);
-    setAdvancedBuilderError(null);
-  }
-
-  async function submitAdvancedBuilder() {
-    if (!activeAdvancedBuilder) return;
-
-    const builderKey = activeAdvancedBuilder.wizardKey;
-    const documentType = activeAdvancedBuilder.documentType;
-    const wizardTitle = activeAdvancedBuilder.title;
-    const displayPrompt = `Generate the ${wizardTitle} document using the provided business details.`;
-    const userMessage: Message = { role: "user", content: displayPrompt };
-
-    setMessages((prev) => [...prev, userMessage]);
-    setLoading(true);
-    setAdvancedBuilderLoading(true);
-    setAdvancedBuilderError(null);
-    setError(null);
-    trackWorkspaceEvent("document_generation_requested", {
-      wizard: documentType,
-      tier,
-      source: "advanced_document_builder",
-    });
-
-    try {
-      const requestPayload = buildDocumentGenerationPayload(builderKey, advancedBuilderAnswers);
-
-      const res = await fetch("/api/documents/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...requestPayload,
-          format: "json",
-          conversationId,
-          displayPrompt,
-        }),
-      });
-
-      const data = (await res.json()) as {
-        error?: string;
-        assistantMessage?: string;
-        conversationId?: string;
-        artifact?: Message["artifact"];
-        usage?: { used: number; limit: number | null; tier: SubscriptionTier; isAdmin?: boolean };
-      };
-
-      if (!res.ok) {
-        if (res.status === 402) {
-          setUpgradeModalTrigger("document_generation");
-        }
-        const nextError = data.error ?? "Document generation failed.";
-        setAdvancedBuilderError(nextError);
-        if (res.status !== 402) {
-          setError(nextError);
-        }
-        setMessages((prev) => prev.slice(0, -1));
-        return;
-      }
-
-      if (data.conversationId) setConversationId(data.conversationId);
-      if (data.assistantMessage) {
-        const assistantMessage = data.assistantMessage;
-        setMessages((prev) => [
-          ...prev,
-          {
-            role: "assistant",
-            content: assistantMessage,
-            persona: currentPersona ?? undefined,
-            artifact: data.artifact ?? {
-              id: `${documentType}-${Date.now()}`,
-              kind: "document",
-              title: wizardTitle,
-              summary: assistantMessage,
-              status: "ready",
-              documentType,
-            },
-          },
-        ]);
-      }
-      if (data.usage) {
-        setUsage(data.usage.used);
-        safeTierUpdate(data.usage.tier);
-        setIsAdmin(Boolean(data.usage.isAdmin));
-      }
-      setActiveAdvancedBuilder(null);
-      setAdvancedBuilderAnswers({});
-      setAdvancedBuilderError(null);
-      await loadConversations(true);
-    } catch {
-      setAdvancedBuilderError("Network error while generating document.");
-      setError("Network error while generating document.");
-      setMessages((prev) => prev.slice(0, -1));
-    } finally {
-      setLoading(false);
-      setAdvancedBuilderLoading(false);
-    }
-  }
-
-
-  async function handleDocWizardInput(rawPrompt: string): Promise<boolean> {
-    if (!activeDocWizard) return false;
-    const answer = rawPrompt.trim();
-    if (!answer) return true;
-
-    setPrompt("");
-    if (textareaRef.current) textareaRef.current.style.height = "auto";
-
-    if (["cancel", "/cancel", "stop"].includes(answer.toLowerCase())) {
-      setActiveDocWizard(null);
-      setDocWizardStep(0);
-      setDocWizardAnswers({});
-      pushAssistantMessage(tw("wizardCancelled"), currentPersona);
-      return true;
-    }
-
-    setMessages((prev) => [...prev, { role: "user", content: answer }]);
-
-    const currentQuestion = activeDocWizard.questions[docWizardStep];
-    if (!currentQuestion) {
-      setActiveDocWizard(null);
-      setDocWizardStep(0);
-      setDocWizardAnswers({});
-      pushAssistantMessage(tw("wizardCancelled"), currentPersona);
-      return true;
-    }
-
-    const nextAnswers = {
-      ...docWizardAnswers,
-      [currentQuestion.key]: answer,
-    };
-    const nextStep = docWizardStep + 1;
-
-    if (nextStep < activeDocWizard.questionCount) {
-      setDocWizardAnswers(nextAnswers);
-      setDocWizardStep(nextStep);
-      const nextQ = activeDocWizard.questions[nextStep]?.prompt ?? tw(`wizards.${activeDocWizard.wizardKey}.q${nextStep + 1}`);
-      pushAssistantMessage(`Question ${nextStep + 1}/${activeDocWizard.questionCount}: ${nextQ}`, currentPersona);
-      return true;
-    }
-
-    const completedWizard = activeDocWizard;
-    setActiveDocWizard(null);
-    setDocWizardStep(0);
-    setDocWizardAnswers({});
-    pushAssistantMessage(tw("wizardGenerating"), currentPersona);
-
-    const wizardTitle = completedWizard.title;
-    const displayPrompt = `Generate the ${wizardTitle} document using the provided business details.`;
-    const documentType = completedWizard.documentType;
-    const userMessage: Message = { role: "user", content: displayPrompt };
-    setMessages((prev) => [...prev, userMessage]);
-    setLoading(true);
-    setError(null);
-    trackWorkspaceEvent("document_generation_requested", {
-      wizard: completedWizard.documentType,
-      tier,
-      source: "document_wizard",
-    });
-
-    try {
-      const requestPayload =
-        completedWizard.documentType === "haccp_plan"
-          ? {
-              documentType,
-              answers: completedWizard.questions.map((question) => {
-                const value = nextAnswers[question.key];
-                return typeof value === "string" ? value : "";
-              }),
-            }
-          : buildDocumentGenerationPayload(completedWizard.builderKey, nextAnswers);
-
-      const res = await fetch("/api/documents/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...requestPayload,
-          format: "json",
-          conversationId,
-          displayPrompt,
-        }),
-      });
-
-      const data = (await res.json()) as {
-        error?: string;
-        assistantMessage?: string;
-        conversationId?: string;
-        artifact?: Message["artifact"];
-        usage?: { used: number; limit: number | null; tier: SubscriptionTier; isAdmin?: boolean };
-      };
-
-      if (!res.ok) {
-        if (res.status === 402) {
-          setUpgradeModalTrigger("document_generation");
-        } else {
-          setError(data.error ?? "Document generation failed.");
-        }
-        setMessages((prev) => prev.slice(0, -1));
-        return true;
-      }
-
-      if (data.conversationId) setConversationId(data.conversationId);
-      if (data.assistantMessage) {
-        setMessages((prev) => [
-          ...prev,
-          {
-            role: "assistant",
-            content: data.assistantMessage!,
-            persona: currentPersona ?? undefined,
-            artifact: data.artifact ?? {
-              id: `${completedWizard.documentType}-${Date.now()}`,
-              kind: "document",
-              title: wizardTitle,
-              summary: data.assistantMessage!,
-              status: "ready",
-              documentType,
-            },
-          },
-        ]);
-      }
-      if (data.usage) {
-        setUsage(data.usage.used);
-        safeTierUpdate(data.usage.tier);
-        setIsAdmin(Boolean(data.usage.isAdmin));
-      }
-      await loadConversations(true);
-    } catch {
-      setError("Network error while generating document.");
-      setMessages((prev) => prev.slice(0, -1));
-    } finally {
-      setLoading(false);
-    }
-
-    return true;
   }
 
   // ── Reviews ──
@@ -803,8 +504,6 @@ export default function ChatWorkspace({
 
   // ── Send message (with streaming for text, JSON for images) ──
   async function sendPromptValue(rawPrompt: string, options?: { displayPrompt?: string }) {
-    if (await handleDocWizardInput(rawPrompt)) return;
-
     let value = rawPrompt.trim();
     if ((!value && !attachedImage && !attachedDocument) || loading) return;
 
@@ -1229,17 +928,6 @@ export default function ChatWorkspace({
                 })();
                 return;
               }
-              if (suggestion.category === "document") {
-                if (workspaceMode === "virtual_audit") {
-                  return;
-                }
-                if (suggestion.key && isAdvancedDocumentBuilderKey(suggestion.key)) {
-                  startAdvancedBuilder(suggestion.key);
-                  return;
-                }
-                startDocumentWizard(suggestion);
-                return;
-              }
               if (workspaceMode === "virtual_audit") {
                 void sendPromptValue(`Start virtual audit focus: ${suggestion.text}`);
                 return;
@@ -1247,7 +935,7 @@ export default function ChatWorkspace({
               void sendPromptValue(suggestion.text);
             }}
             currentPersona={currentPersona}
-            showDocumentStarters={shouldShowDocumentStarters(workspaceMode)}
+            showDocumentStarters={workspaceMode === "ask"}
             tier={tier}
           />
 
@@ -1395,24 +1083,6 @@ export default function ChatWorkspace({
           onClose={() => setShowReviewModal(false)}
         />
       )}
-
-      <AdvancedDocumentBuilderModal
-        open={Boolean(activeAdvancedBuilder)}
-        definition={activeAdvancedBuilder}
-        answers={advancedBuilderAnswers}
-        loading={advancedBuilderLoading}
-        error={advancedBuilderError}
-        onClose={() => {
-          setActiveAdvancedBuilder(null);
-          setAdvancedBuilderAnswers({});
-          setAdvancedBuilderLoading(false);
-          setAdvancedBuilderError(null);
-        }}
-        onChange={(key, value) => {
-          setAdvancedBuilderAnswers((prev) => ({ ...prev, [key]: value }));
-        }}
-        onSubmit={() => void submitAdvancedBuilder()}
-      />
 
     </>
   );

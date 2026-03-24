@@ -76,7 +76,7 @@
         "text": "Create a cleaning schedule and plan"
       }
     },
-    "createDocument": "Create Document",
+    "downloadTemplates": "Download templates",
     "docCategories": {
       "corePlans": "Core Plans",
       "procedures": "SOPs & Procedures",
