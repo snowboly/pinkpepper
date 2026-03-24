@@ -1,7 +1,6 @@
 import { createClient } from "@/utils/supabase/server";
 import { TIER_CAPABILITIES, type SubscriptionTier } from "@/lib/tier";
 import { resolveUserAccess } from "@/lib/access";
-import { countUsageSince, utcDayStartIso } from "@/lib/policy";
 
 type ExportContext = {
   supabase: Awaited<ReturnType<typeof createClient>>;
@@ -108,28 +107,4 @@ export async function recordExportUsage(input: {
     event_count: 1,
     metadata: { conversation_id: conversationId, format },
   });
-}
-
-export async function enforceDailyDocumentLimit(input: {
-  supabase: Awaited<ReturnType<typeof createClient>>;
-  userId: string;
-  tier: SubscriptionTier;
-  isAdmin: boolean;
-}) {
-  const { supabase, userId, tier, isAdmin } = input;
-  if (isAdmin) return { used: 0, limit: null as number | null };
-
-  const caps = TIER_CAPABILITIES[tier];
-  const used = await countUsageSince({
-    supabase,
-    userId,
-    eventType: "document_generation",
-    sinceIso: utcDayStartIso(),
-  });
-
-  if (used >= caps.dailyDocumentGenerations) {
-    throw new Error("DOC_DAILY_LIMIT_REACHED");
-  }
-
-  return { used, limit: caps.dailyDocumentGenerations };
 }

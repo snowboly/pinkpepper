@@ -2,8 +2,6 @@ export type SubscriptionTier = "free" | "plus" | "pro";
 
 export type TierCapabilities = {
   dailyMessages: number;
-  dailyDocumentGenerations: number;
-  advancedHaccpGeneration: boolean;
   dailyImageUploads: number;
   dailyTranscriptions: number;
   maxSavedConversations: number | null;
@@ -21,8 +19,6 @@ export type TierCapabilities = {
 export const TIER_CAPABILITIES: Record<SubscriptionTier, TierCapabilities> = {
   free: {
     dailyMessages: 15,
-    dailyDocumentGenerations: 0,
-    advancedHaccpGeneration: false,
     dailyImageUploads: 3,
     dailyTranscriptions: 3,
     maxSavedConversations: 10,
@@ -37,8 +33,6 @@ export const TIER_CAPABILITIES: Record<SubscriptionTier, TierCapabilities> = {
   },
   plus: {
     dailyMessages: 100,
-    dailyDocumentGenerations: 0,
-    advancedHaccpGeneration: false,
     dailyImageUploads: 10,
     dailyTranscriptions: 25,
     maxSavedConversations: null,
@@ -53,8 +47,6 @@ export const TIER_CAPABILITIES: Record<SubscriptionTier, TierCapabilities> = {
   },
   pro: {
     dailyMessages: 1000,
-    dailyDocumentGenerations: 20,
-    advancedHaccpGeneration: true,
     dailyImageUploads: 50,
     dailyTranscriptions: 200,
     maxSavedConversations: null,

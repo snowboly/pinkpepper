@@ -21,11 +21,9 @@ type SettingsFormProps = {
   chatLanguage: string;
   usage: number;
   usageLimit: number | null;
-  docGenUsage: number;
-  docGenLimit: number | null;
 };
 
-export default function SettingsForm({ email, tier, isAdmin, chatLanguage: initialChatLanguage, usage, usageLimit, docGenUsage, docGenLimit }: SettingsFormProps) {
+export default function SettingsForm({ email, tier, isAdmin, chatLanguage: initialChatLanguage, usage, usageLimit }: SettingsFormProps) {
   const t = useTranslations("settings");
   const currentLocale = useLocale() as Locale;
   const [chatLanguage, setChatLanguage] = useState(initialChatLanguage);
@@ -148,14 +146,6 @@ export default function SettingsForm({ email, tier, isAdmin, chatLanguage: initi
               limit={usageLimit}
               color="#E11D48"
             />
-            {(docGenLimit ?? 0) > 0 && (
-              <UsageBar
-                label="Document generations today"
-                used={docGenUsage}
-                limit={docGenLimit}
-                color="#7C3AED"
-              />
-            )}
           </div>
         </div>
       )}

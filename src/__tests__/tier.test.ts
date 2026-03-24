@@ -15,8 +15,6 @@ describe("TIER_CAPABILITIES – free tier", () => {
   const free = TIER_CAPABILITIES.free;
 
   it("dailyMessages is 15", () => expect(free.dailyMessages).toBe(15));
-  it("dailyDocumentGenerations is 0", () => expect(free.dailyDocumentGenerations).toBe(0));
-  it("advancedHaccpGeneration is false", () => expect(free.advancedHaccpGeneration).toBe(false));
   it("dailyImageUploads is 3", () => expect(free.dailyImageUploads).toBe(3));
   it("dailyTranscriptions is 3", () => expect(free.dailyTranscriptions).toBe(3));
   it("maxSavedConversations is 10", () => expect(free.maxSavedConversations).toBe(10));
@@ -34,8 +32,6 @@ describe("TIER_CAPABILITIES – plus tier", () => {
   const plus = TIER_CAPABILITIES.plus;
 
   it("dailyMessages is 100", () => expect(plus.dailyMessages).toBe(100));
-  it("dailyDocumentGenerations is 0", () => expect(plus.dailyDocumentGenerations).toBe(0));
-  it("advancedHaccpGeneration is false", () => expect(plus.advancedHaccpGeneration).toBe(false));
   it("dailyImageUploads is 10", () => expect(plus.dailyImageUploads).toBe(10));
   it("dailyTranscriptions is 25", () => expect(plus.dailyTranscriptions).toBe(25));
   it("maxSavedConversations is unlimited (null)", () => expect(plus.maxSavedConversations).toBeNull());
@@ -53,8 +49,6 @@ describe("TIER_CAPABILITIES – pro tier", () => {
   const pro = TIER_CAPABILITIES.pro;
 
   it("dailyMessages is 1000", () => expect(pro.dailyMessages).toBe(1000));
-  it("dailyDocumentGenerations is 20", () => expect(pro.dailyDocumentGenerations).toBe(20));
-  it("advancedHaccpGeneration is true", () => expect(pro.advancedHaccpGeneration).toBe(true));
   it("dailyImageUploads is 50", () => expect(pro.dailyImageUploads).toBe(50));
   it("dailyTranscriptions is 200", () => expect(pro.dailyTranscriptions).toBe(200));
   it("maxSavedConversations is unlimited (null)", () => expect(pro.maxSavedConversations).toBeNull());
@@ -109,22 +103,10 @@ describe("cross-tier invariants", () => {
     expect(TIER_CAPABILITIES.pro.allowPdfExport).toBe(true);
   });
 
-  it("document generation is exclusive to pro", () => {
-    expect(TIER_CAPABILITIES.free.dailyDocumentGenerations).toBe(0);
-    expect(TIER_CAPABILITIES.plus.dailyDocumentGenerations).toBe(0);
-    expect(TIER_CAPABILITIES.pro.dailyDocumentGenerations).toBeGreaterThan(0);
-  });
-
   it("DOCX export is exclusive to pro", () => {
     expect(TIER_CAPABILITIES.free.allowWordExport).toBe(false);
     expect(TIER_CAPABILITIES.plus.allowWordExport).toBe(false);
     expect(TIER_CAPABILITIES.pro.allowWordExport).toBe(true);
-  });
-
-  it("advanced HACCP generation is exclusive to pro", () => {
-    expect(TIER_CAPABILITIES.free.advancedHaccpGeneration).toBe(false);
-    expect(TIER_CAPABILITIES.plus.advancedHaccpGeneration).toBe(false);
-    expect(TIER_CAPABILITIES.pro.advancedHaccpGeneration).toBe(true);
   });
 
   it("full document review is exclusive to pro", () => {
@@ -152,8 +134,6 @@ describe("TIER_CAPABILITIES structure", () => {
   it("every tier has all required capability keys", () => {
     const requiredKeys: (keyof TierCapabilities)[] = [
       "dailyMessages",
-      "dailyDocumentGenerations",
-      "advancedHaccpGeneration",
       "dailyImageUploads",
       "dailyTranscriptions",
       "maxSavedConversations",
@@ -178,11 +158,15 @@ describe("TIER_CAPABILITIES structure", () => {
     for (const tier of ["free", "plus", "pro"] as SubscriptionTier[]) {
       const caps = TIER_CAPABILITIES[tier];
       expect(caps.dailyMessages).toBeGreaterThanOrEqual(0);
-      expect(caps.dailyDocumentGenerations).toBeGreaterThanOrEqual(0);
       expect(caps.dailyImageUploads).toBeGreaterThanOrEqual(0);
       expect(caps.dailyTranscriptions).toBeGreaterThanOrEqual(0);
       expect(caps.maxResponseTokens).toBeGreaterThan(0);
     }
+  });
+
+  it("does not expose document-generation capabilities anymore", () => {
+    expect(TIER_CAPABILITIES.free).not.toHaveProperty("dailyDocumentGenerations");
+    expect(TIER_CAPABILITIES.pro).not.toHaveProperty("advancedHaccpGeneration");
   });
 });
 
