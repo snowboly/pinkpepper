@@ -8,14 +8,14 @@ type KnowledgeChunkInsertRow = {
 };
 
 type MinimalSupabaseClient = {
-  from: (table: string) => {
-    delete?: () => {
-      eq: (column: string, value: string) => {
-        eq: (column: string, value: string) => Promise<{ error: { message: string } | null }>;
-      };
-    };
-    insert?: (rows: KnowledgeChunkInsertRow[]) => Promise<{ error: { message: string } | null }>;
-  };
+  rpc?: (
+    fn: string,
+    args: {
+      p_source_type: string;
+      p_source_name: string;
+      p_rows: KnowledgeChunkInsertRow[];
+    }
+  ) => Promise<{ error: { message: string } | null }>;
 };
 
 export async function replaceKnowledgeChunksForSource(
@@ -31,30 +31,17 @@ export async function replaceKnowledgeChunksForSource(
     return;
   }
 
-  const deleteBuilder = supabase.from("knowledge_chunks").delete?.();
-  if (!deleteBuilder) {
-    throw new Error("Supabase client does not support deleting knowledge chunks");
+  if (!supabase.rpc) {
+    throw new Error("Supabase client does not support replacing knowledge chunks");
   }
 
-  const { error: deleteError } = await deleteBuilder
-    .eq("source_type", params.sourceType)
-    .eq("source_name", params.sourceName);
+  const { error } = await supabase.rpc("replace_knowledge_chunks_for_source", {
+    p_source_type: params.sourceType,
+    p_source_name: params.sourceName,
+    p_rows: params.rows,
+  });
 
-  if (deleteError) {
-    throw new Error(`Database delete failed: ${deleteError.message}`);
-  }
-
-  const tableBuilder = supabase.from("knowledge_chunks");
-  if (!tableBuilder.insert) {
-    throw new Error("Supabase client does not support inserting knowledge chunks");
-  }
-
-  const batchSize = params.batchSize ?? params.rows.length;
-  for (let i = 0; i < params.rows.length; i += batchSize) {
-    const batch = params.rows.slice(i, i + batchSize);
-    const { error: insertError } = await tableBuilder.insert(batch);
-    if (insertError) {
-      throw new Error(`Database insert failed: ${insertError.message}`);
-    }
+  if (error) {
+    throw new Error(`Database replace failed: ${error.message}`);
   }
 }
