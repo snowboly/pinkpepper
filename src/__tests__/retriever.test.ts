@@ -62,4 +62,26 @@ describe("retrieval ranking", () => {
       },
     });
   });
+
+  it("does not apply an exact jurisdiction filter for mixed EU and UK queries", () => {
+    expect(
+      buildKnowledgeSearchRequest({
+        threshold: 0.55,
+        topK: 8,
+        jurisdiction: "mixed",
+        sourceClasses: ["primary_law", "official_guidance"],
+      })
+    ).toEqual({
+      rpcName: "search_knowledge_chunks_authority_aware",
+      rpcArgs: {
+        query_embedding: [],
+        match_threshold: 0.55,
+        match_count: 8,
+        filter_source_type: null,
+        filter_source_name: null,
+        filter_jurisdiction: null,
+        filter_source_classes: ["primary_law", "official_guidance"],
+      },
+    });
+  });
 });

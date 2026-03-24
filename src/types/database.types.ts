@@ -440,6 +440,14 @@ export type Database = {
           source_type: string
         }[]
       }
+      replace_knowledge_chunks_for_source: {
+        Args: {
+          p_rows: Json
+          p_source_name: string
+          p_source_type: string
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       review_priority: "standard" | "priority"

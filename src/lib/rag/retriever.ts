@@ -70,6 +70,14 @@ type SearchKnowledgeRpcArgs = {
   filter_source_classes?: SourceClass[] | null;
 };
 
+function normalizeJurisdictionFilter(jurisdiction?: Jurisdiction): Exclude<Jurisdiction, "mixed" | "unknown"> | null {
+  if (!jurisdiction || jurisdiction === "unknown" || jurisdiction === "mixed") {
+    return null;
+  }
+
+  return jurisdiction;
+}
+
 export function buildKnowledgeSearchRequest(
   options: RetrievalOptions & { queryEmbedding?: number[] }
 ): { rpcName: SearchKnowledgeRpcName; rpcArgs: SearchKnowledgeRpcArgs } {
@@ -77,9 +85,10 @@ export function buildKnowledgeSearchRequest(
     ...DEFAULT_OPTIONS,
     ...options,
   };
+  const jurisdictionFilter = normalizeJurisdictionFilter(jurisdiction);
 
   const useAuthorityAwareSearch = Boolean(
-    (jurisdiction && jurisdiction !== "unknown") || (sourceClasses && sourceClasses.length > 0)
+    jurisdictionFilter || (sourceClasses && sourceClasses.length > 0)
   );
 
   if (useAuthorityAwareSearch) {
@@ -91,7 +100,7 @@ export function buildKnowledgeSearchRequest(
         match_count: topK,
         filter_source_type: sourceType ?? null,
         filter_source_name: sourceName ?? null,
-        filter_jurisdiction: jurisdiction ?? null,
+        filter_jurisdiction: jurisdictionFilter,
         filter_source_classes: sourceClasses ?? null,
       },
     };
