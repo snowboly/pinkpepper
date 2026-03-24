@@ -136,37 +136,32 @@ describe("chat workspace chrome", () => {
     expect(messages).not.toContain("humanReviewHighlight");
   });
 
-  it("uses stable document keys for the builder and hides unsupported document starters", () => {
-    const workspace = readWorkspaceFile("src/components/dashboard/ChatWorkspace.tsx");
+  it("uses a templates-only starter menu in the empty workspace", () => {
     const messages = readWorkspaceFile("src/components/dashboard/ChatMessages.tsx");
 
-    expect(workspace).toContain("buildDocumentGenerationPayload");
-    expect(workspace).toContain("getLightweightDocWizards");
-    expect(workspace).toContain("getInitialLightweightDocWizardAnswers");
-    expect(workspace).not.toContain("DOC_WIZARDS[suggestion.label]");
-    expect(workspace).not.toContain("const DOC_GENERATION_TYPES");
-    expect(workspace).toContain("showDocumentStarters={shouldShowDocumentStarters(workspaceMode)}");
-
-    expect(messages).toContain("key?: string;");
-    expect(messages).toContain("showDocumentStarters && (");
-    expect(messages).not.toContain('{ key: "supplierApproval" }');
-    expect(messages).not.toContain('{ key: "allergenPolicy" }');
-    expect(messages).not.toContain('{ key: "personalHygienePolicy" }');
-    expect(messages).toContain('{ key: "productDataSheet" }');
-    expect(messages).toContain('{ key: "cleaningSchedule" }');
-    expect(messages).toContain('{ key: "cleaningSop" }');
-    expect(messages).toContain('{ key: "staffTrainingRecord" }');
+    expect(messages).toContain('category: "template_download"');
+    expect(messages).not.toContain('category: "document"');
+    expect(messages).not.toContain('titleKey: "docCategories.quickDocuments"');
+    expect(messages).not.toContain('titleKey: "docCategories.advancedDocuments"');
+    expect(messages).toContain('t("downloadTemplates")');
   });
 
-  it("does not append cancel as a fake user answer in the lightweight wizard", () => {
+  it("removes document builder state and route calls from the workspace", () => {
     const workspace = readWorkspaceFile("src/components/dashboard/ChatWorkspace.tsx");
 
-    const cancelIndex = workspace.indexOf('if (["cancel", "/cancel", "stop"].includes(answer.toLowerCase()))');
-    const appendIndex = workspace.indexOf('setMessages((prev) => [...prev, { role: "user", content: answer }]);');
+    expect(workspace).not.toContain("buildDocumentGenerationPayload");
+    expect(workspace).not.toContain("getLightweightDocWizards");
+    expect(workspace).not.toContain("AdvancedDocumentBuilderModal");
+    expect(workspace).not.toContain('fetch("/api/documents/generate"');
+    expect(workspace).toContain('suggestion.category === "template_download"');
+  });
 
-    expect(cancelIndex).toBeGreaterThan(-1);
-    expect(appendIndex).toBeGreaterThan(-1);
-    expect(cancelIndex).toBeLessThan(appendIndex);
+  it("removes the lightweight wizard flow entirely", () => {
+    const workspace = readWorkspaceFile("src/components/dashboard/ChatWorkspace.tsx");
+
+    expect(workspace).not.toContain('["cancel", "/cancel", "stop"]');
+    expect(workspace).not.toContain("wizardCancelled");
+    expect(workspace).not.toContain("wizardGenerating");
   });
 
   it("keeps workspace shell strings localized and removes stale review prop wiring", () => {
@@ -192,23 +187,12 @@ describe("chat workspace chrome", () => {
     expect(reviewModal).not.toContain("reviewTurnaround?: string;");
   });
 
-  it("keeps one create document menu but separates quick and advanced builders", () => {
-    const messages = readWorkspaceFile("src/components/dashboard/ChatMessages.tsx");
-
-    expect(messages).toContain('titleKey: "docCategories.quickDocuments"');
-    expect(messages).toContain('titleKey: "docCategories.advancedDocuments"');
-    expect(messages).toContain('hintKey: "docCategories.structuredBuilder"');
-    expect(messages).toContain('{ key: "cleaningSchedule" }');
-    expect(messages).toContain('{ key: "productDataSheet" }');
-    expect(messages).toContain('{ key: "staffTrainingRecord" }');
-    expect(messages).toContain('{ key: "cleaningSop" }');
-  });
-
-  it("routes advanced document starters into the modal path instead of the chat wizard", () => {
+  it("does not keep builder implementation references after templates-only cleanup", () => {
     const workspace = readWorkspaceFile("src/components/dashboard/ChatWorkspace.tsx");
 
-    expect(workspace).toContain("isAdvancedDocumentBuilderKey");
-    expect(workspace).toContain("AdvancedDocumentBuilderModal");
-    expect(workspace).toContain("setActiveAdvancedBuilder");
+    expect(workspace).not.toContain("document-builders/");
+    expect(workspace).not.toContain("document_generation_requested");
+    expect(workspace).not.toContain("setActiveDocWizard");
+    expect(workspace).not.toContain("setActiveAdvancedBuilder");
   });
 });

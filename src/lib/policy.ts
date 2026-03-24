@@ -15,7 +15,6 @@ type SupabaseLike = {
 
 export type UsageEventType =
   | "chat_prompt"
-  | "document_generation"
   | "document_export"
   | "image_upload"
   | "human_review_request"

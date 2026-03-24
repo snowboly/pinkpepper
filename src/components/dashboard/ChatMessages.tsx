@@ -9,7 +9,7 @@ import MessageItem from "./MessageItem";
 import { TEMPLATES } from "@/lib/templates";
 
 export type StarterSuggestion = {
-  category: "document" | "audit" | "qa" | "template_download";
+  category: "audit" | "qa" | "template_download";
   key?: string;
   label: string;
   text: string;
@@ -28,36 +28,6 @@ type ChatMessagesProps = {
   showDocumentStarters?: boolean;
   tier?: SubscriptionTier;
 };
-
-type DocCategory = {
-  titleKey: string;
-  hintKey?: string;
-  items: { key: string }[];
-};
-
-const DOC_CATEGORIES: DocCategory[] = [
-  {
-    titleKey: "docCategories.quickDocuments",
-    items: [
-      { key: "haccpPlan" },
-      { key: "foodSafetyPolicy" },
-      { key: "traceabilityProcedure" },
-      { key: "pestControlProcedure" },
-      { key: "wasteManagementProcedure" },
-      { key: "tempLog" },
-    ],
-  },
-  {
-    titleKey: "docCategories.advancedDocuments",
-    hintKey: "docCategories.structuredBuilder",
-    items: [
-      { key: "cleaningSchedule" },
-      { key: "productDataSheet" },
-      { key: "staffTrainingRecord" },
-      { key: "cleaningSop" },
-    ],
-  },
-];
 
 export default function ChatMessages({
   messages,
@@ -111,22 +81,6 @@ export default function ChatMessages({
     return () => document.removeEventListener("mousedown", handleClick);
   }, [docMenuOpen]);
 
-  function handleDocSelect(key: string) {
-    setDocMenuOpen(false);
-    const suggestion: StarterSuggestion = {
-      category: "document",
-      key,
-      label: t(`suggestions.${key}.label`),
-      text: t(`suggestions.${key}.text`),
-    };
-    if (onQuickSuggestion) {
-      onQuickSuggestion(suggestion);
-    } else {
-      onSetPrompt(suggestion.text);
-      onFocusInput();
-    }
-  }
-
   return (
     <div ref={scrollContainerRef} onScroll={syncScrollState} className="relative flex-1 overflow-y-auto">
       {messages.length === 0 && !loadingMessages && (
@@ -156,7 +110,7 @@ export default function ChatMessages({
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#7C3AED]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
-                {t("createDocument")}
+                {t("downloadTemplates")}
                 <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 text-[#94A3B8] transition-transform ${docMenuOpen ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                 </svg>
@@ -164,37 +118,6 @@ export default function ChatMessages({
 
               {docMenuOpen && (
                 <div className="absolute left-1/2 -translate-x-1/2 mt-2 w-80 max-h-96 overflow-y-auto rounded-xl border border-[#E2E8F0] bg-white shadow-lg z-20">
-                  {DOC_CATEGORIES.map((cat) => (
-                    <div key={cat.titleKey}>
-                      <div className="px-4 pt-3 pb-1">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-[#94A3B8]">
-                          {t(cat.titleKey)}
-                        </span>
-                        {cat.hintKey ? (
-                          <span className="ml-2 text-[10px] font-medium text-[#64748B]">
-                            {t(cat.hintKey)}
-                          </span>
-                        ) : null}
-                      </div>
-                      {cat.items.map((item) => (
-                        <button
-                          key={item.key}
-                          type="button"
-                          onClick={() => handleDocSelect(item.key)}
-                          className="w-full px-4 py-2 text-left hover:bg-[#F8F9FB] transition-colors"
-                        >
-                          <span className="block text-sm font-medium text-[#0F172A]">
-                            {t(`suggestions.${item.key}.label`)}
-                          </span>
-                          <span className="block text-xs text-[#64748B]">
-                            {t(`suggestions.${item.key}.text`)}
-                          </span>
-                        </button>
-                      ))}
-                    </div>
-                  ))}
-
-                  {/* Downloadable DOCX templates, grouped by category */}
                   {(() => {
                     const grouped = TEMPLATES.reduce<Record<string, typeof TEMPLATES>>((acc, tpl) => {
                       (acc[tpl.category] ??= []).push(tpl);

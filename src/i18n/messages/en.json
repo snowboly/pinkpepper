@@ -1,7 +1,7 @@
 {
   "chat": {
     "title": "Food Safety Compliance Assistant",
-    "description": "Ask about EU & UK food safety law, generate HACCP plans, SOPs, and monitoring logs, or audit your current procedures.",
+    "description": "Ask about EU & UK food safety law, download practical templates, or audit your current procedures.",
     "descriptionWithImages": "You can also attach a photo of your kitchen or a food label for instant compliance analysis.",
     "descriptionUpgradeImages": "Upgrade to Plus or Pro to attach photos of kitchens or labels for instant analysis.",
     "loadingConversation": "Loading conversation...",
@@ -76,7 +76,7 @@
         "text": "Create a cleaning schedule and plan"
       }
     },
-    "createDocument": "Create Document",
+    "downloadTemplates": "Download templates",
     "docCategories": {
       "corePlans": "Core Plans",
       "procedures": "SOPs & Procedures",
@@ -139,10 +139,6 @@
       "comparePlans": "See plan differences",
       "locked": "Locked",
       "proOnly": "Pro only",
-      "generateDocument": {
-        "label": "Generate document",
-        "body": "Create HACCP plans, SOPs, temperature logs, and supplier approval packs faster."
-      },
       "virtualAudit": {
         "label": "Run virtual audit",
         "body": "Simulate an inspection, capture findings, and produce a CAPA-ready report."
@@ -307,10 +303,6 @@
         "heading": "Unlock photo analysis",
         "body": "Upload photos of kitchens, labels, or food products and get instant food safety feedback."
       },
-      "document_generation": {
-        "heading": "Unlock document generation",
-        "body": "Create audit-ready HACCP plans, SOPs, logs, and supplier approval documents with Pro."
-      },
       "transcription_limit": {
         "heading": "Unlock voice transcription",
         "body": "Record questions hands-free and turn speech into chat instantly with Plus or Pro."
@@ -344,7 +336,7 @@
         "name": "Pro",
         "price": "€99/mo",
         "highlights": [
-          "All document generation",
+          "DOCX template downloads",
           "Virtual Audit workflows",
           "PDF + DOCX export",
           "3h food safety consultancy/month",

@@ -36,14 +36,10 @@ export default async function SettingsPage() {
 
   const caps = TIER_CAPABILITIES[tier as keyof typeof TIER_CAPABILITIES] ?? TIER_CAPABILITIES.free;
   let usageCount = 0;
-  let docGenCount = 0;
   if (!isAdmin) {
     const dayStart = utcDayStartIso();
     try {
-      [usageCount, docGenCount] = await Promise.all([
-        countUsageSince({ supabase, userId: user.id, eventType: "chat_prompt", sinceIso: dayStart }),
-        countUsageSince({ supabase, userId: user.id, eventType: "document_generation", sinceIso: dayStart }),
-      ]);
+      usageCount = await countUsageSince({ supabase, userId: user.id, eventType: "chat_prompt", sinceIso: dayStart });
     } catch {
       // leave counts at 0
     }
@@ -73,8 +69,6 @@ export default async function SettingsPage() {
           chatLanguage={chatLanguage}
           usage={usageCount}
           usageLimit={isAdmin ? null : caps.dailyMessages}
-          docGenUsage={docGenCount}
-          docGenLimit={isAdmin ? null : caps.dailyDocumentGenerations}
         />
       </div>
     </div>
