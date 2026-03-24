@@ -98,6 +98,11 @@ describe("buildRAGSystemPrompt", () => {
     expect(prompt).toContain("DOCUMENT GENERATION");
     expect(prompt).toContain("HACCP plans");
   });
+
+  it("instructs the model not to fill legal gaps from memory", () => {
+    const prompt = buildRAGSystemPrompt([], "qa", "English", "2026-03-23");
+    expect(prompt).toContain("do not answer legal questions from model memory when retrieval is weak");
+  });
 });
 
 describe("buildRAGPrompt", () => {
