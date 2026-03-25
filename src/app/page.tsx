@@ -74,7 +74,7 @@ export default function HomePage() {
             </h1>
 
             <p className="mx-auto mb-10 max-w-3xl text-base leading-relaxed text-white/80 md:text-lg lg:text-xl">
-              An AI food safety specialist and human consultancy in one platform.
+              AI trained in food safety, plus specialist consultancy — all in one place.
             </p>
 
             <div className="mb-10 flex flex-wrap items-center justify-center gap-3 text-sm font-medium text-white/80">
