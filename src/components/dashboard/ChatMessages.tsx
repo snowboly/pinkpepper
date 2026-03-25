@@ -21,8 +21,6 @@ type ChatMessagesProps = {
   loadingMessages: boolean;
   conversationId: string | null;
   canUploadImages: boolean;
-  onSetPrompt: (s: string) => void;
-  onFocusInput: () => void;
   onQuickSuggestion?: (s: StarterSuggestion) => void;
   currentPersona?: PersonaInfo | null;
   showDocumentStarters?: boolean;
@@ -34,8 +32,6 @@ export default function ChatMessages({
   loading,
   loadingMessages,
   canUploadImages,
-  onSetPrompt,
-  onFocusInput,
   onQuickSuggestion,
   currentPersona,
   showDocumentStarters = true,

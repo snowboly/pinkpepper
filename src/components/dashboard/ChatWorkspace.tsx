@@ -11,7 +11,7 @@ import type { VerificationState } from "@/lib/rag/verification";
 import { getPersonaForConversation } from "@/lib/personas";
 import type { Message, Conversation, Project, ChatWorkspaceProps, PersonaInfo } from "./types";
 import ChatSidebar from "./ChatSidebar";
-import ChatMessages, { type StarterSuggestion } from "./ChatMessages";
+import ChatMessages from "./ChatMessages";
 import ChatInput from "./ChatInput";
 import OnboardingModal from "./OnboardingModal";
 import UpgradeModal from "./UpgradeModal";

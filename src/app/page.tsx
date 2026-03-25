@@ -13,24 +13,6 @@ import { DemoTabSwitcher } from "@/components/homepage/DemoTabSwitcher";
 import { HeroChatForm } from "@/components/homepage/HeroChatForm";
 import { homepageFaqs } from "@/data/faqs";
 
-const differentiators = [
-  {
-    title: "Domain-trained for food safety",
-    description:
-      "PinkPepper is tuned for HACCP, allergen controls, and audit evidence workflows instead of broad, general chat use.",
-  },
-  {
-    title: "Built around UK and EU expectations",
-    description:
-      "Outputs are structured for EC 852/2004, UK FSA, and operational checks inspectors usually request.",
-  },
-  {
-    title: "AI speed with food safety consultancy",
-    description:
-      "Draft practical plans, SOPs, and logs quickly, then escalate critical work to qualified food safety consultants when a higher-risk decision needs specialist judgement.",
-  },
-];
-
 
 export default function HomePage() {
   const faqSchema = {
