@@ -66,7 +66,7 @@ export default function HomePage() {
               AI food safety compliance software for EU and UK businesses
             </div>
 
-            <h1 className="pp-display mx-auto mb-6 max-w-4xl text-5xl leading-[1.04] tracking-[-0.02em] text-white md:text-6xl lg:text-7xl">
+            <h1 className="pp-display mx-auto mb-6 max-w-4xl text-3xl leading-[1.08] tracking-[-0.02em] text-white sm:text-4xl md:text-5xl lg:text-7xl">
               Food safety compliance, faster and at a fraction of the cost.{" "}
               <span className="bg-gradient-to-r from-[#FDA4AF] via-[#FB7185] to-[#FDA4AF] bg-clip-text text-transparent">
                 AI-powered, with expert consultants when you need them.
