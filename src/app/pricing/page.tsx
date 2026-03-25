@@ -148,7 +148,7 @@ export default async function PricingPage() {
         <div className="pp-container">
           <div className="mx-auto grid max-w-5xl gap-6 lg:grid-cols-3">
             <div className="flex flex-col rounded-3xl border border-[#E2E8F0] bg-[#FCFDFE] p-8">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#94A3B8]">Free</p>
+              <h2 className="text-xs font-semibold uppercase tracking-[0.18em] text-[#94A3B8]">Free</h2>
               <p className="mt-4 text-sm leading-relaxed text-[#64748B]">
                 Best for testing fit on live questions and everyday checks before you commit.
               </p>
@@ -181,7 +181,7 @@ export default async function PricingPage() {
             </div>
 
             <div className="flex flex-col rounded-3xl border border-[#E2E8F0] bg-white p-8">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#94A3B8]">Plus</p>
+              <h2 className="text-xs font-semibold uppercase tracking-[0.18em] text-[#94A3B8]">Plus</h2>
               <p className="mt-4 text-sm leading-relaxed text-[#64748B]">
                 For operators who need heavier day-to-day use, document uploads, and downloadable templates.
               </p>
@@ -221,7 +221,7 @@ export default async function PricingPage() {
             </div>
 
             <div className="flex flex-col rounded-3xl border border-[#F9A8D4] bg-[#FFF8FB] p-8">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#BE123C]">Pro</p>
+              <h2 className="text-xs font-semibold uppercase tracking-[0.18em] text-[#BE123C]">Pro</h2>
               <p className="mt-4 text-sm leading-relaxed text-[#64748B]">
                 For teams preparing for inspections, audits, and higher-stakes work that needs direct food safety consultancy.
               </p>
