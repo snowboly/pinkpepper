@@ -32,10 +32,7 @@ describe("SEO surface", () => {
 
     expect(entries).toContain("https://pinkpepper.io/features");
     expect(entries).toContain("https://pinkpepper.io/use-cases");
-    expect(entries).toContain("https://pinkpepper.io/compare");
     expect(entries).toContain("https://pinkpepper.io/resources");
-    expect(entries).toContain("https://pinkpepper.io/compare/pinkpepper-vs-consultant");
-    expect(entries).toContain("https://pinkpepper.io/compare/haccp-software-alternatives");
     expect(entries).not.toContain("https://pinkpepper.io/login");
     expect(entries).not.toContain("https://pinkpepper.io/dashboard");
     expect(disallowLists).toEqual(
@@ -60,7 +57,6 @@ describe("public SEO copy and linking", () => {
     const contact = readPage("src/app/contact/page.tsx");
     const features = readPage("src/app/features/page.tsx");
     const useCases = readPage("src/app/use-cases/page.tsx");
-    const compare = readPage("src/app/compare/page.tsx");
     const resources = readPage("src/app/resources/page.tsx");
 
     expect(pricing).toContain("/features/");
@@ -69,19 +65,16 @@ describe("public SEO copy and linking", () => {
     expect(contact).toContain("/features/");
     expect(features).toContain("/pricing");
     expect(useCases).toContain("/features/");
-    expect(compare).toContain("/pricing");
     expect(resources).toContain("/features/");
   });
 
   it("keeps hub-page copy user-facing instead of talking about SEO strategy", () => {
     const features = readPage("src/app/features/page.tsx");
     const useCases = readPage("src/app/use-cases/page.tsx");
-    const compare = readPage("src/app/compare/page.tsx");
     const resources = readPage("src/app/resources/page.tsx");
 
     expect(features).not.toContain("revenue-driving search intent");
     expect(useCases).not.toContain("prospects can see their own workflow");
-    expect(compare).not.toContain("buyers already evaluating options");
     expect(resources).not.toContain("long-tail questions and template searches");
   });
 
@@ -101,26 +94,6 @@ describe("public SEO copy and linking", () => {
     }
   });
 
-  it("keeps the comparison hub linked to the current comparison leaf pages only", () => {
-    const compare = readPage("src/app/compare/page.tsx");
-    const about = readPage("src/app/about/page.tsx");
-    const auditChecklist = readPage("src/app/resources/food-safety-audit-checklist/page.tsx");
-
-    expect(compare).toContain("/compare/pinkpepper-vs-consultant");
-    expect(compare).toContain("/compare/haccp-software-alternatives");
-    expect(about).not.toContain("/compare/pinkpepper-vs-consultant");
-    expect(auditChecklist).not.toContain("/compare/pinkpepper-vs-consultant");
-  });
-
-  it("keeps comparison leaf copy user-facing instead of SEO-internal", () => {
-    const consultant = readPage("src/app/compare/pinkpepper-vs-consultant/page.tsx");
-    const alternatives = readPage("src/app/compare/haccp-software-alternatives/page.tsx");
-
-    expect(consultant).not.toContain("search intent");
-    expect(alternatives).not.toContain("search intent");
-    expect(consultant).toContain("software replaces specialist expertise");
-    expect(alternatives).toContain("record storage, digital checklists, and form workflows");
-  });
 });
 
 describe("premium quality regressions", () => {

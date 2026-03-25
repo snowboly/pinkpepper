@@ -266,8 +266,6 @@ export function SiteFooter() {
             <li><Link href="/articles" className="pp-shell-link">Articles</Link></li>
             <li><Link href="/faqs" className="pp-shell-link">FAQs</Link></li>
             <li><Link href="/contact" className="pp-shell-link">Contact & Support</Link></li>
-            <li><Link href="/compare/pinkpepper-vs-consultant" className="pp-shell-link">PinkPepper vs Consultant</Link></li>
-            <li><Link href="/compare/haccp-software-alternatives" className="pp-shell-link">HACCP Alternatives</Link></li>
           </ul>
         </div>
         <div>
