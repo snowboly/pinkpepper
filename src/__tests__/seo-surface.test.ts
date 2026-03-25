@@ -144,11 +144,11 @@ describe("premium quality regressions", () => {
   it("makes the Pro tier clearly about AI plus food safety consultancy", () => {
     const pricing = readPage("src/app/pricing/page.tsx");
 
-    expect(pricing).toContain("AI consultant backed by a real specialist");
-    expect(pricing).toContain("qualified food safety consultancy");
+    expect(pricing).toContain("direct food safety consultancy");
     expect(pricing).toContain("3 hours of food safety consultancy each month");
-    expect(pricing).toContain("Full PDF and DOCX export");
-    expect(pricing).toContain("Daily compliance analysis at scale");
-    expect(pricing).toContain("100 AI queries per day");
+    expect(pricing).toContain("DOCX conversation export and Virtual Audit");
+    expect(pricing).not.toContain("Full PDF and DOCX export");
+    expect(pricing).not.toContain("100 AI queries per day");
+    expect(pricing).not.toContain("voice transcriptions");
   });
 });
