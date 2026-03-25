@@ -6,7 +6,6 @@ import {
   ClipboardCheck,
   Download,
   Sparkles,
-  Star,
   Users,
 } from "lucide-react";
 import { DemoTabSwitcher } from "@/components/homepage/DemoTabSwitcher";
@@ -310,9 +309,9 @@ export default function HomePage() {
           </div>
 
           <div className="mx-auto grid max-w-5xl gap-6 lg:grid-cols-3">
-            <div className="flex flex-col rounded-3xl border border-[#E2E8F0] bg-white p-8 transition-all duration-200 hover:shadow-lg hover:shadow-black/[0.04]">
-              <h3 className="text-xl font-bold text-[#0F172A]">Free</h3>
-              <p className="mt-2 text-sm text-[#64748B]">Use PinkPepper on real questions before you commit.</p>
+            <div className="flex flex-col rounded-3xl border border-[#E2E8F0] bg-[#FCFDFE] p-8">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#94A3B8]">Free</p>
+              <p className="mt-4 text-sm leading-relaxed text-[#64748B]">Use PinkPepper on real questions before you commit.</p>
               <div className="mt-6 flex items-baseline gap-1">
                 <span className="text-5xl font-bold tracking-tight text-[#0F172A]"><span className="text-2xl align-super">€</span>0</span>
                 <span className="text-base text-[#94A3B8]">/month</span>
@@ -329,9 +328,9 @@ export default function HomePage() {
               </Link>
             </div>
 
-            <div className="flex flex-col rounded-3xl border-2 border-[#FBCFE8] bg-white p-8 shadow-md shadow-[#FDA4AF]/[0.08] transition-all duration-200 hover:shadow-lg hover:shadow-[#FDA4AF]/[0.12]">
-              <h3 className="text-xl font-bold text-[#0F172A]">Plus</h3>
-              <p className="mt-2 text-sm text-[#64748B]">For teams that need regular day-to-day use, uploads, and template access.</p>
+            <div className="flex flex-col rounded-3xl border border-[#E2E8F0] bg-white p-8">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#94A3B8]">Plus</p>
+              <p className="mt-4 text-sm leading-relaxed text-[#64748B]">For teams that need regular day-to-day use, uploads, and template access.</p>
               <div className="mt-6 flex items-baseline gap-1">
                 <span className="text-5xl font-bold tracking-tight text-[#0F172A]"><span className="text-2xl align-super">€</span>19</span>
                 <span className="text-base text-[#94A3B8]">/month</span>
@@ -348,16 +347,16 @@ export default function HomePage() {
               </Link>
             </div>
 
-            <div className="relative flex flex-col rounded-3xl border-2 border-[#E11D48] bg-white p-8 shadow-lg shadow-[#E11D48]/[0.06]">
-              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-[#E11D48] px-4 py-1 text-xs font-bold uppercase tracking-wide text-white">
-                <Star className="mr-1 inline h-3 w-3" />
-                Most Popular
-              </div>
-              <h3 className="text-xl font-bold text-[#0F172A]">Pro</h3>
-              <p className="mt-2 text-sm text-[#64748B]">For operators preparing for inspections, audits, and higher-risk work that needs direct consultancy support.</p>
+            <div className="flex flex-col rounded-3xl border border-[#F9A8D4] bg-[#FFF8FB] p-8">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#BE123C]">Pro</p>
+              <p className="mt-4 text-sm leading-relaxed text-[#64748B]">For operators preparing for inspections, audits, and higher-risk work that needs direct consultancy support.</p>
               <div className="mt-6 flex items-baseline gap-1">
                 <span className="text-5xl font-bold tracking-tight text-[#0F172A]"><span className="text-2xl align-super">€</span>99</span>
                 <span className="text-base text-[#94A3B8]">/month</span>
+              </div>
+              <div className="mt-5 rounded-2xl border border-[#FBCFE8] bg-white px-4 py-3 text-sm text-[#475569]">
+                <p className="font-semibold text-[#0F172A]">Consultancy included</p>
+                <p className="mt-1">3 hours each month for review, guidance, and higher-risk support.</p>
               </div>
               <div className="my-6 border-t border-[#F1F5F9]" />
               <ul className="flex-1 space-y-3.5 text-sm text-[#475569]">
