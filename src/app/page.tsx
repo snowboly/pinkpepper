@@ -397,7 +397,7 @@ export default function HomePage() {
 
             <div className="mt-10 space-y-4">
               {homepageFaqs.map((faq) => (
-                <details key={faq.question} className="group rounded-2xl border border-[#E2E8F0] bg-white p-6">
+                <details key={faq.id} className="group rounded-2xl border border-[#E2E8F0] bg-white p-6">
                   <summary className="cursor-pointer list-none text-lg font-semibold text-[#0F172A]">
                     {faq.question}
                   </summary>

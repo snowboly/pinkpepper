@@ -28,7 +28,7 @@ export default function FaqsPage() {
         <div className="pp-container max-w-3xl space-y-4">
           {faqs.map((faq) => (
             <details
-              key={faq.question}
+              key={faq.id}
               className="group rounded-2xl border border-[#E2E8F0] bg-white transition-shadow hover:shadow-lg hover:shadow-black/[0.04]"
             >
               <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-6 py-5 text-base font-semibold text-[#0F172A]">
