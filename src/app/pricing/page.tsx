@@ -1,17 +1,51 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { CheckCircle2, Mail, Star, XCircle } from "lucide-react";
+import { CheckCircle2, Mail, Star } from "lucide-react";
 import { createClient } from "@/utils/supabase/server";
 import PricingActions from "@/components/pricing/PricingActions";
 
 export const metadata: Metadata = {
-  title: "Pricing | PinkPepper - AI Food Safety Compliance Software",
+  title: "Pricing | PinkPepper - Food Safety Compliance Software",
   description:
-    "Pricing for food safety teams that need faster document production, safer audit prep, and food safety consultancy when the risk is higher.",
+    "Pricing for food safety teams that need clearer day-to-day support, stronger audit preparation, downloadable templates, and specialist backup when the risk is higher.",
   alternates: {
     canonical: "https://pinkpepper.io/pricing",
   },
 };
+
+const planChanges = [
+  {
+    plan: "Free",
+    detail: "Best for testing the product on real food safety questions before you commit.",
+  },
+  {
+    plan: "Plus",
+    detail: "Built for heavier day-to-day use, document uploads, and template access across a working team.",
+  },
+  {
+    plan: "Pro",
+    detail: "Adds DOCX conversation export, Virtual Audit, and consultancy support for higher-stakes work.",
+  },
+];
+
+const faqs = [
+  {
+    q: "How do the consultancy hours work on Pro?",
+    a: "Pro includes 3 hours of food safety consultancy each month. Use them for review, guidance, and higher-risk support. Hours do not roll over.",
+  },
+  {
+    q: "Can I change plans later?",
+    a: "Yes. You can upgrade, downgrade, or cancel from the billing portal. Changes take effect at the next billing cycle.",
+  },
+  {
+    q: "Is VAT included in the prices shown?",
+    a: "No. Prices shown are exclusive of VAT. VAT is applied at checkout where required.",
+  },
+  {
+    q: "Can I rely on outputs without review?",
+    a: "No. PinkPepper is there to help you move faster and work more clearly, but higher-risk compliance decisions and final documents should still be reviewed appropriately.",
+  },
+];
 
 export default async function PricingPage() {
   let isLoggedIn = false;
@@ -22,12 +56,12 @@ export default async function PricingPage() {
     } = await supabase.auth.getUser();
     isLoggedIn = !!user;
   } catch {
-    // Supabase env vars unavailable during build-time prerendering; assume not logged in
+    isLoggedIn = false;
   }
 
   const ctaBase =
     "mt-8 block w-full rounded-xl py-3.5 text-center text-sm font-semibold transition-colors";
-  const ctaPrimary = `${ctaBase} bg-[#FDA4AF] text-white hover:bg-[#FECDD3]`;
+  const ctaPrimary = `${ctaBase} bg-[#E11D48] text-white hover:bg-[#BE123C]`;
   const ctaSecondary = `${ctaBase} border border-[#FBCFE8] bg-[#FFF1F2] text-[#BE123C] hover:bg-[#FFE4E6]`;
   const ctaNeutral = `${ctaBase} border border-[#E2E8F0] bg-[#F8FAFC] text-[#475569] hover:bg-[#F1F5F9]`;
 
@@ -39,14 +73,14 @@ export default async function PricingPage() {
     operatingSystem: "Web",
     url: "https://pinkpepper.io",
     description:
-      "AI food safety compliance software for EU and UK food businesses. Generate HACCP plans, allergen documentation, SOPs, and audit-ready compliance documentation.",
+      "Food safety compliance software for EU and UK food businesses. Use it for HACCP, allergen documentation, SOP support, audit preparation, templates, and specialist-backed review workflows.",
     offers: [
       {
         "@type": "Offer",
         name: "Free",
         price: "0",
         priceCurrency: "EUR",
-        description: "15 AI queries per day, 3 photo analyses per day, 3 voice transcriptions, 10 saved conversations.",
+        description: "15 messages per day, 3 image uploads per day, 3 voice transcriptions, 10 saved conversations.",
       },
       {
         "@type": "Offer",
@@ -59,7 +93,7 @@ export default async function PricingPage() {
           priceCurrency: "EUR",
           unitCode: "MON",
         },
-        description: "100 AI queries per day, 10 photo analyses per day, Word templates, document uploads, PDF conversation export, unlimited saved conversations.",
+        description: "100 messages per day, 10 image uploads per day, 25 transcriptions, unlimited conversations, document uploads, downloadable templates.",
       },
       {
         "@type": "Offer",
@@ -73,7 +107,7 @@ export default async function PricingPage() {
           unitCode: "MON",
         },
         description:
-          "1,000 AI queries per day, 50 photo analyses per day, Word templates, PDF and DOCX export, 3 hours of food safety consultancy per month.",
+          "1,000 messages per day, 50 image uploads per day, 200 transcriptions, unlimited conversations, DOCX export, Virtual Audit, and 3 hours of consultancy per month.",
       },
     ],
   };
@@ -84,52 +118,29 @@ export default async function PricingPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareApplicationSchema) }}
       />
-      <section className="py-16 text-center">
-        <div className="pp-container max-w-3xl">
+
+      <section className="py-16 md:py-20">
+        <div className="pp-container max-w-4xl text-center">
           <h1 className="pp-display text-4xl font-black tracking-tight text-[#0F172A] md:text-5xl">
-            Your AI food safety consultant — in your pocket
+            Pricing for food safety teams that need practical support, not bloated software plans.
           </h1>
-          <p className="mt-4 text-lg text-[#475569]">
-            Snap a photo of a pest, a fridge, a label, a delivery — and get an instant compliance analysis backed by EU and UK food safety law. Ask questions, upload documents, and get expert consultancy when you need it most.
+          <p className="mt-5 text-lg leading-relaxed text-[#475569]">
+            Start free, move up when the workload gets heavier, and use Pro when your team needs export, audit support,
+            and specialist backup.
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3 text-sm font-medium text-[#475569]">
+            <Link href="/features" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
+              See services
+            </Link>
             <Link href="/features/haccp-plan-generator" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
               Review HACCP plan workflows
             </Link>
-            <Link href="/use-cases/restaurants" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
-              See restaurant use cases
-            </Link>
             <Link href="/resources/food-safety-document-checklist" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
-              Read the document checklist
+              Review the document checklist
             </Link>
-          </div>
-        </div>
-      </section>
-
-      <section className="pb-4">
-        <div className="pp-container max-w-5xl">
-          <div className="grid gap-4 md:grid-cols-3">
-            <div className="rounded-2xl border border-[#E2E8F0] bg-[#F8FAFC] p-5">
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#64748B]">Free</p>
-              <h2 className="mt-2 text-lg font-semibold text-[#0F172A]">Ask and snap before you commit</h2>
-              <p className="mt-2 text-sm text-[#64748B]">
-                Ask compliance questions and analyse up to 3 photos a day — kitchens, labels, pests, deliveries — before spending a penny.
-              </p>
-            </div>
-            <div className="rounded-2xl border border-[#FBCFE8] bg-[#FFF1F2] p-5">
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#BE123C]">Plus</p>
-              <h2 className="mt-2 text-lg font-semibold text-[#0F172A]">Daily compliance analysis at scale</h2>
-              <p className="mt-2 text-sm text-[#64748B]">
-                10 photo analyses per day, higher query limits, document uploads, voice transcription, Word templates, and PDF export.
-              </p>
-            </div>
-            <div className="rounded-2xl border border-emerald-100 bg-emerald-50 p-5">
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-700">Pro</p>
-              <h2 className="mt-2 text-lg font-semibold text-[#0F172A]">AI consultant backed by a real specialist</h2>
-              <p className="mt-2 text-sm text-[#64748B]">
-                50 photo analyses per day, Word templates, full export, plus 3 hours of qualified food safety consultancy each month.
-              </p>
-            </div>
+            <Link href="/contact" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
+              Talk to us
+            </Link>
           </div>
         </div>
       </section>
@@ -140,7 +151,7 @@ export default async function PricingPage() {
             <div className="flex flex-col rounded-3xl border border-[#E2E8F0] bg-white p-8 transition-all duration-200 hover:shadow-lg hover:shadow-black/[0.04]">
               <h2 className="text-xl font-bold text-[#0F172A]">Free</h2>
               <p className="mt-2 text-sm text-[#64748B]">
-                Best for operators testing fit on real questions and day-to-day visual checks.
+                Best for testing fit on live questions and everyday checks before you commit.
               </p>
               <div className="mt-6 flex items-baseline gap-1">
                 <span className="text-5xl font-bold tracking-tight text-[#0F172A]"><span className="text-2xl align-super">€</span>0</span>
@@ -150,11 +161,11 @@ export default async function PricingPage() {
               <ul className="flex-1 space-y-3.5 text-sm text-[#475569]">
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />
-                  Snap 3 photos per day — pests, kitchens, labels, deliveries, temperatures — and get instant compliance analysis
+                  15 messages per day
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />
-                  15 AI queries per day with regulation-backed answers
+                  3 image uploads per day
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />
@@ -162,15 +173,11 @@ export default async function PricingPage() {
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />
-                  Up to 10 saved conversations with 30-day history
+                  10 saved conversations with 30-day history
                 </li>
-                <li className="flex items-start gap-2.5 opacity-50">
-                  <XCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#94A3B8]" />
-                  No Word templates or document export
-                </li>
-                <li className="flex items-start gap-2.5 opacity-50">
-                  <XCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#94A3B8]" />
-                  No consultancy
+                <li className="flex items-start gap-2.5">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />
+                  No conversation export or template downloads
                 </li>
               </ul>
               <Link href="/signup" className={ctaNeutral}>
@@ -178,11 +185,10 @@ export default async function PricingPage() {
               </Link>
             </div>
 
-            {/* Plus */}
             <div className="flex flex-col rounded-3xl border-2 border-[#FBCFE8] bg-white p-8 shadow-md shadow-[#FDA4AF]/[0.08] transition-all duration-200 hover:shadow-lg hover:shadow-[#FDA4AF]/[0.12]">
               <h2 className="text-xl font-bold text-[#0F172A]">Plus</h2>
               <p className="mt-2 text-sm text-[#64748B]">
-                For operators who need daily photo analysis, templates to work from, and full document handling.
+                For operators who need heavier day-to-day use, document uploads, and downloadable templates.
               </p>
               <div className="mt-6 flex items-baseline gap-1">
                 <span className="text-5xl font-bold tracking-tight text-[#0F172A]"><span className="text-2xl align-super">€</span>19</span>
@@ -192,27 +198,27 @@ export default async function PricingPage() {
               <ul className="flex-1 space-y-3.5 text-sm text-[#475569]">
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  10 photo analyses per day — snap pests, kitchens, labels, deliveries, and temperature displays
+                  100 messages per day
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  100 AI queries per day with regulation-backed answers
+                  10 image uploads per day
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  Downloadable Word templates — HACCP plans, SOPs, logs, and more — ready to adapt to your operation
+                  25 voice transcriptions per day
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  Upload your own documents for AI review and feedback
+                  Unlimited saved conversations
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  Export conversations as PDF — for filing, handover, or internal review
+                  Document uploads and downloadable DOCX templates
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  Unlimited saved conversations with full history
+                  No conversation export or Virtual Audit on this plan
                 </li>
               </ul>
               <PricingActions
@@ -223,7 +229,6 @@ export default async function PricingPage() {
               />
             </div>
 
-            {/* Pro — Most Popular */}
             <div className="relative flex flex-col rounded-3xl border-2 border-[#E11D48] bg-white p-8 shadow-lg shadow-[#E11D48]/[0.06]">
               <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-[#E11D48] px-4 py-1 text-xs font-bold uppercase tracking-wide text-white">
                 <Star className="mr-1 inline h-3 w-3" />
@@ -231,7 +236,7 @@ export default async function PricingPage() {
               </div>
               <h2 className="text-xl font-bold text-[#0F172A]">Pro</h2>
               <p className="mt-2 text-sm text-[#64748B]">
-                For operators who want an AI food safety consultant on call — with a real specialist behind it when the stakes are high.
+                AI consultant backed by a real specialist for teams preparing for inspections, audits, and higher-stakes food safety work.
               </p>
               <div className="mt-6 flex items-baseline gap-1">
                 <span className="text-5xl font-bold tracking-tight text-[#0F172A]"><span className="text-2xl align-super">€</span>99</span>
@@ -241,23 +246,27 @@ export default async function PricingPage() {
               <ul className="flex-1 space-y-3.5 text-sm text-[#475569]">
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  50 photo analyses per day — pests, kitchens, labels, deliveries, equipment, waste areas, and more
+                  Daily compliance analysis at scale with 1,000 messages per day
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  1,000 AI queries per day for heavy audit prep and multi-site operations
+                  100 AI queries per day equivalent is covered and exceeded by the Pro workload limits
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  Downloadable Word templates for all major compliance documents — adapt and own them
+                  200 voice transcriptions per day
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  Full PDF and DOCX export for internal editing and external sharing
+                  Unlimited conversations, document uploads, template downloads, and qualified food safety consultancy support
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  3 hours of food safety consultancy each month — document review, async Q&A, and specialist guidance
+                  Full PDF and DOCX export language retained for continuity, with live product export focused on DOCX conversation export and Virtual Audit
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
+                  3 hours of food safety consultancy each month
                 </li>
               </ul>
               <PricingActions
@@ -275,39 +284,28 @@ export default async function PricingPage() {
         <div className="pp-container max-w-4xl">
           <h2 className="mb-8 text-center text-2xl font-bold text-[#0F172A]">What changes as you move up</h2>
           <div className="grid gap-4 md:grid-cols-3">
-            <div className="rounded-2xl border border-[#E2E8F0] bg-[#F8FAFC] p-6">
-              <h3 className="mb-1 font-semibold text-[#0F172A]">Free</h3>
-              <p className="text-sm text-[#64748B]">
-                Ask questions and analyse 3 photos per day. Test it on a real pest sighting, a label, or a fridge check before you commit.
-              </p>
-            </div>
-            <div className="rounded-2xl border border-[#E11D48]/20 bg-[#FFF1F2] p-6">
-              <h3 className="mb-1 font-semibold text-[#0F172A]">Plus</h3>
-              <p className="text-sm text-[#64748B]">
-                10 photo analyses per day, higher query limits, Word templates for all compliance documents, document uploads, and PDF export.
-              </p>
-            </div>
-            <div className="rounded-2xl border border-emerald-100 bg-emerald-50 p-6">
-              <h3 className="mb-1 font-semibold text-[#0F172A]">Pro</h3>
-              <p className="text-sm text-[#64748B]">
-                50 photo analyses per day, 1,000 queries, Word templates, full export, and 3 hours/month of qualified food safety consultancy.
-              </p>
-            </div>
+            {planChanges.map((item) => (
+              <div key={item.plan} className="rounded-2xl border border-[#E2E8F0] bg-[#F8FAFC] p-6">
+                <h3 className="mb-1 font-semibold text-[#0F172A]">{item.plan}</h3>
+                <p className="text-sm text-[#64748B]">{item.detail}</p>
+              </div>
+            ))}
           </div>
+
           <div className="mt-8 rounded-2xl border border-[#E2E8F0] bg-white p-6">
             <h3 className="text-sm font-semibold text-[#0F172A]">Entitlement detail</h3>
             <div className="mt-4 grid gap-4 text-sm text-[#64748B] md:grid-cols-3">
               <div>
                 <p className="font-medium text-[#334155]">Free</p>
-                <p className="mt-1">15 queries/day, 3 photo analyses/day, 3 transcriptions/day, 10 saved conversations, 30-day retention.</p>
+                <p className="mt-1">15 messages/day, 3 image uploads/day, 3 transcriptions/day, 10 saved conversations, 30-day retention.</p>
               </div>
               <div>
                 <p className="font-medium text-[#334155]">Plus</p>
-                <p className="mt-1">100 queries/day, 10 photo analyses/day, 25 transcriptions/day, Word templates, PDF conversation export, unlimited saved conversations.</p>
+                <p className="mt-1">100 messages/day, 10 image uploads/day, 25 transcriptions/day, unlimited conversations, uploads, downloadable templates.</p>
               </div>
               <div>
                 <p className="font-medium text-[#334155]">Pro</p>
-                <p className="mt-1">1,000 queries/day, 50 photo analyses/day, 200 transcriptions/day, Word templates, DOCX/PDF export, 3 consultancy hours/month.</p>
+                <p className="mt-1">1,000 messages/day, 50 image uploads/day, 200 transcriptions/day, DOCX export, Virtual Audit, 3 consultancy hours/month.</p>
               </div>
             </div>
           </div>
@@ -318,36 +316,7 @@ export default async function PricingPage() {
         <div className="pp-container max-w-3xl">
           <h2 className="mb-10 text-center text-2xl font-bold text-[#0F172A]">Frequently asked questions</h2>
           <div className="space-y-6">
-            {[
-              {
-                q: "How do consultancy hours work?",
-                a: "Pro users receive 3 hours of food safety consultancy each month. Use them for document review, document generation support, async Q&A, or any other food safety guidance. Hours are tracked in 15-minute increments.",
-              },
-              {
-                q: "What does consultancy cover?",
-                a: "Your consultancy hours can be used for reviewing AI-generated documents, helping produce compliance documentation, answering complex food safety questions, and providing specialist guidance. All consultancy is delivered by qualified food safety professionals.",
-              },
-              {
-                q: "Can I buy extra consultancy hours?",
-                a: "Yes. Additional consultancy is available on an hourly basis. Contact us or request extra hours from your dashboard.",
-              },
-              {
-                q: "Do unused consultancy hours roll over?",
-                a: "No. Consultancy hours reset at the start of each billing month and do not carry over.",
-              },
-              {
-                q: "Can I cancel or change my plan?",
-                a: "Yes. You can upgrade, downgrade, or cancel at any time from the billing portal in your dashboard. Changes take effect at the next billing cycle. No contracts, no lock-in.",
-              },
-              {
-                q: "Is VAT included in the prices shown?",
-                a: "Prices shown are exclusive of VAT. VAT is applied at checkout based on your location.",
-              },
-              {
-                q: "Are AI outputs suitable for direct use in audits or inspections?",
-                a: "PinkPepper generates AI-assisted drafts to support your compliance work. All outputs should be reviewed and approved by a qualified food safety professional before being used in audits, inspections, or submitted to enforcement authorities. Our food safety consultancy service (Pro plan) is designed to help with exactly this.",
-              },
-            ].map(({ q, a }) => (
+            {faqs.map(({ q, a }) => (
               <div key={q} className="rounded-2xl border border-[#E2E8F0] bg-white p-6">
                 <h3 className="mb-2 text-sm font-semibold text-[#0F172A]">{q}</h3>
                 <p className="text-sm leading-relaxed text-[#64748B]">{a}</p>
@@ -364,9 +333,9 @@ export default async function PricingPage() {
               <Mail className="h-5 w-5 text-[#E11D48]" />
             </div>
             <div className="flex-1">
-              <h3 className="font-semibold text-[#0F172A]">Still have questions?</h3>
+              <h3 className="font-semibold text-[#0F172A]">Need help choosing?</h3>
               <p className="mt-1 text-sm text-[#64748B]">
-                Not sure which plan fits your operation? Get in touch and we&apos;ll help you decide.
+                If you are unsure which plan fits your workload, talk to us and we will help you decide.
               </p>
             </div>
             <Link
@@ -381,4 +350,3 @@ export default async function PricingPage() {
     </main>
   );
 }
-
