@@ -49,8 +49,28 @@ export default function HomePage() {
             </div>
 
             <h1 className="pp-display mx-auto mb-8 max-w-4xl text-2xl leading-[1.15] tracking-[-0.02em] text-white sm:text-3xl md:text-4xl lg:text-5xl">
-              A food safety-trained AI and specialist consultancy, all in one place.
+              AI food safety compliance software with specialist backup when the stakes are higher.
             </h1>
+
+            <p className="mx-auto mb-8 max-w-3xl text-base leading-relaxed text-white/80 sm:text-lg">
+              Ask source-grounded EU and UK food safety questions, build review-ready compliance work faster, and bring in
+              qualified food safety consultants when you need specialist judgment.
+            </p>
+
+            <div className="mb-8 flex flex-wrap items-center justify-center gap-3">
+              <Link
+                href="/signup"
+                className="pp-interactive rounded-full bg-[#E11D48] px-6 py-3 text-sm font-semibold text-white hover:bg-[#BE123C]"
+              >
+                Start for free
+              </Link>
+              <Link
+                href="/pricing"
+                className="pp-interactive rounded-full border border-white/20 bg-white/10 px-6 py-3 text-sm font-semibold text-white hover:bg-white/15"
+              >
+                View pricing
+              </Link>
+            </div>
 
             <div className="mb-8 flex justify-center">
               <a
@@ -92,15 +112,42 @@ export default function HomePage() {
         </div>
       </section>
 
+      <section className="border-y border-[#F1F5F9] bg-white py-8">
+        <div className="pp-container">
+          <div className="grid gap-4 md:grid-cols-3">
+            {[
+              {
+                title: "EU and UK source grounding",
+                body: "Built around food safety regulations, official guidance, and practical references instead of generic AI copy.",
+              },
+              {
+                title: "Export-ready outputs",
+                body: "Turn useful conversations into clean records, templates, and handover material without reworking everything manually.",
+              },
+              {
+                title: "Specialist backup",
+                body: "Move faster with AI, then route the higher-risk work to qualified food safety consultants when needed.",
+              },
+            ].map((item) => (
+              <div key={item.title} className="rounded-2xl border border-[#E2E8F0] bg-[#F8FAFC] p-5">
+                <p className="text-sm font-semibold text-[#0F172A]">{item.title}</p>
+                <p className="mt-2 text-sm leading-relaxed text-[#64748B]">{item.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-      <section className="relative overflow-hidden border-y border-[#F1F5F9] bg-[#F8FAFC] py-24">
+      <section className="relative overflow-hidden border-b border-[#F1F5F9] bg-[#F8FAFC] py-24">
         <div className="pp-container">
           <div className="mb-14 max-w-xl">
-            <h2 className="pp-display text-4xl font-semibold tracking-[-0.01em] text-[#0F172A] md:text-5xl">
-              Built for real world operators
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">Built for real world operators</p>
+            <h2 className="pp-display mt-4 text-4xl font-semibold tracking-[-0.01em] text-[#0F172A] md:text-5xl">
+              What PinkPepper helps you do
             </h2>
             <p className="mt-4 text-lg text-[#475569]">
-              PinkPepper combines practical generation with traceable references, reviewable structure, and outputs that fit the rhythm of real compliance work.
+              From raw notes to review-ready compliance work, PinkPepper is designed to shorten the time between a food
+              safety problem and something your team can actually use.
             </p>
           </div>
 
@@ -110,9 +157,9 @@ export default function HomePage() {
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[#FFF1F2] text-[#E11D48]">
                   <BookOpen className="h-6 w-6" />
                 </div>
-                <h3 className="mb-2 text-xl font-semibold text-[#0F172A]">Regulation-grounded</h3>
+                <h3 className="mb-2 text-xl font-semibold text-[#0F172A]">Answer compliance questions faster</h3>
                 <p className="text-[#64748B]">
-                  Responses anchored in EC 852/2004, UK FSA guidance, and Codex HACCP references.
+                  Get regulation-grounded answers anchored in EC 852/2004, UK FSA guidance, and Codex HACCP references.
                 </p>
               </div>
 
@@ -120,9 +167,9 @@ export default function HomePage() {
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[#FFF1F2] text-[#E11D48]">
                   <ClipboardCheck className="h-6 w-6" />
                 </div>
-                <h3 className="mb-2 text-xl font-semibold text-[#0F172A]">HACCP in minutes</h3>
+                <h3 className="mb-2 text-xl font-semibold text-[#0F172A]">Build HACCP and audit prep faster</h3>
                 <p className="text-[#64748B]">
-                  Build hazard analysis, CCPs, monitoring logic, and corrective controls quickly.
+                  Move from hazard analysis and CCP logic to inspection prep and corrective actions without starting from blank pages.
                 </p>
               </div>
 
@@ -130,9 +177,9 @@ export default function HomePage() {
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[#FFF1F2] text-[#E11D48]">
                   <Download className="h-6 w-6" />
                 </div>
-                <h3 className="mb-2 text-xl font-semibold text-[#0F172A]">Audit-ready exports</h3>
+                <h3 className="mb-2 text-xl font-semibold text-[#0F172A]">Reuse templates and export cleanly</h3>
                 <p className="text-[#64748B]">
-                  Export structured PDF and Word files with clean formatting and traceable sections.
+                  Download structured templates and export conversation work in a format that is easier to review and hand over.
                 </p>
               </div>
 
@@ -154,16 +201,19 @@ export default function HomePage() {
 
       <section className="border-b border-[#F1F5F9] bg-white py-24">
         <div className="pp-container">
-          <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[0.95fr_1.05fr]">
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">Workflow story</p>
-              <h2 className="pp-display mt-4 text-4xl text-[#0F172A] md:text-5xl">
-                From raw notes to review-ready compliance work
-              </h2>
-              <p className="mt-5 max-w-xl text-lg leading-relaxed text-[#475569]">
-                The premium experience is not just faster drafting. It is moving from messy operational context to structured work your team can review, export, audit, and defend.
-              </p>
-              <div className="mt-8 flex flex-wrap gap-3">
+          <div className="mx-auto max-w-6xl">
+            <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+              <div className="max-w-3xl">
+                <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">Value in practice</p>
+                <h2 className="pp-display mt-4 text-4xl text-[#0F172A] md:text-5xl">
+                  From raw notes to review-ready compliance work
+                </h2>
+                <p className="mt-5 text-lg leading-relaxed text-[#475569]">
+                  Use PinkPepper when you need quicker answers, cleaner working drafts, and a clearer route from day-to-day
+                  operations to something defensible.
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-3">
                 <Link href="/features/food-safety-audit-prep" className="pp-interactive rounded-full bg-[#0F172A] px-5 py-3 text-sm font-semibold text-white hover:bg-[#1E293B]">
                   Explore audit-prep workflows
                 </Link>
@@ -175,27 +225,24 @@ export default function HomePage() {
                 </Link>
               </div>
             </div>
-            <div className="grid gap-4 md:grid-cols-3">
+
+            <div className="mt-10 grid gap-5 md:grid-cols-3">
               {[
                 {
-                  step: "01",
-                  title: "Capture the messy reality",
-                  body: "Menus, process steps, supplier notes, temperature risks, and audit pressure start as operational fragments.",
+                  title: "Ask before you act",
+                  body: "Check a requirement, compare EU and UK expectations, or pressure-test a draft before your team commits to it.",
                 },
                 {
-                  step: "02",
-                  title: "Structure the compliance work",
-                  body: "PinkPepper turns those fragments into HACCP logic, SOPs, allergen controls, and reviewable evidence packs.",
+                  title: "Tighten the working draft",
+                  body: "Use AI to structure the first useful version, then refine it with your team instead of rewriting from scratch.",
                 },
                 {
-                  step: "03",
-                  title: "Ship with more confidence",
-                  body: "Teams export, review, and refine higher-stakes documents before inspections, audits, or internal sign-off.",
+                  title: "Escalate the risky part",
+                  body: "Bring in qualified food safety consultants when the question moves from routine execution into specialist judgment.",
                 },
               ].map((item) => (
-                <div key={item.step} className="rounded-3xl border border-[#E2E8F0] bg-[#F8FAFC] p-6">
-                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#BE123C]">{item.step}</p>
-                  <h3 className="mt-4 text-xl font-semibold text-[#0F172A]">{item.title}</h3>
+                <div key={item.title} className="rounded-3xl border border-[#E2E8F0] bg-[#F8FAFC] p-6">
+                  <h3 className="text-xl font-semibold text-[#0F172A]">{item.title}</h3>
                   <p className="mt-3 text-sm leading-relaxed text-[#64748B]">{item.body}</p>
                 </div>
               ))}
