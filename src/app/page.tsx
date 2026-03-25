@@ -66,8 +66,11 @@ export default function HomePage() {
               AI food safety compliance software for EU and UK businesses
             </div>
 
-            <h1 className="pp-display mx-auto mb-6 max-w-4xl text-3xl leading-[1.08] tracking-[-0.02em] text-white sm:text-4xl md:text-5xl lg:text-7xl">
-              A food safety-trained AI and specialist consultancy, all in one place.
+            <h1 className="pp-display mx-auto mb-6 max-w-4xl text-2xl leading-[1.1] tracking-[-0.02em] text-white sm:text-3xl md:text-4xl lg:text-5xl">
+              A food safety-trained AI and specialist consultancy,{" "}
+              <span className="bg-gradient-to-r from-[#FDA4AF] via-[#FB7185] to-[#FDA4AF] bg-clip-text text-transparent">
+                all in one place.
+              </span>
             </h1>
 
             <div className="mb-10 flex flex-wrap items-center justify-center gap-3 text-sm font-medium text-white/80">
