@@ -24,7 +24,7 @@ const planChanges = [
   },
   {
     plan: "Pro",
-    detail: "Adds DOCX conversation export, Virtual Audit, and consultancy support for higher-stakes work.",
+    detail: "Adds Virtual Audit, DOCX export, and consultancy support for higher-stakes work.",
   },
 ];
 
@@ -80,7 +80,7 @@ export default async function PricingPage() {
         name: "Free",
         price: "0",
         priceCurrency: "EUR",
-        description: "15 messages per day, 3 image uploads per day, 3 voice transcriptions, 10 saved conversations.",
+        description: "15 messages per day, 3 image uploads per day, and 10 saved conversations.",
       },
       {
         "@type": "Offer",
@@ -107,7 +107,7 @@ export default async function PricingPage() {
           unitCode: "MON",
         },
         description:
-          "1,000 messages per day, 50 image uploads per day, 200 transcriptions, unlimited conversations, DOCX export, Virtual Audit, and 3 hours of consultancy per month.",
+          "1,000 messages per day, 50 image uploads per day, unlimited conversations, DOCX export, Virtual Audit, and 3 hours of consultancy per month.",
       },
     ],
   };
@@ -122,11 +122,10 @@ export default async function PricingPage() {
       <section className="py-16 md:py-20">
         <div className="pp-container max-w-4xl text-center">
           <h1 className="pp-display text-4xl font-black tracking-tight text-[#0F172A] md:text-5xl">
-            Pricing for food safety teams that need practical support, not bloated software plans.
+            Simple pricing for food safety teams.
           </h1>
           <p className="mt-5 text-lg leading-relaxed text-[#475569]">
-            Start free, move up when the workload gets heavier, and use Pro when your team needs export, audit support,
-            and specialist backup.
+            Start free, move to Plus for regular day-to-day use, and choose Pro when you need audit support and direct consultancy input.
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3 text-sm font-medium text-[#475569]">
             <Link href="/features" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
@@ -169,10 +168,6 @@ export default async function PricingPage() {
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />
-                  3 voice transcriptions per day
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />
                   10 saved conversations with 30-day history
                 </li>
                 <li className="flex items-start gap-2.5">
@@ -206,10 +201,6 @@ export default async function PricingPage() {
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  25 voice transcriptions per day
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
                   Unlimited saved conversations
                 </li>
                 <li className="flex items-start gap-2.5">
@@ -236,7 +227,7 @@ export default async function PricingPage() {
               </div>
               <h2 className="text-xl font-bold text-[#0F172A]">Pro</h2>
               <p className="mt-2 text-sm text-[#64748B]">
-                AI consultant backed by a real specialist for teams preparing for inspections, audits, and higher-stakes food safety work.
+                For teams preparing for inspections, audits, and higher-stakes work that needs direct food safety consultancy.
               </p>
               <div className="mt-6 flex items-baseline gap-1">
                 <span className="text-5xl font-bold tracking-tight text-[#0F172A]"><span className="text-2xl align-super">€</span>99</span>
@@ -246,27 +237,19 @@ export default async function PricingPage() {
               <ul className="flex-1 space-y-3.5 text-sm text-[#475569]">
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  Daily compliance analysis at scale with 1,000 messages per day
+                  1,000 messages per day and 50 image uploads per day
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  100 AI queries per day equivalent is covered and exceeded by the Pro workload limits
+                  Unlimited conversations, document uploads, and template downloads
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  200 voice transcriptions per day
+                  DOCX conversation export and Virtual Audit
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  Unlimited conversations, document uploads, template downloads, and qualified food safety consultancy support
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  Full PDF and DOCX export language retained for continuity, with live product export focused on DOCX conversation export and Virtual Audit
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  3 hours of food safety consultancy each month
+                  3 hours of food safety consultancy each month for review, guidance, and higher-risk support
                 </li>
               </ul>
               <PricingActions
@@ -297,15 +280,15 @@ export default async function PricingPage() {
             <div className="mt-4 grid gap-4 text-sm text-[#64748B] md:grid-cols-3">
               <div>
                 <p className="font-medium text-[#334155]">Free</p>
-                <p className="mt-1">15 messages/day, 3 image uploads/day, 3 transcriptions/day, 10 saved conversations, 30-day retention.</p>
+                <p className="mt-1">15 messages/day, 3 image uploads/day, 10 saved conversations, 30-day retention.</p>
               </div>
               <div>
                 <p className="font-medium text-[#334155]">Plus</p>
-                <p className="mt-1">100 messages/day, 10 image uploads/day, 25 transcriptions/day, unlimited conversations, uploads, downloadable templates.</p>
+                <p className="mt-1">100 messages/day, 10 image uploads/day, unlimited conversations, uploads, downloadable templates.</p>
               </div>
               <div>
                 <p className="font-medium text-[#334155]">Pro</p>
-                <p className="mt-1">1,000 messages/day, 50 image uploads/day, 200 transcriptions/day, DOCX export, Virtual Audit, 3 consultancy hours/month.</p>
+                <p className="mt-1">1,000 messages/day, 50 image uploads/day, DOCX export, Virtual Audit, 3 consultancy hours/month.</p>
               </div>
             </div>
           </div>

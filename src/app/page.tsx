@@ -306,7 +306,7 @@ export default function HomePage() {
         <div className="pp-container relative z-10">
           <div className="mx-auto mb-16 max-w-2xl text-center">
             <h2 className="pp-display mb-4 text-4xl text-[#0F172A] md:text-5xl">Pricing that follows the compliance job</h2>
-            <p className="text-lg text-[#64748B]">Start with questions, upgrade for deeper analysis and conversation export, then move to audit readiness when the stakes are higher.</p>
+            <p className="text-lg text-[#64748B]">Start free, move to Plus for regular operational use, and choose Pro when you need audit support and consultancy input.</p>
           </div>
 
           <div className="mx-auto grid max-w-5xl gap-6 lg:grid-cols-3">
@@ -319,10 +319,10 @@ export default function HomePage() {
               </div>
               <div className="my-6 border-t border-[#F1F5F9]" />
               <ul className="flex-1 space-y-3.5 text-sm text-[#475569]">
-                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />Ask food safety and compliance questions before you buy</li>
-                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />Check one photo per day for labels, kitchens, or product issues</li>
-                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />Keep up to 10 saved conversations with 30-day history</li>
-                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />15 AI queries and 3 voice transcriptions per day</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />15 messages per day</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />3 image uploads per day</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />10 saved conversations with 30-day history</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />No export or template downloads</li>
               </ul>
               <Link href="/signup" className="mt-8 block rounded-xl border border-[#E2E8F0] bg-white py-3.5 text-center text-sm font-semibold text-[#0F172A] transition-all duration-200 hover:bg-[#F8FAFC] hover:-translate-y-0.5 hover:shadow-md active:scale-[0.98]">
                 Get started
@@ -331,18 +331,17 @@ export default function HomePage() {
 
             <div className="flex flex-col rounded-3xl border-2 border-[#FBCFE8] bg-white p-8 shadow-md shadow-[#FDA4AF]/[0.08] transition-all duration-200 hover:shadow-lg hover:shadow-[#FDA4AF]/[0.12]">
               <h3 className="text-xl font-bold text-[#0F172A]">Plus</h3>
-              <p className="mt-2 text-sm text-[#64748B]">For teams that need deeper operational analysis, uploads, and conversation export beyond the free plan.</p>
+              <p className="mt-2 text-sm text-[#64748B]">For teams that need regular day-to-day use, uploads, and template access.</p>
               <div className="mt-6 flex items-baseline gap-1">
                 <span className="text-5xl font-bold tracking-tight text-[#0F172A]"><span className="text-2xl align-super">€</span>19</span>
                 <span className="text-base text-[#94A3B8]">/month</span>
               </div>
               <div className="my-6 border-t border-[#FCE7F3]" />
               <ul className="flex-1 space-y-3.5 text-sm text-[#475569]">
-                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />No generated compliance documents on Plus - use chat, uploads, and conversation export instead</li>
-                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />Export work as PDF for handover, filing, or internal review</li>
-                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />100 AI queries per day</li>
-                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />3 image uploads per day for label, kitchen, or product checks</li>
-                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />Unlimited saved conversations with extended working context</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />100 messages per day</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />10 image uploads per day</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />Unlimited saved conversations</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />Document uploads and downloadable templates</li>
               </ul>
               <Link href="/signup?plan=plus" className="mt-8 block rounded-xl border border-[#FBCFE8] bg-[#FFF1F2] py-3.5 text-center text-sm font-semibold text-[#BE123C] transition-all duration-200 hover:bg-[#FFE4E6] hover:-translate-y-0.5 hover:shadow-md active:scale-[0.98]">
                 Choose Plus
@@ -355,17 +354,17 @@ export default function HomePage() {
                 Most Popular
               </div>
               <h3 className="text-xl font-bold text-[#0F172A]">Pro</h3>
-              <p className="mt-2 text-sm text-[#64748B]">For operators preparing for inspections, customer audits, and higher-risk document decisions.</p>
+              <p className="mt-2 text-sm text-[#64748B]">For operators preparing for inspections, audits, and higher-risk work that needs direct consultancy support.</p>
               <div className="mt-6 flex items-baseline gap-1">
                 <span className="text-5xl font-bold tracking-tight text-[#0F172A]"><span className="text-2xl align-super">€</span>99</span>
                 <span className="text-base text-[#94A3B8]">/month</span>
               </div>
               <div className="my-6 border-t border-[#F1F5F9]" />
               <ul className="flex-1 space-y-3.5 text-sm text-[#475569]">
-                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />Highest daily limits for ongoing audit prep and operational use</li>
-                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />Run Virtual Audit workflows before inspections or internal reviews</li>
-                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />Export in both PDF and DOCX for internal editing and external sharing</li>
-                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />3 hours of food safety consultancy each month — document review, generation support, and async Q&A</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />1,000 messages per day and 50 image uploads per day</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />Unlimited conversations, uploads, and template downloads</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />DOCX conversation export and Virtual Audit</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />3 hours of food safety consultancy each month</li>
               </ul>
               <Link href="/signup?plan=pro" className="mt-8 block rounded-xl bg-[#E11D48] py-3.5 text-center text-sm font-semibold text-white transition-all duration-200 hover:bg-[#BE123C] hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#E11D48]/25 active:scale-[0.98]">
                 Choose Pro
