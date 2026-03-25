@@ -67,15 +67,8 @@ export default function HomePage() {
             </div>
 
             <h1 className="pp-display mx-auto mb-6 max-w-4xl text-3xl leading-[1.08] tracking-[-0.02em] text-white sm:text-4xl md:text-5xl lg:text-7xl">
-              Food safety compliance, faster and at a fraction of the cost.{" "}
-              <span className="bg-gradient-to-r from-[#FDA4AF] via-[#FB7185] to-[#FDA4AF] bg-clip-text text-transparent">
-                AI-powered, with expert consultants when you need them.
-              </span>
-            </h1>
-
-            <p className="mx-auto mb-10 max-w-3xl text-base leading-relaxed text-white/80 md:text-lg lg:text-xl">
               A food safety-trained AI and specialist consultancy, all in one place.
-            </p>
+            </h1>
 
             <div className="mb-10 flex flex-wrap items-center justify-center gap-3 text-sm font-medium text-white/80">
               <Link href="/features/haccp-plan-generator" className="pp-interactive rounded-full border border-white/20 bg-white/10 px-4 py-2 backdrop-blur-sm transition-colors hover:border-white/40 hover:bg-white/20 hover:text-white">

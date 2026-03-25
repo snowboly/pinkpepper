@@ -53,6 +53,36 @@ export const faqs = [
     answer:
       "Yes. You can create an account and explore the platform before committing to a paid plan. Visit the pricing page for current plan details and trial options.",
   },
+  {
+    id: "haccp-output-format",
+    question: "What does a PinkPepper HACCP plan actually look like?",
+    answer:
+      "PinkPepper generates a structured HACCP plan document covering all seven Codex Alimentarius principles: hazard analysis, critical control points, critical limits, monitoring procedures, corrective actions, verification activities, and record-keeping requirements. Each plan is tailored to your business type and process flow, references the applicable EU or UK regulation, and is exported as a formatted document ready for submission to an enforcement officer or auditor.",
+  },
+  {
+    id: "allergen-labelling",
+    question: "How does PinkPepper handle allergen documentation?",
+    answer:
+      "PinkPepper helps you build allergen matrices, written menus, and ingredient declarations aligned with EU 1169/2011 and Natasha's Law (UK Food Information Amendment 2021). It flags the 14 major allergens, supports precautionary allergen labelling decisions, and generates staff training records and allergen management SOPs. All outputs reference the controlling regulation and can be updated as your menu changes.",
+  },
+  {
+    id: "multi-site",
+    question: "Can PinkPepper be used across multiple sites?",
+    answer:
+      "Yes. PinkPepper supports multi-site operations. You can maintain separate compliance documentation for each premises while sharing templates, SOPs, and training records across your estate. Contact us to discuss team and enterprise plans suited to your organisation's size.",
+  },
+  {
+    id: "data-security",
+    question: "How is my business data handled and stored?",
+    answer:
+      "All data is encrypted in transit and at rest. PinkPepper does not use your business data to train AI models. Your documents and conversation history are stored securely and are only accessible to users in your account. For full details, refer to our Privacy Policy and Data Processing Agreement.",
+  },
+  {
+    id: "consultant-access",
+    question: "How do I access a specialist consultant through PinkPepper?",
+    answer:
+      "Consultant access is available on selected plans. Once enabled, you can request a review of any document or compliance question directly within the platform. A qualified food safety professional will review your submission and return annotated feedback or a revised document, typically within one to two business days.",
+  },
 ];
 
 /** IDs of the FAQs shown on the homepage — focused on trust, scope, and accountability. */
