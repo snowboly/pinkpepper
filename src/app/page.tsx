@@ -140,7 +140,7 @@ export default function HomePage() {
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[#FFF1F2] text-[#E11D48]">
                   <Users className="h-6 w-6" />
                 </div>
-                <h3 className="mb-2 text-xl font-semibold text-[#0F172A]">Food safety consultancy</h3>
+                <h3 className="mb-2 text-xl font-semibold text-[#0F172A]">AI speed with food safety consultancy</h3>
                 <p className="text-[#64748B]">
                   Route higher-stakes drafts to qualified food safety consultants for review, generation support, and specialist guidance.
                 </p>
@@ -167,8 +167,11 @@ export default function HomePage() {
                 <Link href="/features/food-safety-audit-prep" className="pp-interactive rounded-full bg-[#0F172A] px-5 py-3 text-sm font-semibold text-white hover:bg-[#1E293B]">
                   Explore audit-prep workflows
                 </Link>
-                <Link href="/features/food-safety-sop-generator" className="pp-interactive rounded-full border border-[#E2E8F0] bg-white px-5 py-3 text-sm font-semibold text-[#0F172A] hover:bg-[#F8FAFC]">
-                  See SOP generation
+                <Link href="/features/haccp-plan-generator" className="pp-interactive rounded-full border border-[#E2E8F0] bg-white px-5 py-3 text-sm font-semibold text-[#0F172A] hover:bg-[#F8FAFC]">
+                  See HACCP plan generation
+                </Link>
+                <Link href="/pricing" className="pp-interactive rounded-full border border-[#E2E8F0] bg-white px-5 py-3 text-sm font-semibold text-[#0F172A] hover:bg-[#F8FAFC]">
+                  Compare plans
                 </Link>
               </div>
             </div>
