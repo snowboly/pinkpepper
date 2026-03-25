@@ -13,24 +13,6 @@ import { DemoTabSwitcher } from "@/components/homepage/DemoTabSwitcher";
 import { HeroChatForm } from "@/components/homepage/HeroChatForm";
 import { homepageFaqs } from "@/data/faqs";
 
-const differentiators = [
-  {
-    title: "Domain-trained for food safety",
-    description:
-      "PinkPepper is tuned for HACCP, allergen controls, and audit evidence workflows instead of broad, general chat use.",
-  },
-  {
-    title: "Built around UK and EU expectations",
-    description:
-      "Outputs are structured for EC 852/2004, UK FSA, and operational checks inspectors usually request.",
-  },
-  {
-    title: "AI speed with food safety consultancy",
-    description:
-      "Draft practical plans, SOPs, and logs quickly, then escalate critical work to qualified food safety consultants when a higher-risk decision needs specialist judgement.",
-  },
-];
-
 
 export default function HomePage() {
   const faqSchema = {
@@ -158,7 +140,7 @@ export default function HomePage() {
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[#FFF1F2] text-[#E11D48]">
                   <Users className="h-6 w-6" />
                 </div>
-                <h3 className="mb-2 text-xl font-semibold text-[#0F172A]">Food safety consultancy</h3>
+                <h3 className="mb-2 text-xl font-semibold text-[#0F172A]">AI speed with food safety consultancy</h3>
                 <p className="text-[#64748B]">
                   Route higher-stakes drafts to qualified food safety consultants for review, generation support, and specialist guidance.
                 </p>
@@ -185,8 +167,11 @@ export default function HomePage() {
                 <Link href="/features/food-safety-audit-prep" className="pp-interactive rounded-full bg-[#0F172A] px-5 py-3 text-sm font-semibold text-white hover:bg-[#1E293B]">
                   Explore audit-prep workflows
                 </Link>
-                <Link href="/features/food-safety-sop-generator" className="pp-interactive rounded-full border border-[#E2E8F0] bg-white px-5 py-3 text-sm font-semibold text-[#0F172A] hover:bg-[#F8FAFC]">
-                  See SOP generation
+                <Link href="/features/haccp-plan-generator" className="pp-interactive rounded-full border border-[#E2E8F0] bg-white px-5 py-3 text-sm font-semibold text-[#0F172A] hover:bg-[#F8FAFC]">
+                  See HACCP plan generation
+                </Link>
+                <Link href="/pricing" className="pp-interactive rounded-full border border-[#E2E8F0] bg-white px-5 py-3 text-sm font-semibold text-[#0F172A] hover:bg-[#F8FAFC]">
+                  Compare plans
                 </Link>
               </div>
             </div>
