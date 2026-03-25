@@ -1,33 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-
-const faqs = [
-  {
-    question: "What is PinkPepper?",
-    answer:
-      "PinkPepper is AI-powered food safety compliance software that helps EU and UK food businesses create and maintain HACCP plans, allergen documentation, SOPs, and audit-ready records.",
-  },
-  {
-    question: "Who is PinkPepper designed for?",
-    answer:
-      "Restaurants, cafés, catering companies, and food manufacturers that need to meet EU and UK food safety regulations — especially teams without a dedicated compliance officer.",
-  },
-  {
-    question: "Does PinkPepper replace a food safety consultant?",
-    answer:
-      "PinkPepper helps you produce working drafts of compliance documents faster, but the final review and sign-off should always reflect your site-specific operations. Many users work alongside consultants and use PinkPepper to save time on the initial documentation.",
-  },
-  {
-    question: "What regulations does PinkPepper cover?",
-    answer:
-      "PinkPepper is built around EU Regulation (EC) No 852/2004 and UK food hygiene regulations, including HACCP requirements, allergen labelling (EU FIC / Natasha's Law), and environmental health inspection standards.",
-  },
-  {
-    question: "Can I try PinkPepper before subscribing?",
-    answer:
-      "Yes. You can create an account and explore the platform before committing to a paid plan. Visit the pricing page for current options.",
-  },
-];
+import { faqs } from "@/data/faqs";
 
 export const metadata: Metadata = {
   title: "Frequently Asked Questions | PinkPepper",

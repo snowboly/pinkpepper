@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { DemoTabSwitcher } from "@/components/homepage/DemoTabSwitcher";
 import { HeroChatForm } from "@/components/homepage/HeroChatForm";
+import { homepageFaqs } from "@/data/faqs";
 
 const differentiators = [
   {
@@ -30,39 +31,12 @@ const differentiators = [
   },
 ];
 
-const faqs = [
-  {
-    question: "Is PinkPepper just another ChatGPT wrapper?",
-    answer:
-      "No. PinkPepper is a specialised food safety assistant designed for compliance workflows such as HACCP plans, allergen controls, corrective actions, and audit evidence packs. It is not a general-purpose chatbot for broad topics.",
-  },
-  {
-    question: "Can I rely on PinkPepper output for legal compliance?",
-    answer:
-      "PinkPepper helps draft and structure documents based on recognised guidance, but it does not provide legal advice. You should review outputs against your local legal obligations and, where needed, consult a qualified food safety professional or legal adviser.",
-  },
-  {
-    question: "Which regulations does PinkPepper support?",
-    answer:
-      "PinkPepper is focused on UK and EU food safety operations, including HACCP-oriented documentation and allergen management workflows. Requirements can vary by country, region, and business type, so final sign-off should be done by your responsible compliance lead.",
-  },
-  {
-    question: "Where does PinkPepper's regulation data come from?",
-    answer:
-      "PinkPepper's EU regulation knowledge is sourced from EUR-Lex CELLAR, the official open-data repository of the Publications Office of the European Union. This ensures that referenced legislation, such as EC 852/2004, EC 178/2002, and EU 1169/2011, is drawn from authoritative, publicly accessible EU law.",
-  },
-  {
-    question: "Who is responsible for final documents and decisions?",
-    answer:
-      "Your business remains responsible for implementation, verification, and legal compliance. PinkPepper accelerates preparation, but final approval, staff training, and operational controls must be handled by accountable personnel.",
-  },
-];
 
 export default function HomePage() {
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: faqs.map((faq) => ({
+    mainEntity: homepageFaqs.map((faq) => ({
       "@type": "Question",
       name: faq.question,
       acceptedAnswer: {
@@ -422,7 +396,7 @@ export default function HomePage() {
             </p>
 
             <div className="mt-10 space-y-4">
-              {faqs.map((faq) => (
+              {homepageFaqs.map((faq) => (
                 <details key={faq.question} className="group rounded-2xl border border-[#E2E8F0] bg-white p-6">
                   <summary className="cursor-pointer list-none text-lg font-semibold text-[#0F172A]">
                     {faq.question}
