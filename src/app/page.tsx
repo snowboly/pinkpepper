@@ -31,6 +31,15 @@ const differentiators = [
   },
 ];
 
+const whoWeWorkWith = [
+  { emoji: "🌱", label: "Growers" },
+  { emoji: "📦", label: "Packers" },
+  { emoji: "🚚", label: "Shippers" },
+  { emoji: "🏪", label: "Storage facilities" },
+  { emoji: "🏭", label: "Processing & manufacturing" },
+  { emoji: "🍽️", label: "Restaurants & prep kitchens" },
+];
+
 
 export default function HomePage() {
   const faqSchema = {
@@ -219,49 +228,27 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="border-b border-[#F1F5F9] bg-white py-20">
+      <section className="border-b border-[#F1F5F9] bg-[#F8FAFC] py-20">
         <div className="pp-container">
-          <div className="mx-auto mb-10 max-w-3xl text-center">
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">Explore the site</p>
+          <div className="mx-auto max-w-3xl text-center">
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#0F172A]">Who we work with</p>
             <h2 className="pp-display mt-4 text-4xl text-[#0F172A] md:text-5xl">
-              Go deeper by feature, business type, or resource
+              Ideal for small and medium food businesses
             </h2>
             <p className="mt-4 text-lg leading-relaxed text-[#475569]">
-              Browse PinkPepper by product workflow, industry fit, or practical compliance template.
+              PinkPepper supports practical compliance workflows across the supply chain, from production to service.
             </p>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-3">
-            <Link
-              href="/features"
-              className="pp-interactive rounded-3xl border border-[#E2E8F0] bg-[#FFF7ED] p-8 transition-all hover:shadow-lg hover:shadow-black/[0.04]"
-            >
-              <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#E11D48]">Features</p>
-              <h3 className="mt-3 text-2xl font-semibold text-[#0F172A]">Commercial product pages</h3>
-              <p className="mt-4 text-sm leading-relaxed text-[#475569]">
-                Explore HACCP, allergen, SOP, and audit-prep workflows with dedicated buying-intent landing pages.
-              </p>
-            </Link>
-            <Link
-              href="/use-cases"
-              className="pp-interactive rounded-3xl border border-[#E2E8F0] bg-[#F8FAFC] p-8 transition-all hover:shadow-lg hover:shadow-black/[0.04]"
-            >
-              <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#E11D48]">Use Cases</p>
-              <h3 className="mt-3 text-2xl font-semibold text-[#0F172A]">Pages by business type</h3>
-              <p className="mt-4 text-sm leading-relaxed text-[#475569]">
-                See how PinkPepper fits restaurants, cafes, caterers, and food manufacturing teams.
-              </p>
-            </Link>
-            <Link
-              href="/resources"
-              className="pp-interactive rounded-3xl border border-[#E2E8F0] bg-[#FFF1F2] p-8 transition-all hover:shadow-lg hover:shadow-black/[0.04]"
-            >
-              <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#E11D48]">Resources</p>
-              <h3 className="mt-3 text-2xl font-semibold text-[#0F172A]">Templates and guides</h3>
-              <p className="mt-4 text-sm leading-relaxed text-[#475569]">
-                Read supporting content for HACCP templates, allergen matrices, audit checklists, and SOP examples.
-              </p>
-            </Link>
+          <div className="mx-auto mt-12 grid max-w-5xl gap-10 sm:grid-cols-2 lg:grid-cols-3">
+            {whoWeWorkWith.map((group) => (
+              <div key={group.label} className="text-center">
+                <div className="mx-auto flex h-44 w-44 items-center justify-center rounded-full border border-[#E2E8F0] bg-white text-6xl shadow-sm">
+                  <span aria-hidden>{group.emoji}</span>
+                </div>
+                <h3 className="mt-5 text-2xl font-semibold text-[#0F172A]">{group.label}</h3>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -388,4 +375,3 @@ export default function HomePage() {
     </main>
   );
 }
-
