@@ -47,6 +47,13 @@ export function canExportDocx(tier: SubscriptionTier, isAdmin = false): boolean 
   return TIER_CAPABILITIES[tier].allowWordExport;
 }
 
+type ExportTranscriptMessage = {
+  role: "user" | "assistant";
+  content: string;
+  createdAt: string | null;
+  metadata: Record<string, unknown> | null;
+};
+
 export async function getLatestAssistantMessageForConversation(input: {
   supabase: Awaited<ReturnType<typeof createClient>>;
   userId: string;
@@ -90,6 +97,56 @@ export async function getLatestAssistantMessageForConversation(input: {
     content: latestAssistant.content,
     createdAt: latestAssistant.created_at,
     metadata: (latestAssistant as Record<string, unknown>).metadata as Record<string, unknown> | null,
+  };
+}
+
+export async function getConversationTranscriptForExport(input: {
+  supabase: Awaited<ReturnType<typeof createClient>>;
+  userId: string;
+  conversationId: string;
+}): Promise<{ conversationTitle: string; messages: ExportTranscriptMessage[] }> {
+  const { supabase, userId, conversationId } = input;
+
+  const { data: conv } = await supabase
+    .from("conversations")
+    .select("id,title")
+    .eq("id", conversationId)
+    .eq("user_id", userId)
+    .maybeSingle();
+
+  if (!conv) {
+    throw new Error("CONVERSATION_NOT_FOUND");
+  }
+
+  const { data: rows, error: msgError } = await supabase
+    .from("chat_messages")
+    .select("role,content,created_at,metadata")
+    .eq("conversation_id", conversationId)
+    .eq("user_id", userId)
+    .order("created_at", { ascending: true });
+
+  if (msgError) {
+    console.error("[export] chat_messages transcript query error:", msgError);
+    throw new Error("NO_CONVERSATION_MESSAGES");
+  }
+
+  const messages = (rows ?? [])
+    .filter((row) => row.role === "user" || row.role === "assistant")
+    .map((row) => ({
+      role: row.role as "user" | "assistant",
+      content: typeof row.content === "string" ? row.content.trim() : "",
+      createdAt: typeof row.created_at === "string" ? row.created_at : null,
+      metadata: (row as Record<string, unknown>).metadata as Record<string, unknown> | null,
+    }))
+    .filter((row) => row.content.length > 0);
+
+  if (messages.length === 0) {
+    throw new Error("NO_CONVERSATION_MESSAGES");
+  }
+
+  return {
+    conversationTitle: conv.title ?? "PinkPepper Conversation",
+    messages,
   };
 }
 

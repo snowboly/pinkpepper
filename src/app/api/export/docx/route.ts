@@ -1,21 +1,82 @@
-import { Document, Packer, Paragraph, TextRun, ImageRun, HeadingLevel, Header, Footer, AlignmentType, PageNumber, BorderStyle } from "docx";
+import {
+  AlignmentType,
+  BorderStyle,
+  Document,
+  Footer,
+  Header,
+  HeadingLevel,
+  ImageRun,
+  PageNumber,
+  Packer,
+  Paragraph,
+  TextRun,
+} from "docx";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { NextResponse } from "next/server";
 import {
   canExportDocx,
+  getConversationTranscriptForExport,
   getExportContext,
-  getLatestAssistantMessageForConversation,
   recordExportUsage,
 } from "@/lib/export/common";
-import { exportLimiter, checkRateLimit } from "@/lib/ratelimit";
 import { renderDocx } from "@/lib/documents/render-docx";
 import type { GeneratedDocument } from "@/lib/documents/types";
+import { exportLimiter, checkRateLimit } from "@/lib/ratelimit";
 
 export const dynamic = "force-dynamic";
 
 const BRAND_COLOR = "E11D48";
 const GRAY_COLOR = "64748B";
+
+export function getStructuredGeneratedDocument(
+  messages: Array<{
+    role: "user" | "assistant";
+    metadata: Record<string, unknown> | null;
+  }>
+): GeneratedDocument | undefined {
+  for (let index = messages.length - 1; index >= 0; index -= 1) {
+    const message = messages[index];
+    if (message.role !== "assistant") continue;
+
+    const generatedDocument = message.metadata?.generatedDocument as GeneratedDocument | undefined;
+    if (generatedDocument?.documentType && generatedDocument?.sections) {
+      return generatedDocument;
+    }
+  }
+
+  return undefined;
+}
+
+function buildHeaderItems() {
+  return async (): Promise<(TextRun | ImageRun)[]> => {
+    try {
+      const logoPath = join(process.cwd(), "public", "LogoV3.png");
+      const logoBuffer = await readFile(logoPath);
+      return [
+        new ImageRun({ data: logoBuffer, transformation: { width: 120, height: 32 }, type: "png" }),
+        new TextRun({ text: "  |  Food Safety Compliance", color: GRAY_COLOR, size: 16 }),
+      ];
+    } catch {
+      return [
+        new TextRun({ text: "PinkPepper", bold: true, color: BRAND_COLOR, size: 20 }),
+        new TextRun({ text: "  |  Food Safety Compliance", color: GRAY_COLOR, size: 16 }),
+      ];
+    }
+  };
+}
+
+function formatTimestamp(value: string | null) {
+  if (!value) return null;
+
+  return new Date(value).toLocaleString("en-GB", {
+    year: "numeric",
+    month: "short",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
 
 export async function POST(request: Request) {
   try {
@@ -34,54 +95,48 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "A valid conversationId is required." }, { status: 400 });
     }
 
-    const docData = await getLatestAssistantMessageForConversation({
+    const docData = await getConversationTranscriptForExport({
       supabase,
       userId,
       conversationId,
     });
 
-    // Try to use the structured renderer if a generated document is stored in metadata
-    const generatedDoc = (docData.metadata as Record<string, unknown> | null)?.generatedDocument as GeneratedDocument | undefined;
+    const generatedDoc = getStructuredGeneratedDocument(docData.messages);
 
     let bodyBytes: Uint8Array;
 
     if (generatedDoc?.documentType && generatedDoc?.sections) {
-      // Use the professional structured renderer
       const buffer = await renderDocx(generatedDoc);
       bodyBytes = new Uint8Array(buffer);
     } else {
-      // Fallback: render chat content with branded header/footer
-      const paragraphs = docData.content
-        .replace(/\r\n/g, "\n")
-        .split("\n")
-        .filter((line: string) => line.trim().length > 0)
-        .map(
-          (line: string) =>
-            new Paragraph({
-              children: [new TextRun({ text: line, size: 22 })],
-              spacing: { after: 160 },
-            })
-        );
+      const headerItems = await buildHeaderItems()();
 
-      // Build header with logo or text fallback
-      const headerItems: (TextRun | ImageRun)[] = [];
-      try {
-        const logoPath = join(process.cwd(), "public", "LogoV3.png");
-        const logoBuffer = await readFile(logoPath);
-        headerItems.push(
-          new ImageRun({ data: logoBuffer, transformation: { width: 120, height: 32 }, type: "png" })
-        );
-        headerItems.push(
-          new TextRun({ text: "  |  Food Safety Compliance", color: GRAY_COLOR, size: 16 })
-        );
-      } catch {
-        headerItems.push(
-          new TextRun({ text: "PinkPepper", bold: true, color: BRAND_COLOR, size: 20 })
-        );
-        headerItems.push(
-          new TextRun({ text: "  |  Food Safety Compliance", color: GRAY_COLOR, size: 16 })
-        );
-      }
+      const transcriptParagraphs = docData.messages.flatMap((message) => {
+        const speaker = message.role === "assistant" ? "PinkPepper" : "You";
+        const timestamp = formatTimestamp(message.createdAt);
+        const contentParagraphs = message.content
+          .replace(/\r\n/g, "\n")
+          .split("\n")
+          .filter((line) => line.trim().length > 0)
+          .map(
+            (line) =>
+              new Paragraph({
+                children: [new TextRun({ text: line, size: 22 })],
+                spacing: { after: 120 },
+              })
+          );
+
+        return [
+          new Paragraph({
+            spacing: { before: 240, after: 100 },
+            children: [
+              new TextRun({ text: speaker, bold: true, color: BRAND_COLOR, size: 24 }),
+              ...(timestamp ? [new TextRun({ text: `  -  ${timestamp}`, color: GRAY_COLOR, size: 18 })] : []),
+            ],
+          }),
+          ...contentParagraphs,
+        ];
+      });
 
       const doc = new Document({
         sections: [
@@ -94,9 +149,7 @@ export async function POST(request: Request) {
             },
             headers: {
               default: new Header({
-                children: [
-                  new Paragraph({ children: headerItems }),
-                ],
+                children: [new Paragraph({ children: headerItems })],
               }),
             },
             footers: {
@@ -106,7 +159,7 @@ export async function POST(request: Request) {
                     alignment: AlignmentType.CENTER,
                     border: { top: { style: BorderStyle.SINGLE, size: 1, color: "E2E8F0", space: 4 } },
                     children: [
-                      new TextRun({ text: "Generated by PinkPepper — AI-assisted draft  •  Page ", size: 16, color: GRAY_COLOR }),
+                      new TextRun({ text: "Generated by PinkPepper - Conversation transcript - Page ", size: 16, color: GRAY_COLOR }),
                       new TextRun({ children: [PageNumber.CURRENT], size: 16, color: GRAY_COLOR }),
                       new TextRun({ text: " of ", size: 16, color: GRAY_COLOR }),
                       new TextRun({ children: [PageNumber.TOTAL_PAGES], size: 16, color: GRAY_COLOR }),
@@ -121,17 +174,19 @@ export async function POST(request: Request) {
                 children: [new TextRun({ text: docData.conversationTitle, bold: true, color: BRAND_COLOR, size: 48 })],
                 spacing: { after: 200 },
               }),
-              new Paragraph({ children: [new TextRun(`Generated: ${new Date().toISOString()}`)] }),
+              new Paragraph({ children: [new TextRun(`Exported: ${new Date().toISOString()}`)] }),
               new Paragraph({
-                children: [new TextRun({
-                  text: "This is an AI-assisted draft. Human validation is required before operational use.",
-                  italics: true,
-                  color: GRAY_COLOR,
-                  size: 18,
-                })],
-                spacing: { after: 200 },
+                children: [
+                  new TextRun({
+                    text: "Conversation transcript exported from PinkPepper.",
+                    italics: true,
+                    color: GRAY_COLOR,
+                    size: 18,
+                  }),
+                ],
+                spacing: { after: 240 },
               }),
-              ...paragraphs,
+              ...transcriptParagraphs,
             ],
           },
         ],
@@ -160,8 +215,8 @@ export async function POST(request: Request) {
     if (message === "CONVERSATION_NOT_FOUND") {
       return NextResponse.json({ error: "Conversation not found." }, { status: 404 });
     }
-    if (message === "NO_ASSISTANT_CONTENT") {
-      return NextResponse.json({ error: "No assistant response available to export." }, { status: 400 });
+    if (message === "NO_ASSISTANT_CONTENT" || message === "NO_CONVERSATION_MESSAGES") {
+      return NextResponse.json({ error: "No conversation content available to export." }, { status: 400 });
     }
     console.error("[export/docx] unhandled error:", error);
     return NextResponse.json({ error: "Export failed. Please try again." }, { status: 500 });

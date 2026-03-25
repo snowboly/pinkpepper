@@ -82,6 +82,20 @@ describe("buildRAGSystemPrompt", () => {
     expect(prompt).toContain("Chilled food must be stored");
   });
 
+  it("does not mention a training cutoff date", () => {
+    const prompt = buildRAGSystemPrompt([makeChunk()], "qa", "English", "2026-03-25", null, "pro");
+
+    expect(prompt).not.toContain("training data ends");
+    expect(prompt).not.toContain("training weights alone");
+  });
+
+  it("describes conversation export as DOCX-only", () => {
+    const prompt = buildRAGSystemPrompt([makeChunk()], "qa", "English", "2026-03-25", null, "pro");
+
+    expect(prompt).toContain("DOCX");
+    expect(prompt).not.toContain("PDF");
+  });
+
   it("includes Q&A mode instructions by default", () => {
     const prompt = buildRAGSystemPrompt([makeChunk()]);
     expect(prompt).toContain("Q&A");

@@ -36,7 +36,7 @@ describe("TIER_CAPABILITIES – plus tier", () => {
   it("dailyTranscriptions is 25", () => expect(plus.dailyTranscriptions).toBe(25));
   it("maxSavedConversations is unlimited (null)", () => expect(plus.maxSavedConversations).toBeNull());
   it("conversationRetentionDays is unlimited (null)", () => expect(plus.conversationRetentionDays).toBeNull());
-  it("allowPdfExport is true", () => expect(plus.allowPdfExport).toBe(true));
+  it("allowPdfExport is false", () => expect(plus.allowPdfExport).toBe(false));
   it("allowWordExport is false", () => expect(plus.allowWordExport).toBe(false));
   it("allowFullDocumentReview is false", () => expect(plus.allowFullDocumentReview).toBe(false));
   it("hasConsultancy is false", () => expect(plus.hasConsultancy).toBe(false));
@@ -53,7 +53,7 @@ describe("TIER_CAPABILITIES – pro tier", () => {
   it("dailyTranscriptions is 200", () => expect(pro.dailyTranscriptions).toBe(200));
   it("maxSavedConversations is unlimited (null)", () => expect(pro.maxSavedConversations).toBeNull());
   it("conversationRetentionDays is unlimited (null)", () => expect(pro.conversationRetentionDays).toBeNull());
-  it("allowPdfExport is true", () => expect(pro.allowPdfExport).toBe(true));
+  it("allowPdfExport is false", () => expect(pro.allowPdfExport).toBe(false));
   it("allowWordExport is true", () => expect(pro.allowWordExport).toBe(true));
   it("allowFullDocumentReview is true", () => expect(pro.allowFullDocumentReview).toBe(true));
   it("hasConsultancy is true", () => expect(pro.hasConsultancy).toBe(true));
@@ -97,10 +97,10 @@ describe("cross-tier invariants", () => {
     expect(TIER_CAPABILITIES.pro.conversationRetentionDays).toBeNull();
   });
 
-  it("PDF export is available on plus and pro but not free", () => {
+  it("PDF export is disabled across user tiers", () => {
     expect(TIER_CAPABILITIES.free.allowPdfExport).toBe(false);
-    expect(TIER_CAPABILITIES.plus.allowPdfExport).toBe(true);
-    expect(TIER_CAPABILITIES.pro.allowPdfExport).toBe(true);
+    expect(TIER_CAPABILITIES.plus.allowPdfExport).toBe(false);
+    expect(TIER_CAPABILITIES.pro.allowPdfExport).toBe(false);
   });
 
   it("DOCX export is exclusive to pro", () => {

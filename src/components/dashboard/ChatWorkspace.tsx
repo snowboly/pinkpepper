@@ -35,7 +35,6 @@ export default function ChatWorkspace({
   initialUsage,
   usageLimit,
   dailyImageUploads,
-  canExportPdf,
   canExportWord,
   canReview,
   isAdmin: initialIsAdmin = false,
@@ -65,8 +64,7 @@ export default function ChatWorkspace({
   const [isAdmin, setIsAdmin] = useState(initialIsAdmin);
 
   // ── Export state ──
-  const [exportLoading, setExportLoading] = useState<"pdf" | "docx" | null>(null);
-  const [showExportMenu, setShowExportMenu] = useState(false);
+  const [exportLoading, setExportLoading] = useState<"docx" | null>(null);
 
 
   // ── Image attachment state ──
@@ -190,7 +188,6 @@ export default function ChatWorkspace({
     ? { ...TIER_CAPABILITIES.pro, allowPdfExport: true, allowWordExport: true, hasConsultancy: true }
     : {
         ...TIER_CAPABILITIES[tier],
-        allowPdfExport: TIER_CAPABILITIES[tier].allowPdfExport || canExportPdf,
         allowWordExport: TIER_CAPABILITIES[tier].allowWordExport || canExportWord,
       };
 
@@ -473,17 +470,20 @@ export default function ChatWorkspace({
   // ── Reviews ──
 
   // ── Export ──
-  async function exportDocument(format: "pdf" | "docx") {
+  async function exportDocument() {
     setError(null);
-    setShowExportMenu(false);
     if (!conversationId) {
       setError("Send at least one message before exporting.");
       return;
     }
-    setExportLoading(format);
+    if (tier !== "pro" && !isAdmin) {
+      setUpgradeModalTrigger("export");
+      return;
+    }
+    setExportLoading("docx");
     try {
-      trackWorkspaceEvent("export_started", { format, tier, source: "workspace", conversationId: conversationId ?? null });
-      const res = await fetch(`/api/export/${format}`, {
+      trackWorkspaceEvent("export_started", { format: "docx", tier, source: "workspace", conversationId: conversationId ?? null });
+      const res = await fetch("/api/export/docx", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ conversationId }),
@@ -497,12 +497,12 @@ export default function ChatWorkspace({
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `pinkpepper-export.${format}`;
+      a.download = "pinkpepper-export.docx";
       document.body.appendChild(a);
       a.click();
       a.remove();
       URL.revokeObjectURL(url);
-      trackWorkspaceEvent("export_completed", { format, tier, source: "workspace", conversationId: conversationId ?? null });
+      trackWorkspaceEvent("export_completed", { format: "docx", tier, source: "workspace", conversationId: conversationId ?? null });
     } catch {
       setError("Network error while exporting.");
     } finally {
@@ -833,14 +833,6 @@ export default function ChatWorkspace({
     return () => clearTypingInterval();
   }, [clearTypingInterval]);
 
-  // Close export menu on outside click
-  useEffect(() => {
-    if (!showExportMenu) return;
-    const handler = () => setShowExportMenu(false);
-    document.addEventListener("click", handler);
-    return () => document.removeEventListener("click", handler);
-  }, [showExportMenu]);
-
   // ── Render ──
   return (
     <>
@@ -1014,38 +1006,13 @@ export default function ChatWorkspace({
                 </button>
               )}
               {conversationId && (
-                <div className="relative">
-                  <button
-                    onClick={(e) => { e.stopPropagation(); setShowExportMenu((prev) => !prev); }}
-                    disabled={exportLoading !== null}
-                    className="rounded-full border border-[#E2E8F0] bg-white px-3 py-1 text-xs text-[#64748B] hover:bg-[#F8F9FB] disabled:opacity-50"
-                  >
-                    {exportLoading ? tw("exporting") : tw("exportConversation")}
-                  </button>
-                  {showExportMenu && (
-                    <div className="absolute bottom-full left-0 mb-1 rounded-lg border border-[#E2E8F0] bg-white py-1 shadow-lg z-50 min-w-[140px]">
-                      <button
-                        onClick={() => void exportDocument("pdf")}
-                        className="block w-full px-4 py-2 text-left text-xs text-[#475569] hover:bg-[#F8F9FB]"
-                      >
-                        {tw("pdf")}
-                      </button>
-                      <button
-                        onClick={() => {
-                          if (tier === "free" || tier === "plus") {
-                            setShowExportMenu(false);
-                            setUpgradeModalTrigger("export");
-                          } else {
-                            void exportDocument("docx");
-                          }
-                        }}
-                        className="block w-full px-4 py-2 text-left text-xs text-[#475569] hover:bg-[#F8F9FB]"
-                      >
-                        {tw("docx")} {tier !== "pro" && !isAdmin ? <span className="text-[10px] text-[#E11D48]">(Pro)</span> : null}
-                      </button>
-                    </div>
-                  )}
-                </div>
+                <button
+                  onClick={() => void exportDocument()}
+                  disabled={exportLoading !== null}
+                  className="rounded-full border border-[#E2E8F0] bg-white px-3 py-1 text-xs text-[#64748B] hover:bg-[#F8F9FB] disabled:opacity-50"
+                >
+                  {exportLoading ? tw("exporting") : `${tw("exportConversation")} (DOCX)`}
+                </button>
               )}
             </div>
           </div>

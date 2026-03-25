@@ -195,4 +195,13 @@ describe("chat workspace chrome", () => {
     expect(workspace).not.toContain("setActiveDocWizard");
     expect(workspace).not.toContain("setActiveAdvancedBuilder");
   });
+
+  it("keeps chat export on a single DOCX path", () => {
+    const workspace = readWorkspaceFile("src/components/dashboard/ChatWorkspace.tsx");
+
+    expect(workspace).toContain('fetch("/api/export/docx"');
+    expect(workspace).toContain('exportConversation")} (DOCX)`');
+    expect(workspace).not.toContain('void exportDocument("pdf")');
+    expect(workspace).not.toContain('{tw("pdf")}');
+  });
 });

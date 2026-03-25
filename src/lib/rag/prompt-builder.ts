@@ -12,10 +12,10 @@ const MODE_TEMPERATURES: Record<RAGMode, number> = {
 const PINKPEPPER_PRODUCT_INFO = `ABOUT PINKPEPPER (answer when users ask about you, the product, or their plan):
 PinkPepper is a food safety compliance SaaS that helps food businesses with HACCP plans, SOPs, audit preparation, allergen law, and EU/UK food safety compliance.
 Subscription tiers:
-- Free: 15 messages/day, 1 image upload/day, 10 saved conversations (30-day retention), no PDF/DOCX export, no consultancy.
-- Plus: 100 messages/day, 3 image uploads/day, unlimited conversations, PDF export for chat conversations, no document generation.
-- Pro: 1000 messages/day, 20 image uploads/day, unlimited conversations, PDF + DOCX export, 3 hours of food safety consultancy/month (within 5 working days).
-Features: AI chatbot (you), Pro-only document generation (HACCP plans, SOPs, cleaning schedules, temperature logs, and core compliance procedures), virtual audit mode, image analysis for food safety, PDF/DOCX export, and food safety consultancy (Pro only).
+- Free: 15 messages/day, 1 image upload/day, 10 saved conversations (30-day retention), no conversation export, no consultancy.
+- Plus: 100 messages/day, 3 image uploads/day, unlimited conversations, no conversation export, no document generation.
+- Pro: 1000 messages/day, 20 image uploads/day, unlimited conversations, DOCX conversation export, 3 hours of food safety consultancy/month (within 5 working days).
+Features: AI chatbot (you), Pro-only document generation (HACCP plans, SOPs, cleaning schedules, temperature logs, and core compliance procedures), virtual audit mode, image analysis for food safety, DOCX conversation export, and food safety consultancy (Pro only).
 If asked about upgrading, direct users to the upgrade option in the sidebar or settings.`;
 
 const SYSTEM_PROMPT_BASE = `You are PinkPepper, an expert AI food safety compliance assistant specialising in EU and UK food law and best practice.
@@ -62,13 +62,13 @@ export function getExportGuidance(tier?: SubscriptionTier): string {
 
   switch (tier) {
     case "pro":
-      return `${base} The user is on the Pro plan and can export conversations as PDF or Word (DOCX). After generating a document, remind them they can use the "Export Conversation" button at the bottom of the chat window to download it as PDF or Word.`;
+      return `${base} The user is on the Pro plan and can export conversations as DOCX. If they ask to download the conversation, tell them to use the "Export Conversation" button to export a DOCX file.`;
     case "plus":
-      return `${base} The user is on the Plus plan and can export conversations as PDF. After generating a document, remind them they can use the "Export Conversation" button at the bottom of the chat window to download it as PDF. For Word (DOCX) export, they would need to upgrade to Pro.`;
+      return `${base} The user is on the Plus plan and cannot export conversations. If they ask about export, explain that DOCX export is available on Pro.`;
     case "free":
-      return `${base} The user is on the Free plan and cannot export conversations. If they ask about exporting, let them know PDF export is available on Plus and Pro plans, and DOCX export on Pro. Direct them to the upgrade option in the sidebar or settings.`;
+      return `${base} The user is on the Free plan and cannot export conversations. If they ask about exporting, let them know DOCX export is available on Pro. Direct them to the upgrade option in the sidebar or settings.`;
     default:
-      return `${base} If the user asks to download or export a document, tell them to use the "Export Conversation" button at the bottom of the chat window. PDF export is available for Plus and Pro users; DOCX export is available for Pro users only.`;
+      return `${base} If the user asks to download or export a conversation, tell them to use the "Export Conversation" button to export a DOCX file when their plan allows it.`;
   }
 }
 
@@ -110,7 +110,7 @@ export function buildRAGSystemPrompt(
   const contextParts: string[] = [];
   if (currentDate) {
     contextParts.push(
-      `Today's date is ${currentDate}. Your knowledge base may contain regulations published up to the present day â€” always check retrieved context documents first before relying on your training weights alone. Do not tell users your training data ends in a specific year; if very recent changes are not found in context, recommend they verify with EUR-Lex, the FSA, or the relevant authority for the latest official text.`
+      `Today's date is ${currentDate}. Prioritise retrieved context documents and cite them. If the retrieved context is thin or the question depends on a very recent change, advise the user to verify the latest official text with EUR-Lex, the FSA, or the relevant authority.`
     );
   }
   if (businessTypeLabel) {
