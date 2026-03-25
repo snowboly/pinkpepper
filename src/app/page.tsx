@@ -73,9 +73,8 @@ export default function HomePage() {
               </span>
             </h1>
 
-            <p className="mx-auto mb-10 max-w-3xl text-lg leading-relaxed text-white/80 md:text-xl">
-              PinkPepper is AI food safety compliance software built for HACCP plans, allergen management, SOP generation, and inspection prep.
-              Create UK and EU-ready compliance documents that fit real kitchen, production, and audit workflows, then add food safety consultancy when the work needs specialist input.
+            <p className="mx-auto mb-10 max-w-3xl text-base leading-relaxed text-white/80 md:text-lg lg:text-xl">
+              AI food safety compliance software for HACCP plans, allergen management, SOPs, and inspection prep — with expert consultancy when you need it.
             </p>
 
             <div className="mb-10 flex flex-wrap items-center justify-center gap-3 text-sm font-medium text-white/80">
