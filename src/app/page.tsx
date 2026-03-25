@@ -74,7 +74,7 @@ export default function HomePage() {
             </h1>
 
             <p className="mx-auto mb-10 max-w-3xl text-base leading-relaxed text-white/80 md:text-lg lg:text-xl">
-              Create HACCP plans, SOPs, and audit-ready documents — backed by expert consultancy when you need it.
+              An AI food safety specialist and human consultancy in one platform.
             </p>
 
             <div className="mb-10 flex flex-wrap items-center justify-center gap-3 text-sm font-medium text-white/80">
