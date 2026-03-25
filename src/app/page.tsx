@@ -66,24 +66,9 @@ export default function HomePage() {
               AI food safety compliance software for EU and UK businesses
             </div>
 
-            <h1 className="pp-display mx-auto mb-6 max-w-4xl text-xl leading-[1.15] tracking-[-0.02em] text-white sm:text-2xl md:text-3xl lg:text-4xl">
-              A food safety-trained AI and specialist consultancy,{" "}
-              <span className="bg-gradient-to-r from-[#FECDD3] via-[#FDA4AF] to-[#FECDD3] bg-clip-text text-transparent">
-                all in one place.
-              </span>
+            <h1 className="pp-display mx-auto mb-8 max-w-4xl text-2xl leading-[1.15] tracking-[-0.02em] text-white sm:text-3xl md:text-4xl lg:text-5xl">
+              A food safety-trained AI and specialist consultancy, all in one place.
             </h1>
-
-            <div className="mb-10 flex flex-wrap items-center justify-center gap-3 text-sm font-medium text-white/80">
-              <Link href="/features/haccp-plan-generator" className="pp-interactive rounded-full border border-white/20 bg-white/10 px-4 py-2 backdrop-blur-sm transition-colors hover:border-white/40 hover:bg-white/20 hover:text-white">
-                Explore the HACCP plan generator
-              </Link>
-              <Link href="/features/allergen-documentation" className="pp-interactive rounded-full border border-white/20 bg-white/10 px-4 py-2 backdrop-blur-sm transition-colors hover:border-white/40 hover:bg-white/20 hover:text-white">
-                See allergen documentation workflows
-              </Link>
-              <Link href="/pricing" className="pp-interactive rounded-full border border-white/20 bg-white/10 px-4 py-2 backdrop-blur-sm transition-colors hover:border-white/40 hover:bg-white/20 hover:text-white">
-                Compare pricing plans
-              </Link>
-            </div>
 
             <div className="mb-8 flex justify-center">
               <a
@@ -120,31 +105,7 @@ export default function HomePage() {
               </a>
             </div>
 
-            <div className="mx-auto mb-10 grid max-w-5xl gap-4 text-left md:grid-cols-3">
-              {differentiators.map((item) => (
-                <div key={item.title} className="rounded-2xl border border-white/15 bg-white/10 p-5 backdrop-blur-sm">
-                  <p className="text-sm font-semibold text-white">{item.title}</p>
-                  <p className="mt-2 text-sm leading-relaxed text-white/85">{item.description}</p>
-                </div>
-              ))}
-            </div>
-
             <HeroChatForm />
-
-            <div className="mt-7 flex flex-wrap items-center justify-center gap-5 text-sm text-white/70">
-              <span className="inline-flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-                No credit card required
-              </span>
-              <span className="inline-flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-                EU and UK regulations
-              </span>
-              <span className="inline-flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-                PDF and Word export
-              </span>
-            </div>
           </div>
         </div>
       </section>
