@@ -9,11 +9,9 @@ describe("getStructuredGeneratedDocument", () => {
     };
 
     const result = getStructuredGeneratedDocument([
-      { role: "user", content: "Create a cleaning SOP", createdAt: "2026-03-25T10:00:00Z", metadata: null },
+      { role: "user", metadata: null },
       {
         role: "assistant",
-        content: "Here is your SOP",
-        createdAt: "2026-03-25T10:00:10Z",
         metadata: { generatedDocument },
       },
     ]);
@@ -26,9 +24,9 @@ describe("getStructuredGeneratedDocument", () => {
     const newer = { documentType: "sop", sections: [{ heading: "New", body: "New body" }] };
 
     const result = getStructuredGeneratedDocument([
-      { role: "assistant", content: "Older", createdAt: "2026-03-25T10:00:00Z", metadata: { generatedDocument: older } },
-      { role: "user", content: "Add more detail", createdAt: "2026-03-25T10:01:00Z", metadata: null },
-      { role: "assistant", content: "Updated", createdAt: "2026-03-25T10:02:00Z", metadata: { generatedDocument: newer } },
+      { role: "assistant", metadata: { generatedDocument: older } },
+      { role: "user", metadata: null },
+      { role: "assistant", metadata: { generatedDocument: newer } },
     ]);
 
     expect(result).toEqual(newer);
@@ -36,8 +34,8 @@ describe("getStructuredGeneratedDocument", () => {
 
   it("returns undefined when no assistant metadata includes a generated document", () => {
     const result = getStructuredGeneratedDocument([
-      { role: "user", content: "Hello", createdAt: "2026-03-25T10:00:00Z", metadata: null },
-      { role: "assistant", content: "Plain answer", createdAt: "2026-03-25T10:00:10Z", metadata: { citations: [] } },
+      { role: "user", metadata: null },
+      { role: "assistant", metadata: { citations: [] } },
     ]);
 
     expect(result).toBeUndefined();
