@@ -913,8 +913,6 @@ export default function ChatWorkspace({
             loadingMessages={loadingMessages}
             conversationId={conversationId}
             canUploadImages={canUploadImages}
-            onSetPrompt={setPrompt}
-            onFocusInput={() => textareaRef.current?.focus()}
             onQuickSuggestion={(suggestion) => {
               if (suggestion.category === "template_download" && suggestion.key) {
                 if (tier === "free") {
