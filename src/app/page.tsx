@@ -370,7 +370,7 @@ export default function HomePage() {
             <div className="flex flex-1 flex-col items-center gap-8">
               <div className="flex flex-wrap justify-center gap-8">
                 {[
-                  { id: "anne", name: "Anne", descriptor: "Supportive" },
+                  { id: "ana", name: "Ana", descriptor: "Supportive" },
                   { id: "jack", name: "Jack", descriptor: "Direct" },
                   { id: "greta", name: "Greta", descriptor: "Methodical" },
                 ].map((s) => (
@@ -390,7 +390,7 @@ export default function HomePage() {
               <div className="flex flex-wrap justify-center gap-8">
                 {[
                   { id: "jason", name: "Jason", descriptor: "Mentor" },
-                  { id: "leila", name: "Leila", descriptor: "Reassuring" },
+                  { id: "egle", name: "Egle", descriptor: "Reassuring" },
                 ].map((s) => (
                   <div key={s.name} className="flex flex-col items-center gap-2">
                     <Image
