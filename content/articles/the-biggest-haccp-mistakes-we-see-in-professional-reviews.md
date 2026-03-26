@@ -18,7 +18,7 @@ source: "ilovehaccp"
       
 
       
-      <p>The Hazard Analysis and Critical Control Points (HACCP) system is a preventive approach to food safety that identifies, evaluates, and controls hazards in the food production process.</p><h4>What you'll learn</h4><ul><li>How this HACCP topic applies in real-world operations</li><li>Common hazards and practical controls to reduce risk</li><li>Records and monitoring that auditors expect to see</li></ul><p> It is widely recognized and adopted by the food industry worldwide, including by regulatory bodies such as the FDA in the United States and the European Food Safety Authority (EFSA) in Europe. The Codex Alimentarius Commission, established by the Food and Agriculture Organization (FAO) of the United Nations and the World Health Organization (WHO), provides a framework for HACCP implementation that is internationally recognized.</p>
+      <p>The Hazard Analysis and Critical Control Points (HACCP) system is a preventive approach to food safety that identifies, evaluates, and controls hazards in the food production process.</p><p> It is widely recognized and adopted by the food industry worldwide, including by regulatory bodies such as the FDA in the United States and the European Food Safety Authority (EFSA) in Europe. The Codex Alimentarius Commission, established by the Food and Agriculture Organization (FAO) of the United Nations and the World Health Organization (WHO), provides a framework for HACCP implementation that is internationally recognized.</p>
       
       <h2>Common HACCP Mistakes</h2>
 

@@ -18,7 +18,7 @@ source: "ilovehaccp"
       
 
       
-      <p>Cooling and reheating are fundamental processes in the food industry that, if not managed properly, can lead to the proliferation of harmful bacteria, posing serious health risks to consumers. The Hazard Analysis and Critical Control Points (HACCP) system, widely adopted globally, identifies these steps as critical control points (CCPs) where significant hazards can be controlled, thereby preventing foodborne illnesses.</p><h4>What you'll learn</h4><ul><li>How this HACCP topic applies in real-world operations</li><li>Common hazards and practical controls to reduce risk</li><li>Records and monitoring that auditors expect to see</li></ul>
+      <p>Cooling and reheating are fundamental processes in the food industry that, if not managed properly, can lead to the proliferation of harmful bacteria, posing serious health risks to consumers. The Hazard Analysis and Critical Control Points (HACCP) system, widely adopted globally, identifies these steps as critical control points (CCPs) where significant hazards can be controlled, thereby preventing foodborne illnesses.</p>
       <h3>Cooling: A Critical Control Point</h3>
 
       <p>Cooling is a high-risk step because it involves reducing the temperature of cooked foods to a level that is not favorable for bacterial growth.</p><p> According to the FDA Food Code, cooked foods should be cooled from 57°C to 21°C within two hours and to 4°C or below within four hours. This guideline is crucial because the temperature range between 4°C and 60°C (4°C and 60°C) is known as the danger zone, where bacterial growth is most rapid.</p>

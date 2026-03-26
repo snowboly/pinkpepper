@@ -18,7 +18,7 @@ source: "ilovehaccp"
       
 
       
-               <p>The Hazard Analysis and Critical Control Points (HACCP) system is a systematic approach to identifying and controlling hazards in the food industry, as outlined by the Codex Alimentarius Commission. Non-conformities in HACCP refer to deviations from the established procedures, which can compromise the safety and quality of food products.</p><h4>What you'll learn</h4><ul><li>How this HACCP topic applies in real-world operations</li><li>Common hazards and practical controls to reduce risk</li><li>Records and monitoring that auditors expect to see</li></ul>
+               <p>The Hazard Analysis and Critical Control Points (HACCP) system is a systematic approach to identifying and controlling hazards in the food industry, as outlined by the Codex Alimentarius Commission. Non-conformities in HACCP refer to deviations from the established procedures, which can compromise the safety and quality of food products.</p>
                <h3>Identifying Non-Conformities</h3>
 
                <p>Identifying non-conformities is the first step in correcting them. This can be done through regular audits, monitoring, and verification activities. The FDA's Food Safety Modernization Act (FSMA) emphasizes the importance of preventive controls, which include identifying and correcting non-conformities.</p>
