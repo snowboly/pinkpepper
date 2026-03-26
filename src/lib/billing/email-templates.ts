@@ -8,18 +8,15 @@ const TIER_NAMES: Record<string, string> = {
 
 const TIER_FEATURES: Record<string, string[]> = {
   plus: [
-    "100 AI queries per day",
-    "PDF conversation export",
-    "Document and photo uploads",
-    "Unlimited saved conversations",
-    "25 voice transcriptions per day",
+    "Everything in Free, plus more usage",
+    "Unlimited saved conversations and projects",
+    "Access to downloadable templates",
   ],
   pro: [
+    "Everything in Plus, plus the highest usage limits",
+    "Priority support",
+    "Access to virtual audit mode",
     "2 hours of food safety consultancy per month",
-    "Document generation (HACCP plans, SOPs, logs, and more)",
-    "PDF &amp; DOCX export",
-    "Virtual Audit workflows",
-    "Highest daily limits for audit prep and operational use",
   ],
 };
 

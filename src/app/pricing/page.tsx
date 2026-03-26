@@ -16,15 +16,15 @@ export const metadata: Metadata = {
 const planChanges = [
   {
     plan: "Free",
-    detail: "Best for testing the product on real food safety questions before you commit.",
+    detail: "Chat on web and mobile, write and edit food safety content, analyze text and images, and access the curated knowledge base.",
   },
   {
     plan: "Plus",
-    detail: "Built for heavier day-to-day use, document uploads, and template access across a working team.",
+    detail: "Everything in Free, plus more usage, unlimited saved conversations and projects, and access to downloadable templates.",
   },
   {
     plan: "Pro",
-    detail: "Adds Virtual Audit, DOCX export, and consultancy support for higher-stakes work.",
+    detail: "Everything in Plus, plus the highest usage limits, priority support, virtual audit mode, and 2h/month of food safety consultancy.",
   },
 ];
 
@@ -80,7 +80,7 @@ export default async function PricingPage() {
         name: "Free",
         price: "0",
         priceCurrency: "EUR",
-        description: "15 messages per day, 3 image uploads per day, and 10 saved conversations.",
+        description: "Chat on web and mobile, write and edit food safety content, analyze text and images, and access the curated knowledge base.",
       },
       {
         "@type": "Offer",
@@ -93,7 +93,7 @@ export default async function PricingPage() {
           priceCurrency: "EUR",
           unitCode: "MON",
         },
-        description: "100 messages per day, 10 image uploads per day, 25 transcriptions, unlimited conversations, document uploads, downloadable templates.",
+        description: "Everything in Free, plus more usage, unlimited saved conversations and projects, and access to downloadable templates.",
       },
       {
         "@type": "Offer",
@@ -107,7 +107,7 @@ export default async function PricingPage() {
           unitCode: "MON",
         },
         description:
-          "1,000 messages per day, 50 image uploads per day, unlimited conversations, DOCX export, Virtual Audit, and 2 hours of consultancy per month.",
+          "Everything in Plus, plus the highest usage limits, priority support, virtual audit mode, and 2 hours of food safety consultancy per month.",
       },
     ],
   };
@@ -276,15 +276,15 @@ export default async function PricingPage() {
             <div className="mt-4 grid gap-4 text-sm text-[#64748B] md:grid-cols-3">
               <div>
                 <p className="font-medium text-[#334155]">Free</p>
-                <p className="mt-1">15 messages/day, 3 image uploads/day, 10 saved conversations, 30-day retention.</p>
+                <p className="mt-1">Chat on web and mobile, write and edit food safety content, analyze text and images, access the curated knowledge base.</p>
               </div>
               <div>
                 <p className="font-medium text-[#334155]">Plus</p>
-                <p className="mt-1">100 messages/day, 10 image uploads/day, unlimited conversations, uploads, downloadable templates.</p>
+                <p className="mt-1">Everything in Free, plus more usage, unlimited saved conversations and projects, and downloadable templates.</p>
               </div>
               <div>
                 <p className="font-medium text-[#334155]">Pro</p>
-                <p className="mt-1">1,000 messages/day, 50 image uploads/day, DOCX export, Virtual Audit, 2 consultancy hours/month.</p>
+                <p className="mt-1">Everything in Plus, plus the highest usage limits, priority support, virtual audit mode, and 2h/month of food safety consultancy.</p>
               </div>
             </div>
           </div>

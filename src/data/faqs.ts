@@ -81,7 +81,7 @@ export const faqs = [
     id: "consultant-access",
     question: "How do I access a specialist consultant through PinkPepper?",
     answer:
-      "Consultant access is available on selected plans. Once enabled, you can request a review of any document or compliance question directly within the platform. A qualified food safety professional will review your submission and return annotated feedback or a revised document, typically within one to two business days.",
+      "Consultant access is available on the Pro plan. Once active, you can request a review of any document or compliance question directly within the platform. A qualified food safety professional will review your submission and return feedback, typically within one to two business days.",
   },
 ];
 
