@@ -30,6 +30,7 @@ describe("iLoveHACCP article transform", () => {
     expect(result.body).not.toContain("/builder");
     expect(result.body).not.toContain("\u00e2\u2030\u00a4");
     expect(result.body).not.toContain("\\'");
+    expect(result.body).not.toContain("How this HACCP topic applies in real-world operations");
     expect(result.body).toContain("you'll fix it");
     expect(result.body).toContain("\u2264");
     expect(result.migrationFlags).toContain("legacy_cta_rewritten");

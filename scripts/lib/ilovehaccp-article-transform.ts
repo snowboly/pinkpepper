@@ -86,6 +86,10 @@ export function transformIloveHaccpArticle(article: SourceArticle): MigratedArti
     /<li>\s*<a href="\/pricing">(?:Build|Create|Generate|Review)[\s\S]*?<\/a>\s*<\/li>/gi,
     "",
   );
+  body = body.replace(
+    /<h4>What you'll learn<\/h4>\s*<ul>\s*<li>How this HACCP topic applies in real-world operations<\/li>\s*<li>Common hazards and practical controls to reduce risk<\/li>\s*<li>Records and monitoring that auditors expect to see<\/li>\s*<\/ul>/gi,
+    "",
+  );
   body = body.replace(/<ul>\s*<\/ul>/gi, "");
 
   if (body !== beforePromoCleanup) {

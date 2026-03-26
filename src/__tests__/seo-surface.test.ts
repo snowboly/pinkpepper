@@ -21,6 +21,14 @@ describe("SEO surface", () => {
     expect(layout).toContain('images: ["/og-image"]');
   });
 
+  it("allows article imagery from the configured external sources", () => {
+    const nextConfig = readPage("next.config.ts");
+
+    expect(nextConfig).toContain('hostname: "images.unsplash.com"');
+    expect(nextConfig).toContain('hostname: "images.pexels.com"');
+    expect(nextConfig).toContain("img-src 'self' blob: data: https://*.supabase.co https://images.unsplash.com https://images.pexels.com");
+  });
+
   it("includes public marketing pages and excludes auth/dashboard routes from sitemap and robots", async () => {
     const entries = (await sitemap()).map((entry) => entry.url);
     const robotRules = robots().rules;
