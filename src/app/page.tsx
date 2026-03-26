@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -369,17 +370,18 @@ export default function HomePage() {
             <div className="flex flex-1 flex-col items-center gap-8">
               <div className="flex flex-wrap justify-center gap-8">
                 {[
-                  { name: "Anne", descriptor: "Supportive", colour: "#E11D48" },
-                  { name: "Jack", descriptor: "Direct", colour: "#334155" },
-                  { name: "Greta", descriptor: "Methodical", colour: "#0EA5E9" },
+                  { id: "anne", name: "Anne", descriptor: "Supportive" },
+                  { id: "jack", name: "Jack", descriptor: "Direct" },
+                  { id: "greta", name: "Greta", descriptor: "Methodical" },
                 ].map((s) => (
                   <div key={s.name} className="flex flex-col items-center gap-2">
-                    <div
-                      className="flex h-24 w-24 items-center justify-center rounded-full ring-4 ring-white shadow-md transition-transform duration-200 hover:-translate-y-1"
-                      style={{ backgroundColor: s.colour }}
-                    >
-                      <span className="text-3xl font-bold text-white">{s.name[0]}</span>
-                    </div>
+                    <Image
+                      src={`/${s.id}.svg`}
+                      alt={s.name}
+                      width={96}
+                      height={96}
+                      className="rounded-full ring-4 ring-white shadow-md transition-transform duration-200 hover:-translate-y-1"
+                    />
                     <p className="text-sm font-semibold text-[#0F172A]">{s.name}</p>
                     <p className="text-xs text-[#94A3B8]">{s.descriptor}</p>
                   </div>
@@ -387,16 +389,17 @@ export default function HomePage() {
               </div>
               <div className="flex flex-wrap justify-center gap-8">
                 {[
-                  { name: "Jason", descriptor: "Mentor", colour: "#D97706" },
-                  { name: "Leila", descriptor: "Reassuring", colour: "#10B981" },
+                  { id: "jason", name: "Jason", descriptor: "Mentor" },
+                  { id: "leila", name: "Leila", descriptor: "Reassuring" },
                 ].map((s) => (
                   <div key={s.name} className="flex flex-col items-center gap-2">
-                    <div
-                      className="flex h-24 w-24 items-center justify-center rounded-full ring-4 ring-white shadow-md transition-transform duration-200 hover:-translate-y-1"
-                      style={{ backgroundColor: s.colour }}
-                    >
-                      <span className="text-3xl font-bold text-white">{s.name[0]}</span>
-                    </div>
+                    <Image
+                      src={`/${s.id}.svg`}
+                      alt={s.name}
+                      width={96}
+                      height={96}
+                      className="rounded-full ring-4 ring-white shadow-md transition-transform duration-200 hover:-translate-y-1"
+                    />
                     <p className="text-sm font-semibold text-[#0F172A]">{s.name}</p>
                     <p className="text-xs text-[#94A3B8]">{s.descriptor}</p>
                   </div>
