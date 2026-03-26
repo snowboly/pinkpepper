@@ -64,9 +64,18 @@ export default function MessageItem({ message }: MessageItemProps) {
     <div className="group py-5">
       <div className="mx-auto max-w-5xl px-4 md:px-6">
         <div className="mb-2 flex items-center gap-2">
-          <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-[#E11D48] text-[10px] font-bold text-white">
-            PP
-          </div>
+          {message.persona ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={`/${message.persona.name.toLowerCase()}.svg`}
+              alt={message.persona.name}
+              className="h-7 w-7 flex-shrink-0 rounded-full"
+            />
+          ) : (
+            <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-[#E11D48] text-[10px] font-bold text-white">
+              PP
+            </div>
+          )}
           <span className="text-sm font-semibold text-[#0F172A]">
             {message.persona ? message.persona.name : t("pinkPepper")}
           </span>
