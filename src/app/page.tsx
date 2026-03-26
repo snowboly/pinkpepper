@@ -297,7 +297,7 @@ export default function HomePage() {
           <div className="mx-auto grid max-w-5xl gap-6 lg:grid-cols-3">
             <div className="flex flex-col rounded-3xl border border-[#E2E8F0] bg-[#FCFDFE] p-8">
               <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-[#94A3B8]">Free</h3>
-              <p className="mt-4 text-sm leading-relaxed text-[#64748B]">Use PinkPepper on real questions before you commit.</p>
+              <p className="mt-4 min-h-[4.5rem] text-sm leading-relaxed text-[#64748B]">Use PinkPepper on real questions before you commit.</p>
               <div className="mt-6 flex items-baseline gap-1">
                 <span className="text-5xl font-bold tracking-tight text-[#0F172A]"><span className="text-2xl align-super">€</span>0</span>
                 <span className="text-base text-[#94A3B8]">/month</span>
@@ -316,7 +316,7 @@ export default function HomePage() {
 
             <div className="flex flex-col rounded-3xl border border-[#E2E8F0] bg-white p-8">
               <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-[#94A3B8]">Plus</h3>
-              <p className="mt-4 text-sm leading-relaxed text-[#64748B]">For teams that need regular day-to-day use, uploads, and template access.</p>
+              <p className="mt-4 min-h-[4.5rem] text-sm leading-relaxed text-[#64748B]">For teams that need regular day-to-day use, uploads, and template access.</p>
               <div className="mt-6 flex items-baseline gap-1">
                 <span className="text-5xl font-bold tracking-tight text-[#0F172A]"><span className="text-2xl align-super">€</span>19</span>
                 <span className="text-base text-[#94A3B8]">/month</span>
@@ -335,7 +335,7 @@ export default function HomePage() {
 
             <div className="flex flex-col rounded-3xl border border-[#F9A8D4] bg-[#FFF8FB] p-8">
               <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-[#BE123C]">Pro</h3>
-              <p className="mt-4 text-sm leading-relaxed text-[#64748B]">For operators preparing for inspections, audits, and higher-risk work that needs direct consultancy support.</p>
+              <p className="mt-4 min-h-[4.5rem] text-sm leading-relaxed text-[#64748B]">For operators preparing for inspections, audits, and higher-risk work that needs direct consultancy support.</p>
               <div className="mt-6 flex items-baseline gap-1">
                 <span className="text-5xl font-bold tracking-tight text-[#0F172A]"><span className="text-2xl align-super">€</span>99</span>
                 <span className="text-base text-[#94A3B8]">/month</span>
