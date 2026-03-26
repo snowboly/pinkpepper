@@ -354,6 +354,59 @@ export default function HomePage() {
         </div>
       </section>
 
+      <section className="border-b border-[#F1F5F9] bg-[#FFF8FB] py-20">
+        <div className="pp-container">
+          <div className="flex flex-col gap-14 lg:flex-row lg:items-center lg:gap-20">
+            <div className="max-w-md">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#E11D48]">Your specialists</p>
+              <h2 className="pp-display mt-4 text-4xl text-[#0F172A] md:text-5xl">Five specialists. One subscription.</h2>
+              <p className="mt-5 text-lg leading-relaxed text-[#475569]">
+                Every PinkPepper conversation is handled by one of five AI food safety specialists. Each has a distinct approach — from step-by-step checklists to direct executive summaries — so you get the right tone for every situation.
+              </p>
+              <p className="mt-4 text-sm text-[#94A3B8]">Assigned automatically. Same conversation, same specialist.</p>
+            </div>
+
+            <div className="flex flex-1 flex-col items-center gap-8">
+              <div className="flex flex-wrap justify-center gap-8">
+                {[
+                  { name: "Anne", descriptor: "Supportive", colour: "#E11D48" },
+                  { name: "Jack", descriptor: "Direct", colour: "#334155" },
+                  { name: "Greta", descriptor: "Methodical", colour: "#0EA5E9" },
+                ].map((s) => (
+                  <div key={s.name} className="flex flex-col items-center gap-2">
+                    <div
+                      className="flex h-24 w-24 items-center justify-center rounded-full ring-4 ring-white shadow-md transition-transform duration-200 hover:-translate-y-1"
+                      style={{ backgroundColor: s.colour }}
+                    >
+                      <span className="text-3xl font-bold text-white">{s.name[0]}</span>
+                    </div>
+                    <p className="text-sm font-semibold text-[#0F172A]">{s.name}</p>
+                    <p className="text-xs text-[#94A3B8]">{s.descriptor}</p>
+                  </div>
+                ))}
+              </div>
+              <div className="flex flex-wrap justify-center gap-8">
+                {[
+                  { name: "Jason", descriptor: "Mentor", colour: "#D97706" },
+                  { name: "Leila", descriptor: "Reassuring", colour: "#10B981" },
+                ].map((s) => (
+                  <div key={s.name} className="flex flex-col items-center gap-2">
+                    <div
+                      className="flex h-24 w-24 items-center justify-center rounded-full ring-4 ring-white shadow-md transition-transform duration-200 hover:-translate-y-1"
+                      style={{ backgroundColor: s.colour }}
+                    >
+                      <span className="text-3xl font-bold text-white">{s.name[0]}</span>
+                    </div>
+                    <p className="text-sm font-semibold text-[#0F172A]">{s.name}</p>
+                    <p className="text-xs text-[#94A3B8]">{s.descriptor}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="relative overflow-hidden border-b border-[#F1F5F9] bg-[#F8FAFC] py-24">
         <div className="pp-container">
           <div className="mx-auto max-w-3xl">
