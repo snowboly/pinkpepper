@@ -146,6 +146,7 @@ describe("premium quality regressions", () => {
 
     expect(pricing).toContain("direct food safety consultancy");
     expect(pricing).toContain("2 hours of food safety consultancy each month");
+    expect(pricing).toContain("Access to virtual audit mode");
     expect(pricing).not.toContain("Full PDF and DOCX export");
     expect(pricing).not.toContain("100 AI queries per day");
     expect(pricing).not.toContain("voice transcriptions");
