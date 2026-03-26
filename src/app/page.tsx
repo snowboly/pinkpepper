@@ -56,21 +56,6 @@ export default function HomePage() {
               qualified food safety consultants when you need specialist judgment.
             </p>
 
-            <div className="mb-8 flex flex-wrap items-center justify-center gap-3">
-              <Link
-                href="/signup"
-                className="pp-interactive rounded-full bg-[#E11D48] px-6 py-3 text-sm font-semibold text-white hover:bg-[#BE123C]"
-              >
-                Start for free
-              </Link>
-              <Link
-                href="/pricing"
-                className="pp-interactive rounded-full border border-white/20 bg-white/10 px-6 py-3 text-sm font-semibold text-white hover:bg-white/15"
-              >
-                View pricing
-              </Link>
-            </div>
-
             <div className="mb-8 flex justify-center">
               <a
                 href="https://eur-lex.europa.eu"
