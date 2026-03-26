@@ -23,9 +23,9 @@
     "reviewBannerTitle": "Quer que um especialista humano verifique este documento?",
     "reviewBannerBody": "Os nossos especialistas em segurança alimentar analisam os seus documentos gerados por IA quanto a precisão, lacunas de conformidade e preparação para auditorias.",
     "reviewUpsellTitle": "Faça este documento ser verificado por um especialista humano",
-    "reviewUpsellBody": "O plano Pro inclui 3 horas de consultoria em segurança alimentar/mês — revisão de documentos, apoio à geração e Q&A assíncrono.",
+    "reviewUpsellBody": "O plano Pro inclui 2 horas de consultoria em segurança alimentar/mês — revisão de documentos, apoio à geração e Q&A assíncrono.",
     "reviewUpsellCta": "Atualizar para Pro",
-    "humanReviewHighlight": "O plano Pro inclui 3 horas de consultoria em segurança alimentar por mês com um especialista qualificado.",
+    "humanReviewHighlight": "O plano Pro inclui 2 horas de consultoria em segurança alimentar por mês com um especialista qualificado.",
     "suggestions": {
       "haccpPlan": {
         "label": "Plano HACCP",
@@ -230,7 +230,7 @@
           "1.000 mensagens/dia",
           "20 carregamentos de imagens/dia",
           "Exportação PDF + Word",
-          "3h de consultoria em segurança alimentar/mês",
+          "2h de consultoria em segurança alimentar/mês",
           "Limites diários mais elevados para preparação de auditorias"
         ],
         "cta": "Atualizar para Pro"
@@ -250,7 +250,7 @@
     "scopeNote": "A consultoria limita-se ao conteúdo da conversa selecionada. Pedidos fora do tema ou fora do âmbito podem ser recusados.",
     "turnaround": "Tempo de resposta:",
     "turnaroundTimes": "Respostas em 5 dias úteis",
-    "fullReviewCostNote": "A consultoria é contabilizada em incrementos de 15 minutos contra as suas 3 horas mensais.",
+    "fullReviewCostNote": "A consultoria é contabilizada em incrementos de 15 minutos contra as suas 2 horas mensais.",
     "documentType": "Tipo de documento",
     "quickCheck": "Verificação Rápida",
     "quickCheckCredits": "— 1 crédito",

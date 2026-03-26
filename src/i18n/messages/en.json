@@ -23,9 +23,9 @@
     "reviewBannerTitle": "Want a human expert to check this document?",
     "reviewBannerBody": "Our food safety specialists review your AI-generated documents for accuracy, compliance gaps, and audit readiness.",
     "reviewUpsellTitle": "Get this document verified by a human expert",
-    "reviewUpsellBody": "Pro plan includes 3 hours of food safety consultancy/month — document review, generation support, and async Q&A.",
+    "reviewUpsellBody": "Pro plan includes 2 hours of food safety consultancy/month — document review, generation support, and async Q&A.",
     "reviewUpsellCta": "Upgrade to Pro",
-    "humanReviewHighlight": "Pro plan includes 3 hours of food safety consultancy each month with a qualified specialist.",
+    "humanReviewHighlight": "Pro plan includes 2 hours of food safety consultancy each month with a qualified specialist.",
     "suggestions": {
       "haccpPlan": {
         "label": "HACCP plan",
@@ -339,7 +339,7 @@
           "DOCX template downloads",
           "Virtual Audit workflows",
           "PDF + DOCX export",
-          "3h food safety consultancy/month",
+          "2h food safety consultancy/month",
           "Highest daily limits for audit prep and operational use"
         ],
         "cta": "Upgrade to Pro"
@@ -359,13 +359,13 @@
     "scopeNote": "Consultancy is scoped to the content of the selected conversation. Off-topic or out-of-scope requests may be declined.",
     "turnaround": "Response time:",
     "turnaroundTimes": "Responses within 5 working days",
-    "fullReviewCostNote": "Consultancy is tracked in 15-minute increments against your 3 monthly hours.",
+    "fullReviewCostNote": "Consultancy is tracked in 15-minute increments against your 2 monthly hours.",
     "documentType": "Document type",
     "quickCheck": "Quick Check",
     "quickCheckCredits": "— 1 credit",
     "fullDocumentReview": "Full Document Review",
-    "fullDocumentReviewCredits": "— uses all 3 credits",
-    "fullReviewWarning": "This will use all 6 of your monthly review slots. You won't be able to submit additional reviews this month.",
+    "fullDocumentReviewCredits": "— uses all 2 credits",
+    "fullReviewWarning": "This will use all 4 of your monthly review slots. You won't be able to submit additional reviews this month.",
     "notesLabel": "Notes for reviewer (optional)",
     "notesPlaceholder": "Tell the reviewer what you want checked.",
     "submitting": "Submitting...",

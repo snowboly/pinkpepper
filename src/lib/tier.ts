@@ -55,7 +55,7 @@ export const TIER_CAPABILITIES: Record<SubscriptionTier, TierCapabilities> = {
     allowWordExport: true,
     allowFullDocumentReview: true,
     hasConsultancy: true,
-    monthlyConsultancyRequests: 3,
+    monthlyConsultancyRequests: 2,
     reviewTurnaround: "within 5 working days",
     maxResponseTokens: 8192,
   },

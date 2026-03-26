@@ -31,7 +31,7 @@ const planChanges = [
 const faqs = [
   {
     q: "How do the consultancy hours work on Pro?",
-    a: "Pro includes 3 hours of food safety consultancy each month. Use them for review, guidance, and higher-risk support. Hours do not roll over.",
+    a: "Pro includes 2 hours of food safety consultancy each month. Use them for review, guidance, and higher-risk support. Hours do not roll over.",
   },
   {
     q: "Can I change plans later?",
@@ -107,7 +107,7 @@ export default async function PricingPage() {
           unitCode: "MON",
         },
         description:
-          "1,000 messages per day, 50 image uploads per day, unlimited conversations, DOCX export, Virtual Audit, and 3 hours of consultancy per month.",
+          "1,000 messages per day, 50 image uploads per day, unlimited conversations, DOCX export, Virtual Audit, and 2 hours of consultancy per month.",
       },
     ],
   };
@@ -229,10 +229,6 @@ export default async function PricingPage() {
                 <span className="text-5xl font-bold tracking-tight text-[#0F172A]"><span className="text-2xl align-super">€</span>99</span>
                 <span className="text-base text-[#94A3B8]">/month + VAT</span>
               </div>
-              <div className="mt-5 rounded-2xl border border-[#FBCFE8] bg-white px-4 py-3 text-sm text-[#475569]">
-                <p className="font-semibold text-[#0F172A]">Consultancy included</p>
-                <p className="mt-1">3 hours each month for review, guidance, and higher-risk support.</p>
-              </div>
               <div className="my-6 border-t border-[#F1F5F9]" />
               <ul className="flex-1 space-y-3.5 text-sm text-[#475569]">
                 <li className="flex items-start gap-2.5">
@@ -249,7 +245,7 @@ export default async function PricingPage() {
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  3 hours of food safety consultancy each month for review, guidance, and higher-risk support
+                  2 hours of food safety consultancy each month for review, guidance, and higher-risk support
                 </li>
               </ul>
               <PricingActions
@@ -288,7 +284,7 @@ export default async function PricingPage() {
               </div>
               <div>
                 <p className="font-medium text-[#334155]">Pro</p>
-                <p className="mt-1">1,000 messages/day, 50 image uploads/day, DOCX export, Virtual Audit, 3 consultancy hours/month.</p>
+                <p className="mt-1">1,000 messages/day, 50 image uploads/day, DOCX export, Virtual Audit, 2 consultancy hours/month.</p>
               </div>
             </div>
           </div>
