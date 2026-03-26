@@ -77,7 +77,8 @@ async function handleImageAnalysis(
   ]);
 
   if (insertMsgError) {
-    return NextResponse.json({ error: "Failed to save messages." }, { status: 500 });
+    // Log for debugging but do not block the response — the analysis succeeded.
+    console.error("[chat/image] Failed to save messages to DB:", insertMsgError);
   }
 
   const { error: usageInsertError } = await supabase.from("usage_events").insert({

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { useTranslations } from "next-intl";
 import type { Message } from "./types";
 import {
@@ -92,7 +93,7 @@ export default function MessageItem({ message }: MessageItemProps) {
 
         <div className="pl-9">
           <div className="pp-markdown text-base text-[#0F172A]">
-            <ReactMarkdown>{message.content}</ReactMarkdown>
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>{message.content}</ReactMarkdown>
             {message.isStreaming && (
               <span className="ml-0.5 inline-block h-4 w-0.5 animate-pulse align-text-bottom bg-[#0F172A]" />
             )}

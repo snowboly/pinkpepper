@@ -137,7 +137,7 @@ export default function AboutPage() {
               {
                 icon: Users,
                 title: "Food Safety Consultancy",
-                body: "Critical documents deserve expert eyes. Our Pro tier includes 2 hours of food safety consultancy each month — document review, generation support, and async Q&A from qualified professionals.",
+                body: "Critical documents deserve expert eyes. Our Pro plan includes 2 hours of food safety consultancy each month — guidance and specialist support from qualified professionals.",
               },
               {
                 icon: ShieldCheck,
