@@ -354,16 +354,12 @@ export default function HomePage() {
                 <span className="text-5xl font-bold tracking-tight text-[#0F172A]"><span className="text-2xl align-super">€</span>99</span>
                 <span className="text-base text-[#94A3B8]">/month</span>
               </div>
-              <div className="mt-5 rounded-2xl border border-[#FBCFE8] bg-white px-4 py-3 text-sm text-[#475569]">
-                <p className="font-semibold text-[#0F172A]">Consultancy included</p>
-                <p className="mt-1">3 hours each month for review, guidance, and higher-risk support.</p>
-              </div>
               <div className="my-6 border-t border-[#F1F5F9]" />
               <ul className="flex-1 space-y-3.5 text-sm text-[#475569]">
                 <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />1,000 messages per day and 50 image uploads per day</li>
                 <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />Unlimited conversations, uploads, and template downloads</li>
                 <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />DOCX conversation export and Virtual Audit</li>
-                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />3 hours of food safety consultancy each month</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />2 hours of food safety consultancy each month</li>
               </ul>
               <Link href="/signup?plan=pro" className="mt-8 block rounded-xl bg-[#E11D48] py-3.5 text-center text-sm font-semibold text-white transition-all duration-200 hover:bg-[#BE123C] hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#E11D48]/25 active:scale-[0.98]">
                 Choose Pro

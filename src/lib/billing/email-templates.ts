@@ -15,7 +15,7 @@ const TIER_FEATURES: Record<string, string[]> = {
     "25 voice transcriptions per day",
   ],
   pro: [
-    "3 hours of food safety consultancy per month",
+    "2 hours of food safety consultancy per month",
     "Document generation (HACCP plans, SOPs, logs, and more)",
     "PDF &amp; DOCX export",
     "Virtual Audit workflows",
