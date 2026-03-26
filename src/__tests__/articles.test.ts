@@ -4,6 +4,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { transformIloveHaccpArticle } from "../../scripts/lib/ilovehaccp-article-transform";
 import { getAllArticles, getArticleBySlug } from "@/lib/articles";
+import { processArticleContent } from "@/lib/article-content";
 
 describe("iLoveHACCP article transform", () => {
   it("normalizes metadata, strips legacy markers, and flags migration issues", () => {
@@ -87,5 +88,21 @@ publishedAt: "2026-02-10"
     expect(article?.body).toContain("<h2>First body</h2>");
     expect(article?.source).toBe("ilovehaccp");
     expect(await getArticleBySlug("missing", { contentDir })).toBeNull();
+  });
+});
+
+describe("article content processing", () => {
+  it("normalizes rich article html for editorial rendering", () => {
+    const result = processArticleContent(
+      "<blockquote><strong>Audit Tip:</strong> Keep records ready.</blockquote><h2>Critical Control Points</h2><p>What you\\'ll check each day.</p><figure><img src=\"https://example.com/hero.jpg\" alt=\"Hero\" /></figure>",
+    );
+
+    expect(result.normalizedContent).toContain("What you'll check each day.");
+    expect(result.headings).toEqual([
+      { id: "critical-control-points", text: "Critical Control Points", level: 2 },
+    ]);
+    expect(result.processedContent).toContain('id="critical-control-points"');
+    expect(result.processedContent).toContain("pp-article-callout");
+    expect(result.processedContent).toContain("pp-article-figure");
   });
 });
