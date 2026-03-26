@@ -9,6 +9,7 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "articles:migrate:ilovehaccp": "node scripts/migrate-ilovehaccp-articles.mjs",
     "supabase:types": "supabase gen types typescript --project-id klzvpixfslfsrjafbwkc > src/types/database.types.ts"
   },
   "dependencies": {
