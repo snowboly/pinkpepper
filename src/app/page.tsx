@@ -48,7 +48,7 @@ export default function HomePage() {
             </div>
 
             <h1 className="pp-display mx-auto mb-8 max-w-4xl text-2xl leading-[1.15] tracking-[-0.02em] text-white sm:text-3xl md:text-4xl lg:text-5xl">
-              AI food safety compliance software with specialist backup when the stakes are higher.
+              AI food safety compliance software with a specialist consultant on retainer.
             </h1>
 
             <p className="mx-auto mb-8 max-w-3xl text-base leading-relaxed text-white/80 sm:text-lg">
