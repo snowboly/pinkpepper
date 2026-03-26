@@ -239,11 +239,7 @@ export default async function PricingPage() {
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
                   Unlimited conversations, document uploads, and template downloads
                 </li>
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  DOCX conversation export and Virtual Audit
-                </li>
-                <li className="flex items-start gap-2.5">
+<li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
                   2 hours of food safety consultancy each month for review, guidance, and higher-risk support
                 </li>
