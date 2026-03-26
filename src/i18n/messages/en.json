@@ -15,17 +15,17 @@
     "imageAnalysisNote": "{name} - food safety analysis will be performed on this photo.",
     "attachPhotoTitle": "Attach a photo for food safety analysis",
     "attachDocumentTitle": "Attach a document (PDF, DOCX, TXT)",
-    "upgradePhotoTitle": "Upgrade to Plus or Pro to analyse photos",
-    "upgradePhotoTooltip": "Upgrade for photo analysis",
+    "upgradePhotoTitle": "Upgrade to Plus or Pro to analyze photos",
+    "upgradePhotoTooltip": "Upgrade to analyze photos",
     "photoNote": "Add a note about this photo (optional)...",
     "placeholder": "Ask a food safety question... (Shift+Enter for new line)",
     "stopGenerating": "Stop generating",
     "reviewBannerTitle": "Want a human expert to check this document?",
     "reviewBannerBody": "Our food safety specialists review your AI-generated documents for accuracy, compliance gaps, and audit readiness.",
     "reviewUpsellTitle": "Get this document verified by a human expert",
-    "reviewUpsellBody": "Pro plan includes 2 hours of food safety consultancy/month — document review, generation support, and async Q&A.",
+    "reviewUpsellBody": "Pro plan includes 2h of food safety consultancy/month — guidance and specialist support.",
     "reviewUpsellCta": "Upgrade to Pro",
-    "humanReviewHighlight": "Pro plan includes 2 hours of food safety consultancy each month with a qualified specialist.",
+    "humanReviewHighlight": "Pro plan includes 2h of food safety consultancy each month with a qualified specialist.",
     "suggestions": {
       "haccpPlan": {
         "label": "HACCP plan",
@@ -297,11 +297,11 @@
     "triggers": {
       "message_limit": {
         "heading": "You've reached your daily message limit",
-        "body": "Upgrade to continue chatting. Plus gives you 7× more messages per day — Pro gives you 65×."
+        "body": "Upgrade to continue chatting with more usage on Plus or Pro."
       },
       "image_limit": {
         "heading": "Unlock photo analysis",
-        "body": "Upload photos of kitchens, labels, or food products and get instant food safety feedback."
+        "body": "Analyze photos of kitchens, labels, and food products with Plus or Pro."
       },
       "transcription_limit": {
         "heading": "Unlock voice transcription",
@@ -313,7 +313,7 @@
       },
       "review": {
         "heading": "Get food safety consultancy",
-        "body": "Get document review, generation support, and async Q&A from a qualified food safety specialist."
+        "body": "Get guidance and specialist support from a qualified food safety professional on Pro."
       },
       "audit_mode": {
         "heading": "Unlock Virtual Audit",
@@ -325,10 +325,10 @@
         "name": "Plus",
         "price": "€19/mo",
         "highlights": [
-          "Analyse uploads and get faster answers",
-          "PDF export for chat conversations",
-          "Unlimited saved conversations",
-          "Higher daily chat, image, and voice limits"
+          "Everything in Free, plus:",
+          "More usage",
+          "Unlimited saved conversations and projects",
+          "Access to downloadable templates"
         ],
         "cta": "Upgrade to Plus"
       },
@@ -336,11 +336,11 @@
         "name": "Pro",
         "price": "€99/mo",
         "highlights": [
-          "DOCX template downloads",
-          "Virtual Audit workflows",
-          "PDF + DOCX export",
-          "2h food safety consultancy/month",
-          "Highest daily limits for audit prep and operational use"
+          "Everything in Plus, plus:",
+          "Highest usage limits",
+          "Priority support",
+          "Access to virtual audit mode",
+          "2h/month of food safety consultancy"
         ],
         "cta": "Upgrade to Pro"
       }
