@@ -53,6 +53,6 @@ Implementing and maintaining CCPs requires a thorough understanding of the food 
 </ul>
 Regular audits by Environmental Health Officers (EHOs) will assess compliance with Regulation 852/2004, making accurate documentation vital for passing inspections.
 
-<h4>What you\'ll learn</h4><ul><li>How this HACCP topic applies in real-world operations</li><li>Common hazards and practical controls to reduce risk</li><li>Records and monitoring that auditors expect to see</li></ul>
+<h4>What you'll learn</h4><ul><li>How this HACCP topic applies in real-world operations</li><li>Common hazards and practical controls to reduce risk</li><li>Records and monitoring that auditors expect to see</li></ul>
 
 

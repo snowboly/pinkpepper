@@ -2,7 +2,6 @@ import fs from "node:fs";
 import path from "node:path";
 import vm from "node:vm";
 
-const SOURCE_FILE = "C:/Users/Joao/websites/ilovehaccp/src/data/articles.ts";
 const OUTPUT_DIR = path.join(process.cwd(), "content", "articles");
 const REPORT_DIR = path.join(process.cwd(), "docs", "superpowers", "reports");
 const REPORT_FILE = path.join(REPORT_DIR, "2026-03-26-ilovehaccp-article-migration-report.md");
@@ -19,6 +18,18 @@ function normalizePublishedAt(value) {
   const parsed = new Date(value);
   if (Number.isNaN(parsed.getTime())) return value;
   return parsed.toISOString().slice(0, 10);
+}
+
+function resolveSourceFile() {
+  const sourceFile = process.env.ILOVEHACCP_SOURCE_FILE ?? process.argv[2];
+
+  if (!sourceFile) {
+    throw new Error(
+      "Missing source file. Pass the iLoveHACCP articles file path as the first argument or set ILOVEHACCP_SOURCE_FILE.",
+    );
+  }
+
+  return path.resolve(sourceFile);
 }
 
 function transformArticle(article) {
@@ -42,6 +53,11 @@ function transformArticle(article) {
   if (body.includes('href="/builder"')) {
     body = body.replaceAll('href="/builder"', 'href="/pricing"');
     pushFlag("legacy_cta_rewritten");
+  }
+
+  if (body.includes("\\'")) {
+    body = body.replaceAll("\\'", "'");
+    pushFlag("escape_normalized");
   }
 
   const beforePromoCleanup = body;
@@ -95,10 +111,11 @@ function transformArticle(article) {
 }
 
 function loadSourceArticles() {
-  const source = fs.readFileSync(SOURCE_FILE, "utf8");
+  const sourceFile = resolveSourceFile();
+  const source = fs.readFileSync(sourceFile, "utf8");
   const match = source.match(/export const articles: Article\[] = (\[[\s\S]*\]);\s*$/);
   if (!match) {
-    throw new Error("Could not locate article array in source file");
+    throw new Error(`Could not locate article array in source file: ${sourceFile}`);
   }
 
   return vm.runInNewContext(match[1], {}, { timeout: 1000 });

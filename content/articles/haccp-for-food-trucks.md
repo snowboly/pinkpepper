@@ -17,7 +17,7 @@ source: "ilovehaccp"
 
       
 
-<p>In the vibrant world of food trucks and mobile catering, delicious meals are served on the go, but behind every tasty bite lies the critical need for food safety. As the popularity of mobile food services continues to rise, so does the responsibility of operators to ensure the health and safety of their customers. This is where HACCP (Hazard Analysis Critical Control Point) comes into play.</p><h4>What you\'ll learn</h4><ul><li>How this HACCP topic applies in real-world operations</li><li>Common hazards and practical controls to reduce risk</li><li>Records and monitoring that auditors expect to see</li></ul>
+<p>In the vibrant world of food trucks and mobile catering, delicious meals are served on the go, but behind every tasty bite lies the critical need for food safety. As the popularity of mobile food services continues to rise, so does the responsibility of operators to ensure the health and safety of their customers. This is where HACCP (Hazard Analysis Critical Control Point) comes into play.</p><h4>What you'll learn</h4><ul><li>How this HACCP topic applies in real-world operations</li><li>Common hazards and practical controls to reduce risk</li><li>Records and monitoring that auditors expect to see</li></ul>
 <p>HACCP is a systematic approach to food safety that identifies, evaluates, and controls hazards throughout the food production process. For mobile food vendors, implementing HACCP principles is not just a regulatory requirement; it's a vital component of their operational success.</p>
 
 

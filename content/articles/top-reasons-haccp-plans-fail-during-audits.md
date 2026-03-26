@@ -13,7 +13,7 @@ source: "ilovehaccp"
       
 
       
-      <p>Hazard Analysis and Critical Control Points (HACCP) plans are a systematic approach to identifying and controlling hazards in the food production process.</p><h4>What you\'ll learn</h4><ul><li>How this HACCP topic applies in real-world operations</li><li>Common hazards and practical controls to reduce risk</li><li>Records and monitoring that auditors expect to see</li></ul><p> The Codex Alimentarius Commission and the US Food and Drug Administration (FDA) recommend HACCP plans as a key component of a food safety management system. However, despite their importance, many HACCP plans fail during audits, resulting in costly rework, reputational damage, and potential harm to consumers.</p>
+      <p>Hazard Analysis and Critical Control Points (HACCP) plans are a systematic approach to identifying and controlling hazards in the food production process.</p><h4>What you'll learn</h4><ul><li>How this HACCP topic applies in real-world operations</li><li>Common hazards and practical controls to reduce risk</li><li>Records and monitoring that auditors expect to see</li></ul><p> The Codex Alimentarius Commission and the US Food and Drug Administration (FDA) recommend HACCP plans as a key component of a food safety management system. However, despite their importance, many HACCP plans fail during audits, resulting in costly rework, reputational damage, and potential harm to consumers.</p>
       
       <h2>Reason 1: Inadequate Hazard Analysis</h2>
 

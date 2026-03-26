@@ -18,7 +18,7 @@ source: "ilovehaccp"
       
 
       
-      <p>Food safety is a paramount concern for consumers, regulatory bodies, and the food industry itself. To address these concerns, various certification schemes have been developed to ensure that food products are safe for consumption.</p><h4>What you\'ll learn</h4><ul><li>How this HACCP topic applies in real-world operations</li><li>Common hazards and practical controls to reduce risk</li><li>Records and monitoring that auditors expect to see</li></ul><p> Among these, Hazard Analysis and Critical Control Points (HACCP), British Retail Consortium Global Standards (BRCGS), and International Featured Standard (IFS) are prominent. Each of these standards has its own set of guidelines and protocols aimed at minimizing food safety risks.</p>
+      <p>Food safety is a paramount concern for consumers, regulatory bodies, and the food industry itself. To address these concerns, various certification schemes have been developed to ensure that food products are safe for consumption.</p><h4>What you'll learn</h4><ul><li>How this HACCP topic applies in real-world operations</li><li>Common hazards and practical controls to reduce risk</li><li>Records and monitoring that auditors expect to see</li></ul><p> Among these, Hazard Analysis and Critical Control Points (HACCP), British Retail Consortium Global Standards (BRCGS), and International Featured Standard (IFS) are prominent. Each of these standards has its own set of guidelines and protocols aimed at minimizing food safety risks.</p>
       
       <h2>HACCP: The Foundation of Food Safety</h2>
 

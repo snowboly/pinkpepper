@@ -16,7 +16,7 @@ describe("iLoveHACCP article transform", () => {
       image: "https://example.com/image.jpg",
       publishedAt: "Feb 21, 2026",
       content:
-        "<!-- Written by Dr. Margarida --><p>Hello</p><p>Bad \u00e2\u2030\u00a4 text</p><p>Generate your free plan at <a href=\"https://ilovehaccp.com/builder\">ilovehaccp.com/builder</a></p><h3>Further Reading &amp; Tools</h3><p>Use these resources.</p><ul><li><a href=\"/builder\">Free HACCP Builder Tool</a></li></ul>",
+        "<!-- Written by Dr. Margarida --><p>Hello</p><p>Bad \u00e2\u2030\u00a4 text and you\\'ll fix it</p><p>Generate your free plan at <a href=\"https://ilovehaccp.com/builder\">ilovehaccp.com/builder</a></p><h3>Further Reading &amp; Tools</h3><p>Use these resources.</p><ul><li><a href=\"/builder\">Free HACCP Builder Tool</a></li></ul>",
     });
 
     expect(result.frontmatter.slug).toBe("test-article");
@@ -28,9 +28,12 @@ describe("iLoveHACCP article transform", () => {
     expect(result.body).not.toContain("Further Reading &amp; Tools");
     expect(result.body).not.toContain("/builder");
     expect(result.body).not.toContain("\u00e2\u2030\u00a4");
+    expect(result.body).not.toContain("\\'");
+    expect(result.body).toContain("you'll fix it");
     expect(result.body).toContain("\u2264");
     expect(result.migrationFlags).toContain("legacy_cta_rewritten");
     expect(result.migrationFlags).toContain("promo_block_removed");
+    expect(result.migrationFlags).toContain("escape_normalized");
   });
 });
 

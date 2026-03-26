@@ -64,6 +64,11 @@ export function transformIloveHaccpArticle(article: SourceArticle): MigratedArti
     pushFlag("legacy_cta_rewritten");
   }
 
+  if (body.includes("\\'")) {
+    body = body.replaceAll("\\'", "'");
+    pushFlag("escape_normalized");
+  }
+
   const beforePromoCleanup = body;
   body = body.replace(
     /<h3>Further Reading &amp; Tools<\/h3>[\s\S]*$/i,
