@@ -237,11 +237,15 @@ export default async function PricingPage() {
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  Priority support
+                  Access to virtual audit mode
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  2 hours of food safety consultancy each month for review, guidance, and higher-risk support
+                  2h/month of food safety consultancy
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
+                  Priority support
                 </li>
               </ul>
               <PricingActions
