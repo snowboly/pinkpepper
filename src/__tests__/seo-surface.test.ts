@@ -21,8 +21,8 @@ describe("SEO surface", () => {
     expect(layout).toContain('images: ["/og-image"]');
   });
 
-  it("includes public marketing pages and excludes auth/dashboard routes from sitemap and robots", () => {
-    const entries = sitemap().map((entry) => entry.url);
+  it("includes public marketing pages and excludes auth/dashboard routes from sitemap and robots", async () => {
+    const entries = (await sitemap()).map((entry) => entry.url);
     const robotRules = robots().rules;
     const robotRuleList = Array.isArray(robotRules) ? robotRules : [robotRules];
     const disallowLists = robotRuleList.flatMap((rule) => {
@@ -78,8 +78,8 @@ describe("public SEO copy and linking", () => {
     expect(resources).not.toContain("long-tail questions and template searches");
   });
 
-  it("keeps current public marketing pages fresh in the sitemap", () => {
-    const entries = sitemap();
+  it("keeps current public marketing pages fresh in the sitemap", async () => {
+    const entries = await sitemap();
     const currentPages = [
       "https://pinkpepper.io",
       "https://pinkpepper.io/about",

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { getAllArticles } from "@/lib/articles";
 
 export const metadata: Metadata = {
   title: "Food Safety Articles & Insights | PinkPepper",
@@ -10,7 +11,9 @@ export const metadata: Metadata = {
   },
 };
 
-export default function ArticlesPage() {
+export default async function ArticlesPage() {
+  const articles = await getAllArticles();
+
   return (
     <main className="overflow-hidden">
       <section className="border-b border-[#F1F5F9] bg-white py-16 md:py-24">
@@ -27,21 +30,26 @@ export default function ArticlesPage() {
       </section>
 
       <section className="bg-[#F8FAFC] py-16">
-        <div className="pp-container max-w-4xl text-center">
-          <p className="text-lg font-medium text-[#475569]">New articles are on the way. Check back soon.</p>
-          <div className="mt-8 flex justify-center gap-4">
-            <Link
-              href="/resources"
-              className="rounded-full bg-[#E11D48] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#BE123C]"
-            >
-              Browse free templates
-            </Link>
-            <Link
-              href="/features"
-              className="rounded-full border border-[#E2E8F0] bg-white px-6 py-3 text-sm font-semibold text-[#0F172A] transition-colors hover:bg-[#F8FAFC]"
-            >
-              Explore features
-            </Link>
+        <div className="pp-container">
+          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+            {articles.map((article) => (
+              <article key={article.slug} className="rounded-3xl border border-[#E2E8F0] bg-white p-6">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#E11D48]">{article.category}</p>
+                <h2 className="mt-3 text-2xl font-semibold text-[#0F172A]">
+                  <Link href={`/articles/${article.slug}`} className="hover:text-[#BE123C]">
+                    {article.title}
+                  </Link>
+                </h2>
+                <p className="mt-3 text-sm text-[#64748B]">{article.publishedAt}</p>
+                <p className="mt-4 text-sm leading-relaxed text-[#475569]">{article.excerpt}</p>
+                <Link
+                  href={`/articles/${article.slug}`}
+                  className="mt-6 inline-flex rounded-full border border-[#E2E8F0] px-4 py-2 text-sm font-semibold text-[#0F172A] transition-colors hover:border-[#FDA4AF] hover:text-[#BE123C]"
+                >
+                  Read article
+                </Link>
+              </article>
+            ))}
           </div>
         </div>
       </section>
