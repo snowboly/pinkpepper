@@ -184,53 +184,73 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="border-b border-[#F1F5F9] bg-white py-24">
+      <section className="border-b border-[#F1F5F9] bg-[#1B2F7E] py-24">
         <div className="pp-container">
           <div className="mx-auto max-w-6xl">
-            <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-              <div className="max-w-3xl">
-                <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">Value in practice</p>
-                <h2 className="pp-display mt-4 text-4xl text-[#0F172A] md:text-5xl">
-                  From raw notes to review-ready compliance work
-                </h2>
-                <p className="mt-5 text-lg leading-relaxed text-[#475569]">
-                  Use PinkPepper when you need quicker answers, cleaner working drafts, and a clearer route from day-to-day
-                  operations to something defensible.
+            <div className="mb-12 text-center">
+              <h2 className="pp-display text-4xl text-white md:text-5xl">
+                AI-powered compliance, with specialists when it matters
+              </h2>
+              <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-blue-200">
+                PinkPepper combines AI automation with verified food safety consultants so your team moves faster without cutting corners.
+              </p>
+            </div>
+
+            <div className="grid gap-6 md:grid-cols-3">
+              {/* Card 1: AI + Specialist */}
+              <div className="flex flex-col items-center rounded-3xl bg-white/10 p-8 text-center backdrop-blur-sm">
+                <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-white/20">
+                  <svg className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z" />
+                  </svg>
+                </div>
+                <p className="text-4xl font-extrabold text-white">AI + Expert</p>
+                <p className="mt-1 text-sm font-semibold text-blue-200">Routine tasks automated; complex calls escalated</p>
+                <p className="mt-4 text-sm leading-relaxed text-blue-100">
+                  AI handles documentation, regulation lookups, and draft generation. Qualified food safety consultants step in when specialist judgment is required — so you get the right resource for every question.
                 </p>
               </div>
-              <div className="flex flex-wrap gap-3">
-                <Link href="/features/food-safety-audit-prep" className="pp-interactive rounded-full bg-[#0F172A] px-5 py-3 text-sm font-semibold text-white hover:bg-[#1E293B]">
-                  Explore audit-prep workflows
-                </Link>
-                <Link href="/features/haccp-plan-generator" className="pp-interactive rounded-full border border-[#E2E8F0] bg-white px-5 py-3 text-sm font-semibold text-[#0F172A] hover:bg-[#F8FAFC]">
-                  See HACCP plan generation
-                </Link>
-                <Link href="/pricing" className="pp-interactive rounded-full border border-[#E2E8F0] bg-white px-5 py-3 text-sm font-semibold text-[#0F172A] hover:bg-[#F8FAFC]">
-                  Compare plans
-                </Link>
+
+              {/* Card 2: Time saved */}
+              <div className="flex flex-col items-center rounded-3xl bg-white/10 p-8 text-center backdrop-blur-sm">
+                <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-white/20">
+                  <svg className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <p className="text-4xl font-extrabold text-white">+2h daily</p>
+                <p className="mt-1 text-sm font-semibold text-blue-200">10+ hours saved every week</p>
+                <p className="mt-4 text-sm leading-relaxed text-blue-100">
+                  Food safety managers typically spend 30–40% of their day on documentation and compliance admin. PinkPepper cuts that overhead so your team focuses on operations, not paperwork.
+                </p>
+              </div>
+
+              {/* Card 3: Cost saving */}
+              <div className="flex flex-col items-center rounded-3xl bg-white/10 p-8 text-center backdrop-blur-sm">
+                <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-white/20">
+                  <svg className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" />
+                  </svg>
+                </div>
+                <p className="text-4xl font-extrabold text-white">€18,000+</p>
+                <p className="mt-1 text-sm font-semibold text-blue-200">Saved in compliance costs per year</p>
+                <p className="mt-4 text-sm leading-relaxed text-blue-100">
+                  Reduce reactive consultant spend by replacing ad-hoc hourly retainers with targeted expert escalations. At €150/hr, avoiding 120 unnecessary consultant hours alone covers the saving.
+                </p>
               </div>
             </div>
 
-            <div className="mt-10 grid gap-5 md:grid-cols-3">
-              {[
-                {
-                  title: "Ask before you act",
-                  body: "Check a requirement, compare EU and UK expectations, or pressure-test a draft before your team commits to it.",
-                },
-                {
-                  title: "Tighten the working draft",
-                  body: "Use AI to structure the first useful version, then refine it with your team instead of rewriting from scratch.",
-                },
-                {
-                  title: "Escalate the risky part",
-                  body: "Bring in qualified food safety consultants when the question moves from routine execution into specialist judgment.",
-                },
-              ].map((item) => (
-                <div key={item.title} className="rounded-3xl border border-[#E2E8F0] bg-[#F8FAFC] p-6">
-                  <h3 className="text-xl font-semibold text-[#0F172A]">{item.title}</h3>
-                  <p className="mt-3 text-sm leading-relaxed text-[#64748B]">{item.body}</p>
-                </div>
-              ))}
+            <div className="mt-10 flex flex-wrap justify-center gap-3">
+              <Link href="/features/food-safety-audit-prep" className="pp-interactive rounded-full bg-white px-5 py-3 text-sm font-semibold text-[#1B2F7E] hover:bg-blue-50">
+                Explore audit-prep workflows
+              </Link>
+              <Link href="/features/haccp-plan-generator" className="pp-interactive rounded-full border border-white/30 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10">
+                See HACCP plan generation
+              </Link>
+              <Link href="/pricing" className="pp-interactive rounded-full border border-white/30 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10">
+                Compare plans
+              </Link>
             </div>
           </div>
         </div>
