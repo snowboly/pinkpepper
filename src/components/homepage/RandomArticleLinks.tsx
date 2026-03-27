@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 type ArticleLink = {
   href: string;
@@ -60,11 +60,7 @@ function pickRandom<T>(arr: T[], n: number): T[] {
 }
 
 export default function RandomArticleLinks() {
-  const [links, setLinks] = useState<ArticleLink[]>([]);
-
-  useEffect(() => {
-    setLinks(pickRandom(ARTICLE_POOL, 3));
-  }, []);
+  const [links] = useState<ArticleLink[]>(() => pickRandom(ARTICLE_POOL, 3));
 
   if (links.length === 0) return null;
 
