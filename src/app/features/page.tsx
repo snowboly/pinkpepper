@@ -185,30 +185,19 @@ export default function FeaturesPage() {
       </section>
 
       <section className="bg-white py-16">
-        <div className="pp-container rounded-3xl border border-[#FCE7F3] bg-[#FFF1F2] p-8 md:p-10">
-          <div className="max-w-3xl">
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">Next step</p>
-            <h2 className="pp-display mt-4 text-4xl text-[#0F172A] md:text-5xl">
-              If you need help with food safety work, start the conversation.
-            </h2>
-            <p className="mt-5 text-lg leading-relaxed text-[#475569]">
-              Use PinkPepper when you want quicker progress on the day-to-day work, then talk to us when the task needs a
-              closer review or more specialist input.
-            </p>
-          </div>
-
-          <div className="mt-8 flex flex-wrap gap-3">
+        <div className="pp-container text-center">
+          <div className="flex flex-wrap justify-center gap-3">
             <Link
-              href="/contact"
+              href="/signup"
               className="pp-interactive rounded-full bg-[#E11D48] px-6 py-3 text-sm font-semibold text-white hover:bg-[#BE123C]"
             >
-              Talk to us
+              Get started free
             </Link>
             <Link
-              href="/pricing"
-              className="pp-interactive rounded-full border border-[#FBCFE8] bg-white px-6 py-3 text-sm font-semibold text-[#0F172A] hover:bg-[#FFF7F8]"
+              href="/login"
+              className="pp-interactive rounded-full border border-[#E2E8F0] bg-white px-6 py-3 text-sm font-semibold text-[#0F172A] hover:bg-[#F8FAFC]"
             >
-              See pricing
+              Log in
             </Link>
           </div>
         </div>

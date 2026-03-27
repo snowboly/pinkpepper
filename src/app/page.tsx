@@ -190,24 +190,13 @@ export default function HomePage() {
           <div className="mx-auto max-w-6xl">
             <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
               <div className="max-w-3xl">
-                <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">Value in practice</p>
+                <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">Added Value</p>
                 <h2 className="pp-display mt-4 text-4xl text-[#0F172A] md:text-5xl">
                   AI-powered compliance, with specialists when it matters
                 </h2>
                 <p className="mt-5 text-lg leading-relaxed text-[#475569]">
                   PinkPepper combines AI automation with verified food safety consultants so your team moves faster without cutting corners.
                 </p>
-              </div>
-              <div className="flex flex-wrap gap-3">
-                <Link href="/features/food-safety-audit-prep" className="pp-interactive rounded-full bg-[#0F172A] px-5 py-3 text-sm font-semibold text-white hover:bg-[#1E293B]">
-                  Explore audit-prep workflows
-                </Link>
-                <Link href="/features/haccp-plan-generator" className="pp-interactive rounded-full border border-[#E2E8F0] bg-white px-5 py-3 text-sm font-semibold text-[#0F172A] hover:bg-[#F8FAFC]">
-                  See HACCP plan generation
-                </Link>
-                <Link href="/pricing" className="pp-interactive rounded-full border border-[#E2E8F0] bg-white px-5 py-3 text-sm font-semibold text-[#0F172A] hover:bg-[#F8FAFC]">
-                  Compare plans
-                </Link>
               </div>
             </div>
 
