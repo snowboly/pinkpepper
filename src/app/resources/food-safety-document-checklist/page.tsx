@@ -101,18 +101,19 @@ export default function FoodSafetyDocumentChecklistPage() {
         </div>
       </section>
 
-      <section className="border-y border-[#F1F5F9] bg-[#FFF7ED] py-16">
-        <div className="pp-container max-w-4xl rounded-3xl border border-[#FED7AA] bg-white p-8 md:p-10">
-          <h2 className="text-3xl font-semibold text-[#0F172A]">Turn the checklist into a working system</h2>
-          <p className="mt-4 text-base leading-relaxed text-[#475569]">
-            A checklist is only useful if it leads to better documents and cleaner review cycles. PinkPepper helps teams
-            generate HACCP drafts, SOPs, allergen records, audit checklists, and supporting documents faster, then route
-            the higher-stakes work into review.
+      <section className="bg-white py-16">
+        <div className="pp-container text-center">
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">Ready to start?</p>
+          <h2 className="pp-display mx-auto mt-3 max-w-xl text-3xl text-[#0F172A] md:text-4xl">
+            Start free. No card required.
+          </h2>
+          <p className="mx-auto mt-3 max-w-md text-base text-[#64748B]">
+            Try PinkPepper on a real compliance question today.
           </p>
-          <div className="mt-6 flex flex-wrap gap-4">
+          <div className="mt-7">
             <Link
               href="/signup"
-              className="rounded-full bg-[#E11D48] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#BE123C]"
+              className="pp-interactive inline-block rounded-full bg-[#E11D48] px-8 py-3.5 text-sm font-semibold text-white hover:bg-[#BE123C]"
             >
               Get Started
             </Link>
