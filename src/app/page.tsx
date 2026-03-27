@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import RandomArticleLinks from "@/components/homepage/RandomArticleLinks";
 import {
   ArrowRight,
   BookOpen,
@@ -258,53 +259,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="border-b border-[#F1F5F9] bg-white py-20">
-        <div className="pp-container">
-          <div className="mx-auto mb-10 max-w-3xl text-center">
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">Explore the site</p>
-            <h2 className="pp-display mt-4 text-4xl text-[#0F172A] md:text-5xl">
-              Go deeper by feature, business type, or resource
-            </h2>
-            <p className="mt-4 text-lg leading-relaxed text-[#475569]">
-              Browse PinkPepper by product workflow, industry fit, or practical compliance template.
-            </p>
-          </div>
-
-          <div className="grid gap-6 md:grid-cols-3">
-            <Link
-              href="/features"
-              className="pp-interactive rounded-3xl border border-[#E2E8F0] bg-[#FFF7ED] p-8 transition-all hover:shadow-lg hover:shadow-black/[0.04]"
-            >
-              <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#E11D48]">Features</p>
-              <h3 className="mt-3 text-2xl font-semibold text-[#0F172A]">Commercial product pages</h3>
-              <p className="mt-4 text-sm leading-relaxed text-[#475569]">
-                Explore HACCP, allergen, SOP, and audit-prep workflows with dedicated buying-intent landing pages.
-              </p>
-            </Link>
-            <Link
-              href="/use-cases"
-              className="pp-interactive rounded-3xl border border-[#E2E8F0] bg-[#F8FAFC] p-8 transition-all hover:shadow-lg hover:shadow-black/[0.04]"
-            >
-              <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#E11D48]">Use Cases</p>
-              <h3 className="mt-3 text-2xl font-semibold text-[#0F172A]">Pages by business type</h3>
-              <p className="mt-4 text-sm leading-relaxed text-[#475569]">
-                See how PinkPepper fits restaurants, cafes, caterers, and food manufacturing teams.
-              </p>
-            </Link>
-            <Link
-              href="/resources"
-              className="pp-interactive rounded-3xl border border-[#E2E8F0] bg-[#FFF1F2] p-8 transition-all hover:shadow-lg hover:shadow-black/[0.04]"
-            >
-              <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#E11D48]">Resources</p>
-              <h3 className="mt-3 text-2xl font-semibold text-[#0F172A]">Templates and guides</h3>
-              <p className="mt-4 text-sm leading-relaxed text-[#475569]">
-                Read supporting content for HACCP templates, allergen matrices, audit checklists, and SOP examples.
-              </p>
-            </Link>
-          </div>
-        </div>
-      </section>
-
       <section id="pricing" className="relative overflow-hidden border-y border-[#F1F5F9] bg-white py-24">
         <div className="absolute inset-0 -z-10">
           <div className="absolute inset-0 bg-white" />
@@ -374,6 +328,23 @@ export default function HomePage() {
                 Choose Pro
               </Link>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="border-b border-[#F1F5F9] bg-white py-16">
+        <div className="pp-container">
+          <div className="mx-auto max-w-6xl">
+            <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">From the library</p>
+                <h2 className="pp-display mt-2 text-2xl text-[#0F172A] md:text-3xl">Articles, guides &amp; templates</h2>
+              </div>
+              <Link href="/articles" className="text-sm font-semibold text-[#475569] hover:text-[#0F172A]">
+                Browse all →
+              </Link>
+            </div>
+            <RandomArticleLinks />
           </div>
         </div>
       </section>
