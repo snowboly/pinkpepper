@@ -184,7 +184,9 @@ export default function ResourcesPage() {
             Start free. No card required.
           </h2>
           <p className="mx-auto mt-3 max-w-md text-base text-[#64748B]">
-            Try PinkPepper on a real compliance question today.
+            Try PinkPepper on a real compliance question today. Or{" "}
+            <Link href="/features" className="underline hover:text-[#0F172A]">explore the features</Link>{" "}
+            to see what&apos;s possible.
           </p>
           <div className="mt-7">
             <Link
