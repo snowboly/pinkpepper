@@ -47,12 +47,6 @@ export function FeatureTemplate({
                 {primaryCta}
                 <ArrowRight className="h-4 w-4" />
               </Link>
-              <Link
-                href="/pricing"
-                className="inline-flex items-center rounded-full border border-[#E2E8F0] px-6 py-3 text-sm font-semibold text-[#0F172A] transition-colors hover:bg-[#F8FAFC]"
-              >
-                View pricing
-              </Link>
             </div>
           </div>
 

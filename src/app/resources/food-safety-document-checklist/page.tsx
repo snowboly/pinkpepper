@@ -111,16 +111,10 @@ export default function FoodSafetyDocumentChecklistPage() {
           </p>
           <div className="mt-6 flex flex-wrap gap-4">
             <Link
-              href="/features"
+              href="/signup"
               className="rounded-full bg-[#E11D48] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#BE123C]"
             >
-              Explore features
-            </Link>
-            <Link
-              href="/resources"
-              className="rounded-full border border-[#E2E8F0] px-6 py-3 text-sm font-semibold text-[#0F172A] transition-colors hover:bg-[#F8FAFC]"
-            >
-              Browse resources
+              Get Started
             </Link>
           </div>
         </div>
