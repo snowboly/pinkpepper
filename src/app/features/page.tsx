@@ -186,18 +186,19 @@ export default function FeaturesPage() {
 
       <section className="bg-white py-16">
         <div className="pp-container text-center">
-          <div className="flex flex-wrap justify-center gap-3">
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">Ready to start?</p>
+          <h2 className="pp-display mx-auto mt-3 max-w-xl text-3xl text-[#0F172A] md:text-4xl">
+            Start free. No card required.
+          </h2>
+          <p className="mx-auto mt-3 max-w-md text-base text-[#64748B]">
+            Try PinkPepper on a real compliance question today.
+          </p>
+          <div className="mt-7">
             <Link
               href="/signup"
-              className="pp-interactive rounded-full bg-[#E11D48] px-6 py-3 text-sm font-semibold text-white hover:bg-[#BE123C]"
+              className="pp-interactive inline-block rounded-full bg-[#E11D48] px-8 py-3.5 text-sm font-semibold text-white hover:bg-[#BE123C]"
             >
-              Get started free
-            </Link>
-            <Link
-              href="/login"
-              className="pp-interactive rounded-full border border-[#E2E8F0] bg-white px-6 py-3 text-sm font-semibold text-[#0F172A] hover:bg-[#F8FAFC]"
-            >
-              Log in
+              Get Started
             </Link>
           </div>
         </div>
