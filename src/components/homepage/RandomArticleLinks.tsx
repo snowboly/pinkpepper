@@ -63,7 +63,7 @@ export default function RandomArticleLinks() {
   const [links, setLinks] = useState<ArticleLink[]>([]);
 
   useEffect(() => {
-    setLinks(pickRandom(ARTICLE_POOL, 6));
+    setLinks(pickRandom(ARTICLE_POOL, 3));
   }, []);
 
   if (links.length === 0) return null;
