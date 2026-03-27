@@ -256,7 +256,7 @@ export default function HomePage() {
         <div className="pp-container relative z-10">
           <div className="mx-auto mb-16 max-w-2xl text-center">
             <h2 className="pp-display mb-4 text-4xl text-[#0F172A] md:text-5xl">Pricing that follows the compliance job</h2>
-            <p className="text-lg text-[#64748B]">Start free, move to Plus for regular operational use, and choose Pro when you need audit support and consultancy input.</p>
+            <p className="text-lg text-[#64748B]">Start free, move to Plus for regular operational use, and choose Pro when you need audit support and consultancy input. <Link href="/pricing" className="underline hover:text-[#0F172A]">See full pricing</Link>.</p>
           </div>
 
           <div className="mx-auto grid max-w-5xl gap-6 lg:grid-cols-3">
