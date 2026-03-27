@@ -193,6 +193,9 @@ export default function ResourcesPage() {
             >
               Get Started
             </Link>
+          </div>
+        </div>
+      </section>
     </main>
   );
 }
