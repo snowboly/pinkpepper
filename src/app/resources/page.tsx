@@ -193,16 +193,10 @@ export default function ResourcesPage() {
             </p>
             <div className="mt-6 flex flex-wrap gap-4">
               <Link
-                href="/features/haccp-plan-generator"
+                href="/signup"
                 className="rounded-full bg-[#E11D48] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#BE123C]"
               >
-                Explore features
-              </Link>
-              <Link
-                href="/pricing"
-                className="rounded-full border border-[#E2E8F0] bg-white px-6 py-3 text-sm font-semibold text-[#0F172A] transition-colors hover:bg-[#F8FAFC]"
-              >
-                View pricing
+                Get Started
               </Link>
             </div>
           </div>

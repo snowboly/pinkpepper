@@ -108,13 +108,7 @@ export function ResourceTemplate({
               href="/signup"
               className="rounded-full bg-[#E11D48] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#BE123C]"
             >
-              Start for free
-            </Link>
-            <Link
-              href="/pricing"
-              className="rounded-full border border-[#E2E8F0] px-6 py-3 text-sm font-semibold text-[#0F172A] transition-colors hover:bg-[#F8FAFC]"
-            >
-              View pricing
+              Get Started
             </Link>
           </div>
         </div>
