@@ -178,27 +178,23 @@ export default function ResourcesPage() {
 
       {/* CTA */}
       <section className="bg-white py-16">
-        <div className="pp-container">
-          <div className="mx-auto max-w-4xl rounded-3xl border border-[#FBCFE8] bg-[#FFF1F2] p-8 md:p-10">
-            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#BE123C]">
-              From template to working draft
-            </p>
-            <h2 className="mt-4 text-3xl font-semibold text-[#0F172A] md:text-4xl">
-              Move from a reference template into a document your site can use
-            </h2>
-            <p className="mt-4 max-w-3xl text-base leading-relaxed text-[#475569]">
-              A template is only useful if it helps your team produce a document that matches the way
-              your site actually runs. PinkPepper helps operators turn reference material into practical
-              drafts for HACCP, allergens, SOPs, and audit preparation.
-            </p>
-            <div className="mt-6 flex flex-wrap gap-4">
-              <Link
-                href="/signup"
-                className="rounded-full bg-[#E11D48] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#BE123C]"
-              >
-                Get Started
-              </Link>
-            </div>
+        <div className="pp-container text-center">
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">Ready to start?</p>
+          <h2 className="pp-display mx-auto mt-3 max-w-xl text-3xl text-[#0F172A] md:text-4xl">
+            Start free. No card required.
+          </h2>
+          <p className="mx-auto mt-3 max-w-md text-base text-[#64748B]">
+            Try PinkPepper on a real compliance question today. Or{" "}
+            <Link href="/features" className="underline hover:text-[#0F172A]">explore the features</Link>{" "}
+            to see what&apos;s possible.
+          </p>
+          <div className="mt-7">
+            <Link
+              href="/signup"
+              className="pp-interactive inline-block rounded-full bg-[#E11D48] px-8 py-3.5 text-sm font-semibold text-white hover:bg-[#BE123C]"
+            >
+              Get Started
+            </Link>
           </div>
         </div>
       </section>
