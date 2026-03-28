@@ -148,7 +148,7 @@ export default function FeaturesPage() {
                   <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#E11D48]">Typical support includes</p>
                   <ul className="mt-3 space-y-2 text-sm text-[#475569]">
                     {service.includes.map((item) => (
-                      <li key={item}>• {item}</li>
+                      <li key={item}>- {item}</li>
                     ))}
                   </ul>
                 </div>

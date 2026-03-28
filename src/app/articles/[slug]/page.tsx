@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { getAllArticles, getArticleBySlug } from "@/lib/articles";
+import { getArticleBySlug, getArticleManifest } from "@/lib/articles";
 import { processArticleContent } from "@/lib/article-content";
 
 type ArticlePageProps = {
@@ -9,7 +9,7 @@ type ArticlePageProps = {
 };
 
 export async function generateStaticParams() {
-  const articles = await getAllArticles();
+  const articles = await getArticleManifest();
   return articles.map((article) => ({ slug: article.slug }));
 }
 

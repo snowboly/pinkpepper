@@ -21,7 +21,7 @@ source: "ilovehaccp"
                <p>The Hazard Analysis and Critical Control Points (HACCP) system is a systematic approach to identifying and controlling hazards in the food industry, as outlined by the Codex Alimentarius Commission. Non-conformities in HACCP refer to deviations from the established procedures, which can compromise the safety and quality of food products.</p>
                <h3>Identifying Non-Conformities</h3>
 
-               <p>Identifying non-conformities is the first step in correcting them. This can be done through regular audits, monitoring, and verification activities. The FDA's Food Safety Modernization Act (FSMA) emphasizes the importance of preventive controls, which include identifying and correcting non-conformities.</p>
+               <p>Identifying non-conformities is the first step in correcting them. This can be done through regular audits, monitoring, and verification activities. Preventive control systems depend on identifying non-conformities quickly and correcting them before they create a wider food safety issue.</p>
                <ul>
                   <li>Review of HACCP plans and procedures</li>
                   <li>Observation of employee practices and behaviors</li>
@@ -47,7 +47,7 @@ source: "ilovehaccp"
       <h2>Conclusion</h2>
 
       
-               <p>In conclusion, correcting non-conformities in HACCP is essential to ensuring the safety and quality of food products. By following the steps outlined in this article, food business owners, chefs, and quality managers can identify, correct, and prevent non-conformities, and maintain a robust HACCP system that meets the requirements of regulatory agencies such as the FDA and Codex Alimentarius Commission.</p>
+               <p>In conclusion, correcting non-conformities in HACCP is essential to ensuring the safety and quality of food products. By following the steps outlined in this article, food business owners, chefs, and quality managers can identify, correct, and prevent non-conformities, and maintain a robust HACCP system that meets the requirements of the relevant competent authorities and Codex Alimentarius guidance.</p>
 
 
 

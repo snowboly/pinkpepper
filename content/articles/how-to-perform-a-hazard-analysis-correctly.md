@@ -45,7 +45,7 @@ source: "ilovehaccp"
     <li><strong>Control:</strong> Establishing measures to mitigate or eliminate the identified hazards.</li>
 </ul>
 
-<p>According to the FDA's guidelines under <strong>21 CFR 117</strong>, a comprehensive hazard analysis must be documented and reviewed periodically to ensure its relevance and effectiveness.</p>
+<p>a comprehensive hazard analysis must be documented and reviewed periodically to ensure its relevance and effectiveness.</p>
 
 <h4>Importance of Hazard Analysis in HACCP</h4>
 
@@ -106,7 +106,7 @@ source: "ilovehaccp"
     <li><strong>Likelihood:</strong> Estimate the probability of occurrence based on historical data and scientific literature. For instance, the incidence of <em>Escherichia coli</em> outbreaks in undercooked ground beef is well-documented.</li>
 </ol>
 
-<p>This risk assessment process aligns with the requirements set forth in regulations such as 21 CFR 117 and EC 852/2004, which mandate a science-based approach to food safety.</p>
+<p>This risk assessment process aligns with the requirements set forth in regulations such as applicable local requirements and EC 852/2004, which mandate a science-based approach to food safety.</p>
 
 <h4>Documenting Findings and Establishing a Hazard Profile</h4>
 
@@ -134,7 +134,7 @@ source: "ilovehaccp"
 
 In the realm of food safety, Critical Control Points (CCPs) are pivotal in the Hazard Analysis and Critical Control Point (HACCP) system. A CCP is defined as a point in a food production process where control can be applied to prevent, eliminate, or reduce a food safety hazard to an acceptable level. The significance of CCPs lies in their ability to mitigate risks associated with biological, chemical, and physical hazards, thus ensuring the safety and quality of food products.
 
-The identification of CCPs is required to compliance with <strong>regulatory standards</strong> such as 21 CFR 117 and EC 852/2004, which outline the necessity for systematic hazard analysis in food operations. Failure to identify and control CCPs can lead to significant health risks and legal ramifications.
+The identification of CCPs is required to compliance with <strong>regulatory standards</strong> such as applicable local requirements and EC 852/2004, which outline the necessity for systematic hazard analysis in food operations. Failure to identify and control CCPs can lead to significant health risks and legal ramifications.
 
 <h4>Methods for Identifying CCPs in Food Processes</h4>
 
@@ -178,7 +178,7 @@ In summary, the determination of CCPs is a multifaceted process involving rigoro
 <p>Critical limits must be established for each identified hazard within the HACCP framework. These limits are based on scientific evidence and regulatory standards, ensuring that the safety of food products is upheld. The following categories necessitate careful consideration:</p>
 
 <ul>
-    <li><strong>Biological Hazards:</strong> Critical limits often pertain to temperature, time, and pH levels. For instance, the <strong>21 CFR 117</strong> mandates that cooked foods must reach a minimum internal temperature to eliminate pathogens.</li>
+    <li><strong>Biological Hazards:</strong> Critical limits often pertain to temperature, time, and pH levels. For instance, the <strong>applicable local requirements</strong> mandates that cooked foods must reach a minimum internal temperature to eliminate pathogens.</li>
     <li><strong>Chemical Hazards:</strong> Limits should be set for residues of pesticides, veterinary drugs, and food additives, ensuring compliance with safety standards outlined in regulations such as <strong>EC 852/2004</strong>.</li>
     <li><strong>Physical Hazards:</strong> Critical limits may include specifications for size and weight to prevent contamination from foreign objects.</li>
 </ul>
@@ -223,7 +223,7 @@ Monitoring is a pivotal component of the Hazard Analysis Critical Control Point 
 The primary objectives of monitoring include:
 
 <ul>
- <li>Ensuring compliance with <strong>regulatory requirements</strong> (21 CFR 117, EC 852/2004).</li>
+ <li>Ensuring compliance with <strong>regulatory requirements</strong> (applicable local requirements, EC 852/2004).</li>
  <li>Detecting deviations that could jeopardize food safety.</li>
  <li>Providing data for ongoing verification and validation of the HACCP plan.</li>
 </ul>
@@ -281,7 +281,7 @@ In conclusion, robust monitoring procedures for CCPs are essential for the succe
 <h4>Identifying When Corrective Actions Are Needed</h4>
 
 
-<p>Recognizing the need for corrective actions is pivotal in maintaining food safety. According to the <strong>FDA's regulation 21 CFR 117</strong>, a food business must establish critical limits for each critical control point (CCP). When monitoring indicates that a critical limit has not been met, it signals a deviation that may lead to unsafe food products.</p>
+<p>Recognizing the need for corrective actions is pivotal in maintaining food safety. a food business must establish critical limits for each critical control point (CCP). When monitoring indicates that a critical limit has not been met, it signals a deviation that may lead to unsafe food products.</p>
 
 <ul>
     <li><strong>Monitoring Results:</strong> Regular monitoring should be conducted to detect deviations. For instance, if temperature readings during cooking do not meet established limits, immediate corrective action is required.</li>
@@ -331,7 +331,7 @@ In conclusion, robust monitoring procedures for CCPs are essential for the succe
 <p>The verification process serves multiple functions within a HACCP framework:</p>
 <ul>
     <li><strong>Validation of Control Measures:</strong> It confirms that the critical control points (CCPs) are effectively managing identified hazards.</li>
-    <li><strong>Compliance Assurance:</strong> Regular verification ensures adherence to regulations such as <strong>21 CFR 117</strong> and <strong>EC 852/2004</strong>, which mandate systematic verification of food safety systems.</li>
+    <li><strong>Compliance Assurance:</strong> Regular verification ensures adherence to regulations such as <strong>applicable local requirements</strong> and <strong>EC 852/2004</strong>, which mandate systematic verification of food safety systems.</li>
     <li><strong>Continuous Improvement:</strong> It provides data that can be analyzed to enhance hazard control strategies, fostering a culture of continuous improvement within food businesses.</li>
 </ul>
 
@@ -389,13 +389,13 @@ In conclusion, robust monitoring procedures for CCPs are essential for the succe
     <li><strong>Consistency:</strong> Ensure that records are completed in a timely and consistent manner. Use standardized forms to reduce variability.</li>
     <li><strong>Clarity:</strong> Records should be legible and unambiguous. Avoid jargon that may hinder understanding.</li>
     <li><strong>Accessibility:</strong> Maintain records in a manner that allows for easy retrieval during audits or inspections.</li>
-    <li><strong>Retention:</strong> Follow <strong>21 CFR 117.140</strong> guidelines, which require records to be retained for at least two years, or longer if specified by local regulations.</li>
+    <li><strong>Retention:</strong> Follow <strong>applicable local requirements</strong> guidelines, which require records to be retained for at least two years, or longer if specified by local regulations.</li>
 </ul>
 
 <h4>Legal Implications of Record-Keeping in Food Safety</h4>
 
 
-<p>Failure to maintain adequate records can have serious legal implications. Under regulations such as <strong>EC 852/2004</strong> and <strong>21 CFR 117</strong>, businesses are mandated to document their food safety practices. Non-compliance can result in:</p>
+<p>Failure to maintain adequate records can have serious legal implications. Under regulations such as <strong>EC 852/2004</strong> and <strong>applicable local requirements</strong>, businesses are mandated to document their food safety practices. Non-compliance can result in:</p>
 
 <ul>
     <li>Fines and penalties from regulatory bodies.</li>
@@ -423,7 +423,7 @@ Key developments include:
     <li><strong>Emerging Pathogens:</strong> Continuous research is essential for identifying new pathogens and understanding their behavior in food matrices.</li>
 </ul>
 
-These advancements underscore the necessity for food businesses to stay informed and adapt their hazard analysis protocols accordingly, as mandated by regulations such as <strong>21 CFR 117</strong> and <strong>EC 852/2004</strong>.
+These advancements underscore the necessity for food businesses to stay informed and adapt their hazard analysis protocols accordingly, as mandated by regulations such as <strong>applicable local requirements</strong> and <strong>EC 852/2004</strong>.
 
 <h4>Microbial Risk Assessment and Its Application</h4>
 
@@ -472,7 +472,7 @@ These technologies not only streamline hazard analysis but also ensure complianc
 
 <p>The examination of a foodborne illness outbreak linked to a salad bar in a grocery store provides critical lessons on the necessity of thorough hazard analysis. This incident involved the pathogen <em>Salmonella enterica</em>, which thrived due to inadequate temperature control and cross-contamination. Key takeaways include:</p>
 <ul>
-    <li><strong>Temperature Control:</strong> Maintaining food at safe temperatures (<strong>≤ 4°C for cold foods</strong> and <strong>≥ 60°C for hot foods</strong>) is paramount to inhibit bacterial growth (21 CFR 117.40).</li>
+    <li><strong>Temperature Control:</strong> Maintaining food at safe temperatures (<strong>≤ 4°C for cold foods</strong> and <strong>≥ 60°C for hot foods</strong>) is paramount to inhibit bacterial growth (applicable local requirements).</li>
     <li><strong>Cross-Contamination Prevention:</strong> Measures must be established to prevent raw foods from contaminating ready-to-eat items.</li>
     <li><strong>Regular Audits:</strong> Implementing routine audits can help identify potential lapses in the food safety management system.</li>
 </ul>
@@ -497,7 +497,7 @@ These technologies not only streamline hazard analysis but also ensure complianc
 <h3>Challenges in Performing Hazard Analysis</h3>
 
 
-<p>Conducting a comprehensive hazard analysis is a cornerstone of food safety management systems.</p><p> However, food businesses frequently encounter various challenges that can undermine the effectiveness of their hazard analysis processes. Understanding these obstacles and implementing strategies to address them is essential for compliance with established regulations, such as <strong>21 CFR 117</strong> and <strong>EC 852/2004</strong>.</p>
+<p>Conducting a comprehensive hazard analysis is a cornerstone of food safety management systems.</p><p> However, food businesses frequently encounter various challenges that can undermine the effectiveness of their hazard analysis processes. Understanding these obstacles and implementing strategies to address them is essential for compliance with established regulations, such as <strong>applicable local requirements</strong> and <strong>EC 852/2004</strong>.</p>
 
 <h4>Common Obstacles Faced by Food Businesses</h4>
 
@@ -524,7 +524,7 @@ These technologies not only streamline hazard analysis but also ensure complianc
 <h4>The Evolving Nature of Food Safety Regulations</h4>
 
 
-<p>The landscape of food safety regulations is continuously changing, presenting both challenges and opportunities for food businesses. Regulatory frameworks, such as <strong>21 CFR 117</strong> and <strong>EC 852/2004</strong>, require businesses to adapt their hazard analysis protocols to meet new standards. This evolving nature necessitates:</p>
+<p>The landscape of food safety regulations is continuously changing, presenting both challenges and opportunities for food businesses. Regulatory frameworks, such as <strong>applicable local requirements</strong> and <strong>EC 852/2004</strong>, require businesses to adapt their hazard analysis protocols to meet new standards. This evolving nature necessitates:</p>
 
 <ul>
     <li><strong>Regular Updates:</strong> Businesses must stay informed about changes in regulations to ensure compliance and incorporate new scientific findings related to food safety.</li>

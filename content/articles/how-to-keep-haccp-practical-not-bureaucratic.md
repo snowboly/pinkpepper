@@ -13,7 +13,7 @@ source: "ilovehaccp"
       
 
       
-      <p>The Hazard Analysis and Critical Control Points (HACCP) system is a systematic approach to identifying and controlling hazards in the food production process.</p><p> It is based on the principles outlined by the Codex Alimentarius Commission and is widely recognized as the international standard for food safety management. The FDA also mandates HACCP for certain segments of the food industry, such as juice and seafood processing.</p>
+      <p>The Hazard Analysis and Critical Control Points (HACCP) system is a systematic approach to identifying and controlling hazards in the food production process.</p><p> It is based on the principles outlined by the Codex Alimentarius Commission and is widely recognized as the international standard for food safety management. Some sectors work under more specific HACCP requirements, but the core discipline is keeping the system practical, current, and usable in daily operations.</p>
       <h3>Key Components of HACCP</h3>
 
       <p>A HACCP system consists of seven key components: (1) hazard analysis, (2) identification of critical control points (CCPs), (3) establishment of critical limits, (4) monitoring procedures, (5) corrective actions, (6) verification procedures, and (7) record-keeping and documentation. Each of these components plays a crucial role in ensuring the effectiveness of the HACCP system.</p>

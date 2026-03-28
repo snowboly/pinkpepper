@@ -31,7 +31,7 @@ source: "ilovehaccp"
       <h3>Controls for Biological Hazards</h3>
 
       <p>Effective controls for biological hazards include proper <strong>temperature control</strong>, <strong>personal hygiene</strong>, <strong>cleanliness and sanitation</strong>, and <strong>supply chain management</strong>. For example, cooking food to the appropriate internal temperature can kill harmful bacteria, while regular handwashing and proper cleaning of equipment and surfaces can prevent the spread of pathogens.</p>
-      <p>According to the Codex Alimentarius Commission, a food should be heated to an internal temperature of at least <strong>74°C</strong> to ensure the destruction of pathogens. Similarly, the FDA recommends that foods be stored at temperatures below <strong>5°C</strong> or above <strong>60°C</strong> to prevent bacterial growth.</p>
+      <p>According to the Codex Alimentarius Commission, a food should be heated to an internal temperature of at least <strong>74°C</strong> to ensure the destruction of pathogens. Food should be stored and handled within validated temperature controls that suit the product, process, and applicable legal guidance.</p>
       <h2>Conclusion</h2>
 
       <p>In conclusion, biological hazards are a significant threat to food safety, and their control is essential for protecting public health.</p><p> By understanding the types of biological hazards, implementing HACCP principles, and applying effective controls, food businesses can significantly reduce the risk of foodborne illnesses. It is required to food business owners, chefs, and quality managers to stay informed about the latest scientific research and regulatory guidelines to ensure the safest possible food supply chain.</p>

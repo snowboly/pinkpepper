@@ -3,7 +3,7 @@ import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { transformIloveHaccpArticle } from "../../scripts/lib/ilovehaccp-article-transform";
-import { getAllArticles, getArticleBySlug } from "@/lib/articles";
+import { getAllArticles, getArticleBySlug, getArticleManifest } from "@/lib/articles";
 import { processArticleContent } from "@/lib/article-content";
 
 describe("iLoveHACCP article transform", () => {
@@ -17,7 +17,7 @@ describe("iLoveHACCP article transform", () => {
       image: "https://example.com/image.jpg",
       publishedAt: "Feb 21, 2026",
       content:
-        "<!-- Written by Dr. Margarida --><p>Hello</p><p>Bad \u00e2\u2030\u00a4 text and you\\'ll fix it</p><p>Generate your free plan at <a href=\"https://ilovehaccp.com/builder\">ilovehaccp.com/builder</a></p><h3>Further Reading &amp; Tools</h3><p>Use these resources.</p><ul><li><a href=\"/builder\">Free HACCP Builder Tool</a></li></ul>",
+        "<!-- Written by Dr. Margarida --><p>Hello</p><p>Bad \u00e2\u2030\u00a4 text and you\\'ll fix it</p><p>The FDA also requires food establishments to implement a HACCP plan as part of their food safety regulations.</p><p>Generate your free plan at <a href=\"https://ilovehaccp.com/builder\">ilovehaccp.com/builder</a></p><h3>Further Reading &amp; Tools</h3><p>Use these resources.</p><ul><li><a href=\"/builder\">Free HACCP Builder Tool</a></li></ul>",
     });
 
     expect(result.frontmatter.slug).toBe("test-article");
@@ -28,6 +28,7 @@ describe("iLoveHACCP article transform", () => {
     expect(result.body).not.toContain("Generate your free plan");
     expect(result.body).not.toContain("Further Reading &amp; Tools");
     expect(result.body).not.toContain("/builder");
+    expect(result.body).not.toContain("FDA");
     expect(result.body).not.toContain("\u00e2\u2030\u00a4");
     expect(result.body).not.toContain("\\'");
     expect(result.body).not.toContain("How this HACCP topic applies in real-world operations");
@@ -36,6 +37,7 @@ describe("iLoveHACCP article transform", () => {
     expect(result.migrationFlags).toContain("legacy_cta_rewritten");
     expect(result.migrationFlags).toContain("promo_block_removed");
     expect(result.migrationFlags).toContain("escape_normalized");
+    expect(result.migrationFlags).toContain("scope_reference_rewritten");
   });
 });
 
@@ -52,7 +54,7 @@ describe("local article loader", () => {
     contentDir = mkdtempSync(path.join(tmpdir(), "pinkpepper-articles-"));
 
     writeFileSync(
-      path.join(contentDir, "first.md"),
+      path.join(contentDir, "first-article.md"),
       `---
 title: "First Article"
 slug: "first-article"
@@ -68,7 +70,7 @@ source: "ilovehaccp"
     );
 
     writeFileSync(
-      path.join(contentDir, "second.md"),
+      path.join(contentDir, "second-article.md"),
       `---
 title: "Second Article"
 slug: "second-article"
@@ -83,8 +85,10 @@ publishedAt: "2026-02-10"
 
     const articles = await getAllArticles({ contentDir });
     const article = await getArticleBySlug("first-article", { contentDir });
+    const manifest = await getArticleManifest({ contentDir });
 
     expect(articles.map((item) => item.slug)).toEqual(["second-article", "first-article"]);
+    expect(manifest.map((item) => item.slug)).toEqual(["second-article", "first-article"]);
     expect(article?.title).toBe("First Article");
     expect(article?.body).toContain("<h2>First body</h2>");
     expect(article?.source).toBe("ilovehaccp");

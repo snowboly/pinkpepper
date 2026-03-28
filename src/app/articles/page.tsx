@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { getAllArticles } from "@/lib/articles";
+import { getArticleManifest } from "@/lib/articles";
 
 export const metadata: Metadata = {
   title: "Food Safety Articles & Insights | PinkPepper",
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 };
 
 export default async function ArticlesPage() {
-  const articles = await getAllArticles();
+  const articles = await getArticleManifest();
 
   return (
     <main className="overflow-hidden">
@@ -24,8 +24,8 @@ export default async function ArticlesPage() {
             Food safety insights for EU and UK operators
           </h1>
           <p className="mt-6 max-w-3xl text-lg leading-relaxed text-[#475569]">
-            Practical guidance on HACCP, allergen management, audits, and day-to-day compliance — written for the people
-            who actually run food businesses.
+            Practical guidance on HACCP, allergen management, audits, and day-to-day compliance for the people who
+            actually run food businesses.
           </p>
         </div>
       </section>

@@ -56,6 +56,9 @@ describe("public SEO copy and linking", () => {
     expect(homepage).toContain("AI food safety compliance software");
     expect(homepage).toContain("/features/haccp-plan-generator");
     expect(homepage).toContain("/pricing");
+    expect(homepage).not.toContain("â€”");
+    expect(homepage).not.toContain("â†’");
+    expect(homepage).not.toContain("â‚¬");
   });
 
   it("routes core public pages into deeper commercial paths", () => {
@@ -124,10 +127,14 @@ describe("premium quality regressions", () => {
   it("uses compliance software wording consistently in shared brand surfaces", () => {
     const headerFooter = readPage("src/components/site/chrome.tsx");
     const pricing = readPage("src/app/pricing/page.tsx");
+    const features = readPage("src/app/features/page.tsx");
 
     expect(headerFooter).toContain("AI food safety compliance software");
     expect(headerFooter).not.toContain("AI Food Safety and Compliance Assistant");
     expect(pricing).not.toContain("AI food safety assistant");
+    expect(headerFooter).toContain("Services");
+    expect(headerFooter).not.toContain(">Features<");
+    expect(features).not.toContain("â€¢");
   });
 
   it("provides a dedicated mobile navigation trigger in the shared header", () => {
