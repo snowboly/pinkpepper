@@ -83,7 +83,7 @@ export default function ChatWorkspace({
   const [workspaceMode, setWorkspaceMode] = useState<WorkspaceMode>("ask");
 
   // ── UI state ──
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isDraggingOver, setIsDraggingOver] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
@@ -445,6 +445,7 @@ export default function ChatWorkspace({
     setConversationId(null);
     setCurrentPersona(null);
     setMessages([]);
+    setSidebarOpen(false);
     clearImage();
     clearDocument();
     setError(null);
@@ -809,6 +810,7 @@ export default function ChatWorkspace({
   function selectConversation(id: string) {
     loadConvOnSelect.current = id;
     setConversationId(id);
+    setSidebarOpen(false);
     window.history.replaceState(null, "", `?c=${id}`);
   }
 
@@ -848,6 +850,7 @@ export default function ChatWorkspace({
           tier={tier}
           isAdmin={isAdmin}
           tierColour={tierColour}
+          onCloseSidebar={() => setSidebarOpen(false)}
           onNewChat={startNewChat}
           onSelectConversation={(id) => { selectConversation(id); }}
           onDeleteConversation={(id) => void removeConversation(id)}
@@ -876,9 +879,7 @@ export default function ChatWorkspace({
         >
           <button
             onClick={() => setSidebarOpen((v) => !v)}
-            className={`absolute left-3 top-3 z-30 rounded-lg border border-[#E2E8F0] bg-white p-1.5 text-[#64748B] shadow-sm hover:bg-[#F1F5F9] transition-colors ${
-              sidebarOpen ? "md:hidden" : ""
-            }`}
+            className="absolute left-3 top-3 z-30 rounded-lg border border-[#E2E8F0] bg-white p-1.5 text-[#64748B] shadow-sm transition-colors hover:bg-[#F1F5F9]"
             title={sidebarOpen ? tw("collapseSidebar") : tw("expandSidebar")}
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

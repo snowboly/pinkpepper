@@ -100,7 +100,7 @@ export default function MessageItem({ message }: MessageItemProps) {
           </div>
 
           {!message.isStreaming && message.content && (
-            <div className="mt-2 opacity-0 transition-opacity group-hover:opacity-100">
+            <div className="mt-2 opacity-100 sm:opacity-0 transition-opacity sm:group-hover:opacity-100">
               <button
                 type="button"
                 onClick={copyToClipboard}

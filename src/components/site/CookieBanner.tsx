@@ -39,13 +39,13 @@ export function CookieBanner() {
           role="dialog"
           aria-modal="false"
           aria-label="Cookie consent"
-          className="cookie-banner fixed bottom-0 left-0 right-0 z-50 border-t border-[#E2E8F0] bg-white px-4 py-4 shadow-[0_-4px_24px_rgba(0,0,0,0.06)] md:px-6"
+          className="cookie-banner fixed inset-x-3 bottom-3 z-50 rounded-3xl border border-[#E2E8F0] bg-white px-4 py-3 shadow-[0_12px_36px_rgba(15,23,42,0.14)] md:inset-x-6 md:bottom-6 md:px-6 md:py-4"
         >
-          <div className="pp-container flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-sm leading-relaxed text-[#475569]">
+          <div className="pp-container flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+            <p className="max-w-3xl text-sm leading-relaxed text-[#475569]">
               We use essential cookies to keep PinkPepper running, and optional
               analytics cookies (Vercel Analytics) to understand how you use the
-              product — no personal data is collected.{" "}
+              product - no personal data is collected.{" "}
               <a
                 href="/legal/cookies"
                 className="font-medium text-[#E11D48] underline underline-offset-2 hover:no-underline"
@@ -53,7 +53,7 @@ export function CookieBanner() {
                 Cookie Policy
               </a>
             </p>
-            <div className="flex flex-shrink-0 items-center gap-3">
+            <div className="grid flex-shrink-0 grid-cols-2 gap-2 sm:flex sm:items-center sm:justify-end sm:gap-3">
               <button
                 onClick={decline}
                 className="rounded-full border border-[#E2E8F0] px-4 py-2 text-sm font-semibold text-[#475569] transition-colors hover:border-[#CBD5E1] hover:text-[#0F172A]"
