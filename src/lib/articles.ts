@@ -12,6 +12,8 @@ export type ArticleRecord = {
   body: string;
 };
 
+export type ArticleSummary = Omit<ArticleRecord, "body">;
+
 type LoaderOptions = {
   contentDir?: string;
 };
@@ -56,21 +58,55 @@ async function readArticleFile(filePath: string): Promise<ArticleRecord> {
 
 export async function getAllArticles(options: LoaderOptions = {}): Promise<ArticleRecord[]> {
   const contentDir = options.contentDir ?? DEFAULT_CONTENT_DIR;
-  const fileNames = await fs.readdir(contentDir);
+  const summaries = await getArticleManifest({ contentDir });
 
+  return Promise.all(
+    summaries.map(async (summary) => readArticleFile(path.join(contentDir, `${summary.slug}.md`))),
+  );
+}
+
+async function buildArticleManifest(contentDir: string): Promise<ArticleSummary[]> {
+  const fileNames = await fs.readdir(contentDir);
   const articles = await Promise.all(
     fileNames
       .filter((fileName) => fileName.endsWith(".md"))
       .map((fileName) => readArticleFile(path.join(contentDir, fileName))),
   );
 
-  return articles.sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
+  return articles
+    .map((article) => ({
+      title: article.title,
+      slug: article.slug,
+      excerpt: article.excerpt,
+      category: article.category,
+      publishedAt: article.publishedAt,
+      image: article.image,
+      source: article.source,
+    }))
+    .sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
 }
 
-export async function getArticleBySlug(
-  slug: string,
-  options: LoaderOptions = {},
-): Promise<ArticleRecord | null> {
-  const articles = await getAllArticles(options);
-  return articles.find((article) => article.slug === slug) ?? null;
+export async function getArticleManifest(options: LoaderOptions = {}): Promise<ArticleSummary[]> {
+  const contentDir = options.contentDir ?? DEFAULT_CONTENT_DIR;
+  const manifestFile = path.join(contentDir, "manifest.json");
+
+  try {
+    const raw = await fs.readFile(manifestFile, "utf8");
+    const parsed = JSON.parse(raw) as ArticleSummary[];
+    return parsed.sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
+  } catch {
+    return buildArticleManifest(contentDir);
+  }
+}
+
+export async function getArticleBySlug(slug: string, options: LoaderOptions = {}): Promise<ArticleRecord | null> {
+  const contentDir = options.contentDir ?? DEFAULT_CONTENT_DIR;
+  const summaries = await getArticleManifest({ contentDir });
+  const articleSummary = summaries.find((article) => article.slug === slug);
+
+  if (!articleSummary) {
+    return null;
+  }
+
+  return readArticleFile(path.join(contentDir, `${slug}.md`));
 }

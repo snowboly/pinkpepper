@@ -18,31 +18,31 @@ source: "ilovehaccp"
       
 
       
-      <p>Food safety regulations are in place to protect public health by ensuring that all food products are safe for consumption.</p><p> Small food businesses, which include restaurants, cafes, and food manufacturers, must comply with these regulations to avoid legal and financial consequences. The Codex Alimentarius, a collection of internationally recognized standards, and the FDA's Food Safety Modernization Act (FSMA) provide guidelines for food businesses to follow.</p>
+      <p>Food safety regulations are in place to protect public health by ensuring that all food products are safe for consumption.</p><p> Small food businesses, which include restaurants, cafes, and food manufacturers, must comply with these regulations to avoid legal and financial consequences. Codex Alimentarius guidance and applicable local rules give food businesses the framework they need to operate safely and consistently.</p>
       <h3>Hazard Analysis and Critical Control Points (HACCP)</h3>
 
       <p>A key component of food safety regulations is the implementation of a HACCP plan.</p><p> This involves identifying potential hazards in the food production process, such as contamination from raw materials or improper handling, and implementing controls to prevent or minimize these hazards. According to the Codex Alimentarius, a HACCP plan should include seven principles: hazard analysis, critical control points, critical limits, monitoring, corrective actions, verification, and record-keeping.</p>
       <h3>Sanitation and Hygiene</h3>
 
-      <p>Sanitation and hygiene are critical components of food safety.</p><p> Regulators expect small food businesses to maintain a clean and sanitary environment, including proper handwashing facilities, cleaning and sanitizing of equipment and surfaces, and pest control. The FDA's Model Food Code provides guidelines for sanitation and hygiene practices, including the importance of separating raw and ready-to-eat foods, and the use of sanitizers and cleaning agents.</p>
+      <p>Sanitation and hygiene are critical components of food safety.</p><p> Regulators expect small food businesses to maintain a clean and sanitary environment, including proper handwashing facilities, cleaning and sanitizing of equipment and surfaces, and pest control. Sanitation and hygiene controls should cover raw and ready-to-eat separation, validated cleaning methods, and the correct use of sanitizers.</p>
       <h3>Record-Keeping and Documentation</h3>
 
-      <p>Accurate and detailed record-keeping is essential for small food businesses to demonstrate compliance with regulations.</p><p> This includes records of temperature control, cleaning and sanitizing, and pest control, as well as documentation of employee training and HACCP plan implementation. According to the FSMA, food businesses must maintain records for at least two years, and make them available to regulators upon request.</p>
+      <p>Accurate and detailed record-keeping is essential for small food businesses to demonstrate compliance with regulations.</p><p> This includes records of temperature control, cleaning and sanitizing, and pest control, as well as documentation of employee training and HACCP plan implementation. According to the applicable food safety requirements, food businesses must maintain records for at least two years, and make them available to regulators upon request.</p>
       <h3>Supply Chain Management</h3>
 
-      <p>Small food businesses must also ensure that their suppliers are compliant with food safety regulations.</p><p> This includes verifying the safety of raw materials, and ensuring that suppliers have implemented HACCP plans and sanitation controls. The FDA's FSMA requires food businesses to have a supplier verification program in place, which includes auditing and evaluating suppliers, and taking corrective actions when necessary.</p>
+      <p>Small food businesses must also ensure that their suppliers are compliant with food safety regulations.</p><p> This includes verifying the safety of raw materials, and ensuring that suppliers have implemented HACCP plans and sanitation controls. Supplier verification should include suitable approval checks, ongoing review, and corrective action when suppliers fall short.</p>
       <h3>Employee Training and Education</h3>
 
-      <p>Employee training and education are critical components of food safety.</p><p> Regulators expect small food businesses to provide ongoing training to employees on food safety practices, including proper handling and preparation of foods, and the importance of sanitation and hygiene. The FDA's Model Food Code provides guidelines for employee training, including the importance of training on food safety principles, and the use of training records to document employee knowledge.</p>
+      <p>Employee training and education are critical components of food safety.</p><p> Regulators expect small food businesses to provide ongoing training to employees on food safety practices, including proper handling and preparation of foods, and the importance of sanitation and hygiene. Training should cover practical food safety responsibilities and leave a clear record that staff have been trained.</p>
       
       <h2>Conclusion</h2>
 
       
-      <p>In conclusion, small food businesses must understand and comply with food safety regulations to ensure the safety of their products and protect public health.</p><p> By focusing on key areas such as hazard analysis, sanitation, record-keeping, supply chain management, and employee training, small food businesses can build trust with regulators and avoid legal and financial consequences. By following the guidelines and standards outlined in the Codex Alimentarius and the FDA's FSMA, small food businesses can ensure compliance and provide safe and healthy food products to their customers.</p>
+      <p>In conclusion, small food businesses must understand and comply with food safety regulations to ensure the safety of their products and protect public health.</p><p> By focusing on key areas such as hazard analysis, sanitation, record-keeping, supply chain management, and employee training, small food businesses can build trust with regulators and avoid legal and financial consequences. By following Codex guidance and the rules that apply in their market, small food businesses can ensure compliance and provide safe and healthy food products to their customers.</p>
       <ul>
          <li>Codex Alimentarius: <a href='https://www.fao.org/fao-who-codexalimentarius/home/en/'>https://www.fao.org/fao-who-codexalimentarius/home/en/</a></li>
-         <li>FDA's Food Safety Modernization Act (FSMA): <a href='https://www.fda.gov/food/guidance-regulation-food-and-dietary-supplements/food-safety-modernization-act-fsma'>https://www.fda.gov/food/guidance-regulation-food-and-dietary-supplements/food-safety-modernization-act-fsma</a></li>
-         <li>FDA's Model Food Code: <a href='https://www.fda.gov/food/fda-food-code/food-code-2022'>https://www.fda.gov/food/fda-food-code/food-code-2022</a></li>
+         
+         
       </ul>
 
 

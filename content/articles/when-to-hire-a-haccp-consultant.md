@@ -18,7 +18,7 @@ source: "ilovehaccp"
       
 
       
-      <p>The Hazard Analysis and Critical Control Points (HACCP) system is a systematic approach to identifying and controlling hazards in the food production process.</p><p> As outlined in the Codex Alimentarius Commission's guidelines, HACCP is a preventive approach to food safety that aims to prevent, eliminate, or reduce hazards to an acceptable level. The FDA also requires food establishments to implement a HACCP plan as part of their food safety regulations.</p>
+      <p>The Hazard Analysis and Critical Control Points (HACCP) system is a systematic approach to identifying and controlling hazards in the food production process.</p><p> As outlined in the Codex Alimentarius Commission's guidelines, HACCP is a preventive approach to food safety that aims to prevent, eliminate, or reduce hazards to an acceptable level. Food businesses should maintain HACCP-based controls and supporting records that reflect the regulatory requirements and guidance relevant to their market.</p>
       <h3>Benefits of Hiring a HACCP Consultant</h3>
 
       <p>Hiring a HACCP consultant can provide numerous benefits to food businesses, including improved food safety, reduced risk of contamination, and increased compliance with regulatory requirements. A HACCP consultant can help identify and assess potential hazards, develop and implement effective control measures, and provide training and support to staff.</p>

@@ -23,7 +23,7 @@ source: "ilovehaccp"
       <h2>HACCP: The Foundation of Food Safety</h2>
 
       
-      <p>HACCP, as outlined by the Codex Alimentarius Commission, is a systematic approach to identifying and controlling hazards in the food production process.</p><p> It involves seven principles: conducting a hazard analysis, identifying critical control points, establishing critical limits, monitoring these control points, establishing corrective actions, establishing verification procedures, and documenting the HACCP plan. The FDA and many international food safety standards recommend the implementation of HACCP principles to ensure a proactive approach to food safety.</p>
+      <p>HACCP, as outlined by the Codex Alimentarius Commission, is a systematic approach to identifying and controlling hazards in the food production process.</p><p> It involves seven principles: conducting a hazard analysis, identifying critical control points, establishing critical limits, monitoring these control points, establishing corrective actions, establishing verification procedures, and documenting the HACCP plan. HACCP principles are widely used across food safety standards to support a proactive approach to hazard control.</p>
       <h3>Advantages and Limitations of HACCP</h3>
 
       <p>HACCP is widely recognized and accepted as a fundamental tool for food safety management. Its proactive approach helps in preventing hazards rather than relying on end-product testing.</p><p> However, the effectiveness of HACCP depends heavily on the thoroughness of the hazard analysis and the accuracy of the critical control points identified. Small and medium-sized enterprises might find the implementation of a full HACCP system challenging due to resource constraints.</p>

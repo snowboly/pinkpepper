@@ -24,7 +24,7 @@ source: "ilovehaccp"
    <p>The identification of physical hazards is a critical step in the HACCP process. According to the Codex Alimentarius Commission, a hazard is defined as a biological, chemical, or physical agent in, or condition of, food with the potential to cause an adverse health effect.</p><p> Physical hazards can be introduced at any stage of the food supply chain, from raw material sourcing to final product packaging. Common sources include inadequate cleaning and maintenance of equipment, poor handling practices by staff, and the use of contaminated raw materials.</p>
    <h3>Control Measures for Physical Hazards</h3>
 
-   <p>Control measures for physical hazards are designed to prevent, eliminate, or reduce these contaminants to an acceptable level. The FDA and other regulatory bodies recommend a multi-step approach that includes:</p>
+   <p>Control measures for physical hazards are designed to prevent, eliminate, or reduce these contaminants to an acceptable level. A practical multi-step approach often includes:</p>
    <ul>
       <li><strong>Raw Material Inspection:</strong> Ensuring that all raw materials are inspected for signs of physical contamination before they are used in production.</li>
       <li><strong>Equipment Design and Maintenance:</strong> Designing equipment to minimize the risk of physical contamination and implementing regular maintenance schedules to prevent wear and tear that could lead to contamination.</li>

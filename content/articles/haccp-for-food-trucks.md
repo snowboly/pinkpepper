@@ -316,7 +316,7 @@ source: "ilovehaccp"
 
 <p>2. <strong>The Green Grill</strong>: Focused on healthy, organic options, The Green Grill employs a robust HACCP plan that prioritizes cross-contamination prevention. They utilize color-coded utensils and cutting boards, which are part of their critical control measures. The truck's layout is designed for optimal workflow, minimizing hazards associated with food preparation.</p>
 
-<p>3. <strong>Taco Fusion</strong>: This mobile catering service offers a unique blend of traditional and contemporary taco recipes. Their HACCP plan includes detailed temperature monitoring for food storage and preparation, employing digital thermometers to ensure compliance with the <strong>FDA Food Code</strong> standards. Regular audits and self-assessments reinforce their commitment to food safety.</p>
+<p>3. <strong>Taco Fusion</strong>: This mobile catering service offers a unique blend of traditional and contemporary taco recipes. Their HACCP plan includes detailed temperature monitoring for food storage and preparation, employing digital thermometers to ensure compliance with the <strong>relevant food safety guidance</strong> standards. Regular audits and self-assessments reinforce their commitment to food safety.</p>
 
 <h4>Analysis of Their Operational Strategies and Outcomes</h4>
 

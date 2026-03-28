@@ -13,7 +13,7 @@ source: "ilovehaccp"
       
 
       
-      <p>Hazard Analysis and Critical Control Points (HACCP) plans are a systematic approach to identifying and controlling hazards in the food production process.</p><p> The Codex Alimentarius Commission and the US Food and Drug Administration (FDA) recommend HACCP plans as a key component of a food safety management system. However, despite their importance, many HACCP plans fail during audits, resulting in costly rework, reputational damage, and potential harm to consumers.</p>
+      <p>Hazard Analysis and Critical Control Points (HACCP) plans are a systematic approach to identifying and controlling hazards in the food production process.</p><p> Codex Alimentarius guidance and market-specific requirements both treat HACCP planning as a central part of food safety management. However, despite their importance, many HACCP plans fail during audits, resulting in costly rework, reputational damage, and potential harm to consumers.</p>
       
       <h2>Reason 1: Inadequate Hazard Analysis</h2>
 
@@ -28,7 +28,7 @@ source: "ilovehaccp"
       </ul>
       <h2>Reason 2: Insufficient Critical Control Points (CCPs)</h2>
 
-      <p>CCPs are points in the production process where control measures can be applied to prevent, eliminate, or reduce hazards to an acceptable level.</p><p> However, many HACCP plans fail to identify all relevant CCPs, or fail to establish effective control measures. The FDA recommends that CCPs be established for each hazard identified in the hazard analysis, and that control measures be implemented to ensure that each CCP is under control.</p>
+      <p>CCPs are points in the production process where control measures can be applied to prevent, eliminate, or reduce hazards to an acceptable level.</p><p> However, many HACCP plans fail to identify all relevant CCPs, or fail to establish effective control measures. Each hazard analysis should lead to clear control measures, and every CCP should remain under control through defined monitoring and response.</p>
       <h3>Establishing Effective CCPs</h3>
 
       <ul>
