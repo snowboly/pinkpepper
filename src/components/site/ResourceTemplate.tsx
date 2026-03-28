@@ -29,8 +29,6 @@ export function ResourceTemplate({
   intro,
   summaryPoints,
   sections,
-  ctaTitle,
-  ctaBody,
   relatedLinks,
   templateSlug,
   templateSlugs,

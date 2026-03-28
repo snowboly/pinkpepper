@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { getAllArticles } from "@/lib/articles";
 
@@ -33,21 +34,38 @@ export default async function ArticlesPage() {
         <div className="pp-container">
           <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
             {articles.map((article) => (
-              <article key={article.slug} className="rounded-3xl border border-[#E2E8F0] bg-white p-6">
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#E11D48]">{article.category}</p>
-                <h2 className="mt-3 text-2xl font-semibold text-[#0F172A]">
-                  <Link href={`/articles/${article.slug}`} className="hover:text-[#BE123C]">
-                    {article.title}
+              <article key={article.slug} className="overflow-hidden rounded-3xl border border-[#E2E8F0] bg-white">
+                <div className="relative aspect-[16/9] border-b border-[#E2E8F0] bg-[#F8FAFC]">
+                  {article.image ? (
+                    <Image
+                      src={article.image}
+                      alt={article.title}
+                      fill
+                      className="object-cover"
+                      sizes="(min-width: 1280px) 360px, (min-width: 768px) 50vw, 100vw"
+                    />
+                  ) : (
+                    <div className="flex h-full items-center justify-center bg-[radial-gradient(circle_at_top,_#FFE4E6,_#F8FAFC_62%)]">
+                      <span className="text-sm font-medium text-[#64748B]">Article image coming soon</span>
+                    </div>
+                  )}
+                </div>
+                <div className="p-6">
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#E11D48]">{article.category}</p>
+                  <h2 className="mt-3 text-2xl font-semibold text-[#0F172A]">
+                    <Link href={`/articles/${article.slug}`} className="hover:text-[#BE123C]">
+                      {article.title}
+                    </Link>
+                  </h2>
+                  <p className="mt-3 text-sm text-[#64748B]">{article.publishedAt}</p>
+                  <p className="mt-4 text-sm leading-relaxed text-[#475569]">{article.excerpt}</p>
+                  <Link
+                    href={`/articles/${article.slug}`}
+                    className="mt-6 inline-flex rounded-full border border-[#E2E8F0] px-4 py-2 text-sm font-semibold text-[#0F172A] transition-colors hover:border-[#FDA4AF] hover:text-[#BE123C]"
+                  >
+                    Read article
                   </Link>
-                </h2>
-                <p className="mt-3 text-sm text-[#64748B]">{article.publishedAt}</p>
-                <p className="mt-4 text-sm leading-relaxed text-[#475569]">{article.excerpt}</p>
-                <Link
-                  href={`/articles/${article.slug}`}
-                  className="mt-6 inline-flex rounded-full border border-[#E2E8F0] px-4 py-2 text-sm font-semibold text-[#0F172A] transition-colors hover:border-[#FDA4AF] hover:text-[#BE123C]"
-                >
-                  Read article
-                </Link>
+                </div>
               </article>
             ))}
           </div>

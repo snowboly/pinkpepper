@@ -76,6 +76,14 @@ describe("public SEO copy and linking", () => {
     expect(resources).toContain("/features/");
   });
 
+  it("renders article cards with image support and a fallback shell", () => {
+    const articles = readPage("src/app/articles/page.tsx");
+
+    expect(articles).toContain('from "next/image"');
+    expect(articles).toContain("article.image ? (");
+    expect(articles).toContain("Article image coming soon");
+  });
+
   it("keeps hub-page copy user-facing instead of talking about SEO strategy", () => {
     const features = readPage("src/app/features/page.tsx");
     const useCases = readPage("src/app/use-cases/page.tsx");
