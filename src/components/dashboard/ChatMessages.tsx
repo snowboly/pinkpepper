@@ -113,7 +113,7 @@ export default function ChatMessages({
               </button>
 
               {docMenuOpen && (
-                <div className="absolute left-1/2 -translate-x-1/2 mt-2 w-80 max-h-96 overflow-y-auto rounded-xl border border-[#E2E8F0] bg-white shadow-lg z-20">
+                <div className="absolute left-1/2 z-20 mt-2 w-80 max-w-[calc(100vw-2rem)] -translate-x-1/2 overflow-y-auto rounded-xl border border-[#E2E8F0] bg-white shadow-lg max-h-96">
                   {(() => {
                     const grouped = TEMPLATES.reduce<Record<string, typeof TEMPLATES>>((acc, tpl) => {
                       (acc[tpl.category] ??= []).push(tpl);

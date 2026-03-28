@@ -58,6 +58,7 @@ type ChatSidebarProps = {
   tier: SubscriptionTier;
   isAdmin: boolean;
   tierColour: string;
+  onCloseSidebar?: () => void;
   onNewChat: () => void;
   onSelectConversation: (id: string) => void;
   onDeleteConversation: (id: string) => void;
@@ -79,6 +80,7 @@ export default function ChatSidebar({
   tier,
   isAdmin,
   tierColour,
+  onCloseSidebar,
   onNewChat,
   onSelectConversation,
   onDeleteConversation,
@@ -246,7 +248,10 @@ export default function ChatSidebar({
           />
         ) : (
           <button
-            onClick={() => onSelectConversation(conv.id)}
+            onClick={() => {
+              onSelectConversation(conv.id);
+              onCloseSidebar?.();
+            }}
             className="flex-1 text-left leading-snug font-medium truncate"
           >
             {conv.title || t("untitledConversation")}
@@ -254,7 +259,7 @@ export default function ChatSidebar({
         )}
 
         {renamingId !== conv.id && (
-          <div className="ml-1 hidden group-hover:flex items-center gap-0.5 flex-shrink-0">
+          <div className="ml-1 flex items-center gap-0.5 flex-shrink-0 opacity-100 transition-opacity sm:opacity-0 sm:group-hover:opacity-100">
             {/* Rename */}
             <button
               onClick={(e) => { e.stopPropagation(); startRename(conv); }}
@@ -295,14 +300,17 @@ export default function ChatSidebar({
 
   return (
     <aside
-      className={`${
-        sidebarOpen ? "w-72" : "w-0"
-      } relative z-20 md:z-auto flex-shrink-0 transition-[width] duration-200 overflow-hidden border-r border-[#E2E8F0] bg-white flex flex-col`}
+      className={`fixed inset-y-0 left-0 z-20 flex w-72 max-w-[calc(100vw-1.5rem)] flex-col border-r border-[#E2E8F0] bg-white shadow-xl transition-transform duration-200 ${
+        sidebarOpen ? "translate-x-0" : "-translate-x-full"
+      } md:static md:z-auto md:max-w-none md:translate-x-0 md:shadow-none`}
     >
       {/* New chat button */}
       <div className="flex-shrink-0 px-3 pt-4 pb-3 border-b border-[#E2E8F0]">
         <button
-          onClick={onNewChat}
+          onClick={() => {
+            onNewChat();
+            onCloseSidebar?.();
+          }}
           className="flex w-full items-center gap-2 rounded-xl border border-[#E2E8F0] bg-[#F8F9FB] px-3 py-2 text-sm font-medium text-[#0F172A] transition-colors hover:bg-[#F1F5F9]"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-[#E11D48]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -464,7 +472,7 @@ export default function ChatSidebar({
                   </button>
 
                   {!isRenamingThis && (
-                    <div className="hidden group-hover:flex items-center gap-0.5 flex-shrink-0">
+                    <div className="flex items-center gap-0.5 flex-shrink-0 opacity-100 transition-opacity sm:opacity-0 sm:group-hover:opacity-100">
                       <button
                         onClick={(e) => { e.stopPropagation(); startRenameProject(project); }}
                         className="text-[#9CA3AF] hover:text-[#64748B] p-0.5"
