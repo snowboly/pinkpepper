@@ -11,6 +11,11 @@ export type TemplateEntry = {
   category: string;
 };
 
+export type TemplateGroup = {
+  category: string;
+  templates: TemplateEntry[];
+};
+
 export const TEMPLATES: TemplateEntry[] = [
   // HACCP
   { slug: "haccp-plan-template_hazzards",         title: "HACCP hazards register",                 category: "HACCP" },
@@ -43,4 +48,26 @@ export const TEMPLATE_SLUGS = new Set(TEMPLATES.map((t) => t.slug));
 
 export function isValidTemplateSlug(slug: string): boolean {
   return TEMPLATE_SLUGS.has(slug);
+}
+
+export function getGroupedTemplates(): TemplateGroup[] {
+  const sorted = [...TEMPLATES].sort((a, b) => {
+    const categoryCompare = a.category.localeCompare(b.category);
+    if (categoryCompare !== 0) {
+      return categoryCompare;
+    }
+    return a.title.localeCompare(b.title);
+  });
+
+  const grouped = new Map<string, TemplateEntry[]>();
+  for (const template of sorted) {
+    const items = grouped.get(template.category) ?? [];
+    items.push(template);
+    grouped.set(template.category, items);
+  }
+
+  return Array.from(grouped.entries()).map(([category, templates]) => ({
+    category,
+    templates,
+  }));
 }

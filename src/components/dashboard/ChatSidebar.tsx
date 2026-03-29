@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import type { SubscriptionTier } from "@/lib/tier";
 import type { Conversation, Project } from "./types";
+import { getGroupedTemplates } from "@/lib/templates";
 
 // Preset emojis for projects
 const PRESET_EMOJIS = ["📁", "🍽️", "🧑‍🍳", "📋", "🔬", "🏭", "📊", "🌿"];
@@ -68,6 +69,8 @@ type ChatSidebarProps = {
   onCreateProject: (name: string, emoji: string) => void;
   onRenameProject: (id: string, name: string, emoji: string) => void;
   onDeleteProject: (id: string) => void;
+  onTemplateDownload: (slug: string) => void;
+  onTemplateUpgrade: () => void;
 };
 
 export default function ChatSidebar({
@@ -90,8 +93,12 @@ export default function ChatSidebar({
   onCreateProject,
   onRenameProject,
   onDeleteProject,
+  onTemplateDownload,
+  onTemplateUpgrade,
 }: ChatSidebarProps) {
   const t = useTranslations("sidebar");
+  const tc = useTranslations("chat");
+  const templateGroups = getGroupedTemplates();
   const userInitials = (() => {
     const local = userEmail.split("@")[0] ?? "";
     const tokens = local.split(/[._-]+/).filter(Boolean);
@@ -513,6 +520,61 @@ export default function ChatSidebar({
         </div>
 
         <div className="mx-3 border-t border-[#F1F5F9] my-1" />
+
+        <div className="px-3 py-2">
+          <div className="mb-2 flex items-center justify-between">
+            <span className="text-xs font-semibold uppercase tracking-wider text-[#6B7280]">
+              {tc("downloadTemplates")}
+            </span>
+            <span className="text-[10px] font-medium text-[#94A3B8]">
+              {tc("docCategories.downloadTemplatesHint")}
+            </span>
+          </div>
+
+          <div className="space-y-2">
+            {templateGroups.map((group) => (
+              <div key={group.category}>
+                <p className="px-2 pb-1 text-[10px] font-bold uppercase tracking-wider text-[#CBD5E1]">
+                  {group.category}
+                </p>
+                <div className="space-y-0.5">
+                  {group.templates.map((template) => {
+                    const locked = tier === "free";
+                    return (
+                      <button
+                        key={template.slug}
+                        type="button"
+                        onClick={() => {
+                          if (locked) {
+                            onTemplateUpgrade();
+                            return;
+                          }
+                          onTemplateDownload(template.slug);
+                        }}
+                        className={`flex w-full items-center justify-between gap-2 rounded-xl px-3 py-2 text-left text-sm transition-colors ${
+                          locked ? "hover:bg-[#F8FAFC]" : "hover:bg-[#F1F5F9]"
+                        }`}
+                      >
+                        <span className={`min-w-0 flex-1 truncate font-medium ${locked ? "text-[#94A3B8]" : "text-[#334155]"}`}>
+                          {template.title}
+                        </span>
+                        {locked ? (
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 flex-shrink-0 text-[#CBD5E1]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                          </svg>
+                        ) : (
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 flex-shrink-0 text-[#94A3B8]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                          </svg>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
 
         {/* ── All chats (unassigned) ── */}
         <div
