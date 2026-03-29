@@ -24,12 +24,14 @@ describe("mobile surface regressions", () => {
 
   it("keeps touch-only actions accessible and avoids cramped fixed-width mobile popovers", () => {
     const messages = readPage("src/components/dashboard/MessageItem.tsx");
-    const chatMessages = readPage("src/components/dashboard/ChatMessages.tsx");
+    const sidebar = readPage("src/components/dashboard/ChatSidebar.tsx");
+    const chatInput = readPage("src/components/dashboard/ChatInput.tsx");
     const chrome = readPage("src/components/site/chrome.tsx");
 
     expect(messages).toContain("opacity-100 sm:opacity-0");
     expect(messages).toContain("sm:group-hover:opacity-100");
-    expect(chatMessages).toContain("max-w-[calc(100vw-2rem)]");
+    expect(chatInput).toContain("max-w-[calc(100vw-2rem)]");
+    expect(sidebar).toContain("max-w-[calc(100vw-1.5rem)]");
     expect(chrome).toContain("lg:grid-cols-[2fr_1fr_1fr_1.5fr]");
   });
 });

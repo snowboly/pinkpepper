@@ -221,6 +221,31 @@ export default function ChatWorkspace({
     }
   }
 
+  const handleTemplateDownload = useCallback((slug: string) => {
+    if (tier === "free") {
+      setUpgradeModalTrigger("template_download");
+      return;
+    }
+
+    void (async () => {
+      try {
+        const res = await fetch(`/api/templates/${slug}/download`, { redirect: "manual" });
+        if (res.type === "opaqueredirect") {
+          const a = document.createElement("a");
+          a.href = `/api/templates/${slug}/download`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        } else if (!res.ok) {
+          const data = (await res.json().catch(() => ({}))) as { error?: string };
+          setError(data.error ?? "This template isn't available for download yet.");
+        }
+      } catch {
+        setError("Could not download the template. Please try again.");
+      }
+    })();
+  }, [tier]);
+
   const {
     isRecording,
     isTranscribing,
@@ -860,6 +885,8 @@ export default function ChatWorkspace({
           onCreateProject={(name, emoji) => void createProject(name, emoji)}
           onRenameProject={(id, name, emoji) => void renameProject(id, name, emoji)}
           onDeleteProject={(id) => void deleteProject(id)}
+          onTemplateDownload={handleTemplateDownload}
+          onTemplateUpgrade={() => setUpgradeModalTrigger("template_download")}
         />
 
         {/* Mobile sidebar backdrop */}
@@ -912,43 +939,8 @@ export default function ChatWorkspace({
             messages={messages}
             loading={loading}
             loadingMessages={loadingMessages}
-            conversationId={conversationId}
             canUploadImages={canUploadImages}
-            onQuickSuggestion={(suggestion) => {
-              if (suggestion.category === "template_download" && suggestion.key) {
-                if (tier === "free") {
-                  setUpgradeModalTrigger("template_download");
-                  return;
-                }
-                void (async () => {
-                  try {
-                    const res = await fetch(`/api/templates/${suggestion.key}/download`, { redirect: "manual" });
-                    if (res.type === "opaqueredirect") {
-                      // 302 to Supabase signed URL — trigger download
-                      const a = document.createElement("a");
-                      a.href = `/api/templates/${suggestion.key}/download`;
-                      document.body.appendChild(a);
-                      a.click();
-                      document.body.removeChild(a);
-                    } else if (!res.ok) {
-                      const data = (await res.json().catch(() => ({}))) as { error?: string };
-                      setError(data.error ?? "This template isn't available for download yet.");
-                    }
-                  } catch {
-                    setError("Could not download the template. Please try again.");
-                  }
-                })();
-                return;
-              }
-              if (workspaceMode === "virtual_audit") {
-                void sendPromptValue(`Start virtual audit focus: ${suggestion.text}`);
-                return;
-              }
-              void sendPromptValue(suggestion.text);
-            }}
             currentPersona={currentPersona}
-            showDocumentStarters={workspaceMode === "ask"}
-            tier={tier}
           />
 
           <div className="flex-shrink-0 border-t border-[#E2E8F0] bg-white px-4 py-2">
