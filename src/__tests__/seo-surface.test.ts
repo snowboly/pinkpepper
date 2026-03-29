@@ -87,6 +87,45 @@ describe("public SEO copy and linking", () => {
     expect(articles).toContain("Article image coming soon");
   });
 
+  it("strengthens the public article index card hierarchy", () => {
+    const articles = readPage("src/app/articles/page.tsx");
+
+    expect(articles).toContain('group/article-card');
+    expect(articles).toContain("font-bold");
+    expect(articles).toContain("text-[11px] font-black uppercase tracking-[0.22em]");
+    expect(articles).toContain("inline-flex items-center gap-2");
+  });
+
+  it("tightens the public article detail hero hierarchy", () => {
+    const articleDetail = readPage("src/app/articles/[slug]/page.tsx");
+
+    expect(articleDetail).toContain("pp-article-hero-meta");
+    expect(articleDetail).toContain("text-4xl font-bold leading-[1.05]");
+    expect(articleDetail).toContain("text-lg leading-8");
+  });
+
+  it("expands scoped article-body typography without touching dashboard markdown", () => {
+    const articleDetail = readPage("src/app/articles/[slug]/page.tsx");
+    const globals = readPage("src/app/globals.css");
+
+    expect(articleDetail).toContain("pp-article-body");
+    expect(globals).toContain(".pp-article-body h2");
+    expect(globals).toContain(".pp-article-body strong");
+    expect(globals).toContain("font-weight: 700");
+    expect(globals).toContain(".pp-article-body ul {");
+    expect(globals).toContain("list-style-type: disc;");
+    expect(globals).toContain(".pp-article-body ol {");
+    expect(globals).toContain("list-style-type: decimal;");
+    expect(globals).toContain(".pp-article-body a {");
+    expect(globals).toContain("text-decoration-line: underline;");
+    expect(globals).toContain(".pp-article-body table {");
+    expect(globals).toContain("border-collapse: collapse;");
+    expect(globals).toContain(".pp-article-body blockquote");
+    expect(globals).toContain(".pp-article-body figure");
+    expect(globals).toContain(".pp-article-body img");
+    expect(globals).toContain(".pp-markdown strong");
+  });
+
   it("keeps hub-page copy user-facing instead of talking about SEO strategy", () => {
     const features = readPage("src/app/features/page.tsx");
     const useCases = readPage("src/app/use-cases/page.tsx");
