@@ -44,12 +44,16 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
     <main className="overflow-hidden">
       <section className="border-b border-[#F1F5F9] bg-[#F8FAFC] py-16 md:py-24">
         <div className="pp-container max-w-5xl">
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">{article.category}</p>
-          <h1 className="pp-display mt-4 max-w-4xl text-4xl text-[#0F172A] md:text-6xl">{article.title}</h1>
-          <p className="mt-5 text-sm font-medium text-[#64748B]">{article.publishedAt}</p>
-          <p className="mt-6 max-w-3xl text-lg leading-relaxed text-[#475569]">{article.excerpt}</p>
+          <div className="pp-article-hero-meta max-w-4xl">
+            <p className="text-[11px] font-black uppercase tracking-[0.22em] text-[#E11D48]">{article.category}</p>
+            <h1 className="pp-display mt-4 text-4xl font-bold leading-[1.05] tracking-tight text-[#0F172A] md:text-6xl">
+              {article.title}
+            </h1>
+            <p className="mt-5 text-sm font-semibold text-[#64748B]">{article.publishedAt}</p>
+            <p className="mt-6 max-w-3xl text-lg leading-8 text-[#475569]">{article.excerpt}</p>
+          </div>
           {article.image ? (
-            <figure className="mt-10 overflow-hidden rounded-[28px] border border-[#E2E8F0] bg-white shadow-[0_24px_80px_rgba(15,23,42,0.08)]">
+            <figure className="mt-10 overflow-hidden rounded-[30px] border border-[#E2E8F0] bg-white shadow-[0_24px_80px_rgba(15,23,42,0.08)]">
               <Image
                 src={article.image}
                 alt={article.title}
@@ -64,10 +68,7 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
 
       <section className="bg-white py-16 md:py-20">
         <div className="pp-container max-w-4xl">
-          <div
-            className="pp-article-body prose prose-slate max-w-none prose-headings:text-[#0F172A] prose-p:text-[#334155]"
-            dangerouslySetInnerHTML={{ __html: processedContent }}
-          />
+          <div className="pp-article-body max-w-none" dangerouslySetInnerHTML={{ __html: processedContent }} />
         </div>
       </section>
     </main>
