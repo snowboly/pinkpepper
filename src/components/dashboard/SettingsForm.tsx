@@ -21,9 +21,20 @@ type SettingsFormProps = {
   chatLanguage: string;
   usage: number;
   usageLimit: number | null;
+  imageUsage: number;
+  imageUsageLimit: number | null;
 };
 
-export default function SettingsForm({ email, tier, isAdmin, chatLanguage: initialChatLanguage, usage, usageLimit }: SettingsFormProps) {
+export default function SettingsForm({
+  email,
+  tier,
+  isAdmin,
+  chatLanguage: initialChatLanguage,
+  usage,
+  usageLimit,
+  imageUsage,
+  imageUsageLimit,
+}: SettingsFormProps) {
   const t = useTranslations("settings");
   const currentLocale = useLocale() as Locale;
   const [chatLanguage, setChatLanguage] = useState(initialChatLanguage);
@@ -145,6 +156,12 @@ export default function SettingsForm({ email, tier, isAdmin, chatLanguage: initi
               used={usage}
               limit={usageLimit}
               color="#E11D48"
+            />
+            <UsageBar
+              label={t("dailyImageAnalyses")}
+              used={imageUsage}
+              limit={imageUsageLimit}
+              color="#0F766E"
             />
           </div>
         </div>

@@ -3,7 +3,6 @@ export type SubscriptionTier = "free" | "plus" | "pro";
 export type TierCapabilities = {
   dailyMessages: number;
   dailyImageUploads: number;
-  dailyTranscriptions: number;
   maxSavedConversations: number | null;
   conversationRetentionDays: number | null;
   allowPdfExport: boolean;
@@ -18,9 +17,8 @@ export type TierCapabilities = {
 
 export const TIER_CAPABILITIES: Record<SubscriptionTier, TierCapabilities> = {
   free: {
-    dailyMessages: 15,
-    dailyImageUploads: 3,
-    dailyTranscriptions: 3,
+    dailyMessages: 5,
+    dailyImageUploads: 1,
     maxSavedConversations: 10,
     conversationRetentionDays: 30,
     allowPdfExport: false,
@@ -32,9 +30,8 @@ export const TIER_CAPABILITIES: Record<SubscriptionTier, TierCapabilities> = {
     maxResponseTokens: 2048,
   },
   plus: {
-    dailyMessages: 100,
-    dailyImageUploads: 10,
-    dailyTranscriptions: 25,
+    dailyMessages: 25,
+    dailyImageUploads: 5,
     maxSavedConversations: null,
     conversationRetentionDays: null,
     allowPdfExport: false,
@@ -46,9 +43,8 @@ export const TIER_CAPABILITIES: Record<SubscriptionTier, TierCapabilities> = {
     maxResponseTokens: 4096,
   },
   pro: {
-    dailyMessages: 1000,
-    dailyImageUploads: 50,
-    dailyTranscriptions: 200,
+    dailyMessages: 100,
+    dailyImageUploads: 15,
     maxSavedConversations: null,
     conversationRetentionDays: null,
     allowPdfExport: false,

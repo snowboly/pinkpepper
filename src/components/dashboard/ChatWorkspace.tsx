@@ -17,7 +17,6 @@ import OnboardingModal from "./OnboardingModal";
 import UpgradeModal from "./UpgradeModal";
 import ReviewContactModal from "./ReviewContactModal";
 import { useAttachments } from "./useAttachments";
-import { useAudioRecording } from "./useAudioRecording";
 import {
   parseMessageArtifact,
   parseMessageCitations,
@@ -41,7 +40,6 @@ export default function ChatWorkspace({
   onboardingCompleted = false,
 }: ChatWorkspaceProps) {
   const tw = useTranslations("workspace");
-  const tc = useTranslations("chat");
   // ── Core chat state ──
   const [messages, setMessages] = useState<Message[]>([]);
   const [prompt, setPrompt] = useState("");
@@ -79,7 +77,7 @@ export default function ChatWorkspace({
   const [showReviewModal, setShowReviewModal] = useState(false);
 
   // ── Upgrade modal state ──
-  const [upgradeModalTrigger, setUpgradeModalTrigger] = useState<"message_limit" | "image_limit" | "export" | "review" | "audit_mode" | "transcription_limit" | "template_download" | null>(null);
+  const [upgradeModalTrigger, setUpgradeModalTrigger] = useState<"message_limit" | "image_limit" | "export" | "review" | "audit_mode" | "template_download" | null>(null);
   const [workspaceMode, setWorkspaceMode] = useState<WorkspaceMode>("ask");
 
   // ── UI state ──
@@ -245,21 +243,6 @@ export default function ChatWorkspace({
       }
     })();
   }, [tier]);
-
-  const {
-    isRecording,
-    isTranscribing,
-    recordingError,
-    startRecording,
-    stopRecording,
-    cancelRecording,
-  } = useAudioRecording({
-    loading,
-    setPrompt,
-    sendPromptValue,
-    onTranscriptionLimit: () => setUpgradeModalTrigger("transcription_limit"),
-    t: tc,
-  });
 
   // ── Billing ──
   async function refreshBillingStatus() {
@@ -1016,9 +999,6 @@ export default function ChatWorkspace({
             imagePreview={imagePreview}
             canUploadImages={canUploadImages}
             attachedDocument={attachedDocument}
-            isRecording={isRecording}
-            isTranscribing={isTranscribing}
-            recordingError={recordingError}
             onPromptChange={setPrompt}
             onSubmit={sendPrompt}
             onStop={() => abortControllerRef.current?.abort()}
@@ -1026,9 +1006,6 @@ export default function ChatWorkspace({
             onClearImage={clearImage}
             onDocumentSelect={setAttachedDocument}
             onClearDocument={clearDocument}
-            onStartRecording={() => void startRecording()}
-            onStopRecording={stopRecording}
-            onCancelRecording={cancelRecording}
             onKeyDown={handleKeyDown}
             textareaRef={textareaRef}
             onUpgradeForImages={() => setUpgradeModalTrigger("image_limit")}
