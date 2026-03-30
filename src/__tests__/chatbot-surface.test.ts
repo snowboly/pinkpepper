@@ -202,6 +202,20 @@ describe("chat workspace chrome", () => {
     expect(workspace).not.toContain("setActiveAdvancedBuilder");
   });
 
+  it("removes web voice transcription controls and upgrade hooks", () => {
+    const workspace = readWorkspaceFile("src/components/dashboard/ChatWorkspace.tsx");
+    const input = readWorkspaceFile("src/components/dashboard/ChatInput.tsx");
+    const upgradeModal = readWorkspaceFile("src/components/dashboard/UpgradeModal.tsx");
+
+    expect(workspace).not.toContain("useAudioRecording");
+    expect(workspace).not.toContain('setUpgradeModalTrigger("transcription_limit")');
+    expect(input).not.toContain('t("startRecording")');
+    expect(input).not.toContain('t("stopRecording")');
+    expect(input).not.toContain('t("transcribing")');
+    expect(upgradeModal).not.toContain("transcription_limit");
+    expect(upgradeModal).not.toContain("Unlock voice transcription");
+  });
+
   it("keeps chat export on a single DOCX path", () => {
     const workspace = readWorkspaceFile("src/components/dashboard/ChatWorkspace.tsx");
 

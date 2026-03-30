@@ -16,15 +16,15 @@ export const metadata: Metadata = {
 const planChanges = [
   {
     plan: "Free",
-    detail: "Chat on web and mobile, write and edit food safety content, analyze text and images, and access the curated knowledge base.",
+    detail: "5 messages per day, 1 image analysis per day, and access to the core food safety chat and knowledge base.",
   },
   {
     plan: "Plus",
-    detail: "Everything in Free, plus more usage, unlimited saved conversations and projects, and access to downloadable templates.",
+    detail: "25 messages per day, 5 image analyses per day, unlimited saved conversations and projects, and downloadable templates.",
   },
   {
     plan: "Pro",
-    detail: "Everything in Plus, plus the highest usage limits, priority support, virtual audit mode, and 2h/month of food safety consultancy.",
+    detail: "100 messages per day, 15 image analyses per day, virtual audit mode, priority support, and 2h/month of food safety consultancy.",
   },
 ];
 
@@ -81,7 +81,7 @@ export default async function PricingPage() {
         price: "0",
         priceCurrency: "EUR",
         description:
-          "Chat on web and mobile, write and edit food safety content, analyze text and images, and access the curated knowledge base.",
+          "5 messages per day, 1 image analysis per day, and access to the core food safety chat and knowledge base.",
       },
       {
         "@type": "Offer",
@@ -95,7 +95,7 @@ export default async function PricingPage() {
           unitCode: "MON",
         },
         description:
-          "Everything in Free, plus more usage, unlimited saved conversations and projects, and access to downloadable templates.",
+          "25 messages per day, 5 image analyses per day, unlimited saved conversations and projects, and access to downloadable templates.",
       },
       {
         "@type": "Offer",
@@ -109,7 +109,7 @@ export default async function PricingPage() {
           unitCode: "MON",
         },
         description:
-          "Everything in Plus, plus the highest usage limits, priority support, virtual audit mode, and 2 hours of food safety consultancy per month.",
+          "100 messages per day, 15 image analyses per day, virtual audit mode, priority support, and 2 hours of food safety consultancy per month.",
       },
     ],
   };
@@ -162,7 +162,7 @@ export default async function PricingPage() {
               <ul className="flex-1 space-y-3.5 text-sm text-[#475569]">
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />
-                  Chat on web and mobile (app coming soon)
+                  5 messages per day on web
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />
@@ -170,7 +170,7 @@ export default async function PricingPage() {
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />
-                  Analyze text and images
+                  1 image analysis per day
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />
@@ -199,11 +199,11 @@ export default async function PricingPage() {
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  More usage
+                  25 messages per day
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  Unlimited saved conversations and projects
+                  5 image analyses per day
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
@@ -235,7 +235,11 @@ export default async function PricingPage() {
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  Highest usage limits
+                  100 messages per day
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
+                  15 image analyses per day
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />

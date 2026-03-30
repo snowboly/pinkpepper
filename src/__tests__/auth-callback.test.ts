@@ -17,7 +17,7 @@ const { authState } = vi.hoisted(() => ({
 vi.mock("@supabase/ssr", () => ({
   createServerClient: (_url: string, _key: string, config: { cookies: { setAll: (cookies: CookieRecord[]) => void } }) => ({
     auth: {
-      exchangeCodeForSession: async (_code: string) => {
+      exchangeCodeForSession: async () => {
         if (!authState.exchangeError) {
           config.cookies.setAll([
             { name: "sb-access-token", value: "access-token", options: { path: "/" } },
@@ -27,7 +27,7 @@ vi.mock("@supabase/ssr", () => ({
 
         return { error: authState.exchangeError };
       },
-      verifyOtp: async (_params: unknown) => {
+      verifyOtp: async () => {
         if (!authState.verifyError) {
           config.cookies.setAll([{ name: "sb-access-token", value: "otp-token", options: { path: "/" } }]);
         }

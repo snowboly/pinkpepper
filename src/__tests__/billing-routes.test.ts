@@ -29,7 +29,7 @@ vi.mock("@/utils/supabase/server", () => ({
 
       return {
         select: () => ({
-          eq: (_column: string, _value: string) => ({
+          eq: () => ({
             maybeSingle: async () => ({ data: billingState.subscriptionRow, error: null }),
           }),
         }),
