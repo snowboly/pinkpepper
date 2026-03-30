@@ -94,3 +94,26 @@ Sampling and analysis for official controls shall be performed in accordance wit
 - Must not mix compliant with non-compliant lots
 - Must apply HACCP principles and good manufacturing practice to keep contaminants as low as reasonably achievable
 - Must maintain traceability records for contaminant testing and results
+
+---
+
+## 2024–2025 Amendments — IMPORTANT
+
+Regulation (EU) 2023/915 has been progressively amended since publication. The standalone 2023/915 text is **no longer current**. The following subsequent regulations modify specific maximum levels and must be read alongside this regulation:
+
+| Regulation | Subject | Applies From |
+|---|---|---|
+| **EU 2024/1022** | Deoxynivalenol (DON) and acetylated forms in cereals and cereal products; halved limits for infant/baby cereals | 1 July 2024 |
+| **EU 2024/1756** | Corrections and amendments: lead in leafy vegetables/baby foods, cadmium in cocoa/oilseeds, PAH in smoked fish/dried herbs, ochratoxin A, fumonisin corrections | 15 July 2024 |
+| **EU 2025/1891** | Heavy metals in fish and seafood: inorganic arsenic (fish, shellfish, algae), methylmercury (predatory fish, tuna, freshwater species), cadmium (cephalopods, crab) | 2025 |
+
+**Practical guidance:** Always use the EUR-Lex **consolidated version** of EU 2023/915 (CELEX: 32023R0915) which incorporates all amendments automatically. Do not rely on the standalone 2023 text when checking specific maximum levels — it is outdated.
+
+The old EC 1881/2006 is fully repealed. Any reference to "Regulation 1881/2006" in supplier documentation or specifications should be updated to EU 2023/915 (as amended).
+
+### Note on Inorganic Arsenic in Fish (post-EU 2025/1891)
+The 2025/1891 amendment substantially revised arsenic limits for fish and seafood based on EFSA's 2024 opinion. Key points:
+- Maximum levels now differentiated by species group (flatfish, pelagic fish, crustaceans, bivalves, cephalopods) rather than applying a single blanket limit
+- Algae and seaweed products have stricter inorganic arsenic limits
+- The distinction between **total arsenic** (mostly organic, non-toxic) and **inorganic arsenic** (toxic) is critical — regulations target only the inorganic fraction
+- Testing must use species-specific validated methods for inorganic arsenic (not total arsenic)

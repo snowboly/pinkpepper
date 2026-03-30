@@ -3,6 +3,8 @@ import {
   celexToSourceName,
   extractCurrentVersionInfo,
   discoverNewRegulations,
+  fetchRegulationText,
+  MIN_REGULATION_TEXT_CHARS,
   EUROVOC_FOOD_SAFETY_CONCEPTS,
 } from "@/lib/rag/cellar-client";
 import {
@@ -171,6 +173,123 @@ describe("discoverNewRegulations", () => {
     for (const concept of EUROVOC_FOOD_SAFETY_CONCEPTS) {
       expect(url).toContain(`eurovoc.europa.eu/${concept}`);
     }
+
+    vi.unstubAllGlobals();
+  });
+});
+
+describe("fetchRegulationText", () => {
+  const FULL_TEXT = "Article 1 ".repeat(600); // 6 000+ chars — exceeds MIN_REGULATION_TEXT_CHARS
+
+  it("returns text when the primary URL yields sufficient content", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+        text: () => Promise.resolve(`<html><body><p>${FULL_TEXT}</p></body></html>`),
+      })
+    );
+
+    const text = await fetchRegulationText("32002R0178");
+    expect(text.length).toBeGreaterThanOrEqual(MIN_REGULATION_TEXT_CHARS);
+    expect(text).toContain("Article 1");
+
+    vi.unstubAllGlobals();
+  });
+
+  it("falls back to the secondary URL when the primary returns a short page", async () => {
+    const shortHtml = "<html><body><p>Please accept cookies to continue.</p></body></html>";
+    let callCount = 0;
+
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockImplementation(() => {
+        callCount++;
+        if (callCount === 1) {
+          // Primary URL — short cookie/nav page
+          return Promise.resolve({ ok: true, text: () => Promise.resolve(shortHtml) });
+        }
+        // Secondary URL — full regulation text
+        return Promise.resolve({
+          ok: true,
+          text: () => Promise.resolve(`<html><body><p>${FULL_TEXT}</p></body></html>`),
+        });
+      })
+    );
+
+    const text = await fetchRegulationText("32002R0178");
+    expect(callCount).toBe(2);
+    expect(text.length).toBeGreaterThanOrEqual(MIN_REGULATION_TEXT_CHARS);
+
+    vi.unstubAllGlobals();
+  });
+
+  it("falls back to the LexUriServ URL when both primary and secondary return short pages", async () => {
+    const shortHtml = "<html><body><p>Select a version to view.</p></body></html>";
+    let callCount = 0;
+
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockImplementation(() => {
+        callCount++;
+        if (callCount < 3) {
+          return Promise.resolve({ ok: true, text: () => Promise.resolve(shortHtml) });
+        }
+        return Promise.resolve({
+          ok: true,
+          text: () => Promise.resolve(`<html><body><p>${FULL_TEXT}</p></body></html>`),
+        });
+      })
+    );
+
+    const text = await fetchRegulationText("32002R0178");
+    expect(callCount).toBe(3);
+    expect(text.length).toBeGreaterThanOrEqual(MIN_REGULATION_TEXT_CHARS);
+
+    vi.unstubAllGlobals();
+  });
+
+  it("throws when all three URLs fail to return sufficient text", async () => {
+    const shortHtml = "<html><body><p>Cookie consent required.</p></body></html>";
+
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({ ok: true, text: () => Promise.resolve(shortHtml) })
+    );
+
+    await expect(fetchRegulationText("32002R0178")).rejects.toThrow(
+      "Failed to fetch adequate regulation text for 32002R0178"
+    );
+
+    vi.unstubAllGlobals();
+  });
+
+  it("throws when all URLs return non-OK responses", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({ ok: false, status: 403 })
+    );
+
+    await expect(fetchRegulationText("32002R0178")).rejects.toThrow(
+      "Failed to fetch adequate regulation text for 32002R0178"
+    );
+
+    vi.unstubAllGlobals();
+  });
+
+  it("uses browser-like headers on all fetch attempts", async () => {
+    const mockFetch = vi.fn().mockResolvedValue({
+      ok: true,
+      text: () => Promise.resolve(`<html><body><p>${FULL_TEXT}</p></body></html>`),
+    });
+    vi.stubGlobal("fetch", mockFetch);
+
+    await fetchRegulationText("32002R0178");
+
+    const headers = mockFetch.mock.calls[0][1]?.headers as Record<string, string>;
+    expect(headers["User-Agent"]).toContain("Mozilla");
+    expect(headers["Accept"]).toContain("text/html");
+    expect(headers["Accept-Language"]).toBeDefined();
 
     vi.unstubAllGlobals();
   });
