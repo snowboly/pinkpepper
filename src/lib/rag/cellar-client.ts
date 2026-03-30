@@ -8,6 +8,26 @@
  * No authentication or API key required.
  */
 
+/**
+ * Browser-like headers required to get full regulation text from EUR-Lex.
+ * Without a realistic User-Agent and Accept header, EUR-Lex returns a short
+ * cookie-consent or document-selection page instead of the regulation HTML.
+ */
+const EURLEX_HEADERS = {
+  Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+  "Accept-Language": "en-GB,en-US;q=0.9,en;q=0.8",
+  "User-Agent":
+    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+  "Cache-Control": "no-cache",
+};
+
+/**
+ * Minimum character length for a stripped text to be considered a real regulation.
+ * Cookie-consent and navigation pages are typically < 2 000 chars after stripping.
+ * Even the shortest EU regulation (a one-page amending act) exceeds 5 000 chars.
+ */
+export const MIN_REGULATION_TEXT_CHARS = 5_000;
+
 export type CellarRegulation = {
   celex: string;
   baseCelex: string;
@@ -382,7 +402,7 @@ export async function searchFoodSafetyRegulations(
   const resolved = await Promise.all(
     CORE_REGULATION_SEEDS.map(async (seed) => {
       const response = await fetch(seed.eliPath, {
-        headers: { Accept: "text/html" },
+        headers: EURLEX_HEADERS,
         signal: AbortSignal.timeout(30_000),
       });
 
@@ -410,21 +430,57 @@ export async function searchFoodSafetyRegulations(
 /**
  * Fetch the full English text of a regulation by CELEX number.
  * Returns cleaned plain text (HTML stripped).
+ *
+ * Tries three URL strategies in order, accepting the first response that
+ * produces >= MIN_REGULATION_TEXT_CHARS of stripped text.  Without browser-like
+ * headers, EUR-Lex returns a short cookie-consent or document-selection page
+ * instead of the regulation HTML (< 2 000 chars after stripping).
+ *
+ * URL strategies:
+ *  1. Primary (/TXT/HTML/ + &from=EN) — forces direct English text rendering
+ *  2. Secondary (/TXT/HTML/ without &from=EN) — standard current endpoint
+ *  3. Legacy (LexUriServ) — reliable for original (non-consolidated) CELEX
  */
 export async function fetchRegulationText(celexNumber: string): Promise<string> {
-  const url = `https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:${encodeURIComponent(celexNumber)}`;
+  const encoded = encodeURIComponent(celexNumber);
+  const candidateUrls = [
+    `https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:${encoded}&from=EN`,
+    `https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:${encoded}`,
+    `https://eur-lex.europa.eu/LexUriServ/LexUriServ.do?uri=CELEX:${encoded}:EN:HTML`,
+  ];
 
-  const response = await fetch(url, {
-    headers: { Accept: "text/html" },
-    signal: AbortSignal.timeout(30_000),
-  });
+  const attempts: string[] = [];
 
-  if (!response.ok) {
-    throw new Error(`Failed to fetch regulation ${celexNumber}: ${response.status}`);
+  for (const url of candidateUrls) {
+    let response: Response;
+    try {
+      response = await fetch(url, {
+        headers: EURLEX_HEADERS,
+        signal: AbortSignal.timeout(30_000),
+      });
+    } catch (err) {
+      attempts.push(`${url} → network error: ${err instanceof Error ? err.message : String(err)}`);
+      continue;
+    }
+
+    if (!response.ok) {
+      attempts.push(`${url} → HTTP ${response.status}`);
+      continue;
+    }
+
+    const html = await response.text();
+    const text = stripHtmlToText(html);
+
+    if (text.length >= MIN_REGULATION_TEXT_CHARS) {
+      return text;
+    }
+
+    attempts.push(`${url} → text too short (${text.length} chars — likely a navigation or consent page)`);
   }
 
-  const html = await response.text();
-  return stripHtmlToText(html);
+  throw new Error(
+    `Failed to fetch adequate regulation text for ${celexNumber}.\n${attempts.join("\n")}`
+  );
 }
 
 /**

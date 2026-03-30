@@ -16,6 +16,7 @@ import {
   discoverNewRegulations,
   fetchRegulationText,
   celexToSourceName,
+  MIN_REGULATION_TEXT_CHARS,
   type CellarRegulation,
 } from "@/lib/rag/cellar-client";
 
@@ -366,10 +367,11 @@ export async function syncRegulations(): Promise<SyncResult> {
   // Process each regulation
   for (const regulation of regulations) {
     try {
-      // Fetch text first so we can hash it for amendment detection
+      // Fetch text first so we can hash it for amendment detection.
+      // fetchRegulationText already throws if text < MIN_REGULATION_TEXT_CHARS.
       const text = await fetchRegulationText(regulation.celex);
-      if (!text || text.length < 100) {
-        throw new Error(`Regulation text too short or empty (${text.length} chars)`);
+      if (!text || text.length < MIN_REGULATION_TEXT_CHARS) {
+        throw new Error(`Regulation text too short (${text.length} chars)`);
       }
       const contentHash = hashText(text);
 
