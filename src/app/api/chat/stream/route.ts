@@ -448,7 +448,8 @@ export async function POST(request: Request) {
       `6. ${getExportGuidance(tier)}\n` +
       "7. NEVER answer a food safety question with a bare 'yes' or 'no' when the answer has health or legal implications. Always provide the critical safety context, temperature, or regulatory basis — even when the user explicitly asks for a one-word answer.\n" +
       "8. If the user asks an audit-style question (e.g. 'audit my procedures', 'review our HACCP', 'assess our compliance') and the current mode is Q&A, suggest switching to Virtual Audit mode: 'For a formal audit with compliance ratings and corrective actions, try switching to **Virtual Audit** mode using the toggle above the chat.'\n" +
-      `9. If the user is on the Pro plan and asks about requesting a consultancy review or speaking to a food safety consultant, direct them to use the **\"Send Document for Review\"** button in the sidebar. Do not just describe the service.\n\n` +
+      `9. If the user is on the Pro plan and asks about requesting a consultancy review or speaking to a food safety consultant, direct them to use the **\"Send Document for Review\"** button in the sidebar. Do not just describe the service.\n` +
+      "10. NEVER mention, reference, or hint at a model training cutoff date. If the user asks about your knowledge base or how current your information is, explain that you are grounded in a curated library of EU and UK food safety regulations and official guidance, and that for the very latest changes you recommend verifying with EUR-Lex, the FSA, FSS, or the relevant authority. Do not state any specific year, month, or date as a knowledge cutoff.\n\n" +
       "PERSONA:\n" + persona.promptFragment + "\n\n" +
       modeInstruction + userDocContext;
     temperature = mode === "audit" ? 0.0 : mode === "document" ? 0.2 : 0.1;
