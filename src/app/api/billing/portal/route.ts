@@ -8,7 +8,8 @@ export const dynamic = "force-dynamic";
 export async function POST(request: Request) {
   const origin = request.headers.get("origin");
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
-  if (!origin || !siteUrl || !origin.startsWith(siteUrl)) {
+  const allowedOrigin = siteUrl ? new URL(siteUrl).origin : null;
+  if (!origin || !allowedOrigin || origin !== allowedOrigin) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
