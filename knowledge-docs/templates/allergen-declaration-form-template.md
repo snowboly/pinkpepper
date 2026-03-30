@@ -2,10 +2,10 @@
 
 ## Supplier Allergen Declaration
 
-**Supplier Name:** _______________
-**Product Name:** _______________
-**Product Code:** _______________
-**Batch/Lot Number:** _______________
+**Supplier Name:** _______________  
+**Product Name:** _______________  
+**Product Code:** _______________  
+**Batch/Lot Number:** _______________  
 **Date of Declaration:** _______________
 
 ---
@@ -20,22 +20,22 @@ This form must be completed for all food products supplied. Please indicate whic
 
 | Allergen | Intentionally Added | Present Due to Cross-Contamination Risk | Not Present |
 |----------|---------------------|----------------------------------------|-------------|
-| **1. Cereals containing gluten** (wheat, rye, barley, oats, spelt, kamut) | ☐ | ☐ | ☐ |
+| **1. Cereals containing gluten** (wheat, rye, barley, oats, spelt, kamut) | [ ] | [ ] | [ ] |
 | If yes, specify which: _______________ | | | |
-| **2. Crustaceans** (prawns, crabs, lobster, crayfish) | ☐ | ☐ | ☐ |
-| **3. Eggs** | ☐ | ☐ | ☐ |
-| **4. Fish** | ☐ | ☐ | ☐ |
-| **5. Peanuts** | ☐ | ☐ | ☐ |
-| **6. Soybeans** | ☐ | ☐ | ☐ |
-| **7. Milk** (including lactose) | ☐ | ☐ | ☐ |
-| **8. Nuts** (almonds, hazelnuts, walnuts, cashews, pecans, Brazil nuts, pistachios, macadamia nuts) | ☐ | ☐ | ☐ |
+| **2. Crustaceans** (prawns, crabs, lobster, crayfish) | [ ] | [ ] | [ ] |
+| **3. Eggs** | [ ] | [ ] | [ ] |
+| **4. Fish** | [ ] | [ ] | [ ] |
+| **5. Peanuts** | [ ] | [ ] | [ ] |
+| **6. Soybeans** | [ ] | [ ] | [ ] |
+| **7. Milk** (including lactose) | [ ] | [ ] | [ ] |
+| **8. Nuts** (almonds, hazelnuts, walnuts, cashews, pecans, Brazil nuts, pistachios, macadamia nuts) | [ ] | [ ] | [ ] |
 | If yes, specify which: _______________ | | | |
-| **9. Celery** (including celeriac) | ☐ | ☐ | ☐ |
-| **10. Mustard** | ☐ | ☐ | ☐ |
-| **11. Sesame seeds** | ☐ | ☐ | ☐ |
-| **12. Sulphur dioxide and sulphites** (>10mg/kg or 10mg/litre) | ☐ | ☐ | ☐ |
-| **13. Lupin** | ☐ | ☐ | ☐ |
-| **14. Molluscs** (mussels, oysters, squid, snails) | ☐ | ☐ | ☐ |
+| **9. Celery** (including celeriac) | [ ] | [ ] | [ ] |
+| **10. Mustard** | [ ] | [ ] | [ ] |
+| **11. Sesame seeds** | [ ] | [ ] | [ ] |
+| **12. Sulphur dioxide and sulphites** (>10mg/kg or 10mg/litre) | [ ] | [ ] | [ ] |
+| **13. Lupin** | [ ] | [ ] | [ ] |
+| **14. Molluscs** (mussels, oysters, squid, snails) | [ ] | [ ] | [ ] |
 
 ---
 
@@ -46,7 +46,9 @@ This form must be completed for all food products supplied. Please indicate whic
 _______________
 
 **Are allergen-containing and allergen-free products produced on the same line?**
-- ☐ Yes ☐ No
+
+- [ ] Yes
+- [ ] No
 
 **If yes, describe cleaning procedures between runs:**
 
@@ -58,23 +60,27 @@ _______________
 
 | Allergen | Present | Not Present | Comments |
 |----------|---------|-------------|----------|
-| **Kiwi** | ☐ | ☐ | |
-| **Buckwheat** | ☐ | ☐ | |
-| **Pine nuts** | ☐ | ☐ | |
-| **Chickpeas** | ☐ | ☐ | |
-| **Poppy seeds** | ☐ | ☐ | |
+| **Kiwi** | [ ] | [ ] | |
+| **Buckwheat** | [ ] | [ ] | |
+| **Pine nuts** | [ ] | [ ] | |
+| **Chickpeas** | [ ] | [ ] | |
+| **Poppy seeds** | [ ] | [ ] | |
 
 ---
 
 ## Precautionary Allergen Labelling (PAL)
 
 **Does the product label include a "may contain" statement?**
-- ☐ Yes ☐ No
+
+- [ ] Yes
+- [ ] No
 
 **If yes, please state:** _______________
 
 **Is the "may contain" statement justified by risk assessment?**
-- ☐ Yes ☐ No
+
+- [ ] Yes
+- [ ] No
 
 **Risk assessment reference/date:** _______________
 
@@ -84,21 +90,21 @@ _______________
 
 I confirm that the information provided in this declaration is accurate and complete to the best of my knowledge. I will notify the customer immediately of any changes to ingredients, processes, or allergen status.
 
-**Completed by (Name):** _______________
-**Job Title:** _______________
-**Company:** _______________
-**Signature:** _______________
+**Completed by (Name):** _______________  
+**Job Title:** _______________  
+**Company:** _______________  
+**Signature:** _______________  
 **Date:** _______________
 
 ---
 
 ## Customer Use Only
 
-**Declaration received by:** _______________
-**Date received:** _______________
-**Product specification updated:** ☐ Yes ☐ No
-**HACCP plan reviewed:** ☐ Yes ☐ No
-**Labelling updated (if applicable):** ☐ Yes ☐ No
+**Declaration received by:** _______________  
+**Date received:** _______________  
+**Product specification updated:** [ ] Yes [ ] No  
+**HACCP plan reviewed:** [ ] Yes [ ] No  
+**Labelling updated (if applicable):** [ ] Yes [ ] No
 
 ---
 

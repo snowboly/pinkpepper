@@ -2,8 +2,6 @@ export type SubscriptionTier = "free" | "plus" | "pro";
 
 export type TierCapabilities = {
   dailyMessages: number;
-  dailyDocumentGenerations: number;
-  advancedHaccpGeneration: boolean;
   dailyImageUploads: number;
   dailyTranscriptions: number;
   maxSavedConversations: number | null;
@@ -11,7 +9,8 @@ export type TierCapabilities = {
   allowPdfExport: boolean;
   allowWordExport: boolean;
   allowFullDocumentReview: boolean;
-  monthlyHumanReviews: number;
+  hasConsultancy: boolean;
+  monthlyConsultancyRequests: number;
   reviewTurnaround: string;
   /** Max tokens for LLM response */
   maxResponseTokens: number;
@@ -20,46 +19,43 @@ export type TierCapabilities = {
 export const TIER_CAPABILITIES: Record<SubscriptionTier, TierCapabilities> = {
   free: {
     dailyMessages: 15,
-    dailyDocumentGenerations: 0,
-    advancedHaccpGeneration: false,
-    dailyImageUploads: 1,
+    dailyImageUploads: 3,
     dailyTranscriptions: 3,
     maxSavedConversations: 10,
     conversationRetentionDays: 30,
     allowPdfExport: false,
     allowWordExport: false,
     allowFullDocumentReview: false,
-    monthlyHumanReviews: 0,
+    hasConsultancy: false,
+    monthlyConsultancyRequests: 0,
     reviewTurnaround: "N/A",
     maxResponseTokens: 2048,
   },
   plus: {
     dailyMessages: 100,
-    dailyDocumentGenerations: 0,
-    advancedHaccpGeneration: false,
-    dailyImageUploads: 3,
+    dailyImageUploads: 10,
     dailyTranscriptions: 25,
     maxSavedConversations: null,
     conversationRetentionDays: null,
-    allowPdfExport: true,
+    allowPdfExport: false,
     allowWordExport: false,
     allowFullDocumentReview: false,
-    monthlyHumanReviews: 0,
+    hasConsultancy: false,
+    monthlyConsultancyRequests: 0,
     reviewTurnaround: "N/A",
     maxResponseTokens: 4096,
   },
   pro: {
     dailyMessages: 1000,
-    dailyDocumentGenerations: 20,
-    advancedHaccpGeneration: true,
-    dailyImageUploads: 20,
+    dailyImageUploads: 50,
     dailyTranscriptions: 200,
     maxSavedConversations: null,
     conversationRetentionDays: null,
-    allowPdfExport: true,
+    allowPdfExport: false,
     allowWordExport: true,
     allowFullDocumentReview: true,
-    monthlyHumanReviews: 3,
+    hasConsultancy: true,
+    monthlyConsultancyRequests: 2,
     reviewTurnaround: "within 5 working days",
     maxResponseTokens: 8192,
   },

@@ -23,9 +23,9 @@
     "reviewBannerTitle": "Vuoi far verificare questo documento da un esperto umano?",
     "reviewBannerBody": "I nostri specialisti in sicurezza alimentare esaminano i tuoi documenti generati dall'IA per verificare accuratezza, lacune di conformità e preparazione all'audit.",
     "reviewUpsellTitle": "Fai verificare questo documento da un esperto umano",
-    "reviewUpsellBody": "Il piano Pro include 3 ore di consulenza in sicurezza alimentare/mese — revisione di documenti, supporto alla generazione e Q&A asincrono.",
+    "reviewUpsellBody": "Il piano Pro include 2 ore di consulenza in sicurezza alimentare/mese — revisione di documenti, supporto alla generazione e Q&A asincrono.",
     "reviewUpsellCta": "Passa al piano Pro",
-    "humanReviewHighlight": "Il piano Pro include 3 ore di consulenza in sicurezza alimentare al mese con uno specialista qualificato.",
+    "humanReviewHighlight": "Il piano Pro include 2 ore di consulenza in sicurezza alimentare al mese con uno specialista qualificato.",
     "suggestions": {
       "haccpPlan": {
         "label": "Piano HACCP",
@@ -59,6 +59,14 @@
         "label": "Norme sulla tracciabilità",
         "text": "Quali registrazioni di tracciabilità deve conservare un'impresa alimentare ai sensi del Regulation (EC) No 178/2002?"
       }
+    },
+    "downloadTemplates": "Scarica modelli",
+    "docCategories": {
+      "quickDocuments": "Documenti rapidi",
+      "advancedDocuments": "Documenti avanzati",
+      "structuredBuilder": "Builder strutturato",
+      "downloadTemplates": "Scarica modelli",
+      "downloadTemplatesHint": "DOCX · Plus & Pro"
     },
     "startRecording": "Start recording",
     "stopRecording": "Stop",
@@ -96,6 +104,7 @@
     "myReviews": "Le mie revisioni",
     "expertReviews": "Revisioni di esperti",
     "accountSettings": "Impostazioni account",
+    "viewPlans": "Visualizza i piani",
     "today": "Oggi",
     "yesterday": "Ieri",
     "previous7Days": "Ultimi 7 giorni",
@@ -221,7 +230,7 @@
           "1.000 messaggi/giorno",
           "20 caricamenti foto/giorno",
           "Esportazione PDF + Word",
-          "3h di consulenza in sicurezza alimentare/mese",
+          "2h di consulenza in sicurezza alimentare/mese",
           "Limiti giornalieri più alti per preparazione audit"
         ],
         "cta": "Passa a Pro"
@@ -241,7 +250,7 @@
     "scopeNote": "La consulenza riguarda il contenuto della conversazione selezionata. Richieste fuori tema o fuori ambito potrebbero essere rifiutate.",
     "turnaround": "Tempo di risposta:",
     "turnaroundTimes": "Risposte entro 5 giorni lavorativi",
-    "fullReviewCostNote": "La consulenza viene conteggiata in incrementi di 15 minuti sulle tue 3 ore mensili.",
+    "fullReviewCostNote": "La consulenza viene conteggiata in incrementi di 15 minuti sulle tue 2 ore mensili.",
     "documentType": "Tipo di documento",
     "quickCheck": "Controllo Rapido",
     "quickCheckCredits": "— 1 credito",
@@ -325,6 +334,14 @@
     "saving": "Salvataggio...",
     "save": "Salva",
     "usage": "Utilizzo",
-    "dailyMessages": "Messaggi oggi"
+    "dailyMessages": "Messaggi oggi",
+    "dangerZone": "Zona pericolosa",
+    "deleteAccount": "Elimina account",
+    "deleteAccountDescription": "Elimina definitivamente il tuo account e tutti i dati associati. Questa azione non può essere annullata.",
+    "deleteAccountConfirmTitle": "Eliminare il tuo account?",
+    "deleteAccountConfirmBody": "Questo eliminerà definitivamente il tuo account e tutti i tuoi dati, incluse conversazioni, documenti e impostazioni. Questa azione non può essere annullata.",
+    "deleteAccountConfirm": "Sì, elimina il mio account",
+    "cancel": "Annulla",
+    "deleting": "Eliminazione..."
   }
 }

@@ -2,8 +2,13 @@
 
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { useTranslations } from "next-intl";
 import type { Message } from "./types";
+import {
+  formatVerificationLabel,
+  getVerificationBadgeClassName,
+} from "./chat-message-metadata";
 
 type MessageItemProps = {
   message: Message;
@@ -59,12 +64,28 @@ export default function MessageItem({ message }: MessageItemProps) {
     <div className="group py-5">
       <div className="mx-auto max-w-5xl px-4 md:px-6">
         <div className="mb-2 flex items-center gap-2">
-          <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-[#E11D48] text-[10px] font-bold text-white">
-            PP
-          </div>
+          {message.persona ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={`/${message.persona.name.toLowerCase()}.svg`}
+              alt={message.persona.name}
+              className="h-7 w-7 flex-shrink-0 rounded-full"
+            />
+          ) : (
+            <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-[#E11D48] text-[10px] font-bold text-white">
+              PP
+            </div>
+          )}
           <span className="text-sm font-semibold text-[#0F172A]">
             {message.persona ? message.persona.name : t("pinkPepper")}
           </span>
+          {message.verificationState ? (
+            <span
+              className={`rounded-full border px-2 py-0.5 text-[11px] font-semibold ${getVerificationBadgeClassName(message.verificationState)}`}
+            >
+              {formatVerificationLabel(message.verificationState)}
+            </span>
+          ) : null}
           {message.isStreaming && (
             <span className="text-xs text-[#94A3B8]">{t("thinking")}</span>
           )}
@@ -72,14 +93,14 @@ export default function MessageItem({ message }: MessageItemProps) {
 
         <div className="pl-9">
           <div className="pp-markdown text-base text-[#0F172A]">
-            <ReactMarkdown>{message.content}</ReactMarkdown>
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>{message.content}</ReactMarkdown>
             {message.isStreaming && (
               <span className="ml-0.5 inline-block h-4 w-0.5 animate-pulse align-text-bottom bg-[#0F172A]" />
             )}
           </div>
 
           {!message.isStreaming && message.content && (
-            <div className="mt-2 opacity-0 transition-opacity group-hover:opacity-100">
+            <div className="mt-2 opacity-100 sm:opacity-0 transition-opacity sm:group-hover:opacity-100">
               <button
                 type="button"
                 onClick={copyToClipboard}

@@ -1,7 +1,6 @@
 import { createClient } from "@/utils/supabase/server";
 import { TIER_CAPABILITIES, type SubscriptionTier } from "@/lib/tier";
 import { resolveUserAccess } from "@/lib/access";
-import { countUsageSince, utcDayStartIso } from "@/lib/policy";
 
 type ExportContext = {
   supabase: Awaited<ReturnType<typeof createClient>>;
@@ -47,6 +46,13 @@ export function canExportDocx(tier: SubscriptionTier, isAdmin = false): boolean 
   if (isAdmin) return true;
   return TIER_CAPABILITIES[tier].allowWordExport;
 }
+
+type ExportTranscriptMessage = {
+  role: "user" | "assistant";
+  content: string;
+  createdAt: string | null;
+  metadata: Record<string, unknown> | null;
+};
 
 export async function getLatestAssistantMessageForConversation(input: {
   supabase: Awaited<ReturnType<typeof createClient>>;
@@ -94,6 +100,56 @@ export async function getLatestAssistantMessageForConversation(input: {
   };
 }
 
+export async function getConversationTranscriptForExport(input: {
+  supabase: Awaited<ReturnType<typeof createClient>>;
+  userId: string;
+  conversationId: string;
+}): Promise<{ conversationTitle: string; messages: ExportTranscriptMessage[] }> {
+  const { supabase, userId, conversationId } = input;
+
+  const { data: conv } = await supabase
+    .from("conversations")
+    .select("id,title")
+    .eq("id", conversationId)
+    .eq("user_id", userId)
+    .maybeSingle();
+
+  if (!conv) {
+    throw new Error("CONVERSATION_NOT_FOUND");
+  }
+
+  const { data: rows, error: msgError } = await supabase
+    .from("chat_messages")
+    .select("role,content,created_at,metadata")
+    .eq("conversation_id", conversationId)
+    .eq("user_id", userId)
+    .order("created_at", { ascending: true });
+
+  if (msgError) {
+    console.error("[export] chat_messages transcript query error:", msgError);
+    throw new Error("NO_CONVERSATION_MESSAGES");
+  }
+
+  const messages = (rows ?? [])
+    .filter((row) => row.role === "user" || row.role === "assistant")
+    .map((row) => ({
+      role: row.role as "user" | "assistant",
+      content: typeof row.content === "string" ? row.content.trim() : "",
+      createdAt: typeof row.created_at === "string" ? row.created_at : null,
+      metadata: (row as Record<string, unknown>).metadata as Record<string, unknown> | null,
+    }))
+    .filter((row) => row.content.length > 0);
+
+  if (messages.length === 0) {
+    throw new Error("NO_CONVERSATION_MESSAGES");
+  }
+
+  return {
+    conversationTitle: conv.title ?? "PinkPepper Conversation",
+    messages,
+  };
+}
+
 export async function recordExportUsage(input: {
   supabase: Awaited<ReturnType<typeof createClient>>;
   userId: string;
@@ -108,28 +164,4 @@ export async function recordExportUsage(input: {
     event_count: 1,
     metadata: { conversation_id: conversationId, format },
   });
-}
-
-export async function enforceDailyDocumentLimit(input: {
-  supabase: Awaited<ReturnType<typeof createClient>>;
-  userId: string;
-  tier: SubscriptionTier;
-  isAdmin: boolean;
-}) {
-  const { supabase, userId, tier, isAdmin } = input;
-  if (isAdmin) return { used: 0, limit: null as number | null };
-
-  const caps = TIER_CAPABILITIES[tier];
-  const used = await countUsageSince({
-    supabase,
-    userId,
-    eventType: "document_generation",
-    sinceIso: utcDayStartIso(),
-  });
-
-  if (used >= caps.dailyDocumentGenerations) {
-    throw new Error("DOC_DAILY_LIMIT_REACHED");
-  }
-
-  return { used, limit: caps.dailyDocumentGenerations };
 }

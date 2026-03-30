@@ -4,6 +4,7 @@ export const metadata: Metadata = {
   title: "Cookie Policy | PinkPepper",
   description: "How PinkPepper uses cookies and similar technologies.",
   alternates: { canonical: "https://pinkpepper.io/legal/cookies" },
+  robots: { index: false, follow: false },
 };
 
 export default function CookiesPage() {

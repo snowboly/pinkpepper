@@ -14,17 +14,11 @@ const VALID_CATEGORIES = ["produced_pdf", "produced_docx", "async_qa"] as const;
 const LEGACY_CATEGORIES = ["process_flow", "log_review", "short_procedure", "full_haccp_plan", "ccp_review", "prps_review", "operations_manual"] as const;
 
 type DocumentCategory = typeof VALID_CATEGORIES[number] | typeof LEGACY_CATEGORIES[number];
-type ReviewType = "quick_check" | "full_review";
 
 function normalizeDocumentCategory(input: string | undefined): DocumentCategory | null {
   if (VALID_CATEGORIES.includes(input as typeof VALID_CATEGORIES[number])) return input as DocumentCategory;
   if (LEGACY_CATEGORIES.includes(input as typeof LEGACY_CATEGORIES[number])) return input as DocumentCategory;
   return null;
-}
-
-function deriveReviewType(_category: DocumentCategory): ReviewType {
-  // All current categories are quick checks (1 credit)
-  return "quick_check";
 }
 
 export async function GET(request: Request) {
@@ -104,8 +98,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "A valid documentCategory is required." }, { status: 400 });
   }
 
-  const reviewType = deriveReviewType(documentCategory);
-
   const [{ data: profile }, { data: subscription }] = await Promise.all([
     supabase
       .from("profiles")
@@ -122,12 +114,29 @@ export async function POST(request: Request) {
   const { tier, isAdmin } = resolveUserAccess(profile, user.email, subscription);
   const caps = TIER_CAPABILITIES[tier];
 
-  if (!isAdmin && caps.monthlyHumanReviews <= 0) {
+  if (!isAdmin && !caps.hasConsultancy) {
     return NextResponse.json({ error: "Expert document review is available on Pro." }, { status: 403 });
   }
 
-  if (!isAdmin && reviewType === "full_review" && !caps.allowFullDocumentReview) {
-    return NextResponse.json({ error: "Full document review is available on Pro only." }, { status: 403 });
+  // Enforce monthly consultancy-hour cap (admins are exempt)
+  if (!isAdmin && caps.monthlyConsultancyRequests > 0) {
+    const usedThisMonth = await countUsageSince({
+      supabase,
+      userId: user.id,
+      eventType: "human_review_request",
+      sinceIso: utcMonthStartIso(),
+    });
+
+    if (usedThisMonth >= caps.monthlyConsultancyRequests) {
+      return NextResponse.json(
+        {
+          error:
+            "You have reached your consultancy review limit for this billing period. " +
+            "Please email us at support@pinkpepper.io to arrange additional reviews.",
+        },
+        { status: 429 },
+      );
+    }
   }
 
   const { data: conv } = await supabase
@@ -155,38 +164,12 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "No assistant output available to review." }, { status: 400 });
   }
 
-  const monthStart = utcMonthStartIso();
-  let used = 0;
-  if (!isAdmin) {
-    try {
-      used = await countUsageSince({
-        supabase,
-        userId: user.id,
-        eventType: "human_review_request",
-        sinceIso: monthStart,
-      });
-    } catch {
-      return NextResponse.json({ error: "Unable to read review usage." }, { status: 500 });
-    }
-
-    if (reviewType === "full_review" && used >= 1) {
-      return NextResponse.json(
-        { error: "Full document review costs all 3 credits and requires a fresh monthly balance. Use your remaining quick checks first or wait until next month." },
-        { status: 402 }
-      );
-    }
-
-    if (used >= caps.monthlyHumanReviews) {
-      return NextResponse.json({ error: "Monthly consultancy hours exhausted. Hours reset at the start of your next billing month." }, { status: 402 });
-    }
-  }
-
   const { data: created, error: createError } = await supabase
     .from("review_requests")
     .insert({
       user_id: user.id,
       conversation_id: conversationId,
-      review_type: reviewType,
+      review_type: "quick_check",
       document_category: documentCategory,
       notes: notes.length > 0 ? notes : null,
       snapshot_content: latestAssistant.content,
@@ -200,17 +183,12 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Failed to create review request." }, { status: 500 });
   }
 
-  // A full_review exhausts the entire monthly quota; insert one row per slot so
-  // countUsageSince correctly reflects the quota as exhausted.
-  const slotsToConsume = !isAdmin && reviewType === "full_review" ? caps.monthlyHumanReviews : 1;
-  const usageRows = Array.from({ length: slotsToConsume }, () => ({
+  const { error: usageError } = await supabase.from("usage_events").insert({
     user_id: user.id,
     event_type: "human_review_request" as const,
     event_count: 1,
-    metadata: { review_request_id: created.id, conversation_id: conversationId, document_category: documentCategory, review_type: reviewType },
-  }));
-
-  const { error: usageError } = await supabase.from("usage_events").insert(usageRows);
+    metadata: { review_request_id: created.id, conversation_id: conversationId, document_category: documentCategory },
+  });
 
   if (usageError) {
     return NextResponse.json({ error: "Failed to record review usage." }, { status: 500 });
@@ -242,7 +220,6 @@ export async function POST(request: Request) {
       const emailContent = buildNewReviewAdminEmail({
         userEmail: user.email ?? "unknown",
         documentCategory,
-        reviewType,
         priority,
         notes: notes.length > 0 ? notes : null,
       });
@@ -257,7 +234,6 @@ export async function POST(request: Request) {
     try {
       const confirmationEmail = buildReviewSubmittedEmail({
         documentCategory,
-        reviewType,
         priority,
       });
       await sendEmail({ to: user.email, ...confirmationEmail });
@@ -266,11 +242,5 @@ export async function POST(request: Request) {
     }
   }
 
-  return NextResponse.json({
-    request: created,
-    usage: {
-      used: isAdmin ? 0 : used + slotsToConsume,
-      limit: isAdmin ? null : caps.monthlyHumanReviews,
-    },
-  });
+  return NextResponse.json({ request: created });
 }

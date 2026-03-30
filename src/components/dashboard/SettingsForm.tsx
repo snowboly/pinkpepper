@@ -21,13 +21,9 @@ type SettingsFormProps = {
   chatLanguage: string;
   usage: number;
   usageLimit: number | null;
-  docGenUsage: number;
-  docGenLimit: number | null;
-  reviewUsage: number;
-  reviewLimit: number | null;
 };
 
-export default function SettingsForm({ email, tier, isAdmin, chatLanguage: initialChatLanguage, usage, usageLimit, docGenUsage, docGenLimit, reviewUsage, reviewLimit }: SettingsFormProps) {
+export default function SettingsForm({ email, tier, isAdmin, chatLanguage: initialChatLanguage, usage, usageLimit }: SettingsFormProps) {
   const t = useTranslations("settings");
   const currentLocale = useLocale() as Locale;
   const [chatLanguage, setChatLanguage] = useState(initialChatLanguage);
@@ -39,6 +35,9 @@ export default function SettingsForm({ email, tier, isAdmin, chatLanguage: initi
   const [passwordLoading, setPasswordLoading] = useState(false);
   const [passwordMsg, setPasswordMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [signOutLoading, setSignOutLoading] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   const supabase = createClient();
 
@@ -98,6 +97,24 @@ export default function SettingsForm({ email, tier, isAdmin, chatLanguage: initi
     window.location.href = "/";
   }
 
+  async function handleDeleteAccount() {
+    setDeleteLoading(true);
+    setDeleteError(null);
+    try {
+      const res = await fetch("/api/account/delete", { method: "DELETE" });
+      if (!res.ok) {
+        const data = await res.json() as { error?: string };
+        setDeleteError(data.error ?? t("unexpectedError"));
+        return;
+      }
+      window.location.href = "/";
+    } catch {
+      setDeleteError(t("unexpectedError"));
+    } finally {
+      setDeleteLoading(false);
+    }
+  }
+
   return (
     <div className="space-y-6">
       {/* Profile card */}
@@ -129,22 +146,6 @@ export default function SettingsForm({ email, tier, isAdmin, chatLanguage: initi
               limit={usageLimit}
               color="#E11D48"
             />
-            {(docGenLimit ?? 0) > 0 && (
-              <UsageBar
-                label="Document generations today"
-                used={docGenUsage}
-                limit={docGenLimit}
-                color="#7C3AED"
-              />
-            )}
-            {(reviewLimit ?? 0) > 0 && (
-              <UsageBar
-                label="Expert reviews this month"
-                used={reviewUsage}
-                limit={reviewLimit}
-                color="#059669"
-              />
-            )}
           </div>
         </div>
       )}
@@ -309,7 +310,7 @@ export default function SettingsForm({ email, tier, isAdmin, chatLanguage: initi
         </div>
       )}
 
-      {/* Danger zone */}
+      {/* Account / Danger zone */}
       <div className="rounded-2xl border border-[#E2E8F0] bg-white p-6">
         <h2 className="text-sm font-semibold text-[#0F172A] mb-4">{t("account")}</h2>
         <button
@@ -320,6 +321,47 @@ export default function SettingsForm({ email, tier, isAdmin, chatLanguage: initi
           {signOutLoading ? t("signingOut") : t("signOut")}
         </button>
       </div>
+
+      {/* Danger zone */}
+      <div className="rounded-2xl border border-[#FCA5A5] bg-[#FFF5F5] p-6">
+        <h2 className="text-sm font-semibold text-[#B91C1C] mb-1">{t("dangerZone")}</h2>
+        <p className="text-xs text-[#EF4444] mb-4">{t("deleteAccountDescription")}</p>
+        <button
+          onClick={() => { setDeleteError(null); setShowDeleteConfirm(true); }}
+          className="rounded-xl border border-[#EF4444] bg-white px-4 py-2 text-sm font-medium text-[#EF4444] hover:bg-[#FEE2E2] transition-colors"
+        >
+          {t("deleteAccount")}
+        </button>
+      </div>
+
+      {/* Delete confirmation modal */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+          <div className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl">
+            <h3 className="text-base font-semibold text-[#0F172A] mb-2">{t("deleteAccountConfirmTitle")}</h3>
+            <p className="text-sm text-[#64748B] mb-5">{t("deleteAccountConfirmBody")}</p>
+            {deleteError && (
+              <p className="mb-3 text-xs text-[#E11D48]">{deleteError}</p>
+            )}
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowDeleteConfirm(false)}
+                disabled={deleteLoading}
+                className="flex-1 rounded-xl border border-[#E2E8F0] px-4 py-2 text-sm text-[#64748B] hover:bg-[#F8F9FB] disabled:opacity-50 transition-colors"
+              >
+                {t("cancel")}
+              </button>
+              <button
+                onClick={handleDeleteAccount}
+                disabled={deleteLoading}
+                className="flex-1 rounded-xl bg-[#EF4444] px-4 py-2 text-sm font-medium text-white hover:bg-[#DC2626] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                {deleteLoading ? t("deleting") : t("deleteAccountConfirm")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

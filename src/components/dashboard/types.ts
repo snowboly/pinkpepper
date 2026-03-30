@@ -1,5 +1,6 @@
 import type { SubscriptionTier } from "@/lib/tier";
 import type { Citation } from "@/lib/rag/citations";
+import type { VerificationState } from "@/lib/rag/verification";
 
 export type PersonaInfo = {
   id: string;
@@ -22,6 +23,7 @@ export type Message = {
   imagePreview?: string;
   documentName?: string;
   citations?: Citation[];
+  verificationState?: VerificationState | null;
   isStreaming?: boolean;
   persona?: PersonaInfo;
   artifact?: MessageArtifact;

@@ -9,6 +9,7 @@ export const BUCKETS = {
   vault: "user-vault",        // Plus/Pro persistent storage
   temp: "temp-uploads",       // All tiers — 72h ephemeral
   review: "review-attachments", // Review request docs
+  templates: "templates",     // Static DOCX template files (admin-managed)
 } as const;
 
 export type BucketName = (typeof BUCKETS)[keyof typeof BUCKETS];

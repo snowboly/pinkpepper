@@ -15,16 +15,15 @@ describe("TIER_CAPABILITIES – free tier", () => {
   const free = TIER_CAPABILITIES.free;
 
   it("dailyMessages is 15", () => expect(free.dailyMessages).toBe(15));
-  it("dailyDocumentGenerations is 0", () => expect(free.dailyDocumentGenerations).toBe(0));
-  it("advancedHaccpGeneration is false", () => expect(free.advancedHaccpGeneration).toBe(false));
-  it("dailyImageUploads is 1", () => expect(free.dailyImageUploads).toBe(1));
+  it("dailyImageUploads is 3", () => expect(free.dailyImageUploads).toBe(3));
   it("dailyTranscriptions is 3", () => expect(free.dailyTranscriptions).toBe(3));
   it("maxSavedConversations is 10", () => expect(free.maxSavedConversations).toBe(10));
   it("conversationRetentionDays is 30", () => expect(free.conversationRetentionDays).toBe(30));
   it("allowPdfExport is false", () => expect(free.allowPdfExport).toBe(false));
   it("allowWordExport is false", () => expect(free.allowWordExport).toBe(false));
   it("allowFullDocumentReview is false", () => expect(free.allowFullDocumentReview).toBe(false));
-  it("monthlyHumanReviews is 0", () => expect(free.monthlyHumanReviews).toBe(0));
+  it("hasConsultancy is false", () => expect(free.hasConsultancy).toBe(false));
+  it("monthlyConsultancyRequests is 0", () => expect(free.monthlyConsultancyRequests).toBe(0));
   it("reviewTurnaround is N/A", () => expect(free.reviewTurnaround).toBe("N/A"));
   it("maxResponseTokens is 2048", () => expect(free.maxResponseTokens).toBe(2048));
 });
@@ -33,16 +32,15 @@ describe("TIER_CAPABILITIES – plus tier", () => {
   const plus = TIER_CAPABILITIES.plus;
 
   it("dailyMessages is 100", () => expect(plus.dailyMessages).toBe(100));
-  it("dailyDocumentGenerations is 0", () => expect(plus.dailyDocumentGenerations).toBe(0));
-  it("advancedHaccpGeneration is false", () => expect(plus.advancedHaccpGeneration).toBe(false));
-  it("dailyImageUploads is 3", () => expect(plus.dailyImageUploads).toBe(3));
+  it("dailyImageUploads is 10", () => expect(plus.dailyImageUploads).toBe(10));
   it("dailyTranscriptions is 25", () => expect(plus.dailyTranscriptions).toBe(25));
   it("maxSavedConversations is unlimited (null)", () => expect(plus.maxSavedConversations).toBeNull());
   it("conversationRetentionDays is unlimited (null)", () => expect(plus.conversationRetentionDays).toBeNull());
-  it("allowPdfExport is true", () => expect(plus.allowPdfExport).toBe(true));
+  it("allowPdfExport is false", () => expect(plus.allowPdfExport).toBe(false));
   it("allowWordExport is false", () => expect(plus.allowWordExport).toBe(false));
   it("allowFullDocumentReview is false", () => expect(plus.allowFullDocumentReview).toBe(false));
-  it("monthlyHumanReviews is 0", () => expect(plus.monthlyHumanReviews).toBe(0));
+  it("hasConsultancy is false", () => expect(plus.hasConsultancy).toBe(false));
+  it("monthlyConsultancyRequests is 0", () => expect(plus.monthlyConsultancyRequests).toBe(0));
   it("reviewTurnaround is N/A", () => expect(plus.reviewTurnaround).toBe("N/A"));
   it("maxResponseTokens is 4096", () => expect(plus.maxResponseTokens).toBe(4096));
 });
@@ -51,16 +49,15 @@ describe("TIER_CAPABILITIES – pro tier", () => {
   const pro = TIER_CAPABILITIES.pro;
 
   it("dailyMessages is 1000", () => expect(pro.dailyMessages).toBe(1000));
-  it("dailyDocumentGenerations is 20", () => expect(pro.dailyDocumentGenerations).toBe(20));
-  it("advancedHaccpGeneration is true", () => expect(pro.advancedHaccpGeneration).toBe(true));
-  it("dailyImageUploads is 20", () => expect(pro.dailyImageUploads).toBe(20));
+  it("dailyImageUploads is 50", () => expect(pro.dailyImageUploads).toBe(50));
   it("dailyTranscriptions is 200", () => expect(pro.dailyTranscriptions).toBe(200));
   it("maxSavedConversations is unlimited (null)", () => expect(pro.maxSavedConversations).toBeNull());
   it("conversationRetentionDays is unlimited (null)", () => expect(pro.conversationRetentionDays).toBeNull());
-  it("allowPdfExport is true", () => expect(pro.allowPdfExport).toBe(true));
+  it("allowPdfExport is false", () => expect(pro.allowPdfExport).toBe(false));
   it("allowWordExport is true", () => expect(pro.allowWordExport).toBe(true));
   it("allowFullDocumentReview is true", () => expect(pro.allowFullDocumentReview).toBe(true));
-  it("monthlyHumanReviews is 3", () => expect(pro.monthlyHumanReviews).toBe(3));
+  it("hasConsultancy is true", () => expect(pro.hasConsultancy).toBe(true));
+  it("monthlyConsultancyRequests is 2", () => expect(pro.monthlyConsultancyRequests).toBe(2));
   it("reviewTurnaround is within 5 working days", () => expect(pro.reviewTurnaround).toBe("within 5 working days"));
   it("maxResponseTokens is 8192", () => expect(pro.maxResponseTokens).toBe(8192));
 });
@@ -77,7 +74,6 @@ describe("cross-tier invariants", () => {
     "dailyMessages",
     "dailyImageUploads",
     "dailyTranscriptions",
-    "monthlyHumanReviews",
     "maxResponseTokens",
   ];
 
@@ -101,16 +97,10 @@ describe("cross-tier invariants", () => {
     expect(TIER_CAPABILITIES.pro.conversationRetentionDays).toBeNull();
   });
 
-  it("PDF export is available on plus and pro but not free", () => {
+  it("PDF export is disabled across user tiers", () => {
     expect(TIER_CAPABILITIES.free.allowPdfExport).toBe(false);
-    expect(TIER_CAPABILITIES.plus.allowPdfExport).toBe(true);
-    expect(TIER_CAPABILITIES.pro.allowPdfExport).toBe(true);
-  });
-
-  it("document generation is exclusive to pro", () => {
-    expect(TIER_CAPABILITIES.free.dailyDocumentGenerations).toBe(0);
-    expect(TIER_CAPABILITIES.plus.dailyDocumentGenerations).toBe(0);
-    expect(TIER_CAPABILITIES.pro.dailyDocumentGenerations).toBeGreaterThan(0);
+    expect(TIER_CAPABILITIES.plus.allowPdfExport).toBe(false);
+    expect(TIER_CAPABILITIES.pro.allowPdfExport).toBe(false);
   });
 
   it("DOCX export is exclusive to pro", () => {
@@ -119,16 +109,16 @@ describe("cross-tier invariants", () => {
     expect(TIER_CAPABILITIES.pro.allowWordExport).toBe(true);
   });
 
-  it("advanced HACCP generation is exclusive to pro", () => {
-    expect(TIER_CAPABILITIES.free.advancedHaccpGeneration).toBe(false);
-    expect(TIER_CAPABILITIES.plus.advancedHaccpGeneration).toBe(false);
-    expect(TIER_CAPABILITIES.pro.advancedHaccpGeneration).toBe(true);
-  });
-
   it("full document review is exclusive to pro", () => {
     expect(TIER_CAPABILITIES.free.allowFullDocumentReview).toBe(false);
     expect(TIER_CAPABILITIES.plus.allowFullDocumentReview).toBe(false);
     expect(TIER_CAPABILITIES.pro.allowFullDocumentReview).toBe(true);
+  });
+
+  it("consultancy is exclusive to pro", () => {
+    expect(TIER_CAPABILITIES.free.hasConsultancy).toBe(false);
+    expect(TIER_CAPABILITIES.plus.hasConsultancy).toBe(false);
+    expect(TIER_CAPABILITIES.pro.hasConsultancy).toBe(true);
   });
 });
 
@@ -144,8 +134,6 @@ describe("TIER_CAPABILITIES structure", () => {
   it("every tier has all required capability keys", () => {
     const requiredKeys: (keyof TierCapabilities)[] = [
       "dailyMessages",
-      "dailyDocumentGenerations",
-      "advancedHaccpGeneration",
       "dailyImageUploads",
       "dailyTranscriptions",
       "maxSavedConversations",
@@ -153,7 +141,8 @@ describe("TIER_CAPABILITIES structure", () => {
       "allowPdfExport",
       "allowWordExport",
       "allowFullDocumentReview",
-      "monthlyHumanReviews",
+      "hasConsultancy",
+      "monthlyConsultancyRequests",
       "reviewTurnaround",
       "maxResponseTokens",
     ];
@@ -169,12 +158,15 @@ describe("TIER_CAPABILITIES structure", () => {
     for (const tier of ["free", "plus", "pro"] as SubscriptionTier[]) {
       const caps = TIER_CAPABILITIES[tier];
       expect(caps.dailyMessages).toBeGreaterThanOrEqual(0);
-      expect(caps.dailyDocumentGenerations).toBeGreaterThanOrEqual(0);
       expect(caps.dailyImageUploads).toBeGreaterThanOrEqual(0);
       expect(caps.dailyTranscriptions).toBeGreaterThanOrEqual(0);
-      expect(caps.monthlyHumanReviews).toBeGreaterThanOrEqual(0);
       expect(caps.maxResponseTokens).toBeGreaterThan(0);
     }
+  });
+
+  it("does not expose document-generation capabilities anymore", () => {
+    expect(TIER_CAPABILITIES.free).not.toHaveProperty("dailyDocumentGenerations");
+    expect(TIER_CAPABILITIES.pro).not.toHaveProperty("advancedHaccpGeneration");
   });
 });
 

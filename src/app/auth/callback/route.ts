@@ -72,7 +72,11 @@ export async function GET(request: NextRequest) {
     const errorParam = code
       ? "cross_device_link"
       : "invalid_or_expired_link";
-    return NextResponse.redirect(`${origin}/login?error=${errorParam}`);
+    const errorResponse = NextResponse.redirect(`${origin}/login?error=${errorParam}`);
+    response.cookies.getAll().forEach(({ name, value, ...rest }) => {
+      errorResponse.cookies.set(name, value, rest);
+    });
+    return errorResponse;
   }
 
   // Fire welcome email for signups (via internal API)
@@ -84,5 +88,9 @@ export async function GET(request: NextRequest) {
 
   // Redirect to the intended destination
   const redirectUrl = new URL(next, request.nextUrl.origin);
-  return NextResponse.redirect(redirectUrl);
+  const redirectResponse = NextResponse.redirect(redirectUrl);
+  response.cookies.getAll().forEach(({ name, value, ...rest }) => {
+    redirectResponse.cookies.set(name, value, rest);
+  });
+  return redirectResponse;
 }

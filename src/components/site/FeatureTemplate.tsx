@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { CheckCircle2, ArrowRight } from "lucide-react";
 
@@ -15,6 +16,7 @@ type FeatureTemplateProps = {
   outcomes: string[];
   sections: Section[];
   relatedLinks: Array<{ href: string; label: string; description: string }>;
+  heroImage?: { src: string; alt: string };
 };
 
 export function FeatureTemplate({
@@ -26,6 +28,7 @@ export function FeatureTemplate({
   outcomes,
   sections,
   relatedLinks,
+  heroImage,
 }: FeatureTemplateProps) {
   return (
     <main className="overflow-hidden">
@@ -44,17 +47,11 @@ export function FeatureTemplate({
                 {primaryCta}
                 <ArrowRight className="h-4 w-4" />
               </Link>
-              <Link
-                href="/pricing"
-                className="inline-flex items-center rounded-full border border-[#E2E8F0] px-6 py-3 text-sm font-semibold text-[#0F172A] transition-colors hover:bg-[#F8FAFC]"
-              >
-                View pricing
-              </Link>
             </div>
           </div>
 
           <div className="rounded-3xl border border-[#E2E8F0] bg-[#F8FAFC] p-6">
-            <p className="text-sm font-semibold text-[#0F172A]">Why this page exists</p>
+            <p className="text-sm font-semibold text-[#0F172A]">Common challenges</p>
             <ul className="mt-4 space-y-3 text-sm leading-relaxed text-[#475569]">
               {painPoints.map((point) => (
                 <li key={point} className="flex gap-3">
@@ -66,6 +63,23 @@ export function FeatureTemplate({
           </div>
         </div>
       </section>
+
+      {heroImage && (
+        <section className="border-b border-[#F1F5F9] bg-[#F8FAFC] py-12">
+          <div className="pp-container">
+            <div className="relative mx-auto aspect-[21/9] max-w-5xl overflow-hidden rounded-3xl">
+              <Image
+                src={heroImage.src}
+                alt={heroImage.alt}
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 1120px"
+                priority
+              />
+            </div>
+          </div>
+        </section>
+      )}
 
       <section className="bg-white py-16">
         <div className="pp-container">

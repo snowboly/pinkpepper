@@ -44,6 +44,10 @@ export default function HaccpPlanGeneratorPage() {
             "The workflow is relevant to restaurants, cafes, bakeries, caterers, and small manufacturers that need practical HACCP structure under EU and UK compliance expectations.",
         },
       ]}
+      heroImage={{
+        src: "https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?w=1200&q=80",
+        alt: "Clean commercial kitchen ready for food preparation",
+      }}
       relatedLinks={[
         {
           href: "/features/allergen-documentation",

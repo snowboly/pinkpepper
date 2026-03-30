@@ -2,15 +2,12 @@ import { describe, it, expect, vi } from "vitest";
 import {
   canExportPdf,
   canExportDocx,
-  enforceDailyDocumentLimit,
+  getConversationTranscriptForExport,
+  recordExportUsage,
 } from "@/lib/export/common";
 import type { createClient } from "@/utils/supabase/server";
 
 type SupabaseClient = Awaited<ReturnType<typeof createClient>>;
-
-/* ──────────────────────────────────────────────────────────────────────────
-   canExportPdf
-   ────────────────────────────────────────────────────────────────────────── */
 
 describe("canExportPdf", () => {
   it("free tier cannot export PDF", () => {
@@ -18,11 +15,11 @@ describe("canExportPdf", () => {
   });
 
   it("plus tier can export PDF", () => {
-    expect(canExportPdf("plus")).toBe(true);
+    expect(canExportPdf("plus")).toBe(false);
   });
 
   it("pro tier can export PDF", () => {
-    expect(canExportPdf("pro")).toBe(true);
+    expect(canExportPdf("pro")).toBe(false);
   });
 
   it("admin always can export PDF regardless of tier", () => {
@@ -32,16 +29,7 @@ describe("canExportPdf", () => {
   it("admin on plus still returns true", () => {
     expect(canExportPdf("plus", true)).toBe(true);
   });
-
-  it("non-admin flag defaults to false", () => {
-    // canExportPdf("free") — isAdmin defaults to false
-    expect(canExportPdf("free")).toBe(false);
-  });
 });
-
-/* ──────────────────────────────────────────────────────────────────────────
-   canExportDocx
-   ────────────────────────────────────────────────────────────────────────── */
 
 describe("canExportDocx", () => {
   it("free tier cannot export DOCX", () => {
@@ -59,118 +47,91 @@ describe("canExportDocx", () => {
   it("admin always can export DOCX regardless of tier", () => {
     expect(canExportDocx("free", true)).toBe(true);
   });
-
-  it("admin on plus can export DOCX", () => {
-    expect(canExportDocx("plus", true)).toBe(true);
-  });
 });
 
-/* ──────────────────────────────────────────────────────────────────────────
-   enforceDailyDocumentLimit
-   ────────────────────────────────────────────────────────────────────────── */
+function buildTranscriptSupabase(rows: Array<Record<string, unknown>>): SupabaseClient {
+  const conversationChain = {
+    eq: vi.fn().mockReturnThis(),
+    maybeSingle: vi.fn().mockResolvedValue({ data: { id: "conv-1", title: "Kitchen checks" } }),
+  };
 
-function buildMockSupabase(count: number | null, error: unknown = null): SupabaseClient {
+  const messageChain = {
+    select: vi.fn().mockReturnThis(),
+    eq: vi.fn().mockReturnThis(),
+    order: vi.fn().mockResolvedValue({ data: rows, error: null }),
+  };
+
   return {
-    from: vi.fn().mockReturnValue({
-      select: vi.fn().mockReturnValue({
-        eq: vi.fn().mockReturnValue({
-          eq: vi.fn().mockReturnValue({
-            gte: vi.fn().mockResolvedValue({ count, error }),
-          }),
-        }),
-      }),
+    from: vi.fn((table: string) => {
+      if (table === "conversations") {
+        return {
+          select: vi.fn().mockReturnValue(conversationChain),
+        };
+      }
+
+      if (table === "chat_messages") {
+        return messageChain;
+      }
+
+      throw new Error(`Unexpected table ${table}`);
     }),
   } as unknown as SupabaseClient;
 }
 
-describe("enforceDailyDocumentLimit", () => {
-  it("admin bypasses all limits and returns used: 0, limit: null", async () => {
-    // Admin should not even query the DB
-    const result = await enforceDailyDocumentLimit({
-      supabase: {} as unknown as SupabaseClient,
-      userId: "admin-1",
-      tier: "free",
-      isAdmin: true,
+describe("getConversationTranscriptForExport", () => {
+  it("returns the full conversation transcript in chronological order", async () => {
+    const supabase = buildTranscriptSupabase([
+      { role: "user", content: "What temperature should chilled food stay at?", created_at: "2026-03-25T10:00:00Z", metadata: null },
+      { role: "assistant", content: "Keep chilled food at 8C or below.", created_at: "2026-03-25T10:00:10Z", metadata: { citations: [{ id: "c1" }] } },
+      { role: "user", content: "What records should I keep?", created_at: "2026-03-25T10:01:00Z", metadata: null },
+      { role: "assistant", content: "Keep temperature, corrective action, and verification records.", created_at: "2026-03-25T10:01:15Z", metadata: null },
+    ]);
+
+    const result = await getConversationTranscriptForExport({
+      supabase,
+      userId: "user-1",
+      conversationId: "conv-1",
     });
 
-    expect(result).toEqual({ used: 0, limit: null });
+    expect(result.conversationTitle).toBe("Kitchen checks");
+    expect(result.messages).toHaveLength(4);
+    expect(result.messages.map((message) => message.role)).toEqual(["user", "assistant", "user", "assistant"]);
+    expect(result.messages[0]?.content).toContain("What temperature");
+    expect(result.messages[3]?.content).toContain("verification records");
   });
 
-  it("free tier throws immediately when usage is 0 (limit is 0)", async () => {
-    const mockSupabase = buildMockSupabase(0);
+  it("throws when a conversation has no exportable messages", async () => {
+    const supabase = buildTranscriptSupabase([]);
 
     await expect(
-      enforceDailyDocumentLimit({
-        supabase: mockSupabase,
+      getConversationTranscriptForExport({
+        supabase,
         userId: "user-1",
-        tier: "free",
-        isAdmin: false,
+        conversationId: "conv-1",
       })
-    ).rejects.toThrow("DOC_DAILY_LIMIT_REACHED");
+    ).rejects.toThrow("NO_CONVERSATION_MESSAGES");
   });
+});
 
-  it("plus tier throws immediately because document generation is Pro only", async () => {
-    const mockSupabase = buildMockSupabase(0);
+function buildUsageSupabase(): SupabaseClient {
+  return {
+    from: vi.fn().mockReturnValue({
+      insert: vi.fn().mockResolvedValue({ error: null }),
+    }),
+  } as unknown as SupabaseClient;
+}
 
-    await expect(
-      enforceDailyDocumentLimit({
-        supabase: mockSupabase,
-        userId: "user-1",
-        tier: "plus",
-        isAdmin: false,
-      })
-    ).rejects.toThrow("DOC_DAILY_LIMIT_REACHED");
-  });
+describe("recordExportUsage", () => {
+  it("records export usage without document-generation quota helpers", async () => {
+    const mockSupabase = buildUsageSupabase();
 
-  it("pro tier allows when under limit", async () => {
-    const mockSupabase = buildMockSupabase(19); // 19 used out of 20
-
-    const result = await enforceDailyDocumentLimit({
+    await recordExportUsage({
       supabase: mockSupabase,
       userId: "user-1",
-      tier: "pro",
-      isAdmin: false,
+      format: "pdf",
+      conversationId: "conv-1",
     });
 
-    expect(result).toEqual({ used: 19, limit: 20 });
-  });
-
-  it("pro tier throws when at limit", async () => {
-    const mockSupabase = buildMockSupabase(20); // 20 used, limit is 20
-
-    await expect(
-      enforceDailyDocumentLimit({
-        supabase: mockSupabase,
-        userId: "user-1",
-        tier: "pro",
-        isAdmin: false,
-      })
-    ).rejects.toThrow("DOC_DAILY_LIMIT_REACHED");
-  });
-
-  it("throws when over limit (handles race condition)", async () => {
-    const mockSupabase = buildMockSupabase(25); // somehow over limit
-
-    await expect(
-      enforceDailyDocumentLimit({
-        supabase: mockSupabase,
-        userId: "user-1",
-        tier: "pro",
-        isAdmin: false,
-      })
-    ).rejects.toThrow("DOC_DAILY_LIMIT_REACHED");
-  });
-
-  it("propagates USAGE_READ_FAILED from countUsageSince", async () => {
-    const mockSupabase = buildMockSupabase(null, "db error");
-
-    await expect(
-      enforceDailyDocumentLimit({
-        supabase: mockSupabase,
-        userId: "user-1",
-        tier: "plus",
-        isAdmin: false,
-      })
-    ).rejects.toThrow("USAGE_READ_FAILED");
+    expect(mockSupabase.from).toHaveBeenCalledWith("usage_events");
   });
 });

@@ -1,18 +1,174 @@
 ﻿import { createClient as createSupabaseServer } from "@/utils/supabase/server";
-import { TIER_CAPABILITIES } from "@/lib/tier";
+import { TIER_CAPABILITIES, type SubscriptionTier } from "@/lib/tier";
 import { resolveUserAccess } from "@/lib/access";
 import { countUsageSince, utcDayStartIso } from "@/lib/policy";
 import { retrieveContext, retrieveRegulationContext, retrieveUserDocumentContext, buildRAGPrompt, formatCitations, type KnowledgeChunk, getExportGuidance } from "@/lib/rag";
+import { getVerificationState } from "@/lib/rag/verification";
+import { inferQueryJurisdiction } from "@/lib/rag/source-taxonomy";
 import { chatLimiter, chatBurstLimiter, checkRateLimit } from "@/lib/ratelimit";
-import { detectQueryMode, detectComplexity } from "@/lib/query-mode";
+import { detectQueryMode } from "@/lib/query-mode";
 import { getPersonaForConversation, type Persona } from "@/lib/personas";
 
 export const dynamic = "force-dynamic";
 
+function shouldPreferAuthoritativeSources(message: string, mode: "qa" | "document" | "audit"): boolean {
+  if (mode === "audit") {
+    return true;
+  }
+
+  if (mode === "document") {
+    return false;
+  }
+
+  return /\b(law|legal|regulation|regulations|compliance|requirement|requirements|must|shall|approval|register|registration)\b/i.test(
+    message
+  );
+}
+
+const PRIMARY_CHAT_MODEL = "llama-3.3-70b-versatile";
+const FALLBACK_CHAT_MODEL = "gpt-4o-mini";
+
+type ChatRequestMessage = {
+  role: "system" | "user" | "assistant";
+  content: string;
+};
+
+type ChatStreamAttempt = {
+  provider: "groq" | "openai";
+  model: string;
+  response: Response;
+};
+
+export function resolveChatModels(modelOverride?: string | null) {
+  return {
+    primary: modelOverride?.trim() || PRIMARY_CHAT_MODEL,
+    fallback: FALLBACK_CHAT_MODEL,
+  };
+}
+
+export function getHistoryWindowLimit(tier: SubscriptionTier, isAdmin: boolean) {
+  if (isAdmin) return 40;
+  if (tier === "pro") return 32;
+  if (tier === "plus") return 24;
+  return 18;
+}
+
+function shouldRetryStatus(status: number) {
+  return status === 429 || status >= 500;
+}
+
+async function requestStreamingCompletion(input: {
+  provider: "groq" | "openai";
+  apiKey: string;
+  model: string;
+  temperature: number;
+  maxTokens: number;
+  messages: ChatRequestMessage[];
+}) {
+  const { provider, apiKey, model, temperature, maxTokens, messages } = input;
+  const url = provider === "groq"
+    ? "https://api.groq.com/openai/v1/chat/completions"
+    : "https://api.openai.com/v1/chat/completions";
+  const maxRetries = provider === "groq" ? 3 : 2;
+
+  let lastResponse: Response | null = null;
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          "Content-Type": "application/json",
+        },
+        signal: AbortSignal.timeout(30_000),
+        body: JSON.stringify({
+          model,
+          temperature,
+          max_tokens: maxTokens,
+          stream: true,
+          messages,
+        }),
+      });
+
+      if (response.ok || !shouldRetryStatus(response.status)) {
+        return response;
+      }
+
+      lastResponse = response;
+      if (attempt < maxRetries - 1) {
+        const backoffMs = Math.pow(2, attempt) * 1000;
+        await new Promise((resolve) => setTimeout(resolve, backoffMs));
+      }
+    } catch (error) {
+      if (attempt < maxRetries - 1) {
+        const backoffMs = Math.pow(2, attempt) * 1000;
+        await new Promise((resolve) => setTimeout(resolve, backoffMs));
+      } else {
+        console.error(`[chat/stream] ${provider} request failed after retries:`, error);
+      }
+    }
+  }
+
+  return lastResponse;
+}
+
+async function requestChatStream(input: {
+  groqKey?: string;
+  openaiKey?: string;
+  modelOverride?: string | null;
+  temperature: number;
+  maxTokens: number;
+  messages: ChatRequestMessage[];
+}): Promise<ChatStreamAttempt | null> {
+  const { groqKey, openaiKey, modelOverride, temperature, maxTokens, messages } = input;
+  const models = resolveChatModels(modelOverride);
+
+  if (groqKey) {
+    const groqResponse = await requestStreamingCompletion({
+      provider: "groq",
+      apiKey: groqKey,
+      model: models.primary,
+      temperature,
+      maxTokens,
+      messages,
+    });
+
+    if (groqResponse?.ok) {
+      return { provider: "groq", model: models.primary, response: groqResponse };
+    }
+
+    if (groqResponse) {
+      console.error("[chat/stream] groq upstream error:", await groqResponse.text());
+    }
+  }
+
+  if (openaiKey) {
+    const openaiResponse = await requestStreamingCompletion({
+      provider: "openai",
+      apiKey: openaiKey,
+      model: models.fallback,
+      temperature,
+      maxTokens,
+      messages,
+    });
+
+    if (openaiResponse?.ok) {
+      return { provider: "openai", model: models.fallback, response: openaiResponse };
+    }
+
+    if (openaiResponse) {
+      console.error("[chat/stream] openai upstream error:", await openaiResponse.text());
+    }
+  }
+
+  return null;
+}
+
 export async function POST(request: Request) {
   const groqKey = process.env.GROQ_API_KEY;
-  if (!groqKey) {
-    return Response.json({ error: "GROQ_API_KEY is not configured." }, { status: 500 });
+  const openaiKey = process.env.OPENAI_API_KEY;
+  if (!groqKey && !openaiKey) {
+    return Response.json({ error: "Neither GROQ_API_KEY nor OPENAI_API_KEY is configured." }, { status: 500 });
   }
 
   const supabase = await createSupabaseServer();
@@ -148,7 +304,7 @@ export async function POST(request: Request) {
   const persona: Persona = getPersonaForConversation(conversationId!);
 
   // Load conversation history
-  const historyLimit = isAdmin || tier === "pro" ? 20 : 10;
+  const historyLimit = getHistoryWindowLimit(tier, isAdmin);
   const { data: historyRows } = await supabase
     .from("chat_messages")
     .select("role, content")
@@ -157,24 +313,43 @@ export async function POST(request: Request) {
     .limit(historyLimit);
 
   const history = (historyRows ?? []).reverse().map((row: { role: string; content: string }) => ({
-    role: row.role,
+    role: row.role as "user" | "assistant",
     content: row.content,
   }));
+
+  const mode = detectQueryMode(message);
 
   // RAG retrieval (knowledge base + user uploaded documents)
   let retrievedChunks: KnowledgeChunk[] = [];
   let userDocContext = "";
   let ragEnabled = false;
+  const queryJurisdiction = inferQueryJurisdiction(message);
+  const useAuthorityFilters = shouldPreferAuthoritativeSources(message, mode);
+  const jurisdictionFilter =
+    queryJurisdiction !== "unknown" && queryJurisdiction !== "mixed"
+      ? queryJurisdiction
+      : undefined;
 
   try {
     const [kChunks, uChunks] = await Promise.all([
-      retrieveContext(message, { topK: 8, threshold: 0.6 }),
+      retrieveContext(message, {
+        topK: 8,
+        threshold: 0.6,
+        ...(jurisdictionFilter ? { jurisdiction: jurisdictionFilter } : {}),
+        ...(useAuthorityFilters
+          ? { sourceClasses: ["primary_law", "official_guidance"] as const }
+          : {}),
+      }),
       retrieveUserDocumentContext(message, user.id, { topK: 3, threshold: 0.65 }),
     ]);
 
     // If few general results, try a regulation-focused search with a lower threshold
     if (kChunks.length < 3) {
-      const regChunks = await retrieveRegulationContext(message, { topK: 5, threshold: 0.55 });
+      const regChunks = await retrieveRegulationContext(message, {
+        topK: 5,
+        threshold: 0.55,
+        ...(jurisdictionFilter ? { jurisdiction: jurisdictionFilter } : {}),
+      });
       const existingIds = new Set(kChunks.map((c) => c.id));
       for (const chunk of regChunks) {
         if (!existingIds.has(chunk.id)) kChunks.push(chunk);
@@ -190,8 +365,6 @@ export async function POST(request: Request) {
   } catch (ragError) {
     console.error("RAG retrieval error:", ragError);
   }
-
-  const mode = detectQueryMode(message);
 
   let systemPrompt: string;
   let temperature: number;
@@ -237,7 +410,7 @@ export async function POST(request: Request) {
           "- Keep answers focused — do not pad with unnecessary caveats.";
 
     const fallbackHeader = [
-      `Today's date is ${currentDate}. No context documents were retrieved for this query. Use your food safety expertise to answer the user's question — you may draw on your knowledge of EU and UK food safety regulations, HACCP principles, and industry best practice. Recommend the user verify with the relevant authority (EUR-Lex, FSA, EFSA) for the most up-to-date official text. Do not tell users your training data ends in a specific year.`,
+      `Today's date is ${currentDate}. No context documents were retrieved for this query. Use your food safety expertise to answer the user's question, but stay grounded in EU and UK food safety law and best practice. If the answer depends on a recent legal change or you lack source support, advise the user to verify the latest official text with EUR-Lex, the FSA, EFSA, or the relevant authority.`,
       businessTypeLabel
         ? `The user operates a ${businessTypeLabel}. Tailor your examples and advice to this business type where relevant.`
         : "",
@@ -246,20 +419,20 @@ export async function POST(request: Request) {
 
     systemPrompt =
       fallbackHeader +
-      "You are PinkPepper, an expert AI food safety compliance assistant specialising in EU and UK food law and best practice.\n\n" +
+      "You are a food safety compliance expert working for PinkPepper. Your name and persona are defined in the PERSONA section below — always introduce yourself by that name, not as 'PinkPepper'. PinkPepper is the product/company you represent.\n\n" +
       "ABOUT PINKPEPPER (answer when users ask about you, the product, or their plan):\n" +
       "PinkPepper is a food safety compliance SaaS that helps food businesses with HACCP plans, SOPs, audit preparation, allergen law, and EU/UK food safety compliance.\n" +
       "Subscription tiers:\n" +
-      `- Free: ${TIER_CAPABILITIES.free.dailyMessages} messages/day (${used} used today on the current ${tier} plan), ${TIER_CAPABILITIES.free.dailyImageUploads} image upload/day, ${TIER_CAPABILITIES.free.dailyTranscriptions} voice transcriptions/day, ${TIER_CAPABILITIES.free.maxSavedConversations} saved conversations with ${TIER_CAPABILITIES.free.conversationRetentionDays}-day retention, no document generation, no export, no virtual audit, no consultancy.\n` +
-      `- Plus: ${TIER_CAPABILITIES.plus.dailyMessages} messages/day, ${TIER_CAPABILITIES.plus.dailyImageUploads} image uploads/day, ${TIER_CAPABILITIES.plus.dailyTranscriptions} voice transcriptions/day, no document generation, unlimited conversations, PDF export for chat conversations, no virtual audit.\n` +
-      `- Pro: ${TIER_CAPABILITIES.pro.dailyMessages} messages/day, ${TIER_CAPABILITIES.pro.dailyImageUploads} image uploads/day, ${TIER_CAPABILITIES.pro.dailyTranscriptions} voice transcriptions/day, ${TIER_CAPABILITIES.pro.dailyDocumentGenerations} document generations/day, unlimited conversations, PDF + DOCX export, Virtual Audit mode, ${TIER_CAPABILITIES.pro.monthlyHumanReviews} hours of food safety consultancy/month (${TIER_CAPABILITIES.pro.reviewTurnaround} response time).\n` +
-      "Features: AI chatbot (you), Pro-only document generation (HACCP plans, SOPs, cleaning logs, supplier approval), virtual audit mode, image analysis for food safety, voice transcription, PDF/DOCX export, and food safety consultancy (Pro only).\n" +
+      `- Free: ${TIER_CAPABILITIES.free.dailyMessages} messages/day (${used} used today on the current ${tier} plan), ${TIER_CAPABILITIES.free.dailyImageUploads} image upload/day, ${TIER_CAPABILITIES.free.dailyTranscriptions} voice transcriptions/day, ${TIER_CAPABILITIES.free.maxSavedConversations} saved conversations with ${TIER_CAPABILITIES.free.conversationRetentionDays}-day retention, no conversation export, no template downloads, no virtual audit, no consultancy.\n` +
+      `- Plus: ${TIER_CAPABILITIES.plus.dailyMessages} messages/day, ${TIER_CAPABILITIES.plus.dailyImageUploads} image uploads/day, ${TIER_CAPABILITIES.plus.dailyTranscriptions} voice transcriptions/day, unlimited conversations, no conversation export, DOCX template downloads, no virtual audit.\n` +
+      `- Pro: ${TIER_CAPABILITIES.pro.dailyMessages} messages/day, ${TIER_CAPABILITIES.pro.dailyImageUploads} image uploads/day, ${TIER_CAPABILITIES.pro.dailyTranscriptions} voice transcriptions/day, unlimited conversations, DOCX conversation export, DOCX template downloads, Virtual Audit mode, 2 hours of food safety consultancy/month (${TIER_CAPABILITIES.pro.reviewTurnaround} response time).\n` +
+      "Features: AI chatbot (you), downloadable document templates, virtual audit mode, image analysis for food safety, voice transcription, DOCX conversation export, and food safety consultancy (Pro only).\n" +
       "If asked about upgrading, direct users to the upgrade option in the sidebar or settings.\n\n" +
       "Your expertise covers:\n" +
       "- HACCP principles (Codex Alimentarius CAC/RCP 1-1969, Rev. 2003)\n" +
       "- Food hygiene law: Regulation (EC) No 852/2004, 853/2004, and their retained UK equivalents\n" +
       "- Allergen labelling: Regulation (EU) No 1169/2011 (Article 21, Annex II), UK Food Information Regulations 2014, Natasha's Law (PPDS foods, from Oct 2021)\n" +
-      "- Temperature control: chilled (=8°C), frozen (=-18°C), hot-holding (=63°C), cook temperatures\n" +
+      "- Temperature control: chilled (≤8°C), frozen (≤-18°C), hot-holding (≥63°C), cook temperatures\n" +
       "- Traceability: Regulation (EC) No 178/2002 (Articles 17–20)\n" +
       "- Microbiological criteria: Regulation (EC) No 2073/2005\n" +
       "- Private certification standards: BRCGS Food Safety Issue 9, SQF Edition 9, IFS Food Version 8, FSSC 22000 Version 6\n" +
@@ -272,75 +445,31 @@ export async function POST(request: Request) {
       "3. Where EU and UK law have diverged post-Brexit, call out both positions explicitly.\n" +
       "4. If a question requires site-specific detail you do not have (e.g. specific menu, layout, volume), ask for it rather than making assumptions.\n" +
       `5. ${languageInstruction} Keep legal references (regulation names, article numbers) in their original form.\n` +
-      `6. ${getExportGuidance(tier)}\n\n` +
+      `6. ${getExportGuidance(tier)}\n` +
+      "7. NEVER answer a food safety question with a bare 'yes' or 'no' when the answer has health or legal implications. Always provide the critical safety context, temperature, or regulatory basis — even when the user explicitly asks for a one-word answer.\n" +
+      "8. If the user asks an audit-style question (e.g. 'audit my procedures', 'review our HACCP', 'assess our compliance') and the current mode is Q&A, suggest switching to Virtual Audit mode: 'For a formal audit with compliance ratings and corrective actions, try switching to **Virtual Audit** mode using the toggle above the chat.'\n" +
+      `9. If the user is on the Pro plan and asks about requesting a consultancy review or speaking to a food safety consultant, direct them to use the **\"Send Document for Review\"** button in the sidebar. Do not just describe the service.\n` +
+      "10. NEVER mention, reference, or hint at a model training cutoff date. If the user asks about your knowledge base or how current your information is, explain that you are grounded in a curated library of EU and UK food safety regulations and official guidance, and that for the very latest changes you recommend verifying with EUR-Lex, the FSA, FSS, or the relevant authority. Do not state any specific year, month, or date as a knowledge cutoff.\n\n" +
       "PERSONA:\n" + persona.promptFragment + "\n\n" +
       modeInstruction + userDocContext;
     temperature = mode === "audit" ? 0.0 : mode === "document" ? 0.2 : 0.1;
   }
 
-  // Model routing: simple Q&A ? 8B, complex/document/audit ? 70B
-  const complexity = detectComplexity(message, mode);
-  const modelOverride = process.env.GROQ_MODEL;
-  const model = modelOverride
-    ? modelOverride
-    : complexity === "simple"
-      ? "llama-3.1-8b-instant"
-      : "llama-3.3-70b-versatile";
-
   const maxTokens = isAdmin ? 8192 : caps.maxResponseTokens;
-
-  // Call Groq with streaming enabled (retry on transient errors)
-  const groqPayload = {
-    model,
+  const upstream = await requestChatStream({
+    groqKey: groqKey ?? undefined,
+    openaiKey: openaiKey ?? undefined,
+    modelOverride: process.env.GROQ_MODEL,
     temperature,
-    max_tokens: maxTokens,
-    stream: true,
+    maxTokens,
     messages: [
       { role: "system", content: systemPrompt },
       ...history,
       { role: "user", content: message },
     ],
-  };
+  });
 
-  let groqRes: Response | null = null;
-  const maxRetries = 3;
-  for (let attempt = 0; attempt < maxRetries; attempt++) {
-    try {
-      groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${groqKey}`,
-          "Content-Type": "application/json",
-        },
-        signal: AbortSignal.timeout(30_000),
-        body: JSON.stringify(groqPayload),
-      });
-
-      // Success or non-retryable error — stop retrying
-      if (groqRes.ok || (groqRes.status < 500 && groqRes.status !== 429)) {
-        break;
-      }
-
-      // Retryable error (429, 5xx) — wait and retry
-      if (attempt < maxRetries - 1) {
-        const backoffMs = Math.pow(2, attempt) * 1000; // 1s, 2s
-        await new Promise((r) => setTimeout(r, backoffMs));
-      }
-    } catch (fetchErr) {
-      // Network error or timeout — retry
-      if (attempt < maxRetries - 1) {
-        const backoffMs = Math.pow(2, attempt) * 1000;
-        await new Promise((r) => setTimeout(r, backoffMs));
-      } else {
-        console.error("Groq API fetch failed after retries:", fetchErr);
-        return Response.json({ error: "AI service temporarily unavailable." }, { status: 502 });
-      }
-    }
-  }
-
-  if (!groqRes || !groqRes.ok) {
-    const details = groqRes ? await groqRes.text() : "No response";
-    console.error("Groq API error after retries:", details);
+  if (!upstream) {
     return Response.json({ error: "AI service temporarily unavailable." }, { status: 502 });
   }
 
@@ -355,8 +484,8 @@ export async function POST(request: Request) {
         )
       );
 
-      // Process Groq's SSE stream
-      if (!groqRes.body) {
+      // Process the upstream SSE stream
+      if (!upstream.response.body) {
         controller.enqueue(
           encoder.encode(
             `data: ${JSON.stringify({ type: "error", message: "No response body from AI service" })}\n\n`
@@ -365,7 +494,7 @@ export async function POST(request: Request) {
         controller.close();
         return;
       }
-      const reader = groqRes.body.getReader();
+      const reader = upstream.response.body.getReader();
       const decoder = new TextDecoder();
       let fullContent = "";
       let buffer = "";
@@ -404,26 +533,47 @@ export async function POST(request: Request) {
         }
 
         const citations = ragEnabled ? formatCitations(retrievedChunks) : [];
+        const verificationState = getVerificationState(
+          retrievedChunks.map((chunk) => ({
+            source_class:
+              typeof chunk.metadata?.source_class === "string"
+                ? chunk.metadata.source_class
+                : undefined,
+          }))
+        );
 
         // Save messages to database
         // All rows must include the same columns so PostgREST includes metadata in the INSERT
-        await supabase.from("chat_messages").insert([
+        const { error: insertMsgError } = await supabase.from("chat_messages").insert([
           { conversation_id: conversationId, user_id: user.id, role: "user", content: message, metadata: {} },
           {
             conversation_id: conversationId,
             user_id: user.id,
             role: "assistant",
             content: fullContent,
-            metadata: citations.length > 0 ? { citations } : {},
+            metadata: {
+              ...(citations.length > 0 ? { citations } : {}),
+              verificationState,
+            },
           },
         ]);
+
+        if (insertMsgError) {
+          console.error("[chat/stream] Failed to save messages to DB:", insertMsgError);
+        }
 
         // Record usage event
         await supabase.from("usage_events").insert({
           user_id: user.id,
           event_type: "chat_prompt",
           event_count: 1,
-          metadata: { conversation_id: conversationId, model, complexity, rag_enabled: ragEnabled, mode },
+          metadata: {
+            conversation_id: conversationId,
+            model: upstream.model,
+            provider: upstream.provider,
+            rag_enabled: ragEnabled,
+            mode,
+          },
         });
 
         // Send final event with citations and usage
@@ -432,6 +582,7 @@ export async function POST(request: Request) {
             `data: ${JSON.stringify({
               type: "done",
               citations,
+              verificationState,
               usage: {
                 used: used + 1,
                 limit: isAdmin ? null : caps.dailyMessages,

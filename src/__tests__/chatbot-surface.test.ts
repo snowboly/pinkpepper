@@ -84,6 +84,22 @@ describe("chatbot source encoding", () => {
       }
     }
   });
+
+  it("keeps the new template assets free of common mojibake markers", () => {
+    const files = [
+      "knowledge-docs/templates/HACCP-plan-template.md",
+      "knowledge-docs/templates/allergen-declaration-form-template.md",
+    ];
+
+    const badFragments = ["â˜", "â†“", "â‰¤", "â‰¥", "Ã—", "â€”"];
+
+    for (const file of files) {
+      const content = readWorkspaceFile(file);
+      for (const fragment of badFragments) {
+        expect(content, `${file} should not contain ${fragment}`).not.toContain(fragment);
+      }
+    }
+  });
 });
 
 describe("chat workspace chrome", () => {
@@ -118,5 +134,80 @@ describe("chat workspace chrome", () => {
     expect(messages).not.toContain("Premium Workflows");
     expect(messages).not.toContain("Request expert review");
     expect(messages).not.toContain("humanReviewHighlight");
+  });
+
+  it("moves real downloadable templates into the sidebar and removes the empty-state dropdown", () => {
+    const messages = readWorkspaceFile("src/components/dashboard/ChatMessages.tsx");
+    const sidebar = readWorkspaceFile("src/components/dashboard/ChatSidebar.tsx");
+
+    expect(messages).not.toContain('category: "template_download"');
+    expect(messages).not.toContain('category: "document"');
+    expect(messages).not.toContain('t("downloadTemplates")');
+
+    expect(sidebar).toContain("getGroupedTemplates");
+    expect(sidebar).toContain('onTemplateDownload: (slug: string) => void;');
+    expect(sidebar).toContain('onTemplateUpgrade: () => void;');
+    expect(sidebar).toContain('tc("downloadTemplates")');
+  });
+
+  it("removes document builder state and route calls from the workspace", () => {
+    const workspace = readWorkspaceFile("src/components/dashboard/ChatWorkspace.tsx");
+
+    expect(workspace).not.toContain("buildDocumentGenerationPayload");
+    expect(workspace).not.toContain("getLightweightDocWizards");
+    expect(workspace).not.toContain("AdvancedDocumentBuilderModal");
+    expect(workspace).not.toContain('fetch("/api/documents/generate"');
+    expect(workspace).toContain("const handleTemplateDownload = useCallback((slug: string) =>");
+    expect(workspace).toContain('setUpgradeModalTrigger("template_download")');
+    expect(workspace).toContain('fetch(`/api/templates/${slug}/download`');
+  });
+
+  it("removes the lightweight wizard flow entirely", () => {
+    const workspace = readWorkspaceFile("src/components/dashboard/ChatWorkspace.tsx");
+
+    expect(workspace).not.toContain('["cancel", "/cancel", "stop"]');
+    expect(workspace).not.toContain("wizardCancelled");
+    expect(workspace).not.toContain("wizardGenerating");
+  });
+
+  it("keeps workspace shell strings localized and removes stale review prop wiring", () => {
+    const workspace = readWorkspaceFile("src/components/dashboard/ChatWorkspace.tsx");
+    const messages = readWorkspaceFile("src/components/dashboard/ChatMessages.tsx");
+    const input = readWorkspaceFile("src/components/dashboard/ChatInput.tsx");
+    const sidebar = readWorkspaceFile("src/components/dashboard/ChatSidebar.tsx");
+    const reviewModal = readWorkspaceFile("src/components/dashboard/ReviewModal.tsx");
+
+    expect(workspace).not.toContain("Send for Review");
+
+    expect(messages).not.toContain("reviewEligible:");
+    expect(messages).not.toContain("tier:");
+    expect(messages).not.toContain("isAdmin:");
+    expect(messages).not.toContain("onRequestReview:");
+    expect(messages).not.toContain("onUpgradeForReview");
+
+    expect(input).not.toContain('alt="Attached"');
+    expect(input).not.toContain('aria-label="Open attachment tools"');
+
+    expect(sidebar).not.toContain("View plans");
+
+    expect(reviewModal).not.toContain("reviewTurnaround?: string;");
+  });
+
+  it("does not keep builder implementation references after templates-only cleanup", () => {
+    const workspace = readWorkspaceFile("src/components/dashboard/ChatWorkspace.tsx");
+
+    expect(workspace).not.toContain("document-builders/");
+    expect(workspace).not.toContain("document_generation_requested");
+    expect(workspace).not.toContain("setActiveDocWizard");
+    expect(workspace).not.toContain("setActiveAdvancedBuilder");
+  });
+
+  it("keeps chat export on a single DOCX path", () => {
+    const workspace = readWorkspaceFile("src/components/dashboard/ChatWorkspace.tsx");
+
+    expect(workspace).toContain('fetch("/api/export/docx"');
+    expect(workspace).toContain('exportConversation")} (DOCX)`');
+    expect(workspace).not.toContain('void exportDocument("pdf")');
+    expect(workspace).not.toContain('{tw("pdf")}');
   });
 });

@@ -23,9 +23,9 @@
     "reviewBannerTitle": "Souhaitez-vous qu'un expert humain vérifie ce document ?",
     "reviewBannerBody": "Nos spécialistes en sécurité alimentaire examinent vos documents générés par l'IA pour en vérifier l'exactitude, les lacunes de conformité et la préparation à l'audit.",
     "reviewUpsellTitle": "Faites vérifier ce document par un expert humain",
-    "reviewUpsellBody": "Le plan Pro inclut 3 heures de consultation en sécurité alimentaire/mois — révision de documents, aide à la génération et questions-réponses asynchrones.",
+    "reviewUpsellBody": "Le plan Pro inclut 2 heures de consultation en sécurité alimentaire/mois — révision de documents, aide à la génération et questions-réponses asynchrones.",
     "reviewUpsellCta": "Passer au plan Pro",
-    "humanReviewHighlight": "Le plan Pro inclut 3 heures de consultation en sécurité alimentaire par mois avec un spécialiste qualifié.",
+    "humanReviewHighlight": "Le plan Pro inclut 2 heures de consultation en sécurité alimentaire par mois avec un spécialiste qualifié.",
     "suggestions": {
       "haccpPlan": {
         "label": "Plan HACCP",
@@ -59,6 +59,14 @@
         "label": "Règles de traçabilité",
         "text": "Quels registres de traçabilité une entreprise alimentaire doit-elle conserver en vertu du Regulation (EC) No 178/2002 ?"
       }
+    },
+    "downloadTemplates": "Télécharger les modèles",
+    "docCategories": {
+      "quickDocuments": "Documents rapides",
+      "advancedDocuments": "Documents avancés",
+      "structuredBuilder": "Assistant structuré",
+      "downloadTemplates": "Télécharger les modèles",
+      "downloadTemplatesHint": "DOCX · Plus & Pro"
     },
     "startRecording": "Start recording",
     "stopRecording": "Stop",
@@ -96,6 +104,7 @@
     "myReviews": "Mes avis",
     "expertReviews": "Avis d'experts",
     "accountSettings": "Paramètres du compte",
+    "viewPlans": "Voir les plans",
     "today": "Aujourd'hui",
     "yesterday": "Hier",
     "previous7Days": "7 derniers jours",
@@ -221,7 +230,7 @@
           "1 000 messages/jour",
           "20 photos/jour",
           "Export PDF + Word",
-          "3h de consultation en sécurité alimentaire/mois",
+          "2h de consultation en sécurité alimentaire/mois",
           "Heures de consultation supplémentaires à la demande"
         ],
         "cta": "Passer à Pro"
@@ -241,7 +250,7 @@
     "scopeNote": "La consultation porte sur le contenu de la conversation sélectionnée. Les demandes hors sujet ou hors périmètre peuvent être refusées.",
     "turnaround": "Délai de réponse :",
     "turnaroundTimes": "Réponses sous 5 jours ouvrés",
-    "fullReviewCostNote": "La consultation est comptabilisée par tranches de 15 minutes, déduites de vos 3 heures mensuelles.",
+    "fullReviewCostNote": "La consultation est comptabilisée par tranches de 15 minutes, déduites de vos 2 heures mensuelles.",
     "documentType": "Type de document",
     "quickCheck": "Vérification rapide",
     "quickCheckCredits": "— 1 crédit",
@@ -325,6 +334,14 @@
     "saving": "Enregistrement...",
     "save": "Enregistrer",
     "usage": "Utilisation",
-    "dailyMessages": "Messages aujourd'hui"
+    "dailyMessages": "Messages aujourd'hui",
+    "dangerZone": "Zone dangereuse",
+    "deleteAccount": "Supprimer le compte",
+    "deleteAccountDescription": "Supprimez définitivement votre compte et toutes les données associées. Cette action est irréversible.",
+    "deleteAccountConfirmTitle": "Supprimer votre compte ?",
+    "deleteAccountConfirmBody": "Cela supprimera définitivement votre compte et toutes vos données, y compris les conversations, documents et paramètres. Cette action est irréversible.",
+    "deleteAccountConfirm": "Oui, supprimer mon compte",
+    "cancel": "Annuler",
+    "deleting": "Suppression..."
   }
 }

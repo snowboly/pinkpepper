@@ -40,6 +40,7 @@ export default function AllergenMatrixTemplatePage() {
       ]}
       ctaTitle="Create allergen documents that are easier to maintain"
       ctaBody="PinkPepper helps food businesses draft allergen matrices, control documents, and update workflows without relying on one static spreadsheet."
+      templateSlug="allergen-matrix-template"
       relatedLinks={[
         { href: "/features/allergen-documentation", label: "Allergen documentation" },
         { href: "/use-cases/cafes", label: "Cafe use case" },

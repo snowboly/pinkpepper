@@ -13,8 +13,10 @@ import { generateEmbeddings } from "@/lib/rag/embeddings";
 import type { Json } from "@/types/database.types";
 import {
   searchFoodSafetyRegulations,
+  discoverNewRegulations,
   fetchRegulationText,
   celexToSourceName,
+  MIN_REGULATION_TEXT_CHARS,
   type CellarRegulation,
 } from "@/lib/rag/cellar-client";
 
@@ -195,19 +197,26 @@ function hashText(text: string): string {
 /**
  * Check if a regulation has already been synced with an identical content hash.
  * Falls back to last_modified comparison if no hash is stored yet.
+ *
+ * Queries by both the exact consolidated CELEX and the base CELEX number,
+ * because the consolidated suffix (date) changes whenever EUR-Lex publishes
+ * a new consolidated version — without this, every sync re-ingests everything.
  */
 async function isAlreadySynced(
   celex: string,
+  baseCelex: string,
   lastModified: string,
   contentHash: string
 ): Promise<boolean> {
   const supabase = createAdminClient();
 
+  // Try exact consolidated CELEX first, then fall back to base CELEX prefix.
+  // The base CELEX is stored in metadata->baseCelexNumber.
   const { data, error } = await supabase
     .from("regulation_sync_log")
     .select("content_hash, last_modified")
-    .eq("celex_number", celex)
     .eq("status", "success")
+    .or(`celex_number.eq.${celex},celex_number.like.${baseCelex}%`)
     .order("synced_at", { ascending: false })
     .limit(1)
     .maybeSingle();
@@ -324,31 +333,52 @@ export async function syncRegulations(): Promise<SyncResult> {
   const sinceDate = await getLastSyncDate();
   console.log(`[regulation-sync] Searching for regulations modified since ${sinceDate}`);
 
-  // Search CELLAR for food safety regulations
-  let regulations: CellarRegulation[];
+  // Search CELLAR for curated seed regulations
+  let seedRegulations: CellarRegulation[];
   try {
-    regulations = await searchFoodSafetyRegulations(sinceDate);
-    console.log(`[regulation-sync] Found ${regulations.length} regulations`);
+    seedRegulations = await searchFoodSafetyRegulations(sinceDate);
+    console.log(`[regulation-sync] Found ${seedRegulations.length} seed regulations`);
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
-    console.error(`[regulation-sync] SPARQL search failed: ${message}`);
-    result.errors.push({ celex: "SPARQL_SEARCH", error: message });
+    console.error(`[regulation-sync] Seed search failed: ${message}`);
+    result.errors.push({ celex: "SEED_SEARCH", error: message });
     return result;
   }
+
+  // Discover new regulations via EUR-Lex SPARQL (non-fatal)
+  let discoveredRegulations: CellarRegulation[] = [];
+  try {
+    discoveredRegulations = await discoverNewRegulations(sinceDate);
+    console.log(`[regulation-sync] Discovered ${discoveredRegulations.length} new regulations via SPARQL`);
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.error(`[regulation-sync] SPARQL discovery failed (non-fatal): ${message}`);
+    result.errors.push({ celex: "SPARQL_DISCOVERY", error: message });
+  }
+
+  // Merge: seeds take priority over discovered
+  const seenCelex = new Set(seedRegulations.map((r) => r.baseCelex));
+  const regulations = [
+    ...seedRegulations,
+    ...discoveredRegulations.filter((r) => !seenCelex.has(r.baseCelex)),
+  ];
+  console.log(`[regulation-sync] Total: ${regulations.length} regulations to process`);
 
   // Process each regulation
   for (const regulation of regulations) {
     try {
-      // Fetch text first so we can hash it for amendment detection
+      // Fetch text first so we can hash it for amendment detection.
+      // fetchRegulationText already throws if text < MIN_REGULATION_TEXT_CHARS.
       const text = await fetchRegulationText(regulation.celex);
-      if (!text || text.length < 100) {
-        throw new Error(`Regulation text too short or empty (${text.length} chars)`);
+      if (!text || text.length < MIN_REGULATION_TEXT_CHARS) {
+        throw new Error(`Regulation text too short (${text.length} chars)`);
       }
       const contentHash = hashText(text);
 
       // Skip if already synced with identical content
       const alreadySynced = await isAlreadySynced(
         regulation.celex,
+        regulation.baseCelex,
         regulation.dateLastModified,
         contentHash
       );
@@ -378,6 +408,7 @@ export async function syncRegulations(): Promise<SyncResult> {
         metadata: {
           baseCelexNumber: regulation.baseCelex,
           legacyAliases: regulation.legacyAliases,
+          ...(regulation.discovered && { discoveredViaSparql: true }),
         },
       });
       if (!logged) result.loggingAvailable = false;
@@ -403,6 +434,7 @@ export async function syncRegulations(): Promise<SyncResult> {
         metadata: {
           baseCelexNumber: regulation.baseCelex,
           legacyAliases: regulation.legacyAliases,
+          ...(regulation.discovered && { discoveredViaSparql: true }),
         },
       });
       if (!logged) result.loggingAvailable = false;

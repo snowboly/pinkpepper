@@ -1,3 +1,16 @@
+export type ProductNutritionRow = {
+  nutrient: string;
+  per100g: string;
+  perServing: string;
+};
+
+export type ProductMicrobiologyRow = {
+  parameter: string;
+  limit: string;
+  method: string;
+  frequency: string;
+};
+
 export type ProductDataSheetData = {
   metadata: {
     businessName: string;
@@ -20,4 +33,6 @@ export type ProductDataSheetData = {
   shelfLifeOpened: string;
   netWeight: string;
   packagingType: string;
+  nutritionRows: ProductNutritionRow[];
+  microbiologyRows: ProductMicrobiologyRow[];
 };

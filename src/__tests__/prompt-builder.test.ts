@@ -82,6 +82,20 @@ describe("buildRAGSystemPrompt", () => {
     expect(prompt).toContain("Chilled food must be stored");
   });
 
+  it("does not mention a training cutoff date", () => {
+    const prompt = buildRAGSystemPrompt([makeChunk()], "qa", "English", "2026-03-25", null, "pro");
+
+    expect(prompt).not.toContain("training data ends");
+    expect(prompt).not.toContain("training weights alone");
+  });
+
+  it("describes conversation export as DOCX-only", () => {
+    const prompt = buildRAGSystemPrompt([makeChunk()], "qa", "English", "2026-03-25", null, "pro");
+
+    expect(prompt).toContain("DOCX");
+    expect(prompt).not.toContain("PDF");
+  });
+
   it("includes Q&A mode instructions by default", () => {
     const prompt = buildRAGSystemPrompt([makeChunk()]);
     expect(prompt).toContain("Q&A");
@@ -97,6 +111,11 @@ describe("buildRAGSystemPrompt", () => {
     const prompt = buildRAGSystemPrompt([makeChunk()], "document");
     expect(prompt).toContain("DOCUMENT GENERATION");
     expect(prompt).toContain("HACCP plans");
+  });
+
+  it("instructs the model not to fill legal gaps from memory", () => {
+    const prompt = buildRAGSystemPrompt([], "qa", "English", "2026-03-23");
+    expect(prompt).toContain("do not answer legal questions from model memory when retrieval is weak");
   });
 });
 

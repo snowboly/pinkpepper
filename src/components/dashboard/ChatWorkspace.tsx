@@ -1,217 +1,33 @@
 ﻿"use client";
 
-import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { track } from "@vercel/analytics";
 import type { SubscriptionTier } from "@/lib/tier";
 import { TIER_CAPABILITIES } from "@/lib/tier";
-import { buildHaccpWizardDefinition } from "@/lib/documents/haccp-wizard";
 import type { Citation } from "@/lib/rag/citations";
+import type { VerificationState } from "@/lib/rag/verification";
 import { getPersonaForConversation } from "@/lib/personas";
 import type { Message, Conversation, Project, ChatWorkspaceProps, PersonaInfo } from "./types";
 import ChatSidebar from "./ChatSidebar";
-import ChatMessages, { type StarterSuggestion } from "./ChatMessages";
+import ChatMessages from "./ChatMessages";
 import ChatInput from "./ChatInput";
 import OnboardingModal from "./OnboardingModal";
 import UpgradeModal from "./UpgradeModal";
 import ReviewContactModal from "./ReviewContactModal";
 import { useAttachments } from "./useAttachments";
 import { useAudioRecording } from "./useAudioRecording";
-import { parseMessageArtifact, parseMessageCitations } from "./chat-message-metadata";
+import {
+  parseMessageArtifact,
+  parseMessageCitations,
+  parseMessageVerificationState,
+} from "./chat-message-metadata";
 import { applyStreamError } from "./chat-stream-state";
 
 type StreamUsage = { used: number; limit: number | null; tier: SubscriptionTier; isAdmin?: boolean };
+type StreamDoneData = { citations?: Citation[]; verificationState?: VerificationState; usage?: StreamUsage };
 type WorkspaceMode = "ask" | "virtual_audit";
-type DocWizard = {
-  id: string;
-  wizardKey: string;
-  questionCount: number;
-  buildPrompt: (answers: string[]) => string;
-  questions?: string[];
-};
-
-const HACCP_WIZARD = buildHaccpWizardDefinition();
-
-const DOC_WIZARDS: Record<string, DocWizard> = {
-  "HACCP plan": {
-    id: "haccp_plan",
-    wizardKey: "haccpPlan",
-    questionCount: HACCP_WIZARD.questions.length,
-    questions: HACCP_WIZARD.questions.map((question) => question.prompt),
-    buildPrompt: (answers) =>
-      `Create a lean, operational HACCP plan using the structured details below.\n\n` +
-      `Document metadata:\n` +
-      `- Company Name: ${answers[0] ?? ""}\n` +
-      `- Version: ${answers[1] ?? ""}\n` +
-      `- Date: ${answers[2] ?? ""}\n` +
-      `- Created by: ${answers[3] ?? ""}\n` +
-      `- Approved by: ${answers[4] ?? ""}\n\n` +
-      `Core content:\n` +
-      `- Process flow:\n${answers[5] ?? ""}\n\n` +
-      `- Hazard analysis input:\n${answers[6] ?? ""}\n\n` +
-      `- CCP details:\n${answers[7] ?? ""}\n\n` +
-      `Output requirements:\n` +
-      `- Use only these sections: Process Flow, Process Steps Table, Hazard Analysis Table, and CCP Table only if needed.\n` +
-      `- Keep the format operational and audit-ready, not manual-style.\n` +
-      `- Use visible Yes/No values for CCP decisions.`,
-  },
-  "Cleaning SOP": {
-    id: "cleaning_sop",
-    wizardKey: "cleaningSop",
-    questionCount: 5,
-    buildPrompt: (answers) =>
-      `Draft a complete Cleaning and Disinfection SOP using the following details:\n\n` +
-      `1) ${answers[0] ?? ""}\n` +
-      `2) ${answers[1] ?? ""}\n` +
-      `3) ${answers[2] ?? ""}\n` +
-      `4) ${answers[3] ?? ""}\n` +
-      `5) ${answers[4] ?? ""}\n\n` +
-      `Requirements:\n` +
-      `- Structure: Purpose, Scope, Responsibilities, Materials/Chemicals, Procedure, Frequency, Verification, Corrective Action, Records.\n` +
-      `- Include example cleaning schedule and sign-off log table.\n` +
-      `- Keep wording operational and audit-friendly.`,
-  },
-  "Temperature log": {
-    id: "temp_log",
-    wizardKey: "tempLog",
-    questionCount: 4,
-    buildPrompt: (answers) =>
-      `Generate a practical Temperature Monitoring Log pack based on:\n\n` +
-      `1) ${answers[0] ?? ""}\n` +
-      `2) ${answers[1] ?? ""}\n` +
-      `3) ${answers[2] ?? ""}\n` +
-      `4) ${answers[3] ?? ""}\n\n` +
-      `Requirements:\n` +
-      `- Provide separate tables where useful (fridge/freezer/hot-hold/cooking/delivery).\n` +
-      `- Include date, time, item/equipment, reading, limit, pass/fail, corrective action, initials/sign-off.\n` +
-      `- Add concise guidance on what to do when limits are breached.`,
-  },
-  "Food safety policy": {
-    id: "food_safety_policy",
-    wizardKey: "foodSafetyPolicy",
-    questionCount: 4,
-    buildPrompt: (answers) =>
-      `Create a comprehensive Food Safety Policy using:\n\n` +
-      `1) ${answers[0] ?? ""}\n` +
-      `2) ${answers[1] ?? ""}\n` +
-      `3) ${answers[2] ?? ""}\n` +
-      `4) ${answers[3] ?? ""}\n\n` +
-      `Requirements:\n` +
-      `- Include policy statement, management commitment, legal obligations, organisational responsibilities.\n` +
-      `- Include HACCP commitment, training requirements, monitoring and review schedule.\n` +
-      `- Reference Reg (EC) 852/2004 and Food Safety Act 1990 where relevant.`,
-  },
-  "Traceability procedure": {
-    id: "traceability_procedure",
-    wizardKey: "traceabilityProcedure",
-    questionCount: 4,
-    buildPrompt: (answers) =>
-      `Create a complete Traceability Procedure using:\n\n` +
-      `1) ${answers[0] ?? ""}\n` +
-      `2) ${answers[1] ?? ""}\n` +
-      `3) ${answers[2] ?? ""}\n` +
-      `4) ${answers[3] ?? ""}\n\n` +
-      `Requirements:\n` +
-      `- Include one-up/one-down traceability, batch coding, incoming goods recording, dispatch records.\n` +
-      `- Include recall/withdrawal procedure with decision tree and mock recall schedule.\n` +
-      `- Reference Reg (EC) 178/2002 Articles 17-20.`,
-  },
-  "Pest control procedure": {
-    id: "pest_control_procedure",
-    wizardKey: "pestControlProcedure",
-    questionCount: 5,
-    buildPrompt: (answers) =>
-      `Create a complete Pest Control Procedure using:\n\n` +
-      `1) ${answers[0] ?? ""}\n` +
-      `2) ${answers[1] ?? ""}\n` +
-      `3) ${answers[2] ?? ""}\n` +
-      `4) ${answers[3] ?? ""}\n` +
-      `5) ${answers[4] ?? ""}\n\n` +
-      `Requirements:\n` +
-      `- Cover rodents, insects, birds, and stored product insects.\n` +
-      `- Include prevention measures, monitoring methods, pest sighting log, corrective actions.\n` +
-      `- Include contractor management requirements and record-keeping.`,
-  },
-  "Staff training record": {
-    id: "staff_training_record",
-    wizardKey: "staffTrainingRecord",
-    questionCount: 4,
-    buildPrompt: (answers) =>
-      `Create a Staff Training Record and Matrix using:\n\n` +
-      `1) ${answers[0] ?? ""}\n` +
-      `2) ${answers[1] ?? ""}\n` +
-      `3) ${answers[2] ?? ""}\n` +
-      `4) ${answers[3] ?? ""}\n\n` +
-      `Requirements:\n` +
-      `- Include training requirements by role, induction checklist, ongoing training schedule.\n` +
-      `- Cover food hygiene, allergens, HACCP, cleaning, personal hygiene, pest awareness.\n` +
-      `- Include a training matrix table and individual training record template.`,
-  },
-  "Waste management procedure": {
-    id: "waste_management_procedure",
-    wizardKey: "wasteManagementProcedure",
-    questionCount: 4,
-    buildPrompt: (answers) =>
-      `Create a Waste Management Procedure using:\n\n` +
-      `1) ${answers[0] ?? ""}\n` +
-      `2) ${answers[1] ?? ""}\n` +
-      `3) ${answers[2] ?? ""}\n` +
-      `4) ${answers[3] ?? ""}\n\n` +
-      `Requirements:\n` +
-      `- Include waste categories, segregation/storage requirements, collection schedules.\n` +
-      `- Include waste carrier licensing, duty of care, and record-keeping.\n` +
-      `- Reference Annex II Reg (EC) 852/2004 and Environmental Protection Act 1990.`,
-  },
-  "Cleaning schedule": {
-    id: "cleaning_schedule",
-    wizardKey: "cleaningSchedule",
-    questionCount: 5,
-    buildPrompt: (answers) =>
-      `Create a Cleaning Schedule and Plan using:\n\n` +
-      `1) ${answers[0] ?? ""}\n` +
-      `2) ${answers[1] ?? ""}\n` +
-      `3) ${answers[2] ?? ""}\n` +
-      `4) ${answers[3] ?? ""}\n` +
-      `5) ${answers[4] ?? ""}\n\n` +
-      `Requirements:\n` +
-      `- Include area-by-area cleaning schedule with method, chemical, frequency, and responsibility.\n` +
-      `- Include deep cleaning schedule and equipment cleaning procedures.\n` +
-      `- Include daily/weekly tables and a cleaning verification log.`,
-  },
-  "Product data sheet": {
-    id: "product_data_sheet",
-    wizardKey: "productDataSheet",
-    questionCount: 7,
-    buildPrompt: (answers) =>
-      `Create a Product Data Sheet using:\n\n` +
-      `1) ${answers[0] ?? ""}\n` +
-      `2) ${answers[1] ?? ""}\n` +
-      `3) ${answers[2] ?? ""}\n` +
-      `4) ${answers[3] ?? ""}\n` +
-      `5) ${answers[4] ?? ""}\n` +
-      `6) ${answers[5] ?? ""}\n` +
-      `7) ${answers[6] ?? ""}\n\n` +
-      `Requirements:\n` +
-      `- Include product name/code, description, country of origin, ingredients (by weight), allergen declaration.\n` +
-      `- Include storage conditions, shelf life (opened/unopened), packaging, net weight.\n` +
-      `- Include nutritional information table and microbiological specification.\n` +
-      `- Reference Regulation 1169/2011 and Natasha's Law where relevant.`,
-  },
-};
-
-const DOC_GENERATION_TYPES: Record<DocWizard["id"], string> = {
-  haccp_plan: "haccp_plan",
-  cleaning_sop: "cleaning_sop",
-  temp_log: "temperature_log",
-  food_safety_policy: "food_safety_policy",
-  traceability_procedure: "traceability_procedure",
-  pest_control_procedure: "pest_control_procedure",
-  staff_training_record: "staff_training_record",
-  waste_management_procedure: "waste_management_procedure",
-  cleaning_schedule: "cleaning_schedule",
-  product_data_sheet: "product_data_sheet",
-};
 
 export default function ChatWorkspace({
   userEmail,
@@ -219,7 +35,6 @@ export default function ChatWorkspace({
   initialUsage,
   usageLimit,
   dailyImageUploads,
-  canExportPdf,
   canExportWord,
   canReview,
   isAdmin: initialIsAdmin = false,
@@ -244,13 +59,12 @@ export default function ChatWorkspace({
   // ── Billing state ──
   const [billingError, setBillingError] = useState<string | null>(null);
   const [tier, setTier] = useState<SubscriptionTier>(initialTier);
-  const [usage, setUsage] = useState(initialUsage);
-  const [currentUsageLimit, setUsageLimit] = useState(usageLimit);
+  const [, setUsage] = useState(initialUsage);
+  const [, setUsageLimit] = useState(usageLimit);
   const [isAdmin, setIsAdmin] = useState(initialIsAdmin);
 
   // ── Export state ──
-  const [exportLoading, setExportLoading] = useState<"pdf" | "docx" | null>(null);
-  const [showExportMenu, setShowExportMenu] = useState(false);
+  const [exportLoading, setExportLoading] = useState<"docx" | null>(null);
 
 
   // ── Image attachment state ──
@@ -265,20 +79,17 @@ export default function ChatWorkspace({
   const [showReviewModal, setShowReviewModal] = useState(false);
 
   // ── Upgrade modal state ──
-  const [upgradeModalTrigger, setUpgradeModalTrigger] = useState<"message_limit" | "image_limit" | "export" | "review" | "audit_mode" | "transcription_limit" | "document_generation" | null>(null);
+  const [upgradeModalTrigger, setUpgradeModalTrigger] = useState<"message_limit" | "image_limit" | "export" | "review" | "audit_mode" | "transcription_limit" | "template_download" | null>(null);
   const [workspaceMode, setWorkspaceMode] = useState<WorkspaceMode>("ask");
-  const [activeDocWizard, setActiveDocWizard] = useState<DocWizard | null>(null);
-  const [docWizardStep, setDocWizardStep] = useState(0);
-  const [docWizardAnswers, setDocWizardAnswers] = useState<string[]>([]);
 
   // ── UI state ──
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isDraggingOver, setIsDraggingOver] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
   const typingQueueRef = useRef("");
   const typingIntervalRef = useRef<number | null>(null);
-  const pendingDoneRef = useRef<{ citations?: Citation[]; usage?: StreamUsage } | null>(null);
+  const pendingDoneRef = useRef<StreamDoneData | null>(null);
 
   const canUploadImages = isAdmin || dailyImageUploads > 0;
 
@@ -302,7 +113,7 @@ export default function ChatWorkspace({
     }
   }, []);
 
-  const finalizeStreamingMessage = useCallback((doneData: { citations?: Citation[]; usage?: StreamUsage } | null) => {
+  const finalizeStreamingMessage = useCallback((doneData: StreamDoneData | null) => {
     setMessages((prev) => {
       const updated = [...prev];
       const last = updated[updated.length - 1];
@@ -311,6 +122,7 @@ export default function ChatWorkspace({
           ...last,
           isStreaming: false,
           citations: doneData?.citations,
+          verificationState: doneData?.verificationState ?? null,
         };
       }
       return updated;
@@ -373,14 +185,13 @@ export default function ChatWorkspace({
 
   // ── Derived values ──
   const dynamicCapabilities = isAdmin
-    ? { ...TIER_CAPABILITIES.pro, allowPdfExport: true, allowWordExport: true, monthlyHumanReviews: Number.MAX_SAFE_INTEGER }
+    ? { ...TIER_CAPABILITIES.pro, allowPdfExport: true, allowWordExport: true, hasConsultancy: true }
     : {
         ...TIER_CAPABILITIES[tier],
-        allowPdfExport: TIER_CAPABILITIES[tier].allowPdfExport || canExportPdf,
         allowWordExport: TIER_CAPABILITIES[tier].allowWordExport || canExportWord,
       };
 
-  const reviewEligible = isAdmin || dynamicCapabilities.monthlyHumanReviews > 0 || canReview;
+  const reviewEligible = isAdmin || dynamicCapabilities.hasConsultancy || canReview;
 
   const tierColour = isAdmin
     ? "border-[#7C3AED] bg-[#F5F3FF] text-[#5B21B6]"
@@ -409,6 +220,31 @@ export default function ChatWorkspace({
       // Best-effort telemetry only.
     }
   }
+
+  const handleTemplateDownload = useCallback((slug: string) => {
+    if (tier === "free") {
+      setUpgradeModalTrigger("template_download");
+      return;
+    }
+
+    void (async () => {
+      try {
+        const res = await fetch(`/api/templates/${slug}/download`, { redirect: "manual" });
+        if (res.type === "opaqueredirect") {
+          const a = document.createElement("a");
+          a.href = `/api/templates/${slug}/download`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        } else if (!res.ok) {
+          const data = (await res.json().catch(() => ({}))) as { error?: string };
+          setError(data.error ?? "This template isn't available for download yet.");
+        }
+      } catch {
+        setError("Could not download the template. Please try again.");
+      }
+    })();
+  }, [tier]);
 
   const {
     isRecording,
@@ -480,6 +316,7 @@ export default function ChatWorkspace({
         role: m.role,
         content: m.content,
         citations: parseMessageCitations(m.metadata),
+        verificationState: parseMessageVerificationState(m.metadata),
         artifact: parseMessageArtifact(m.metadata),
         ...(m.role === "assistant" ? { persona: { id: persona.id, name: persona.name } } : {}),
       })));
@@ -630,12 +467,10 @@ export default function ChatWorkspace({
     typingQueueRef.current = "";
     pendingDoneRef.current = null;
     clearTypingInterval();
-    setActiveDocWizard(null);
-    setDocWizardStep(0);
-    setDocWizardAnswers([]);
     setConversationId(null);
     setCurrentPersona(null);
     setMessages([]);
+    setSidebarOpen(false);
     clearImage();
     clearDocument();
     setError(null);
@@ -652,160 +487,29 @@ export default function ChatWorkspace({
       trackWorkspaceEvent("virtual_audit_started", { tier, source: "workspace_mode_toggle" });
     }
     setWorkspaceMode(nextMode);
-    setActiveDocWizard(null);
-    setDocWizardStep(0);
-    setDocWizardAnswers([]);
     // Start a fresh conversation when entering virtual audit mode
     if (nextMode === "virtual_audit") {
       startNewChat();
     }
   }
 
-  function startDocumentWizard(suggestion: StarterSuggestion) {
-    const wizard = DOC_WIZARDS[suggestion.label];
-    if (!wizard) {
-      void sendPromptValue(suggestion.text);
-      return;
-    }
-    setActiveDocWizard(wizard);
-    setDocWizardStep(0);
-    setDocWizardAnswers([]);
-    const intro = tw(`wizards.${wizard.wizardKey}.intro`);
-    const q1 = wizard.questions?.[0] ?? tw(`wizards.${wizard.wizardKey}.q1`);
-    pushAssistantMessage(`${intro}\n\nQuestion 1/${wizard.questionCount}: ${q1}`, currentPersona);
-    setPrompt("");
-    textareaRef.current?.focus();
-  }
-
-
-  async function handleDocWizardInput(rawPrompt: string): Promise<boolean> {
-    if (!activeDocWizard) return false;
-    const answer = rawPrompt.trim();
-    if (!answer) return true;
-
-    setPrompt("");
-    if (textareaRef.current) textareaRef.current.style.height = "auto";
-
-    setMessages((prev) => [...prev, { role: "user", content: answer }]);
-
-    if (["cancel", "/cancel", "stop"].includes(answer.toLowerCase())) {
-      setActiveDocWizard(null);
-      setDocWizardStep(0);
-      setDocWizardAnswers([]);
-      pushAssistantMessage(tw("wizardCancelled"), currentPersona);
-      return true;
-    }
-
-    const nextAnswers = [...docWizardAnswers, answer];
-    const nextStep = docWizardStep + 1;
-
-    if (nextStep < activeDocWizard.questionCount) {
-      setDocWizardAnswers(nextAnswers);
-      setDocWizardStep(nextStep);
-      const nextQ = activeDocWizard.questions?.[nextStep] ?? tw(`wizards.${activeDocWizard.wizardKey}.q${nextStep + 1}`);
-      pushAssistantMessage(`Question ${nextStep + 1}/${activeDocWizard.questionCount}: ${nextQ}`, currentPersona);
-      return true;
-    }
-
-    const completedWizard = activeDocWizard;
-    setActiveDocWizard(null);
-    setDocWizardStep(0);
-    setDocWizardAnswers([]);
-    pushAssistantMessage(tw("wizardGenerating"), currentPersona);
-
-    const wizardTitle = tw(`wizards.${completedWizard.wizardKey}.title`);
-    const displayPrompt = `Generate the ${wizardTitle} document using the provided business details.`;
-    const documentType = DOC_GENERATION_TYPES[completedWizard.id];
-    const userMessage: Message = { role: "user", content: displayPrompt };
-    setMessages((prev) => [...prev, userMessage]);
-    setLoading(true);
-    setError(null);
-    trackWorkspaceEvent("document_generation_requested", {
-      wizard: completedWizard.id,
-      tier,
-      source: "document_wizard",
-    });
-
-    try {
-      const res = await fetch("/api/documents/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          documentType,
-          answers: nextAnswers,
-          format: "json",
-          conversationId,
-          displayPrompt,
-        }),
-      });
-
-      const data = (await res.json()) as {
-        error?: string;
-        assistantMessage?: string;
-        conversationId?: string;
-        artifact?: Message["artifact"];
-        usage?: { used: number; limit: number | null; tier: SubscriptionTier; isAdmin?: boolean };
-      };
-
-      if (!res.ok) {
-        if (res.status === 402) {
-          setUpgradeModalTrigger("document_generation");
-        } else {
-          setError(data.error ?? "Document generation failed.");
-        }
-        setMessages((prev) => prev.slice(0, -1));
-        return true;
-      }
-
-      if (data.conversationId) setConversationId(data.conversationId);
-      if (data.assistantMessage) {
-        setMessages((prev) => [
-          ...prev,
-          {
-            role: "assistant",
-            content: data.assistantMessage!,
-            persona: currentPersona ?? undefined,
-            artifact: data.artifact ?? {
-              id: `${completedWizard.id}-${Date.now()}`,
-              kind: "document",
-              title: wizardTitle,
-              summary: data.assistantMessage!,
-              status: "ready",
-              documentType,
-            },
-          },
-        ]);
-      }
-      if (data.usage) {
-        setUsage(data.usage.used);
-        safeTierUpdate(data.usage.tier);
-        setIsAdmin(Boolean(data.usage.isAdmin));
-      }
-      await loadConversations(true);
-    } catch {
-      setError("Network error while generating document.");
-      setMessages((prev) => prev.slice(0, -1));
-    } finally {
-      setLoading(false);
-    }
-
-    return true;
-  }
-
   // ── Reviews ──
 
   // ── Export ──
-  async function exportDocument(format: "pdf" | "docx") {
+  async function exportDocument() {
     setError(null);
-    setShowExportMenu(false);
     if (!conversationId) {
       setError("Send at least one message before exporting.");
       return;
     }
-    setExportLoading(format);
+    if (tier !== "pro" && !isAdmin) {
+      setUpgradeModalTrigger("export");
+      return;
+    }
+    setExportLoading("docx");
     try {
-      trackWorkspaceEvent("export_started", { format, tier, source: "workspace", conversationId: conversationId ?? null });
-      const res = await fetch(`/api/export/${format}`, {
+      trackWorkspaceEvent("export_started", { format: "docx", tier, source: "workspace", conversationId: conversationId ?? null });
+      const res = await fetch("/api/export/docx", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ conversationId }),
@@ -819,12 +523,12 @@ export default function ChatWorkspace({
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `pinkpepper-export.${format}`;
+      a.download = "pinkpepper-export.docx";
       document.body.appendChild(a);
       a.click();
       a.remove();
       URL.revokeObjectURL(url);
-      trackWorkspaceEvent("export_completed", { format, tier, source: "workspace", conversationId: conversationId ?? null });
+      trackWorkspaceEvent("export_completed", { format: "docx", tier, source: "workspace", conversationId: conversationId ?? null });
     } catch {
       setError("Network error while exporting.");
     } finally {
@@ -834,8 +538,6 @@ export default function ChatWorkspace({
 
   // ── Send message (with streaming for text, JSON for images) ──
   async function sendPromptValue(rawPrompt: string, options?: { displayPrompt?: string }) {
-    if (await handleDocWizardInput(rawPrompt)) return;
-
     let value = rawPrompt.trim();
     if ((!value && !attachedImage && !attachedDocument) || loading) return;
 
@@ -1017,7 +719,16 @@ export default function ChatWorkspace({
           const payload = line.slice(6);
           if (payload === "[DONE]") continue;
 
-          let event: { type: string; delta?: string; conversationId?: string; citations?: Citation[]; usage?: StreamUsage; persona?: PersonaInfo; message?: string };
+          let event: {
+            type: string;
+            delta?: string;
+            conversationId?: string;
+            citations?: Citation[];
+            verificationState?: VerificationState;
+            usage?: StreamUsage;
+            persona?: PersonaInfo;
+            message?: string;
+          };
           try {
             event = JSON.parse(payload);
           } catch {
@@ -1054,7 +765,11 @@ export default function ChatWorkspace({
             setPrompt(value);
             setError(event.message ?? "Stream interrupted");
           } else if (event.type === "done") {
-            pendingDoneRef.current = { citations: event.citations, usage: event.usage };
+            pendingDoneRef.current = {
+              citations: event.citations,
+              verificationState: event.verificationState,
+              usage: event.usage,
+            };
             startTypingDrain();
           }
         }
@@ -1120,6 +835,7 @@ export default function ChatWorkspace({
   function selectConversation(id: string) {
     loadConvOnSelect.current = id;
     setConversationId(id);
+    setSidebarOpen(false);
     window.history.replaceState(null, "", `?c=${id}`);
   }
 
@@ -1144,14 +860,6 @@ export default function ChatWorkspace({
     return () => clearTypingInterval();
   }, [clearTypingInterval]);
 
-  // Close export menu on outside click
-  useEffect(() => {
-    if (!showExportMenu) return;
-    const handler = () => setShowExportMenu(false);
-    document.addEventListener("click", handler);
-    return () => document.removeEventListener("click", handler);
-  }, [showExportMenu]);
-
   // ── Render ──
   return (
     <>
@@ -1167,6 +875,7 @@ export default function ChatWorkspace({
           tier={tier}
           isAdmin={isAdmin}
           tierColour={tierColour}
+          onCloseSidebar={() => setSidebarOpen(false)}
           onNewChat={startNewChat}
           onSelectConversation={(id) => { selectConversation(id); }}
           onDeleteConversation={(id) => void removeConversation(id)}
@@ -1176,6 +885,8 @@ export default function ChatWorkspace({
           onCreateProject={(name, emoji) => void createProject(name, emoji)}
           onRenameProject={(id, name, emoji) => void renameProject(id, name, emoji)}
           onDeleteProject={(id) => void deleteProject(id)}
+          onTemplateDownload={handleTemplateDownload}
+          onTemplateUpgrade={() => setUpgradeModalTrigger("template_download")}
         />
 
         {/* Mobile sidebar backdrop */}
@@ -1195,9 +906,7 @@ export default function ChatWorkspace({
         >
           <button
             onClick={() => setSidebarOpen((v) => !v)}
-            className={`absolute left-3 top-3 z-30 rounded-lg border border-[#E2E8F0] bg-white p-1.5 text-[#64748B] shadow-sm hover:bg-[#F1F5F9] transition-colors ${
-              sidebarOpen ? "md:hidden" : ""
-            }`}
+            className="absolute left-3 top-3 z-30 rounded-lg border border-[#E2E8F0] bg-white p-1.5 text-[#64748B] shadow-sm transition-colors hover:bg-[#F1F5F9]"
             title={sidebarOpen ? tw("collapseSidebar") : tw("expandSidebar")}
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -1230,26 +939,7 @@ export default function ChatWorkspace({
             messages={messages}
             loading={loading}
             loadingMessages={loadingMessages}
-            conversationId={conversationId}
-            reviewEligible={reviewEligible}
             canUploadImages={canUploadImages}
-            tier={tier}
-            isAdmin={isAdmin}
-            onSetPrompt={setPrompt}
-            onFocusInput={() => textareaRef.current?.focus()}
-            onQuickSuggestion={(suggestion) => {
-              if (workspaceMode === "virtual_audit") {
-                void sendPromptValue(`Start virtual audit focus: ${suggestion.text}`);
-                return;
-              }
-              if (suggestion.category === "document") {
-                startDocumentWizard(suggestion);
-              } else {
-                void sendPromptValue(suggestion.text);
-              }
-            }}
-            onRequestReview={() => { window.location.href = "/dashboard/reviews"; }}
-            onUpgradeForReview={!reviewEligible ? () => setUpgradeModalTrigger("review") : undefined}
             currentPersona={currentPersona}
           />
 
@@ -1281,7 +971,7 @@ export default function ChatWorkspace({
                   onClick={() => setShowReviewModal(true)}
                   className="rounded-full border border-[#059669] bg-[#ECFDF5] px-3 py-1 text-xs font-semibold text-[#047857] hover:bg-[#D1FAE5] transition-colors"
                 >
-                  Send for Review
+                  {tw("requestReview")}
                 </button>
               )}
               {isAdmin && (
@@ -1307,38 +997,13 @@ export default function ChatWorkspace({
                 </button>
               )}
               {conversationId && (
-                <div className="relative">
-                  <button
-                    onClick={(e) => { e.stopPropagation(); setShowExportMenu((prev) => !prev); }}
-                    disabled={exportLoading !== null}
-                    className="rounded-full border border-[#E2E8F0] bg-white px-3 py-1 text-xs text-[#64748B] hover:bg-[#F8F9FB] disabled:opacity-50"
-                  >
-                    {exportLoading ? tw("exporting") : tw("exportConversation")}
-                  </button>
-                  {showExportMenu && (
-                    <div className="absolute bottom-full left-0 mb-1 rounded-lg border border-[#E2E8F0] bg-white py-1 shadow-lg z-50 min-w-[140px]">
-                      <button
-                        onClick={() => void exportDocument("pdf")}
-                        className="block w-full px-4 py-2 text-left text-xs text-[#475569] hover:bg-[#F8F9FB]"
-                      >
-                        {tw("pdf")}
-                      </button>
-                      <button
-                        onClick={() => {
-                          if (tier === "free" || tier === "plus") {
-                            setShowExportMenu(false);
-                            setUpgradeModalTrigger("export");
-                          } else {
-                            void exportDocument("docx");
-                          }
-                        }}
-                        className="block w-full px-4 py-2 text-left text-xs text-[#475569] hover:bg-[#F8F9FB]"
-                      >
-                        {tw("docx")} {tier !== "pro" && !isAdmin ? <span className="text-[10px] text-[#E11D48]">(Pro)</span> : null}
-                      </button>
-                    </div>
-                  )}
-                </div>
+                <button
+                  onClick={() => void exportDocument()}
+                  disabled={exportLoading !== null}
+                  className="rounded-full border border-[#E2E8F0] bg-white px-3 py-1 text-xs text-[#64748B] hover:bg-[#F8F9FB] disabled:opacity-50"
+                >
+                  {exportLoading ? tw("exporting") : `${tw("exportConversation")} (DOCX)`}
+                </button>
               )}
             </div>
           </div>

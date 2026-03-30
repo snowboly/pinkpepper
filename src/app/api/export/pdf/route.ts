@@ -16,7 +16,6 @@ export const dynamic = "force-dynamic";
 
 const BRAND = rgb(0.882, 0.114, 0.282); // #E11D48
 const GRAY = rgb(0.392, 0.455, 0.545);
-const LIGHT = rgb(0.886, 0.906, 0.937);
 
 function wrapText(text: string, maxLineLength = 95) {
   const words = text.replace(/\r\n/g, "\n").split(/\s+/);

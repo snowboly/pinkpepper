@@ -114,7 +114,7 @@ export default function ChatInput({
           <div className="mb-2 flex items-start gap-2">
             <div className="relative">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={imagePreview} alt="Attached" className="h-16 w-16 rounded-lg object-cover border border-[#E2E8F0]" />
+              <img src={imagePreview} alt={t("attachedPhoto")} className="h-16 w-16 rounded-lg object-cover border border-[#E2E8F0]" />
               <button
                 type="button"
                 onClick={onClearImage}
@@ -145,7 +145,7 @@ export default function ChatInput({
           </div>
         )}
 
-        <form onSubmit={onSubmit} className="flex items-end gap-2">
+        <form onSubmit={onSubmit} className="flex flex-col gap-2 sm:flex-row sm:items-end">
           <input
             ref={fileInputRef}
             type="file"
@@ -154,6 +154,7 @@ export default function ChatInput({
             onChange={(e) => {
               const f = e.target.files?.[0];
               if (f) onImageSelect(f);
+              e.target.value = "";
             }}
           />
           <input
@@ -168,120 +169,120 @@ export default function ChatInput({
             }}
           />
 
-          <div ref={actionMenuRef} className="relative flex-shrink-0">
-            <button
-              type="button"
-              onClick={() => setActionMenuOpen((open) => !open)}
-              disabled={loading || isTranscribing}
-              className="flex h-[44px] w-[44px] items-center justify-center rounded-xl border border-[#E2E8F0] bg-white p-2.5 text-[#64748B] transition-colors hover:bg-[#F8F9FB] hover:text-[#0F172A] disabled:cursor-not-allowed disabled:opacity-60"
-              title={t("attachDocumentTitle")}
-              aria-expanded={actionMenuOpen}
-              aria-label="Open attachment tools"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.9}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 5v14M5 12h14" />
-              </svg>
-            </button>
+          {/* Document attach — kept in action menu */}
+          <div className="flex flex-wrap items-center gap-2 sm:flex-nowrap">
+            <div ref={actionMenuRef} className="relative flex-shrink-0">
+              <button
+                type="button"
+                onClick={() => setActionMenuOpen((open) => !open)}
+                disabled={loading || isTranscribing}
+                className="flex h-[44px] w-[44px] items-center justify-center rounded-xl border border-[#E2E8F0] bg-white p-2.5 text-[#64748B] transition-colors hover:bg-[#F8F9FB] hover:text-[#0F172A] disabled:cursor-not-allowed disabled:opacity-60"
+                title={t("attachDocumentTitle")}
+                aria-expanded={actionMenuOpen}
+                aria-label={t("attachDocumentTitle")}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.9}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 5v14M5 12h14" />
+                </svg>
+              </button>
 
-            {actionMenuOpen && (
-              <div className="absolute bottom-full left-0 z-20 mb-2 w-56 rounded-2xl border border-[#E2E8F0] bg-white p-2 shadow-xl">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setActionMenuOpen(false);
-                    docInputRef.current?.click();
-                  }}
-                  disabled={loading}
-                  className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-sm text-[#0F172A] transition-colors hover:bg-[#F8F9FB] disabled:cursor-not-allowed disabled:opacity-60"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 flex-shrink-0 text-[#64748B]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                  <span>{t("attachDocumentTitle")}</span>
-                </button>
-
-                {canUploadImages ? (
+              {actionMenuOpen && (
+                <div className="absolute bottom-full left-0 z-20 mb-2 w-56 max-w-[calc(100vw-2rem)] rounded-2xl border border-[#E2E8F0] bg-white p-2 shadow-xl">
                   <button
                     type="button"
                     onClick={() => {
                       setActionMenuOpen(false);
-                      fileInputRef.current?.click();
+                      docInputRef.current?.click();
                     }}
-                    className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-sm text-[#0F172A] transition-colors hover:bg-[#F8F9FB]"
+                    disabled={loading}
+                    className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-sm text-[#0F172A] transition-colors hover:bg-[#F8F9FB] disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 flex-shrink-0 text-[#64748B]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
-                    <span>{t("attachPhotoTitle")}</span>
+                    <span>{t("attachDocumentTitle")}</span>
                   </button>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setActionMenuOpen(false);
-                      onUpgradeForImages?.();
-                    }}
-                    className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-sm text-[#9CA3AF] transition-colors hover:bg-[#FEF2F2] hover:text-[#E11D48]"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                    <div className="min-w-0">
-                      <div>{t("upgradePhotoTitle")}</div>
-                      <div className="text-[11px]">{t("upgradePhotoTooltip")}</div>
-                    </div>
-                  </button>
-                )}
-              </div>
+                </div>
+              )}
+            </div>
+
+            {canUploadImages ? (
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={loading || isTranscribing}
+                className="flex h-[44px] w-[44px] flex-shrink-0 items-center justify-center rounded-xl border border-[#E2E8F0] bg-white p-2.5 text-[#64748B] transition-colors hover:bg-[#F8F9FB] hover:text-[#0F172A] disabled:cursor-not-allowed disabled:opacity-60"
+                title={t("attachPhotoTitle")}
+                aria-label={t("attachPhotoTitle")}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => onUpgradeForImages?.()}
+                disabled={loading || isTranscribing}
+                className="flex h-[44px] w-[44px] flex-shrink-0 items-center justify-center rounded-xl border border-[#E2E8F0] bg-white p-2.5 text-[#9CA3AF] transition-colors hover:bg-[#FEF2F2] hover:text-[#E11D48] disabled:cursor-not-allowed disabled:opacity-60"
+                title={t("upgradePhotoTitle")}
+                aria-label={t("upgradePhotoTitle")}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </button>
             )}
+
+            <button
+              type="button"
+              onClick={isRecording ? onStopRecording : onStartRecording}
+              onKeyDown={(e) => {
+                if (e.key === "Escape" && isRecording) {
+                  e.preventDefault();
+                  onCancelRecording();
+                }
+              }}
+              disabled={loading || isTranscribing}
+              aria-label={
+                isTranscribing
+                  ? t("transcribing")
+                  : isRecording
+                  ? t("stopRecording")
+                  : t("startRecording")
+              }
+              title={
+                isTranscribing
+                  ? t("transcribing")
+                  : isRecording
+                  ? t("stopRecording")
+                  : t("startRecording")
+              }
+              className={`flex h-[44px] w-[44px] flex-shrink-0 items-center justify-center rounded-xl border p-2.5 transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${
+                isTranscribing
+                  ? "border-[#FDBA74] bg-[#FFF7ED] text-[#C2410C]"
+                  : isRecording
+                  ? "border-[#E11D48] bg-[#FEF2F2] text-[#BE123C]"
+                  : "border-[#E2E8F0] bg-white text-[#64748B] hover:bg-[#F8F9FB] hover:text-[#0F172A]"
+              }`}
+            >
+              {isTranscribing ? (
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4.75 12a7.25 7.25 0 017.25-7.25M19.25 12A7.25 7.25 0 0112 19.25" />
+                </svg>
+              ) : (
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4a3 3 0 00-3 3v5a3 3 0 106 0V7a3 3 0 00-3-3z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 11a7 7 0 11-14 0" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 18v3" />
+                </svg>
+              )}
+            </button>
           </div>
 
-          <button
-            type="button"
-            onClick={isRecording ? onStopRecording : onStartRecording}
-            onKeyDown={(e) => {
-              if (e.key === "Escape" && isRecording) {
-                e.preventDefault();
-                onCancelRecording();
-              }
-            }}
-            disabled={loading || isTranscribing}
-            aria-label={
-              isTranscribing
-                ? t("transcribing")
-                : isRecording
-                ? t("stopRecording")
-                : t("startRecording")
-            }
-            title={
-              isTranscribing
-                ? t("transcribing")
-                : isRecording
-                ? t("stopRecording")
-                : t("startRecording")
-            }
-            className={`flex-shrink-0 rounded-xl border p-2.5 transition-colors h-[44px] w-[44px] flex items-center justify-center disabled:cursor-not-allowed disabled:opacity-60 ${
-              isTranscribing
-                ? "border-[#FDBA74] bg-[#FFF7ED] text-[#C2410C]"
-                : isRecording
-                ? "border-[#E11D48] bg-[#FEF2F2] text-[#BE123C]"
-                : "border-[#E2E8F0] bg-white text-[#64748B] hover:bg-[#F8F9FB] hover:text-[#0F172A]"
-            }`}
-          >
-            {isTranscribing ? (
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4.75 12a7.25 7.25 0 017.25-7.25M19.25 12A7.25 7.25 0 0112 19.25" />
-              </svg>
-            ) : (
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4a3 3 0 00-3 3v5a3 3 0 106 0V7a3 3 0 00-3-3z" />
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19 11a7 7 0 11-14 0" />
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 18v3" />
-              </svg>
-            )}
-          </button>
-
-          <div className="relative flex-1">
+          <div className="relative w-full flex-1">
             <textarea
               ref={textareaRef}
               value={prompt}

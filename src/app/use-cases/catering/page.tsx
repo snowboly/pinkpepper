@@ -44,6 +44,10 @@ export default function CateringUseCasePage() {
             "For caterers handling business clients or venues, stronger documentation also supports customer due diligence and internal audit readiness.",
         },
       ]}
+      heroImage={{
+        src: "https://images.unsplash.com/photo-1555244162-803834f70033?w=1200&q=80",
+        alt: "Catering buffet setup at a professional event",
+      }}
       relatedLinks={[
         {
           href: "/features/haccp-plan-generator",

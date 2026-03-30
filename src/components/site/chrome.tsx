@@ -2,12 +2,21 @@ import Image from "next/image";
 import Link from "next/link";
 import { createClient } from "@/utils/supabase/server";
 
-const nav = [
-  { href: "/features", label: "Features" },
-  { href: "/use-cases", label: "Use Cases" },
-  { href: "/resources", label: "Resources" },
+type NavItem =
+  | { href: string; label: string }
+  | { label: string; children: { href: string; label: string }[] };
+
+const nav: NavItem[] = [
+  { href: "/features", label: "Services" },
+  {
+    label: "Resources",
+    children: [
+      { href: "/resources", label: "Free Templates" },
+      { href: "/articles", label: "Articles" },
+      { href: "/faqs", label: "FAQs" },
+    ],
+  },
   { href: "/pricing", label: "Pricing" },
-  { href: "/security", label: "Security" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
 ];
@@ -51,16 +60,43 @@ export async function SiteHeader() {
             />
           </Link>
           <nav className="hidden items-center gap-7 text-sm font-semibold tracking-[0.01em] text-[#64748B] lg:flex">
-            {nav.map((item, i) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="nav-link pp-shell-link"
-                style={{ animationDelay: `${i * 80}ms` }}
-              >
-                {item.label}
-              </Link>
-            ))}
+            {nav.map((item, i) =>
+              "href" in item ? (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="nav-link pp-shell-link"
+                  style={{ animationDelay: `${i * 80}ms` }}
+                >
+                  {item.label}
+                </Link>
+              ) : (
+                <div key={item.label} className="group/dropdown relative" style={{ animationDelay: `${i * 80}ms` }}>
+                  <button
+                    type="button"
+                    className="nav-link pp-shell-link flex items-center gap-1"
+                  >
+                    {item.label}
+                    <svg className="h-3.5 w-3.5 transition-transform duration-200 group-hover/dropdown:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                      <path fillRule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" />
+                    </svg>
+                  </button>
+                  <div className="pointer-events-none absolute left-1/2 top-full z-50 -translate-x-1/2 pt-3 opacity-0 transition-all duration-200 group-hover/dropdown:pointer-events-auto group-hover/dropdown:opacity-100 group-focus-within/dropdown:pointer-events-auto group-focus-within/dropdown:opacity-100">
+                    <div className="pp-glass-card w-48 rounded-2xl p-1.5">
+                      {item.children.map((child) => (
+                        <Link
+                          key={child.href}
+                          href={child.href}
+                          className="block rounded-xl px-3 py-2.5 text-sm font-medium text-[#0F172A] hover:bg-[#F8FAFC]"
+                        >
+                          {child.label}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ),
+            )}
           </nav>
         </div>
         <div className="flex items-center gap-3 md:gap-4">
@@ -75,17 +111,39 @@ export async function SiteHeader() {
                 <span className="block h-0.5 w-4 rounded-full bg-current" />
               </span>
             </summary>
-            <div className="pp-glass-card absolute right-0 top-[calc(100%+10px)] z-50 w-72 rounded-3xl p-3">
+            <div className="pp-glass-card absolute right-0 top-[calc(100%+10px)] z-50 w-[min(18rem,calc(100vw-1.5rem))] rounded-3xl p-3">
               <nav className="flex flex-col">
-                {nav.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className="rounded-2xl px-3 py-3 text-sm font-medium text-[#0F172A] hover:bg-[#F8FAFC]"
-                  >
-                    {item.label}
-                  </Link>
-                ))}
+                {nav.map((item) =>
+                  "href" in item ? (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className="rounded-2xl px-3 py-3 text-sm font-medium text-[#0F172A] hover:bg-[#F8FAFC]"
+                    >
+                      {item.label}
+                    </Link>
+                  ) : (
+                    <details key={item.label} className="group/mobile-res">
+                      <summary className="flex cursor-pointer list-none items-center justify-between rounded-2xl px-3 py-3 text-sm font-medium text-[#0F172A] hover:bg-[#F8FAFC]">
+                        {item.label}
+                        <svg className="h-3.5 w-3.5 text-[#94A3B8] transition-transform duration-200 group-open/mobile-res:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                          <path fillRule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" />
+                        </svg>
+                      </summary>
+                      <div className="ml-3 border-l border-[#E2E8F0] pl-3">
+                        {item.children.map((child) => (
+                          <Link
+                            key={child.href}
+                            href={child.href}
+                            className="block rounded-xl px-3 py-2.5 text-sm font-medium text-[#475569] hover:bg-[#F8FAFC] hover:text-[#0F172A]"
+                          >
+                            {child.label}
+                          </Link>
+                        ))}
+                      </div>
+                    </details>
+                  ),
+                )}
                 {!user && (
                   <>
                     <Link
@@ -162,7 +220,7 @@ export async function SiteHeader() {
 export function SiteFooter() {
   return (
     <footer className="site-footer border-t border-[#F1F5F9] bg-[linear-gradient(180deg,#fff_0%,#fff7f8_100%)] py-16">
-      <div className="pp-container mb-12 grid gap-12 sm:grid-cols-2 md:grid-cols-[2fr_1fr_1fr_1.5fr]">
+      <div className="pp-container mb-12 grid gap-12 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1.5fr]">
         <div>
           <Link href="/" className="inline-flex items-center leading-none">
             <Image
@@ -191,22 +249,23 @@ export function SiteFooter() {
           </div>
         </div>
         <div>
-          <h4 className="mb-4 text-sm font-semibold text-[#1A1A1A]">Platform</h4>
+          <h4 className="mb-4 text-sm font-semibold text-[#1A1A1A]">Product</h4>
           <ul className="space-y-3 text-sm text-[#6B6B6B]">
-            <li><Link href="/features" className="pp-shell-link">Features</Link></li>
+            <li><Link href="/features" className="pp-shell-link">Services</Link></li>
             <li><Link href="/use-cases" className="pp-shell-link">Use Cases</Link></li>
-            <li><Link href="/resources" className="pp-shell-link">Resources</Link></li>
-            <li><Link href="/about" className="pp-shell-link">About</Link></li>
             <li><Link href="/pricing" className="pp-shell-link">Pricing</Link></li>
+            <li><Link href="/about" className="pp-shell-link">About</Link></li>
             <li><Link href="/login" className="pp-shell-link">Log In</Link></li>
             <li><Link href="/signup" className="pp-shell-link">Create Account</Link></li>
           </ul>
         </div>
         <div>
-          <h4 className="mb-4 text-sm font-semibold text-[#1A1A1A]">Support</h4>
+          <h4 className="mb-4 text-sm font-semibold text-[#1A1A1A]">Resources</h4>
           <ul className="space-y-3 text-sm text-[#6B6B6B]">
+            <li><Link href="/resources" className="pp-shell-link">Free Templates</Link></li>
+            <li><Link href="/articles" className="pp-shell-link">Articles</Link></li>
+            <li><Link href="/faqs" className="pp-shell-link">FAQs</Link></li>
             <li><Link href="/contact" className="pp-shell-link">Contact & Support</Link></li>
-            <li><Link href="/compare" className="pp-shell-link">Comparisons</Link></li>
           </ul>
         </div>
         <div>

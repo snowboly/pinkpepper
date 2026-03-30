@@ -1,7 +1,7 @@
 {
   "chat": {
     "title": "Food Safety Compliance Assistant",
-    "description": "Ask about EU & UK food safety law, generate HACCP plans, SOPs, and monitoring logs, or audit your current procedures.",
+    "description": "Ask about EU & UK food safety law, download practical templates, or audit your current procedures.",
     "descriptionWithImages": "You can also attach a photo of your kitchen or a food label for instant compliance analysis.",
     "descriptionUpgradeImages": "Upgrade to Plus or Pro to attach photos of kitchens or labels for instant analysis.",
     "loadingConversation": "Loading conversation...",
@@ -15,17 +15,17 @@
     "imageAnalysisNote": "{name} - food safety analysis will be performed on this photo.",
     "attachPhotoTitle": "Attach a photo for food safety analysis",
     "attachDocumentTitle": "Attach a document (PDF, DOCX, TXT)",
-    "upgradePhotoTitle": "Upgrade to Plus or Pro to analyse photos",
-    "upgradePhotoTooltip": "Upgrade for photo analysis",
+    "upgradePhotoTitle": "Upgrade to Plus or Pro to analyze photos",
+    "upgradePhotoTooltip": "Upgrade to analyze photos",
     "photoNote": "Add a note about this photo (optional)...",
     "placeholder": "Ask a food safety question... (Shift+Enter for new line)",
     "stopGenerating": "Stop generating",
     "reviewBannerTitle": "Want a human expert to check this document?",
     "reviewBannerBody": "Our food safety specialists review your AI-generated documents for accuracy, compliance gaps, and audit readiness.",
     "reviewUpsellTitle": "Get this document verified by a human expert",
-    "reviewUpsellBody": "Pro plan includes 3 hours of food safety consultancy/month — document review, generation support, and async Q&A.",
+    "reviewUpsellBody": "Pro plan includes 2h of food safety consultancy/month — guidance and specialist support.",
     "reviewUpsellCta": "Upgrade to Pro",
-    "humanReviewHighlight": "Pro plan includes 3 hours of food safety consultancy each month with a qualified specialist.",
+    "humanReviewHighlight": "Pro plan includes 2h of food safety consultancy each month with a qualified specialist.",
     "suggestions": {
       "haccpPlan": {
         "label": "HACCP plan",
@@ -76,12 +76,17 @@
         "text": "Create a cleaning schedule and plan"
       }
     },
-    "createDocument": "Create Document",
+    "downloadTemplates": "Download templates",
     "docCategories": {
       "corePlans": "Core Plans",
       "procedures": "SOPs & Procedures",
       "logsRecords": "Logs & Records",
-      "policies": "Policies"
+      "policies": "Policies",
+      "quickDocuments": "Quick documents",
+      "advancedDocuments": "Advanced documents",
+      "structuredBuilder": "Structured builder",
+      "downloadTemplates": "Download templates",
+      "downloadTemplatesHint": "DOCX · Plus & Pro"
     },
     "startRecording": "Start recording",
     "stopRecording": "Stop",
@@ -119,6 +124,7 @@
     "myReviews": "My Reviews",
     "expertReviews": "Ask an expert",
     "accountSettings": "Account settings",
+    "viewPlans": "View plans",
     "today": "Today",
     "yesterday": "Yesterday",
     "previous7Days": "Previous 7 Days",
@@ -133,10 +139,6 @@
       "comparePlans": "See plan differences",
       "locked": "Locked",
       "proOnly": "Pro only",
-      "generateDocument": {
-        "label": "Generate document",
-        "body": "Create HACCP plans, SOPs, temperature logs, and supplier approval packs faster."
-      },
       "virtualAudit": {
         "label": "Run virtual audit",
         "body": "Simulate an inspection, capture findings, and produce a CAPA-ready report."
@@ -295,15 +297,11 @@
     "triggers": {
       "message_limit": {
         "heading": "You've reached your daily message limit",
-        "body": "Upgrade to continue chatting. Plus gives you 7× more messages per day — Pro gives you 65×."
+        "body": "Upgrade to continue chatting with more usage on Plus or Pro."
       },
       "image_limit": {
         "heading": "Unlock photo analysis",
-        "body": "Upload photos of kitchens, labels, or food products and get instant food safety feedback."
-      },
-      "document_generation": {
-        "heading": "Unlock document generation",
-        "body": "Create audit-ready HACCP plans, SOPs, logs, and supplier approval documents with Pro."
+        "body": "Analyze photos of kitchens, labels, and food products with Plus or Pro."
       },
       "transcription_limit": {
         "heading": "Unlock voice transcription",
@@ -315,7 +313,7 @@
       },
       "review": {
         "heading": "Get food safety consultancy",
-        "body": "Get document review, generation support, and async Q&A from a qualified food safety specialist."
+        "body": "Get guidance and specialist support from a qualified food safety professional on Pro."
       },
       "audit_mode": {
         "heading": "Unlock Virtual Audit",
@@ -327,10 +325,10 @@
         "name": "Plus",
         "price": "€19/mo",
         "highlights": [
-          "Analyse uploads and get faster answers",
-          "PDF export for chat conversations",
-          "Unlimited saved conversations",
-          "Higher daily chat, image, and voice limits"
+          "Everything in Free, plus:",
+          "More usage",
+          "Unlimited saved conversations and projects",
+          "Access to downloadable templates"
         ],
         "cta": "Upgrade to Plus"
       },
@@ -338,11 +336,11 @@
         "name": "Pro",
         "price": "€99/mo",
         "highlights": [
-          "All document generation",
-          "Virtual Audit workflows",
-          "PDF + DOCX export",
-          "3h food safety consultancy/month",
-          "Highest daily limits for audit prep and operational use"
+          "Everything in Plus, plus:",
+          "Highest usage limits",
+          "Priority support",
+          "Access to virtual audit mode",
+          "2h/month of food safety consultancy"
         ],
         "cta": "Upgrade to Pro"
       }
@@ -361,13 +359,13 @@
     "scopeNote": "Consultancy is scoped to the content of the selected conversation. Off-topic or out-of-scope requests may be declined.",
     "turnaround": "Response time:",
     "turnaroundTimes": "Responses within 5 working days",
-    "fullReviewCostNote": "Consultancy is tracked in 15-minute increments against your 3 monthly hours.",
+    "fullReviewCostNote": "Consultancy is tracked in 15-minute increments against your 2 monthly hours.",
     "documentType": "Document type",
     "quickCheck": "Quick Check",
     "quickCheckCredits": "— 1 credit",
     "fullDocumentReview": "Full Document Review",
-    "fullDocumentReviewCredits": "— uses all 3 credits",
-    "fullReviewWarning": "This will use all 6 of your monthly review slots. You won't be able to submit additional reviews this month.",
+    "fullDocumentReviewCredits": "— uses all 2 credits",
+    "fullReviewWarning": "This will use all 4 of your monthly review slots. You won't be able to submit additional reviews this month.",
     "notesLabel": "Notes for reviewer (optional)",
     "notesPlaceholder": "Tell the reviewer what you want checked.",
     "submitting": "Submitting...",
@@ -425,7 +423,15 @@
     "saving": "Saving...",
     "save": "Save",
     "usage": "Usage",
-    "dailyMessages": "Messages today"
+    "dailyMessages": "Messages today",
+    "dangerZone": "Danger Zone",
+    "deleteAccount": "Delete account",
+    "deleteAccountDescription": "Permanently delete your account and all associated data. This action cannot be undone.",
+    "deleteAccountConfirmTitle": "Delete your account?",
+    "deleteAccountConfirmBody": "This will permanently delete your account and all your data, including conversations, documents, and settings. This action cannot be undone.",
+    "deleteAccountConfirm": "Yes, delete my account",
+    "cancel": "Cancel",
+    "deleting": "Deleting..."
   }
 }
 
