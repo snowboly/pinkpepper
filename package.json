@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint",
+    "lint": "eslint src scripts next.config.ts middleware.ts vitest.config.ts eslint.config.mjs",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "articles:migrate:ilovehaccp": "node scripts/migrate-ilovehaccp-articles.mjs",
