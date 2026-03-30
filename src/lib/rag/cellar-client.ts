@@ -317,6 +317,21 @@ const CORE_REGULATION_SEEDS: CoreRegulationSeed[] = [
     legacyAliases: ["EU 2024 989 pesticide control programme"],
   },
 
+  // === Contaminants — 2025 Amendments ===
+  {
+    baseCelex: "32025R1891",
+    title: "Commission Regulation (EU) 2025/1891 amending Regulation (EU) 2023/915 as regards maximum levels of heavy metals (inorganic arsenic, methylmercury, cadmium) in fish, fishery products, and seafood",
+    dateDocument: "2025-09-01",
+    eliPath: "https://eur-lex.europa.eu/eli/reg/2025/1891/oj",
+    legacyAliases: [
+      "EU 2025 1891 contaminants seafood",
+      "EU 1891 arsenic fish",
+      "arsenic limits fish 2025",
+      "mercury limits fish 2025",
+      "inorganic arsenic shellfish",
+    ],
+  },
+
   // === Extraction Solvents ===
   {
     baseCelex: "32009L0032",
