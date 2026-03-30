@@ -126,6 +126,9 @@ export default function ChatSidebar({
   // Project expand/collapse
   const [expandedProjects, setExpandedProjects] = useState<Set<string>>(new Set());
 
+  // Templates dropdown
+  const [templatesOpen, setTemplatesOpen] = useState(false);
+
   // New project inline form
   const [creatingProject, setCreatingProject] = useState(false);
   const [newProjectName, setNewProjectName] = useState("");
@@ -311,6 +314,77 @@ export default function ChatSidebar({
         sidebarOpen ? "translate-x-0" : "-translate-x-full"
       } md:static md:z-auto md:max-w-none md:translate-x-0 md:shadow-none`}
     >
+      {/* Templates dropdown - above new chat */}
+      <div className="flex-shrink-0 border-b border-[#E2E8F0]">
+        <button
+          onClick={() => setTemplatesOpen((o) => !o)}
+          className="flex w-full items-center justify-between px-3 py-2.5 text-xs font-semibold uppercase tracking-wider text-[#475569] hover:bg-[#F8F9FB] transition-colors"
+        >
+          <span className="flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 text-[#64748B]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+            {tc("downloadTemplates")}
+          </span>
+          <span className="flex items-center gap-1.5">
+            <span className="text-[10px] font-medium text-[#64748B] normal-case tracking-normal">
+              {tc("docCategories.downloadTemplatesHint")}
+            </span>
+            <svg xmlns="http://www.w3.org/2000/svg" className={`h-3.5 w-3.5 text-[#94A3B8] transition-transform ${templatesOpen ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </span>
+        </button>
+
+        {templatesOpen && (
+          <div className="px-3 pb-2 max-h-64 overflow-y-auto">
+            <div className="space-y-2">
+              {templateGroups.map((group) => (
+                <div key={group.category}>
+                  <p className="px-2 pb-1 text-[10px] font-bold uppercase tracking-wider text-[#64748B]">
+                    {group.category}
+                  </p>
+                  <div className="space-y-0.5">
+                    {group.templates.map((template) => {
+                      const locked = tier === "free";
+                      return (
+                        <button
+                          key={template.slug}
+                          type="button"
+                          onClick={() => {
+                            if (locked) {
+                              onTemplateUpgrade();
+                              return;
+                            }
+                            onTemplateDownload(template.slug);
+                          }}
+                          className={`flex w-full items-center justify-between gap-2 rounded-xl px-3 py-2 text-left text-sm transition-colors ${
+                            locked ? "hover:bg-[#F8FAFC]" : "hover:bg-[#F1F5F9]"
+                          }`}
+                        >
+                          <span className={`min-w-0 flex-1 truncate font-medium ${locked ? "text-[#64748B]" : "text-[#1E293B]"}`}>
+                            {template.title}
+                          </span>
+                          {locked ? (
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 flex-shrink-0 text-[#94A3B8]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                            </svg>
+                          ) : (
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 flex-shrink-0 text-[#64748B]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                            </svg>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
       {/* New chat button */}
       <div className="flex-shrink-0 px-3 pt-4 pb-3 border-b border-[#E2E8F0]">
         <button
@@ -517,63 +591,6 @@ export default function ChatSidebar({
               </div>
             );
           })}
-        </div>
-
-        <div className="mx-3 border-t border-[#F1F5F9] my-1" />
-
-        <div className="px-3 py-2">
-          <div className="mb-2 flex items-center justify-between">
-            <span className="text-xs font-semibold uppercase tracking-wider text-[#6B7280]">
-              {tc("downloadTemplates")}
-            </span>
-            <span className="text-[10px] font-medium text-[#94A3B8]">
-              {tc("docCategories.downloadTemplatesHint")}
-            </span>
-          </div>
-
-          <div className="space-y-2">
-            {templateGroups.map((group) => (
-              <div key={group.category}>
-                <p className="px-2 pb-1 text-[10px] font-bold uppercase tracking-wider text-[#CBD5E1]">
-                  {group.category}
-                </p>
-                <div className="space-y-0.5">
-                  {group.templates.map((template) => {
-                    const locked = tier === "free";
-                    return (
-                      <button
-                        key={template.slug}
-                        type="button"
-                        onClick={() => {
-                          if (locked) {
-                            onTemplateUpgrade();
-                            return;
-                          }
-                          onTemplateDownload(template.slug);
-                        }}
-                        className={`flex w-full items-center justify-between gap-2 rounded-xl px-3 py-2 text-left text-sm transition-colors ${
-                          locked ? "hover:bg-[#F8FAFC]" : "hover:bg-[#F1F5F9]"
-                        }`}
-                      >
-                        <span className={`min-w-0 flex-1 truncate font-medium ${locked ? "text-[#94A3B8]" : "text-[#334155]"}`}>
-                          {template.title}
-                        </span>
-                        {locked ? (
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 flex-shrink-0 text-[#CBD5E1]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                          </svg>
-                        ) : (
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 flex-shrink-0 text-[#94A3B8]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                          </svg>
-                        )}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
 
         {/* ── All chats (unassigned) ── */}
