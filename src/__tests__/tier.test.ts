@@ -203,6 +203,23 @@ describe("normalizeTier", () => {
 });
 
 describe("parseStripeSubscription", () => {
+  it("downgrades past_due subscriptions until billing is current again", () => {
+    process.env.STRIPE_PRO_PRICE_ID = "price_pro";
+
+    expect(
+      parseStripeSubscription({
+        status: "past_due",
+        priceId: "price_pro",
+        currentPeriodEndUnix: 1_710_000_000,
+      })
+    ).toMatchObject({
+      planTier: "pro",
+      tier: "free",
+      stripePriceId: "price_pro",
+      status: "past_due",
+    });
+  });
+
   it("preserves the billed plan tier when access downgrades after cancellation", () => {
     process.env.STRIPE_PRO_PRICE_ID = "price_pro";
 

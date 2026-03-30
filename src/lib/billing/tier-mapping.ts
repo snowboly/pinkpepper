@@ -16,7 +16,7 @@ export function resolveTierFromPrice(priceId: string | null | undefined): Subscr
 }
 
 export function mapStripeStatusToTier(status: string, inferredTier: SubscriptionTier): SubscriptionTier {
-  const activeStates = new Set(["active", "trialing", "past_due"]);
+  const activeStates = new Set(["active", "trialing"]);
   return activeStates.has(status) ? inferredTier : "free";
 }
 
