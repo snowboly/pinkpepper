@@ -24,7 +24,7 @@ const planChanges = [
   },
   {
     plan: "Pro",
-    detail: "Everything in Plus, plus the highest usage limits, priority support, virtual audit mode, and 2h/month of food safety consultancy.",
+    detail: "Everything in Plus, plus the highest usage limits, virtual audit mode, 2h/month of food safety consultancy, and priority support.",
   },
 ];
 
@@ -107,7 +107,7 @@ export default async function PricingPage() {
           unitCode: "MON",
         },
         description:
-          "Everything in Plus, plus the highest usage limits, priority support, virtual audit mode, and 2 hours of food safety consultancy per month.",
+          "Everything in Plus, plus the highest usage limits, virtual audit mode, 2h/month of food safety consultancy, and priority support, and 2 hours of food safety consultancy per month.",
       },
     ],
   };
@@ -269,24 +269,6 @@ export default async function PricingPage() {
                 <p className="text-sm text-[#64748B]">{item.detail}</p>
               </div>
             ))}
-          </div>
-
-          <div className="mt-8 rounded-2xl border border-[#E2E8F0] bg-white p-6">
-            <h3 className="text-sm font-semibold text-[#0F172A]">Entitlement detail</h3>
-            <div className="mt-4 grid gap-4 text-sm text-[#64748B] md:grid-cols-3">
-              <div>
-                <p className="font-medium text-[#334155]">Free</p>
-                <p className="mt-1">Chat on web and mobile, write and edit food safety content, analyze text and images, access the curated knowledge base.</p>
-              </div>
-              <div>
-                <p className="font-medium text-[#334155]">Plus</p>
-                <p className="mt-1">Everything in Free, plus more usage, unlimited saved conversations and projects, and downloadable templates.</p>
-              </div>
-              <div>
-                <p className="font-medium text-[#334155]">Pro</p>
-                <p className="mt-1">Everything in Plus, plus the highest usage limits, priority support, virtual audit mode, and 2h/month of food safety consultancy.</p>
-              </div>
-            </div>
           </div>
         </div>
       </section>
