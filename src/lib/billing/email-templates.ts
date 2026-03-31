@@ -13,11 +13,10 @@ const TIER_FEATURES: Record<string, string[]> = {
     "Access to downloadable templates",
   ],
   pro: [
-    "100 messages per day",
-    "15 image analyses per day",
-    "Priority support",
+    "Everything in Plus, plus the highest usage limits",
     "Access to virtual audit mode",
     "2 hours of food safety consultancy per month",
+    "Priority support",
   ],
 };
 

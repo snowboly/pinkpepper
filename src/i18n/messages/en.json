@@ -332,11 +332,11 @@
         "name": "Pro",
         "price": "€99/mo",
         "highlights": [
-          "100 messages per day",
-          "15 image analyses per day",
-          "Priority support",
+          "Everything in Plus, plus:",
+          "Highest usage limits",
           "Access to virtual audit mode",
-          "2h/month of food safety consultancy"
+          "2h/month of food safety consultancy",
+          "Priority support"
         ],
         "cta": "Upgrade to Pro"
       }

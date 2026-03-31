@@ -16,15 +16,15 @@ export const metadata: Metadata = {
 const planChanges = [
   {
     plan: "Free",
-    detail: "5 messages per day, 1 image analysis per day, and access to the core food safety chat and knowledge base.",
+    detail: "Chat on web and mobile, write and edit food safety content, analyze text and images, and access the curated knowledge base.",
   },
   {
     plan: "Plus",
-    detail: "25 messages per day, 5 image analyses per day, unlimited saved conversations and projects, and downloadable templates.",
+    detail: "Everything in Free, plus more usage, unlimited saved conversations and projects, and access to downloadable templates.",
   },
   {
     plan: "Pro",
-    detail: "100 messages per day, 15 image analyses per day, virtual audit mode, priority support, and 2h/month of food safety consultancy.",
+    detail: "Everything in Plus, plus the highest usage limits, virtual audit mode, 2h/month of food safety consultancy, and priority support.",
   },
 ];
 
@@ -81,7 +81,7 @@ export default async function PricingPage() {
         price: "0",
         priceCurrency: "EUR",
         description:
-          "5 messages per day, 1 image analysis per day, and access to the core food safety chat and knowledge base.",
+          "Chat on web and mobile, write and edit food safety content, analyze text and images, and access the curated knowledge base.",
       },
       {
         "@type": "Offer",
@@ -95,7 +95,7 @@ export default async function PricingPage() {
           unitCode: "MON",
         },
         description:
-          "25 messages per day, 5 image analyses per day, unlimited saved conversations and projects, and access to downloadable templates.",
+          "Everything in Free, plus more usage, unlimited saved conversations and projects, and access to downloadable templates.",
       },
       {
         "@type": "Offer",
@@ -109,7 +109,7 @@ export default async function PricingPage() {
           unitCode: "MON",
         },
         description:
-          "100 messages per day, 15 image analyses per day, virtual audit mode, priority support, and 2 hours of food safety consultancy per month.",
+          "Everything in Plus, plus the highest usage limits, virtual audit mode, 2h/month of food safety consultancy, and priority support.",
       },
     ],
   };
@@ -162,7 +162,7 @@ export default async function PricingPage() {
               <ul className="flex-1 space-y-3.5 text-sm text-[#475569]">
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />
-                  5 messages per day on web
+                  Chat on web and mobile (app coming soon)
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />
@@ -170,11 +170,11 @@ export default async function PricingPage() {
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />
-                  1 image analysis per day
+                  Analyze text and images
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />
-                  Access curated knowledge base
+                  Access to curated knowledge base
                 </li>
               </ul>
               <Link href="/signup" className={ctaNeutral}>
@@ -199,11 +199,11 @@ export default async function PricingPage() {
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  25 messages per day
+                  More usage
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  5 image analyses per day
+                  Unlimited saved conversations and projects
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
@@ -239,10 +239,6 @@ export default async function PricingPage() {
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  15 image analyses per day
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
                   Access to virtual audit mode
                 </li>
                 <li className="flex items-start gap-2.5">
@@ -275,24 +271,6 @@ export default async function PricingPage() {
                 <p className="text-sm text-[#64748B]">{item.detail}</p>
               </div>
             ))}
-          </div>
-
-          <div className="mt-8 rounded-2xl border border-[#E2E8F0] bg-white p-6">
-            <h3 className="text-sm font-semibold text-[#0F172A]">Entitlement detail</h3>
-            <div className="mt-4 grid gap-4 text-sm text-[#64748B] md:grid-cols-3">
-              <div>
-                <p className="font-medium text-[#334155]">Free</p>
-                <p className="mt-1">Chat on web and mobile, write and edit food safety content, analyze text and images, access the curated knowledge base.</p>
-              </div>
-              <div>
-                <p className="font-medium text-[#334155]">Plus</p>
-                <p className="mt-1">Everything in Free, plus more usage, unlimited saved conversations and projects, and downloadable templates.</p>
-              </div>
-              <div>
-                <p className="font-medium text-[#334155]">Pro</p>
-                <p className="mt-1">Everything in Plus, plus the highest usage limits, priority support, virtual audit mode, and 2h/month of food safety consultancy.</p>
-              </div>
-            </div>
           </div>
         </div>
       </section>
