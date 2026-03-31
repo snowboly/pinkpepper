@@ -15,24 +15,49 @@ export default function ProductRecallProcedureTemplatePage() {
     <ResourceTemplate
       category="HACCP resource"
       title="What a product recall procedure template must include"
-      intro="A recall or withdrawal procedure is required under EU Regulation 178/2002 and UK retained food law. Its purpose is not just to have a document — it is to enable your team to act quickly, trace affected product, notify the right people, and demonstrate the action was effective."
+      intro="A recall or withdrawal procedure is required under EU Regulation 178/2002 and UK retained food law. The point isn't to have a document — it's to be able to act quickly, trace affected product, notify the right people, and show the action was effective."
       summaryPoints={[
-        "The procedure must identify the person responsible for initiating and managing a recall or withdrawal.",
-        "Traceability links are what make the procedure work — without them, scope assessment is guesswork.",
-        "A mock recall or test exercise at least annually demonstrates the procedure is functional, not just filed.",
+        "One named person responsible for initiating and managing the recall — not 'the team'.",
+        "Traceability records are what make the procedure work. Without them, scope assessment is guesswork.",
+        "A mock recall at least annually shows the procedure is functional, not just filed.",
+      ]}
+      documentHighlights={[
+        {
+          label: "Trigger criteria",
+          description:
+            "What events activate the procedure — failed product test, allergen mislabelling, supplier notification, customer complaint with a safety element. Also the distinction between a withdrawal (supply chain only) and a full recall (including consumer-facing communication).",
+        },
+        {
+          label: "Roles and contact list",
+          description:
+            "Recall coordinator, their deputy, and the contact details for the relevant authority — FSA in the UK, national body in EU member states. Agreed in advance, not worked out under pressure.",
+        },
+        {
+          label: "Traceability scope worksheet",
+          description:
+            "Where to work out which lots or batches are affected, how far they've distributed, and what needs to be recovered. This is the practical core of the procedure — and it only works if traceability records exist.",
+        },
+        {
+          label: "Effectiveness check section",
+          description:
+            "What was recovered vs what was distributed, as a percentage. Whether communication reached all relevant parties. Post-recall review findings. This is what closes the procedure properly.",
+        },
       ]}
       sections={[
         {
-          title: "Scope and trigger criteria",
-          body: "The procedure should define what events trigger it: a failed product test, a customer complaint identifying a safety issue, an allergen mislabelling event, or a supplier notification. It should also clarify the difference between a withdrawal (from the supply chain before it reaches consumers) and a full recall (including consumer-facing communication and regulatory notification).",
+          title: "The trigger criteria need to be clear in advance",
+          body:
+            "When something goes wrong is not the time to decide whether it constitutes a recall. The procedure should define the events that trigger it — and the difference between a withdrawal (out of the supply chain before consumers) and a full recall that includes regulatory notification and possibly public communication.",
         },
         {
-          title: "Roles, contacts, and communication",
-          body: "At minimum, the procedure needs to name the recall coordinator, their deputy, and the contact details for the relevant competent authority — the FSA in the UK, or the relevant national body in EU member states. It should also identify who communicates to retailers, distributors, and if needed, the public. Media or social communication lines should be agreed in advance rather than improvised under pressure.",
+          title: "Roles and contacts can't be improvised",
+          body:
+            "Who coordinates the recall, who stands in if that person is unavailable, who calls the FSA, who talks to retailers, who handles any media — these decisions need to be made and documented beforehand. Media and social communication lines agreed in advance are far better than responses drafted under pressure.",
         },
         {
-          title: "Traceability, scope assessment, and effectiveness check",
-          body: "The practical core of a recall procedure is how quickly your team can identify the affected lot or batch, determine how far it has distributed, and quantify what has been recovered. This depends on traceability records. The procedure should include a post-recall review: how much product was recovered, what percentage that represents, and whether the communication reached all relevant parties.",
+          title: "The practical core is traceability",
+          body:
+            "How quickly can your team identify which lot or batch is affected, where it went, and how much has been recovered? That depends entirely on traceability records. A recall procedure that assumes those records exist but doesn't reference or test them is not actually ready to use.",
         },
       ]}
       ctaTitle="Draft a recall procedure matched to your operation"

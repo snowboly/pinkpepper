@@ -8,12 +8,19 @@ type ResourceSection = {
   body: string;
 };
 
+type DocumentHighlight = {
+  label: string;
+  description: string;
+};
+
 type ResourceTemplateProps = {
   category: string;
   title: string;
   intro: string;
   summaryPoints: string[];
   sections: ResourceSection[];
+  /** Optional structured highlights shown in "What's inside" section near the blurred preview */
+  documentHighlights?: DocumentHighlight[];
   ctaTitle: string;
   ctaBody: string;
   relatedLinks: Array<{ href: string; label: string }>;
@@ -29,6 +36,7 @@ export function ResourceTemplate({
   intro,
   summaryPoints,
   sections,
+  documentHighlights,
   relatedLinks,
   templateSlug,
   templateSlugs,
@@ -48,19 +56,33 @@ export function ResourceTemplate({
         </div>
       </section>
 
-      {/* Thumbnail preview + download card(s) */}
+      {/* Blurred thumbnail preview + CTA card */}
       {hasSlugs && (
         <section className="bg-[#F8FAFC] py-14">
           <div className="pp-container max-w-4xl">
             <div className="grid gap-8 md:grid-cols-[1fr_320px] items-start">
-              {/* Document thumbnail — always uses the first slug */}
+              {/* Blurred document preview */}
               <div className="relative overflow-hidden rounded-2xl border border-[#E2E8F0] bg-white shadow-sm">
-                <Suspense fallback={<div className="aspect-[600/780] bg-[#F1F5F9] animate-pulse" />}>
-                  <TemplateThumbnail slug={slugs[0]} alt={`${title} preview`} />
-                </Suspense>
+                {/* Blurred thumbnail */}
+                <div className="select-none pointer-events-none" style={{ filter: "blur(5px)", transform: "scale(1.02)" }}>
+                  <Suspense fallback={<div className="aspect-[600/780] bg-[#F1F5F9] animate-pulse" />}>
+                    <TemplateThumbnail slug={slugs[0]} alt={`${title} preview`} />
+                  </Suspense>
+                </div>
+
+                {/* Overlay */}
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-white/20">
+                  <div className="flex flex-col items-center gap-2 rounded-2xl border border-[#E2E8F0] bg-white/90 px-6 py-4 shadow-sm backdrop-blur-sm text-center">
+                    <LockIcon />
+                    <p className="text-sm font-semibold text-[#0F172A]">Document preview</p>
+                    <p className="text-xs leading-relaxed text-[#64748B] max-w-[180px]">
+                      Full document available in your workspace
+                    </p>
+                  </div>
+                </div>
               </div>
 
-              {/* Download card — single card covering all slugs */}
+              {/* CTA card — single card covering all slugs */}
               <div className="md:sticky md:top-24">
                 <Suspense fallback={<DownloadCardSkeleton />}>
                   <TemplateDownloadCard slugs={slugs} title={title} />
@@ -71,31 +93,51 @@ export function ResourceTemplate({
         </section>
       )}
 
-      {/* Summary points */}
-      <section className={templateSlug ? "bg-white py-14" : "bg-[#F8FAFC] py-16"}>
-        <div className="pp-container grid gap-6 md:grid-cols-3">
-          {summaryPoints.map((point) => (
-            <div key={point} className="rounded-2xl border border-[#E2E8F0] bg-white p-6">
-              <p className="text-base font-semibold leading-relaxed text-[#0F172A]">{point}</p>
+      {/* Document explanation — what's inside, key aspects, what to look for */}
+      <section className="bg-white py-14">
+        <div className="pp-container max-w-4xl">
+          {/* Summary points */}
+          {summaryPoints.length > 0 && (
+            <div className="grid gap-4 md:grid-cols-3">
+              {summaryPoints.map((point) => (
+                <div key={point} className="rounded-2xl border border-[#E2E8F0] bg-[#F8FAFC] p-6">
+                  <p className="text-base font-semibold leading-relaxed text-[#0F172A]">{point}</p>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-      </section>
+          )}
 
-      {/* Content sections */}
-      <section className={templateSlug ? "bg-[#F8FAFC] py-14" : "bg-white py-16"}>
-        <div className="pp-container max-w-4xl space-y-10">
-          {sections.map((section) => (
-            <article key={section.title}>
-              <h2 className="text-2xl font-semibold text-[#0F172A]">{section.title}</h2>
-              <p className="mt-4 text-base leading-relaxed text-[#475569]">{section.body}</p>
-            </article>
-          ))}
+          {/* Structured document highlights */}
+          {documentHighlights && documentHighlights.length > 0 && (
+            <div className="mt-10">
+              <h2 className="text-xl font-semibold text-[#0F172A]">What&apos;s inside this template</h2>
+              <div className="mt-6 grid gap-4 md:grid-cols-2">
+                {documentHighlights.map((highlight) => (
+                  <div key={highlight.label} className="rounded-2xl border border-[#E2E8F0] bg-[#F8FAFC] p-5">
+                    <p className="text-sm font-semibold text-[#0F172A]">{highlight.label}</p>
+                    <p className="mt-1.5 text-sm leading-relaxed text-[#475569]">{highlight.description}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Editorial sections */}
+          {sections.length > 0 && (
+            <div className={`space-y-10 ${summaryPoints.length > 0 || (documentHighlights && documentHighlights.length > 0) ? "mt-14" : ""}`}>
+              {sections.map((section) => (
+                <article key={section.title}>
+                  <h2 className="text-2xl font-semibold text-[#0F172A]">{section.title}</h2>
+                  <p className="mt-4 text-base leading-relaxed text-[#475569]">{section.body}</p>
+                </article>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
       {/* CTA */}
-      <section className="bg-white py-16">
+      <section className="bg-[#F8FAFC] py-16">
         <div className="pp-container text-center">
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">Ready to start?</p>
           <h2 className="pp-display mx-auto mt-3 max-w-xl text-3xl text-[#0F172A] md:text-4xl">
@@ -133,6 +175,25 @@ export function ResourceTemplate({
         </div>
       </section>
     </main>
+  );
+}
+
+function LockIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="#94A3B8"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+      <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+    </svg>
   );
 }
 

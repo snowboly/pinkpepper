@@ -15,24 +15,49 @@ export default function PestControlLogTemplatePage() {
     <ResourceTemplate
       category="Monitoring resource"
       title="What a pest control log template should record"
-      intro="Pest control records serve two purposes: they demonstrate that an active pest management programme is in place, and they provide an evidence trail if an infestation is discovered during an inspection. A log that only records contractor visits without findings or follow-up actions is rarely sufficient."
+      intro="Pest control records serve two purposes: they show an active programme is in place, and they provide an evidence trail if something is found during an inspection. A log that only records contractor visits without findings or follow-up is rarely enough."
       summaryPoints={[
-        "The log should record both routine contractor visits and any internal sightings reported by staff.",
-        "Findings at each bait station or monitoring point should be graded, not just noted as checked.",
-        "Follow-up actions and their completion dates turn a findings record into a closed-loop system.",
+        "Contractor visits and internal staff sightings — both need to be in the same log.",
+        "Findings at each monitoring point should be graded, not just marked as checked.",
+        "Follow-up actions with completion dates turn a findings record into a closed loop.",
+      ]}
+      documentHighlights={[
+        {
+          label: "Contractor visit entries",
+          description:
+            "Date, engineer name, stations checked, findings graded by level of activity, corrective actions recommended, and the target date for those actions. Not just 'visit completed'.",
+        },
+        {
+          label: "Internal sighting rows",
+          description:
+            "Space for staff to log sightings between contractor visits — who reported it, which area, what was seen, and what immediate action was taken. A lot of what actually happens on site never makes it into contractor-only logs.",
+        },
+        {
+          label: "Bait station reference",
+          description:
+            "Each entry references the station number or location code, so findings can be mapped back to the site layout. Useful when a pattern emerges in one area.",
+        },
+        {
+          label: "Follow-up actions column",
+          description:
+            "What was recommended and whether it's been completed. Recommendations that sit open for months are a problem in audit — this column is what closes them.",
+        },
       ]}
       sections={[
         {
-          title: "Routine contractor visit records",
-          body: "Each contractor visit should generate a written report. Your pest control log should reference this report (by date and reference number) and record the key outcomes: stations checked, evidence of activity found, pest species if relevant, corrective actions recommended, and the target date for those actions. Keeping contractor reports attached to or filed alongside the log makes audit retrieval straightforward.",
+          title: "A log that only tracks contractor visits misses half the picture",
+          body:
+            "Staff see things between visits. A sighting near a delivery area, evidence in a store room, something spotted during cleaning. If those reports don't make it into a record, your log only reflects what happened during scheduled visits — which is a fraction of the overall picture.",
         },
         {
-          title: "Internal sightings and staff reports",
-          body: "Staff sightings should be recorded even when no contractor visit follows immediately. The log entry should include who reported it, the area and type of evidence, and what immediate action was taken. A pest sighting log that only reflects contractor activity misses a significant portion of what actually happens on site.",
+          title: "Graded findings matter more than presence/absence",
+          body:
+            "A monitoring point marked 'checked' tells you nothing. A graded finding — low, medium, high activity, or species identified — tells you whether a situation is stable or developing. That's the difference between a record and useful information.",
         },
         {
-          title: "Trending and periodic review",
-          body: "Pest control records are most useful when reviewed over time rather than checked individually. Recurring activity at a particular station or in a particular area may indicate a structural issue or a gap in proofing. Your procedure should include a review frequency — typically quarterly — at which point patterns can be identified and the contract or control measures adjusted.",
+          title: "Review the records over time, not one by one",
+          body:
+            "Recurring activity at a specific station or in one area usually means a structural issue or a proofing gap. Reviewing trends quarterly — rather than looking at individual entries — is where that kind of pattern shows up. That's when you adjust the contract or fix the building.",
         },
       ]}
       ctaTitle="Build a pest control record system for your site"
