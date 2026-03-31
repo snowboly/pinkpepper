@@ -15,27 +15,49 @@ export default function TemperatureMonitoringLogTemplatePage() {
     <ResourceTemplate
       category="Monitoring resource"
       title="What a temperature monitoring log template should record"
-      intro="Temperature logs are useful only when they create a traceable record of what was checked, when it was checked, what the result was, and what happened when things were out of range."
+      intro="Temperature logs are only useful when they create a traceable record of what was checked, when, by whom, what the result was, and what happened when something was out of range."
       summaryPoints={[
-        "A good log needs the reading, timing, location or asset, and responsible person.",
+        "Reading, time, location or equipment, and who did the check — all four, every time.",
         "Corrective action fields matter as much as the normal readings.",
-        "Logs should support trend review, not just one-off sign-offs.",
+        "Logs reviewed over time tell you things a single entry never can.",
+      ]}
+      documentHighlights={[
+        {
+          label: "Equipment or location column",
+          description:
+            "Which fridge, freezer, hot-hold unit, or probe reading this entry refers to. Without this, all you have is a number — not a record anyone can act on.",
+        },
+        {
+          label: "Time and reading fields",
+          description:
+            "Not just one entry per day. The time matters — a reading taken at 7am and another at 7pm tell a different story than a single daily average. The actual temperature recorded, not an estimated range.",
+        },
+        {
+          label: "Corrective action row",
+          description:
+            "What was done when the reading was out of range. What happened to the food, what was adjusted, and who made the decision. This row is often skipped, and it's usually the one inspectors look at first.",
+        },
+        {
+          label: "Sign-off column",
+          description:
+            "Who performed the check. Not optional. Without this the record can't be traced back to an individual if it needs to be verified or queried.",
+        },
       ]}
       sections={[
         {
-          title: "Capture enough context to be useful",
+          title: "Context is what makes a reading useful",
           body:
-            "Fridge, freezer, cooling, and hot-hold logs should identify the location or equipment, record the reading, capture the date and time, and show who performed the check. Without that context, the record is much weaker in review.",
+            "A temperature of 6°C means nothing without knowing which piece of equipment it came from, when it was taken, and who took it. Logs that miss any of those fields are much weaker in review — not because the reading is wrong, but because the record can't be traced.",
         },
         {
-          title: "Do not treat exceptions as an afterthought",
+          title: "The corrective action row is the most important one",
           body:
-            "The most valuable part of a monitoring log is often the corrective action entry. What was done when the reading fell outside limits, and was the issue closed properly? A template should make this easy to record.",
+            "Normal readings are expected. What tells you whether the system is working is how the team responds when something falls outside limits. Was action taken? Was the food safe? Was the issue resolved? A log with no corrective action entries over a long period is actually a red flag, not a clean record.",
         },
         {
-          title: "Logs should support management review",
+          title: "Review logs for trends, not just compliance",
           body:
-            "A temperature log is more than a compliance artifact. It can also show recurring equipment issues, weak shift handovers, or process drift when reviewed regularly.",
+            "A fridge that reads 7°C occasionally isn't the same problem as one that reads 7°C every Monday morning. Equipment issues, shift handover gaps, and process drift tend to show up as patterns — and patterns only appear when you look at the records together, not one entry at a time.",
         },
       ]}
       ctaTitle="Draft better monitoring logs and corrective action records"

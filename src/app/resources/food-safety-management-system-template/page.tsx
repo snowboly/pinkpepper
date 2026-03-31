@@ -15,24 +15,49 @@ export default function FoodSafetyManagementSystemTemplatePage() {
     <ResourceTemplate
       category="Audit resource"
       title="How to structure a food safety management system document"
-      intro="A food safety management system (FSMS) is the overarching framework that ties your HACCP plan, prerequisite programmes, SOPs, monitoring records, and audit procedures together. An inspector reviewing your site should be able to pick up the FSMS document and understand how all the pieces connect."
+      intro="A food safety management system (FSMS) is the document that ties everything else together — HACCP plan, SOPs, allergen policy, monitoring records, audit procedures. An inspector should be able to pick it up and understand how the whole system connects."
       summaryPoints={[
-        "The FSMS document should describe the scope of the system — which sites, products, and processes it covers.",
-        "It should index all component documents: HACCP plan, SOPs, allergen policy, traceability procedure, and records.",
-        "Management commitment and review frequency should be explicit, not assumed.",
+        "Scope statement first — which sites, products, and processes are covered.",
+        "A controlled index of all component documents, not just a list of what exists.",
+        "Management commitment and review frequency named explicitly, not assumed.",
+      ]}
+      documentHighlights={[
+        {
+          label: "Scope statement",
+          description:
+            "Which premises, which product categories, which processes are in — and which are out. This is what tells an inspector (and your own team) exactly what the system covers.",
+        },
+        {
+          label: "Document register",
+          description:
+            "A controlled index listing every component — HACCP plan, each SOP, allergen policy, traceability procedure, audit checklist — with version number, last review date, and the person responsible for it.",
+        },
+        {
+          label: "Management commitment section",
+          description:
+            "Who is responsible for food safety at the site, what their role is, and how often the system gets reviewed. This answers one of the most common inspection questions before it's even asked.",
+        },
+        {
+          label: "Review log",
+          description:
+            "Dates and brief outcomes of each system review. Even a few lines per review is enough — it's what turns a static document into evidence that the system is actively managed.",
+        },
       ]}
       sections={[
         {
-          title: "Scope, context, and management commitment",
-          body: "The FSMS document should open with a clear scope statement: which premises it covers, which product categories or processes are included, and which are excluded and why. A brief statement of management commitment — naming the person responsible for food safety and the review frequency — sets the tone for the system and satisfies a common inspection question before it is asked.",
+          title: "The scope statement matters more than people think",
+          body:
+            "A lot of FSMS documents skip this or write it vaguely. But scope is what defines the whole system. Which premises does it cover? Which products? If part of the operation is excluded, why? Getting this right at the start prevents a lot of confusion when the document is reviewed by someone unfamiliar with the site.",
         },
         {
-          title: "Structure of component documents",
-          body: "The body of the FSMS is essentially a controlled index. For each component — the HACCP plan, each SOP, the allergen policy, the traceability procedure, the audit checklist — the document should record the document title, its version number, the date of last review, and who is responsible for it. This makes it clear that the system is actively maintained rather than assembled once and forgotten.",
+          title: "The body of the document is essentially an index",
+          body:
+            "For each component — HACCP plan, each SOP, allergen policy, traceability procedure — the FSMS records the document title, version number, last review date, and who owns it. That's what shows the system is maintained, not just assembled once and put in a folder.",
         },
         {
-          title: "Review, verification, and continuous improvement",
-          body: "An FSMS that is not reviewed degrades over time as the operation changes. The document should state how often the whole system is reviewed — annually is typical — and what triggers an out-of-cycle review: a new product, a process change, a customer complaint, a failed audit, or a change in legislation. Documenting the outcome of each review, even briefly, provides the audit trail that demonstrates the system is genuinely managed.",
+          title: "An FSMS that isn't reviewed degrades",
+          body:
+            "Operations change. New products, new processes, new legislation. The document should state how often the whole system is reviewed — annually is typical — and what triggers an unscheduled review. Documenting the outcome of each review, even briefly, provides the audit trail that shows someone is actually in charge of this.",
         },
       ]}
       ctaTitle="Build a complete FSMS document structure"

@@ -15,27 +15,49 @@ export default function SupplierApprovalQuestionnairePage() {
     <ResourceTemplate
       category="Supplier resource"
       title="What to ask in a supplier approval questionnaire"
-      intro="A supplier approval questionnaire should help you understand risk, not just collect contact details. The strongest versions ask for the evidence and operating details that affect food safety, traceability, specifications, and review frequency."
+      intro="A supplier approval questionnaire should help you understand risk, not just collect contact details. The useful ones ask for the evidence and operating specifics that actually affect food safety — not generic company information."
       summaryPoints={[
-        "Supplier questionnaires should gather both facts and supporting evidence.",
+        "Facts and supporting evidence — both, not just one.",
         "Approval should reflect product risk, not just whether a form was returned.",
-        "Re-approval and non-conformance follow-up should be part of the same workflow.",
+        "Re-approval and non-conformance follow-up are part of the same process.",
+      ]}
+      documentHighlights={[
+        {
+          label: "Food safety certification section",
+          description:
+            "What approvals they hold, what standards they're certified to, and when those certifications expire. A certificate referenced but not current is worse than no certificate — it suggests nobody's checking.",
+        },
+        {
+          label: "Product specification fields",
+          description:
+            "What they supply, how it's packed and labelled, allergen status, shelf life, and storage requirements. The information you need to assess risk and keep your own documentation current.",
+        },
+        {
+          label: "Traceability and recall capability",
+          description:
+            "Can they identify and recall a specific lot? How quickly? This section asks the question most questionnaires skip — and it's the one that matters when something goes wrong.",
+        },
+        {
+          label: "Re-approval date",
+          description:
+            "When this approval needs to be revisited. High-risk suppliers more frequently, lower-risk ones less so. The date is what turns a one-time approval into an ongoing process.",
+        },
       ]}
       sections={[
         {
-          title: "Start with risk and scope",
+          title: "Risk and scope first, admin second",
           body:
-            "Questions should establish what the supplier provides, how critical those materials are, and what the compliance risk looks like. A low-risk dry-goods supplier and a chilled high-risk ingredient supplier should not be reviewed in exactly the same way.",
+            "Questions should establish what the supplier provides and how critical those materials are before anything else. A low-risk dry-goods supplier and a chilled high-risk ingredient supplier don't need the same level of scrutiny. The questionnaire should reflect that difference.",
         },
         {
-          title: "Request useful evidence",
+          title: "Ask for the evidence, not just the answer",
           body:
-            "Specifications, certifications, traceability capability, allergen controls, complaints handling, and recall readiness often matter more than generic company details. A strong questionnaire pulls those details together early.",
+            "Specifications, certifications, allergen controls, traceability capability, complaints handling, recall readiness — these tell you far more than company contact details. A strong questionnaire pulls this information together at the approval stage rather than chasing it later.",
         },
         {
           title: "Approval is not a one-time event",
           body:
-            "A supplier approval form is only part of the process. Teams also need re-approval schedules, non-conformance review, and a way to document what happens when supplier performance changes.",
+            "The questionnaire is only part of the process. Re-approval schedules, non-conformance review, and a way to track what happens when supplier performance changes — all of that needs to be built into the workflow, not treated as separate tasks.",
         },
       ]}
       ctaTitle="Create supplier approval documents more efficiently"

@@ -15,24 +15,49 @@ export default function EmployeeFoodSafetyTrainingRecordPage() {
     <ResourceTemplate
       category="Training resource"
       title="What employee food safety training records need to capture"
-      intro="EU Regulation 852/2004 and UK food hygiene regulations require that food handlers are supervised, instructed, and trained in food hygiene matters commensurate with their work activity. Training records are how you demonstrate compliance. A poorly structured record may leave a business unable to show that training actually happened."
+      intro="EU Regulation 852/2004 and UK food hygiene regulations require that food handlers are trained commensurate with their work activity. Training records are how you demonstrate that. An attendance log isn't enough — the record needs to show what was covered and whether it was understood."
       summaryPoints={[
-        "Training records should link each employee to specific training topics, not just induction dates.",
-        "Refresher training and the trigger for it — a procedure change, an incident, or a set interval — should be recorded.",
-        "Competence assessment, not just attendance, is what demonstrates that training was effective.",
+        "Each employee linked to specific topics, not just an induction date.",
+        "Refresher events recorded with a reason — not just a date.",
+        "Assessment outcome, not just attendance, is what shows training was effective.",
+      ]}
+      documentHighlights={[
+        {
+          label: "Employee name and role",
+          description:
+            "Name, job role, and start date. The role matters because training requirements differ — a chef has different exposure to hazards than someone at the front of house.",
+        },
+        {
+          label: "Training topic columns",
+          description:
+            "Specific topics — personal hygiene, allergens, temperature controls, cross-contamination — not just 'food hygiene induction'. An inspector will want to see what was actually covered.",
+        },
+        {
+          label: "Delivery method and trainer name",
+          description:
+            "In-person, online, on-the-job — the method matters. So does who delivered it. These columns show the training was real, not just a box ticked.",
+        },
+        {
+          label: "Assessment outcome",
+          description:
+            "Pass, retest required, practical sign-off — whatever the assessment looked like. Attendance alone doesn't demonstrate competence.",
+        },
       ]}
       sections={[
         {
-          title: "What to record for each employee",
-          body: "A training record should capture the employee name and role, the date of training, the topic or procedure covered, the method of delivery (in-person, online course, on-the-job), and the name of the trainer or course provider. If the training involved an assessment — a test, a practical demonstration, or a supervisor sign-off — the outcome should be recorded. An attendance record alone does not show that the employee understood what they were taught.",
+          title: "What you record for each employee",
+          body:
+            "Name, role, date, topic, delivery method, trainer, assessment outcome. That's the full picture. An attendance record alone — 'completed induction 3 March' — doesn't show the employee understood what they were taught. That distinction matters when an inspector asks.",
         },
         {
-          title: "Induction versus ongoing training",
-          body: "New starters should complete a food safety induction before or immediately after beginning work with food. This typically covers personal hygiene, cross-contamination prevention, allergen handling, temperature controls, and waste management. Ongoing training records should capture refresher events, procedure-specific training when processes change, and any formal qualifications obtained (Level 2 Food Hygiene certificate, for example). Inspectors will look at whether training is current, not just whether it was completed at some point.",
+          title: "Induction and ongoing training are different records",
+          body:
+            "New starters need a food safety induction before or right after starting. That's the baseline. But inspectors also look at whether training is current — not just whether it happened once. Refreshers, procedure-specific updates when something changes, allergen training — all of that needs its own entry.",
         },
         {
-          title: "Allergen training as a separate record",
-          body: "For businesses subject to allergen information requirements, allergen-specific training should be recorded separately or clearly flagged within the general training record. This includes understanding the 14 regulated allergens, how to communicate allergen information to customers, and what to do when a customer discloses an allergy or intolerance. Given the legal and safety implications of allergen errors, having a clear record of who has received allergen training and when is particularly important.",
+          title: "Allergen training deserves its own row",
+          body:
+            "Given the legal and safety implications, allergen training should be clearly flagged or recorded separately. Who received it, when, and what it covered. If something goes wrong and allergen training records are missing or vague, that's a significant problem.",
         },
       ]}
       ctaTitle="Create a training record system for your team"

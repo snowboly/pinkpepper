@@ -15,24 +15,49 @@ export default function CorrectiveActionLogTemplatePage() {
     <ResourceTemplate
       category="HACCP resource"
       title="What a corrective action log template should capture"
-      intro="A corrective action log documents what went wrong, why it happened, and what was done to bring the process back under control. It is a legal requirement under HACCP and one of the first records an inspector will ask to see."
+      intro="A corrective action log documents what went wrong, why it happened, and what was done to bring the process back under control. It's a legal requirement under HACCP and one of the first records an inspector will ask to see."
       summaryPoints={[
-        "A corrective action log must link the deviation to the specific CCP or prerequisite programme affected.",
-        "Root cause entries should be specific enough to show that the cause — not just the symptom — was addressed.",
-        "Verification and sign-off columns turn a log into audit evidence rather than an informal note.",
+        "Specific enough that someone unfamiliar with the incident can read the entry and understand what happened.",
+        "Root cause and immediate action are different things — the log records both separately.",
+        "Verification sign-off turns an entry into closed audit evidence, not just an open note.",
+      ]}
+      documentHighlights={[
+        {
+          label: "Deviation description",
+          description:
+            "Date, time, which CCP or monitoring point was out of limits, the actual reading, and who found it. 'Temperature problem' isn't a useful entry. It needs to be specific.",
+        },
+        {
+          label: "Immediate action field",
+          description:
+            "What was done with the affected product right away — held, destroyed, reworked, returned. Separate from the root cause column because they're two different decisions.",
+        },
+        {
+          label: "Root cause entry",
+          description:
+            "Why did the limit get breached? A faulty door seal, a missed monitoring task, a process change nobody communicated. The answer here is what prevents it happening again.",
+        },
+        {
+          label: "Verification sign-off",
+          description:
+            "Who confirmed the action was effective and that the process is back under control. Without this column, the log shows problems were found but not that they were actually resolved.",
+        },
       ]}
       sections={[
         {
-          title: "What triggered the deviation",
-          body: "The log should record the date and time, which CCP or monitoring point was out of limits, the actual value recorded, and who identified the issue. Vague entries like 'temperature problem' are not useful. The record should be specific enough that someone unfamiliar with the incident can understand what happened from the log alone.",
+          title: "The record needs to stand on its own",
+          body:
+            "When an inspector picks up this log, they shouldn't need to ask anyone what happened. The date, the CCP, the actual reading, who found it — all of that needs to be in the entry. Vague notes like 'fridge warm, sorted' don't hold up.",
         },
         {
-          title: "Root cause and immediate action",
-          body: "The most useful corrective action logs separate immediate action (what was done with the affected product) from root cause investigation (why the limit was breached). Disposing of or recooking product addresses the immediate risk. Identifying that a fridge door seal was faulty or that a monitoring task was missed addresses the underlying cause.",
+          title: "Immediate action and root cause are not the same thing",
+          body:
+            "Disposing of or recooking product deals with the immediate risk. Identifying that a fridge door seal was worn, or that Monday mornings have a pattern of missed checks, deals with the cause. A good log has space for both, and teams fill in both.",
         },
         {
-          title: "Verification and sign-off",
-          body: "A corrective action is not complete until someone verifies that the action taken was effective and that normal process control has been restored. The log should record who carried out the verification, what they checked, and the result. Without this column, the log shows problems were found but not that they were resolved.",
+          title: "The verification column is the one most often skipped",
+          body:
+            "A corrective action isn't complete until someone confirms it worked — that normal process control is restored and the issue won't recur. That sign-off is what closes the entry. Logs without it tend to accumulate open-ended entries that look unresolved in audit.",
         },
       ]}
       ctaTitle="Generate a corrective action log for your site"
