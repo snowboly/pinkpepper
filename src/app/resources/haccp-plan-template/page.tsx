@@ -17,25 +17,47 @@ export default function HaccpPlanTemplatePage() {
       title="What a useful HACCP plan template should actually contain"
       intro="A HACCP plan template is only useful if it helps your team move from process flow to hazards, controls, monitoring, corrective actions, and records. Good templates create structure. Bad templates create busywork."
       summaryPoints={[
-        "A useful HACCP template should reflect process flow, not generic sections alone.",
-        "Control measures and monitoring logic need to be practical enough for site teams to follow.",
-        "The value is in producing a reviewable draft faster, not in pretending the template is final by itself.",
+        "Built around process flow, not a blank form to fill in.",
+        "Monitoring steps your team can actually use on shift.",
+        "A faster route to a solid first draft — not a shortcut past the review.",
+      ]}
+      documentHighlights={[
+        {
+          label: "Process steps follow your operation",
+          description:
+            "The rows go through receiving, storage, prep, cooking, cooling, dispatch — in order. Not a generic list. You fill in what actually happens at your site.",
+        },
+        {
+          label: "B / P / C split per step",
+          description:
+            "Each hazard type gets its own row. Lumping them together is how things get missed, and auditors notice.",
+        },
+        {
+          label: "Risk score columns",
+          description:
+            "Probability, severity, residual risk — three columns so you can show the reasoning, not just the outcome. That's what makes the CCP decisions defensible.",
+        },
+        {
+          label: "Control measures kept separate from the CCP column",
+          description:
+            "A lot of templates muddle these two things together. This one doesn't. The designation — CCP, PPR, OPRP — sits in its own column so the logic is clear when someone reviews it later.",
+        },
       ]}
       sections={[
         {
           title: "Start with the process, not the form",
           body:
-            "Most weak HACCP templates begin with a pre-filled table and ask the operator to force the business into it. A better approach starts with your actual operation: receiving, storage, prep, cooking, cooling, hot hold, service, packaging, or dispatch. The template should reflect those stages clearly.",
+            "Most templates hand you a blank table and expect you to figure out the rest. The good ones are built around how food actually moves through a site — from goods in, through every prep and cook step, to the point it leaves. If your template isn't structured around that flow, you're fighting it from day one.",
         },
         {
-          title: "Control logic has to be usable",
+          title: "If the control logic doesn't work on shift, it doesn't work",
           body:
-            "Hazards, controls, monitoring frequencies, corrective actions, and verification steps should be written in a way that managers and site teams can actually follow. If the wording sounds impressive but no one can use it on shift, the template has failed.",
+            "A monitoring step that says 'check temperatures regularly' is not a monitoring step. Your team needs to know what to check, when, how often, and what to do when something's wrong. That clarity is the difference between a HACCP plan that gets used and one that sits in a folder until the next audit.",
         },
         {
-          title: "Templates are for acceleration, not sign-off",
+          title: "A template is a starting point, not a finished document",
           body:
-            "A strong template helps you draft a better first version. It does not remove the need for review, adaptation, and accountability. That is why PinkPepper positions AI output as a faster path to a stronger draft rather than a substitute for judgment.",
+            "No generic template reflects your operation. It gets you to a better first draft faster — but someone with knowledge of the site still needs to review it, challenge the assumptions, and sign off. That part doesn't get skipped.",
         },
       ]}
       ctaTitle="Turn a HACCP template into a real first draft"
