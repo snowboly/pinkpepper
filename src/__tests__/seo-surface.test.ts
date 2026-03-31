@@ -21,8 +21,16 @@ describe("SEO surface", () => {
     expect(layout).toContain('images: ["/og-image"]');
   });
 
-  it("includes public marketing pages and excludes auth/dashboard routes from sitemap and robots", () => {
-    const entries = sitemap().map((entry) => entry.url);
+  it("allows article imagery from the configured external sources", () => {
+    const nextConfig = readPage("next.config.ts");
+
+    expect(nextConfig).toContain('hostname: "images.unsplash.com"');
+    expect(nextConfig).toContain('hostname: "images.pexels.com"');
+    expect(nextConfig).toContain("img-src 'self' blob: data: https://*.supabase.co https://images.unsplash.com https://images.pexels.com");
+  });
+
+  it("includes public marketing pages and excludes auth/dashboard routes from sitemap and robots", async () => {
+    const entries = (await sitemap()).map((entry) => entry.url);
     const robotRules = robots().rules;
     const robotRuleList = Array.isArray(robotRules) ? robotRules : [robotRules];
     const disallowLists = robotRuleList.flatMap((rule) => {
@@ -48,6 +56,9 @@ describe("public SEO copy and linking", () => {
     expect(homepage).toContain("AI food safety compliance software");
     expect(homepage).toContain("/features/haccp-plan-generator");
     expect(homepage).toContain("/pricing");
+    expect(homepage).not.toContain("â€”");
+    expect(homepage).not.toContain("â†’");
+    expect(homepage).not.toContain("â‚¬");
   });
 
   it("routes core public pages into deeper commercial paths", () => {
@@ -68,6 +79,53 @@ describe("public SEO copy and linking", () => {
     expect(resources).toContain("/features/");
   });
 
+  it("renders article cards with image support and a fallback shell", () => {
+    const articles = readPage("src/app/articles/page.tsx");
+
+    expect(articles).toContain('from "next/image"');
+    expect(articles).toContain("article.image ? (");
+    expect(articles).toContain("Article image coming soon");
+  });
+
+  it("strengthens the public article index card hierarchy", () => {
+    const articles = readPage("src/app/articles/page.tsx");
+
+    expect(articles).toContain('group/article-card');
+    expect(articles).toContain("font-bold");
+    expect(articles).toContain("text-[11px] font-black uppercase tracking-[0.22em]");
+    expect(articles).toContain("inline-flex items-center gap-2");
+  });
+
+  it("tightens the public article detail hero hierarchy", () => {
+    const articleDetail = readPage("src/app/articles/[slug]/page.tsx");
+
+    expect(articleDetail).toContain("pp-article-hero-meta");
+    expect(articleDetail).toContain("text-4xl font-bold leading-[1.05]");
+    expect(articleDetail).toContain("text-lg leading-8");
+  });
+
+  it("expands scoped article-body typography without touching dashboard markdown", () => {
+    const articleDetail = readPage("src/app/articles/[slug]/page.tsx");
+    const globals = readPage("src/app/globals.css");
+
+    expect(articleDetail).toContain("pp-article-body");
+    expect(globals).toContain(".pp-article-body h2");
+    expect(globals).toContain(".pp-article-body strong");
+    expect(globals).toContain("font-weight: 700");
+    expect(globals).toContain(".pp-article-body ul {");
+    expect(globals).toContain("list-style-type: disc;");
+    expect(globals).toContain(".pp-article-body ol {");
+    expect(globals).toContain("list-style-type: decimal;");
+    expect(globals).toContain(".pp-article-body a {");
+    expect(globals).toContain("text-decoration-line: underline;");
+    expect(globals).toContain(".pp-article-body table {");
+    expect(globals).toContain("border-collapse: collapse;");
+    expect(globals).toContain(".pp-article-body blockquote");
+    expect(globals).toContain(".pp-article-body figure");
+    expect(globals).toContain(".pp-article-body img");
+    expect(globals).toContain(".pp-markdown strong");
+  });
+
   it("keeps hub-page copy user-facing instead of talking about SEO strategy", () => {
     const features = readPage("src/app/features/page.tsx");
     const useCases = readPage("src/app/use-cases/page.tsx");
@@ -78,8 +136,8 @@ describe("public SEO copy and linking", () => {
     expect(resources).not.toContain("long-tail questions and template searches");
   });
 
-  it("keeps current public marketing pages fresh in the sitemap", () => {
-    const entries = sitemap();
+  it("keeps current public marketing pages fresh in the sitemap", async () => {
+    const entries = await sitemap();
     const currentPages = [
       "https://pinkpepper.io",
       "https://pinkpepper.io/about",
@@ -108,10 +166,14 @@ describe("premium quality regressions", () => {
   it("uses compliance software wording consistently in shared brand surfaces", () => {
     const headerFooter = readPage("src/components/site/chrome.tsx");
     const pricing = readPage("src/app/pricing/page.tsx");
+    const features = readPage("src/app/features/page.tsx");
 
     expect(headerFooter).toContain("AI food safety compliance software");
     expect(headerFooter).not.toContain("AI Food Safety and Compliance Assistant");
     expect(pricing).not.toContain("AI food safety assistant");
+    expect(headerFooter).toContain("Services");
+    expect(headerFooter).not.toContain(">Features<");
+    expect(features).not.toContain("â€¢");
   });
 
   it("provides a dedicated mobile navigation trigger in the shared header", () => {
@@ -145,8 +207,8 @@ describe("premium quality regressions", () => {
     const pricing = readPage("src/app/pricing/page.tsx");
 
     expect(pricing).toContain("direct food safety consultancy");
-    expect(pricing).toContain("2 hours of food safety consultancy each month");
-    expect(pricing).toContain("DOCX conversation export and Virtual Audit");
+    expect(pricing).toContain("2h/month of food safety consultancy");
+    expect(pricing).toContain("Access to virtual audit mode");
     expect(pricing).not.toContain("Full PDF and DOCX export");
     expect(pricing).not.toContain("100 AI queries per day");
     expect(pricing).not.toContain("voice transcriptions");

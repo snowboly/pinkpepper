@@ -16,10 +16,10 @@ const securityHeaders = [
     key: "Content-Security-Policy",
     value: [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+      "script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com",
       "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' blob: data: https://*.supabase.co https://images.unsplash.com",
-      "connect-src 'self' https://*.supabase.co https://api.groq.com https://api.openai.com https://api.stripe.com https://js.stripe.com",
+      "img-src 'self' blob: data: https://*.supabase.co https://images.unsplash.com https://images.pexels.com",
+      "connect-src 'self' https://*.supabase.co https://api.groq.com https://api.openai.com https://api.stripe.com https://js.stripe.com https://va.vercel-scripts.com",
       "frame-src https://js.stripe.com https://hooks.stripe.com",
       "frame-ancestors 'none'",
     ].join("; "),
@@ -28,7 +28,7 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   turbopack: {
-    root: __dirname,
+    root: process.cwd(),
   },
 
   images: {
@@ -36,6 +36,10 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "images.unsplash.com",
+      },
+      {
+        protocol: "https",
+        hostname: "images.pexels.com",
       },
     ],
   },

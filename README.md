@@ -1,36 +1,163 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PinkPepper
+
+AI-powered food safety compliance assistant for EU/UK food businesses.
+
+Built with **Next.js 16 (App Router)**, **Supabase**, **Groq** (LLM streaming), **OpenAI** (embeddings + vision), **Stripe** (billing), and **Resend** (email).
+
+The core product is an AI chatbot that helps food businesses with HACCP plans, SOPs, audit prep, allergen law, and EU/UK food safety compliance.
+
+---
+
+## Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 16 App Router (React 19) |
+| Styling | Tailwind CSS v4 |
+| Database & Auth | Supabase (Postgres + pgvector) |
+| LLM | Groq (`llama-3.3-70b-versatile`) |
+| Embeddings | OpenAI `text-embedding-ada-002` |
+| Vision | OpenAI `gpt-4o-mini` |
+| Payments | Stripe |
+| Email | Resend |
+| Deployment | Vercel |
+
+---
 
 ## Getting Started
 
-First, run the development server:
+Copy `.env.example` to `.env.local` and fill in all values, then:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev          # http://localhost:3000
+
+# Generate TypeScript types from Supabase schema
+npm run supabase:types
+
+# Run database migrations (requires Supabase CLI linked)
+supabase db push
+
+# Ingest food safety knowledge documents into RAG
+npx tsx scripts/ingest-knowledge.ts ./knowledge-docs
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Environment Variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
 
-## Learn More
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
 
-To learn more about Next.js, take a look at the following resources:
+GROQ_API_KEY=
+GROQ_MODEL=llama-3.3-70b-versatile   # optional override
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+OPENAI_API_KEY=                        # used for embeddings + vision
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+STRIPE_SECRET_KEY=
+STRIPE_WEBHOOK_SECRET=
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=
+STRIPE_PLUS_PRICE_ID=
+STRIPE_PRO_PRICE_ID=
 
-## Deploy on Vercel
+RESEND_API_KEY=
+RESEND_FROM_EMAIL=noreply@pinkpepper.io
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Key File Map
+
+```
+src/
+  app/
+    api/
+      chat/stream/route.ts     ← Main streaming chat endpoint (Groq)
+      chat/route.ts            ← Image analysis endpoint (OpenAI vision)
+      billing/                 ← Stripe checkout, portal, status
+      export/                  ← PDF and DOCX export
+      reviews/                 ← Human review request endpoints
+      webhook/stripe/          ← Stripe webhook handler
+  components/dashboard/
+    ChatWorkspace.tsx          ← Root chat UI component
+    ChatMessages.tsx           ← Message list + empty state suggestions
+    ChatInput.tsx              ← Textarea, image upload, send button
+    ChatSidebar.tsx            ← Conversation list
+    MessageItem.tsx            ← Single message bubble + citations
+  lib/
+    rag/
+      index.ts                 ← RAG exports
+      retriever.ts             ← pgvector similarity search
+      embeddings.ts            ← OpenAI embedding generation
+      prompt-builder.ts        ← RAG system prompt construction
+      vision-prompt.ts         ← Food safety image analysis system prompt
+      citations.ts             ← Citation formatting
+    tier.ts                    ← Subscription tier definitions + capabilities
+    policy.ts                  ← Usage counting helpers
+    access.ts                  ← Resolve user tier + admin status
+  utils/supabase/
+    client.ts                  ← Browser Supabase client
+    server.ts                  ← Server Supabase client (SSR)
+    admin.ts                   ← Service-role Supabase client
+  types/
+    database.types.ts          ← Auto-generated from Supabase schema (do not edit)
+supabase/
+  migrations/                  ← All DB migrations (apply in order)
+scripts/
+  ingest-knowledge.ts          ← Batch-ingest food safety docs into knowledge_chunks
+```
+
+---
+
+## Subscription Tiers
+
+| | Free | Plus | Pro |
+|---|---|---|---|
+| Daily messages | 15 | 100 | 1000 |
+| Daily image uploads | 0 | 3 | 20 |
+| PDF export | No | Yes | Yes |
+| DOCX export | No | No | Yes |
+| Review credits/month | 0 | 0 | 3 |
+| Saved conversations | 10 (30d) | Unlimited | Unlimited |
+
+Admins bypass all limits.
+
+---
+
+## Chat Architecture
+
+1. **Text messages** → `/api/chat/stream` → Groq SSE stream → client renders tokens incrementally
+2. **Image messages** → `/api/chat` → OpenAI vision (`gpt-4o-mini`) → JSON response
+3. **RAG**: every text message triggers pgvector similarity search against `knowledge_chunks`; chunks found above similarity threshold are injected into the system prompt
+
+### Query modes (auto-detected from keywords)
+- `qa` — general Q&A (default)
+- `document` — HACCP plans, SOPs, forms, logs
+- `audit` — compliance audits, gap analysis, NC identification
+
+---
+
+## Commands
+
+```bash
+npm run dev          # Start development server
+npm run build        # Production build
+npm run test         # Run unit tests (Vitest)
+npm run typecheck    # TypeScript type check
+npm run lint         # ESLint
+```
+
+---
+
+## Database
+
+All migrations are in `supabase/migrations/`. Key tables:
+- `profiles` — user tiers, admin flag
+- `conversations` + `chat_messages` — chat history
+- `usage_events` — daily usage tracking
+- `knowledge_chunks` — RAG vector store (pgvector)
+- `review_requests` + `review_attachments` — human review queue

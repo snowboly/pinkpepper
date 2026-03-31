@@ -148,7 +148,7 @@ export default function FeaturesPage() {
                   <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#E11D48]">Typical support includes</p>
                   <ul className="mt-3 space-y-2 text-sm text-[#475569]">
                     {service.includes.map((item) => (
-                      <li key={item}>• {item}</li>
+                      <li key={item}>- {item}</li>
                     ))}
                   </ul>
                 </div>
@@ -185,30 +185,20 @@ export default function FeaturesPage() {
       </section>
 
       <section className="bg-white py-16">
-        <div className="pp-container rounded-3xl border border-[#FCE7F3] bg-[#FFF1F2] p-8 md:p-10">
-          <div className="max-w-3xl">
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">Next step</p>
-            <h2 className="pp-display mt-4 text-4xl text-[#0F172A] md:text-5xl">
-              If you need help with food safety work, start the conversation.
-            </h2>
-            <p className="mt-5 text-lg leading-relaxed text-[#475569]">
-              Use PinkPepper when you want quicker progress on the day-to-day work, then talk to us when the task needs a
-              closer review or more specialist input.
-            </p>
-          </div>
-
-          <div className="mt-8 flex flex-wrap gap-3">
+        <div className="pp-container text-center">
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">Ready to start?</p>
+          <h2 className="pp-display mx-auto mt-3 max-w-xl text-3xl text-[#0F172A] md:text-4xl">
+            Start free. No card required.
+          </h2>
+          <p className="mx-auto mt-3 max-w-md text-base text-[#64748B]">
+            Try PinkPepper on a real compliance question today.
+          </p>
+          <div className="mt-7">
             <Link
-              href="/contact"
-              className="pp-interactive rounded-full bg-[#E11D48] px-6 py-3 text-sm font-semibold text-white hover:bg-[#BE123C]"
+              href="/signup"
+              className="pp-interactive inline-block rounded-full bg-[#E11D48] px-8 py-3.5 text-sm font-semibold text-white hover:bg-[#BE123C]"
             >
-              Talk to us
-            </Link>
-            <Link
-              href="/pricing"
-              className="pp-interactive rounded-full border border-[#FBCFE8] bg-white px-6 py-3 text-sm font-semibold text-[#0F172A] hover:bg-[#FFF7F8]"
-            >
-              See pricing
+              Get Started
             </Link>
           </div>
         </div>

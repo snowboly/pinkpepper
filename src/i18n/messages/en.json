@@ -297,15 +297,11 @@
     "triggers": {
       "message_limit": {
         "heading": "You've reached your daily message limit",
-        "body": "Upgrade to continue chatting with more usage on Plus or Pro."
+        "body": "Upgrade for 25 messages per day on Plus or 100 per day on Pro."
       },
       "image_limit": {
         "heading": "Unlock photo analysis",
         "body": "Analyze photos of kitchens, labels, and food products with Plus or Pro."
-      },
-      "transcription_limit": {
-        "heading": "Unlock voice transcription",
-        "body": "Record questions hands-free and turn speech into chat instantly with Plus or Pro."
       },
       "export": {
         "heading": "Export your compliance documents",
@@ -325,8 +321,8 @@
         "name": "Plus",
         "price": "€19/mo",
         "highlights": [
-          "Everything in Free, plus:",
-          "More usage",
+          "25 messages per day",
+          "5 image analyses per day",
           "Unlimited saved conversations and projects",
           "Access to downloadable templates"
         ],
@@ -424,6 +420,7 @@
     "save": "Save",
     "usage": "Usage",
     "dailyMessages": "Messages today",
+    "dailyImageAnalyses": "Image analyses today",
     "dangerZone": "Danger Zone",
     "deleteAccount": "Delete account",
     "deleteAccountDescription": "Permanently delete your account and all associated data. This action cannot be undone.",

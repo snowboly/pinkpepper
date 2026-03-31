@@ -6,7 +6,7 @@ import { track } from "@vercel/analytics";
 import type { SubscriptionTier } from "@/lib/tier";
 
 type UpgradeModalProps = {
-  trigger: "message_limit" | "image_limit" | "export" | "review" | "audit_mode" | "transcription_limit" | "template_download";
+  trigger: "message_limit" | "image_limit" | "export" | "review" | "audit_mode" | "template_download";
   currentTier: SubscriptionTier;
   onClose: () => void;
 };
@@ -30,14 +30,10 @@ export default function UpgradeModal({ trigger, currentTier, onClose }: UpgradeM
   const t = useTranslations("upgrade");
   const [loading, setLoading] = useState<SubscriptionTier | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const heading = trigger === "transcription_limit"
-    ? "Unlock voice transcription"
-    : trigger === "template_download"
+  const heading = trigger === "template_download"
     ? "Download DOCX templates"
     : t(`triggers.${trigger}.heading`);
-  const body = trigger === "transcription_limit"
-    ? "Record questions hands-free and turn speech into chat instantly with Plus or Pro."
-    : trigger === "template_download"
+  const body = trigger === "template_download"
     ? "Download ready-made HACCP, allergen, SOP, and audit templates as Word documents with Plus or Pro."
     : t(`triggers.${trigger}.body`);
 

@@ -1,8 +1,8 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { CheckCircle2, Mail } from "lucide-react";
-import { createClient } from "@/utils/supabase/server";
 import PricingActions from "@/components/pricing/PricingActions";
+import { createClient } from "@/utils/supabase/server";
 
 export const metadata: Metadata = {
   title: "Pricing | PinkPepper - Food Safety Compliance Software",
@@ -80,7 +80,8 @@ export default async function PricingPage() {
         name: "Free",
         price: "0",
         priceCurrency: "EUR",
-        description: "Chat on web and mobile, write and edit food safety content, analyze text and images, and access the curated knowledge base.",
+        description:
+          "Chat on web and mobile, write and edit food safety content, analyze text and images, and access the curated knowledge base.",
       },
       {
         "@type": "Offer",
@@ -93,7 +94,8 @@ export default async function PricingPage() {
           priceCurrency: "EUR",
           unitCode: "MON",
         },
-        description: "Everything in Free, plus more usage, unlimited saved conversations and projects, and access to downloadable templates.",
+        description:
+          "Everything in Free, plus more usage, unlimited saved conversations and projects, and access to downloadable templates.",
       },
       {
         "@type": "Offer",
@@ -107,7 +109,7 @@ export default async function PricingPage() {
           unitCode: "MON",
         },
         description:
-          "Everything in Plus, plus the highest usage limits, virtual audit mode, 2h/month of food safety consultancy, and priority support, and 2 hours of food safety consultancy per month.",
+          "Everything in Plus, plus the highest usage limits, virtual audit mode, 2h/month of food safety consultancy, and priority support.",
       },
     ],
   };
@@ -149,11 +151,11 @@ export default async function PricingPage() {
           <div className="mx-auto grid max-w-5xl gap-6 lg:grid-cols-3">
             <div className="flex flex-col rounded-3xl border border-[#E2E8F0] bg-[#FCFDFE] p-8">
               <h2 className="text-xs font-semibold uppercase tracking-[0.18em] text-[#94A3B8]">Free</h2>
-              <p className="mt-4 text-sm leading-relaxed text-[#64748B]">
+              <p className="mt-4 min-h-[4.5rem] text-sm leading-relaxed text-[#64748B]">
                 Best for testing fit on live questions and everyday checks before you commit.
               </p>
               <div className="mt-6 flex items-baseline gap-1">
-                <span className="text-5xl font-bold tracking-tight text-[#0F172A]"><span className="text-2xl align-super">€</span>0</span>
+                <span className="text-5xl font-bold tracking-tight text-[#0F172A]"><span className="text-2xl align-super">EUR </span>0</span>
                 <span className="text-base text-[#94A3B8]">/month</span>
               </div>
               <div className="my-6 border-t border-[#F1F5F9]" />
@@ -182,11 +184,11 @@ export default async function PricingPage() {
 
             <div className="flex flex-col rounded-3xl border border-[#E2E8F0] bg-white p-8">
               <h2 className="text-xs font-semibold uppercase tracking-[0.18em] text-[#94A3B8]">Plus</h2>
-              <p className="mt-4 text-sm leading-relaxed text-[#64748B]">
+              <p className="mt-4 min-h-[4.5rem] text-sm leading-relaxed text-[#64748B]">
                 For operators who need heavier day-to-day use, document uploads, and downloadable templates.
               </p>
               <div className="mt-6 flex items-baseline gap-1">
-                <span className="text-5xl font-bold tracking-tight text-[#0F172A]"><span className="text-2xl align-super">€</span>19</span>
+                <span className="text-5xl font-bold tracking-tight text-[#0F172A]"><span className="text-2xl align-super">EUR </span>19</span>
                 <span className="text-base text-[#94A3B8]">/month + VAT</span>
               </div>
               <div className="my-6 border-t border-[#FCE7F3]" />
@@ -218,11 +220,11 @@ export default async function PricingPage() {
 
             <div className="flex flex-col rounded-3xl border border-[#F9A8D4] bg-[#FFF8FB] p-8">
               <h2 className="text-xs font-semibold uppercase tracking-[0.18em] text-[#BE123C]">Pro</h2>
-              <p className="mt-4 text-sm leading-relaxed text-[#64748B]">
+              <p className="mt-4 min-h-[4.5rem] text-sm leading-relaxed text-[#64748B]">
                 For teams preparing for inspections, audits, and higher-stakes work that needs direct food safety consultancy.
               </p>
               <div className="mt-6 flex items-baseline gap-1">
-                <span className="text-5xl font-bold tracking-tight text-[#0F172A]"><span className="text-2xl align-super">€</span>99</span>
+                <span className="text-5xl font-bold tracking-tight text-[#0F172A]"><span className="text-2xl align-super">EUR </span>99</span>
                 <span className="text-base text-[#94A3B8]">/month + VAT</span>
               </div>
               <div className="my-6 border-t border-[#F1F5F9]" />
@@ -233,7 +235,7 @@ export default async function PricingPage() {
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  Highest usage limits
+                  100 messages per day
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />

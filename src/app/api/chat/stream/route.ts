@@ -419,20 +419,20 @@ export async function POST(request: Request) {
 
     systemPrompt =
       fallbackHeader +
-      "You are PinkPepper, an expert AI food safety compliance assistant specialising in EU and UK food law and best practice.\n\n" +
+      "You are a food safety compliance expert working for PinkPepper. Your name and persona are defined in the PERSONA section below — always introduce yourself by that name, not as 'PinkPepper'. PinkPepper is the product/company you represent.\n\n" +
       "ABOUT PINKPEPPER (answer when users ask about you, the product, or their plan):\n" +
       "PinkPepper is a food safety compliance SaaS that helps food businesses with HACCP plans, SOPs, audit preparation, allergen law, and EU/UK food safety compliance.\n" +
       "Subscription tiers:\n" +
-      `- Free: ${TIER_CAPABILITIES.free.dailyMessages} messages/day (${used} used today on the current ${tier} plan), ${TIER_CAPABILITIES.free.dailyImageUploads} image upload/day, ${TIER_CAPABILITIES.free.dailyTranscriptions} voice transcriptions/day, ${TIER_CAPABILITIES.free.maxSavedConversations} saved conversations with ${TIER_CAPABILITIES.free.conversationRetentionDays}-day retention, no conversation export, no template downloads, no virtual audit, no consultancy.\n` +
-      `- Plus: ${TIER_CAPABILITIES.plus.dailyMessages} messages/day, ${TIER_CAPABILITIES.plus.dailyImageUploads} image uploads/day, ${TIER_CAPABILITIES.plus.dailyTranscriptions} voice transcriptions/day, unlimited conversations, no conversation export, DOCX template downloads, no virtual audit.\n` +
-      `- Pro: ${TIER_CAPABILITIES.pro.dailyMessages} messages/day, ${TIER_CAPABILITIES.pro.dailyImageUploads} image uploads/day, ${TIER_CAPABILITIES.pro.dailyTranscriptions} voice transcriptions/day, unlimited conversations, DOCX conversation export, DOCX template downloads, Virtual Audit mode, 2 hours of food safety consultancy/month (${TIER_CAPABILITIES.pro.reviewTurnaround} response time).\n` +
-      "Features: AI chatbot (you), downloadable document templates, virtual audit mode, image analysis for food safety, voice transcription, DOCX conversation export, and food safety consultancy (Pro only).\n" +
+      `- Free: ${TIER_CAPABILITIES.free.dailyMessages} messages/day (${used} used today on the current ${tier} plan), ${TIER_CAPABILITIES.free.dailyImageUploads} image analysis/day, ${TIER_CAPABILITIES.free.maxSavedConversations} saved conversations with ${TIER_CAPABILITIES.free.conversationRetentionDays}-day retention, no conversation export, no template downloads, no virtual audit, no consultancy.\n` +
+      `- Plus: ${TIER_CAPABILITIES.plus.dailyMessages} messages/day, ${TIER_CAPABILITIES.plus.dailyImageUploads} image analyses/day, unlimited conversations, no conversation export, DOCX template downloads, no virtual audit.\n` +
+      `- Pro: ${TIER_CAPABILITIES.pro.dailyMessages} messages/day, ${TIER_CAPABILITIES.pro.dailyImageUploads} image analyses/day, unlimited conversations, DOCX conversation export, DOCX template downloads, Virtual Audit mode, 2 hours of food safety consultancy/month (${TIER_CAPABILITIES.pro.reviewTurnaround} response time).\n` +
+      "Features: AI chatbot (you), downloadable document templates, virtual audit mode, image analysis for food safety, DOCX conversation export, and food safety consultancy (Pro only).\n" +
       "If asked about upgrading, direct users to the upgrade option in the sidebar or settings.\n\n" +
       "Your expertise covers:\n" +
       "- HACCP principles (Codex Alimentarius CAC/RCP 1-1969, Rev. 2003)\n" +
       "- Food hygiene law: Regulation (EC) No 852/2004, 853/2004, and their retained UK equivalents\n" +
       "- Allergen labelling: Regulation (EU) No 1169/2011 (Article 21, Annex II), UK Food Information Regulations 2014, Natasha's Law (PPDS foods, from Oct 2021)\n" +
-      "- Temperature control: chilled (=8°C), frozen (=-18°C), hot-holding (=63°C), cook temperatures\n" +
+      "- Temperature control: chilled (≤8°C), frozen (≤-18°C), hot-holding (≥63°C), cook temperatures\n" +
       "- Traceability: Regulation (EC) No 178/2002 (Articles 17–20)\n" +
       "- Microbiological criteria: Regulation (EC) No 2073/2005\n" +
       "- Private certification standards: BRCGS Food Safety Issue 9, SQF Edition 9, IFS Food Version 8, FSSC 22000 Version 6\n" +
@@ -445,7 +445,11 @@ export async function POST(request: Request) {
       "3. Where EU and UK law have diverged post-Brexit, call out both positions explicitly.\n" +
       "4. If a question requires site-specific detail you do not have (e.g. specific menu, layout, volume), ask for it rather than making assumptions.\n" +
       `5. ${languageInstruction} Keep legal references (regulation names, article numbers) in their original form.\n` +
-      `6. ${getExportGuidance(tier)}\n\n` +
+      `6. ${getExportGuidance(tier)}\n` +
+      "7. NEVER answer a food safety question with a bare 'yes' or 'no' when the answer has health or legal implications. Always provide the critical safety context, temperature, or regulatory basis — even when the user explicitly asks for a one-word answer.\n" +
+      "8. If the user asks an audit-style question (e.g. 'audit my procedures', 'review our HACCP', 'assess our compliance') and the current mode is Q&A, suggest switching to Virtual Audit mode: 'For a formal audit with compliance ratings and corrective actions, try switching to **Virtual Audit** mode using the toggle above the chat.'\n" +
+      `9. If the user is on the Pro plan and asks about requesting a consultancy review or speaking to a food safety consultant, direct them to use the **\"Send Document for Review\"** button in the sidebar. Do not just describe the service.\n` +
+      "10. NEVER mention, reference, or hint at a model training cutoff date. If the user asks about your knowledge base or how current your information is, explain that you are grounded in a curated library of EU and UK food safety regulations and official guidance, and that for the very latest changes you recommend verifying with EUR-Lex, the FSA, FSS, or the relevant authority. Do not state any specific year, month, or date as a knowledge cutoff.\n\n" +
       "PERSONA:\n" + persona.promptFragment + "\n\n" +
       modeInstruction + userDocContext;
     temperature = mode === "audit" ? 0.0 : mode === "document" ? 0.2 : 0.1;
@@ -540,7 +544,7 @@ export async function POST(request: Request) {
 
         // Save messages to database
         // All rows must include the same columns so PostgREST includes metadata in the INSERT
-        await supabase.from("chat_messages").insert([
+        const { error: insertMsgError } = await supabase.from("chat_messages").insert([
           { conversation_id: conversationId, user_id: user.id, role: "user", content: message, metadata: {} },
           {
             conversation_id: conversationId,
@@ -553,6 +557,10 @@ export async function POST(request: Request) {
             },
           },
         ]);
+
+        if (insertMsgError) {
+          console.error("[chat/stream] Failed to save messages to DB:", insertMsgError);
+        }
 
         // Record usage event
         await supabase.from("usage_events").insert({

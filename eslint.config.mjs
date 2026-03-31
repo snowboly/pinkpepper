@@ -12,6 +12,13 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Local worktrees and non-source content should not be part of app linting.
+    ".worktrees/**",
+    ".claude/**",
+    "content/**",
+    "docs/**",
+    "knowledge-docs/**",
+    "knowledge-sources/**",
   ]),
 ]);
 

@@ -285,6 +285,193 @@ summary:active {
   margin: 0.75rem 0;
 }
 
+.pp-article-body {
+  color: #334155;
+  font-size: 1rem;
+  line-height: 1.8;
+}
+
+.pp-article-body h2,
+.pp-article-body h3,
+.pp-article-body h4 {
+  color: #0F172A;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  scroll-margin-top: 96px;
+}
+
+.pp-article-body h2 {
+  font-size: 2rem;
+  line-height: 1.15;
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+}
+
+.pp-article-body h3 {
+  font-size: 1.375rem;
+  line-height: 1.25;
+  margin-top: 2rem;
+  margin-bottom: 0.85rem;
+}
+
+.pp-article-body h4 {
+  font-size: 1.125rem;
+  line-height: 1.35;
+  margin-top: 1.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.pp-article-body p {
+  font-size: 1.0625rem;
+  line-height: 1.85;
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.pp-article-body strong {
+  font-weight: 700;
+  color: #0F172A;
+}
+
+.pp-article-body ul,
+.pp-article-body ol {
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  padding-left: 1.4rem;
+}
+
+.pp-article-body ul {
+  list-style-type: disc;
+}
+
+.pp-article-body ol {
+  list-style-type: decimal;
+}
+
+.pp-article-body li {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.75;
+  padding-left: 0.2rem;
+}
+
+.pp-article-body a {
+  color: #BE123C;
+  text-decoration-line: underline;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.18em;
+  text-decoration-color: rgba(190, 18, 60, 0.35);
+  transition: color 180ms ease, text-decoration-color 180ms ease;
+}
+
+.pp-article-body a:hover {
+  color: #9F1239;
+  text-decoration-color: currentColor;
+}
+
+.pp-article-body table {
+  width: 100%;
+  margin: 2rem 0;
+  border-collapse: collapse;
+  border-spacing: 0;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  display: block;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.pp-article-body thead {
+  background: #F8FAFC;
+}
+
+.pp-article-body th,
+.pp-article-body td {
+  border: 1px solid #E2E8F0;
+  padding: 0.85rem 1rem;
+  vertical-align: top;
+  white-space: normal;
+}
+
+.pp-article-body th {
+  color: #0F172A;
+  font-weight: 700;
+  text-align: left;
+}
+
+.pp-article-body tbody tr:nth-child(even) {
+  background: #F8FAFC;
+}
+
+.pp-article-body caption {
+  caption-side: bottom;
+  margin-top: 0.65rem;
+  color: #64748B;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  text-align: left;
+}
+
+.pp-article-body blockquote,
+.pp-article-callout {
+  margin: 2rem 0;
+  border: 1px solid #FBCFE8;
+  border-left-width: 4px;
+  background: linear-gradient(180deg, #FFF1F2 0%, #FFF7F8 100%);
+  border-radius: 24px;
+  padding: 1.25rem 1.25rem;
+  color: #881337;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.05);
+}
+
+.pp-article-body blockquote > :first-child,
+.pp-article-callout > :first-child {
+  margin-top: 0;
+}
+
+.pp-article-body blockquote > :last-child,
+.pp-article-callout > :last-child {
+  margin-bottom: 0;
+}
+
+.pp-article-body blockquote p,
+.pp-article-callout p {
+  line-height: 1.75;
+}
+
+.pp-article-callout p:first-child,
+.pp-article-callout p:last-child {
+  margin: 0;
+}
+
+.pp-article-figure,
+.pp-article-body figure {
+  margin: 2.5rem 0;
+}
+
+.pp-article-inline-image,
+.pp-article-body img {
+  width: 100%;
+  height: auto;
+  border-radius: 24px;
+  box-shadow: 0 22px 60px rgba(15, 23, 42, 0.10);
+}
+
+.pp-article-body figure {
+  display: block;
+}
+
+.pp-article-body img {
+  display: block;
+}
+
+.pp-article-body figcaption {
+  margin-top: 0.85rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #64748B;
+}
+
 /* Bot thinking animation */
 @keyframes thinking-wave {
   0%, 60%, 100% {

@@ -136,14 +136,18 @@ describe("chat workspace chrome", () => {
     expect(messages).not.toContain("humanReviewHighlight");
   });
 
-  it("uses a templates-only starter menu in the empty workspace", () => {
+  it("moves real downloadable templates into the sidebar and removes the empty-state dropdown", () => {
     const messages = readWorkspaceFile("src/components/dashboard/ChatMessages.tsx");
+    const sidebar = readWorkspaceFile("src/components/dashboard/ChatSidebar.tsx");
 
-    expect(messages).toContain('category: "template_download"');
+    expect(messages).not.toContain('category: "template_download"');
     expect(messages).not.toContain('category: "document"');
-    expect(messages).not.toContain('titleKey: "docCategories.quickDocuments"');
-    expect(messages).not.toContain('titleKey: "docCategories.advancedDocuments"');
-    expect(messages).toContain('t("downloadTemplates")');
+    expect(messages).not.toContain('t("downloadTemplates")');
+
+    expect(sidebar).toContain("getGroupedTemplates");
+    expect(sidebar).toContain('onTemplateDownload: (slug: string) => void;');
+    expect(sidebar).toContain('onTemplateUpgrade: () => void;');
+    expect(sidebar).toContain('tc("downloadTemplates")');
   });
 
   it("removes document builder state and route calls from the workspace", () => {
@@ -153,7 +157,9 @@ describe("chat workspace chrome", () => {
     expect(workspace).not.toContain("getLightweightDocWizards");
     expect(workspace).not.toContain("AdvancedDocumentBuilderModal");
     expect(workspace).not.toContain('fetch("/api/documents/generate"');
-    expect(workspace).toContain('suggestion.category === "template_download"');
+    expect(workspace).toContain("const handleTemplateDownload = useCallback((slug: string) =>");
+    expect(workspace).toContain('setUpgradeModalTrigger("template_download")');
+    expect(workspace).toContain('fetch(`/api/templates/${slug}/download`');
   });
 
   it("removes the lightweight wizard flow entirely", () => {
@@ -194,6 +200,20 @@ describe("chat workspace chrome", () => {
     expect(workspace).not.toContain("document_generation_requested");
     expect(workspace).not.toContain("setActiveDocWizard");
     expect(workspace).not.toContain("setActiveAdvancedBuilder");
+  });
+
+  it("removes web voice transcription controls and upgrade hooks", () => {
+    const workspace = readWorkspaceFile("src/components/dashboard/ChatWorkspace.tsx");
+    const input = readWorkspaceFile("src/components/dashboard/ChatInput.tsx");
+    const upgradeModal = readWorkspaceFile("src/components/dashboard/UpgradeModal.tsx");
+
+    expect(workspace).not.toContain("useAudioRecording");
+    expect(workspace).not.toContain('setUpgradeModalTrigger("transcription_limit")');
+    expect(input).not.toContain('t("startRecording")');
+    expect(input).not.toContain('t("stopRecording")');
+    expect(input).not.toContain('t("transcribing")');
+    expect(upgradeModal).not.toContain("transcription_limit");
+    expect(upgradeModal).not.toContain("Unlock voice transcription");
   });
 
   it("keeps chat export on a single DOCX path", () => {

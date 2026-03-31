@@ -7,7 +7,7 @@ type NavItem =
   | { label: string; children: { href: string; label: string }[] };
 
 const nav: NavItem[] = [
-  { href: "/features", label: "Features" },
+  { href: "/features", label: "Services" },
   {
     label: "Resources",
     children: [
@@ -111,7 +111,7 @@ export async function SiteHeader() {
                 <span className="block h-0.5 w-4 rounded-full bg-current" />
               </span>
             </summary>
-            <div className="pp-glass-card absolute right-0 top-[calc(100%+10px)] z-50 w-72 rounded-3xl p-3">
+            <div className="pp-glass-card absolute right-0 top-[calc(100%+10px)] z-50 w-[min(18rem,calc(100vw-1.5rem))] rounded-3xl p-3">
               <nav className="flex flex-col">
                 {nav.map((item) =>
                   "href" in item ? (
@@ -220,7 +220,7 @@ export async function SiteHeader() {
 export function SiteFooter() {
   return (
     <footer className="site-footer border-t border-[#F1F5F9] bg-[linear-gradient(180deg,#fff_0%,#fff7f8_100%)] py-16">
-      <div className="pp-container mb-12 grid gap-12 sm:grid-cols-2 md:grid-cols-[2fr_1fr_1fr_1.5fr]">
+      <div className="pp-container mb-12 grid gap-12 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1.5fr]">
         <div>
           <Link href="/" className="inline-flex items-center leading-none">
             <Image
@@ -251,7 +251,7 @@ export function SiteFooter() {
         <div>
           <h4 className="mb-4 text-sm font-semibold text-[#1A1A1A]">Product</h4>
           <ul className="space-y-3 text-sm text-[#6B6B6B]">
-            <li><Link href="/features" className="pp-shell-link">Features</Link></li>
+            <li><Link href="/features" className="pp-shell-link">Services</Link></li>
             <li><Link href="/use-cases" className="pp-shell-link">Use Cases</Link></li>
             <li><Link href="/pricing" className="pp-shell-link">Pricing</Link></li>
             <li><Link href="/about" className="pp-shell-link">About</Link></li>

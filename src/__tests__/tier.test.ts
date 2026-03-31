@@ -14,9 +14,8 @@ import { parseStripeSubscription } from "@/lib/billing/tier-mapping";
 describe("TIER_CAPABILITIES – free tier", () => {
   const free = TIER_CAPABILITIES.free;
 
-  it("dailyMessages is 15", () => expect(free.dailyMessages).toBe(15));
-  it("dailyImageUploads is 3", () => expect(free.dailyImageUploads).toBe(3));
-  it("dailyTranscriptions is 3", () => expect(free.dailyTranscriptions).toBe(3));
+  it("dailyMessages is 5", () => expect(free.dailyMessages).toBe(5));
+  it("dailyImageUploads is 1", () => expect(free.dailyImageUploads).toBe(1));
   it("maxSavedConversations is 10", () => expect(free.maxSavedConversations).toBe(10));
   it("conversationRetentionDays is 30", () => expect(free.conversationRetentionDays).toBe(30));
   it("allowPdfExport is false", () => expect(free.allowPdfExport).toBe(false));
@@ -31,9 +30,8 @@ describe("TIER_CAPABILITIES – free tier", () => {
 describe("TIER_CAPABILITIES – plus tier", () => {
   const plus = TIER_CAPABILITIES.plus;
 
-  it("dailyMessages is 100", () => expect(plus.dailyMessages).toBe(100));
-  it("dailyImageUploads is 10", () => expect(plus.dailyImageUploads).toBe(10));
-  it("dailyTranscriptions is 25", () => expect(plus.dailyTranscriptions).toBe(25));
+  it("dailyMessages is 25", () => expect(plus.dailyMessages).toBe(25));
+  it("dailyImageUploads is 5", () => expect(plus.dailyImageUploads).toBe(5));
   it("maxSavedConversations is unlimited (null)", () => expect(plus.maxSavedConversations).toBeNull());
   it("conversationRetentionDays is unlimited (null)", () => expect(plus.conversationRetentionDays).toBeNull());
   it("allowPdfExport is false", () => expect(plus.allowPdfExport).toBe(false));
@@ -48,9 +46,8 @@ describe("TIER_CAPABILITIES – plus tier", () => {
 describe("TIER_CAPABILITIES – pro tier", () => {
   const pro = TIER_CAPABILITIES.pro;
 
-  it("dailyMessages is 1000", () => expect(pro.dailyMessages).toBe(1000));
-  it("dailyImageUploads is 50", () => expect(pro.dailyImageUploads).toBe(50));
-  it("dailyTranscriptions is 200", () => expect(pro.dailyTranscriptions).toBe(200));
+  it("dailyMessages is 100", () => expect(pro.dailyMessages).toBe(100));
+  it("dailyImageUploads is 15", () => expect(pro.dailyImageUploads).toBe(15));
   it("maxSavedConversations is unlimited (null)", () => expect(pro.maxSavedConversations).toBeNull());
   it("conversationRetentionDays is unlimited (null)", () => expect(pro.conversationRetentionDays).toBeNull());
   it("allowPdfExport is false", () => expect(pro.allowPdfExport).toBe(false));
@@ -73,7 +70,6 @@ describe("cross-tier invariants", () => {
   const numericKeys: (keyof TierCapabilities)[] = [
     "dailyMessages",
     "dailyImageUploads",
-    "dailyTranscriptions",
     "maxResponseTokens",
   ];
 
@@ -135,7 +131,6 @@ describe("TIER_CAPABILITIES structure", () => {
     const requiredKeys: (keyof TierCapabilities)[] = [
       "dailyMessages",
       "dailyImageUploads",
-      "dailyTranscriptions",
       "maxSavedConversations",
       "conversationRetentionDays",
       "allowPdfExport",
@@ -159,9 +154,14 @@ describe("TIER_CAPABILITIES structure", () => {
       const caps = TIER_CAPABILITIES[tier];
       expect(caps.dailyMessages).toBeGreaterThanOrEqual(0);
       expect(caps.dailyImageUploads).toBeGreaterThanOrEqual(0);
-      expect(caps.dailyTranscriptions).toBeGreaterThanOrEqual(0);
       expect(caps.maxResponseTokens).toBeGreaterThan(0);
     }
+  });
+
+  it("does not expose voice transcription as a web plan capability anymore", () => {
+    expect(TIER_CAPABILITIES.free).not.toHaveProperty("dailyTranscriptions");
+    expect(TIER_CAPABILITIES.plus).not.toHaveProperty("dailyTranscriptions");
+    expect(TIER_CAPABILITIES.pro).not.toHaveProperty("dailyTranscriptions");
   });
 
   it("does not expose document-generation capabilities anymore", () => {
@@ -195,6 +195,23 @@ describe("normalizeTier", () => {
 });
 
 describe("parseStripeSubscription", () => {
+  it("downgrades past_due subscriptions until billing is current again", () => {
+    process.env.STRIPE_PRO_PRICE_ID = "price_pro";
+
+    expect(
+      parseStripeSubscription({
+        status: "past_due",
+        priceId: "price_pro",
+        currentPeriodEndUnix: 1_710_000_000,
+      })
+    ).toMatchObject({
+      planTier: "pro",
+      tier: "free",
+      stripePriceId: "price_pro",
+      status: "past_due",
+    });
+  });
+
   it("preserves the billed plan tier when access downgrades after cancellation", () => {
     process.env.STRIPE_PRO_PRICE_ID = "price_pro";
 

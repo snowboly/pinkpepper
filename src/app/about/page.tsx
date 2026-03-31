@@ -297,14 +297,8 @@ export default function AboutPage() {
               href="/signup"
               className="inline-flex items-center gap-2 rounded-full bg-[#E11D48] px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-[#E11D48]/20 transition-all hover:bg-[#BE123C]"
             >
-              Get started free
+              Get Started
               <ArrowRight className="h-4 w-4" />
-            </Link>
-            <Link
-              href="/contact"
-              className="inline-flex items-center gap-2 rounded-full border border-[#E2E8F0] bg-white px-8 py-3.5 text-base font-semibold text-[#0F172A] shadow-sm transition-all hover:border-[#CBD5E1] hover:shadow-md"
-            >
-              Talk to us
             </Link>
           </div>
         </div>

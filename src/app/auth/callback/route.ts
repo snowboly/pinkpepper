@@ -1,6 +1,14 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 
+function resolveSafeRedirectPath(next: string | null): string {
+  if (!next || !next.startsWith("/") || next.startsWith("//")) {
+    return "/dashboard";
+  }
+
+  return next;
+}
+
 /**
  * Server-side auth callback handler.
  *
@@ -21,7 +29,7 @@ export async function GET(request: NextRequest) {
   const code = searchParams.get("code");
   const tokenHash = searchParams.get("token_hash");
   const type = searchParams.get("type");
-  const next = searchParams.get("next") ?? "/dashboard";
+  const next = resolveSafeRedirectPath(searchParams.get("next"));
   const flow = searchParams.get("flow");
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
@@ -64,7 +72,11 @@ export async function GET(request: NextRequest) {
     const errorParam = code
       ? "cross_device_link"
       : "invalid_or_expired_link";
-    return NextResponse.redirect(`${origin}/login?error=${errorParam}`);
+    const errorResponse = NextResponse.redirect(`${origin}/login?error=${errorParam}`);
+    response.cookies.getAll().forEach(({ name, value, ...rest }) => {
+      errorResponse.cookies.set(name, value, rest);
+    });
+    return errorResponse;
   }
 
   // Fire welcome email for signups (via internal API)
@@ -75,8 +87,10 @@ export async function GET(request: NextRequest) {
   }
 
   // Redirect to the intended destination
-  const redirectUrl = request.nextUrl.clone();
-  redirectUrl.pathname = next;
-  redirectUrl.search = "";
-  return NextResponse.redirect(redirectUrl);
+  const redirectUrl = new URL(next, request.nextUrl.origin);
+  const redirectResponse = NextResponse.redirect(redirectUrl);
+  response.cookies.getAll().forEach(({ name, value, ...rest }) => {
+    redirectResponse.cookies.set(name, value, rest);
+  });
+  return redirectResponse;
 }

@@ -17,7 +17,6 @@ import OnboardingModal from "./OnboardingModal";
 import UpgradeModal from "./UpgradeModal";
 import ReviewContactModal from "./ReviewContactModal";
 import { useAttachments } from "./useAttachments";
-import { useAudioRecording } from "./useAudioRecording";
 import {
   parseMessageArtifact,
   parseMessageCitations,
@@ -41,7 +40,6 @@ export default function ChatWorkspace({
   onboardingCompleted = false,
 }: ChatWorkspaceProps) {
   const tw = useTranslations("workspace");
-  const tc = useTranslations("chat");
   // ── Core chat state ──
   const [messages, setMessages] = useState<Message[]>([]);
   const [prompt, setPrompt] = useState("");
@@ -79,11 +77,11 @@ export default function ChatWorkspace({
   const [showReviewModal, setShowReviewModal] = useState(false);
 
   // ── Upgrade modal state ──
-  const [upgradeModalTrigger, setUpgradeModalTrigger] = useState<"message_limit" | "image_limit" | "export" | "review" | "audit_mode" | "transcription_limit" | "template_download" | null>(null);
+  const [upgradeModalTrigger, setUpgradeModalTrigger] = useState<"message_limit" | "image_limit" | "export" | "review" | "audit_mode" | "template_download" | null>(null);
   const [workspaceMode, setWorkspaceMode] = useState<WorkspaceMode>("ask");
 
   // ── UI state ──
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isDraggingOver, setIsDraggingOver] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
@@ -221,20 +219,30 @@ export default function ChatWorkspace({
     }
   }
 
-  const {
-    isRecording,
-    isTranscribing,
-    recordingError,
-    startRecording,
-    stopRecording,
-    cancelRecording,
-  } = useAudioRecording({
-    loading,
-    setPrompt,
-    sendPromptValue,
-    onTranscriptionLimit: () => setUpgradeModalTrigger("transcription_limit"),
-    t: tc,
-  });
+  const handleTemplateDownload = useCallback((slug: string) => {
+    if (tier === "free") {
+      setUpgradeModalTrigger("template_download");
+      return;
+    }
+
+    void (async () => {
+      try {
+        const res = await fetch(`/api/templates/${slug}/download`, { redirect: "manual" });
+        if (res.type === "opaqueredirect") {
+          const a = document.createElement("a");
+          a.href = `/api/templates/${slug}/download`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        } else if (!res.ok) {
+          const data = (await res.json().catch(() => ({}))) as { error?: string };
+          setError(data.error ?? "This template isn't available for download yet.");
+        }
+      } catch {
+        setError("Could not download the template. Please try again.");
+      }
+    })();
+  }, [tier]);
 
   // ── Billing ──
   async function refreshBillingStatus() {
@@ -445,6 +453,7 @@ export default function ChatWorkspace({
     setConversationId(null);
     setCurrentPersona(null);
     setMessages([]);
+    setSidebarOpen(false);
     clearImage();
     clearDocument();
     setError(null);
@@ -809,6 +818,7 @@ export default function ChatWorkspace({
   function selectConversation(id: string) {
     loadConvOnSelect.current = id;
     setConversationId(id);
+    setSidebarOpen(false);
     window.history.replaceState(null, "", `?c=${id}`);
   }
 
@@ -848,6 +858,7 @@ export default function ChatWorkspace({
           tier={tier}
           isAdmin={isAdmin}
           tierColour={tierColour}
+          onCloseSidebar={() => setSidebarOpen(false)}
           onNewChat={startNewChat}
           onSelectConversation={(id) => { selectConversation(id); }}
           onDeleteConversation={(id) => void removeConversation(id)}
@@ -857,6 +868,8 @@ export default function ChatWorkspace({
           onCreateProject={(name, emoji) => void createProject(name, emoji)}
           onRenameProject={(id, name, emoji) => void renameProject(id, name, emoji)}
           onDeleteProject={(id) => void deleteProject(id)}
+          onTemplateDownload={handleTemplateDownload}
+          onTemplateUpgrade={() => setUpgradeModalTrigger("template_download")}
         />
 
         {/* Mobile sidebar backdrop */}
@@ -876,9 +889,7 @@ export default function ChatWorkspace({
         >
           <button
             onClick={() => setSidebarOpen((v) => !v)}
-            className={`absolute left-3 top-3 z-30 rounded-lg border border-[#E2E8F0] bg-white p-1.5 text-[#64748B] shadow-sm hover:bg-[#F1F5F9] transition-colors ${
-              sidebarOpen ? "md:hidden" : ""
-            }`}
+            className="absolute left-3 top-3 z-30 rounded-lg border border-[#E2E8F0] bg-white p-1.5 text-[#64748B] shadow-sm transition-colors hover:bg-[#F1F5F9]"
             title={sidebarOpen ? tw("collapseSidebar") : tw("expandSidebar")}
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -911,43 +922,8 @@ export default function ChatWorkspace({
             messages={messages}
             loading={loading}
             loadingMessages={loadingMessages}
-            conversationId={conversationId}
             canUploadImages={canUploadImages}
-            onQuickSuggestion={(suggestion) => {
-              if (suggestion.category === "template_download" && suggestion.key) {
-                if (tier === "free") {
-                  setUpgradeModalTrigger("template_download");
-                  return;
-                }
-                void (async () => {
-                  try {
-                    const res = await fetch(`/api/templates/${suggestion.key}/download`, { redirect: "manual" });
-                    if (res.type === "opaqueredirect") {
-                      // 302 to Supabase signed URL — trigger download
-                      const a = document.createElement("a");
-                      a.href = `/api/templates/${suggestion.key}/download`;
-                      document.body.appendChild(a);
-                      a.click();
-                      document.body.removeChild(a);
-                    } else if (!res.ok) {
-                      const data = (await res.json().catch(() => ({}))) as { error?: string };
-                      setError(data.error ?? "This template isn't available for download yet.");
-                    }
-                  } catch {
-                    setError("Could not download the template. Please try again.");
-                  }
-                })();
-                return;
-              }
-              if (workspaceMode === "virtual_audit") {
-                void sendPromptValue(`Start virtual audit focus: ${suggestion.text}`);
-                return;
-              }
-              void sendPromptValue(suggestion.text);
-            }}
             currentPersona={currentPersona}
-            showDocumentStarters={workspaceMode === "ask"}
-            tier={tier}
           />
 
           <div className="flex-shrink-0 border-t border-[#E2E8F0] bg-white px-4 py-2">
@@ -1023,9 +999,6 @@ export default function ChatWorkspace({
             imagePreview={imagePreview}
             canUploadImages={canUploadImages}
             attachedDocument={attachedDocument}
-            isRecording={isRecording}
-            isTranscribing={isTranscribing}
-            recordingError={recordingError}
             onPromptChange={setPrompt}
             onSubmit={sendPrompt}
             onStop={() => abortControllerRef.current?.abort()}
@@ -1033,9 +1006,6 @@ export default function ChatWorkspace({
             onClearImage={clearImage}
             onDocumentSelect={setAttachedDocument}
             onClearDocument={clearDocument}
-            onStartRecording={() => void startRecording()}
-            onStopRecording={stopRecording}
-            onCancelRecording={cancelRecording}
             onKeyDown={handleKeyDown}
             textareaRef={textareaRef}
             onUpgradeForImages={() => setUpgradeModalTrigger("image_limit")}
