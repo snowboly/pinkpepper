@@ -4,13 +4,14 @@ import { resolveEffectiveTier } from "@/lib/access";
 import { TEMPLATES } from "@/lib/templates";
 
 type Props = {
-  slug: string;
-  /** Falls back to the registry title when omitted */
+  slugs: string[];
+  /** Falls back to the registry title of the first slug when omitted */
   title?: string;
 };
 
-export async function TemplateDownloadCard({ slug, title: titleProp }: Props) {
-  const title = titleProp ?? TEMPLATES.find((t) => t.slug === slug)?.title ?? slug;
+export async function TemplateDownloadCard({ slugs, title: titleProp }: Props) {
+  const firstSlug = slugs[0];
+  const title = titleProp ?? TEMPLATES.find((t) => t.slug === firstSlug)?.title ?? firstSlug;
   // Read auth + tier server-side — no round trip from client
   const supabase = await createClient();
   const {
@@ -30,7 +31,7 @@ export async function TemplateDownloadCard({ slug, title: titleProp }: Props) {
     tier = resolveEffectiveTier(profile?.tier, subscription);
   }
 
-  // ── Plus / Pro: show download button ────────────────────────────
+  // ── Plus / Pro: show download button(s) ─────────────────────────
   if (user && (tier === "plus" || tier === "pro")) {
     return (
       <div className="flex flex-col rounded-2xl border border-[#E2E8F0] bg-white p-6">
@@ -41,14 +42,22 @@ export async function TemplateDownloadCard({ slug, title: titleProp }: Props) {
         <p className="mt-2 text-sm leading-relaxed text-[#475569]">
           Download the DOCX file and adapt it directly for your site.
         </p>
-        <a
-          href={`/api/templates/${slug}/download`}
-          download
-          className="mt-5 inline-flex items-center gap-2 rounded-full bg-[#E11D48] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#BE123C] self-start"
-        >
-          <DownloadIcon />
-          Download DOCX
-        </a>
+        <div className="mt-5 flex flex-col gap-3">
+          {slugs.map((slug) => {
+            const templateTitle = TEMPLATES.find((t) => t.slug === slug)?.title ?? slug;
+            return (
+              <a
+                key={slug}
+                href={`/api/templates/${slug}/download`}
+                download
+                className="inline-flex items-center gap-2 rounded-full bg-[#E11D48] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#BE123C] self-start"
+              >
+                <DownloadIcon />
+                {slugs.length > 1 ? templateTitle : "Download DOCX"}
+              </a>
+            );
+          })}
+        </div>
         <p className="mt-3 text-xs text-[#94A3B8]">
           Editable Microsoft Word format
         </p>
