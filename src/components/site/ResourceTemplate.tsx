@@ -60,13 +60,11 @@ export function ResourceTemplate({
                 </Suspense>
               </div>
 
-              {/* Download card(s) — one per slug, stacked */}
-              <div className="md:sticky md:top-24 flex flex-col gap-4">
-                {slugs.map((slug) => (
-                  <Suspense key={slug} fallback={<DownloadCardSkeleton />}>
-                    <TemplateDownloadCard slug={slug} title={slug === slugs[0] ? title : undefined} />
-                  </Suspense>
-                ))}
+              {/* Download card — single card covering all slugs */}
+              <div className="md:sticky md:top-24">
+                <Suspense fallback={<DownloadCardSkeleton />}>
+                  <TemplateDownloadCard slugs={slugs} title={title} />
+                </Suspense>
               </div>
             </div>
           </div>
