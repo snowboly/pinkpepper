@@ -172,7 +172,7 @@ export default async function PricingPage() {
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />
-                  Access curated knowledge base
+                  Access to curated knowledge base
                 </li>
               </ul>
               <Link href="/signup" className={ctaNeutral}>
