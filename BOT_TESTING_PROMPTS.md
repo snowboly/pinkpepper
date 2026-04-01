@@ -7,30 +7,92 @@ A comprehensive set of prompts to test every capability of the PinkPepper food s
 ## 1. General Food Safety Q&A
 
 ### Basic Knowledge
-1. "What is HACCP and why is it important for food businesses?"
-2. "What are the 7 principles of HACCP?"
-3. "What temperature should a fridge be set to in a commercial kitchen?"
-4. "How long can cooked food be left at room temperature before it becomes unsafe?"
-5. "What is the danger zone for food temperature?"
+1. "What is HACCP and why is it important for food businesses?" OK
+2. "What are the 7 principles of HACCP?" OK
+3. "What temperature should a fridge be set to in a commercial kitchen?" OK- Primay answer is about UK - maybe we add UK AND EU if the answer is the same.
+4. "How long can cooked food be left at room temperature before it becomes unsafe?" OK- Primay answer is about UK - maybe we add UK AND EU if the answer is the same.
+5. "What is the danger zone for food temperature?" OK- Primay answer is about UK- maybe we add UK AND EU if the answer is the same.
 
 ### EU Regulation Knowledge
-6. "Explain EC 852/2004 and who it applies to."
-7. "What are the key requirements of EU Regulation 1169/2011 on food labelling?"
-8. "Summarize EU Regulation 178/2002 on general food law."
-9. "What does EC 853/2004 say about hygiene rules for animal products?"
-10. "What are the microbiological criteria in EU Regulation 2073/2005?"
+6. "Explain EC 852/2004 and who it applies to." OK- the bot is repeating the introduction "Hello, I'm Ana, your food safety compliance expert. "
+7. "What are the key requirements of EU Regulation 1169/2011 on food labelling?" OK- the bot is repeating the introduction "Hello, I'm Ana, your food safety compliance expert. "
+8. "Summarize EU Regulation 178/2002 on general food law." OK -* Hello, I'm Egle, your food safety compliance expert. 
+9. "What does EC 853/2004 say about hygiene rules for animal products?" OK- Hello, I'm Egle, your food safety compliance expert. 
+10. "What are the microbiological criteria in EU Regulation 2073/2005?" OK
 
 ### UK-Specific Knowledge
-11. "What are the key differences between UK and EU food safety law after Brexit?"
-12. "What does the Food Standards Agency (FSA) require for allergen labelling in the UK?"
-13. "Explain Natasha's Law and how it affects food businesses in the UK."
-14. "What is the Food Hygiene Rating Scheme and how does scoring work?"
-15. "What are the FSA requirements for food traceability in the UK?"
+11. "What are the key differences between UK and EU food safety law after Brexit?" OK but  the bot is repeating the introduction
+12. "What does the Food Standards Agency (FSA) require for allergen labelling in the UK?" OK but  the bot is repeating the introduction
+13. "Explain Natasha's Law and how it affects food businesses in the UK." OK but  the bot is repeating the introduction
+14. "What is the Food Hygiene Rating Scheme and how does scoring work?"OK but  the bot is repeating the introduction
+15. "What are the FSA requirements for food traceability in the UK?"OK but  the bot is repeating the introduction
 
 ### Jurisdiction Awareness
-16. "I run a restaurant in London. What food safety regulations apply to me?"
-17. "I'm a food manufacturer in Germany. What EU regulations must I follow?"
-18. "Compare the allergen labelling requirements between the EU and UK."
+16. "I run a restaurant in London. What food safety regulations apply to me?" OK - Hello, I'm Jason, your food safety compliance expert. As a restaurant owner in London, you're subject to various food safety regulations. Let's break them down:
+
+Registration and Approval
+You must register your food business with the local authority, in this case, the London Borough Council. This is a free process, and you can do it online via the Food Business Operator portal. If your restaurant handles products of animal origin, you may need approval from the competent authority.
+
+Food Hygiene Regulations
+The Food Hygiene (England) Regulations 2006, which implement EC 852/2004, EC 853/2004, and EC 854/2004, apply to your restaurant. These regulations cover general hygiene requirements, such as:
+
+Maintaining a clean and hygienic environment
+Implementing proper food handling, storage, and disposal practices
+Ensuring adequate ventilation, lighting, and pest control
+Food Safety Management
+You must have a food safety management system in place, which includes:
+
+Identifying potential food safety hazards
+Implementing controls to prevent or minimize these hazards
+Monitoring and reviewing your system regularly
+HACCP (Hazard Analysis and Critical Control Points)
+While not mandatory for all food businesses, HACCP is a recommended approach to managing food safety. It involves identifying critical control points in your food preparation process and implementing controls to prevent contamination.
+
+Allergen Management
+You must comply with the Food Information Regulations 2014 and Natasha's Law, which require you to provide accurate allergen information to customers. This includes labeling pre-packed foods and providing information on the presence of allergens in non-pre-packed foods.
+
+Food Hygiene Rating Scheme (FHRS)
+Your restaurant will be inspected by the local authority and awarded a food hygiene rating from 0 to 5. While display of the rating is voluntary in England, it's essential to maintain a good rating to demonstrate your commitment to food safety.
+
+Enforcement and Penalties
+Failure to comply with food safety regulations can result in enforcement action, including improvement notices, prohibition notices, and even prosecution. Penalties can include fines and imprisonment.
+
+Takeaway: As a restaurant owner in London, you must register your business, maintain a clean and hygienic environment, implement a food safety management system, and comply with allergen management regulations. Regular inspections and a good food hygiene rating are crucial to demonstrating your commitment to food safety. [Source: UK food hygiene regulations 2006, Document 1]
+
+17. "I'm a food manufacturer in Germany. What EU regulations must I follow?" - Hello, I'm Jason, your food safety compliance expert. As a food manufacturer in Germany, you must follow various EU regulations to ensure the safety and quality of your products. Here are some key regulations to consider:
+
+Regulation (EC) No 852/2004: This regulation outlines the general requirements for food hygiene, including the implementation of Hazard Analysis and Critical Control Points (HACCP) principles.
+Regulation (EC) No 853/2004: This regulation sets specific hygiene rules for food of animal origin, such as meat, dairy, and fish products.
+Regulation (EC) No 854/2004: This regulation establishes the rules for official controls on products of animal origin, including imports and exports.
+Regulation (EU) No 1169/2011: This regulation requires food manufacturers to provide food information to consumers, including labeling requirements for allergens, nutritional information, and country of origin.
+Regulation (EU) 2017/625: This regulation updates the rules for official controls on food and feed, including the frequency and nature of inspections.
+Additionally, you should be aware of the following regulations:
+
+Commission Regulation (EU) 2025/351: Updates the rules for plastic food contact materials.
+Commission Regulation (EU) 2026/245: Amends Annex I to Regulation (EU) No 10/2011 on plastic materials and articles intended to come into contact with food.
+Commission Implementing Regulation (EU) 2026/194: Updates the rules for high-risk import controls.
+It's essential to stay up-to-date with the latest regulations and amendments to ensure compliance and maintain the safety and quality of your products.
+
+18. "Compare the allergen labelling requirements between the EU and UK." - Hello, I'm Jason, your food safety compliance expert. I'd be happy to help you understand the allergen labelling requirements in the EU and UK.
+
+The EU and UK have similar allergen labelling requirements, but there are some key differences. In the EU, the Food Information to Consumers (FIC) Regulation (EU) No 1169/2011 requires that food businesses provide clear and accurate labelling of allergens on pre-packaged foods. This includes emphasizing the allergens in the ingredients list, such as using bold text or italics.
+
+In the UK, the Food Information Regulations 2014 (FIR) implement the EU FIC Regulation, but with some additional requirements. For example, the UK requires that food businesses provide allergen information on non-prepacked foods, such as foods sold loose or made to order.
+
+One key difference between the EU and UK is the requirement for labelling of pre-packed for direct sale (PPDS) foods. In the UK, Natasha's Law requires that PPDS foods, such as sandwiches made on-site, carry a full ingredients list with allergens emphasized. This law came into effect in October 2021.
+
+In contrast, the EU does not have a specific law requiring labelling of PPDS foods, but food businesses are still required to provide allergen information to consumers upon request.
+
+Here are the key points to compare:
+
+EU:
+FIC Regulation (EU) No 1169/2011 requires clear and accurate labelling of allergens on pre-packaged foods
+No specific requirement for labelling of PPDS foods, but food businesses must provide allergen information upon request
+UK:
+Food Information Regulations 2014 (FIR) implement the EU FIC Regulation
+Natasha's Law requires labelling of PPDS foods with a full ingredients list and allergens emphasized
+Requires allergen information on non-prepacked foods, such as foods sold loose or made to order
+Takeaway summary: While the EU and UK have similar allergen labelling requirements, the UK has additional requirements, such as Natasha's Law, which mandates labelling of PPDS foods. Food businesses operating in both the EU and UK must ensure they comply with the relevant regulations and provide clear and accurate allergen information to consumers. [Source: Regulation (EU) No 1169/2011, Food Information Regulations 2014 (FIR), Natasha's Law]
 
 ### Private Standards / Certification
 19. "What is BRCGS and what does version 9 require?"
