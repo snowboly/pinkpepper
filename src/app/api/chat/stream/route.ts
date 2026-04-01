@@ -546,8 +546,6 @@ export async function POST(request: Request) {
           }
         }
 
-        streamCompleted = true;
-
         const citations = ragEnabled ? formatCitations(retrievedChunks) : [];
         const verificationState = getVerificationState(
           retrievedChunks.map((chunk) => ({
@@ -587,6 +585,9 @@ export async function POST(request: Request) {
             mode,
           },
         });
+
+        // Mark as completed only after DB persistence succeeds
+        streamCompleted = true;
 
         // Send final event with citations and usage
         controller.enqueue(

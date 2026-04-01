@@ -301,8 +301,6 @@ export async function POST(request: Request) {
           }
         }
 
-        streamCompleted = true;
-
         // Save assistant message to database
         await supabase.from("chat_messages").insert({
           conversation_id: conversationId,
@@ -318,6 +316,9 @@ export async function POST(request: Request) {
           event_count: 1,
           metadata: { conversation_id: conversationId, model, rag_enabled: ragEnabled, mode: "virtual_audit" },
         });
+
+        // Mark as completed only after DB persistence succeeds
+        streamCompleted = true;
 
         const citations = ragEnabled ? formatCitations(retrievedChunks) : [];
         controller.enqueue(
