@@ -230,6 +230,19 @@ export async function POST(request: Request) {
     return Response.json({ error: "AI audit service temporarily unavailable." }, { status: 502 });
   }
 
+  // Save user message to DB immediately so it persists even if the stream is interrupted
+  const { error: userMsgError } = await supabase.from("chat_messages").insert({
+    conversation_id: conversationId,
+    user_id: user.id,
+    role: "user",
+    content: message,
+    metadata: {},
+  });
+
+  if (userMsgError) {
+    console.error("[audit/stream] Failed to save user message to DB:", userMsgError);
+  }
+
   const encoder = new TextEncoder();
   const stream = new ReadableStream({
     async start(controller) {
@@ -253,6 +266,7 @@ export async function POST(request: Request) {
       const decoder = new TextDecoder();
       let fullContent = "";
       let buffer = "";
+      let streamCompleted = false;
 
       try {
         while (true) {
@@ -287,11 +301,14 @@ export async function POST(request: Request) {
           }
         }
 
-        // All rows must include the same columns so PostgREST includes metadata in the INSERT
-        await supabase.from("chat_messages").insert([
-          { conversation_id: conversationId, user_id: user.id, role: "user", content: message, metadata: {} },
-          { conversation_id: conversationId, user_id: user.id, role: "assistant", content: fullContent, metadata: {} },
-        ]);
+        // Save assistant message to database
+        await supabase.from("chat_messages").insert({
+          conversation_id: conversationId,
+          user_id: user.id,
+          role: "assistant",
+          content: fullContent,
+          metadata: {},
+        });
 
         await supabase.from("usage_events").insert({
           user_id: user.id,
@@ -299,6 +316,9 @@ export async function POST(request: Request) {
           event_count: 1,
           metadata: { conversation_id: conversationId, model, rag_enabled: ragEnabled, mode: "virtual_audit" },
         });
+
+        // Mark as completed only after DB persistence succeeds
+        streamCompleted = true;
 
         const citations = ragEnabled ? formatCitations(retrievedChunks) : [];
         controller.enqueue(
@@ -317,13 +337,48 @@ export async function POST(request: Request) {
         );
       } catch (err) {
         console.error("Stream processing error (audit):", err);
-        controller.enqueue(
-          encoder.encode(
-            `data: ${JSON.stringify({ type: "error", message: "Stream interrupted" })}\n\n`
-          )
-        );
+        try {
+          controller.enqueue(
+            encoder.encode(
+              `data: ${JSON.stringify({ type: "error", message: "Stream interrupted" })}\n\n`
+            )
+          );
+        } catch {
+          // Controller already closed (client disconnected) — ignore
+        }
       } finally {
-        controller.close();
+        // Save assistant message if stream was interrupted before the normal save
+        if (!streamCompleted && fullContent.length > 0) {
+          try {
+            await supabase.from("chat_messages").insert({
+              conversation_id: conversationId,
+              user_id: user.id,
+              role: "assistant",
+              content: fullContent,
+              metadata: { interrupted: true },
+            });
+
+            await supabase.from("usage_events").insert({
+              user_id: user.id,
+              event_type: "chat_prompt",
+              event_count: 1,
+              metadata: {
+                conversation_id: conversationId,
+                model,
+                rag_enabled: ragEnabled,
+                mode: "virtual_audit",
+                interrupted: true,
+              },
+            });
+          } catch (saveErr) {
+            console.error("[audit/stream] Failed to save interrupted message:", saveErr);
+          }
+        }
+        try {
+          controller.close();
+        } catch {
+          // Already closed — ignore
+        }
       }
     },
   });
