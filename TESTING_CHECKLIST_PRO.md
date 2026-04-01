@@ -48,7 +48,7 @@ This checklist is for a **PRO subscription user** to manually test all PinkPeppe
 
 ---
 
-## 4. Chat — Image Analysis (PRO: 20/day)
+## 4. Chat — Image Analysis (PRO: 15/day)
 
 - [ ] **Upload JPEG image** via button — preview thumbnail appears, send; verify OpenAI vision response about food safety. YES, all OK.
 - [ ] **Upload PNG image** — same flow. YES, all OK.
@@ -60,8 +60,8 @@ This checklist is for a **PRO subscription user** to manually test all PinkPeppe
 - [ ] **Image > 5MB** — verify rejection with size error. YES, all ok.
 - [ ] **Send image with text prompt** — verify both are processed. Yes, all OK.
 - [ ] **Send image without text** — verify image-only analysis works. Yes, all OK.
-- [ ] **Upload 20 images in one day** — all should succeed (PRO limit). Yes, all ok.
-- [ ] **Upload 21st image** — verify 402 error / upgrade modal with "daily image limit reached". Yes, all ok.
+- [ ] **Upload 15 images in one day** — all should succeed (PRO limit). Yes, all ok.
+- [ ] **Upload 16th image** — verify 402 error / upgrade modal with "daily image limit reached". Yes, all ok.
 
 ---
 
