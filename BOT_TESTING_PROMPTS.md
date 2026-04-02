@@ -107,8 +107,8 @@ Quality option: SQF (Level 3), BRC (optional modules), IFS (includes quality)
 Unannounced audits: BRC (required, Year 2+), SQF (optional or required), IFS (required, Year 2+) [Source: Document 5: SQF food safety summary, Part 1] Each standard has its own certification process, grading system, and requirements. For a detailed comparison, consider the specific needs of your business and the markets you serve.
 
 21. "What is FSSC 22000 and how does it relate to ISO 22000?" - FSSC 22000 is a Global Food Safety Initiative (GFSI) benchmarked certification scheme based on ISO 22000, with additional requirements for food safety management. [Source: Document 3, ISO 22000 food safety summary, Clause 1] It incorporates ISO 22000 and adds requirements for prerequisite programs (PRPs) and a management system. FSSC 22000 is GFSI-recognized, whereas ISO 22000 is not, unless certified to FSSC 22000. [Source: Document 5, ISO 22000 food safety summary, Clause 9]
-    
-23. "What do I need to prepare for a BRCGS audit?" - To prepare for a BRCGS audit, focus on the following key areas:
+
+22. "What do I need to prepare for a BRCGS audit?" - To prepare for a BRCGS audit, focus on the following key areas:
 
 HACCP Plan: Ensure your Hazard Analysis and Critical Control Points plan is up-to-date, comprehensive, and effectively implemented.
 Quality Management System (QMS): Review and refine your QMS to meet BRCGS standards, including documentation, record-keeping, and continuous improvement processes.
