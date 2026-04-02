@@ -95,35 +95,17 @@ Requires allergen information on non-prepacked foods, such as foods sold loose o
 Takeaway summary: While the EU and UK have similar allergen labelling requirements, the UK has additional requirements, such as Natasha's Law, which mandates labelling of PPDS foods. Food businesses operating in both the EU and UK must ensure they comply with the relevant regulations and provide clear and accurate allergen information to consumers. [Source: Regulation (EU) No 1169/2011, Food Information Regulations 2014 (FIR), Natasha's Law]
 
 ### Private Standards / Certification
-19. "What is BRCGS and what does version 9 require?" - BRCGS (Brand Reputation through Compliance Global Standards) is a private food safety standard. Version 9 requires a documented food safety culture programme, enhanced environmental monitoring, stronger food fraud (VACCP) requirements, and explicit allergen cleaning validation. [Source: Document 3: BRCGS food safety v9 summary, Section 1] Key changes include new fundamental requirements, such as senior management commitment, HACCP system, internal audits, and supplier approval. [Source: Document 4: BRCGS food safety v9 summary, Section 1]
+19. "What is BRCGS and what does version 9 require?" 
 
-20. "Explain the differences between BRC, SQF, and IFS Food standards." - Partially verified
-BRC, SQF, and IFS Food are private food safety standards. Key differences:
+20. "Explain the differences between BRC, SQF, and IFS Food standards." 
 
-Origin: BRC (UK), SQF (USA), IFS (Germany/France)
-Market focus: BRC (global, UK-strong), SQF (North America), IFS (Europe)
-Levels: SQF (3 levels), BRC and IFS (single standard)
-Quality option: SQF (Level 3), BRC (optional modules), IFS (includes quality)
-Unannounced audits: BRC (required, Year 2+), SQF (optional or required), IFS (required, Year 2+) [Source: Document 5: SQF food safety summary, Part 1] Each standard has its own certification process, grading system, and requirements. For a detailed comparison, consider the specific needs of your business and the markets you serve.
-
-21. "What is FSSC 22000 and how does it relate to ISO 22000?" - FSSC 22000 is a Global Food Safety Initiative (GFSI) benchmarked certification scheme based on ISO 22000, with additional requirements for food safety management. [Source: Document 3, ISO 22000 food safety summary, Clause 1] It incorporates ISO 22000 and adds requirements for prerequisite programs (PRPs) and a management system. FSSC 22000 is GFSI-recognized, whereas ISO 22000 is not, unless certified to FSSC 22000. [Source: Document 5, ISO 22000 food safety summary, Clause 9]
+21. "What is FSSC 22000 and how does it relate to ISO 22000?" - 
 
 22. "What do I need to prepare for a BRCGS audit?" - To prepare for a BRCGS audit, focus on the following key areas:
 
-HACCP Plan: Ensure your Hazard Analysis and Critical Control Points plan is up-to-date, comprehensive, and effectively implemented.
-Quality Management System (QMS): Review and refine your QMS to meet BRCGS standards, including documentation, record-keeping, and continuous improvement processes.
-Site Standards: Verify that your facility meets BRCGS requirements for site standards, including cleaning, pest control, and waste management.
-Product Safety and Quality: Confirm that your products meet the required safety and quality standards, including labeling, packaging, and testing.
-Training and Competence: Ensure all relevant staff are trained and competent in their roles, with records of training and evaluation.
-Internal Audits and Corrective Actions: Conduct regular internal audits and address any non-conformities with corrective actions.
-Documentation and Record-Keeping: Organize and maintain accurate, up-to-date records of all relevant processes, procedures, and audits.
-[Source: BRCGS Food Safety Issue 9]
 
-For a detailed, customized preparation plan, consider using the "Send Document for Review" button to submit your current procedures and receive expert feedback.
 
----
-
-## 2. Document Generation (Document Mode)
+## 2. Document Generation (Document Mode) - NO MORE DOC GENERATION
 
 ### HACCP Plans
 23. "Write me a HACCP plan for a small pizza restaurant."
@@ -197,8 +179,24 @@ For a detailed, customized preparation plan, consider using the "Send Document f
 ## 5. Business-Type Specific Questions
 
 ### Restaurant/Cafe
-65. "What food safety documents does a new restaurant need before opening?"
-66. "How do I set up a food safety management system for a small cafe?"
+65. "What food safety documents does a new restaurant need before opening?" - To open a new restaurant, you need a food safety management system (FSMS) based on HACCP principles, as required by Regulation (EC) 852/2004 [Source: Regulation (EC) 852/2004, Article 5]. Key documents include:
+
+Food Safety Policy: Outlines your commitment to food safety [Source: Document 4, Section 1].
+HACCP Plan: Identifies hazards, critical control points, and corrective actions [Source: Document 4, Section 6].
+Procedures for premises, equipment, and personal hygiene [Source: Document 6, Sections 3 and 4].
+Allergen management procedure, including Natasha's Law compliance for pre-packed foods [Source: pinkpepper-export.docx].
+Training records for all staff, including food handlers and supervisors [Source: Document 1, Training Requirements].
+Supplier approval procedure to ensure ingredients are safe and from approved sources [Source: Document 2]. These documents form the foundation of your FSMS, demonstrating your restaurant's commitment to serving safe food.
+
+66. "How do I set up a food safety management system for a small cafe?" - To set up a food safety management system for a small cafe, follow these essential steps:
+
+Develop a food safety policy: Outline your commitment to food safety, including responsibilities and objectives [Source: Document 1, Section 1].
+Conduct a hazard analysis: Identify biological, chemical, physical, and allergen hazards in your cafe [Source: Document 1, Section 6].
+Implement prerequisite programs (PRPs): Establish procedures for cleaning, pest control, personal hygiene, and supplier management [Source: Document 3, Clause 8.2].
+Create a HACCP plan: Identify critical control points, set critical limits, and establish monitoring and corrective action procedures [Source: Document 1, Section 6].
+Train staff: Provide food hygiene induction, allergen awareness, and role-specific training [Source: Document 5, Section 7].
+Maintain records: Keep records of training, temperature monitoring, cleaning, and customer complaints [Source: Document 5, Section 8].
+Regularly review and update: Review your food safety management system annually and update as necessary [Source: Document 5, Section 8].
 
 ### Food Manufacturer
 67. "What GMP requirements apply to a food manufacturing facility?"
