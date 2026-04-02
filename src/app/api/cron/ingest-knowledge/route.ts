@@ -1,9 +1,6 @@
-import { NextResponse } from "next/server";
-import { createClient } from "@/utils/supabase/server";
-import { createAdminClient } from "@/utils/supabase/admin";
-import { resolveUserAccess } from "@/lib/access";
 import { buildChunkMetadata } from "@/lib/rag/source-taxonomy";
 import { replaceKnowledgeChunksForSource } from "@/lib/rag/knowledge-ingestion";
+import { createAdminClient } from "@/utils/supabase/admin";
 import OpenAI from "openai";
 import * as fs from "fs";
 import * as path from "path";
@@ -68,12 +65,11 @@ function extractSectionRef(content: string): string | null {
   return null;
 }
 
-async function ingestFile(filePath: string, openai: OpenAI, supabase: ReturnType<typeof createAdminClient>) {
-  const ext = path.extname(filePath).toLowerCase();
-  if (ext !== ".md" && ext !== ".txt") {
-    return { file: path.basename(filePath), skipped: true, reason: "unsupported format" };
-  }
-
+async function ingestFile(
+  filePath: string,
+  openai: OpenAI,
+  supabase: ReturnType<typeof createAdminClient>
+) {
   const text = await fs.promises.readFile(filePath, "utf-8");
   const sourceType = detectSourceType(filePath);
   const sourceName = extractSourceName(filePath);
@@ -91,8 +87,15 @@ async function ingestFile(filePath: string, openai: OpenAI, supabase: ReturnType
     },
   }));
 
-  // Generate embeddings in batches
-  const chunksWithEmbeddings: Array<{ chunk: (typeof chunks)[0]; embedding: number[] }> = [];
+  const rows: Array<{
+    content: string;
+    embedding: string;
+    source_type: string;
+    source_name: string;
+    section_ref: string | null;
+    metadata: Record<string, unknown>;
+  }> = [];
+
   for (let i = 0; i < chunks.length; i += BATCH_SIZE) {
     const batch = chunks.slice(i, i + BATCH_SIZE);
     const response = await openai.embeddings.create({
@@ -100,21 +103,19 @@ async function ingestFile(filePath: string, openai: OpenAI, supabase: ReturnType
       input: batch.map((c) => c.content),
     });
     for (let j = 0; j < batch.length; j++) {
-      chunksWithEmbeddings.push({ chunk: batch[j], embedding: response.data[j].embedding });
+      rows.push({
+        content: batch[j].content,
+        embedding: JSON.stringify(response.data[j].embedding),
+        source_type: batch[j].sourceType,
+        source_name: batch[j].sourceName,
+        section_ref: batch[j].sectionRef,
+        metadata: batch[j].metadata,
+      });
     }
     if (i + BATCH_SIZE < chunks.length) {
       await new Promise((r) => setTimeout(r, 200));
     }
   }
-
-  const rows = chunksWithEmbeddings.map(({ chunk, embedding }) => ({
-    content: chunk.content,
-    embedding: JSON.stringify(embedding),
-    source_type: chunk.sourceType,
-    source_name: chunk.sourceName,
-    section_ref: chunk.sectionRef,
-    metadata: chunk.metadata,
-  }));
 
   await replaceKnowledgeChunksForSource(supabase as never, {
     sourceType,
@@ -123,57 +124,42 @@ async function ingestFile(filePath: string, openai: OpenAI, supabase: ReturnType
     batchSize: 100,
   });
 
-  return { file: path.basename(filePath), chunks: rows.length, sourceName, sourceType };
+  return { file: path.basename(filePath), chunks: rows.length, sourceName };
 }
 
-export async function POST(request: Request) {
-  // Auth check — admin only
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+/**
+ * Cron endpoint to ingest new knowledge documents into the RAG database.
+ * Protected by CRON_SECRET — trigger manually from the Vercel dashboard.
+ */
+export async function GET(request: Request) {
+  const authHeader = request.headers.get("authorization");
+  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("tier,is_admin")
-    .eq("id", user.id)
-    .maybeSingle();
-
-  const { isAdmin } = resolveUserAccess(profile, user.email, null);
-  if (!isAdmin) {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-  }
-
-  // Parse optional list of specific files to ingest
-  const body = await request.json().catch(() => ({}));
-  const requestedFiles: string[] = body.files ?? [
+  const targetFiles = [
     "knowledge-docs/certification/FSSC-22000-food-safety-summary.md",
     "knowledge-docs/certification/IFS-food-standard-summary.md",
   ];
 
   const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-  const adminSupabase = createAdminClient();
+  const supabase = createAdminClient();
 
   const results = [];
   const errors = [];
 
-  for (const relPath of requestedFiles) {
+  for (const relPath of targetFiles) {
     const fullPath = path.join(process.cwd(), relPath);
     if (!fs.existsSync(fullPath)) {
       errors.push({ file: relPath, error: "File not found" });
       continue;
     }
     try {
-      const result = await ingestFile(fullPath, openai, adminSupabase);
-      results.push(result);
+      results.push(await ingestFile(fullPath, openai, supabase));
     } catch (err) {
       errors.push({ file: relPath, error: err instanceof Error ? err.message : String(err) });
     }
   }
 
-  return NextResponse.json({ ok: true, results, errors });
+  return Response.json({ ok: true, results, errors });
 }
