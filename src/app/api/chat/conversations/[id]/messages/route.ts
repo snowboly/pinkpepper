@@ -59,6 +59,7 @@ export async function GET(_request: Request, context: { params: Promise<{ id: st
     .limit(200);
 
   if (error) {
+    console.error("[messages] Supabase query error:", error.message, error.code, error.details);
     return NextResponse.json({ error: "Failed to load messages." }, { status: 500 });
   }
 
