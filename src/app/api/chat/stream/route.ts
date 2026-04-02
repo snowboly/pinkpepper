@@ -11,16 +11,6 @@ import { getPersonaForConversation, type Persona } from "@/lib/personas";
 
 export const dynamic = "force-dynamic";
 
-/**
- * Returns true only when the user's message explicitly references an uploaded
- * document. Prevents user-document chunks (including conversation exports that
- * were re-uploaded) from bleeding into unrelated general knowledge answers.
- */
-function messageReferencesUploadedDoc(message: string): boolean {
-  return /\b(my document|my file|my plan|my procedure|my sop|my haccp|my policy|the document|the file|this document|this file|review this|check this|analys[ei]s this|analyse this|analyze this|look at this|the attached|attached file|i uploaded|uploaded file|from my document|in my document|in the document|from the document)\b/i.test(
-    message
-  );
-}
 
 function shouldPreferAuthoritativeSources(message: string, mode: "qa" | "document" | "audit"): boolean {
   if (mode === "audit") {
@@ -351,13 +341,13 @@ export async function POST(request: Request) {
           ? { sourceClasses: ["primary_law", "official_guidance"] as const }
           : {}),
       }),
-      messageReferencesUploadedDoc(message)
-        ? retrieveUserDocumentContext(message, user.id, { topK: 3, threshold: 0.65 })
-        : Promise.resolve([]),
+      // Scope retrieval to this conversation so document grounding persists
+      // across all follow-up turns without relying on message-text signals.
+      retrieveUserDocumentContext(message, user.id, { topK: 3, threshold: 0.65 }, conversationId),
     ]);
 
-    // Exclude conversation exports that were re-uploaded — they are bot-generated
-    // output, not authoritative reference documents.
+    // Exclude conversation exports re-uploaded as documents — they are bot-generated
+    // output, not authoritative reference material.
     const uChunks = rawUChunks.filter(
       (c) => !c.file_name.toLowerCase().startsWith("pinkpepper-export")
     );

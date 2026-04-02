@@ -204,12 +204,15 @@ export type UserDocumentChunk = {
 };
 
 /**
- * Retrieve relevant chunks from a specific user's uploaded documents
+ * Retrieve relevant chunks from a specific user's uploaded documents.
+ * When conversationId is supplied, only chunks from that conversation are searched,
+ * so document grounding persists across all follow-up turns automatically.
  */
 export async function retrieveUserDocumentContext(
   query: string,
   userId: string,
-  options: RetrievalOptions = {}
+  options: RetrievalOptions = {},
+  conversationId?: string | null
 ): Promise<UserDocumentChunk[]> {
   const { topK, threshold } = { ...DEFAULT_OPTIONS, ...options };
 
@@ -220,6 +223,7 @@ export async function retrieveUserDocumentContext(
     query_embedding: embedding,
     match_threshold: threshold,
     match_count: topK,
+    p_conversation_id: conversationId ?? null,
   });
 
   if (error) {
