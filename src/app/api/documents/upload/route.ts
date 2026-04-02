@@ -57,6 +57,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "No file provided." }, { status: 400 });
   }
 
+  const conversationId = typeof formData.get("conversationId") === "string"
+    ? (formData.get("conversationId") as string)
+    : null;
+
   if (file.size <= 0 || file.size > MAX_FILE_SIZE_BYTES) {
     return NextResponse.json({ error: "File must be between 1 byte and 10MB." }, { status: 400 });
   }
@@ -89,6 +93,7 @@ export async function POST(request: Request) {
       content,
       embedding: embeddings[i].embedding,
       chunk_index: i,
+      ...(conversationId ? { conversation_id: conversationId } : {}),
     }));
 
     const adminSupabase = getAdminSupabase();
