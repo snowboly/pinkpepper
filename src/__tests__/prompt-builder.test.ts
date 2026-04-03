@@ -141,7 +141,7 @@ describe("buildRAGPrompt", () => {
     expect(result.systemPrompt).toContain("Start with a short bottom-line summary tailored to their location and business type");
     expect(result.systemPrompt).toContain("Core laws and official guidance that apply");
     expect(result.systemPrompt).toContain("Immediate actions the business should take now");
-    expect(result.systemPrompt).not.toContain("generic list");
+    expect(result.systemPrompt).toContain("do NOT answer with a generic list");
   });
 
   it("returns audit temperature", () => {
