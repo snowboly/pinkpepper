@@ -5,7 +5,7 @@ export type SourceClass =
   | "reference_standard"
   | "internal_practice";
 
-const GB_PATTERN = /\b(uk|great britain|fsa|england|food hygiene regulations)\b/i;
+const GB_PATTERN = /\b(uk|great britain|fsa|england|london|manchester|birmingham|liverpool|leeds|glasgow|edinburgh|wales|scotland|northern ireland|food hygiene regulations)\b/i;
 const EU_PATTERN = /\b(eu|ec[-\s]?\d+|regulation \(ec\)|regulation \(eu\)|eur-lex)\b/i;
 const CODEX_PATTERN = /\b(codex)\b/i;
 const GUIDANCE_PATTERN = /\b(guidance|guide|fsa[-\s])/i;

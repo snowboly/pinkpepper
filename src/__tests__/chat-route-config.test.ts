@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { getHistoryWindowLimit, resolveChatModels } from "@/app/api/chat/stream/route";
+import {
+  buildAuthorityRetryQueries,
+  getHistoryWindowLimit,
+  resolveChatModels,
+  shouldUseRetrievedContextPrompt,
+} from "@/app/api/chat/stream/route";
 
 describe("resolveChatModels", () => {
   it("uses llama 3.3 as the primary chat model", () => {
@@ -33,5 +38,26 @@ describe("getHistoryWindowLimit", () => {
 
   it("gives admins the largest history window", () => {
     expect(getHistoryWindowLimit("free", true)).toBeGreaterThanOrEqual(getHistoryWindowLimit("pro", false));
+  });
+});
+
+describe("authority-query retrieval fallback", () => {
+  it("uses the retrieved-context prompt for legal questions even when retrieval is empty", () => {
+    expect(shouldUseRetrievedContextPrompt(false, true)).toBe(true);
+    expect(shouldUseRetrievedContextPrompt(false, false)).toBe(false);
+    expect(shouldUseRetrievedContextPrompt(true, false)).toBe(true);
+  });
+
+  it("expands London legal queries with GB authority hints", () => {
+    const queries = buildAuthorityRetryQueries(
+      "I run a restaurant in London. What food safety regulations apply to me?",
+      "gb",
+      "restaurant or café"
+    );
+
+    expect(queries[0]).toContain("London");
+    expect(queries[0]).toContain("UK food hygiene law");
+    expect(queries[0]).toContain("FSA guidance");
+    expect(queries[0]).toContain("restaurant or café");
   });
 });

@@ -21,6 +21,12 @@ describe("source taxonomy", () => {
   it("infers GB jurisdiction from user queries about UK rules", () => {
     expect(inferQueryJurisdiction("What does UK law require for chilled food storage?")).toBe("gb");
   });
+
+  it("infers GB jurisdiction from London-based user queries", () => {
+    expect(
+      inferQueryJurisdiction("I run a restaurant in London. What food safety regulations apply to me?")
+    ).toBe("gb");
+  });
 });
 
 describe("verification state", () => {
