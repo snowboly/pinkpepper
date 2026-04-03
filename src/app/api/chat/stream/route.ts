@@ -4,7 +4,7 @@ import { resolveUserAccess } from "@/lib/access";
 import { countUsageSince, utcDayStartIso } from "@/lib/policy";
 import { retrieveContext, retrieveRegulationContext, retrieveUserDocumentContext, buildRAGPrompt, formatCitations, type KnowledgeChunk, getExportGuidance } from "@/lib/rag";
 import { getVerificationState } from "@/lib/rag/verification";
-import { inferQueryJurisdiction } from "@/lib/rag/source-taxonomy";
+import { inferQueryJurisdiction, type Jurisdiction } from "@/lib/rag/source-taxonomy";
 import { chatLimiter, chatBurstLimiter, checkRateLimit } from "@/lib/ratelimit";
 import { detectQueryMode } from "@/lib/query-mode";
 import { getPersonaForConversation, type Persona } from "@/lib/personas";
@@ -51,6 +51,32 @@ export function getHistoryWindowLimit(tier: SubscriptionTier, isAdmin: boolean) 
   if (tier === "pro") return 32;
   if (tier === "plus") return 24;
   return 18;
+}
+
+export function shouldUseRetrievedContextPrompt(ragEnabled: boolean, preferAuthoritativeSources: boolean) {
+  return ragEnabled || preferAuthoritativeSources;
+}
+
+export function buildAuthorityRetryQueries(
+  message: string,
+  queryJurisdiction: Jurisdiction,
+  businessTypeLabel?: string | null
+) {
+  const jurisdictionHints =
+    queryJurisdiction === "gb"
+      ? ["UK food hygiene law", "England food business regulations", "FSA guidance"]
+      : queryJurisdiction === "eu"
+      ? ["EU food hygiene law", "Regulation (EC) No 852/2004", "official guidance"]
+      : ["EU and UK food hygiene law", "Regulation (EC) No 852/2004", "FSA guidance"];
+  const operationalHints = ["HACCP", "registration", "allergen management", "temperature control"];
+  const businessHint = businessTypeLabel ? `for a ${businessTypeLabel}` : "";
+
+  return [
+    [message, ...jurisdictionHints, businessHint, ...operationalHints].filter(Boolean).join(" "),
+    [message, ...jurisdictionHints, businessHint, "legal requirements", "food hygiene compliance"]
+      .filter(Boolean)
+      .join(" "),
+  ];
 }
 
 function shouldRetryStatus(status: number) {
@@ -356,6 +382,38 @@ export async function POST(request: Request) {
       }
     }
 
+    if (useAuthorityFilters && kChunks.length === 0) {
+      const retryQueries = buildAuthorityRetryQueries(message, queryJurisdiction, businessTypeLabel);
+
+      for (const retryQuery of retryQueries) {
+        const [retryAuthorityChunks, retryRegChunks] = await Promise.all([
+          retrieveContext(retryQuery, {
+            topK: 8,
+            threshold: 0.52,
+            ...(jurisdictionFilter ? { jurisdiction: jurisdictionFilter } : {}),
+            sourceClasses: ["primary_law", "official_guidance"],
+          }),
+          retrieveRegulationContext(retryQuery, {
+            topK: 5,
+            threshold: 0.5,
+            ...(jurisdictionFilter ? { jurisdiction: jurisdictionFilter } : {}),
+          }),
+        ]);
+
+        const existingIds = new Set(kChunks.map((chunk) => chunk.id));
+        for (const chunk of [...retryAuthorityChunks, ...retryRegChunks]) {
+          if (!existingIds.has(chunk.id)) {
+            existingIds.add(chunk.id);
+            kChunks.push(chunk);
+          }
+        }
+
+        if (kChunks.length > 0) {
+          break;
+        }
+      }
+    }
+
     retrievedChunks = kChunks;
     ragEnabled = kChunks.length > 0;
     if (uChunks.length > 0) {
@@ -380,7 +438,7 @@ export async function POST(request: Request) {
   const preferredLanguage = CHAT_LANGUAGE_NAMES[chatLanguage] ?? "English";
   const languageInstruction = `Respond in ${preferredLanguage}. This is the user's preferred response language. Do not switch to another language unless the user explicitly asks you to.`;
 
-  if (ragEnabled) {
+  if (shouldUseRetrievedContextPrompt(ragEnabled, useAuthorityFilters)) {
     const ragPrompt = buildRAGPrompt(message, retrievedChunks, mode, preferredLanguage, currentDate, businessTypeLabel, tier);
     systemPrompt = ragPrompt.systemPrompt + userDocContext + `\n\nPERSONA:\n${persona.promptFragment}`;
     temperature = ragPrompt.temperature;
