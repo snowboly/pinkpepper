@@ -126,6 +126,24 @@ describe("buildRAGPrompt", () => {
     expect(result.systemPrompt).toContain("PinkPepper");
   });
 
+  it("adds a stricter structure for regulation-applicability questions", () => {
+    const result = buildRAGPrompt(
+      "I run a restaurant in London. What food safety regulations apply to me?",
+      [makeChunk({ source_name: "UK food hygiene regulations 2006" })],
+      "qa",
+      "English",
+      "2026-04-03",
+      "restaurant or café",
+      "pro"
+    );
+
+    expect(result.systemPrompt).toContain("When the user asks what regulations apply to their business");
+    expect(result.systemPrompt).toContain("Start with a short bottom-line summary tailored to their location and business type");
+    expect(result.systemPrompt).toContain("Core laws and official guidance that apply");
+    expect(result.systemPrompt).toContain("Immediate actions the business should take now");
+    expect(result.systemPrompt).not.toContain("generic list");
+  });
+
   it("returns audit temperature", () => {
     const result = buildRAGPrompt("audit this", [makeChunk()], "audit");
     expect(result.temperature).toBe(0.0);

@@ -175,6 +175,27 @@ function getModeInstructions(mode: RAGMode): string {
   }
 }
 
+function getLegalApplicabilityInstructions(userMessage: string): string {
+  if (!/\b(what (food safety )?regulations apply|what laws apply|what requirements apply|which regulations apply|which laws apply)\b/i.test(userMessage)) {
+    return "";
+  }
+
+  return `
+
+LEGAL APPLICABILITY FORMAT:
+- When the user asks what regulations apply to their business, do NOT answer with a generic list.
+- Start with a short bottom-line summary tailored to their location and business type.
+- Then use these headings in order:
+  1. Core laws and official guidance that apply
+  2. What those laws mean for this business in practice
+  3. Immediate actions the business should take now
+- Under "Core laws and official guidance that apply", name the specific UK/EU-retained laws and official guidance that are relevant to the business type and location shown in the prompt/context.
+- Under "What those laws mean for this business in practice", convert the legal sources into operational duties such as registration, HACCP or SFBB, allergen controls, temperature control, training, cleaning, traceability, and inspection readiness.
+- Under "Immediate actions the business should take now", give a short practical checklist for the operator.
+- If the user has given a location like London or England, answer for that jurisdiction directly instead of saying only "UK".
+- If the business is a restaurant, include registration with the local authority, food hygiene management system expectations, allergen duties, and likely inspection/FHRS exposure where supported by retrieved sources.`;
+}
+
 /**
  * Build a complete RAG prompt for the chat API
  */
@@ -187,8 +208,12 @@ export function buildRAGPrompt(
   businessTypeLabel?: string | null,
   tier?: SubscriptionTier
 ): { systemPrompt: string; temperature: number } {
+  const legalApplicabilityInstructions = getLegalApplicabilityInstructions(userMessage);
+
   return {
-    systemPrompt: buildRAGSystemPrompt(chunks, mode, preferredLanguage, currentDate, businessTypeLabel, tier),
+    systemPrompt:
+      buildRAGSystemPrompt(chunks, mode, preferredLanguage, currentDate, businessTypeLabel, tier) +
+      legalApplicabilityInstructions,
     temperature: MODE_TEMPERATURES[mode],
   };
 }
