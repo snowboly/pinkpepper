@@ -208,7 +208,8 @@ export function buildRAGPrompt(
   businessTypeLabel?: string | null,
   tier?: SubscriptionTier
 ): { systemPrompt: string; temperature: number } {
-  const legalApplicabilityInstructions = getLegalApplicabilityInstructions(userMessage);
+  const legalApplicabilityInstructions =
+    mode === "qa" ? getLegalApplicabilityInstructions(userMessage) : "";
 
   return {
     systemPrompt:

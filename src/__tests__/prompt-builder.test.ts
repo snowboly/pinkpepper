@@ -144,6 +144,22 @@ describe("buildRAGPrompt", () => {
     expect(result.systemPrompt).toContain("do NOT answer with a generic list");
   });
 
+  it("does not apply the legal-applicability Q&A format to audit prompts", () => {
+    const result = buildRAGPrompt(
+      "Which food safety regulations apply to this London restaurant?",
+      [makeChunk({ source_name: "UK food hygiene regulations 2006" })],
+      "audit",
+      "English",
+      "2026-04-03",
+      "restaurant or café",
+      "pro"
+    );
+
+    expect(result.systemPrompt).toContain("COMPLIANCE AUDIT");
+    expect(result.systemPrompt).not.toContain("LEGAL APPLICABILITY FORMAT:");
+    expect(result.systemPrompt).not.toContain("Core laws and official guidance that apply");
+  });
+
   it("returns audit temperature", () => {
     const result = buildRAGPrompt("audit this", [makeChunk()], "audit");
     expect(result.temperature).toBe(0.0);
