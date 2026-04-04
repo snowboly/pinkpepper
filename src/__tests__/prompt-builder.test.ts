@@ -6,6 +6,8 @@ import {
   extractSourceReferences,
   MODE_TEMPERATURES,
   classifyQAIntent,
+  isExactReferenceQuestion,
+  isRecentChangeQuestion,
   responseMeetsIntentContract,
 } from "@/lib/rag/prompt-builder";
 import type { KnowledgeChunk } from "@/lib/rag/retriever";
@@ -225,6 +227,38 @@ describe("buildRAGPrompt", () => {
     expect(result.systemPrompt).toContain("What an inspector will usually ask for first");
     expect(result.systemPrompt).toContain("What the business should check before inspection");
   });
+
+  it("adds anti-speculation guardrails for very recent change questions", () => {
+    const result = buildRAGPrompt(
+      "What changed in food safety law last week for my type of business?",
+      [],
+      "qa",
+      "English",
+      "2026-04-04",
+      "restaurant",
+      "pro"
+    );
+
+    expect(result.systemPrompt).toContain("UNCERTAINTY HANDLING:");
+    expect(result.systemPrompt).toContain("Do NOT say you are a general AI");
+    expect(result.systemPrompt).toContain("latest change is not verified from the current support");
+  });
+
+  it("adds anti-speculation guardrails for exact article lookup questions", () => {
+    const result = buildRAGPrompt(
+      "Which article number says I must review my SOP every 90 days?",
+      [],
+      "qa",
+      "English",
+      "2026-04-04",
+      "food manufacturer",
+      "pro"
+    );
+
+    expect(result.systemPrompt).toContain("exact article, clause, section, or review frequency");
+    expect(result.systemPrompt).toContain("Do NOT offer nearby regulations, certification standards, or guessed review frequencies");
+    expect(result.systemPrompt).toContain("ask one short narrowing follow-up");
+  });
 });
 
 describe("consultant-grade qa intent detection", () => {
@@ -256,6 +290,14 @@ describe("consultant-grade qa intent detection", () => {
     expect(
       classifyQAIntent("What will an inspector expect to see first at my small restaurant in London?")
     ).toBe("inspection_readiness");
+  });
+
+  it("detects recent-change questions", () => {
+    expect(isRecentChangeQuestion("What changed in food safety law last week?")).toBe(true);
+  });
+
+  it("detects exact-reference questions", () => {
+    expect(isExactReferenceQuestion("Which article number says I must review my SOP every 90 days?")).toBe(true);
   });
 });
 
