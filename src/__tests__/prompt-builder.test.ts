@@ -5,6 +5,8 @@ import {
   buildRAGPrompt,
   extractSourceReferences,
   MODE_TEMPERATURES,
+  classifyQAIntent,
+  responseMeetsIntentContract,
 } from "@/lib/rag/prompt-builder";
 import type { KnowledgeChunk } from "@/lib/rag/retriever";
 
@@ -173,6 +175,182 @@ describe("buildRAGPrompt", () => {
   it("defaults to qa mode", () => {
     const result = buildRAGPrompt("question", [makeChunk()]);
     expect(result.temperature).toBe(0.1);
+  });
+
+  it("adds a stricter structure for label-requirements questions", () => {
+    const result = buildRAGPrompt(
+      "I'm a food manufacturer in Germany creating a label for a soup with celery, milk, and wheat. What must appear on the label?",
+      [makeChunk({ source_name: "Regulation (EU) No 1169/2011" })],
+      "qa",
+      "English",
+      "2026-04-04",
+      "food manufacturer",
+      "pro"
+    );
+
+    expect(result.systemPrompt).toContain("LABEL REQUIREMENTS FORMAT:");
+    expect(result.systemPrompt).toContain("What type of product and label situation this is");
+    expect(result.systemPrompt).toContain("Mandatory particulars that must appear");
+    expect(result.systemPrompt).toContain("Missing facts needed before finalising the label");
+  });
+
+  it("adds a stricter structure for recordkeeping questions", () => {
+    const result = buildRAGPrompt(
+      "What records should I keep for my restaurant in London?",
+      [makeChunk({ source_name: "Food Safety Act 1990" })],
+      "qa",
+      "English",
+      "2026-04-04",
+      "restaurant",
+      "pro"
+    );
+
+    expect(result.systemPrompt).toContain("RECORDKEEPING REQUIREMENTS FORMAT:");
+    expect(result.systemPrompt).toContain("Core records the business should keep");
+    expect(result.systemPrompt).toContain("Which records matter most in inspection or incident situations");
+  });
+
+  it("adds a stricter structure for inspection-readiness questions", () => {
+    const result = buildRAGPrompt(
+      "What will an inspector expect to see first at my small restaurant in London?",
+      [makeChunk({ source_name: "Food Hygiene (England) Regulations 2013" })],
+      "qa",
+      "English",
+      "2026-04-04",
+      "restaurant",
+      "pro"
+    );
+
+    expect(result.systemPrompt).toContain("INSPECTION READINESS FORMAT:");
+    expect(result.systemPrompt).toContain("What an inspector will usually ask for first");
+    expect(result.systemPrompt).toContain("What the business should check before inspection");
+  });
+});
+
+describe("consultant-grade qa intent detection", () => {
+  it("classifies regulation applicability questions separately from generic qa", () => {
+    expect(
+      classifyQAIntent("I run a restaurant in London. What food safety regulations apply to me?")
+    ).toBe("legal_applicability");
+  });
+
+  it("classifies label questions separately from generic qa", () => {
+    expect(
+      classifyQAIntent("What must appear on the label for a soup containing celery, milk, and wheat?")
+    ).toBe("label_requirements");
+  });
+
+  it("classifies label requirements phrasing as label requirements", () => {
+    expect(
+      classifyQAIntent("What are the label requirements for a soup containing celery, milk, and wheat?")
+    ).toBe("label_requirements");
+  });
+
+  it("classifies recordkeeping questions separately from generic qa", () => {
+    expect(
+      classifyQAIntent("What records should I keep for my restaurant in London?")
+    ).toBe("recordkeeping_requirements");
+  });
+
+  it("classifies inspection-readiness questions separately from generic qa", () => {
+    expect(
+      classifyQAIntent("What will an inspector expect to see first at my small restaurant in London?")
+    ).toBe("inspection_readiness");
+  });
+});
+
+describe("response intent contracts", () => {
+  it("rejects a legal applicability answer that omits operational records and inspection expectations", () => {
+    const answer = `You must comply with food safety law in England.
+
+Core laws and official guidance that apply
+- Food Safety Act 1990
+- Regulation (EC) No 852/2004
+
+What those laws mean for this business in practice
+- You need a food safety management system.`;
+
+    expect(
+      responseMeetsIntentContract(
+        "legal_applicability",
+        answer,
+        "I run a restaurant in London. What food safety laws apply to me?"
+      )
+    ).toBe(false);
+  });
+
+  it("accepts a label answer only when it covers mandatory particulars and missing information", () => {
+    const answer = `What type of product and label situation this is
+This is a prepacked retail food label for an EU food manufacturer.
+
+Laws and guidance that apply
+- Regulation (EU) No 1169/2011
+
+Mandatory particulars that must appear
+- Name of the food
+- Ingredients list
+- Allergens emphasised
+
+Allergen, emphasis, language, and field-of-vision issues
+- Celery, milk, and wheat must be emphasised in the ingredients list.
+
+Missing facts needed before finalising the label
+- Net quantity
+- Durability date
+
+Practical next actions
+- Confirm pack size and shelf life.`;
+
+    expect(
+      responseMeetsIntentContract(
+        "label_requirements",
+        answer,
+        "What must appear on the label for a soup with celery, milk, and wheat?"
+      )
+    ).toBe(true);
+  });
+
+  it("rejects a recordkeeping answer that does not distinguish critical inspection records", () => {
+    const answer = `Core records the business should keep
+- Cleaning records
+- Training records
+
+Why each record matters operationally
+- They help maintain control.`;
+
+    expect(
+      responseMeetsIntentContract(
+        "recordkeeping_requirements",
+        answer,
+        "What records should I keep for my restaurant in London?"
+      )
+    ).toBe(false);
+  });
+
+  it("accepts an inspection-readiness answer only when it identifies first-check evidence and practical gaps", () => {
+    const answer = `What an inspector will usually ask for first
+- Food safety management system
+- Recent monitoring records
+
+What the inspector is trying to confirm
+- That controls are in place and being followed
+
+What the business should check before inspection
+- Records are current and corrective actions are closed
+
+Common weak points inspectors pick up quickly
+- Incomplete records and poor allergen controls
+
+Immediate pre-inspection actions
+- Review the latest records and verify cleaning and temperature checks`;
+
+    expect(
+      responseMeetsIntentContract(
+        "inspection_readiness",
+        answer,
+        "What will an inspector expect to see first at my small restaurant in London?"
+      )
+    ).toBe(true);
   });
 });
 

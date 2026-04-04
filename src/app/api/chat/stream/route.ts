@@ -9,6 +9,7 @@ import {
   retrieveTemplateContext,
   retrieveUserDocumentContext,
   buildRAGPrompt,
+  classifyQAIntent,
   formatCitations,
   type KnowledgeChunk,
   getExportGuidance,
@@ -78,6 +79,7 @@ export function buildAuthorityRetryQueries(
   queryJurisdiction: Jurisdiction,
   businessTypeLabel?: string | null
 ) {
+  const qaIntent = classifyQAIntent(message);
   const jurisdictionHints =
     queryJurisdiction === "gb"
       ? ["UK food hygiene law", "England food business regulations", "FSA guidance"]
@@ -101,11 +103,19 @@ export function buildAuthorityRetryQueries(
           "food contact materials",
         ]
       : ["HACCP", "registration", "allergen management", "temperature control"];
+  const intentHints =
+    qaIntent === "legal_applicability"
+      ? ["registration", "records", "inspection readiness", "local authority", "EHO expectations"]
+      : qaIntent === "inspection_readiness"
+      ? ["inspection readiness", "records", "EHO expectations", "local authority inspection"]
+      : qaIntent === "recordkeeping_requirements"
+      ? ["records", "monitoring logs", "training records", "cleaning records", "traceability records", "corrective action records"]
+      : [];
   const businessHint = businessTypeLabel ? `for a ${businessTypeLabel}` : "";
 
   return [
-    [message, ...jurisdictionHints, businessHint, ...operationalHints].filter(Boolean).join(" "),
-    [message, ...jurisdictionHints, businessHint, "legal requirements", "food hygiene compliance"]
+    [message, ...jurisdictionHints, businessHint, ...operationalHints, ...intentHints].filter(Boolean).join(" "),
+    [message, ...jurisdictionHints, businessHint, "legal requirements", "food hygiene compliance", ...intentHints]
       .filter(Boolean)
       .join(" "),
   ];
@@ -117,6 +127,7 @@ export function buildKnowledgeRetryQueries(
   queryJurisdiction: Jurisdiction,
   businessTypeLabel?: string | null
 ) {
+  const qaIntent = classifyQAIntent(message);
   const businessHint = businessTypeLabel ? `for a ${businessTypeLabel}` : "";
   const jurisdictionHints =
     queryJurisdiction === "gb"
@@ -131,6 +142,12 @@ export function buildKnowledgeRetryQueries(
       ? labelPattern.test(message)
         ? ["food label", "allergen declaration", "template", "product information"]
         : ["template", "procedure", "checklist", "policy", "form"]
+      : qaIntent === "label_requirements"
+      ? ["food label", "mandatory particulars", "allergen declaration", "food information"]
+      : qaIntent === "recordkeeping_requirements"
+      ? ["records", "monitoring logs", "cleaning records", "training records", "traceability records"]
+      : qaIntent === "inspection_readiness"
+      ? ["inspection", "EHO", "inspection records", "food safety management system"]
       : ["food safety", "guidance", "compliance"];
 
   return [

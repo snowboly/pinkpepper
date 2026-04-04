@@ -82,6 +82,43 @@ describe("authority-query retrieval fallback", () => {
     expect(queries[0]).toContain("food manufacturing business");
   });
 
+  it("expands legal applicability queries with operational inspection and records hints", () => {
+    const queries = buildAuthorityRetryQueries(
+      "I run a restaurant in London. What food safety regulations apply to me?",
+      "gb",
+      "restaurant"
+    );
+
+    expect(queries[0]).toContain("inspection readiness");
+    expect(queries[0]).toContain("local authority");
+    expect(queries[0]).toContain("records");
+  });
+
+  it("expands recordkeeping queries with monitoring and traceability anchors", () => {
+    const queries = buildKnowledgeRetryQueries(
+      "What records should I keep for my restaurant in London?",
+      "qa",
+      "gb",
+      "restaurant"
+    );
+
+    expect(queries[0]).toContain("monitoring logs");
+    expect(queries[0]).toContain("cleaning records");
+    expect(queries[0]).toContain("traceability records");
+  });
+
+  it("expands inspection-readiness queries with inspection-specific anchors", () => {
+    const queries = buildAuthorityRetryQueries(
+      "What will an inspector expect to see first at my small restaurant in London?",
+      "gb",
+      "restaurant"
+    );
+
+    expect(queries[0]).toContain("inspection readiness");
+    expect(queries[0]).toContain("EHO expectations");
+    expect(queries[0]).toContain("local authority");
+  });
+
   it("expands label-creation document queries with labelling anchors", () => {
     const queries = buildKnowledgeRetryQueries(
       "Create a compliant food label for my product",
@@ -94,6 +131,19 @@ describe("authority-query retrieval fallback", () => {
     expect(queries[0]).toContain("Regulation (EU) No 1169/2011");
     expect(queries[0]).toContain("allergen declaration");
     expect(queries[0]).toContain("food manufacturing business");
+  });
+
+  it("expands label-requirements qa queries with label-specific anchors", () => {
+    const queries = buildKnowledgeRetryQueries(
+      "What must appear on the label for a soup containing celery, milk, and wheat?",
+      "qa",
+      "eu",
+      "food manufacturing business"
+    );
+
+    expect(queries[0]).toContain("mandatory particulars");
+    expect(queries[0]).toContain("food information");
+    expect(queries[0]).toContain("allergen declaration");
   });
 });
 
