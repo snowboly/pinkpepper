@@ -84,11 +84,12 @@ describe("billing route origin validation", () => {
     process.env.STRIPE_PRO_PRICE_ID = "price_pro";
   });
 
-  it("allows checkout from the same origin when NEXT_PUBLIC_SITE_URL has a trailing slash", async () => {
+  it("allows checkout with same-origin request", async () => {
     const response = await checkoutPost(
       new Request("https://pinkpepper.io/api/billing/checkout", {
         method: "POST",
         headers: {
+          host: "pinkpepper.io",
           origin: "https://pinkpepper.io",
           "content-type": "application/json",
         },
@@ -100,13 +101,14 @@ describe("billing route origin validation", () => {
     await expect(response.json()).resolves.toEqual({ url: "https://checkout.stripe.test/session_123" });
   });
 
-  it("allows billing-portal access from the same origin when NEXT_PUBLIC_SITE_URL has a trailing slash", async () => {
+  it("allows billing-portal access with same-origin request", async () => {
     billingState.subscriptionRow = { stripe_customer_id: "cus_123" };
 
     const response = await portalPost(
       new Request("https://pinkpepper.io/api/billing/portal", {
         method: "POST",
         headers: {
+          host: "pinkpepper.io",
           origin: "https://pinkpepper.io",
         },
       }),
@@ -116,11 +118,14 @@ describe("billing route origin validation", () => {
     await expect(response.json()).resolves.toEqual({ url: "https://billing.stripe.test/session_123" });
   });
 
-  it("allows checkout when behind a reverse proxy with a different request URL but correct Origin header", async () => {
+  it("allows checkout behind reverse proxy with x-forwarded-host/proto", async () => {
     const response = await checkoutPost(
       new Request("http://localhost:3000/api/billing/checkout", {
         method: "POST",
         headers: {
+          host: "localhost:3000",
+          "x-forwarded-host": "pinkpepper.io",
+          "x-forwarded-proto": "https",
           origin: "https://pinkpepper.io",
           "content-type": "application/json",
         },
@@ -132,11 +137,12 @@ describe("billing route origin validation", () => {
     await expect(response.json()).resolves.toEqual({ url: "https://checkout.stripe.test/session_123" });
   });
 
-  it("allows checkout when the request is same-origin but the browser omits the Origin header", async () => {
+  it("allows checkout when browser omits Origin header", async () => {
     const response = await checkoutPost(
       new Request("https://pinkpepper.io/api/billing/checkout", {
         method: "POST",
         headers: {
+          host: "pinkpepper.io",
           "content-type": "application/json",
         },
         body: JSON.stringify({ plan: "plus" }),
@@ -145,5 +151,21 @@ describe("billing route origin validation", () => {
 
     expect(response.status).toBe(200);
     await expect(response.json()).resolves.toEqual({ url: "https://checkout.stripe.test/session_123" });
+  });
+
+  it("rejects checkout from a different origin", async () => {
+    const response = await checkoutPost(
+      new Request("https://pinkpepper.io/api/billing/checkout", {
+        method: "POST",
+        headers: {
+          host: "pinkpepper.io",
+          origin: "https://evil.com",
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({ plan: "plus" }),
+      }),
+    );
+
+    expect(response.status).toBe(403);
   });
 });
