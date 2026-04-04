@@ -20,11 +20,11 @@ const planChanges = [
   },
   {
     plan: "Plus",
-    detail: "Everything in Free, plus more usage, 5 premium expert answers per day, unlimited saved conversations and projects, and access to downloadable templates.",
+    detail: "Everything in Free, plus more usage, 3 premium expert answers per day, unlimited saved conversations and projects, and access to downloadable templates.",
   },
   {
     plan: "Pro",
-    detail: "Everything in Plus, plus 20 premium expert answers per day, virtual audit mode, 2h/month of food safety consultancy, and priority support.",
+    detail: "Everything in Plus, plus 8 premium expert answers per day, virtual audit mode, 2h/month of food safety consultancy, and priority support.",
   },
 ];
 
@@ -95,7 +95,7 @@ export default async function PricingPage() {
           unitCode: "MON",
         },
         description:
-          "Everything in Free, plus more usage, 5 premium expert answers per day, unlimited saved conversations and projects, and access to downloadable templates.",
+          "Everything in Free, plus more usage, 3 premium expert answers per day, unlimited saved conversations and projects, and access to downloadable templates.",
       },
       {
         "@type": "Offer",
@@ -109,7 +109,7 @@ export default async function PricingPage() {
           unitCode: "MON",
         },
         description:
-          "Everything in Plus, plus 20 premium expert answers per day, virtual audit mode, 2h/month of food safety consultancy, and priority support.",
+          "Everything in Plus, plus 8 premium expert answers per day, virtual audit mode, 2h/month of food safety consultancy, and priority support.",
       },
     ],
   };
@@ -203,7 +203,7 @@ export default async function PricingPage() {
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  5 premium expert answers per day
+                  3 premium expert answers per day
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
@@ -239,7 +239,7 @@ export default async function PricingPage() {
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  20 premium expert answers per day
+                  8 premium expert answers per day
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
