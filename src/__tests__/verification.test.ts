@@ -34,6 +34,14 @@ describe("verification state", () => {
     expect(getVerificationState([{ source_class: "primary_law", jurisdiction: "gb" }])).toBe("verified");
   });
 
+  it("returns verified for regulation chunks even when source_class metadata is missing", () => {
+    expect(getVerificationState([{ source_type: "regulation", source_name: "UK food hygiene regulations 2006" }])).toBe("verified");
+  });
+
+  it("returns verified for guidance chunks even when source_class metadata is missing", () => {
+    expect(getVerificationState([{ source_type: "guidance", source_name: "FSA temperature control guidance" }])).toBe("verified");
+  });
+
   it("returns partial when only internal practice is present", () => {
     expect(getVerificationState([{ source_class: "internal_practice", jurisdiction: "gb" }])).toBe("partial");
   });
