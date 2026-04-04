@@ -14,21 +14,9 @@ import {
 import { DemoTabSwitcher } from "@/components/homepage/DemoTabSwitcher";
 import { HeroChatForm } from "@/components/homepage/HeroChatForm";
 import { homepageFaqs } from "@/data/faqs";
-import { createClient } from "@/utils/supabase/server";
 
 
-export default async function HomePage() {
-  let isLoggedIn = false;
-  try {
-    const supabase = await createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    isLoggedIn = !!user;
-  } catch {
-    isLoggedIn = false;
-  }
-
+export default function HomePage() {
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -307,9 +295,9 @@ export default async function HomePage() {
                 <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />Access to downloadable templates</li>
               </ul>
               <PricingActions
-                isLoggedIn={isLoggedIn}
                 plan="plus"
                 label="Choose Plus"
+                source="homepage"
                 className="mt-8 block rounded-xl border border-[#FBCFE8] bg-[#FFF1F2] py-3.5 text-center text-sm font-semibold text-[#BE123C] transition-all duration-200 hover:bg-[#FFE4E6] hover:-translate-y-0.5 hover:shadow-md active:scale-[0.98]"
               />
             </div>
@@ -330,9 +318,9 @@ export default async function HomePage() {
                 <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />Priority support</li>
               </ul>
               <PricingActions
-                isLoggedIn={isLoggedIn}
                 plan="pro"
                 label="Choose Pro"
+                source="homepage"
                 className="mt-8 block rounded-xl bg-[#E11D48] py-3.5 text-center text-sm font-semibold text-white transition-all duration-200 hover:bg-[#BE123C] hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#E11D48]/25 active:scale-[0.98]"
               />
             </div>

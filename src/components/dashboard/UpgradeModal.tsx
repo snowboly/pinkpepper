@@ -36,6 +36,16 @@ async function readCheckoutResponse(res: Response): Promise<{ url?: string; erro
   return { error: text || "Unable to start checkout." };
 }
 
+function openCheckout(url: string) {
+  const opened = window.open(url, "_blank", "noopener,noreferrer");
+  if (opened) {
+    opened.opener = null;
+    return;
+  }
+
+  window.location.href = url;
+}
+
 export default function UpgradeModal({ trigger, currentTier, onClose }: UpgradeModalProps) {
   const t = useTranslations("upgrade");
   const [loading, setLoading] = useState<SubscriptionTier | null>(null);
@@ -70,7 +80,7 @@ export default function UpgradeModal({ trigger, currentTier, onClose }: UpgradeM
         setError(data.error ?? t("unableToCheckout"));
         return;
       }
-      window.location.href = data.url;
+      openCheckout(data.url);
     } catch {
       setError(t("networkError"));
     } finally {

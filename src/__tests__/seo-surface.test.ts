@@ -203,6 +203,18 @@ describe("premium quality regressions", () => {
     expect(homepage).toContain("qualified food safety consultants");
   });
 
+  it("keeps homepage pricing CTAs cache-friendly and attributed separately from the pricing page", () => {
+    const homepage = readPage("src/app/page.tsx");
+    const pricingActions = readPage("src/components/pricing/PricingActions.tsx");
+
+    expect(homepage).not.toContain('await createClient()');
+    expect(homepage).not.toContain("supabase.auth.getUser()");
+    expect(homepage).toContain('source="homepage"');
+    expect(pricingActions).toContain('source?: "pricing_page" | "homepage"');
+    expect(pricingActions).toContain('source = "pricing_page"');
+    expect(pricingActions).toContain('track("checkout_started", { plan, source })');
+  });
+
   it("makes the Pro tier clearly about AI plus food safety consultancy", () => {
     const pricing = readPage("src/app/pricing/page.tsx");
 
