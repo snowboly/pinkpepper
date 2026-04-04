@@ -41,6 +41,7 @@ function shouldPreferAuthoritativeSources(message: string, mode: "qa" | "documen
 
 const PRIMARY_CHAT_MODEL = "llama-3.3-70b-versatile";
 const FALLBACK_CHAT_MODEL = "gpt-4o-mini";
+const HIGH_RISK_OPENAI_MODEL = "gpt-4.1";
 
 type ChatRequestMessage = {
   role: "system" | "user" | "assistant";
@@ -53,7 +54,38 @@ type ChatStreamAttempt = {
   response: Response;
 };
 
-export function resolveChatModels(modelOverride?: string | null) {
+export function shouldPreferOpenAIForQuery(
+  mode: "qa" | "document" | "audit",
+  message: string
+) {
+  if (mode === "audit") {
+    return true;
+  }
+
+  if (mode !== "qa") {
+    return false;
+  }
+
+  const intent = classifyQAIntent(message);
+  return (
+    intent === "legal_applicability" ||
+    intent === "label_requirements" ||
+    intent === "allergen_control" ||
+    intent === "inspection_readiness"
+  );
+}
+
+export function resolveChatModels(
+  modelOverride?: string | null,
+  options?: { preferOpenAI?: boolean }
+) {
+  if (options?.preferOpenAI) {
+    return {
+      primary: HIGH_RISK_OPENAI_MODEL,
+      fallback: modelOverride?.trim() || PRIMARY_CHAT_MODEL,
+    };
+  }
+
   return {
     primary: modelOverride?.trim() || PRIMARY_CHAT_MODEL,
     fallback: FALLBACK_CHAT_MODEL,
@@ -230,25 +262,50 @@ async function requestChatStream(input: {
   groqKey?: string;
   openaiKey?: string;
   modelOverride?: string | null;
+  preferOpenAI?: boolean;
   temperature: number;
   maxTokens: number;
   messages: ChatRequestMessage[];
 }): Promise<ChatStreamAttempt | null> {
-  const { groqKey, openaiKey, modelOverride, temperature, maxTokens, messages } = input;
-  const models = resolveChatModels(modelOverride);
+  const { groqKey, openaiKey, modelOverride, preferOpenAI, temperature, maxTokens, messages } =
+    input;
+  const models = resolveChatModels(modelOverride, { preferOpenAI });
 
-  if (groqKey) {
-    const groqResponse = await requestStreamingCompletion({
-      provider: "groq",
-      apiKey: groqKey,
+  if (preferOpenAI && openaiKey) {
+    const openaiResponse = await requestStreamingCompletion({
+      provider: "openai",
+      apiKey: openaiKey,
       model: models.primary,
       temperature,
       maxTokens,
       messages,
     });
 
+    if (openaiResponse?.ok) {
+      return { provider: "openai", model: models.primary, response: openaiResponse };
+    }
+
+    if (openaiResponse) {
+      console.error("[chat/stream] openai upstream error:", await openaiResponse.text());
+    }
+  }
+
+  if (groqKey) {
+    const groqResponse = await requestStreamingCompletion({
+      provider: "groq",
+      apiKey: groqKey,
+      model: preferOpenAI ? models.fallback : models.primary,
+      temperature,
+      maxTokens,
+      messages,
+    });
+
     if (groqResponse?.ok) {
-      return { provider: "groq", model: models.primary, response: groqResponse };
+      return {
+        provider: "groq",
+        model: preferOpenAI ? models.fallback : models.primary,
+        response: groqResponse,
+      };
     }
 
     if (groqResponse) {
@@ -260,14 +317,18 @@ async function requestChatStream(input: {
     const openaiResponse = await requestStreamingCompletion({
       provider: "openai",
       apiKey: openaiKey,
-      model: models.fallback,
+      model: preferOpenAI ? models.primary : models.fallback,
       temperature,
       maxTokens,
       messages,
     });
 
     if (openaiResponse?.ok) {
-      return { provider: "openai", model: models.fallback, response: openaiResponse };
+      return {
+        provider: "openai",
+        model: preferOpenAI ? models.primary : models.fallback,
+        response: openaiResponse,
+      };
     }
 
     if (openaiResponse) {
@@ -433,6 +494,7 @@ export async function POST(request: Request) {
   const hasAssistantHistory = history.some((row) => row.role === "assistant");
 
   const mode = detectQueryMode(message);
+  const preferOpenAI = shouldPreferOpenAIForQuery(mode, message);
 
   // RAG retrieval (knowledge base + user uploaded documents)
   let retrievedChunks: KnowledgeChunk[] = [];
@@ -704,6 +766,7 @@ export async function POST(request: Request) {
     groqKey: groqKey ?? undefined,
     openaiKey: openaiKey ?? undefined,
     modelOverride: process.env.GROQ_MODEL,
+    preferOpenAI,
     temperature,
     maxTokens,
     messages: [

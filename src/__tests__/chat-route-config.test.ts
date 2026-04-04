@@ -5,6 +5,7 @@ import {
   buildIntroductionInstruction,
   getHistoryWindowLimit,
   resolveChatModels,
+  shouldPreferOpenAIForQuery,
   shouldRunKnowledgeRetry,
   shouldUseRetrievedContextPrompt,
 } from "@/app/api/chat/stream/route";
@@ -27,6 +28,52 @@ describe("resolveChatModels", () => {
 
     expect(models.primary).toBe("custom-model");
     expect(models.fallback).toBe("gpt-4o-mini");
+  });
+
+  it("prefers gpt-4.1 first for high-risk compliance questions", () => {
+    const models = resolveChatModels("custom-groq-model", { preferOpenAI: true });
+
+    expect(models.primary).toBe("gpt-4.1");
+    expect(models.fallback).toBe("custom-groq-model");
+  });
+});
+
+describe("high-risk model routing", () => {
+  it("routes legal applicability questions to the stronger model", () => {
+    expect(
+      shouldPreferOpenAIForQuery(
+        "qa",
+        "I run a restaurant in London. What food safety regulations apply to me?"
+      )
+    ).toBe(true);
+  });
+
+  it("routes label questions to the stronger model", () => {
+    expect(
+      shouldPreferOpenAIForQuery(
+        "qa",
+        "What are the label requirements for a prepacked soup sold in Germany?"
+      )
+    ).toBe(true);
+  });
+
+  it("routes allergen-control questions to the stronger model", () => {
+    expect(
+      shouldPreferOpenAIForQuery(
+        "qa",
+        "A customer asks whether one of our sandwiches is gluten-free. What should staff do before answering?"
+      )
+    ).toBe(true);
+  });
+
+  it("keeps generic operational chat on the default model", () => {
+    expect(
+      shouldPreferOpenAIForQuery("qa", "Give me a simple cleaning checklist for closing time.")
+    ).toBe(false);
+  });
+
+  it("routes audit mode to the stronger model", () => {
+    expect(shouldPreferOpenAIForQuery("audit", "Audit my HACCP plan")).toBe(true);
   });
 });
 
