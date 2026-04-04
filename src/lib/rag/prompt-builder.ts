@@ -281,7 +281,7 @@ export function classifyQAIntent(userMessage: string): QAIntent {
 
   if (
     /\b(label|labelling|labeling)\b/i.test(userMessage) &&
-    /\b(must appear|need(?:s)? to appear|required|what goes on|what has to be on)\b/i.test(userMessage)
+    /\b(must appear|need(?:s)? to appear|required|what goes on|what has to be on|requirements?)\b/i.test(userMessage)
   ) {
     return "label_requirements";
   }

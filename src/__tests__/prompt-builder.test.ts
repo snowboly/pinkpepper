@@ -240,6 +240,12 @@ describe("consultant-grade qa intent detection", () => {
     ).toBe("label_requirements");
   });
 
+  it("classifies label requirements phrasing as label requirements", () => {
+    expect(
+      classifyQAIntent("What are the label requirements for a soup containing celery, milk, and wheat?")
+    ).toBe("label_requirements");
+  });
+
   it("classifies recordkeeping questions separately from generic qa", () => {
     expect(
       classifyQAIntent("What records should I keep for my restaurant in London?")
