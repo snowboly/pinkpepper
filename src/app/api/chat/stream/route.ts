@@ -313,7 +313,7 @@ async function requestChatStream(input: {
     }
   }
 
-  if (openaiKey) {
+  if (openaiKey && !preferOpenAI) {
     const openaiResponse = await requestStreamingCompletion({
       provider: "openai",
       apiKey: openaiKey,
