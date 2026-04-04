@@ -3,13 +3,9 @@ import { createClient } from "@/utils/supabase/server";
 import { getStripe } from "@/lib/billing/stripe";
 import { isAllowedBillingRequest } from "@/lib/billing/request-origin";
 import { billingLimiter, checkRateLimit } from "@/lib/ratelimit";
+import { getStripePriceIdForPlan, hasStripePriceConfigError } from "@/lib/billing/price-config";
 
 export const dynamic = "force-dynamic";
-
-const PLAN_TO_PRICE_ENV: Record<string, string | undefined> = {
-  plus: process.env.STRIPE_PLUS_PRICE_ID,
-  pro: process.env.STRIPE_PRO_PRICE_ID,
-};
 
 export async function POST(request: Request) {
   if (!isAllowedBillingRequest(request)) {
@@ -32,11 +28,17 @@ export async function POST(request: Request) {
 
   const body = (await request.json()) as { plan?: "plus" | "pro" };
   const plan = body.plan;
-  if (!plan || !PLAN_TO_PRICE_ENV[plan]) {
-    return NextResponse.json({ error: "Invalid plan." }, { status: 400 });
+  if (hasStripePriceConfigError(plan)) {
+    return NextResponse.json(
+      { error: "Billing is misconfigured. Stripe price IDs must start with `price_`." },
+      { status: 500 }
+    );
   }
 
-  const priceId = PLAN_TO_PRICE_ENV[plan]!;
+  const priceId = getStripePriceIdForPlan(plan);
+  if (!plan || !priceId) {
+    return NextResponse.json({ error: "Invalid plan." }, { status: 400 });
+  }
   const appUrl = process.env.NEXT_PUBLIC_SITE_URL || new URL(request.url).origin;
   const stripe = getStripe();
 
