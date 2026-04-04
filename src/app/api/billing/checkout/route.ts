@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
 import { getStripe } from "@/lib/billing/stripe";
+import { isAllowedBillingRequest } from "@/lib/billing/request-origin";
 import { billingLimiter, checkRateLimit } from "@/lib/ratelimit";
 
 export const dynamic = "force-dynamic";
@@ -11,10 +12,7 @@ const PLAN_TO_PRICE_ENV: Record<string, string | undefined> = {
 };
 
 export async function POST(request: Request) {
-  const origin = request.headers.get("origin");
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
-  const allowedOrigin = siteUrl ? new URL(siteUrl).origin : null;
-  if (!origin || !allowedOrigin || origin !== allowedOrigin) {
+  if (!isAllowedBillingRequest(request)) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
