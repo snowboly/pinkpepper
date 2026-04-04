@@ -13,6 +13,16 @@ interface Props {
   className: string;
 }
 
+async function readCheckoutResponse(res: Response): Promise<{ url?: string; error?: string }> {
+  const contentType = res.headers.get("content-type") ?? "";
+  if (contentType.includes("application/json")) {
+    return (await res.json()) as { url?: string; error?: string };
+  }
+
+  const text = await res.text();
+  return { error: text || "Unable to start checkout." };
+}
+
 export default function PricingActions({ isLoggedIn, plan, label, className }: Props) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -40,7 +50,7 @@ export default function PricingActions({ isLoggedIn, plan, label, className }: P
         body: JSON.stringify({ plan }),
       });
 
-      const data = (await res.json()) as { url?: string; error?: string };
+      const data = await readCheckoutResponse(res);
       if (!res.ok || !data.url) {
         setError(data.error ?? "Unable to start checkout.");
         return;
