@@ -228,4 +228,21 @@ describe("parseStripeSubscription", () => {
       status: "canceled",
     });
   });
+
+  it("matches Stripe prices consistently when env values contain whitespace", () => {
+    process.env.STRIPE_PLUS_PRICE_ID = "  price_plus  ";
+
+    expect(
+      parseStripeSubscription({
+        status: "active",
+        priceId: "price_plus",
+        currentPeriodEndUnix: 1_710_000_000,
+      })
+    ).toMatchObject({
+      planTier: "plus",
+      tier: "plus",
+      stripePriceId: "price_plus",
+      status: "active",
+    });
+  });
 });

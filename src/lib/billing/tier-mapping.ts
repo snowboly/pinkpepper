@@ -1,4 +1,5 @@
 import type { SubscriptionTier } from "@/lib/tier";
+import { normalizeStripePriceId } from "@/lib/billing/price-config";
 
 export type StripeSubscriptionSnapshot = {
   status: string;
@@ -9,9 +10,11 @@ export type StripeSubscriptionSnapshot = {
 };
 
 export function resolveTierFromPrice(priceId: string | null | undefined): SubscriptionTier {
-  if (!priceId) return "free";
-  if (priceId === process.env.STRIPE_PRO_PRICE_ID) return "pro";
-  if (priceId === process.env.STRIPE_PLUS_PRICE_ID) return "plus";
+  const normalizedPriceId = normalizeStripePriceId(priceId);
+  if (!normalizedPriceId) return "free";
+
+  if (normalizedPriceId === normalizeStripePriceId(process.env.STRIPE_PRO_PRICE_ID)) return "pro";
+  if (normalizedPriceId === normalizeStripePriceId(process.env.STRIPE_PLUS_PRICE_ID)) return "plus";
   return "free";
 }
 
