@@ -215,6 +215,24 @@ describe("buildRAGPrompt", () => {
     expect(result.systemPrompt).toContain("Do NOT suggest \"may contain\" wording for an ingredient that is intentionally present");
   });
 
+  it("treats manufacturer recipe-change label checks as label-and-release-control questions", () => {
+    const result = buildRAGPrompt(
+      "I run a small food manufacturing business in Germany. We changed a soup recipe and it now includes celery and milk. What label checks, allergen updates, and release controls should we complete before the new batch goes on sale?",
+      [makeChunk({ source_name: "Regulation (EU) No 1169/2011" })],
+      "qa",
+      "English",
+      "2026-04-04",
+      "food manufacturer",
+      "pro"
+    );
+
+    expect(result.systemPrompt).toContain("LABEL REQUIREMENTS FORMAT:");
+    expect(result.systemPrompt).toContain("label-and-release-control question");
+    expect(result.systemPrompt).toContain("updated raw material specifications");
+    expect(result.systemPrompt).toContain("artwork approval");
+    expect(result.systemPrompt).toContain("wrong-pack prevention");
+  });
+
   it("adds a stricter structure for recordkeeping questions", () => {
     const result = buildRAGPrompt(
       "What records should I keep for my restaurant in London?",
@@ -303,6 +321,12 @@ describe("consultant-grade qa intent detection", () => {
     expect(
       classifyQAIntent("A customer asks whether one of our sandwiches is gluten-free. What should my staff do before answering?")
     ).toBe("allergen_control");
+  });
+
+  it("classifies recipe-change release-control label questions as label requirements", () => {
+    expect(
+      classifyQAIntent("We changed a soup recipe. What label checks and release controls should we complete before the new batch goes on sale?")
+    ).toBe("label_requirements");
   });
 
   it("classifies recipe-change allergen questions as allergen control", () => {

@@ -159,6 +159,20 @@ describe("authority-query retrieval fallback", () => {
     expect(queries[0]).toContain("cross-contact controls");
     expect(queries[0]).toContain("gluten-free claim");
   });
+
+  it("expands manufacturer recipe-change label queries with release-control anchors", () => {
+    const queries = buildKnowledgeRetryQueries(
+      "We changed a soup recipe and it now includes celery and milk. What label checks, allergen updates, and release controls should we complete before the new batch goes on sale?",
+      "qa",
+      "eu",
+      "food manufacturer"
+    );
+
+    expect(queries[0]).toContain("recipe change");
+    expect(queries[0]).toContain("release controls");
+    expect(queries[0]).toContain("raw material specifications");
+    expect(queries[0]).toContain("wrong-pack prevention");
+  });
 });
 
 describe("persona introduction rules", () => {
