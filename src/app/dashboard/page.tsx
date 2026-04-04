@@ -39,15 +39,26 @@ export default async function DashboardPage() {
     : TIER_CAPABILITIES[tier];
 
   let count = 0;
+  let expertCount = 0;
   try {
-    count = await countUsageSince({
-      supabase,
-      userId: user.id,
-      eventType: "chat_prompt",
-      sinceIso: utcDayStartIso(),
-    });
+    const dayStart = utcDayStartIso();
+    [count, expertCount] = await Promise.all([
+      countUsageSince({
+        supabase,
+        userId: user.id,
+        eventType: "chat_prompt",
+        sinceIso: dayStart,
+      }),
+      countUsageSince({
+        supabase,
+        userId: user.id,
+        eventType: "expert_answer",
+        sinceIso: dayStart,
+      }),
+    ]);
   } catch {
     count = 0;
+    expertCount = 0;
   }
 
   return (
@@ -56,6 +67,8 @@ export default async function DashboardPage() {
       initialTier={tier}
       initialUsage={count}
       usageLimit={caps.dailyMessages}
+      initialExpertUsage={expertCount}
+      expertUsageLimit={isAdmin ? Number.MAX_SAFE_INTEGER : caps.dailyExpertAnswers}
       dailyImageUploads={isAdmin ? Number.MAX_SAFE_INTEGER : caps.dailyImageUploads}
       canExportPdf={caps.allowPdfExport}
       canExportWord={caps.allowWordExport}

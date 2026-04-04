@@ -196,7 +196,7 @@ export function buildIntroductionInstruction(hasAssistantHistory: boolean) {
     return "This conversation already has prior assistant replies. Do NOT greet, re-introduce yourself, or say 'Hello, I'm ...'. Continue directly with the answer.";
   }
 
-  return "This is the first assistant reply in this conversation. Begin with one brief introduction using your persona name, then answer the user's question.";
+  return "This is the first assistant reply in this conversation. Use one short professional introduction with your persona name only, then answer directly. Do NOT use chatty filler such as 'Let's walk through', 'I'll guide you', or similar soft openers.";
 }
 
 function shouldRetryStatus(status: number) {
@@ -403,14 +403,27 @@ export async function POST(request: Request) {
     return Response.json({ error: "Message is required." }, { status: 400 });
   }
 
+  const mode = detectQueryMode(message);
+  const preferOpenAI = shouldPreferOpenAIForQuery(mode, message);
+
   let used = 0;
+  let expertUsed = 0;
   try {
-    used = await countUsageSince({
-      supabase,
-      userId: user.id,
-      eventType: "chat_prompt",
-      sinceIso: utcDayStartIso(),
-    });
+    const dayStart = utcDayStartIso();
+    [used, expertUsed] = await Promise.all([
+      countUsageSince({
+        supabase,
+        userId: user.id,
+        eventType: "chat_prompt",
+        sinceIso: dayStart,
+      }),
+      countUsageSince({
+        supabase,
+        userId: user.id,
+        eventType: "expert_answer",
+        sinceIso: dayStart,
+      }),
+    ]);
   } catch {
     return Response.json({ error: "Unable to read usage." }, { status: 500 });
   }
@@ -420,6 +433,17 @@ export async function POST(request: Request) {
       {
         error: "Daily message limit reached for your plan. Upgrade to continue today.",
         usage: { used, limit: caps.dailyMessages, tier },
+      },
+      { status: 402 }
+    );
+  }
+
+  if (!isAdmin && preferOpenAI && expertUsed >= caps.dailyExpertAnswers) {
+    return Response.json(
+      {
+        error: "Daily expert answer limit reached for your plan. Upgrade to unlock more premium consultant answers today.",
+        usage: { used: expertUsed, limit: caps.dailyExpertAnswers, tier },
+        upgradeTrigger: "expert_limit",
       },
       { status: 402 }
     );
@@ -492,9 +516,6 @@ export async function POST(request: Request) {
     content: row.content,
   }));
   const hasAssistantHistory = history.some((row) => row.role === "assistant");
-
-  const mode = detectQueryMode(message);
-  const preferOpenAI = shouldPreferOpenAIForQuery(mode, message);
 
   // RAG retrieval (knowledge base + user uploaded documents)
   let retrievedChunks: KnowledgeChunk[] = [];
@@ -886,18 +907,41 @@ export async function POST(request: Request) {
         }
 
         // Record usage event
-        await supabase.from("usage_events").insert({
-          user_id: user.id,
-          event_type: "chat_prompt",
-          event_count: 1,
-          metadata: {
-            conversation_id: conversationId,
-            model: upstream.model,
-            provider: upstream.provider,
-            rag_enabled: ragEnabled,
-            mode,
+        const usageEvents: Array<{
+          user_id: string;
+          event_type: "chat_prompt" | "expert_answer";
+          event_count: number;
+          metadata: Record<string, string | boolean | null>;
+        }> = [
+          {
+            user_id: user.id,
+            event_type: "chat_prompt",
+            event_count: 1,
+            metadata: {
+              conversation_id: conversationId,
+              model: upstream.model,
+              provider: upstream.provider,
+              rag_enabled: ragEnabled,
+              mode,
+            },
           },
-        });
+        ];
+
+        if (preferOpenAI) {
+          usageEvents.push({
+            user_id: user.id,
+            event_type: "expert_answer",
+            event_count: 1,
+            metadata: {
+              conversation_id: conversationId,
+              model: upstream.model,
+              provider: upstream.provider,
+              mode,
+            },
+          });
+        }
+
+        await supabase.from("usage_events").insert(usageEvents);
 
         // Mark as completed only after DB persistence succeeds
         streamCompleted = true;
@@ -941,19 +985,43 @@ export async function POST(request: Request) {
               metadata: { interrupted: true },
             });
 
-            await supabase.from("usage_events").insert({
-              user_id: user.id,
-              event_type: "chat_prompt",
-              event_count: 1,
-              metadata: {
-                conversation_id: conversationId,
-                model: upstream.model,
-                provider: upstream.provider,
-                rag_enabled: ragEnabled,
-                mode,
-                interrupted: true,
+            const interruptedEvents: Array<{
+              user_id: string;
+              event_type: "chat_prompt" | "expert_answer";
+              event_count: number;
+              metadata: Record<string, string | boolean | null>;
+            }> = [
+              {
+                user_id: user.id,
+                event_type: "chat_prompt",
+                event_count: 1,
+                metadata: {
+                  conversation_id: conversationId,
+                  model: upstream.model,
+                  provider: upstream.provider,
+                  rag_enabled: ragEnabled,
+                  mode,
+                  interrupted: true,
+                },
               },
-            });
+            ];
+
+            if (preferOpenAI) {
+              interruptedEvents.push({
+                user_id: user.id,
+                event_type: "expert_answer",
+                event_count: 1,
+                metadata: {
+                  conversation_id: conversationId,
+                  model: upstream.model,
+                  provider: upstream.provider,
+                  mode,
+                  interrupted: true,
+                },
+              });
+            }
+
+            await supabase.from("usage_events").insert(interruptedEvents);
           } catch (saveErr) {
             console.error("[chat/stream] Failed to save interrupted message:", saveErr);
           }

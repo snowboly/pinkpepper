@@ -33,6 +33,8 @@ export default function ChatWorkspace({
   initialTier,
   initialUsage,
   usageLimit,
+  initialExpertUsage,
+  expertUsageLimit,
   dailyImageUploads,
   canExportWord,
   canReview,
@@ -59,6 +61,8 @@ export default function ChatWorkspace({
   const [tier, setTier] = useState<SubscriptionTier>(initialTier);
   const [, setUsage] = useState(initialUsage);
   const [, setUsageLimit] = useState(usageLimit);
+  const [, setExpertUsage] = useState(initialExpertUsage);
+  const [, setExpertUsageLimit] = useState(expertUsageLimit);
   const [isAdmin, setIsAdmin] = useState(initialIsAdmin);
 
   // ── Export state ──
@@ -77,7 +81,7 @@ export default function ChatWorkspace({
   const [showReviewModal, setShowReviewModal] = useState(false);
 
   // ── Upgrade modal state ──
-  const [upgradeModalTrigger, setUpgradeModalTrigger] = useState<"message_limit" | "image_limit" | "export" | "review" | "audit_mode" | "template_download" | null>(null);
+  const [upgradeModalTrigger, setUpgradeModalTrigger] = useState<"message_limit" | "expert_limit" | "image_limit" | "export" | "review" | "audit_mode" | "template_download" | null>(null);
   const [workspaceMode, setWorkspaceMode] = useState<WorkspaceMode>("ask");
 
   // ── UI state ──
@@ -249,7 +253,15 @@ export default function ChatWorkspace({
     setBillingError(null);
     try {
       const res = await fetch("/api/billing/status");
-      const data = (await res.json()) as { tier?: SubscriptionTier; isAdmin?: boolean; usage?: number; usageLimit?: number; error?: string };
+      const data = (await res.json()) as {
+        tier?: SubscriptionTier;
+        isAdmin?: boolean;
+        usage?: number;
+        usageLimit?: number;
+        expertUsage?: number;
+        expertUsageLimit?: number;
+        error?: string;
+      };
       if (!res.ok || !data.tier) {
         setBillingError(data.error ?? "Failed to refresh billing status.");
         return;
@@ -258,6 +270,8 @@ export default function ChatWorkspace({
       setIsAdmin(Boolean(data.isAdmin));
       if (typeof data.usage === "number") setUsage(data.usage);
       if (typeof data.usageLimit === "number") setUsageLimit(data.usageLimit);
+      if (typeof data.expertUsage === "number") setExpertUsage(data.expertUsage);
+      if (typeof data.expertUsageLimit === "number") setExpertUsageLimit(data.expertUsageLimit);
     } catch {
       setBillingError("Network error while refreshing billing status.");
     }
@@ -681,11 +695,17 @@ export default function ChatWorkspace({
       if (!res.ok) {
         let errMsg = "Request failed";
         const isLimit = res.status === 402;
+        let responseUpgradeTrigger: "message_limit" | "expert_limit" | "audit_mode" | null = null;
         try {
-          const data = await res.json();
+          const data = await res.json() as { error?: string; upgradeTrigger?: "message_limit" | "expert_limit" | "audit_mode" };
           errMsg = data.error ?? errMsg;
+          if (data.upgradeTrigger) {
+            responseUpgradeTrigger = data.upgradeTrigger;
+          }
         } catch { /* body may not be JSON */ }
-        if (isLimit && workspaceMode === "virtual_audit") {
+        if (isLimit && responseUpgradeTrigger) {
+          setUpgradeModalTrigger(responseUpgradeTrigger);
+        } else if (isLimit && workspaceMode === "virtual_audit") {
           setUpgradeModalTrigger("audit_mode");
         } else if (isLimit) {
           setUpgradeModalTrigger("message_limit");

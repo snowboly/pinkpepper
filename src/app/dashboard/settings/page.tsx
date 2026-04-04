@@ -36,16 +36,19 @@ export default async function SettingsPage() {
 
   const caps = TIER_CAPABILITIES[tier as keyof typeof TIER_CAPABILITIES] ?? TIER_CAPABILITIES.free;
   let usageCount = 0;
+  let expertUsageCount = 0;
   let imageUsageCount = 0;
   if (!isAdmin) {
     const dayStart = utcDayStartIso();
     try {
-      [usageCount, imageUsageCount] = await Promise.all([
+      [usageCount, expertUsageCount, imageUsageCount] = await Promise.all([
         countUsageSince({ supabase, userId: user.id, eventType: "chat_prompt", sinceIso: dayStart }),
+        countUsageSince({ supabase, userId: user.id, eventType: "expert_answer", sinceIso: dayStart }),
         countUsageSince({ supabase, userId: user.id, eventType: "image_upload", sinceIso: dayStart }),
       ]);
     } catch {
       usageCount = 0;
+      expertUsageCount = 0;
       imageUsageCount = 0;
     }
   }
@@ -74,6 +77,8 @@ export default async function SettingsPage() {
           chatLanguage={chatLanguage}
           usage={usageCount}
           usageLimit={isAdmin ? null : caps.dailyMessages}
+          expertUsage={expertUsageCount}
+          expertUsageLimit={isAdmin ? null : caps.dailyExpertAnswers}
           imageUsage={imageUsageCount}
           imageUsageLimit={isAdmin ? null : caps.dailyImageUploads}
         />

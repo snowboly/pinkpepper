@@ -21,6 +21,8 @@ type SettingsFormProps = {
   chatLanguage: string;
   usage: number;
   usageLimit: number | null;
+  expertUsage: number;
+  expertUsageLimit: number | null;
   imageUsage: number;
   imageUsageLimit: number | null;
 };
@@ -32,6 +34,8 @@ export default function SettingsForm({
   chatLanguage: initialChatLanguage,
   usage,
   usageLimit,
+  expertUsage,
+  expertUsageLimit,
   imageUsage,
   imageUsageLimit,
 }: SettingsFormProps) {
@@ -156,6 +160,12 @@ export default function SettingsForm({
               used={usage}
               limit={usageLimit}
               color="#E11D48"
+            />
+            <UsageBar
+              label={t("dailyExpertAnswers")}
+              used={expertUsage}
+              limit={expertUsageLimit}
+              color="#2563EB"
             />
             <UsageBar
               label={t("dailyImageAnalyses")}

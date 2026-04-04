@@ -6,7 +6,7 @@ import { track } from "@vercel/analytics";
 import type { SubscriptionTier } from "@/lib/tier";
 
 type UpgradeModalProps = {
-  trigger: "message_limit" | "image_limit" | "export" | "review" | "audit_mode" | "template_download";
+  trigger: "message_limit" | "expert_limit" | "image_limit" | "export" | "review" | "audit_mode" | "template_download";
   currentTier: SubscriptionTier;
   onClose: () => void;
 };

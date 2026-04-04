@@ -52,6 +52,8 @@ export default async function AdminDashboardPage() {
       initialTier={tier}
       initialUsage={count}
       usageLimit={Number.MAX_SAFE_INTEGER}
+      initialExpertUsage={0}
+      expertUsageLimit={Number.MAX_SAFE_INTEGER}
       dailyImageUploads={Number.MAX_SAFE_INTEGER}
       canExportPdf
       canExportWord
