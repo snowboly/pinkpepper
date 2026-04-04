@@ -116,6 +116,22 @@ describe("billing route origin validation", () => {
     await expect(response.json()).resolves.toEqual({ url: "https://billing.stripe.test/session_123" });
   });
 
+  it("allows checkout when behind a reverse proxy with a different request URL but correct Origin header", async () => {
+    const response = await checkoutPost(
+      new Request("http://localhost:3000/api/billing/checkout", {
+        method: "POST",
+        headers: {
+          origin: "https://pinkpepper.io",
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({ plan: "plus" }),
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    await expect(response.json()).resolves.toEqual({ url: "https://checkout.stripe.test/session_123" });
+  });
+
   it("allows checkout when the request is same-origin but the browser omits the Origin header", async () => {
     const response = await checkoutPost(
       new Request("https://pinkpepper.io/api/billing/checkout", {

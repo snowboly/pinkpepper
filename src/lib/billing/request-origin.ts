@@ -12,16 +12,17 @@ function normalizeOrigin(value: string | null | undefined): string | null {
 
 export function isAllowedBillingRequest(request: Request): boolean {
   const configuredOrigin = normalizeOrigin(process.env.NEXT_PUBLIC_SITE_URL);
-  const requestOrigin = normalizeOrigin(request.url);
-  const headerOrigin = normalizeOrigin(request.headers.get("origin"));
 
-  if (!configuredOrigin || !requestOrigin || requestOrigin !== configuredOrigin) {
+  if (!configuredOrigin) {
     return false;
   }
 
-  if (!headerOrigin) {
-    return true;
+  const headerOrigin = normalizeOrigin(request.headers.get("origin"));
+
+  if (headerOrigin) {
+    return headerOrigin === configuredOrigin;
   }
 
-  return headerOrigin === configuredOrigin;
+  const requestOrigin = normalizeOrigin(request.url);
+  return requestOrigin === configuredOrigin;
 }
