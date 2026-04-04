@@ -1,10 +1,12 @@
 import { describe, expect, it } from "vitest";
 import {
+  isPremiumExpertResponse,
   buildAuthorityRetryQueries,
   buildKnowledgeRetryQueries,
   buildIntroductionInstruction,
   getHistoryWindowLimit,
   resolveChatModels,
+  shouldUsePremiumExpertModel,
   shouldPreferOpenAIForQuery,
   shouldRunKnowledgeRetry,
   shouldUseRetrievedContextPrompt,
@@ -74,6 +76,48 @@ describe("high-risk model routing", () => {
 
   it("routes audit mode to the stronger model", () => {
     expect(shouldPreferOpenAIForQuery("audit", "Audit my HACCP plan")).toBe(true);
+  });
+
+  it("uses the premium model only when OpenAI is available and quota remains", () => {
+    expect(
+      shouldUsePremiumExpertModel({
+        preferOpenAI: true,
+        hasOpenAIKey: true,
+        isAdmin: false,
+        expertUsed: 2,
+        dailyExpertAnswers: 3,
+      })
+    ).toBe(true);
+  });
+
+  it("falls back to the regular path when premium quota is exhausted", () => {
+    expect(
+      shouldUsePremiumExpertModel({
+        preferOpenAI: true,
+        hasOpenAIKey: true,
+        isAdmin: false,
+        expertUsed: 3,
+        dailyExpertAnswers: 3,
+      })
+    ).toBe(false);
+  });
+
+  it("falls back to the regular path when OpenAI is unavailable", () => {
+    expect(
+      shouldUsePremiumExpertModel({
+        preferOpenAI: true,
+        hasOpenAIKey: false,
+        isAdmin: false,
+        expertUsed: 0,
+        dailyExpertAnswers: 3,
+      })
+    ).toBe(false);
+  });
+
+  it("counts expert usage only for premium OpenAI responses", () => {
+    expect(isPremiumExpertResponse({ provider: "openai", model: "gpt-4.1" })).toBe(true);
+    expect(isPremiumExpertResponse({ provider: "groq", model: "llama-3.3-70b-versatile" })).toBe(false);
+    expect(isPremiumExpertResponse({ provider: "openai", model: "gpt-4o-mini" })).toBe(false);
   });
 });
 

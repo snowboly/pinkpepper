@@ -75,6 +75,30 @@ export function shouldPreferOpenAIForQuery(
   );
 }
 
+export function shouldUsePremiumExpertModel(input: {
+  preferOpenAI: boolean;
+  hasOpenAIKey: boolean;
+  isAdmin: boolean;
+  expertUsed: number;
+  dailyExpertAnswers: number;
+}) {
+  const { preferOpenAI, hasOpenAIKey, isAdmin, expertUsed, dailyExpertAnswers } = input;
+
+  if (!preferOpenAI || !hasOpenAIKey) {
+    return false;
+  }
+
+  if (isAdmin) {
+    return true;
+  }
+
+  return expertUsed < dailyExpertAnswers;
+}
+
+export function isPremiumExpertResponse(upstream: { provider: "groq" | "openai"; model: string }) {
+  return upstream.provider === "openai" && upstream.model === HIGH_RISK_OPENAI_MODEL;
+}
+
 export function resolveChatModels(
   modelOverride?: string | null,
   options?: { preferOpenAI?: boolean }
@@ -438,16 +462,13 @@ export async function POST(request: Request) {
     );
   }
 
-  if (!isAdmin && preferOpenAI && expertUsed >= caps.dailyExpertAnswers) {
-    return Response.json(
-      {
-        error: "Daily expert answer limit reached for your plan. Upgrade to unlock more premium consultant answers today.",
-        usage: { used: expertUsed, limit: caps.dailyExpertAnswers, tier },
-        upgradeTrigger: "expert_limit",
-      },
-      { status: 402 }
-    );
-  }
+  const usePremiumExpertModel = shouldUsePremiumExpertModel({
+    preferOpenAI,
+    hasOpenAIKey: Boolean(openaiKey),
+    isAdmin,
+    expertUsed,
+    dailyExpertAnswers: caps.dailyExpertAnswers,
+  });
 
   // Resolve or create conversation
   let conversationId = body.conversationId ?? null;
@@ -787,7 +808,7 @@ export async function POST(request: Request) {
     groqKey: groqKey ?? undefined,
     openaiKey: openaiKey ?? undefined,
     modelOverride: process.env.GROQ_MODEL,
-    preferOpenAI,
+    preferOpenAI: usePremiumExpertModel,
     temperature,
     maxTokens,
     messages: [
@@ -927,7 +948,7 @@ export async function POST(request: Request) {
           },
         ];
 
-        if (preferOpenAI) {
+        if (isPremiumExpertResponse(upstream)) {
           usageEvents.push({
             user_id: user.id,
             event_type: "expert_answer",
@@ -1006,7 +1027,7 @@ export async function POST(request: Request) {
               },
             ];
 
-            if (preferOpenAI) {
+            if (isPremiumExpertResponse(upstream)) {
               interruptedEvents.push({
                 user_id: user.id,
                 event_type: "expert_answer",
