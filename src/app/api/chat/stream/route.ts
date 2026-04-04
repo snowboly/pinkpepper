@@ -141,10 +141,12 @@ export function buildKnowledgeRetryQueries(
   const retryHints =
     mode === "document"
       ? labelPattern.test(message)
-        ? ["food label", "allergen declaration", "template", "product information"]
+        ? ["food label", "allergen declaration", "template", "product information", "PPDS", "ingredients list emphasis"]
         : ["template", "procedure", "checklist", "policy", "form"]
       : qaIntent === "label_requirements"
-      ? ["food label", "mandatory particulars", "allergen declaration", "food information"]
+      ? ["food label", "mandatory particulars", "allergen declaration", "food information", "PPDS", "ingredients list emphasis", "name of the food"]
+      : qaIntent === "allergen_control"
+      ? ["allergen matrix", "ingredient specifications", "cross-contact controls", "gluten-free claim", "recipe change", "PPDS"]
       : qaIntent === "recordkeeping_requirements"
       ? ["records", "monitoring logs", "cleaning records", "training records", "traceability records"]
       : qaIntent === "inspection_readiness"

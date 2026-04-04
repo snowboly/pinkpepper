@@ -145,6 +145,20 @@ describe("authority-query retrieval fallback", () => {
     expect(queries[0]).toContain("food information");
     expect(queries[0]).toContain("allergen declaration");
   });
+
+  it("expands allergen-control queries with claim and cross-contact anchors", () => {
+    const queries = buildKnowledgeRetryQueries(
+      "A customer asks whether one of our sandwiches is gluten-free. What should my staff do before answering?",
+      "qa",
+      "gb",
+      "cafe"
+    );
+
+    expect(queries[0]).toContain("allergen matrix");
+    expect(queries[0]).toContain("ingredient specifications");
+    expect(queries[0]).toContain("cross-contact controls");
+    expect(queries[0]).toContain("gluten-free claim");
+  });
 });
 
 describe("persona introduction rules", () => {
