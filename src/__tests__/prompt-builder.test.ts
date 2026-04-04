@@ -196,6 +196,7 @@ describe("buildRAGPrompt", () => {
     expect(result.systemPrompt).toContain("Missing facts needed before finalising the label");
     expect(result.systemPrompt).toContain("Do NOT turn intentional allergens into generic \"allergen warning\" filler");
     expect(result.systemPrompt).toContain("Distinguish clearly between prepacked retail, PPDS, and loose or foodservice sale");
+    expect(result.systemPrompt).toContain("do NOT describe a separate \"Contains\" statement as interchangeable with ingredients-list allergen emphasis");
   });
 
   it("adds a stricter structure for allergen-control questions", () => {
