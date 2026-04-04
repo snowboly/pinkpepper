@@ -107,7 +107,7 @@ export function buildAuthorityRetryQueries(
     qaIntent === "legal_applicability"
       ? ["registration", "records", "inspection readiness", "local authority", "EHO expectations"]
       : qaIntent === "inspection_readiness"
-      ? ["inspection readiness", "records", "EHO", "local authority inspection"]
+      ? ["inspection readiness", "records", "EHO expectations", "local authority inspection"]
       : qaIntent === "recordkeeping_requirements"
       ? ["records", "monitoring logs", "training records", "cleaning records", "traceability records", "corrective action records"]
       : [];
