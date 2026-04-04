@@ -46,6 +46,24 @@ describe("verification state", () => {
     expect(getVerificationState([{ source_class: "internal_practice", jurisdiction: "gb" }])).toBe("partial");
   });
 
+  it("returns partial for certification-standard questions when retrieval is empty", () => {
+    expect(
+      getVerificationState([], {
+        mode: "qa",
+        userMessage: "What do I need to prepare for a BRCGS audit?",
+      })
+    ).toBe("partial");
+  });
+
+  it("keeps legal applicability questions unverified when retrieval is empty", () => {
+    expect(
+      getVerificationState([], {
+        mode: "qa",
+        userMessage: "I run a restaurant in London. What food safety regulations apply to me?",
+      })
+    ).toBe("unverified");
+  });
+
   it("returns unverified when there is no evidence", () => {
     expect(getVerificationState([])).toBe("unverified");
   });
