@@ -10,6 +10,7 @@
 import { createHash } from "crypto";
 import { createAdminClient } from "@/utils/supabase/admin";
 import { generateEmbeddings } from "@/lib/rag/embeddings";
+import { buildChunkMetadata } from "@/lib/rag/source-taxonomy";
 import type { Json } from "@/types/database.types";
 import {
   searchFoodSafetyRegulations,
@@ -68,6 +69,11 @@ type SyncHealthSummary = {
   defaultSinceDate: string;
 };
 
+type RegulationMetadataInput = Pick<
+  CellarRegulation,
+  "celex" | "baseCelex" | "title" | "dateDocument" | "dateLastModified"
+>;
+
 function extractMetadataDate(metadata: Json | null): string | null {
   if (!metadata || typeof metadata !== "object" || Array.isArray(metadata)) return null;
   const syncedAt = metadata.syncedAt;
@@ -119,6 +125,21 @@ export async function writeSyncLogEntry(
     return false;
   }
   throw new Error(String("message" in error ? error.message : error));
+}
+
+export function buildRegulationChunkMetadata(
+  sourceName: string,
+  regulation: RegulationMetadataInput
+): Json {
+  return {
+    ...buildChunkMetadata(sourceName),
+    celexNumber: regulation.celex,
+    baseCelexNumber: regulation.baseCelex,
+    currentVersionDate: regulation.dateLastModified,
+    originalTitle: regulation.title,
+    dateDocument: regulation.dateDocument,
+    syncedAt: new Date().toISOString(),
+  };
 }
 
 /**
@@ -283,14 +304,7 @@ async function processRegulation(
         source_type: "regulation",
         source_name: sourceName,
         section_ref: extractSectionRef(batch[j]),
-        metadata: {
-          celexNumber: regulation.celex,
-          baseCelexNumber: regulation.baseCelex,
-          currentVersionDate: regulation.dateLastModified,
-          originalTitle: regulation.title,
-          dateDocument: regulation.dateDocument,
-          syncedAt: new Date().toISOString(),
-        },
+        metadata: buildRegulationChunkMetadata(sourceName, regulation),
       });
     }
 

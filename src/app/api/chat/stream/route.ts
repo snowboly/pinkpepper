@@ -2,7 +2,16 @@
 import { TIER_CAPABILITIES, type SubscriptionTier } from "@/lib/tier";
 import { resolveUserAccess } from "@/lib/access";
 import { countUsageSince, utcDayStartIso } from "@/lib/policy";
-import { retrieveContext, retrieveRegulationContext, retrieveUserDocumentContext, buildRAGPrompt, formatCitations, type KnowledgeChunk, getExportGuidance } from "@/lib/rag";
+import {
+  retrieveContext,
+  retrieveRegulationContext,
+  retrieveUserDocumentContext,
+  buildRAGPrompt,
+  formatCitations,
+  type KnowledgeChunk,
+  getExportGuidance,
+  filterAuthorityFallbackChunks,
+} from "@/lib/rag";
 import { getVerificationState } from "@/lib/rag/verification";
 import { inferQueryJurisdiction, type Jurisdiction } from "@/lib/rag/source-taxonomy";
 import { chatLimiter, chatBurstLimiter, checkRateLimit } from "@/lib/ratelimit";
@@ -67,9 +76,25 @@ export function buildAuthorityRetryQueries(
     queryJurisdiction === "gb"
       ? ["UK food hygiene law", "England food business regulations", "FSA guidance"]
       : queryJurisdiction === "eu"
-      ? ["EU food hygiene law", "Regulation (EC) No 852/2004", "official guidance"]
+      ? [
+          "EU food hygiene law",
+          "Regulation (EC) No 852/2004",
+          "Regulation (EC) No 178/2002",
+          "Regulation (EU) No 1169/2011",
+          "official guidance",
+        ]
       : ["EU and UK food hygiene law", "Regulation (EC) No 852/2004", "FSA guidance"];
-  const operationalHints = ["HACCP", "registration", "allergen management", "temperature control"];
+  const operationalHints =
+    queryJurisdiction === "eu"
+      ? [
+          "HACCP",
+          "traceability",
+          "allergen management",
+          "food information",
+          "microbiological criteria",
+          "food contact materials",
+        ]
+      : ["HACCP", "registration", "allergen management", "temperature control"];
   const businessHint = businessTypeLabel ? `for a ${businessTypeLabel}` : "";
 
   return [
@@ -428,6 +453,41 @@ export async function POST(request: Request) {
 
         if (kChunks.length > 0) {
           break;
+        }
+      }
+
+      if (kChunks.length === 0) {
+        for (const retryQuery of retryQueries) {
+          const [unfilteredChunks, unfilteredRegChunks] = await Promise.all([
+            retrieveContext(retryQuery, {
+              topK: 8,
+              threshold: 0.52,
+            }),
+            retrieveRegulationContext(retryQuery, {
+              topK: 5,
+              threshold: 0.5,
+            }),
+          ]);
+
+          const filteredFallbackChunks = filterAuthorityFallbackChunks(
+            [...unfilteredChunks, ...unfilteredRegChunks],
+            {
+              jurisdiction: jurisdictionFilter,
+              sourceClasses: ["primary_law", "official_guidance"],
+            }
+          );
+
+          const existingIds = new Set(kChunks.map((chunk) => chunk.id));
+          for (const chunk of filteredFallbackChunks) {
+            if (!existingIds.has(chunk.id)) {
+              existingIds.add(chunk.id);
+              kChunks.push(chunk);
+            }
+          }
+
+          if (kChunks.length > 0) {
+            break;
+          }
         }
       }
     }

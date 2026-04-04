@@ -10,6 +10,7 @@ export {
   retrieveTemplateContext,
   retrieveCertificationContext,
   retrieveUserDocumentContext,
+  filterAuthorityFallbackChunks,
   type KnowledgeChunk,
   type UserDocumentChunk,
   type RetrievalOptions,

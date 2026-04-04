@@ -53,13 +53,26 @@ describe("authority-query retrieval fallback", () => {
     const queries = buildAuthorityRetryQueries(
       "I run a restaurant in London. What food safety regulations apply to me?",
       "gb",
-      "restaurant or café"
+      "restaurant or cafe"
     );
 
     expect(queries[0]).toContain("London");
     expect(queries[0]).toContain("UK food hygiene law");
     expect(queries[0]).toContain("FSA guidance");
-    expect(queries[0]).toContain("restaurant or café");
+    expect(queries[0]).toContain("restaurant or cafe");
+  });
+
+  it("expands EU manufacturer legal queries with core EU food law anchors", () => {
+    const queries = buildAuthorityRetryQueries(
+      "I'm a food manufacturer in Germany. What EU regulations must I follow?",
+      "eu",
+      "food manufacturing business"
+    );
+
+    expect(queries[0]).toContain("Germany");
+    expect(queries[0]).toContain("Regulation (EC) No 178/2002");
+    expect(queries[0]).toContain("Regulation (EU) No 1169/2011");
+    expect(queries[0]).toContain("food manufacturing business");
   });
 });
 

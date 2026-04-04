@@ -115,4 +115,19 @@ describe("billing route origin validation", () => {
     expect(response.status).toBe(200);
     await expect(response.json()).resolves.toEqual({ url: "https://billing.stripe.test/session_123" });
   });
+
+  it("allows checkout when the request is same-origin but the browser omits the Origin header", async () => {
+    const response = await checkoutPost(
+      new Request("https://pinkpepper.io/api/billing/checkout", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({ plan: "plus" }),
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    await expect(response.json()).resolves.toEqual({ url: "https://checkout.stripe.test/session_123" });
+  });
 });
