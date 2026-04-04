@@ -189,4 +189,25 @@ describe("billing route origin validation", () => {
       error: "Billing is misconfigured. Stripe price IDs must start with `price_`.",
     });
   });
+
+  it("returns structured json when Stripe checkout creation throws", async () => {
+    createCheckoutSessionMock.mockRejectedValueOnce(new Error("Stripe API down"));
+
+    const response = await checkoutPost(
+      new Request("https://pinkpepper.io/api/billing/checkout", {
+        method: "POST",
+        headers: {
+          host: "pinkpepper.io",
+          origin: "https://pinkpepper.io",
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({ plan: "plus" }),
+      }),
+    );
+
+    expect(response.status).toBe(500);
+    await expect(response.json()).resolves.toEqual({
+      error: "Unable to start checkout right now. Please try again in a moment.",
+    });
+  });
 });

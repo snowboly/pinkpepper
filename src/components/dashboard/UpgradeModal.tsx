@@ -26,6 +26,16 @@ const PLAN_DEFS = [
   },
 ];
 
+async function readCheckoutResponse(res: Response): Promise<{ url?: string; error?: string }> {
+  const contentType = res.headers.get("content-type") ?? "";
+  if (contentType.includes("application/json")) {
+    return (await res.json()) as { url?: string; error?: string };
+  }
+
+  const text = await res.text();
+  return { error: text || "Unable to start checkout." };
+}
+
 export default function UpgradeModal({ trigger, currentTier, onClose }: UpgradeModalProps) {
   const t = useTranslations("upgrade");
   const [loading, setLoading] = useState<SubscriptionTier | null>(null);
@@ -55,7 +65,7 @@ export default function UpgradeModal({ trigger, currentTier, onClose }: UpgradeM
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ plan }),
       });
-      const data = (await res.json()) as { url?: string; error?: string };
+      const data = await readCheckoutResponse(res);
       if (!res.ok || !data.url) {
         setError(data.error ?? t("unableToCheckout"));
         return;
