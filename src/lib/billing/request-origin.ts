@@ -1,10 +1,18 @@
 function deriveRequestOrigin(request: Request): string | null {
-  const host = request.headers.get("x-forwarded-host") ?? request.headers.get("host");
-  if (!host) {
+  const rawHost = request.headers.get("x-forwarded-host") ?? request.headers.get("host");
+  if (!rawHost) {
     return null;
   }
 
-  const proto = request.headers.get("x-forwarded-proto") ?? "https";
+  // X-Forwarded-Host can be a comma-separated list when chained through proxies;
+  // the first entry is the client-facing host.
+  const host = rawHost.split(",")[0].trim();
+
+  const rawProto = request.headers.get("x-forwarded-proto");
+  const proto = rawProto
+    ? rawProto.split(",")[0].trim()
+    : new URL(request.url).protocol.replace(":", "");
+
   try {
     return new URL(`${proto}://${host}`).origin;
   } catch {
