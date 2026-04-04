@@ -4,7 +4,9 @@ import { resolveUserAccess } from "@/lib/access";
 import { countUsageSince, utcDayStartIso } from "@/lib/policy";
 import {
   retrieveContext,
+  retrieveGuidanceContext,
   retrieveRegulationContext,
+  retrieveTemplateContext,
   retrieveUserDocumentContext,
   buildRAGPrompt,
   formatCitations,
@@ -102,6 +104,34 @@ export function buildAuthorityRetryQueries(
     [message, ...jurisdictionHints, businessHint, "legal requirements", "food hygiene compliance"]
       .filter(Boolean)
       .join(" "),
+  ];
+}
+
+export function buildKnowledgeRetryQueries(
+  message: string,
+  mode: "qa" | "document" | "audit",
+  queryJurisdiction: Jurisdiction,
+  businessTypeLabel?: string | null
+) {
+  const businessHint = businessTypeLabel ? `for a ${businessTypeLabel}` : "";
+  const jurisdictionHints =
+    queryJurisdiction === "gb"
+      ? ["UK food safety", "FSA guidance"]
+      : queryJurisdiction === "eu"
+      ? ["EU food safety", "Regulation (EC) No 852/2004", "Regulation (EU) No 1169/2011"]
+      : ["EU and UK food safety", "Regulation (EC) No 852/2004", "official guidance"];
+
+  const labelPattern = /\b(label|labels|labelling|labeling|allergen|ppds|food information)\b/i;
+  const retryHints =
+    mode === "document"
+      ? labelPattern.test(message)
+        ? ["food label", "allergen declaration", "template", "product information"]
+        : ["template", "procedure", "checklist", "policy", "form"]
+      : ["food safety", "guidance", "compliance"];
+
+  return [
+    [message, businessHint, ...jurisdictionHints, ...retryHints].filter(Boolean).join(" "),
+    [message, businessHint, ...retryHints].filter(Boolean).join(" "),
   ];
 }
 
@@ -488,6 +518,47 @@ export async function POST(request: Request) {
           if (kChunks.length > 0) {
             break;
           }
+        }
+      }
+    }
+
+    if (kChunks.length === 0) {
+      const retryQueries = buildKnowledgeRetryQueries(message, mode, queryJurisdiction, businessTypeLabel);
+
+      for (const retryQuery of retryQueries) {
+        const [retryChunks, retryGuidanceChunks, retryTemplateChunks, retryRegChunks] = await Promise.all([
+          retrieveContext(retryQuery, {
+            topK: 8,
+            threshold: 0.52,
+            ...(jurisdictionFilter ? { jurisdiction: jurisdictionFilter } : {}),
+          }),
+          retrieveGuidanceContext(retryQuery, {
+            topK: 5,
+            threshold: 0.5,
+            ...(jurisdictionFilter ? { jurisdiction: jurisdictionFilter } : {}),
+          }),
+          retrieveTemplateContext(retryQuery, {
+            topK: 5,
+            threshold: 0.5,
+            ...(jurisdictionFilter ? { jurisdiction: jurisdictionFilter } : {}),
+          }),
+          retrieveRegulationContext(retryQuery, {
+            topK: 5,
+            threshold: 0.5,
+            ...(jurisdictionFilter ? { jurisdiction: jurisdictionFilter } : {}),
+          }),
+        ]);
+
+        const existingIds = new Set(kChunks.map((chunk) => chunk.id));
+        for (const chunk of [...retryChunks, ...retryGuidanceChunks, ...retryTemplateChunks, ...retryRegChunks]) {
+          if (!existingIds.has(chunk.id)) {
+            existingIds.add(chunk.id);
+            kChunks.push(chunk);
+          }
+        }
+
+        if (kChunks.length > 0) {
+          break;
         }
       }
     }

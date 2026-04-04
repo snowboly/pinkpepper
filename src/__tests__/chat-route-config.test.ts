@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   buildAuthorityRetryQueries,
+  buildKnowledgeRetryQueries,
   buildIntroductionInstruction,
   getHistoryWindowLimit,
   resolveChatModels,
@@ -72,6 +73,20 @@ describe("authority-query retrieval fallback", () => {
     expect(queries[0]).toContain("Germany");
     expect(queries[0]).toContain("Regulation (EC) No 178/2002");
     expect(queries[0]).toContain("Regulation (EU) No 1169/2011");
+    expect(queries[0]).toContain("food manufacturing business");
+  });
+
+  it("expands label-creation document queries with labelling anchors", () => {
+    const queries = buildKnowledgeRetryQueries(
+      "Create a compliant food label for my product",
+      "document",
+      "eu",
+      "food manufacturing business"
+    );
+
+    expect(queries[0]).toContain("food label");
+    expect(queries[0]).toContain("Regulation (EU) No 1169/2011");
+    expect(queries[0]).toContain("allergen declaration");
     expect(queries[0]).toContain("food manufacturing business");
   });
 });
