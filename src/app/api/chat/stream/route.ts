@@ -629,7 +629,11 @@ export async function POST(request: Request) {
                 : undefined,
             source_type: chunk.source_type,
             source_name: chunk.source_name,
-          }))
+          })),
+          {
+            mode,
+            userMessage: message,
+          }
         );
 
         // Save assistant message to database
