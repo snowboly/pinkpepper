@@ -22,11 +22,14 @@ export {
 export {
   buildRAGPrompt,
   buildRAGSystemPrompt,
+  classifyQAIntent,
   formatContext,
   extractSourceReferences,
   getExportGuidance,
   MODE_TEMPERATURES,
+  responseMeetsIntentContract,
   type RAGMode,
+  type QAIntent,
 } from "./prompt-builder";
 
 export {

@@ -2,6 +2,13 @@
 import type { SubscriptionTier } from "@/lib/tier";
 
 export type RAGMode = "qa" | "document" | "audit";
+export type QAIntent =
+  | "generic"
+  | "legal_applicability"
+  | "label_requirements"
+  | "recordkeeping_requirements"
+  | "inspection_readiness"
+  | "certification_guidance";
 
 const MODE_TEMPERATURES: Record<RAGMode, number> = {
   qa: 0.1,      // Factual accuracy from retrieved docs
@@ -178,7 +185,7 @@ function getModeInstructions(mode: RAGMode): string {
 }
 
 function getLegalApplicabilityInstructions(userMessage: string): string {
-  if (!/\b(what (food safety )?regulations apply|what laws apply|what requirements apply|which regulations apply|which laws apply)\b/i.test(userMessage)) {
+  if (classifyQAIntent(userMessage) !== "legal_applicability") {
     return "";
   }
 
@@ -198,6 +205,196 @@ LEGAL APPLICABILITY FORMAT:
 - If the business is a restaurant, include registration with the local authority, food hygiene management system expectations, allergen duties, and likely inspection/FHRS exposure where supported by retrieved sources.`;
 }
 
+function getLabelRequirementsInstructions(userMessage: string): string {
+  if (classifyQAIntent(userMessage) !== "label_requirements") {
+    return "";
+  }
+
+  return `
+
+LABEL REQUIREMENTS FORMAT:
+- When the user asks what must appear on a label, do NOT answer with generic allergen advice or a loose regulation summary.
+- Use these headings in order:
+  1. What type of product and label situation this is
+  2. Laws and guidance that apply
+  3. Mandatory particulars that must appear
+  4. Allergen, emphasis, language, and field-of-vision issues
+  5. Missing facts needed before finalising the label
+  6. Practical next actions
+- Under "What type of product and label situation this is", identify whether this appears to be a prepacked retail label, PPDS situation, foodservice label, or another case based on the user's wording.
+- Under "Laws and guidance that apply", cite the specific EU/UK rules that matter for the user's jurisdiction and product context.
+- Under "Mandatory particulars that must appear", list the required label elements relevant to the case rather than reciting every possible rule.
+- Under "Allergen, emphasis, language, and field-of-vision issues", explain how allergens must be presented and call out any key display constraints where relevant.
+- Under "Missing facts needed before finalising the label", name the exact product-specific details still needed before a label can be finalised.
+- Keep the answer operational and label-ready, not academic.`;
+}
+
+function getRecordkeepingRequirementsInstructions(userMessage: string): string {
+  if (classifyQAIntent(userMessage) !== "recordkeeping_requirements") {
+    return "";
+  }
+
+  return `
+
+RECORDKEEPING REQUIREMENTS FORMAT:
+- When the user asks what records they should keep, do NOT give a loose mixed list of documents and generic advice.
+- Use these headings in order:
+  1. Core records the business should keep
+  2. Why each record matters operationally
+  3. Which records matter most in inspection or incident situations
+  4. Immediate actions to tighten record keeping
+- Under "Core records the business should keep", group the records into practical categories such as monitoring, cleaning, training, allergens, supplier/traceability, maintenance, pest control, and corrective actions where relevant.
+- Under "Why each record matters operationally", explain what control each record proves.
+- Under "Which records matter most in inspection or incident situations", identify the records an inspector, auditor, or investigator will most often rely on first.
+- Keep the answer practical and prioritised rather than exhaustive for its own sake.`;
+}
+
+function getInspectionReadinessInstructions(userMessage: string): string {
+  if (classifyQAIntent(userMessage) !== "inspection_readiness") {
+    return "";
+  }
+
+  return `
+
+INSPECTION READINESS FORMAT:
+- When the user asks what an inspector will expect, do NOT answer with a generic hygiene summary.
+- Use these headings in order:
+  1. What an inspector will usually ask for first
+  2. What the inspector is trying to confirm
+  3. What the business should check before inspection
+  4. Common weak points inspectors pick up quickly
+  5. Immediate pre-inspection actions
+- Under "What an inspector will usually ask for first", name the records, systems, and obvious site conditions an inspector will typically review early.
+- Under "What the inspector is trying to confirm", explain what those checks are intended to prove.
+- Under "What the business should check before inspection", turn that into a practical operator checklist.
+- Keep the answer specific to the business type and jurisdiction in the prompt where possible.`;
+}
+
+export function classifyQAIntent(userMessage: string): QAIntent {
+  if (
+    /\b(what (food safety )?regulations apply|what laws apply|what requirements apply|which regulations apply|which laws apply)\b/i.test(
+      userMessage
+    )
+  ) {
+    return "legal_applicability";
+  }
+
+  if (
+    /\b(label|labelling|labeling)\b/i.test(userMessage) &&
+    /\b(must appear|need(?:s)? to appear|required|what goes on|what has to be on)\b/i.test(userMessage)
+  ) {
+    return "label_requirements";
+  }
+
+  if (
+    /\b(what records should|what records do i need|what records do we need|what records must|which records should|which records do i need)\b/i.test(
+      userMessage
+    )
+  ) {
+    return "recordkeeping_requirements";
+  }
+
+  if (
+    /\b(inspector|inspection|eho|environmental health officer|what would an inspector expect|what will an inspector ask)\b/i.test(
+      userMessage
+    )
+  ) {
+    return "inspection_readiness";
+  }
+
+  if (/\b(brcgs|sqf|ifs|fssc\s*22000|salsa|certification)\b/i.test(userMessage)) {
+    return "certification_guidance";
+  }
+
+  return "generic";
+}
+
+function getQAIntentInstructions(userMessage: string): string {
+  const legalApplicabilityInstructions = getLegalApplicabilityInstructions(userMessage);
+  if (legalApplicabilityInstructions) {
+    return legalApplicabilityInstructions;
+  }
+
+  const labelRequirementsInstructions = getLabelRequirementsInstructions(userMessage);
+  if (labelRequirementsInstructions) {
+    return labelRequirementsInstructions;
+  }
+
+  const recordkeepingRequirementsInstructions = getRecordkeepingRequirementsInstructions(userMessage);
+  if (recordkeepingRequirementsInstructions) {
+    return recordkeepingRequirementsInstructions;
+  }
+
+  const inspectionReadinessInstructions = getInspectionReadinessInstructions(userMessage);
+  if (inspectionReadinessInstructions) {
+    return inspectionReadinessInstructions;
+  }
+
+  return "";
+}
+
+function normalizeAnswer(value: string) {
+  return value.toLowerCase();
+}
+
+function includesAll(answer: string, requiredPhrases: string[]) {
+  const normalized = normalizeAnswer(answer);
+  return requiredPhrases.every((phrase) => normalized.includes(phrase));
+}
+
+export function responseMeetsIntentContract(
+  intent: QAIntent,
+  answer: string,
+  userMessage: string
+): boolean {
+  const normalizedAnswer = normalizeAnswer(answer);
+  const normalizedUserMessage = normalizeAnswer(userMessage);
+
+  switch (intent) {
+    case "legal_applicability":
+      return (
+        includesAll(answer, [
+          "core laws and official guidance that apply",
+          "what those laws mean for this business in practice",
+          "immediate actions the business should take now",
+        ]) &&
+        (normalizedAnswer.includes("record") || normalizedAnswer.includes("records")) &&
+        (normalizedAnswer.includes("inspector") ||
+          normalizedAnswer.includes("inspection") ||
+          normalizedAnswer.includes("eho"))
+      );
+
+    case "label_requirements":
+      return includesAll(answer, [
+        "what type of product and label situation this is",
+        "mandatory particulars that must appear",
+        "missing facts needed before finalising the label",
+      ]);
+
+    case "recordkeeping_requirements":
+      return includesAll(answer, [
+        "core records the business should keep",
+        "which records matter most in inspection or incident situations",
+      ]);
+
+    case "inspection_readiness":
+      return includesAll(answer, [
+        "what an inspector will usually ask for first",
+        "what the business should check before inspection",
+      ]);
+
+    case "certification_guidance":
+      return /\b(brcgs|sqf|ifs|fssc|salsa)\b/i.test(answer);
+
+    case "generic":
+    default:
+      if (normalizedUserMessage.includes("label")) {
+        return normalizedAnswer.includes("label");
+      }
+      return true;
+  }
+}
+
 /**
  * Build a complete RAG prompt for the chat API
  */
@@ -210,13 +407,13 @@ export function buildRAGPrompt(
   businessTypeLabel?: string | null,
   tier?: SubscriptionTier
 ): { systemPrompt: string; temperature: number } {
-  const legalApplicabilityInstructions =
-    mode === "qa" ? getLegalApplicabilityInstructions(userMessage) : "";
+  const qaIntentInstructions =
+    mode === "qa" ? getQAIntentInstructions(userMessage) : "";
 
   return {
     systemPrompt:
       buildRAGSystemPrompt(chunks, mode, preferredLanguage, currentDate, businessTypeLabel, tier) +
-      legalApplicabilityInstructions,
+      qaIntentInstructions,
     temperature: MODE_TEMPERATURES[mode],
   };
 }
