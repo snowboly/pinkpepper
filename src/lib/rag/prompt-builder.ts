@@ -6,6 +6,7 @@ export type QAIntent =
   | "generic"
   | "legal_applicability"
   | "label_requirements"
+  | "allergen_control"
   | "recordkeeping_requirements"
   | "inspection_readiness"
   | "certification_guidance";
@@ -238,7 +239,33 @@ LABEL REQUIREMENTS FORMAT:
 - Under "Mandatory particulars that must appear", list the required label elements relevant to the case rather than reciting every possible rule.
 - Under "Allergen, emphasis, language, and field-of-vision issues", explain how allergens must be presented and call out any key display constraints where relevant.
 - Under "Missing facts needed before finalising the label", name the exact product-specific details still needed before a label can be finalised.
+- Distinguish clearly between prepacked retail, PPDS, and loose or foodservice sale. Do NOT blur them together.
+- Do NOT turn intentional allergens into generic "allergen warning" filler. Focus on the correct legal presentation for the case, especially ingredients-list emphasis or PPDS requirements where relevant.
+- Mention separate precautionary allergen wording only when the user has actually raised cross-contact or precautionary labelling issues.
 - Keep the answer operational and label-ready, not academic.`;
+}
+
+function getAllergenControlInstructions(userMessage: string): string {
+  if (classifyQAIntent(userMessage) !== "allergen_control") {
+    return "";
+  }
+
+  return `
+
+ALLERGEN CONTROL FORMAT:
+- When the user asks about allergen advice, gluten-free claims, recipe changes that introduce allergens, or what staff should say to a customer, do NOT answer with a generic allergen summary.
+- Use these headings in order:
+  1. Immediate decision or response
+  2. Checks the business must complete before answering or selling
+  3. When the business must refuse to make the claim or stop the sale
+  4. Records and controls that should already be in place
+  5. Immediate next actions
+- Under "Immediate decision or response", give the operational answer first, such as whether staff should pause, escalate, verify ingredients, or avoid making a claim.
+- Under "Checks the business must complete before answering or selling", include current ingredient specifications, allergen matrix or recipe records, cross-contact controls, preparation method, and any label or PPDS implications where relevant.
+- Under "When the business must refuse to make the claim or stop the sale", be explicit that staff must not guess, reassure from memory, or make a gluten-free or allergen-safe claim when ingredients, specs, or cross-contact controls are not verified.
+- Under "Records and controls that should already be in place", name the practical controls such as current specs, allergen matrix, recipe/version control, staff training, cross-contact controls, and recipe-change approval.
+- Distinguish between intentional allergen declaration and precautionary cross-contact wording. Do NOT suggest "may contain" wording for an ingredient that is intentionally present.
+- If the user mentions gluten-free, explain that the answer must be based on verified ingredients/specs and reliable cross-contact control, not assumption.`;
 }
 
 function getRecordkeepingRequirementsInstructions(userMessage: string): string {
@@ -336,6 +363,17 @@ export function classifyQAIntent(userMessage: string): QAIntent {
   }
 
   if (
+    /\b(allergen|allergy|gluten[- ]?free|gluten free|nut allergy|walnuts|tree nuts?|contains walnuts|ppds)\b/i.test(
+      userMessage
+    ) &&
+    /\b(what should|what do|before answering|before selling|what must we update|refuse|claim|safe|serve|selling it again|come back|customer asks)\b/i.test(
+      userMessage
+    )
+  ) {
+    return "allergen_control";
+  }
+
+  if (
     /\b(what records should|what records do i need|what records do we need|what records must|which records should|which records do i need)\b/i.test(
       userMessage
     )
@@ -374,6 +412,11 @@ function getQAIntentInstructions(userMessage: string): string {
   const labelRequirementsInstructions = getLabelRequirementsInstructions(userMessage);
   if (labelRequirementsInstructions) {
     instructions.push(labelRequirementsInstructions);
+  }
+
+  const allergenControlInstructions = getAllergenControlInstructions(userMessage);
+  if (allergenControlInstructions) {
+    instructions.push(allergenControlInstructions);
   }
 
   const recordkeepingRequirementsInstructions = getRecordkeepingRequirementsInstructions(userMessage);
@@ -425,6 +468,13 @@ export function responseMeetsIntentContract(
         "what type of product and label situation this is",
         "mandatory particulars that must appear",
         "missing facts needed before finalising the label",
+      ]);
+
+    case "allergen_control":
+      return includesAll(answer, [
+        "immediate decision or response",
+        "when the business must refuse to make the claim or stop the sale",
+        "records and controls that should already be in place",
       ]);
 
     case "recordkeeping_requirements":

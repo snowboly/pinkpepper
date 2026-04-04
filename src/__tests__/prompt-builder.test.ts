@@ -194,6 +194,25 @@ describe("buildRAGPrompt", () => {
     expect(result.systemPrompt).toContain("What type of product and label situation this is");
     expect(result.systemPrompt).toContain("Mandatory particulars that must appear");
     expect(result.systemPrompt).toContain("Missing facts needed before finalising the label");
+    expect(result.systemPrompt).toContain("Do NOT turn intentional allergens into generic \"allergen warning\" filler");
+    expect(result.systemPrompt).toContain("Distinguish clearly between prepacked retail, PPDS, and loose or foodservice sale");
+  });
+
+  it("adds a stricter structure for allergen-control questions", () => {
+    const result = buildRAGPrompt(
+      "I run a small cafe in England. A customer asks whether one of our sandwiches is gluten-free. What should my staff do before answering, and when should we refuse to make that claim?",
+      [makeChunk({ source_name: "FSA allergen guidance" })],
+      "qa",
+      "English",
+      "2026-04-04",
+      "cafe",
+      "pro"
+    );
+
+    expect(result.systemPrompt).toContain("ALLERGEN CONTROL FORMAT:");
+    expect(result.systemPrompt).toContain("Immediate decision or response");
+    expect(result.systemPrompt).toContain("When the business must refuse to make the claim or stop the sale");
+    expect(result.systemPrompt).toContain("Do NOT suggest \"may contain\" wording for an ingredient that is intentionally present");
   });
 
   it("adds a stricter structure for recordkeeping questions", () => {
@@ -280,6 +299,18 @@ describe("consultant-grade qa intent detection", () => {
     ).toBe("label_requirements");
   });
 
+  it("classifies gluten-free customer-answer questions as allergen control", () => {
+    expect(
+      classifyQAIntent("A customer asks whether one of our sandwiches is gluten-free. What should my staff do before answering?")
+    ).toBe("allergen_control");
+  });
+
+  it("classifies recipe-change allergen questions as allergen control", () => {
+    expect(
+      classifyQAIntent("We changed our brownie recipe and it now contains walnuts. What must we update before selling it again?")
+    ).toBe("allergen_control");
+  });
+
   it("classifies recordkeeping questions separately from generic qa", () => {
     expect(
       classifyQAIntent("What records should I keep for my restaurant in London?")
@@ -350,6 +381,25 @@ Practical next actions
         "What must appear on the label for a soup with celery, milk, and wheat?"
       )
     ).toBe(true);
+  });
+
+  it("rejects an allergen-control answer that does not set refusal rules", () => {
+    const answer = `Immediate decision or response
+- Check the ingredients.
+
+Checks the business must complete before answering or selling
+- Review the recipe and prep method.
+
+Records and controls that should already be in place
+- Allergen matrix and training records.`;
+
+    expect(
+      responseMeetsIntentContract(
+        "allergen_control",
+        answer,
+        "A customer asks whether one of our sandwiches is gluten-free. What should my staff do before answering?"
+      )
+    ).toBe(false);
   });
 
   it("rejects a recordkeeping answer that does not distinguish critical inspection records", () => {
