@@ -79,6 +79,14 @@ export function buildAuthorityRetryQueries(
   ];
 }
 
+export function buildIntroductionInstruction(hasAssistantHistory: boolean) {
+  if (hasAssistantHistory) {
+    return "This conversation already has prior assistant replies. Do NOT greet, re-introduce yourself, or say 'Hello, I'm ...'. Continue directly with the answer.";
+  }
+
+  return "This is the first assistant reply in this conversation. Begin with one brief introduction using your persona name, then answer the user's question.";
+}
+
 function shouldRetryStatus(status: number) {
   return status === 429 || status >= 500;
 }
@@ -342,6 +350,7 @@ export async function POST(request: Request) {
     role: row.role as "user" | "assistant",
     content: row.content,
   }));
+  const hasAssistantHistory = history.some((row) => row.role === "assistant");
 
   const mode = detectQueryMode(message);
 
@@ -440,7 +449,11 @@ export async function POST(request: Request) {
 
   if (shouldUseRetrievedContextPrompt(ragEnabled, useAuthorityFilters)) {
     const ragPrompt = buildRAGPrompt(message, retrievedChunks, mode, preferredLanguage, currentDate, businessTypeLabel, tier);
-    systemPrompt = ragPrompt.systemPrompt + userDocContext + `\n\nPERSONA:\n${persona.promptFragment}`;
+    systemPrompt =
+      ragPrompt.systemPrompt +
+      userDocContext +
+      `\n\nINTRODUCTION RULE:\n${buildIntroductionInstruction(hasAssistantHistory)}` +
+      `\n\nPERSONA:\n${persona.promptFragment}`;
     temperature = ragPrompt.temperature;
   } else {
     const modeInstruction =
@@ -510,6 +523,7 @@ export async function POST(request: Request) {
       "10. NEVER mention, reference, or hint at a model training cutoff date. Do NOT say phrases like 'my training data goes up to', 'my knowledge cutoff is', 'as of my last update', or similar. You are NOT a generic AI — you are a PinkPepper food safety specialist grounded in a curated, regularly updated library of EU and UK food safety regulations and official guidance. If asked how current your information is, explain this. For the very latest changes, recommend verifying with EUR-Lex, the FSA, FSS, or the relevant authority.\n" +
       "11. Only introduce yourself by name on the FIRST message of a conversation. If the conversation history already contains your introduction, do NOT repeat it. Jump straight into answering the question.\n" +
       "12. When answering general food safety questions (temperatures, danger zones, storage times, etc.), present BOTH EU and UK requirements. If they are the same, state the requirement once and note that it applies in both the EU and UK. Do not default to one jurisdiction unless the user has specified their location.\n\n" +
+      "INTRODUCTION RULE:\n" + buildIntroductionInstruction(hasAssistantHistory) + "\n\n" +
       "PERSONA:\n" + persona.promptFragment + "\n\n" +
       modeInstruction + userDocContext;
     temperature = mode === "audit" ? 0.0 : mode === "document" ? 0.2 : 0.1;
@@ -613,6 +627,8 @@ export async function POST(request: Request) {
               typeof chunk.metadata?.source_class === "string"
                 ? chunk.metadata.source_class
                 : undefined,
+            source_type: chunk.source_type,
+            source_name: chunk.source_name,
           }))
         );
 

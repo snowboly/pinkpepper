@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   buildAuthorityRetryQueries,
+  buildIntroductionInstruction,
   getHistoryWindowLimit,
   resolveChatModels,
   shouldUseRetrievedContextPrompt,
@@ -59,5 +60,15 @@ describe("authority-query retrieval fallback", () => {
     expect(queries[0]).toContain("UK food hygiene law");
     expect(queries[0]).toContain("FSA guidance");
     expect(queries[0]).toContain("restaurant or café");
+  });
+});
+
+describe("persona introduction rules", () => {
+  it("tells the model not to re-introduce itself after the first assistant reply", () => {
+    expect(buildIntroductionInstruction(true)).toContain("Do NOT greet, re-introduce yourself");
+  });
+
+  it("allows one short introduction on the first assistant reply", () => {
+    expect(buildIntroductionInstruction(false)).toContain("This is the first assistant reply");
   });
 });
