@@ -3,14 +3,16 @@
 import Link from "next/link";
 import { useState } from "react";
 import { track } from "@vercel/analytics";
+import { createClient } from "@/utils/supabase/client";
 
 type Plan = "plus" | "pro";
 
 interface Props {
-  isLoggedIn: boolean;
+  isLoggedIn?: boolean;
   plan: Plan;
   label: string;
   className: string;
+  source?: "pricing_page" | "homepage";
 }
 
 async function readCheckoutResponse(res: Response): Promise<{ url?: string; error?: string }> {
@@ -23,16 +25,36 @@ async function readCheckoutResponse(res: Response): Promise<{ url?: string; erro
   return { error: text || "Unable to start checkout." };
 }
 
-export default function PricingActions({ isLoggedIn, plan, label, className }: Props) {
+function openCheckout(url: string) {
+  const opened = window.open(url, "_blank", "noopener,noreferrer");
+  if (opened) {
+    opened.opener = null;
+    return;
+  }
+
+  window.location.href = url;
+}
+
+function redirectToSignup(plan: Plan) {
+  window.location.href = `/signup?plan=${plan}`;
+}
+
+export default function PricingActions({
+  isLoggedIn,
+  plan,
+  label,
+  className,
+  source = "pricing_page",
+}: Props) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  if (!isLoggedIn) {
+  if (isLoggedIn === false) {
     return (
       <Link
         href={`/signup?plan=${plan}`}
         className={className}
-        onClick={() => track("pricing_signup_click", { plan, source: "pricing_page" })}
+        onClick={() => track("pricing_signup_click", { plan, source })}
       >
         {label}
       </Link>
@@ -40,10 +62,23 @@ export default function PricingActions({ isLoggedIn, plan, label, className }: P
   }
 
   async function startCheckout() {
-    track("checkout_started", { plan, source: "pricing_page" });
     setLoading(true);
     setError(null);
     try {
+      if (isLoggedIn !== true) {
+        const supabase = createClient();
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+
+        if (!user) {
+          track("pricing_signup_click", { plan, source });
+          redirectToSignup(plan);
+          return;
+        }
+      }
+
+      track("checkout_started", { plan, source });
       const res = await fetch("/api/billing/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -56,7 +91,7 @@ export default function PricingActions({ isLoggedIn, plan, label, className }: P
         return;
       }
 
-      window.location.href = data.url;
+      openCheckout(data.url);
     } catch {
       setError("Network error. Please try again.");
     } finally {
