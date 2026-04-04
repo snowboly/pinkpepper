@@ -10,6 +10,18 @@ export type QAIntent =
   | "inspection_readiness"
   | "certification_guidance";
 
+export function isRecentChangeQuestion(userMessage: string) {
+  return /\b(what changed|what has changed|changed last week|last week|this week|recent changes?|recently changed|latest change)\b/i.test(
+    userMessage
+  );
+}
+
+export function isExactReferenceQuestion(userMessage: string) {
+  return /\b(which article|what article|which clause|what clause|which section|what section|where does it say|which regulation says|what regulation says|every 90 days|90 days|90-day)\b/i.test(
+    userMessage
+  );
+}
+
 const MODE_TEMPERATURES: Record<RAGMode, number> = {
   qa: 0.1,      // Factual accuracy from retrieved docs
   document: 0.2, // Slight creativity for natural language
@@ -270,6 +282,43 @@ INSPECTION READINESS FORMAT:
 - Keep the answer specific to the business type and jurisdiction in the prompt where possible.`;
 }
 
+export function getUncertaintyHandlingInstructions(
+  userMessage: string,
+  mode: RAGMode = "qa"
+) {
+  if (mode !== "qa") {
+    return "";
+  }
+
+  const rules: string[] = [];
+
+  if (isRecentChangeQuestion(userMessage)) {
+    rules.push(
+      "- The user is asking about a very recent change. Do NOT claim that you know what changed in the last week unless the retrieved context supports it.",
+      "- Do NOT say you are a general AI, do not mention lacking real-time access, and do not mention a training cutoff. Explain instead that the latest change is not verified from the current support and that the user should check the latest official source."
+    );
+  }
+
+  if (isExactReferenceQuestion(userMessage)) {
+    rules.push(
+      "- The user is asking for an exact article, clause, section, or review frequency.",
+      "- If you cannot support one exact citation from retrieved context, say that the exact reference is not verified from the available support.",
+      "- Do NOT offer nearby regulations, certification standards, or guessed review frequencies as substitutes for the exact reference.",
+      "- If the governing framework is ambiguous, ask one short narrowing follow-up such as whether they mean law, certification standard, customer requirement, or internal policy."
+    );
+  }
+
+  if (rules.length === 0) {
+    return "";
+  }
+
+  return `
+
+UNCERTAINTY HANDLING:
+${rules.join("\n")}
+- When certainty is limited, prefer a short, tightly scoped answer over a broad speculative list.`;
+}
+
 export function classifyQAIntent(userMessage: string): QAIntent {
   if (
     /\b(what (food safety )?regulations apply|what laws apply|what requirements apply|which regulations apply|which laws apply)\b/i.test(
@@ -310,27 +359,34 @@ export function classifyQAIntent(userMessage: string): QAIntent {
 }
 
 function getQAIntentInstructions(userMessage: string): string {
+  const instructions: string[] = [];
+
+  const uncertaintyHandlingInstructions = getUncertaintyHandlingInstructions(userMessage);
+  if (uncertaintyHandlingInstructions) {
+    instructions.push(uncertaintyHandlingInstructions);
+  }
+
   const legalApplicabilityInstructions = getLegalApplicabilityInstructions(userMessage);
   if (legalApplicabilityInstructions) {
-    return legalApplicabilityInstructions;
+    instructions.push(legalApplicabilityInstructions);
   }
 
   const labelRequirementsInstructions = getLabelRequirementsInstructions(userMessage);
   if (labelRequirementsInstructions) {
-    return labelRequirementsInstructions;
+    instructions.push(labelRequirementsInstructions);
   }
 
   const recordkeepingRequirementsInstructions = getRecordkeepingRequirementsInstructions(userMessage);
   if (recordkeepingRequirementsInstructions) {
-    return recordkeepingRequirementsInstructions;
+    instructions.push(recordkeepingRequirementsInstructions);
   }
 
   const inspectionReadinessInstructions = getInspectionReadinessInstructions(userMessage);
   if (inspectionReadinessInstructions) {
-    return inspectionReadinessInstructions;
+    instructions.push(inspectionReadinessInstructions);
   }
 
-  return "";
+  return instructions.join("");
 }
 
 function normalizeAnswer(value: string) {

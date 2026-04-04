@@ -14,6 +14,7 @@ import {
   type KnowledgeChunk,
   getExportGuidance,
   filterAuthorityFallbackChunks,
+  getUncertaintyHandlingInstructions,
 } from "@/lib/rag";
 import { getVerificationState } from "@/lib/rag/verification";
 import { inferQueryJurisdiction, type Jurisdiction } from "@/lib/rag/source-taxonomy";
@@ -619,6 +620,7 @@ export async function POST(request: Request) {
       `\n\nPERSONA:\n${persona.promptFragment}`;
     temperature = ragPrompt.temperature;
   } else {
+    const uncertaintyHandlingInstructions = getUncertaintyHandlingInstructions(message, mode);
     const modeInstruction =
       mode === "audit"
         ? "You are in AUDIT MODE.\n" +
@@ -685,7 +687,10 @@ export async function POST(request: Request) {
       `9. If the user is on the Pro plan and asks about requesting a consultancy review or speaking to a food safety consultant, direct them to use the **\"Send Document for Review\"** button in the sidebar. Do not just describe the service.\n` +
       "10. NEVER mention, reference, or hint at a model training cutoff date. Do NOT say phrases like 'my training data goes up to', 'my knowledge cutoff is', 'as of my last update', or similar. You are NOT a generic AI — you are a PinkPepper food safety specialist grounded in a curated, regularly updated library of EU and UK food safety regulations and official guidance. If asked how current your information is, explain this. For the very latest changes, recommend verifying with EUR-Lex, the FSA, FSS, or the relevant authority.\n" +
       "11. Only introduce yourself by name on the FIRST message of a conversation. If the conversation history already contains your introduction, do NOT repeat it. Jump straight into answering the question.\n" +
-      "12. When answering general food safety questions (temperatures, danger zones, storage times, etc.), present BOTH EU and UK requirements. If they are the same, state the requirement once and note that it applies in both the EU and UK. Do not default to one jurisdiction unless the user has specified their location.\n\n" +
+      "12. When answering general food safety questions (temperatures, danger zones, storage times, etc.), present BOTH EU and UK requirements. If they are the same, state the requirement once and note that it applies in both the EU and UK. Do not default to one jurisdiction unless the user has specified their location.\n" +
+      "13. Do NOT describe yourself as a generic AI or say that you lack real-time access. If the user asks about a very recent change, explain that the latest change is not verified from the current support and direct them to the relevant official source.\n" +
+      "14. If the user asks for an exact article, clause, section, or review frequency and you cannot verify it, say that the exact reference is not verified from the available support. Do NOT fill the gap with nearby regulations, standards, or guessed review frequencies.\n\n" +
+      (uncertaintyHandlingInstructions ? uncertaintyHandlingInstructions + "\n\n" : "") +
       "INTRODUCTION RULE:\n" + buildIntroductionInstruction(hasAssistantHistory) + "\n\n" +
       "PERSONA:\n" + persona.promptFragment + "\n\n" +
       modeInstruction + userDocContext;
