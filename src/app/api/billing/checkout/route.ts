@@ -3,13 +3,9 @@ import { createClient } from "@/utils/supabase/server";
 import { getStripe } from "@/lib/billing/stripe";
 import { isAllowedBillingRequest } from "@/lib/billing/request-origin";
 import { billingLimiter, checkRateLimit } from "@/lib/ratelimit";
+import { getStripePriceIdForPlan, hasStripePriceConfigError } from "@/lib/billing/price-config";
 
 export const dynamic = "force-dynamic";
-
-const PLAN_TO_PRICE_KEY: Record<string, string> = {
-  plus: "STRIPE_PLUS_PRICE_ID",
-  pro: "STRIPE_PRO_PRICE_ID",
-};
 
 export async function POST(request: Request) {
   if (!isAllowedBillingRequest(request)) {
@@ -32,8 +28,14 @@ export async function POST(request: Request) {
 
   const body = (await request.json()) as { plan?: "plus" | "pro" };
   const plan = body.plan;
-  const priceEnvKey = plan ? PLAN_TO_PRICE_KEY[plan] : undefined;
-  const priceId = priceEnvKey ? process.env[priceEnvKey] : undefined;
+  if (hasStripePriceConfigError(plan)) {
+    return NextResponse.json(
+      { error: "Billing is misconfigured. Stripe price IDs must start with `price_`." },
+      { status: 500 }
+    );
+  }
+
+  const priceId = getStripePriceIdForPlan(plan);
   if (!plan || !priceId) {
     return NextResponse.json({ error: "Invalid plan." }, { status: 400 });
   }

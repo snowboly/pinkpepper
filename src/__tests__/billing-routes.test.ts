@@ -168,4 +168,25 @@ describe("billing route origin validation", () => {
 
     expect(response.status).toBe(403);
   });
+
+  it("returns a billing configuration error when a plan env uses a Stripe product id", async () => {
+    process.env.STRIPE_PLUS_PRICE_ID = "prod_bad";
+
+    const response = await checkoutPost(
+      new Request("https://pinkpepper.io/api/billing/checkout", {
+        method: "POST",
+        headers: {
+          host: "pinkpepper.io",
+          origin: "https://pinkpepper.io",
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({ plan: "plus" }),
+      }),
+    );
+
+    expect(response.status).toBe(500);
+    await expect(response.json()).resolves.toEqual({
+      error: "Billing is misconfigured. Stripe price IDs must start with `price_`.",
+    });
+  });
 });
