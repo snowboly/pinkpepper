@@ -6,9 +6,9 @@ import { billingLimiter, checkRateLimit } from "@/lib/ratelimit";
 
 export const dynamic = "force-dynamic";
 
-const PLAN_TO_PRICE_ENV: Record<string, string | undefined> = {
-  plus: process.env.STRIPE_PLUS_PRICE_ID,
-  pro: process.env.STRIPE_PRO_PRICE_ID,
+const PLAN_TO_PRICE_KEY: Record<string, string> = {
+  plus: "STRIPE_PLUS_PRICE_ID",
+  pro: "STRIPE_PRO_PRICE_ID",
 };
 
 export async function POST(request: Request) {
@@ -32,11 +32,11 @@ export async function POST(request: Request) {
 
   const body = (await request.json()) as { plan?: "plus" | "pro" };
   const plan = body.plan;
-  if (!plan || !PLAN_TO_PRICE_ENV[plan]) {
+  const priceEnvKey = plan ? PLAN_TO_PRICE_KEY[plan] : undefined;
+  const priceId = priceEnvKey ? process.env[priceEnvKey] : undefined;
+  if (!plan || !priceId) {
     return NextResponse.json({ error: "Invalid plan." }, { status: 400 });
   }
-
-  const priceId = PLAN_TO_PRICE_ENV[plan]!;
   const appUrl = process.env.NEXT_PUBLIC_SITE_URL || new URL(request.url).origin;
   const stripe = getStripe();
 
