@@ -32,7 +32,7 @@ describe("TIER_CAPABILITIES – plus tier", () => {
   const plus = TIER_CAPABILITIES.plus;
 
   it("dailyMessages is 25", () => expect(plus.dailyMessages).toBe(25));
-  it("dailyExpertAnswers is 5", () => expect(plus.dailyExpertAnswers).toBe(5));
+  it("dailyExpertAnswers is 3", () => expect(plus.dailyExpertAnswers).toBe(3));
   it("dailyImageUploads is 5", () => expect(plus.dailyImageUploads).toBe(5));
   it("maxSavedConversations is unlimited (null)", () => expect(plus.maxSavedConversations).toBeNull());
   it("conversationRetentionDays is unlimited (null)", () => expect(plus.conversationRetentionDays).toBeNull());
@@ -49,7 +49,7 @@ describe("TIER_CAPABILITIES – pro tier", () => {
   const pro = TIER_CAPABILITIES.pro;
 
   it("dailyMessages is 100", () => expect(pro.dailyMessages).toBe(100));
-  it("dailyExpertAnswers is 20", () => expect(pro.dailyExpertAnswers).toBe(20));
+  it("dailyExpertAnswers is 8", () => expect(pro.dailyExpertAnswers).toBe(8));
   it("dailyImageUploads is 15", () => expect(pro.dailyImageUploads).toBe(15));
   it("maxSavedConversations is unlimited (null)", () => expect(pro.maxSavedConversations).toBeNull());
   it("conversationRetentionDays is unlimited (null)", () => expect(pro.conversationRetentionDays).toBeNull());

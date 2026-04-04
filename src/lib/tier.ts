@@ -33,7 +33,7 @@ export const TIER_CAPABILITIES: Record<SubscriptionTier, TierCapabilities> = {
   },
   plus: {
     dailyMessages: 25,
-    dailyExpertAnswers: 5,
+    dailyExpertAnswers: 3,
     dailyImageUploads: 5,
     maxSavedConversations: null,
     conversationRetentionDays: null,
@@ -47,7 +47,7 @@ export const TIER_CAPABILITIES: Record<SubscriptionTier, TierCapabilities> = {
   },
   pro: {
     dailyMessages: 100,
-    dailyExpertAnswers: 20,
+    dailyExpertAnswers: 8,
     dailyImageUploads: 15,
     maxSavedConversations: null,
     conversationRetentionDays: null,
