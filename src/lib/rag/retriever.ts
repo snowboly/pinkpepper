@@ -264,6 +264,56 @@ export type UserDocumentChunk = {
   similarity: number;
 };
 
+export type UserDocumentRetrievalOptions = {
+  topK?: number;
+  threshold?: number;
+  conversationId?: string;
+};
+
+type UserDocumentSearchRpcArgs = {
+  p_user_id: string;
+  query_embedding: number[];
+  match_threshold: number;
+  match_count: number;
+  p_conversation_id?: string;
+};
+
+export function buildUserDocumentSearchRpcArgs(input: {
+  userId: string;
+  queryEmbedding: number[];
+  threshold: number;
+  topK: number;
+  conversationId?: string;
+}): UserDocumentSearchRpcArgs {
+  const args: UserDocumentSearchRpcArgs = {
+    p_user_id: input.userId,
+    query_embedding: input.queryEmbedding,
+    match_threshold: input.threshold,
+    match_count: input.topK,
+  };
+
+  if (input.conversationId) {
+    args.p_conversation_id = input.conversationId;
+  }
+
+  return args;
+}
+
+export function shouldRetryLegacyUserDocumentSearch(error: unknown): boolean {
+  if (!error || typeof error !== "object") {
+    return false;
+  }
+
+  const code = "code" in error ? error.code : undefined;
+  const details = "details" in error ? String(error.details) : "";
+  const message = "message" in error ? String(error.message) : "";
+
+  return (
+    code === "PGRST202" &&
+    /p_conversation_id/i.test(`${details} ${message}`)
+  );
+}
+
 /**
  * Retrieve relevant chunks from a specific user's uploaded documents.
  * When conversationId is supplied, only chunks from that conversation are searched,
@@ -272,20 +322,33 @@ export type UserDocumentChunk = {
 export async function retrieveUserDocumentContext(
   query: string,
   userId: string,
-  options: RetrievalOptions = {},
-  conversationId?: string | null
+  options: UserDocumentRetrievalOptions = {}
 ): Promise<UserDocumentChunk[]> {
-  const { topK, threshold } = { ...DEFAULT_OPTIONS, ...options };
+  const { topK, threshold, conversationId } = { ...DEFAULT_OPTIONS, ...options };
 
   const { embedding } = await generateEmbedding(query);
 
-  const { data, error } = await getSupabase().rpc("search_user_document_chunks", {
-    p_user_id: userId,
-    query_embedding: embedding,
-    match_threshold: threshold,
-    match_count: topK,
-    p_conversation_id: conversationId ?? null,
+  const rpcArgs = buildUserDocumentSearchRpcArgs({
+    userId,
+    queryEmbedding: embedding,
+    threshold,
+    topK,
+    conversationId,
   });
+
+  let { data, error } = await getSupabase().rpc("search_user_document_chunks", rpcArgs);
+
+  if (error && conversationId && shouldRetryLegacyUserDocumentSearch(error)) {
+    const legacyArgs = buildUserDocumentSearchRpcArgs({
+      userId,
+      queryEmbedding: embedding,
+      threshold,
+      topK,
+    });
+    const legacyResult = await getSupabase().rpc("search_user_document_chunks", legacyArgs);
+    data = legacyResult.data;
+    error = legacyResult.error;
+  }
 
   if (error) {
     console.error("User document retrieval error:", error);

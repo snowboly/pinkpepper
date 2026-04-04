@@ -124,7 +124,11 @@ export async function POST(request: Request) {
   try {
     const [kChunks, rawUChunks] = await Promise.all([
       retrieveContext(message, { topK: 10, threshold: 0.72 }),
-      retrieveUserDocumentContext(message, user.id, { topK: 5, threshold: 0.65 }),
+      retrieveUserDocumentContext(message, user.id, {
+        topK: 5,
+        threshold: 0.65,
+        conversationId: conversationId ?? undefined,
+      }),
     ]);
     retrievedChunks = kChunks;
     // Exclude conversation exports — bot-generated output, not audit evidence.

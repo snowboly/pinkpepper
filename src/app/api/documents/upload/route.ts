@@ -53,13 +53,13 @@ export async function POST(request: Request) {
   }
 
   const file = formData.get("file");
+  let effectiveConversationId = (formData.get("conversationId") as string | null) ?? null;
+  const draftTitle = typeof formData.get("draftTitle") === "string"
+    ? String(formData.get("draftTitle")).trim()
+    : "";
   if (!(file instanceof File)) {
     return NextResponse.json({ error: "No file provided." }, { status: 400 });
   }
-
-  const conversationId = typeof formData.get("conversationId") === "string"
-    ? (formData.get("conversationId") as string)
-    : null;
 
   if (file.size <= 0 || file.size > MAX_FILE_SIZE_BYTES) {
     return NextResponse.json({ error: "File must be between 1 byte and 10MB." }, { status: 400 });
@@ -87,23 +87,48 @@ export async function POST(request: Request) {
     const texts = chunks.map((c) => c);
     const embeddings = await generateEmbeddings(texts);
 
+    if (!effectiveConversationId) {
+      const titleSource = draftTitle || file.name;
+      const title = titleSource.length > 80 ? `${titleSource.slice(0, 77)}...` : titleSource;
+      const { data: conversation, error: conversationError } = await supabase
+        .from("conversations")
+        .insert({ user_id: user.id, title })
+        .select("id")
+        .single();
+
+      if (conversationError || !conversation) {
+        console.error("Failed to create conversation for document upload:", conversationError);
+        return NextResponse.json({ error: "Failed to create conversation for document upload." }, { status: 500 });
+      }
+
+      effectiveConversationId = conversation.id;
+    }
+
     const rows = chunks.map((content, i) => ({
       user_id: user.id,
+      conversation_id: effectiveConversationId,
       file_name: file.name,
       content,
       embedding: embeddings[i].embedding,
       chunk_index: i,
-      ...(conversationId ? { conversation_id: conversationId } : {}),
     }));
 
     const adminSupabase = getAdminSupabase();
 
     // Delete any existing chunks for this file before inserting fresh ones
-    await adminSupabase
+    const deleteQuery = adminSupabase
       .from("user_document_chunks")
       .delete()
       .eq("user_id", user.id)
       .eq("file_name", file.name);
+
+    if (effectiveConversationId) {
+      deleteQuery.eq("conversation_id", effectiveConversationId);
+    } else {
+      deleteQuery.is("conversation_id", null);
+    }
+
+    await deleteQuery;
 
     const { error: insertError } = await adminSupabase
       .from("user_document_chunks")
@@ -125,6 +150,7 @@ export async function POST(request: Request) {
     extractedText: extraction.text.slice(0, 500), // preview only
     extractionStrategy: extraction.strategy,
     warning: extraction.warning,
+    conversationId: effectiveConversationId,
     chunksStored,
   });
 }

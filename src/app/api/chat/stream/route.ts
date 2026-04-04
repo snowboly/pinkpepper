@@ -435,9 +435,11 @@ export async function POST(request: Request) {
           ? { sourceClasses: ["primary_law", "official_guidance"] as const }
           : {}),
       }),
-      // Scope retrieval to this conversation so document grounding persists
-      // across all follow-up turns without relying on message-text signals.
-      retrieveUserDocumentContext(message, user.id, { topK: 3, threshold: 0.65 }, conversationId),
+      retrieveUserDocumentContext(message, user.id, {
+        topK: 3,
+        threshold: 0.65,
+        conversationId: conversationId ?? undefined,
+      }),
     ]);
 
     // Exclude conversation exports re-uploaded as documents — they are bot-generated
