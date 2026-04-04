@@ -22,6 +22,7 @@ import { getPersonaForConversation, type Persona } from "@/lib/personas";
 
 export const dynamic = "force-dynamic";
 
+
 function shouldPreferAuthoritativeSources(message: string, mode: "qa" | "document" | "audit"): boolean {
   if (mode === "audit") {
     return true;
@@ -425,7 +426,7 @@ export async function POST(request: Request) {
       : undefined;
 
   try {
-    const [kChunks, uChunks] = await Promise.all([
+    const [kChunks, rawUChunks] = await Promise.all([
       retrieveContext(message, {
         topK: 8,
         threshold: 0.6,
@@ -440,6 +441,12 @@ export async function POST(request: Request) {
         conversationId: conversationId ?? undefined,
       }),
     ]);
+
+    // Exclude conversation exports re-uploaded as documents — they are bot-generated
+    // output, not authoritative reference material.
+    const uChunks = rawUChunks.filter(
+      (c) => !c.file_name.toLowerCase().startsWith("pinkpepper-export")
+    );
 
     // If few general results, try a regulation-focused search with a lower threshold
     if (kChunks.length < 3) {

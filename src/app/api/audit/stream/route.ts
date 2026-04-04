@@ -122,7 +122,7 @@ export async function POST(request: Request) {
   let userChunks: UserDocumentChunk[] = [];
   let ragEnabled = false;
   try {
-    const [kChunks, uChunks] = await Promise.all([
+    const [kChunks, rawUChunks] = await Promise.all([
       retrieveContext(message, { topK: 10, threshold: 0.72 }),
       retrieveUserDocumentContext(message, user.id, {
         topK: 5,
@@ -131,7 +131,10 @@ export async function POST(request: Request) {
       }),
     ]);
     retrievedChunks = kChunks;
-    userChunks = uChunks;
+    // Exclude conversation exports — bot-generated output, not audit evidence.
+    userChunks = rawUChunks.filter(
+      (c) => !c.file_name.toLowerCase().startsWith("pinkpepper-export")
+    );
     ragEnabled = retrievedChunks.length > 0 || userChunks.length > 0;
   } catch (ragError) {
     console.error("Audit retrieval error:", ragError);

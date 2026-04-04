@@ -1,27 +1,41 @@
-function normalizeOrigin(value: string | null | undefined): string | null {
-  if (!value) {
+function deriveRequestOrigin(request: Request): string | null {
+  const rawHost = request.headers.get("x-forwarded-host") ?? request.headers.get("host");
+  if (!rawHost) {
     return null;
   }
 
+  // X-Forwarded-Host can be a comma-separated list when chained through proxies;
+  // the first entry is the client-facing host.
+  const host = rawHost.split(",")[0].trim();
+
+  const rawProto = request.headers.get("x-forwarded-proto");
+  const proto = rawProto
+    ? rawProto.split(",")[0].trim()
+    : new URL(request.url).protocol.replace(":", "");
+
   try {
-    return new URL(value).origin;
+    return new URL(`${proto}://${host}`).origin;
   } catch {
     return null;
   }
 }
 
 export function isAllowedBillingRequest(request: Request): boolean {
-  const configuredOrigin = normalizeOrigin(process.env.NEXT_PUBLIC_SITE_URL);
-  const requestOrigin = normalizeOrigin(request.url);
-  const headerOrigin = normalizeOrigin(request.headers.get("origin"));
-
-  if (!configuredOrigin || !requestOrigin || requestOrigin !== configuredOrigin) {
-    return false;
-  }
-
+  const headerOrigin = request.headers.get("origin");
   if (!headerOrigin) {
+    // Browsers always send Origin on POST; missing header means
+    // this is a same-origin navigation or a non-browser client.
     return true;
   }
 
-  return headerOrigin === configuredOrigin;
+  const expectedOrigin = deriveRequestOrigin(request);
+  if (!expectedOrigin) {
+    return false;
+  }
+
+  try {
+    return new URL(headerOrigin).origin === expectedOrigin;
+  } catch {
+    return false;
+  }
 }

@@ -38,18 +38,18 @@ describe("MODE_TEMPERATURES", () => {
 describe("formatContext", () => {
   it("formats chunks with headers", () => {
     const result = formatContext([makeChunk()]);
-    expect(result).toContain("[Document 1: EC 852/2004, Annex II, Chapter IX]");
+    expect(result).toContain("[Source: EC 852/2004, Annex II, Chapter IX]");
     expect(result).toContain("Chilled food must be stored at or below 8°C.");
   });
 
   it("includes section ref when present", () => {
     const result = formatContext([makeChunk({ section_ref: "Article 5" })]);
-    expect(result).toContain("[Document 1: EC 852/2004, Article 5]");
+    expect(result).toContain("[Source: EC 852/2004, Article 5]");
   });
 
   it("omits section ref when null", () => {
     const result = formatContext([makeChunk({ section_ref: null })]);
-    expect(result).toContain("[Document 1: EC 852/2004]");
+    expect(result).toContain("[Source: EC 852/2004]");
     expect(result).not.toContain(",]");
   });
 
@@ -60,8 +60,8 @@ describe("formatContext", () => {
     ];
     const result = formatContext(chunks);
     expect(result).toContain("---");
-    expect(result).toContain("[Document 1: Doc A");
-    expect(result).toContain("[Document 2: Doc B");
+    expect(result).toContain("[Source: Doc A");
+    expect(result).toContain("[Source: Doc B");
   });
 
   it("returns fallback message for empty chunks", () => {

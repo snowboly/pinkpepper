@@ -3,6 +3,10 @@
     {
       "path": "/api/cron/sync-regulations",
       "schedule": "0 3 1 * *"
+    },
+    {
+      "path": "/api/cron/ingest-knowledge",
+      "schedule": "0 4 1 * *"
     }
   ]
 }

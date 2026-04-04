@@ -87,9 +87,9 @@ export function formatContext(chunks: KnowledgeChunk[]): string {
   }
 
   return chunks
-    .map((chunk, index) => {
+    .map((chunk) => {
       const sectionInfo = chunk.section_ref ? `, ${chunk.section_ref}` : "";
-      const header = `[Document ${index + 1}: ${chunk.source_name}${sectionInfo}]`;
+      const header = `[Source: ${chunk.source_name}${sectionInfo}]`;
       return `${header}\n${chunk.content}`;
     })
     .join("\n\n---\n\n");
@@ -170,6 +170,8 @@ function getModeInstructions(mode: RAGMode): string {
 - Provide clear, structured answers with practical, actionable guidance
 - Lead with the direct answer, then provide regulatory context
 - Use bullet points or numbered lists for multi-part answers
+- For setup, checklist, or "what do I need" questions, be comprehensive — cover all legally required documents/steps, not just the most obvious ones; include records (temperature logs, cleaning records, delivery checks, staff training records, pest control log) alongside policies and plans
+- For UK small food businesses, always mention the FSA's free Safer Food Better Business (SFBB) toolkit as a practical starting point
 - Where EU and UK rules differ post-Brexit, call it out explicitly
 - Signpost further resources (FSA, FSS, Food Safety Authority of Ireland, EFSA) where appropriate`;
   }

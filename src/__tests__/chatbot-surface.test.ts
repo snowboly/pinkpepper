@@ -224,4 +224,18 @@ describe("chat workspace chrome", () => {
     expect(workspace).not.toContain('void exportDocument("pdf")');
     expect(workspace).not.toContain('{tw("pdf")}');
   });
+
+  it("keeps first-turn document uploads scoped to a single conversation", () => {
+    const workspace = readWorkspaceFile("src/components/dashboard/ChatWorkspace.tsx");
+    const uploadRoute = readWorkspaceFile("src/app/api/documents/upload/route.ts");
+
+    expect(workspace).toContain("let activeConversationId = conversationId;");
+    expect(workspace).toContain('fd.append("draftTitle"');
+    expect(workspace).toContain("activeConversationId = data.conversationId;");
+    expect(workspace).toContain("body: JSON.stringify({ message: value, conversationId: activeConversationId })");
+
+    expect(uploadRoute).toContain('.eq("conversation_id", effectiveConversationId)');
+    expect(uploadRoute).toContain('.is("conversation_id", null)');
+    expect(uploadRoute).toContain("conversationId: effectiveConversationId");
+  });
 });

@@ -315,7 +315,9 @@ export function shouldRetryLegacyUserDocumentSearch(error: unknown): boolean {
 }
 
 /**
- * Retrieve relevant chunks from a specific user's uploaded documents
+ * Retrieve relevant chunks from a specific user's uploaded documents.
+ * When conversationId is supplied, only chunks from that conversation are searched,
+ * so document grounding persists across all follow-up turns automatically.
  */
 export async function retrieveUserDocumentContext(
   query: string,

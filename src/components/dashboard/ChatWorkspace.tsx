@@ -523,6 +523,7 @@ export default function ChatWorkspace({
   async function sendPromptValue(rawPrompt: string, options?: { displayPrompt?: string }) {
     let value = rawPrompt.trim();
     if ((!value && !attachedImage && !attachedDocument) || loading) return;
+    let activeConversationId = conversationId;
 
     setLoading(true);
     setError(null);
@@ -556,11 +557,17 @@ export default function ChatWorkspace({
       try {
         const fd = new FormData();
         fd.append("file", currentDocument);
-        if (conversationId) {
-          fd.append("conversationId", conversationId);
+        if (activeConversationId) {
+          fd.append("conversationId", activeConversationId);
         }
+        fd.append("draftTitle", (options?.displayPrompt ?? value) || currentDocument.name);
         const res = await fetch("/api/documents/upload", { method: "POST", body: fd });
-        const data = (await res.json()) as { chunksStored?: number; warning?: string; error?: string };
+        const data = (await res.json()) as {
+          chunksStored?: number;
+          warning?: string;
+          error?: string;
+          conversationId?: string;
+        };
         if (!res.ok || (data.chunksStored ?? 0) === 0) {
           const reason = data.warning ?? data.error ?? "could not extract text";
           pushAssistantMessage(
@@ -568,6 +575,10 @@ export default function ChatWorkspace({
           );
           setLoading(false);
           return;
+        }
+        if (data.conversationId) {
+          activeConversationId = data.conversationId;
+          setConversationId(data.conversationId);
         }
         // Partial extraction warning — inform the LLM so it can caveat its answer
         if (data.warning) {
@@ -595,7 +606,7 @@ export default function ChatWorkspace({
         const fd = new FormData();
         fd.append("image", currentImage);
         fd.append("message", value);
-        if (conversationId) fd.append("conversationId", conversationId);
+        if (activeConversationId) fd.append("conversationId", activeConversationId);
         const res = await fetch("/api/chat", { method: "POST", body: fd });
         const data = (await res.json()) as {
           error?: string;
@@ -663,7 +674,7 @@ export default function ChatWorkspace({
       const res = await fetch(streamEndpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: value, conversationId }),
+        body: JSON.stringify({ message: value, conversationId: activeConversationId }),
         signal: abortControllerRef.current.signal,
       });
 
