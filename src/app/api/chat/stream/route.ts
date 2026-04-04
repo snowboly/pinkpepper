@@ -434,7 +434,11 @@ export async function POST(request: Request) {
           ? { sourceClasses: ["primary_law", "official_guidance"] as const }
           : {}),
       }),
-      retrieveUserDocumentContext(message, user.id, { topK: 3, threshold: 0.65 }),
+      retrieveUserDocumentContext(message, user.id, {
+        topK: 3,
+        threshold: 0.65,
+        conversationId: conversationId ?? undefined,
+      }),
     ]);
 
     // If few general results, try a regulation-focused search with a lower threshold

@@ -53,6 +53,7 @@ export async function POST(request: Request) {
   }
 
   const file = formData.get("file");
+  const conversationId = (formData.get("conversationId") as string | null) ?? null;
   if (!(file instanceof File)) {
     return NextResponse.json({ error: "No file provided." }, { status: 400 });
   }
@@ -85,6 +86,7 @@ export async function POST(request: Request) {
 
     const rows = chunks.map((content, i) => ({
       user_id: user.id,
+      conversation_id: conversationId,
       file_name: file.name,
       content,
       embedding: embeddings[i].embedding,

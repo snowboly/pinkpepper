@@ -556,6 +556,9 @@ export default function ChatWorkspace({
       try {
         const fd = new FormData();
         fd.append("file", currentDocument);
+        if (conversationId) {
+          fd.append("conversationId", conversationId);
+        }
         const res = await fetch("/api/documents/upload", { method: "POST", body: fd });
         const data = (await res.json()) as { chunksStored?: number; warning?: string; error?: string };
         if (!res.ok || (data.chunksStored ?? 0) === 0) {

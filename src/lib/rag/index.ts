@@ -11,9 +11,12 @@ export {
   retrieveCertificationContext,
   retrieveUserDocumentContext,
   filterAuthorityFallbackChunks,
+  buildUserDocumentSearchRpcArgs,
+  shouldRetryLegacyUserDocumentSearch,
   type KnowledgeChunk,
   type UserDocumentChunk,
   type RetrievalOptions,
+  type UserDocumentRetrievalOptions,
 } from "./retriever";
 
 export {

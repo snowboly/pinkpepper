@@ -2,8 +2,10 @@ import { describe, expect, it } from "vitest";
 import { buildChunkMetadata } from "@/lib/rag/source-taxonomy";
 import {
   buildKnowledgeSearchRequest,
+  buildUserDocumentSearchRpcArgs,
   filterAuthorityFallbackChunks,
   rankRetrievedChunks,
+  shouldRetryLegacyUserDocumentSearch,
   type KnowledgeChunk,
 } from "@/lib/rag/retriever";
 
@@ -115,5 +117,33 @@ describe("retrieval ranking", () => {
     );
 
     expect(filtered.map((chunk) => chunk.id)).toEqual(["1"]);
+  });
+
+  it("builds conversation-scoped user document rpc args when a conversation id is provided", () => {
+    expect(
+      buildUserDocumentSearchRpcArgs({
+        userId: "user_123",
+        queryEmbedding: [0.1, 0.2],
+        threshold: 0.65,
+        topK: 3,
+        conversationId: "conv_123",
+      })
+    ).toEqual({
+      p_user_id: "user_123",
+      query_embedding: [0.1, 0.2],
+      match_threshold: 0.65,
+      match_count: 3,
+      p_conversation_id: "conv_123",
+    });
+  });
+
+  it("detects when a user-document rpc should retry the legacy signature", () => {
+    expect(
+      shouldRetryLegacyUserDocumentSearch({
+        code: "PGRST202",
+        message:
+          "Could not find the function public.search_user_document_chunks(match_count, match_threshold, p_conversation_id, p_user_id, query_embedding) in the schema cache",
+      })
+    ).toBe(true);
   });
 });
