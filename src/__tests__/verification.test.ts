@@ -27,6 +27,12 @@ describe("source taxonomy", () => {
       inferQueryJurisdiction("I run a restaurant in London. What food safety regulations apply to me?")
     ).toBe("gb");
   });
+
+  it("infers EU jurisdiction from Germany-based user queries", () => {
+    expect(
+      inferQueryJurisdiction("I'm a food manufacturer in Germany. What regulations must I follow?")
+    ).toBe("eu");
+  });
 });
 
 describe("verification state", () => {

@@ -1,6 +1,11 @@
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { generateEmbedding } from "./embeddings";
-import { type Jurisdiction, type SourceClass } from "./source-taxonomy";
+import {
+  inferJurisdiction,
+  inferSourceClass,
+  type Jurisdiction,
+  type SourceClass,
+} from "./source-taxonomy";
 
 let supabaseClient: SupabaseClient | null = null;
 
@@ -45,15 +50,71 @@ const SOURCE_CLASS_WEIGHT: Record<SourceClass, number> = {
   internal_practice: 1,
 };
 
+function normalizeChunkJurisdiction(chunk: KnowledgeChunk): Jurisdiction {
+  const metadataJurisdiction = chunk.metadata?.jurisdiction;
+  if (
+    metadataJurisdiction === "eu" ||
+    metadataJurisdiction === "gb" ||
+    metadataJurisdiction === "mixed" ||
+    metadataJurisdiction === "unknown"
+  ) {
+    return metadataJurisdiction;
+  }
+
+  return inferJurisdiction([chunk.source_type, chunk.source_name].filter(Boolean).join(" "));
+}
+
+function normalizeChunkSourceClass(chunk: KnowledgeChunk): SourceClass {
+  const metadataSourceClass = chunk.metadata?.source_class;
+  if (
+    metadataSourceClass === "primary_law" ||
+    metadataSourceClass === "official_guidance" ||
+    metadataSourceClass === "reference_standard" ||
+    metadataSourceClass === "internal_practice"
+  ) {
+    return metadataSourceClass;
+  }
+
+  return inferSourceClass([chunk.source_type, chunk.source_name].filter(Boolean).join(" "));
+}
+
 export function rankRetrievedChunks(chunks: KnowledgeChunk[]): KnowledgeChunk[] {
   return [...chunks].sort((a, b) => {
-    const aSourceClass = String(a.metadata?.source_class ?? "internal_practice") as SourceClass;
-    const bSourceClass = String(b.metadata?.source_class ?? "internal_practice") as SourceClass;
+    const aSourceClass = normalizeChunkSourceClass(a);
+    const bSourceClass = normalizeChunkSourceClass(b);
     const aWeight = SOURCE_CLASS_WEIGHT[aSourceClass] ?? 0;
     const bWeight = SOURCE_CLASS_WEIGHT[bSourceClass] ?? 0;
 
     return bWeight - aWeight || b.similarity - a.similarity;
   });
+}
+
+export function filterAuthorityFallbackChunks(
+  chunks: KnowledgeChunk[],
+  options: Pick<RetrievalOptions, "jurisdiction" | "sourceClasses">
+): KnowledgeChunk[] {
+  const jurisdictionFilter = normalizeJurisdictionFilter(options.jurisdiction);
+  const sourceClasses = options.sourceClasses;
+
+  return rankRetrievedChunks(
+    chunks.filter((chunk) => {
+      const chunkJurisdiction = normalizeChunkJurisdiction(chunk);
+      const chunkSourceClass = normalizeChunkSourceClass(chunk);
+
+      const matchesJurisdiction =
+        !jurisdictionFilter ||
+        chunkJurisdiction === jurisdictionFilter ||
+        chunkJurisdiction === "mixed" ||
+        chunkJurisdiction === "unknown";
+
+      const matchesSourceClass =
+        !sourceClasses ||
+        sourceClasses.length === 0 ||
+        sourceClasses.includes(chunkSourceClass);
+
+      return matchesJurisdiction && matchesSourceClass;
+    })
+  );
 }
 
 type SearchKnowledgeRpcName =

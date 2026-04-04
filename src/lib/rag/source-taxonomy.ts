@@ -6,7 +6,7 @@ export type SourceClass =
   | "internal_practice";
 
 const GB_PATTERN = /\b(uk|great britain|fsa|england|london|manchester|birmingham|liverpool|leeds|glasgow|edinburgh|wales|scotland|northern ireland|food hygiene regulations)\b/i;
-const EU_PATTERN = /\b(eu|ec[-\s]?\d+|regulation \(ec\)|regulation \(eu\)|eur-lex)\b/i;
+const EU_PATTERN = /\b(eu|european union|germany|deutschland|france|spain|italy|portugal|ireland|netherlands|belgium|austria|poland|denmark|sweden|finland|czech republic|slovakia|slovenia|croatia|hungary|romania|bulgaria|greece|cyprus|malta|estonia|latvia|lithuania|luxembourg|ec[-\s]?\d+|regulation \(ec\)|regulation \(eu\)|eur-lex)\b/i;
 const CODEX_PATTERN = /\b(codex)\b/i;
 const GUIDANCE_PATTERN = /\b(guidance|guide|fsa[-\s])/i;
 const REGULATION_PATTERN = /\b(regulations?|directive|ec[-\s]?\d+|eu[-\s]?\d+|food hygiene regulations)\b/i;
