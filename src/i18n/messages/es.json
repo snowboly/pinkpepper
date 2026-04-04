@@ -194,6 +194,10 @@
         "heading": "Has alcanzado tu límite diario de mensajes",
         "body": "Actualiza para seguir chateando. Plus te da 7 veces más mensajes al día — Pro te da 65 veces más."
       },
+      "expert_limit": {
+        "heading": "Has alcanzado tu límite diario de respuestas expertas",
+        "body": "Las respuestas expertas usan nuestro modelo premium de cumplimiento. Actualiza para obtener 5 respuestas expertas al día con Plus o 20 al día con Pro."
+      },
       "image_limit": {
         "heading": "Desbloquea el análisis de fotos",
         "body": "Sube fotos de cocinas, etiquetas o productos alimentarios y obtén comentarios instantáneos sobre seguridad alimentaria."
@@ -335,6 +339,7 @@
     "save": "Guardar",
     "usage": "Uso",
     "dailyMessages": "Mensajes hoy",
+    "dailyExpertAnswers": "Respuestas expertas hoy",
     "dailyImageAnalyses": "AnÃ¡lisis de imÃ¡genes hoy",
     "dangerZone": "Zona de peligro",
     "deleteAccount": "Eliminar cuenta",

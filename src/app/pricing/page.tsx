@@ -16,15 +16,15 @@ export const metadata: Metadata = {
 const planChanges = [
   {
     plan: "Free",
-    detail: "Chat on web and mobile, write and edit food safety content, analyze text and images, and access the curated knowledge base.",
+    detail: "Chat on web and mobile, write and edit food safety content, analyze text and images, and use 1 premium expert answer per day for higher-risk questions.",
   },
   {
     plan: "Plus",
-    detail: "Everything in Free, plus more usage, unlimited saved conversations and projects, and access to downloadable templates.",
+    detail: "Everything in Free, plus more usage, 5 premium expert answers per day, unlimited saved conversations and projects, and access to downloadable templates.",
   },
   {
     plan: "Pro",
-    detail: "Everything in Plus, plus the highest usage limits, virtual audit mode, 2h/month of food safety consultancy, and priority support.",
+    detail: "Everything in Plus, plus 20 premium expert answers per day, virtual audit mode, 2h/month of food safety consultancy, and priority support.",
   },
 ];
 
@@ -81,7 +81,7 @@ export default async function PricingPage() {
         price: "0",
         priceCurrency: "EUR",
         description:
-          "Chat on web and mobile, write and edit food safety content, analyze text and images, and access the curated knowledge base.",
+          "Chat on web and mobile, write and edit food safety content, analyze text and images, and use 1 premium expert answer per day for higher-risk questions.",
       },
       {
         "@type": "Offer",
@@ -95,7 +95,7 @@ export default async function PricingPage() {
           unitCode: "MON",
         },
         description:
-          "Everything in Free, plus more usage, unlimited saved conversations and projects, and access to downloadable templates.",
+          "Everything in Free, plus more usage, 5 premium expert answers per day, unlimited saved conversations and projects, and access to downloadable templates.",
       },
       {
         "@type": "Offer",
@@ -109,7 +109,7 @@ export default async function PricingPage() {
           unitCode: "MON",
         },
         description:
-          "Everything in Plus, plus the highest usage limits, virtual audit mode, 2h/month of food safety consultancy, and priority support.",
+          "Everything in Plus, plus 20 premium expert answers per day, virtual audit mode, 2h/month of food safety consultancy, and priority support.",
       },
     ],
   };
@@ -176,6 +176,10 @@ export default async function PricingPage() {
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />
                   Access to curated knowledge base
                 </li>
+                <li className="flex items-start gap-2.5">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />
+                  1 premium expert answer per day
+                </li>
               </ul>
               <Link href="/signup" className={ctaNeutral}>
                 Get started free
@@ -199,7 +203,7 @@ export default async function PricingPage() {
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  More usage
+                  5 premium expert answers per day
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
@@ -235,7 +239,7 @@ export default async function PricingPage() {
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  Highest usage limits
+                  20 premium expert answers per day
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />

@@ -194,6 +194,10 @@
         "heading": "Atingiu o seu limite diário de mensagens",
         "body": "Atualize para continuar a conversar. O Plus oferece 7× mais mensagens por dia — o Pro oferece 65×."
       },
+      "expert_limit": {
+        "heading": "Atingiu o seu limite diário de respostas especializadas",
+        "body": "As respostas especializadas usam o nosso modelo premium de compliance. Atualize para 5 respostas especializadas por dia no Plus ou 20 por dia no Pro."
+      },
       "image_limit": {
         "heading": "Desbloqueie a análise de fotografias",
         "body": "Carregue fotografias de cozinhas, rótulos ou produtos alimentares e obtenha feedback imediato sobre segurança alimentar."
@@ -335,6 +339,7 @@
     "save": "Guardar",
     "usage": "Utilização",
     "dailyMessages": "Mensagens hoje",
+    "dailyExpertAnswers": "Respostas especializadas hoje",
     "dailyImageAnalyses": "AnÃ¡lises de imagens hoje",
     "dangerZone": "Zona de perigo",
     "deleteAccount": "Eliminar conta",

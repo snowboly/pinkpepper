@@ -194,6 +194,10 @@
         "heading": "Sie haben Ihr tägliches Nachrichtenlimit erreicht",
         "body": "Upgraden Sie, um weiter zu chatten. Plus bietet Ihnen 7× mehr Nachrichten pro Tag – Pro bietet 65×."
       },
+      "expert_limit": {
+        "heading": "Sie haben Ihr tägliches Expertenantwort-Limit erreicht",
+        "body": "Expertenantworten nutzen unser Premium-Compliance-Modell. Upgraden Sie auf 5 Expertenantworten pro Tag mit Plus oder 20 pro Tag mit Pro."
+      },
       "image_limit": {
         "heading": "Fotoanalyse freischalten",
         "body": "Laden Sie Fotos von Küchen, Etiketten oder Lebensmittelprodukten hoch und erhalten Sie sofortiges Feedback zur Lebensmittelsicherheit."
@@ -335,6 +339,7 @@
     "save": "Speichern",
     "usage": "Nutzung",
     "dailyMessages": "Nachrichten heute",
+    "dailyExpertAnswers": "Expertenantworten heute",
     "dailyImageAnalyses": "Bildanalysen heute",
     "dangerZone": "Gefahrenbereich",
     "deleteAccount": "Konto löschen",

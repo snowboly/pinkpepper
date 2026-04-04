@@ -194,6 +194,10 @@
         "heading": "Vous avez atteint votre limite quotidienne de messages",
         "body": "Passez à un plan supérieur pour continuer à échanger. Plus vous offre 7× plus de messages par jour — Pro vous en offre 65×."
       },
+      "expert_limit": {
+        "heading": "Vous avez atteint votre limite quotidienne de réponses expertes",
+        "body": "Les réponses expertes utilisent notre modèle premium de conformité. Passez à Plus pour 5 réponses expertes par jour ou à Pro pour 20 par jour."
+      },
       "image_limit": {
         "heading": "Débloquez l'analyse photo",
         "body": "Téléchargez des photos de cuisines, d'étiquettes ou de produits alimentaires et obtenez un retour instantané sur la sécurité alimentaire."
@@ -335,6 +339,7 @@
     "save": "Enregistrer",
     "usage": "Utilisation",
     "dailyMessages": "Messages aujourd'hui",
+    "dailyExpertAnswers": "Réponses expertes aujourd'hui",
     "dailyImageAnalyses": "Analyses d'images aujourd'hui",
     "dangerZone": "Zone dangereuse",
     "deleteAccount": "Supprimer le compte",

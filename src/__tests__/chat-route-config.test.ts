@@ -229,5 +229,6 @@ describe("persona introduction rules", () => {
 
   it("allows one short introduction on the first assistant reply", () => {
     expect(buildIntroductionInstruction(false)).toContain("This is the first assistant reply");
+    expect(buildIntroductionInstruction(false)).toContain("Do NOT use chatty filler");
   });
 });
