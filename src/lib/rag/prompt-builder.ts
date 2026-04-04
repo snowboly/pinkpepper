@@ -242,6 +242,8 @@ LABEL REQUIREMENTS FORMAT:
 - Distinguish clearly between prepacked retail, PPDS, and loose or foodservice sale. Do NOT blur them together.
 - Do NOT turn intentional allergens into generic "allergen warning" filler. Focus on the correct legal presentation for the case, especially ingredients-list emphasis or PPDS requirements where relevant.
 - Mention separate precautionary allergen wording only when the user has actually raised cross-contact or precautionary labelling issues.
+- If the user is asking about a recipe change, supplier change, or pre-release check, treat it as a label-and-release-control question, not just a label-content question.
+- For recipe-change or manufacturer release questions, include the operational checks that commonly affect legality before sale: updated raw material specifications, recipe/version control, allergen matrix updates, QUID triggers, nutrition recalculation, storage or shelf-life impact, artwork approval, old-pack segregation, and wrong-pack prevention.
 - Keep the answer operational and label-ready, not academic.`;
 }
 
@@ -358,6 +360,15 @@ export function classifyQAIntent(userMessage: string): QAIntent {
   if (
     /\b(label|labelling|labeling)\b/i.test(userMessage) &&
     /\b(must appear|need(?:s)? to appear|required|what goes on|what has to be on|requirements?)\b/i.test(userMessage)
+  ) {
+    return "label_requirements";
+  }
+
+  if (
+    /\b(label|labelling|labeling)\b/i.test(userMessage) &&
+    /\b(checks?|release controls?|recipe change|supplier change|before (the )?(new batch|sale|release)|goes on sale)\b/i.test(
+      userMessage
+    )
   ) {
     return "label_requirements";
   }
