@@ -5,6 +5,7 @@ import {
   buildIntroductionInstruction,
   getHistoryWindowLimit,
   resolveChatModels,
+  shouldRunKnowledgeRetry,
   shouldUseRetrievedContextPrompt,
 } from "@/app/api/chat/stream/route";
 
@@ -48,6 +49,11 @@ describe("authority-query retrieval fallback", () => {
     expect(shouldUseRetrievedContextPrompt(false, true)).toBe(true);
     expect(shouldUseRetrievedContextPrompt(false, false)).toBe(false);
     expect(shouldUseRetrievedContextPrompt(true, false)).toBe(true);
+  });
+
+  it("skips broad knowledge retry when authoritative sources are required", () => {
+    expect(shouldRunKnowledgeRetry(true)).toBe(false);
+    expect(shouldRunKnowledgeRetry(false)).toBe(true);
   });
 
   it("expands London legal queries with GB authority hints", () => {

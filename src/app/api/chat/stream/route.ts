@@ -69,6 +69,10 @@ export function shouldUseRetrievedContextPrompt(ragEnabled: boolean, preferAutho
   return ragEnabled || preferAuthoritativeSources;
 }
 
+export function shouldRunKnowledgeRetry(preferAuthoritativeSources: boolean) {
+  return !preferAuthoritativeSources;
+}
+
 export function buildAuthorityRetryQueries(
   message: string,
   queryJurisdiction: Jurisdiction,
@@ -522,7 +526,7 @@ export async function POST(request: Request) {
       }
     }
 
-    if (kChunks.length === 0) {
+    if (kChunks.length === 0 && shouldRunKnowledgeRetry(useAuthorityFilters)) {
       const retryQueries = buildKnowledgeRetryQueries(message, mode, queryJurisdiction, businessTypeLabel);
 
       for (const retryQuery of retryQueries) {
