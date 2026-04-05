@@ -8,6 +8,8 @@ type ArticlePageProps = {
   params: Promise<{ slug: string }>;
 };
 
+export const revalidate = 3600;
+
 export async function generateStaticParams() {
   const articles = await getArticleManifest();
   return articles.map((article) => ({ slug: article.slug }));

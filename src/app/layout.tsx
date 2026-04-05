@@ -4,7 +4,10 @@ import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import { CookieBanner } from "@/components/site/CookieBanner";
 import { SiteFooter, SiteHeader } from "@/components/site/chrome";
+import { validateEnv } from "@/lib/env";
 import "./globals.css";
+
+validateEnv();
 
 const manrope = Manrope({
   variable: "--font-manrope",

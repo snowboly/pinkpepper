@@ -57,7 +57,7 @@ export async function GET(request: Request) {
 
   const { data, error, count } = await supabase
     .from("review_requests")
-    .select("*", { count: "exact" })
+    .select("id,conversation_id,review_type,document_category,status,priority,notes,created_at,updated_at", { count: "exact" })
     .eq("user_id", user.id)
     .order("created_at", { ascending: false })
     .range(offset, offset + pageSize - 1);

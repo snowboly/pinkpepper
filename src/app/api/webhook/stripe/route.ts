@@ -41,10 +41,14 @@ async function handleInvoicePaymentFailed(invoice: Stripe.Invoice) {
       })
     : undefined;
 
-  await sendBillingEmail({
-    to: email,
-    ...buildPaymentFailedEmail({ tier: row.tier ?? "free", nextRetryDate }),
-  });
+  try {
+    await sendBillingEmail({
+      to: email,
+      ...buildPaymentFailedEmail({ tier: row.tier ?? "free", nextRetryDate }),
+    });
+  } catch (emailErr) {
+    console.error("Failed to send payment-failed email (non-fatal):", emailErr);
+  }
 }
 
 function getCurrentPeriodEndUnix(subscription: Stripe.Subscription): number | null {
@@ -98,61 +102,55 @@ export async function syncSubscriptionFromStripe(
   });
   const userId = await resolveUserIdForCustomer(customerId);
 
-  const { error: upsertErr } = await admin
-    .from("subscriptions")
-    .upsert(
-      {
-        user_id: userId,
-        stripe_customer_id: customerId,
-        stripe_subscription_id: subscription.id,
-        stripe_price_id: snapshot.stripePriceId,
-        status: snapshot.status,
-        tier: snapshot.tier,
-        current_period_end: snapshot.currentPeriodEnd,
-      },
-      { onConflict: "user_id" }
-    );
+  // Atomic upsert: updates both subscriptions and profiles in a single transaction
+  // to prevent inconsistent state if one write fails.
+  const { error: syncErr } = await admin.rpc("sync_subscription_and_profile", {
+    p_user_id: userId,
+    p_stripe_customer_id: customerId,
+    p_stripe_subscription_id: subscription.id,
+    p_stripe_price_id: snapshot.stripePriceId,
+    p_status: snapshot.status,
+    p_tier: snapshot.tier,
+    p_current_period_end: snapshot.currentPeriodEnd,
+  });
 
-  if (upsertErr) throw upsertErr;
-
-  const { error: profileErr } = await admin
-    .from("profiles")
-    .update({ tier: snapshot.tier })
-    .eq("id", userId);
-
-  if (profileErr) throw profileErr;
+  if (syncErr) throw syncErr;
 
   const { data: userData } = await admin.auth.admin.getUserById(userId);
   const email = userData?.user?.email;
 
   if (email) {
-    let emailContent: { subject: string; html: string };
+    try {
+      let emailContent: { subject: string; html: string };
 
-    if (eventType === "customer.subscription.created" && snapshot.status === "active") {
-      emailContent = buildSubscriptionActivatedEmail({ tier: snapshot.tier });
-    } else if (
-      eventType === "customer.subscription.deleted" ||
-      snapshot.status === "canceled"
-    ) {
-      const periodEndDate = snapshot.currentPeriodEnd
-        ? new Date(snapshot.currentPeriodEnd).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })
-        : undefined;
-      emailContent = buildSubscriptionCancelledEmail({
-        tier: snapshot.planTier,
-        periodEnd: periodEndDate,
-      });
-    } else {
-      emailContent = buildSubscriptionUpdatedEmail({
-        status: snapshot.status,
-        tier: snapshot.tier,
-      });
+      if (eventType === "customer.subscription.created" && snapshot.status === "active") {
+        emailContent = buildSubscriptionActivatedEmail({ tier: snapshot.tier });
+      } else if (
+        eventType === "customer.subscription.deleted" ||
+        snapshot.status === "canceled"
+      ) {
+        const periodEndDate = snapshot.currentPeriodEnd
+          ? new Date(snapshot.currentPeriodEnd).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })
+          : undefined;
+        emailContent = buildSubscriptionCancelledEmail({
+          tier: snapshot.planTier,
+          periodEnd: periodEndDate,
+        });
+      } else {
+        emailContent = buildSubscriptionUpdatedEmail({
+          status: snapshot.status,
+          tier: snapshot.tier,
+        });
+      }
+
+      await sendBillingEmail({ to: email, ...emailContent });
+    } catch (emailErr) {
+      console.error("Failed to send subscription email (non-fatal):", emailErr);
     }
-
-    await sendBillingEmail({ to: email, ...emailContent });
   }
 }
 
@@ -195,6 +193,18 @@ export async function POST(request: Request) {
   }
 
   try {
+    // Deduplicate: skip events we've already processed (Stripe may replay)
+    const admin = createAdminClient();
+    const { data: existing } = await admin
+      .from("webhook_events_processed")
+      .select("stripe_event_id")
+      .eq("stripe_event_id", event.id)
+      .maybeSingle();
+
+    if (existing) {
+      return NextResponse.json({ received: true, deduplicated: true });
+    }
+
     switch (event.type) {
       case "checkout.session.completed": {
         await handleCheckoutCompleted(event.data.object as Stripe.Checkout.Session);
@@ -213,6 +223,12 @@ export async function POST(request: Request) {
       default:
         break;
     }
+
+    // Mark event as processed
+    await admin.from("webhook_events_processed").insert({
+      stripe_event_id: event.id,
+      event_type: event.type,
+    });
 
     return NextResponse.json({ received: true });
   } catch (err) {
