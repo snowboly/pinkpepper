@@ -15,8 +15,8 @@ const TIER_FEATURES: Record<string, string[]> = {
   ],
   pro: [
     "Everything in Plus, plus 8 premium expert answers per day",
-    "Access to virtual audit mode",
-    "2 hours of food safety consultancy per month",
+    "Access to Auditor mode",
+    "2 hours of human food safety consultancy per month",
     "Priority support",
   ],
 };

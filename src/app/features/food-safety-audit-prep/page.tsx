@@ -25,7 +25,7 @@ export default function FoodSafetyAuditPrepPage() {
       outcomes={[
         "Prepare monthly and pre-audit reviews with more structure.",
         "Spot documentation gaps earlier.",
-        "Create a stronger handoff into food safety consultancy where needed.",
+        "Create a stronger handoff into human consultancy where needed.",
       ]}
       sections={[
         {
@@ -41,7 +41,7 @@ export default function FoodSafetyAuditPrepPage() {
         {
           title: "Useful when the stakes are higher",
           body:
-            "Where the work has real compliance risk, PinkPepper's positioning is not 'publish AI output and hope'. It is 'draft faster, review better, export cleanly, and escalate to food safety consultancy when necessary.'",
+            "Where the work has real compliance risk, PinkPepper's positioning is not 'publish AI output and hope'. It is 'use Consultant for guidance, use Auditor for findings, and escalate to human consultancy when necessary.'",
         },
       ]}
       heroImage={{
@@ -62,7 +62,7 @@ export default function FoodSafetyAuditPrepPage() {
         {
           href: "/pricing",
           label: "Pricing",
-          description: "Review the plans that cover exports, audit workflows, and food safety consultancy.",
+          description: "Review the plans that cover Consultant use, Auditor workflows, and human consultancy.",
         },
       ]}
     />
