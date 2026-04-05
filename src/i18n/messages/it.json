@@ -75,7 +75,30 @@
     "recordingUnsupported": "Voice recording is not supported in this browser.",
     "recordingPermissionError": "Microphone access is blocked. Please allow microphone permission and try again.",
     "transcriptionError": "We could not transcribe your recording. Please try again.",
-    "transcriptionEmptyError": "No speech was detected. Please try recording again."
+    "transcriptionEmptyError": "No speech was detected. Please try recording again.",
+    "modeGuidance": {
+      "examplesLabel": "Try asking:",
+      "consultant": {
+        "label": "Consultant mode",
+        "badge": "Best advice",
+        "bestFor": "Best for questions, decisions, and practical compliance guidance.",
+        "useWhen": "Use Consultant when you want a clear answer, a next step, or help applying food safety rules to your business.",
+        "examples": [
+          "\"Can we label this soup gluten-free if we also handle wheat on site?\"",
+          "\"What records should I keep every week so I’m ready for an inspection?\""
+        ]
+      },
+      "auditor": {
+        "label": "Auditor mode",
+        "badge": "Formal findings",
+        "bestFor": "Best for structured findings, evidence gaps, CAPA, and report-style reviews.",
+        "useWhen": "Use Auditor when you want a formal assessment based on uploaded records or a prompt-based preliminary audit.",
+        "examples": [
+          "\"Audit these uploaded records for illness exclusion, fridge monitoring, and allergen control.\"",
+          "\"Run a preliminary audit of this manufacturer before release and give me findings with severity and CAPA.\""
+        ]
+      }
+    }
   },
   "sidebar": {
     "newChat": "Nuova chat",

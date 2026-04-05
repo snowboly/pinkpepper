@@ -264,4 +264,24 @@ describe("chat workspace chrome", () => {
     expect(en).toContain('"generateReport": "Generate audit report"');
     expect(en).toContain('"virtualAuditPlaceholder": "Auditor mode: upload evidence, describe scope, or request the final audit report..."');
   });
+
+  it("adds empty-state guidance that explains consultant and auditor modes", () => {
+    const workspace = readWorkspaceFile("src/components/dashboard/ChatWorkspace.tsx");
+    const messages = readWorkspaceFile("src/components/dashboard/ChatMessages.tsx");
+    const en = readWorkspaceFile("src/i18n/messages/en.json");
+
+    expect(workspace).toContain('workspaceMode={workspaceMode}');
+
+    expect(messages).toContain('workspaceMode: "ask" | "virtual_audit";');
+    expect(messages).toContain('const modeKey = workspaceMode === "virtual_audit" ? "auditor" : "consultant";');
+    expect(messages).toContain('t(`modeGuidance.${modeKey}.bestFor`)');
+    expect(messages).toContain('t(`modeGuidance.${modeKey}.useWhen`)');
+    expect(messages).toContain('t(`modeGuidance.${modeKey}.examples.0`)');
+    expect(messages).toContain('t("modeGuidance.examplesLabel")');
+
+    expect(en).toContain('"modeGuidance"');
+    expect(en).toContain('"bestFor"');
+    expect(en).toContain('"useWhen"');
+    expect(en).toContain('"examples"');
+  });
 });
