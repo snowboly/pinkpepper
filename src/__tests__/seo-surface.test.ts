@@ -46,6 +46,72 @@ async function renderArticlesPageForTest() {
   return renderToStaticMarkup(await ArticlesPage());
 }
 
+async function renderArticleDetailPageForTest() {
+  vi.resetModules();
+  vi.doMock("@/lib/articles", () => ({
+    getArticleBySlug: vi.fn().mockResolvedValue({
+      title: "Cooling and Reheating in HACCP: The High-Risk Steps Operators Miss",
+      slug: "cooling-and-reheating-haccp-high-risk-steps",
+      excerpt: "A practical guide to cooling and reheating controls in HACCP.",
+      category: "Operations",
+      publishedAt: "2025-12-25",
+      body: "<h2>Cooling and Reheating</h2><p>Body copy</p>",
+      image: "https://images.example.com/cooling.jpg",
+    }),
+    getArticleManifest: vi.fn().mockResolvedValue([
+      {
+        title: "Cooling and Reheating in HACCP: The High-Risk Steps Operators Miss",
+        slug: "cooling-and-reheating-haccp-high-risk-steps",
+        excerpt: "A practical guide to cooling and reheating controls in HACCP.",
+        category: "Operations",
+        publishedAt: "2025-12-25",
+        image: "https://images.example.com/cooling.jpg",
+      },
+      {
+        title: "Temperature Control in HACCP: Limits and Monitoring",
+        slug: "temperature-control-in-haccp-limits-and-monitoring",
+        excerpt: "The main temperature control guide.",
+        category: "Operations",
+        publishedAt: "2025-12-27",
+      },
+      {
+        title: "How to Build a HACCP Process Flow Diagram",
+        slug: "building-a-haccp-process-flow-diagram",
+        excerpt: "Build a stronger process map.",
+        category: "Compliance",
+        publishedAt: "2025-11-29",
+      },
+      {
+        title: "HACCP Checklist for New Food Businesses",
+        slug: "haccp-checklist-for-new-food-businesses",
+        excerpt: "Launch-ready checklist.",
+        category: "Compliance",
+        publishedAt: "2025-10-19",
+      },
+    ]),
+  }));
+  vi.doMock("@/lib/article-content", () => ({
+    processArticleContent: vi.fn().mockReturnValue({
+      processedContent: "<h2>Cooling and Reheating</h2><p>Body copy</p>",
+    }),
+  }));
+  vi.doMock("next/image", () => ({
+    default: (props: Record<string, unknown>) => createElement("img", props),
+  }));
+  vi.doMock("next/link", () => ({
+    default: ({ href, children, ...props }: { href: string; children?: ReactNode } & Record<string, unknown>) =>
+      createElement("a", { href, ...props }, children),
+  }));
+
+  const articleDetailPageModule = await import("@/app/articles/[slug]/page");
+  const ArticleDetailPage = articleDetailPageModule.default;
+  return renderToStaticMarkup(
+    await ArticleDetailPage({
+      params: Promise.resolve({ slug: "cooling-and-reheating-haccp-high-risk-steps" }),
+    }),
+  );
+}
+
 function expectLink(markup: string, href: string, label?: string) {
   expect(markup).toContain(`href="${href}"`);
   if (label) expect(markup).toContain(label);
@@ -150,6 +216,17 @@ describe("public SEO copy and linking", () => {
     expect(articleDetail).toContain("pp-article-hero-meta");
     expect(articleDetail).toContain("text-4xl font-bold leading-[1.05]");
     expect(articleDetail).toContain("text-lg leading-8");
+  });
+
+  it("renders related reading links on article detail pages", async () => {
+    const markup = await renderArticleDetailPageForTest();
+
+    expect(markup).toContain("Related reading");
+    expect(markup).toContain("Keep building the same cluster");
+    expect(markup).toContain('href="/articles/temperature-control-in-haccp-limits-and-monitoring"');
+    expect(markup).toContain('href="/articles/building-a-haccp-process-flow-diagram"');
+    expect(markup).toContain('href="/articles/haccp-checklist-for-new-food-businesses"');
+    expect(markup).toContain('href="/articles"');
   });
 
   it("expands scoped article-body typography without touching dashboard markdown", () => {
