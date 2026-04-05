@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { buildVirtualAuditSystemPrompt } from "@/app/api/audit/stream/route";
+import { getAuditPersona } from "@/lib/personas";
 
 describe("buildVirtualAuditSystemPrompt", () => {
   it("uses a finding-first audit contract when the prompt already contains evidence", () => {
@@ -33,5 +34,27 @@ describe("buildVirtualAuditSystemPrompt", () => {
 
     expect(prompt).toContain("User-uploaded documents are available for this turn");
     expect(prompt).toContain("reference them by document name when used as evidence");
+  });
+
+  it("includes severity-calibration and anti-over-finding rules", () => {
+    const prompt = buildVirtualAuditSystemPrompt("No regulation context found.", false);
+
+    expect(prompt).toContain("Use severity carefully");
+    expect(prompt).toContain("Minor NC");
+    expect(prompt).toContain("Major NC");
+    expect(prompt).toContain("Critical NC");
+    expect(prompt).toContain("Do NOT raise a finding just because a document could be stronger");
+    expect(prompt).toContain("Do NOT treat an apparently completed cleaning schedule as a major gap");
+    expect(prompt).toContain("Do NOT backfill or assume missed checks happened");
+  });
+});
+
+describe("audit persona", () => {
+  it("uses the fixed Lead Auditor John persona for virtual audit", () => {
+    const persona = getAuditPersona();
+
+    expect(persona.name).toBe("Lead Auditor John");
+    expect(persona.avatar).toBe("lead-auditor-john");
+    expect(persona.promptFragment).toContain("Lead Auditor John");
   });
 });

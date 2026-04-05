@@ -5,6 +5,7 @@ import type { VerificationState } from "@/lib/rag/verification";
 export type PersonaInfo = {
   id: string;
   name: string;
+  avatar: string;
 };
 
 export type MessageArtifact = {

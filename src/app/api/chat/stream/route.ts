@@ -842,7 +842,7 @@ export async function POST(request: Request) {
       // Send metadata event
       controller.enqueue(
         encoder.encode(
-          `data: ${JSON.stringify({ type: "metadata", conversationId, ragEnabled, persona: { id: persona.id, name: persona.name } })}\n\n`
+          `data: ${JSON.stringify({ type: "metadata", conversationId, ragEnabled, persona: { id: persona.id, name: persona.name, avatar: persona.avatar } })}\n\n`
         )
       );
 

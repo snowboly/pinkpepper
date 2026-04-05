@@ -8,7 +8,7 @@ import type { SubscriptionTier } from "@/lib/tier";
 import { TIER_CAPABILITIES } from "@/lib/tier";
 import type { Citation } from "@/lib/rag/citations";
 import type { VerificationState } from "@/lib/rag/verification";
-import { getPersonaForConversation } from "@/lib/personas";
+import { getAuditPersona, getPersonaForConversation } from "@/lib/personas";
 import type { Message, Conversation, Project, ChatWorkspaceProps, PersonaInfo } from "./types";
 import ChatSidebar from "./ChatSidebar";
 import ChatMessages from "./ChatMessages";
@@ -20,6 +20,7 @@ import { useAttachments } from "./useAttachments";
 import {
   parseMessageArtifact,
   parseMessageCitations,
+  parseMessagePersona,
   parseMessageVerificationState,
 } from "./chat-message-metadata";
 import { applyStreamError } from "./chat-stream-state";
@@ -294,7 +295,7 @@ export default function ChatWorkspace({
     }
   }, []);
 
-  async function loadConversationMessages(id: string) {
+  const loadConversationMessages = useCallback(async (id: string) => {
     abortControllerRef.current?.abort();
     setLoadingMessages(true);
     setError(null);
@@ -305,8 +306,12 @@ export default function ChatWorkspace({
         setError(data.error ?? "Failed to load messages.");
         return;
       }
-      const persona = getPersonaForConversation(id);
-      setCurrentPersona(persona);
+      const assistantPersona =
+        (data.messages ?? [])
+          .map((m) => parseMessagePersona(m.metadata))
+          .find((persona): persona is PersonaInfo => Boolean(persona)) ??
+        (workspaceMode === "virtual_audit" ? getAuditPersona() : getPersonaForConversation(id));
+      setCurrentPersona(assistantPersona);
       setConversationId(id);
       setMessages((data.messages ?? []).map((m) => ({
         role: m.role,
@@ -314,14 +319,16 @@ export default function ChatWorkspace({
         citations: parseMessageCitations(m.metadata),
         verificationState: parseMessageVerificationState(m.metadata),
         artifact: parseMessageArtifact(m.metadata),
-        ...(m.role === "assistant" ? { persona: { id: persona.id, name: persona.name } } : {}),
+        ...(m.role === "assistant"
+          ? { persona: parseMessagePersona(m.metadata) ?? assistantPersona }
+          : {}),
       })));
     } catch {
       setError("Network error while loading messages.");
     } finally {
       setLoadingMessages(false);
     }
-  }
+  }, [workspaceMode]);
 
   async function removeConversation(id: string) {
     setError(null);
@@ -486,6 +493,9 @@ export default function ChatWorkspace({
     // Start a fresh conversation when entering virtual audit mode
     if (nextMode === "virtual_audit") {
       startNewChat();
+      setCurrentPersona(getAuditPersona());
+    } else {
+      setCurrentPersona(null);
     }
   }
 
@@ -867,7 +877,7 @@ export default function ChatWorkspace({
       loadConvOnSelect.current = null;
       void loadConversationMessages(conversationId);
     }
-  }, [conversationId]);
+  }, [conversationId, loadConversationMessages]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
