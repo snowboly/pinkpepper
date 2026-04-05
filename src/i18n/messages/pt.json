@@ -151,11 +151,11 @@
         "q5": "Quem aprova os fornecedores e onde são guardados os registos?"
       }
     },
-    "ask": "Perguntar",
-    "virtualAudit": "Auditoria virtual",
+    "ask": "Consultor",
+    "virtualAudit": "Auditor",
     "adminPanel": "Painel de administração",
     "requestReview": "Solicitar revisão",
-    "generateReport": "Gerar relatório",
+    "generateReport": "Gerar relatório de auditoria",
     "exporting": "A exportar...",
     "exportConversation": "Exportar conversa",
     "pdf": "PDF",
@@ -169,7 +169,7 @@
     "expandSidebar": "Expandir barra lateral",
     "wizardCancelled": "Gerador de documentos cancelado. Pode recomeçar a partir de qualquer cartão inicial.",
     "wizardGenerating": "Perfeito. Tenho informação suficiente. A gerar o documento completo agora.",
-    "virtualAuditPlaceholder": "Modo Auditoria virtual: descreva o âmbito, carregue evidências ou solicite o relatório final de auditoria..."
+    "virtualAuditPlaceholder": "Modo Auditor: carregue evidências, descreva o âmbito ou peça o relatório final de auditoria..."
   },
   "onboarding": {
     "welcome": "Bem-vindo ao PinkPepper",

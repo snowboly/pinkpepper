@@ -255,4 +255,13 @@ describe("chat workspace chrome", () => {
     expect(attachments).toContain("handleDroppedAttachment");
     expect(attachments).toContain("Only images, PDF, DOCX, TXT, and Markdown files are supported.");
   });
+
+  it("rebrands the workspace mode toggle to consultant and auditor", () => {
+    const en = readWorkspaceFile("src/i18n/messages/en.json");
+
+    expect(en).toContain('"ask": "Consultant"');
+    expect(en).toContain('"virtualAudit": "Auditor"');
+    expect(en).toContain('"generateReport": "Generate audit report"');
+    expect(en).toContain('"virtualAuditPlaceholder": "Auditor mode: upload evidence, describe scope, or request the final audit report..."');
+  });
 });

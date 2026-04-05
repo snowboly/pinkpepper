@@ -256,11 +256,11 @@
         "q5": "Who is responsible for cleaning and who verifies it?"
       }
     },
-    "ask": "Ask",
-    "virtualAudit": "Virtual Audit",
+    "ask": "Consultant",
+    "virtualAudit": "Auditor",
     "adminPanel": "Admin panel",
     "requestReview": "Request review",
-    "generateReport": "Generate report",
+    "generateReport": "Generate audit report",
     "exporting": "Exporting...",
     "exportConversation": "Export Conversation",
     "pdf": "Export PDF",
@@ -274,7 +274,7 @@
     "expandSidebar": "Expand sidebar",
     "wizardCancelled": "Document builder cancelled. You can start again from any starter card.",
     "wizardGenerating": "Perfect. I have enough information. Generating your full document now.",
-    "virtualAuditPlaceholder": "Virtual Audit mode: describe scope, upload evidence, or ask for final audit report..."
+    "virtualAuditPlaceholder": "Auditor mode: upload evidence, describe scope, or request the final audit report..."
   },
   "onboarding": {
     "welcome": "Welcome to PinkPepper",

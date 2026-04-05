@@ -151,11 +151,11 @@
         "q5": "Wer genehmigt Lieferanten und wo werden die Aufzeichnungen aufbewahrt?"
       }
     },
-    "ask": "Fragen",
-    "virtualAudit": "Virtuelles Audit",
+    "ask": "Berater",
+    "virtualAudit": "Auditor",
     "adminPanel": "Admin-Bereich",
     "requestReview": "Überprüfung anfordern",
-    "generateReport": "Bericht erstellen",
+    "generateReport": "Auditbericht erstellen",
     "exporting": "Wird exportiert...",
     "exportConversation": "Konversation exportieren",
     "pdf": "PDF",
@@ -169,7 +169,7 @@
     "expandSidebar": "Seitenleiste ausklappen",
     "wizardCancelled": "Dokumenten-Generator abgebrochen. Sie können jederzeit von einer Startkarte aus neu beginnen.",
     "wizardGenerating": "Perfekt. Ich habe genügend Informationen. Ihr vollständiges Dokument wird jetzt erstellt.",
-    "virtualAuditPlaceholder": "Virtueller Audit-Modus: Beschreiben Sie den Umfang, laden Sie Nachweise hoch oder fordern Sie den Abschlussbericht an..."
+    "virtualAuditPlaceholder": "Auditor-Modus: Nachweise hochladen, Umfang beschreiben oder den Abschlussbericht anfordern..."
   },
   "onboarding": {
     "welcome": "Willkommen bei PinkPepper",
