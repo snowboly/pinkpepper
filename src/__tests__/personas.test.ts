@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { PERSONAS, getPersonaForConversation } from "@/lib/personas";
+import { PERSONAS, getAuditPersona, getPersonaForConversation } from "@/lib/personas";
 
 describe("personas", () => {
   it("renames Sofia to Greta", () => {
@@ -25,5 +25,10 @@ describe("personas", () => {
     expect(getPersonaForConversation("conversation-123")).toEqual(
       getPersonaForConversation("conversation-123")
     );
+  });
+
+  it("defines a dedicated virtual-audit persona", () => {
+    expect(getAuditPersona().name).toBe("Lead Auditor John");
+    expect(getAuditPersona().avatar).toBe("lead-auditor-john");
   });
 });

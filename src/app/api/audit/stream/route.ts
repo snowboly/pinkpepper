@@ -4,17 +4,20 @@ import { resolveUserAccess } from "@/lib/access";
 import { countUsageSince, utcDayStartIso } from "@/lib/policy";
 import { retrieveContext, retrieveUserDocumentContext, formatCitations, type KnowledgeChunk, type UserDocumentChunk } from "@/lib/rag";
 import { chatLimiter, checkRateLimit } from "@/lib/ratelimit";
+import { getAuditPersona } from "@/lib/personas";
 
 export const dynamic = "force-dynamic";
 
 export function buildVirtualAuditSystemPrompt(contextBlock: string, hasUserDocuments: boolean) {
+  const auditPersona = getAuditPersona();
   const documentEvidenceInstruction = hasUserDocuments
     ? "- User-uploaded documents are available for this turn. If you rely on them, reference them by document name when used as evidence.\n"
     : "- No user-uploaded documents are available for this turn. Do NOT say you reviewed uploaded records, uploaded files, or attached documents.\n";
 
   return (
-    "You are PinkPepper Virtual Auditor, acting as a strict senior food safety auditor conducting an interactive EU/UK food safety management system audit.\n\n" +
+    `You are ${auditPersona.name}, PinkPepper's Virtual Auditor, acting as a strict senior food safety auditor conducting an interactive EU/UK food safety management system audit.\n\n` +
     "INTERACTIVE AUDIT BEHAVIOUR (CRITICAL):\n" +
+    `- Your name is ${auditPersona.name}. If you introduce yourself, use that name only.\n` +
     "- You are conducting a LIVE, step-by-step audit. Do NOT produce a final report unless the user explicitly asks for one.\n" +
     "- Start by greeting the user, asking what type of business they operate, and which standard/scope they want audited (e.g. HACCP, BRCGS, SQF, FSSC 22000, general EU hygiene regs) only when that context is genuinely missing.\n" +
     "- Work through audit areas ONE AT A TIME.\n" +
@@ -35,6 +38,14 @@ export function buildVirtualAuditSystemPrompt(contextBlock: string, hasUserDocum
     "- If the user says they do not have a required record or control, record that as a finding rather than delaying the audit.\n" +
     "- Do NOT invent extra facts, timestamps, records, units, or observations that are not present in the user's prompt or retrieved evidence.\n" +
     "- When only the user's prompt is available, make it explicit that your objective evidence comes from the user's description, not from uploaded records.\n" +
+    "- Use severity carefully:\n" +
+    "  - Minor NC: a limited gap, isolated weakness, or incomplete evidence where control mostly exists and immediate food safety risk appears limited.\n" +
+    "  - Major NC: a clear control failure, significant monitoring gap, unreliable critical information, unsafe reading without documented disposition, or a meaningful food safety/compliance risk.\n" +
+    "  - Critical NC: an immediate serious risk, likely unsafe product in service/release, or a fundamental breakdown requiring stop, hold, or immediate escalation.\n" +
+    "- Do NOT raise a finding just because a document could be stronger or more detailed if the available evidence is broadly acceptable.\n" +
+    "- Do NOT treat an apparently completed cleaning schedule as a major gap unless the evidence shows missed cleaning, ineffective cleaning, or missing critical controls.\n" +
+    "- Do NOT backfill or assume missed checks happened. If checks are missing, say they are missing and assess the gap from that fact.\n" +
+    "- Do NOT overstate the evidence. If the prompt says staff cannot explain a limit, do not convert that into missing records unless the records are actually absent from the evidence.\n" +
     "- Keep responses concise and auditor-professional. Use bullet points.\n" +
     "- Track which areas have been covered and which remain. Remind the user of progress only when it adds value.\n\n" +
     "FINAL REPORT (only when user asks for it):\n" +
@@ -53,6 +64,7 @@ export function buildVirtualAuditSystemPrompt(contextBlock: string, hasUserDocum
 }
 
 export async function POST(request: Request) {
+  const auditPersona = getAuditPersona();
   const groqKey = process.env.GROQ_API_KEY;
   if (!groqKey) {
     return Response.json({ error: "GROQ_API_KEY is not configured." }, { status: 500 });
@@ -273,7 +285,7 @@ export async function POST(request: Request) {
     async start(controller) {
       controller.enqueue(
         encoder.encode(
-          `data: ${JSON.stringify({ type: "metadata", conversationId, ragEnabled })}\n\n`
+          `data: ${JSON.stringify({ type: "metadata", conversationId, ragEnabled, persona: { id: auditPersona.id, name: auditPersona.name, avatar: auditPersona.avatar } })}\n\n`
         )
       );
 
@@ -332,7 +344,7 @@ export async function POST(request: Request) {
           user_id: user.id,
           role: "assistant",
           content: fullContent,
-          metadata: {},
+          metadata: { persona: { id: auditPersona.id, name: auditPersona.name, avatar: auditPersona.avatar }, mode: "virtual_audit" },
         });
 
         await supabase.from("usage_events").insert({
@@ -380,7 +392,11 @@ export async function POST(request: Request) {
               user_id: user.id,
               role: "assistant",
               content: fullContent,
-              metadata: { interrupted: true },
+              metadata: {
+                interrupted: true,
+                persona: { id: auditPersona.id, name: auditPersona.name, avatar: auditPersona.avatar },
+                mode: "virtual_audit",
+              },
             });
 
             await supabase.from("usage_events").insert({

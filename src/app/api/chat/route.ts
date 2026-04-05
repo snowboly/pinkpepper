@@ -100,7 +100,7 @@ async function handleImageAnalysis(
     citations: [],
     ragEnabled: false,
     imageAnalysis: true,
-    persona: { id: persona.id, name: persona.name },
+    persona: { id: persona.id, name: persona.name, avatar: persona.avatar },
     usage: {
       used: usage.used,
       limit: usage.limit,
