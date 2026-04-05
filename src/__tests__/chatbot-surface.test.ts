@@ -229,7 +229,7 @@ describe("chat workspace chrome", () => {
     const workspace = readWorkspaceFile("src/components/dashboard/ChatWorkspace.tsx");
     const uploadRoute = readWorkspaceFile("src/app/api/documents/upload/route.ts");
 
-    expect(workspace).toContain("let activeConversationId = conversationId;");
+    expect(workspace).toContain("let activeConversationId = activeSession.conversationId;");
     expect(workspace).toContain('fd.append("draftTitle"');
     expect(workspace).toContain("activeConversationId = data.conversationId;");
     expect(workspace).toContain("if (!res.ok || (!data.extractedText && (data.chunksStored ?? 0) === 0))");
@@ -283,5 +283,19 @@ describe("chat workspace chrome", () => {
     expect(en).toContain('"bestFor"');
     expect(en).toContain('"useWhen"');
     expect(en).toContain('"examples"');
+  });
+
+  it("keeps consultant and auditor workspace sessions separate when toggling modes", () => {
+    const workspace = readWorkspaceFile("src/components/dashboard/ChatWorkspace.tsx");
+
+    expect(workspace).toContain('type ModeSessionState = {');
+    expect(workspace).toContain('const [modeSessions, setModeSessions] = useState<Record<WorkspaceMode, ModeSessionState>>');
+    expect(workspace).toContain('const activeSession = modeSessions[workspaceMode];');
+    expect(workspace).toContain('const consultantAttachments = useAttachments');
+    expect(workspace).toContain('const auditorAttachments = useAttachments');
+    expect(workspace).toContain('const activeAttachments = workspaceMode === "virtual_audit" ? auditorAttachments : consultantAttachments;');
+    expect(workspace).not.toContain('setCurrentPersona(getAuditPersona())');
+    expect(workspace).not.toContain('setPrompt("")');
+    expect(workspace).toContain('onPromptChange={(value) => updateActiveSession({ prompt: value })}');
   });
 });
