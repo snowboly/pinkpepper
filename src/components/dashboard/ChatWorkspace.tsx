@@ -165,9 +165,8 @@ export default function ChatWorkspace({
     typingIntervalRef.current = requestAnimationFrame(drain);
   }, [finalizeStreamingMessage]);
 
-  // ── Drag & drop image onto chat area ──
+  // ── Drag & drop attachments onto chat area ──
   function handleDragOver(e: React.DragEvent) {
-    if (!canUploadImages) return;
     e.preventDefault();
     setIsDraggingOver(true);
   }
@@ -180,9 +179,8 @@ export default function ChatWorkspace({
   function handleDrop(e: React.DragEvent) {
     e.preventDefault();
     setIsDraggingOver(false);
-    if (!canUploadImages) return;
     const file = e.dataTransfer.files?.[0];
-    if (file) handleImageSelect(file);
+    if (file) handleDroppedAttachment(file);
   }
 
   // ── Derived values ──
@@ -207,8 +205,9 @@ export default function ChatWorkspace({
     attachedImage,
     imagePreview,
     attachedDocument,
-    setAttachedDocument,
     handleImageSelect,
+    handleDocumentSelect,
+    handleDroppedAttachment,
     clearImage,
     restoreImage,
     clearDocument,
@@ -930,11 +929,11 @@ export default function ChatWorkspace({
               <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           </button>
-          {isDraggingOver && canUploadImages && (
+          {isDraggingOver && (
             <div className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center">
               <div className="rounded-2xl border-2 border-dashed border-[#E11D48] bg-white/90 px-8 py-6 text-center shadow-lg">
-                <p className="text-sm font-semibold text-[#E11D48]">{tw("dropPhotoToAnalyse")}</p>
-                <p className="text-xs text-[#64748B] mt-1">{tw("dropPhotoHint")}</p>
+                <p className="text-sm font-semibold text-[#E11D48]">{tw("dropAttachmentToAnalyse")}</p>
+                <p className="text-xs text-[#64748B] mt-1">{canUploadImages ? tw("dropAttachmentHint") : tw("dropDocumentHint")}</p>
               </div>
             </div>
           )}
@@ -1038,7 +1037,7 @@ export default function ChatWorkspace({
             onStop={() => abortControllerRef.current?.abort()}
             onImageSelect={handleImageSelect}
             onClearImage={clearImage}
-            onDocumentSelect={setAttachedDocument}
+            onDocumentSelect={handleDocumentSelect}
             onClearDocument={clearDocument}
             onKeyDown={handleKeyDown}
             textareaRef={textareaRef}
