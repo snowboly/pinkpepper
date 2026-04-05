@@ -60,12 +60,12 @@ export default function HomePage() {
             </div>
 
             <h1 className="pp-display mx-auto mb-8 max-w-4xl text-2xl leading-[1.15] tracking-[-0.02em] text-white sm:text-3xl md:text-4xl lg:text-5xl">
-              AI food safety compliance software with a specialist consultant on retainer.
+              AI food safety compliance software for day-to-day decisions and audit-ready review.
             </h1>
 
             <p className="mx-auto mb-8 max-w-3xl text-base leading-relaxed text-white/80 sm:text-lg">
-              Ask source-grounded EU and UK food safety questions, build review-ready compliance work faster, and bring in
-              qualified food safety consultants when you need specialist judgment.
+              Use Consultant mode for practical compliance guidance, Auditor mode for structured findings and CAPA, and
+              bring in qualified food safety consultants when a human review is needed.
             </p>
 
             <div className="mb-8 flex justify-center">
@@ -121,8 +121,8 @@ export default function HomePage() {
                 body: "Turn useful conversations into clean records, templates, and handover material without reworking everything manually.",
               },
               {
-                title: "Specialist backup",
-                body: "Move faster with AI, then route the higher-risk work to qualified food safety consultants when needed.",
+                title: "Clear escalation path",
+                body: "Handle day-to-day questions in Consultant, switch to Auditor for formal findings, and escalate to human consultancy when the risk is higher.",
               },
             ].map((item) => (
               <div key={item.title} className="rounded-2xl border border-[#E2E8F0] bg-[#F8FAFC] p-5">
@@ -183,9 +183,9 @@ export default function HomePage() {
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[#FFF1F2] text-[#E11D48]">
                   <Users className="h-6 w-6" />
                 </div>
-                <h3 className="mb-2 text-xl font-semibold text-[#0F172A]">AI speed with food safety consultancy</h3>
+                <h3 className="mb-2 text-xl font-semibold text-[#0F172A]">Switch from Consultant to Auditor when the job changes</h3>
                 <p className="text-[#64748B]">
-                  Route higher-stakes drafts to qualified food safety consultants for review, generation support, and specialist guidance.
+                  Start with practical guidance in Consultant mode, move into evidence-led findings in Auditor mode, and only escalate to human consultancy when specialist review is needed.
                 </p>
               </div>
             </div>
@@ -205,7 +205,7 @@ export default function HomePage() {
                   AI-powered compliance, with specialists when it matters
                 </h2>
                 <p className="mt-5 text-lg leading-relaxed text-[#475569]">
-                  PinkPepper combines AI automation with verified food safety consultants so your team moves faster without cutting corners.
+                  PinkPepper gives your team two ways to work: Consultant for answers and decisions, Auditor for formal findings and CAPA. Human consultancy stays available for the work that genuinely needs specialist review.
                 </p>
               </div>
             </div>
@@ -219,10 +219,10 @@ export default function HomePage() {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z" />
                   </svg>
                 </div>
-                <p className="text-3xl font-extrabold text-white">AI + Expert</p>
-                <p className="mt-1 text-sm font-semibold text-slate-400">Scales across every site</p>
+                <p className="text-3xl font-extrabold text-white">Consultant + Auditor</p>
+                <p className="mt-1 text-sm font-semibold text-slate-400">Two modes, one workflow</p>
                 <p className="mt-4 text-sm leading-relaxed text-slate-300">
-                  AI handles documentation, regulation lookups, and draft generation. Verified food safety consultants step in when specialist judgment is required — the right resource, every time.
+                  Consultant handles practical questions and next steps. Auditor handles structured findings, evidence gaps, and CAPA. Human consultants step in only when you need a real specialist review.
                 </p>
               </div>
 
@@ -266,7 +266,7 @@ export default function HomePage() {
         <div className="pp-container relative z-10">
           <div className="mx-auto mb-16 max-w-2xl text-center">
             <h2 className="pp-display mb-4 text-4xl text-[#0F172A] md:text-5xl">Pricing that follows the compliance job</h2>
-            <p className="text-lg text-[#64748B]">Start free, move to Plus for regular operational use, and choose Pro when you need audit support and consultancy input. <Link href="/pricing" className="underline hover:text-[#0F172A]">See full pricing</Link>.</p>
+            <p className="text-lg text-[#64748B]">Start free for live questions, move to Plus for heavier Consultant use, and choose Pro when you want Auditor mode and human consultancy. <Link href="/pricing" className="underline hover:text-[#0F172A]">See full pricing</Link>.</p>
           </div>
 
           <div className="mx-auto grid max-w-5xl gap-6 lg:grid-cols-3">
@@ -314,7 +314,7 @@ export default function HomePage() {
 
             <div className="flex flex-col rounded-3xl border border-[#F9A8D4] bg-[#FFF8FB] p-8">
               <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-[#BE123C]">Pro</h3>
-              <p className="mt-4 min-h-[4.5rem] text-sm leading-relaxed text-[#64748B]">For operators preparing for inspections, audits, and higher-risk work that needs direct consultancy support.</p>
+              <p className="mt-4 min-h-[4.5rem] text-sm leading-relaxed text-[#64748B]">For operators who want both AI modes, stronger audit workflows, and human specialist backup for higher-risk work.</p>
               <div className="mt-6 flex items-baseline gap-1">
                 <span className="text-5xl font-bold tracking-tight text-[#0F172A]"><span className="text-2xl align-super">€</span>99</span>
                 <span className="text-base text-[#94A3B8]">/month</span>
@@ -323,8 +323,8 @@ export default function HomePage() {
               <ul className="flex-1 space-y-3.5 text-sm text-[#475569]">
                 <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />Everything in Plus, plus:</li>
                 <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />8 premium expert answers per day</li>
-                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />Access to virtual audit mode</li>
-                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />2h/month of food safety consultancy</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />Access to Auditor mode</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />2h/month of human food safety consultancy</li>
                 <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />Priority support</li>
               </ul>
               <PricingActions

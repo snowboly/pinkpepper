@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { CheckCircle2, Mail } from "lucide-react";
 import PricingActions from "@/components/pricing/PricingActions";
+import { faqs as sharedFaqs } from "@/data/faqs";
 import { createClient } from "@/utils/supabase/server";
 
 export const metadata: Metadata = {
@@ -20,18 +21,26 @@ const planChanges = [
   },
   {
     plan: "Plus",
-    detail: "Everything in Free, plus more usage, 3 premium expert answers per day, unlimited saved conversations and projects, and access to downloadable templates.",
+    detail: "Everything in Free, plus more usage, 3 premium expert answers per day, unlimited saved conversations and projects, and downloadable templates for regular Consultant use.",
   },
   {
     plan: "Pro",
-    detail: "Everything in Plus, plus 8 premium expert answers per day, virtual audit mode, 2h/month of food safety consultancy, and priority support.",
+    detail: "Everything in Plus, plus 8 premium expert answers per day, Auditor mode, 2h/month of human food safety consultancy, and priority support.",
   },
 ];
 
-const faqs = [
+const pricingFaqs = [
+  (() => {
+    const modeFaq = sharedFaqs.find((faq) => faq.id === "consultant-vs-auditor");
+    if (!modeFaq) {
+      throw new Error("Missing consultant-vs-auditor FAQ");
+    }
+
+    return { q: modeFaq.question, a: modeFaq.answer };
+  })(),
   {
     q: "How do the consultancy hours work on Pro?",
-    a: "Pro includes 2 hours of food safety consultancy each month. Use them for review, guidance, and higher-risk support. Hours do not roll over.",
+    a: "Pro includes 2 hours of human food safety consultancy each month. This is separate from the in-app Consultant and Auditor modes. Use it for review, guidance, and higher-risk support. Hours do not roll over.",
   },
   {
     q: "Can I change plans later?",
@@ -95,7 +104,7 @@ export default async function PricingPage() {
           unitCode: "MON",
         },
         description:
-          "Everything in Free, plus more usage, 3 premium expert answers per day, unlimited saved conversations and projects, and access to downloadable templates.",
+          "Everything in Free, plus more usage, 3 premium expert answers per day, unlimited saved conversations and projects, and downloadable templates for regular Consultant use.",
       },
       {
         "@type": "Offer",
@@ -109,7 +118,7 @@ export default async function PricingPage() {
           unitCode: "MON",
         },
         description:
-          "Everything in Plus, plus 8 premium expert answers per day, virtual audit mode, 2h/month of food safety consultancy, and priority support.",
+          "Everything in Plus, plus 8 premium expert answers per day, Auditor mode, 2h/month of human food safety consultancy, and priority support.",
       },
     ],
   };
@@ -127,7 +136,7 @@ export default async function PricingPage() {
             Simple pricing for food safety teams.
           </h1>
           <p className="mt-5 text-lg leading-relaxed text-[#475569]">
-            Start free, move to Plus for regular day-to-day use, and choose Pro when you need audit support and direct consultancy input.
+            Start free for live questions, move to Plus for heavier Consultant use, and choose Pro when you want Auditor mode and human specialist backup.
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3 text-sm font-medium text-[#475569]">
             <Link href="/features" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
@@ -189,7 +198,7 @@ export default async function PricingPage() {
             <div className="flex flex-col rounded-3xl border border-[#E2E8F0] bg-white p-8">
               <h2 className="text-xs font-semibold uppercase tracking-[0.18em] text-[#94A3B8]">Plus</h2>
               <p className="mt-4 min-h-[4.5rem] text-sm leading-relaxed text-[#64748B]">
-                For operators who need heavier day-to-day use, document uploads, and downloadable templates.
+                For operators who need heavier day-to-day use, document uploads, and more Consultant capacity.
               </p>
               <div className="mt-6 flex items-baseline gap-1">
                 <span className="text-5xl font-bold tracking-tight text-[#0F172A]"><span className="text-2xl align-super">EUR </span>19</span>
@@ -225,7 +234,7 @@ export default async function PricingPage() {
             <div className="flex flex-col rounded-3xl border border-[#F9A8D4] bg-[#FFF8FB] p-8">
               <h2 className="text-xs font-semibold uppercase tracking-[0.18em] text-[#BE123C]">Pro</h2>
               <p className="mt-4 min-h-[4.5rem] text-sm leading-relaxed text-[#64748B]">
-                For teams preparing for inspections, audits, and higher-stakes work that needs direct food safety consultancy.
+                For teams that want both AI modes, stronger audit workflows, and human food safety consultancy for higher-risk work.
               </p>
               <div className="mt-6 flex items-baseline gap-1">
                 <span className="text-5xl font-bold tracking-tight text-[#0F172A]"><span className="text-2xl align-super">EUR </span>99</span>
@@ -243,11 +252,11 @@ export default async function PricingPage() {
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  Access to virtual audit mode
+                  Access to Auditor mode
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  2h/month of food safety consultancy
+                  2h/month of human food safety consultancy
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
@@ -283,7 +292,7 @@ export default async function PricingPage() {
         <div className="pp-container max-w-3xl">
           <h2 className="mb-10 text-center text-2xl font-bold text-[#0F172A]">Frequently asked questions</h2>
           <div className="space-y-6">
-            {faqs.map(({ q, a }) => (
+            {pricingFaqs.map(({ q, a }) => (
               <div key={q} className="rounded-2xl border border-[#E2E8F0] bg-white p-6">
                 <h3 className="mb-2 text-sm font-semibold text-[#0F172A]">{q}</h3>
                 <p className="text-sm leading-relaxed text-[#64748B]">{a}</p>

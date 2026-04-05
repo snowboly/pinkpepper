@@ -48,6 +48,12 @@ export const faqs = [
       "No. PinkPepper reduces the time spent on initial documentation drafts, but it is not a substitute for site-specific professional assessment, hands-on verification, or qualified food safety advice. Many businesses use PinkPepper alongside a consultant — preparing working drafts quickly on the platform, then having a professional review and validate the final outputs.",
   },
   {
+    id: "consultant-vs-auditor",
+    question: "What is the difference between Consultant and Auditor mode?",
+    answer:
+      "Consultant is PinkPepper's advice mode for questions, next steps, and practical compliance guidance. Auditor is the structured assessment mode for findings, evidence gaps, CAPA, and report-style reviews. Both are AI modes inside the platform. They are separate from PinkPepper's human consultancy service on the Pro plan.",
+  },
+  {
     id: "free-trial",
     question: "Can I try PinkPepper before subscribing?",
     answer:
@@ -81,7 +87,7 @@ export const faqs = [
     id: "consultant-access",
     question: "How do I access a specialist consultant through PinkPepper?",
     answer:
-      "Consultant access is available on the Pro plan. Once active, you can request a review of any document or compliance question directly within the platform. A qualified food safety professional will review your submission and return feedback, typically within one to two business days.",
+      "Human food safety consultancy is available on the Pro plan. This is separate from the in-app Consultant and Auditor modes. Once active, you can request a review of a document or higher-risk compliance question directly within the platform. A qualified food safety professional will review your submission and return feedback, typically within one to two business days.",
   },
 ];
 
