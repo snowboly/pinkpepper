@@ -39,9 +39,10 @@ In scope:
 - Kept `haccp-checklist-for-new-food-businesses` live without expanding it in this round because it still serves a distinct checklist intent.
 - Rewrote `haccp-for-artisanal-bakeries-eu` and `haccp-for-burger-vans-eu` around operator-specific hazards, controls, and records instead of generic HACCP filler.
 - Reweighted `src/components/homepage/RandomArticleLinks.tsx` toward the cleaned evergreen pages and away from the tracked merge-candidate URLs.
+- Rewrote `cooling-and-reheating-haccp-high-risk-steps`, `correcting-non-conformities-in-haccp`, and `haccp-ccp-examples-uk-eu` as narrower support pages that stay live for now while pointing readers toward the stronger parent articles in the cluster.
 
 ## Round Two Merge Candidates
 
-- Do nothing to `cooling-and-reheating-haccp-high-risk-steps.md` in this pass beyond preserving it as a tracked merge candidate. In a later consolidation round, move the strongest cooling/reheating material into `content/articles/temperature-control-in-haccp-limits-and-monitoring.md`, then keep the source URL in place until redirect mapping is ready.
-- Do nothing to `correcting-non-conformities-in-haccp.md` in this pass beyond preserving it as a hold-for-later merge candidate. Revisit it only when a dedicated corrective-action page is added to the cluster, then keep the source URL in place until redirect mapping is ready.
-- Do nothing to `haccp-ccp-examples-uk-eu.md` in this pass beyond preserving it as a tracked merge candidate. In a later consolidation round, move the strongest CCP examples into `content/articles/how-to-create-a-haccp-plan-step-by-step.md`, then keep the source URL in place until redirect mapping is ready.
+- `cooling-and-reheating-haccp-high-risk-steps.md` can stay live as a focused support page for now, but remains a candidate for later consolidation into `content/articles/temperature-control-in-haccp-limits-and-monitoring.md` once redirect mapping is ready.
+- `correcting-non-conformities-in-haccp.md` can stay live as a corrective-action explainer for now, but remains a candidate for later consolidation if a stronger corrective-action or CAPA pillar page is added.
+- `haccp-ccp-examples-uk-eu.md` can stay live as a support page for now, but remains a candidate for later consolidation into `content/articles/how-to-create-a-haccp-plan-step-by-step.md` once redirect mapping is ready.
