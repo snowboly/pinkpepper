@@ -6,7 +6,7 @@ import { getArticleManifest } from "@/lib/articles";
 export const metadata: Metadata = {
   title: "Food Safety Articles & Insights | PinkPepper",
   description:
-    "Practical articles on HACCP, allergen management, food safety audits, and compliance for EU and UK food businesses.",
+    "A curated library of practical guidance on HACCP, allergen management, food safety audits, and operational compliance for EU and UK food businesses.",
   alternates: {
     canonical: "https://pinkpepper.io/articles",
   },
@@ -21,12 +21,36 @@ export default async function ArticlesPage() {
         <div className="pp-container max-w-4xl">
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">Articles</p>
           <h1 className="pp-display mt-4 text-4xl text-[#0F172A] md:text-6xl">
-            Food safety insights for EU and UK operators
+            A curated food safety resource hub for EU and UK operators
           </h1>
           <p className="mt-6 max-w-3xl text-lg leading-relaxed text-[#475569]">
-            Practical guidance on HACCP, allergen management, audits, and day-to-day compliance for the people who
-            actually run food businesses.
+            Practical guidance on HACCP, allergen management, food safety audits, and operational compliance for the
+            people who actually run food businesses.
           </p>
+          <p className="mt-4 max-w-3xl text-base leading-7 text-[#64748B]">
+            This is a curated resource hub, not just an archive: start with practical explanations, then move into
+            templates and feature pages when you need something ready to use.
+          </p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link
+              href="/resources/haccp-plan-template"
+              className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 text-sm font-semibold text-[#0F172A] transition-colors hover:border-[#FDA4AF] hover:text-[#BE123C]"
+            >
+              HACCP template
+            </Link>
+            <Link
+              href="/features/food-safety-audit-prep"
+              className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 text-sm font-semibold text-[#0F172A] transition-colors hover:border-[#FDA4AF] hover:text-[#BE123C]"
+            >
+              Audit prep
+            </Link>
+            <Link
+              href="/features/haccp-plan-generator"
+              className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 text-sm font-semibold text-[#0F172A] transition-colors hover:border-[#FDA4AF] hover:text-[#BE123C]"
+            >
+              HACCP generator
+            </Link>
+          </div>
         </div>
       </section>
 
