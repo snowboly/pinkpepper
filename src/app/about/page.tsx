@@ -12,7 +12,7 @@ import {
 export const metadata = {
   title: "About PinkPepper | AI Food Safety Software Built by a Food Scientist",
   description:
-    "Learn how PinkPepper combines AI food safety compliance software with food safety consultancy for EU and UK food businesses.",
+    "Learn how PinkPepper gives EU and UK food businesses Consultant and Auditor workflows inside one AI food safety compliance platform, with human consultancy when needed.",
   alternates: {
     canonical: "https://pinkpepper.io/about",
   },
@@ -33,10 +33,10 @@ export default function AboutPage() {
             <br className="hidden sm:block" /> powered by AI&nbsp;&amp;&nbsp;human expertise
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-[#475569]">
-            PinkPepper is the AI compliance assistant built exclusively for food
-            businesses operating under EU&nbsp;&amp;&nbsp;UK regulations. We pair
-            a specialised AI agent with real food&nbsp;safety scientists so you
-            get answers you can trust&nbsp;&mdash; instantly.
+            PinkPepper is AI food safety compliance software built exclusively for food
+            businesses operating under EU&nbsp;&amp;&nbsp;UK regulations. Use Consultant mode for
+            practical guidance, Auditor mode for structured findings and CAPA, and bring in human
+            food safety specialists when the work needs a real review.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3 text-sm font-medium text-[#475569]">
             <Link href="/pricing" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
@@ -136,13 +136,13 @@ export default function AboutPage() {
               },
               {
                 icon: Users,
-                title: "Food Safety Consultancy",
-                body: "Critical documents deserve expert eyes. Our Pro plan includes 2 hours of food safety consultancy each month — guidance and specialist support from qualified professionals.",
+                title: "Human Consultancy When Needed",
+                body: "Critical documents deserve expert eyes. Pro includes 2 hours of human food safety consultancy each month for specialist review and higher-risk support.",
               },
               {
                 icon: ShieldCheck,
-                title: "Consultancy Without the Price Tag",
-                body: "Get consultant-level food safety guidance on demand. PinkPepper is designed to give small and mid-sized businesses access to the same standard of compliance support as large enterprises.",
+                title: "Two AI Modes, One Workflow",
+                body: "Use Consultant for day-to-day answers and decisions, then switch to Auditor when you need structured findings, evidence gaps, and CAPA instead of another freeform chat reply.",
               },
             ].map((card) => (
               <div
@@ -168,29 +168,28 @@ export default function AboutPage() {
       <section className="border-t border-[#F1F5F9] bg-[#F8FAFC] py-16 md:py-20">
         <div className="pp-container max-w-4xl">
           <h2 className="text-center text-2xl font-bold text-[#0F172A] md:text-3xl">
-            AI&nbsp;+&nbsp;Human Expertise
+            Consultant, Auditor, then Human Review
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-center text-[#475569] leading-relaxed">
-            Technology is powerful, but food safety is too important to leave
-            entirely to algorithms. That&rsquo;s why PinkPepper combines both.
+            PinkPepper is designed to match the job in front of you instead of forcing every task into the same chat flow.
           </p>
 
           <div className="mt-12 space-y-6">
             {[
               {
                 step: "1",
-                title: "Ask anything, anytime",
-                desc: "Use the AI assistant for instant answers on HACCP principles, allergen legislation, hygiene regulations, supplier approval, recall procedures, and more.",
+                title: "Use Consultant mode",
+                desc: "Get practical answers, next steps, and regulation-grounded guidance on HACCP, allergens, hygiene, supplier approval, recall procedures, and more.",
               },
               {
                 step: "2",
-                title: "Generate documents",
-                desc: "Create HACCP plans, prerequisite programmes, SOPs, monitoring logs, and corrective action reports — tailored to your business type and regulatory context.",
+                title: "Switch to Auditor mode",
+                desc: "Turn the same problem into structured findings, evidence gaps, severity, and CAPA when you need a formal assessment instead of advice alone.",
               },
               {
                 step: "3",
-                title: "Consultancy & sign-off",
-                desc: "Submit critical documents for review by food safety professionals. Get feedback, corrections, and confidence before your next audit.",
+                title: "Escalate to human consultancy",
+                desc: "Submit critical documents for review by food safety professionals when the risk is higher or you want specialist eyes before your next audit or inspection.",
               },
             ].map((item) => (
               <div
