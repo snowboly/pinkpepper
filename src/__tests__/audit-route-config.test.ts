@@ -3,7 +3,7 @@ import { buildVirtualAuditSystemPrompt } from "@/app/api/audit/stream/route";
 
 describe("buildVirtualAuditSystemPrompt", () => {
   it("uses a finding-first audit contract when the prompt already contains evidence", () => {
-    const prompt = buildVirtualAuditSystemPrompt("No regulation context found.");
+    const prompt = buildVirtualAuditSystemPrompt("No regulation context found.", false);
 
     expect(prompt).toContain("If the user's prompt already gives concrete observations, gaps, or non-conformities, issue findings immediately");
     expect(prompt).toContain("Finding");
@@ -14,9 +14,24 @@ describe("buildVirtualAuditSystemPrompt", () => {
   });
 
   it("does not force the auditor to ask for evidence before every finding", () => {
-    const prompt = buildVirtualAuditSystemPrompt("No regulation context found.");
+    const prompt = buildVirtualAuditSystemPrompt("No regulation context found.", false);
 
     expect(prompt).not.toContain("Always ask for evidence before concluding on any area.");
     expect(prompt).toContain("Only switch into question-led evidence gathering when the user's prompt is too vague");
+  });
+
+  it("forbids claims about uploaded records when no user documents are present", () => {
+    const prompt = buildVirtualAuditSystemPrompt("No regulation context found.", false);
+
+    expect(prompt).toContain("No user-uploaded documents are available for this turn");
+    expect(prompt).toContain("Do NOT say you reviewed uploaded records");
+    expect(prompt).toContain("Do NOT invent extra facts, timestamps, records, units, or observations");
+  });
+
+  it("allows document citations only when user documents are actually present", () => {
+    const prompt = buildVirtualAuditSystemPrompt("USER UPLOADED DOCUMENTS:\\n[User Document 1: sample.md]", true);
+
+    expect(prompt).toContain("User-uploaded documents are available for this turn");
+    expect(prompt).toContain("reference them by document name when used as evidence");
   });
 });

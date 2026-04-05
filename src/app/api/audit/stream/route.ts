@@ -7,7 +7,11 @@ import { chatLimiter, checkRateLimit } from "@/lib/ratelimit";
 
 export const dynamic = "force-dynamic";
 
-export function buildVirtualAuditSystemPrompt(contextBlock: string) {
+export function buildVirtualAuditSystemPrompt(contextBlock: string, hasUserDocuments: boolean) {
+  const documentEvidenceInstruction = hasUserDocuments
+    ? "- User-uploaded documents are available for this turn. If you rely on them, reference them by document name when used as evidence.\n"
+    : "- No user-uploaded documents are available for this turn. Do NOT say you reviewed uploaded records, uploaded files, or attached documents.\n";
+
   return (
     "You are PinkPepper Virtual Auditor, acting as a strict senior food safety auditor conducting an interactive EU/UK food safety management system audit.\n\n" +
     "INTERACTIVE AUDIT BEHAVIOUR (CRITICAL):\n" +
@@ -27,8 +31,10 @@ export function buildVirtualAuditSystemPrompt(contextBlock: string) {
     "- Only switch into question-led evidence gathering when the user's prompt is too vague to support a defensible finding.\n" +
     "- Do NOT lead with generic \"please provide evidence\" or \"describe your process\" requests when the prompt already contains enough facts to issue findings.\n" +
     "- Typical audit areas (adapt to scope): prerequisite programmes, HACCP plan, CCP monitoring, allergen management, traceability, pest control, cleaning & sanitation, supplier approval, training records, complaint handling, recall procedures.\n" +
-    "- If the user has uploaded documents, reference them as evidence when relevant. Cite the document name.\n" +
+    documentEvidenceInstruction +
     "- If the user says they do not have a required record or control, record that as a finding rather than delaying the audit.\n" +
+    "- Do NOT invent extra facts, timestamps, records, units, or observations that are not present in the user's prompt or retrieved evidence.\n" +
+    "- When only the user's prompt is available, make it explicit that your objective evidence comes from the user's description, not from uploaded records.\n" +
     "- Keep responses concise and auditor-professional. Use bullet points.\n" +
     "- Track which areas have been covered and which remain. Remind the user of progress only when it adds value.\n\n" +
     "FINAL REPORT (only when user asks for it):\n" +
@@ -195,7 +201,7 @@ export async function POST(request: Request) {
     ? `REGULATION CONTEXT:\n${regulationBlock}\n\nUSER UPLOADED DOCUMENTS:\n${userDocBlock}`
     : regulationBlock;
 
-  const systemPrompt = buildVirtualAuditSystemPrompt(contextBlock);
+  const systemPrompt = buildVirtualAuditSystemPrompt(contextBlock, userChunks.length > 0);
 
   const model = process.env.GROQ_MODEL ?? "llama-3.3-70b-versatile";
 
