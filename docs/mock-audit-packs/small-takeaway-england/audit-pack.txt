@@ -1,0 +1,153 @@
+SMALL TAKEAWAY ENGLAND - MOCK AUDIT PACK
+
+This pack is designed for Virtual Audit testing with a mixed-realism evidence set.
+
+Suggested audit prompt:
+Audit this takeaway in England. Use only the uploaded document as evidence where relevant, and do not assume records that are not shown. Assess illness exclusion, temperature monitoring, cleaning control, and allergen readiness. Give me the main findings, severity, immediate containment, corrective actions, and evidence still needed to close each finding.
+
+================================================================
+DOCUMENT 1 - SITE SCENARIO NOTE
+================================================================
+
+Business:
+- Riverside Bites Takeaway
+- Small takeaway in England
+- Sells hot chicken wraps, chips, sauces, cold drinks, and prepacked sandwiches prepared on site each morning
+
+Staffing:
+- 1 manager
+- 2 kitchen staff
+- 2 front-of-house staff
+
+Current concern:
+- One chef reported vomiting on Wednesday evening
+- The chef returned to work on Friday morning
+- The manager says they "seemed fine" and let them come back
+
+Records uploaded:
+- fridge temperature log
+- return-to-work form
+- cleaning schedule
+- allergen information sheet
+
+Known operating issues:
+- Morning opening checks are sometimes rushed
+- Manager usually answers allergen questions
+- Prepacked sandwiches change fillings depending on ingredient availability
+
+================================================================
+DOCUMENT 2 - FRIDGE TEMPERATURE LOG
+================================================================
+
+Site:
+- Riverside Bites Takeaway
+
+Week commencing:
+- 2026-03-30
+
+Target:
+- Chilled food storage at 5 C or below
+
+| Date | Unit | Opening Check | Mid-Shift Check | Closing Check | Corrective Action | Initials |
+|---|---|---:|---:|---:|---|---|
+| Mon 30 Mar | Fridge 1 | 4.2 C | 4.8 C | 4.5 C | None | RB |
+| Tue 31 Mar | Fridge 1 | 4.6 C | 5.1 C | 4.7 C | Door checked and re-closed | RB |
+| Wed 01 Apr | Fridge 1 |  |  | 4.9 C | None recorded |  |
+| Thu 02 Apr | Fridge 1 |  |  |  |  |  |
+| Fri 03 Apr | Fridge 1 | 6.8 C | 5.9 C | 5.2 C | Moved milk and cooked chicken to Fridge 2 at 09:10 | JS |
+| Sat 04 Apr | Fridge 1 | 4.7 C | 4.9 C | 4.8 C | None | JS |
+
+Notes:
+- Manager wrote "busy opening" next to Wednesday.
+- No product disposition was recorded for Friday morning.
+
+================================================================
+DOCUMENT 3 - RETURN TO WORK FORM
+================================================================
+
+Employee name:
+- Jordan S.
+
+Role:
+- Cook
+
+Last symptoms reported:
+- Vomiting on 2026-04-01 evening
+
+Date returned to work:
+- 2026-04-03
+
+Has the employee been symptom-free for at least 48 hours?
+- Not recorded
+
+Any medical advice received?
+- No
+
+Manager assessment completed?
+- No
+
+Temporary restrictions on duties:
+- None recorded
+
+Employee signature:
+- Jordan S.
+
+Manager signature:
+- Not completed
+
+Notes:
+- "Employee said they feel OK now."
+
+================================================================
+DOCUMENT 4 - DAILY CLEANING SCHEDULE
+================================================================
+
+Site:
+- Riverside Bites Takeaway
+
+| Area / Item | Frequency | Cleaning Method | Responsible Role | Last Completed | Initials |
+|---|---|---|---|---|---|
+| Prep benches | After each service and end of day | Wash, disinfect, air dry | Kitchen staff | 2026-04-03 | RB |
+| Chopping boards | After use | Wash, disinfect, air dry | Kitchen staff | 2026-04-03 | RB |
+| Fridge handles | Twice daily | Food-safe disinfectant wipe | Kitchen staff | 2026-04-03 | JS |
+| Floor under fryer | End of day | Degrease and rinse | Closing staff | 2026-04-03 | RB |
+| Front counter | Every 2 hours | Sanitiser spray and disposable cloth | Front-of-house | 2026-04-03 | LM |
+
+Verification:
+- Weekly manager review: signed 2026-04-04
+
+Comments:
+- No overdue actions noted on this sheet.
+
+================================================================
+DOCUMENT 5 - ALLERGEN INFORMATION SHEET
+================================================================
+
+Site:
+- Riverside Bites Takeaway
+
+Menu items covered:
+- Chicken wrap
+- Falafel wrap
+- Ham and cheese sandwich
+- Tuna mayo sandwich
+
+Current version:
+- Version 2
+- Last updated: 2026-03-10
+
+| Item | Gluten | Milk | Egg | Fish | Sesame | Mustard | Notes |
+|---|---|---|---|---|---|---|---|
+| Chicken wrap | Yes | No | No | No | No | No | Standard tortilla |
+| Falafel wrap | Yes | No | No | No | No | No | Tahini not listed |
+| Ham and cheese sandwich | Yes | Yes | No | No | No | No |  |
+| Tuna mayo sandwich | Yes | No | Yes | Yes | No | No | Bread type may vary |
+
+Controls noted:
+- "Ask manager if unsure."
+- "Check label on sandwich pack."
+
+Missing from sheet:
+- sauce breakdown
+- daily sandwich filling substitutions
+- PPDS label version reference
