@@ -14,21 +14,6 @@ export const metadata: Metadata = {
   },
 };
 
-const planChanges = [
-  {
-    plan: "Free",
-    detail: "Chat on web and mobile, write and edit food safety content, analyze text and images, and use 1 premium expert answer per day for higher-risk questions.",
-  },
-  {
-    plan: "Plus",
-    detail: "Everything in Free, plus more usage, 3 premium expert answers per day, unlimited saved conversations and projects, and downloadable templates for regular Consultant use.",
-  },
-  {
-    plan: "Pro",
-    detail: "Everything in Plus, plus 8 premium expert answers per day, Auditor mode, 2h/month of human food safety consultancy, and priority support.",
-  },
-];
-
 const pricingFaqs = [
   (() => {
     const modeFaq = sharedFaqs.find((faq) => faq.id === "consultant-vs-auditor");
@@ -270,20 +255,6 @@ export default async function PricingPage() {
                 className={ctaPrimary}
               />
             </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-16">
-        <div className="pp-container max-w-4xl">
-          <h2 className="mb-8 text-center text-2xl font-bold text-[#0F172A]">What changes as you move up</h2>
-          <div className="grid gap-4 md:grid-cols-3">
-            {planChanges.map((item) => (
-              <div key={item.plan} className="rounded-2xl border border-[#E2E8F0] bg-[#F8FAFC] p-6">
-                <h3 className="mb-1 font-semibold text-[#0F172A]">{item.plan}</h3>
-                <p className="text-sm text-[#64748B]">{item.detail}</p>
-              </div>
-            ))}
           </div>
         </div>
       </section>
