@@ -971,6 +971,7 @@ export default function ChatWorkspace({
             loadingMessages={loadingMessages}
             canUploadImages={canUploadImages}
             currentPersona={currentPersona}
+            workspaceMode={workspaceMode}
           />
 
           <div className="flex-shrink-0 border-t border-[#E2E8F0] bg-white px-4 py-2">

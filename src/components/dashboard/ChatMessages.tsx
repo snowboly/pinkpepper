@@ -12,6 +12,7 @@ type ChatMessagesProps = {
   loadingMessages: boolean;
   canUploadImages: boolean;
   currentPersona?: PersonaInfo | null;
+  workspaceMode: "ask" | "virtual_audit";
 };
 
 export default function ChatMessages({
@@ -20,6 +21,7 @@ export default function ChatMessages({
   loadingMessages,
   canUploadImages,
   currentPersona,
+  workspaceMode,
 }: ChatMessagesProps) {
   const t = useTranslations("chat");
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -47,6 +49,8 @@ export default function ChatMessages({
     messagesEndRef.current?.scrollIntoView({ behavior: messages.length > 1 ? "smooth" : "auto" });
   }, [messages, loading]);
 
+  const modeKey = workspaceMode === "virtual_audit" ? "auditor" : "consultant";
+
   return (
     <div ref={scrollContainerRef} onScroll={syncScrollState} className="relative flex-1 overflow-y-auto">
       {messages.length === 0 && !loadingMessages && (
@@ -65,6 +69,25 @@ export default function ChatMessages({
             {t("description")}{" "}
             {canUploadImages ? t("descriptionWithImages") : t("descriptionUpgradeImages")}
           </p>
+          <div className="mt-6 w-full max-w-2xl rounded-2xl border border-[#E2E8F0] bg-white p-5 text-left shadow-sm">
+            <div className="flex items-center justify-between gap-3 border-b border-[#EEF2F7] pb-3">
+              <div>
+                <p className="text-sm font-semibold text-[#0F172A]">{t(`modeGuidance.${modeKey}.label`)}</p>
+                <p className="mt-1 text-sm text-[#475569]">{t(`modeGuidance.${modeKey}.bestFor`)}</p>
+              </div>
+              <span className="rounded-full bg-[#F8FAFC] px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-[#64748B]">
+                {workspaceMode === "virtual_audit" ? t("modeGuidance.auditor.badge") : t("modeGuidance.consultant.badge")}
+              </span>
+            </div>
+            <p className="mt-3 text-sm text-[#64748B]">{t(`modeGuidance.${modeKey}.useWhen`)}</p>
+            <div className="mt-4">
+              <p className="text-xs font-semibold uppercase tracking-wide text-[#94A3B8]">{t("modeGuidance.examplesLabel")}</p>
+              <ul className="mt-2 space-y-2 text-sm text-[#0F172A]">
+                <li>{t(`modeGuidance.${modeKey}.examples.0`)}</li>
+                <li>{t(`modeGuidance.${modeKey}.examples.1`)}</li>
+              </ul>
+            </div>
+          </div>
         </div>
       )}
 
