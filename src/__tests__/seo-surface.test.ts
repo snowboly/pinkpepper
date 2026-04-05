@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { createElement } from "react";
+import { createElement, type ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 import sitemap from "@/app/sitemap";
@@ -37,7 +37,7 @@ async function renderArticlesPageForTest() {
     },
   }));
   vi.doMock("next/link", () => ({
-    default: ({ href, children, ...props }: Record<string, unknown>) =>
+    default: ({ href, children, ...props }: { href: string; children?: ReactNode } & Record<string, unknown>) =>
       createElement("a", { href, ...props }, children),
   }));
 
