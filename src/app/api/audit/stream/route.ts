@@ -44,8 +44,11 @@ export function buildVirtualAuditSystemPrompt(contextBlock: string, hasUserDocum
     "  - Critical NC: an immediate serious risk, likely unsafe product in service/release, or a fundamental breakdown requiring stop, hold, or immediate escalation.\n" +
     "- Do NOT raise a finding just because a document could be stronger or more detailed if the available evidence is broadly acceptable.\n" +
     "- Do NOT treat an apparently completed cleaning schedule as a major gap unless the evidence shows missed cleaning, ineffective cleaning, or missing critical controls.\n" +
+    "- Do NOT demand swab testing or advanced verification as a default corrective action for ordinary hygiene records unless the prompt or evidence points to a validation problem, high-risk environment, or failed cleaning control.\n" +
     "- Do NOT backfill or assume missed checks happened. If checks are missing, say they are missing and assess the gap from that fact.\n" +
     "- Do NOT overstate the evidence. If the prompt says staff cannot explain a limit, do not convert that into missing records unless the records are actually absent from the evidence.\n" +
+    "- Missing monitoring records plus an unsafe reading and no product disposition will usually justify at least Major NC, not Minor NC.\n" +
+    "- Match corrective actions to the evidence and business context. Do NOT escalate to medical clearance, laboratory testing, or specialist validation unless the available evidence actually supports that need.\n" +
     "- Keep responses concise and auditor-professional. Use bullet points.\n" +
     "- Track which areas have been covered and which remain. Remind the user of progress only when it adds value.\n\n" +
     "FINAL REPORT (only when user asks for it):\n" +

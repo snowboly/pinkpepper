@@ -46,6 +46,8 @@ describe("buildVirtualAuditSystemPrompt", () => {
     expect(prompt).toContain("Do NOT raise a finding just because a document could be stronger");
     expect(prompt).toContain("Do NOT treat an apparently completed cleaning schedule as a major gap");
     expect(prompt).toContain("Do NOT backfill or assume missed checks happened");
+    expect(prompt).toContain("Missing monitoring records plus an unsafe reading and no product disposition will usually justify at least Major NC");
+    expect(prompt).toContain("Do NOT demand swab testing or advanced verification as a default corrective action");
   });
 });
 
