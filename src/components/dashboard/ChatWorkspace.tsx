@@ -577,11 +577,12 @@ export default function ChatWorkspace({
         const res = await fetch("/api/documents/upload", { method: "POST", body: fd });
         const data = (await res.json()) as {
           chunksStored?: number;
+          extractedText?: string;
           warning?: string;
           error?: string;
           conversationId?: string;
         };
-        if (!res.ok || (data.chunksStored ?? 0) === 0) {
+        if (!res.ok || (!data.extractedText && (data.chunksStored ?? 0) === 0)) {
           const reason = data.warning ?? data.error ?? "could not extract text";
           pushAssistantMessage(
             `I received **${currentDocument.name}** but couldn't process it (${reason}). Please try a plain text or supported file format.`
@@ -596,6 +597,9 @@ export default function ChatWorkspace({
         // Partial extraction warning — inform the LLM so it can caveat its answer
         if (data.warning) {
           value += `\n\n[Note: The uploaded document "${currentDocument.name}" was only partially extracted: ${data.warning}]`;
+        }
+        if ((data.chunksStored ?? 0) === 0 && data.extractedText) {
+          value += `\n\n[Uploaded document content fallback: ${currentDocument.name}]\n${data.extractedText.slice(0, 12000)}`;
         }
         // Success — fall through to the streaming chat flow below.
         // retrieveUserDocumentContext() in /api/chat/stream will find the just-uploaded chunks.

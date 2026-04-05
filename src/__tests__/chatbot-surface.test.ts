@@ -232,11 +232,14 @@ describe("chat workspace chrome", () => {
     expect(workspace).toContain("let activeConversationId = conversationId;");
     expect(workspace).toContain('fd.append("draftTitle"');
     expect(workspace).toContain("activeConversationId = data.conversationId;");
+    expect(workspace).toContain("if (!res.ok || (!data.extractedText && (data.chunksStored ?? 0) === 0))");
+    expect(workspace).toContain("[Uploaded document content fallback:");
     expect(workspace).toContain("body: JSON.stringify({ message: value, conversationId: activeConversationId })");
 
     expect(uploadRoute).toContain('.eq("conversation_id", effectiveConversationId)');
     expect(uploadRoute).toContain('.is("conversation_id", null)');
     expect(uploadRoute).toContain("conversationId: effectiveConversationId");
+    expect(uploadRoute).toContain("extractedText: extraction.text");
   });
 
   it("supports dropped documents in the workspace instead of treating drag-and-drop as image-only", () => {
