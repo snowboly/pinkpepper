@@ -11,6 +11,10 @@ Suggested prompt:
 
 `Audit this German soup manufacturer before release. Use only the uploaded file as evidence where relevant, and do not assume records or controls that are not shown. Give findings, objective evidence, severity, immediate containment, corrective actions, and evidence needed to close.`
 
+Upload options:
+- `german-soup-release-audit-pack.txt`
+- `german-soup-release-audit-pack.docx`
+
 Expected pressure points:
 - new intentional allergens: celery and milk
 - allergen matrix not updated
