@@ -238,4 +238,18 @@ describe("chat workspace chrome", () => {
     expect(uploadRoute).toContain('.is("conversation_id", null)');
     expect(uploadRoute).toContain("conversationId: effectiveConversationId");
   });
+
+  it("supports dropped documents in the workspace instead of treating drag-and-drop as image-only", () => {
+    const workspace = readWorkspaceFile("src/components/dashboard/ChatWorkspace.tsx");
+    const attachments = readWorkspaceFile("src/components/dashboard/useAttachments.ts");
+
+    expect(workspace).toContain("handleDroppedAttachment(file)");
+    expect(workspace).toContain('tw("dropAttachmentToAnalyse")');
+    expect(workspace).toContain('tw("dropDocumentHint")');
+    expect(workspace).not.toContain('{isDraggingOver && canUploadImages && (');
+
+    expect(attachments).toContain("handleDocumentSelect");
+    expect(attachments).toContain("handleDroppedAttachment");
+    expect(attachments).toContain("Only images, PDF, DOCX, TXT, and Markdown files are supported.");
+  });
 });
