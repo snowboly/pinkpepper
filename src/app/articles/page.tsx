@@ -3,6 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { getArticleManifest } from "@/lib/articles";
 
+export const revalidate = 3600;
+
 export const metadata: Metadata = {
   title: "Food Safety Articles & Insights | PinkPepper",
   description:

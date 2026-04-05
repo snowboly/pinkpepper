@@ -22,6 +22,8 @@ const securityHeaders = [
       "connect-src 'self' https://*.supabase.co https://api.groq.com https://api.openai.com https://api.stripe.com https://js.stripe.com https://va.vercel-scripts.com",
       "frame-src https://js.stripe.com https://hooks.stripe.com",
       "frame-ancestors 'none'",
+      "base-uri 'self'",
+      "object-src 'none'",
     ].join("; "),
   },
 ];

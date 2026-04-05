@@ -125,6 +125,8 @@ const resources: ResourceEntry[] = [
   },
 ];
 
+export const revalidate = 3600;
+
 export const metadata: Metadata = {
   title: "Free Food Safety Templates & Guides | HACCP, Allergen, SOP, Audit | PinkPepper",
   description:

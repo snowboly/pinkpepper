@@ -46,19 +46,26 @@ export async function checkRateLimit(
   lazyLimiter: LazyLimiter,
   identifier: string
 ): Promise<NextResponse | null> {
-  const limiter = getLimiter(lazyLimiter._cfg);
-  const { success, limit, remaining, reset } = await limiter.limit(identifier);
-  if (success) return null;
-  return NextResponse.json(
-    { error: "Too many requests. Please slow down." },
-    {
-      status: 429,
-      headers: {
-        "X-RateLimit-Limit": String(limit),
-        "X-RateLimit-Remaining": String(remaining),
-        "X-RateLimit-Reset": String(reset),
-        "Retry-After": String(Math.ceil((reset - Date.now()) / 1000)),
-      },
-    }
-  );
+  try {
+    const limiter = getLimiter(lazyLimiter._cfg);
+    const { success, limit, remaining, reset } = await limiter.limit(identifier);
+    if (success) return null;
+    return NextResponse.json(
+      { error: "Too many requests. Please slow down." },
+      {
+        status: 429,
+        headers: {
+          "X-RateLimit-Limit": String(limit),
+          "X-RateLimit-Remaining": String(remaining),
+          "X-RateLimit-Reset": String(reset),
+          "Retry-After": String(Math.ceil((reset - Date.now()) / 1000)),
+        },
+      }
+    );
+  } catch (err) {
+    // Fail open: if Redis is unavailable, allow the request through
+    // rather than blocking all traffic.
+    console.error("Rate limiter unavailable, failing open:", err);
+    return null;
+  }
 }

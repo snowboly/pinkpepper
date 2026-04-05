@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { faqs } from "@/data/faqs";
 
+export const revalidate = 3600;
+
 export const metadata: Metadata = {
   title: "Frequently Asked Questions | PinkPepper",
   description:
