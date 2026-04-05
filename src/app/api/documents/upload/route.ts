@@ -82,6 +82,7 @@ export async function POST(request: Request) {
   // Chunk, embed, and store in user_document_chunks
   const chunks = chunkText(extraction.text);
   let chunksStored = 0;
+  let storageWarning: string | undefined;
 
   try {
     const texts = chunks.map((c) => c);
@@ -136,20 +137,22 @@ export async function POST(request: Request) {
 
     if (insertError) {
       console.error("Failed to store document chunks:", insertError);
+      storageWarning = "Text was extracted, but the document could not be stored for retrieval.";
     } else {
       chunksStored = rows.length;
     }
   } catch (e) {
     console.error("Embedding/storage error:", e);
+    storageWarning = "Text was extracted, but embeddings/storage failed.";
   }
 
   return NextResponse.json({
     fileName: file.name,
     mimeType: file.type,
     size: file.size,
-    extractedText: extraction.text.slice(0, 500), // preview only
+    extractedText: extraction.text,
     extractionStrategy: extraction.strategy,
-    warning: extraction.warning,
+    warning: extraction.warning ?? storageWarning,
     conversationId: effectiveConversationId,
     chunksStored,
   });
