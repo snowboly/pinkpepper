@@ -75,7 +75,7 @@ export default async function PricingPage() {
         price: "0",
         priceCurrency: "EUR",
         description:
-          "Chat on web and mobile, write and edit food safety content, analyze text and images, and use 1 premium expert answer per day for higher-risk questions.",
+          "Chat on web and mobile, write and edit food safety content, analyze text and images, and use PinkPepper for everyday compliance questions and checks.",
       },
       {
         "@type": "Offer",
@@ -89,7 +89,7 @@ export default async function PricingPage() {
           unitCode: "MON",
         },
         description:
-          "Everything in Free, plus more usage, 3 premium expert answers per day, unlimited saved conversations and projects, and downloadable templates for regular Consultant use.",
+          "Everything in Free, plus more usage, unlimited saved conversations and projects, and downloadable templates for regular Consultant use.",
       },
       {
         "@type": "Offer",
@@ -103,7 +103,7 @@ export default async function PricingPage() {
           unitCode: "MON",
         },
         description:
-          "Everything in Plus, plus 8 premium expert answers per day, Auditor mode, 2h/month of human food safety consultancy, and priority support.",
+          "Everything in Plus, plus Auditor mode, 2h/month of human food safety consultancy, and priority support.",
       },
     ],
   };
@@ -172,7 +172,7 @@ export default async function PricingPage() {
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />
-                  1 premium expert answer per day
+                  Everyday compliance guidance
                 </li>
               </ul>
               <Link href="/signup" className={ctaNeutral}>
@@ -193,11 +193,15 @@ export default async function PricingPage() {
               <ul className="flex-1 space-y-3.5 text-sm text-[#475569]">
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  Everything in Free, plus:
+                  Everything in Free, plus
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  3 premium expert answers per day
+                  Heavier day-to-day Consultant use
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
+                  Higher daily usage limits
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
@@ -229,11 +233,15 @@ export default async function PricingPage() {
               <ul className="flex-1 space-y-3.5 text-sm text-[#475569]">
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  Everything in Plus, plus:
+                  Everything in Plus, plus
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  8 premium expert answers per day
+                  More capacity for higher-risk work
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
+                  Highest daily usage limits
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
