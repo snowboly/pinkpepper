@@ -184,6 +184,16 @@ describe("public SEO copy and linking", () => {
     expect(resources).not.toContain("long-tail questions and template searches");
   });
 
+  it("biases homepage article links toward cleaned evergreen pages", () => {
+    const randomLinks = readPage("src/components/homepage/RandomArticleLinks.tsx");
+
+    expect(randomLinks).toContain("/articles/building-a-haccp-process-flow-diagram");
+    expect(randomLinks).toContain("/articles/haccp-for-burger-vans-eu");
+    expect(randomLinks).toContain("/articles/haccp-for-artisanal-bakeries-eu");
+    expect(randomLinks).not.toContain("/articles/cooling-and-reheating-haccp-high-risk-steps");
+    expect(randomLinks).not.toContain("/articles/correcting-non-conformities-in-haccp");
+  });
+
   it("keeps current public marketing pages fresh in the sitemap", async () => {
     const entries = await sitemap();
     const currentPages = [

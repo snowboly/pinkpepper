@@ -30,16 +30,17 @@ In scope:
 | `src/app/articles/page.tsx` | `keep` | Keep as the article index, but it should stay highly index-worthy because it is the primary hub for the cluster. |
 | `src/app/about/page.tsx` | `keep` | Keep, but position it as a strong brand/trust page that supports the content ecosystem rather than a generic company page. |
 
-## Current Pass Actions
+## Completed In This Pass
 
-- Strengthen `src/app/articles/page.tsx` with clearer hub positioning, stronger internal-link context, and more explicit framing around HACCP, allergens, audits, and operational compliance.
-- Strengthen `src/app/about/page.tsx` so it reads as a useful trust/authority page rather than generic brand filler.
-- Rewrite `building-a-haccp-process-flow-diagram` as a clean foundational explainer with a tighter outline, practical process-flow examples, and no migrated HTML/junk.
-- Rewrite `failed-haccp-inspection-consequences-uk` as a UK-specific enforcement and remediation guide with legally cautious wording, clearer notice distinctions, and a practical recovery sequence for operators.
-- Keep `haccp-checklist-for-new-food-businesses` live with only light cleanup if needed; do not expand it unnecessarily.
-- Rewrite `haccp-for-artisanal-bakeries-eu` and `haccp-for-burger-vans-eu` using the same structure: operator context, hazards specific to the business model, critical controls, records staff should keep, what inspectors or auditors check first, and a short action plan. Strip out generic HACCP filler that could apply to any sector.
+- Strengthened `src/app/articles/page.tsx` with clearer hub positioning, stronger internal-link context, and more explicit framing around HACCP, allergens, audits, and operational compliance.
+- Strengthened `src/app/about/page.tsx` so it reads as a useful trust and authority page rather than generic brand filler, and removed the remaining encoding junk from the source.
+- Rewrote `building-a-haccp-process-flow-diagram` as a clean foundational explainer with a tighter outline, practical process-flow guidance, and no migrated HTML fragments.
+- Rewrote `failed-haccp-inspection-consequences-uk` as a UK-specific enforcement and remediation guide with more careful consequence framing and a clearer recovery sequence for operators.
+- Kept `haccp-checklist-for-new-food-businesses` live without expanding it in this round because it still serves a distinct checklist intent.
+- Rewrote `haccp-for-artisanal-bakeries-eu` and `haccp-for-burger-vans-eu` around operator-specific hazards, controls, and records instead of generic HACCP filler.
+- Reweighted `src/components/homepage/RandomArticleLinks.tsx` toward the cleaned evergreen pages and away from the tracked merge-candidate URLs.
 
-## Later Consolidation Actions
+## Round Two Merge Candidates
 
 - Do nothing to `cooling-and-reheating-haccp-high-risk-steps.md` in this pass beyond preserving it as a tracked merge candidate. In a later consolidation round, move the strongest cooling/reheating material into `content/articles/temperature-control-in-haccp-limits-and-monitoring.md`, then keep the source URL in place until redirect mapping is ready.
 - Do nothing to `correcting-non-conformities-in-haccp.md` in this pass beyond preserving it as a hold-for-later merge candidate. Revisit it only when a dedicated corrective-action page is added to the cluster, then keep the source URL in place until redirect mapping is ready.
