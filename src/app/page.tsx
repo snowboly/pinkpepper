@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import RandomArticleLinks from "@/components/homepage/RandomArticleLinks";
@@ -15,6 +16,14 @@ import { DemoTabSwitcher } from "@/components/homepage/DemoTabSwitcher";
 import { HeroChatForm } from "@/components/homepage/HeroChatForm";
 import { homepageFaqs } from "@/data/faqs";
 
+export const metadata: Metadata = {
+  title: "PinkPepper | AI Food Safety Compliance Software for EU & UK Businesses",
+  description:
+    "PinkPepper is AI food safety compliance software for EU and UK food businesses that need HACCP plans, allergen documentation, SOPs, audit prep, and food safety records.",
+  alternates: {
+    canonical: "https://pinkpepper.io",
+  },
+};
 
 export default function HomePage() {
   const faqSchema = {
