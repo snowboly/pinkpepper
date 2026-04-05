@@ -199,8 +199,8 @@ describe("premium quality regressions", () => {
     expect(homepage).toContain("Built for real world operators");
     expect(homepage).toContain("From raw notes to review-ready compliance work");
     expect(homepage).toContain("/features/food-safety-audit-prep");
-    expect(homepage).toContain("AI speed with food safety consultancy");
-    expect(homepage).toContain("qualified food safety consultants");
+    expect(homepage).toContain("Switch from Consultant to Auditor when the job changes");
+    expect(homepage).toContain("human consultancy");
   });
 
   it("keeps homepage pricing CTAs cache-friendly and attributed separately from the pricing page", () => {
@@ -215,12 +215,12 @@ describe("premium quality regressions", () => {
     expect(pricingActions).toContain('track("checkout_started", { plan, source })');
   });
 
-  it("makes the Pro tier clearly about AI plus food safety consultancy", () => {
+  it("makes the Pro tier clearly about Auditor mode plus human consultancy", () => {
     const pricing = readPage("src/app/pricing/page.tsx");
 
-    expect(pricing).toContain("direct food safety consultancy");
-    expect(pricing).toContain("2h/month of food safety consultancy");
-    expect(pricing).toContain("Access to virtual audit mode");
+    expect(pricing).toContain("Auditor mode");
+    expect(pricing).toContain("2h/month of human food safety consultancy");
+    expect(pricing).toContain("separate from the in-app Consultant and Auditor modes");
     expect(pricing).not.toContain("Full PDF and DOCX export");
     expect(pricing).not.toContain("100 AI queries per day");
     expect(pricing).not.toContain("voice transcriptions");
