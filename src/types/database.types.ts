@@ -328,6 +328,27 @@ export type Database = {
         }
         Relationships: []
       }
+      webhook_events_processed: {
+        Row: {
+          created_at: string
+          event_id: string
+          event_type: string
+          processed_at: string
+        }
+        Insert: {
+          created_at?: string
+          event_id: string
+          event_type: string
+          processed_at?: string
+        }
+        Update: {
+          created_at?: string
+          event_id?: string
+          event_type?: string
+          processed_at?: string
+        }
+        Relationships: []
+      }
       regulation_sync_log: {
         Row: {
           id: string
@@ -445,6 +466,18 @@ export type Database = {
           p_rows: Json
           p_source_name: string
           p_source_type: string
+        }
+        Returns: undefined
+      }
+      sync_subscription_and_profile: {
+        Args: {
+          p_current_period_end?: string
+          p_status: string
+          p_stripe_customer_id: string
+          p_stripe_price_id?: string
+          p_stripe_subscription_id: string
+          p_tier: Database["public"]["Enums"]["subscription_tier"]
+          p_user_id: string
         }
         Returns: undefined
       }
