@@ -151,11 +151,11 @@
         "q5": "¿Quién aprueba a los proveedores y dónde se almacenan los registros?"
       }
     },
-    "ask": "Preguntar",
-    "virtualAudit": "Auditoría virtual",
+    "ask": "Consultor",
+    "virtualAudit": "Auditor",
     "adminPanel": "Panel de administración",
     "requestReview": "Solicitar revisión",
-    "generateReport": "Generar informe",
+    "generateReport": "Generar informe de auditoría",
     "exporting": "Exportando...",
     "exportConversation": "Exportar conversación",
     "pdf": "PDF",
@@ -169,7 +169,7 @@
     "expandSidebar": "Expandir barra lateral",
     "wizardCancelled": "Generador de documentos cancelado. Puedes empezar de nuevo desde cualquier tarjeta de inicio.",
     "wizardGenerating": "Perfecto. Tengo información suficiente. Generando tu documento completo ahora.",
-    "virtualAuditPlaceholder": "Modo Auditoría virtual: describe el alcance, sube evidencias o solicita el informe final de auditoría..."
+    "virtualAuditPlaceholder": "Modo Auditor: sube evidencias, describe el alcance o solicita el informe final de auditoría..."
   },
   "onboarding": {
     "welcome": "Bienvenido a PinkPepper",
