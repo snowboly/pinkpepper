@@ -47,7 +47,7 @@ export default function FoodSafetySopGeneratorPage() {
         },
       ]}
       heroImage={{
-        src: "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=1200&q=80",
+        src: "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=1200&q=60",
         alt: "Kitchen staff following hygiene procedures during food preparation",
       }}
       relatedLinks={[

@@ -47,7 +47,7 @@ export default function FoodSafetyAuditPrepPage() {
         },
       ]}
       heroImage={{
-        src: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1200&q=80",
+        src: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1200&q=60",
         alt: "Organised commercial kitchen ready for inspection",
       }}
       relatedLinks={[

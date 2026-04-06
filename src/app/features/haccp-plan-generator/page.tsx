@@ -47,7 +47,7 @@ export default function HaccpPlanGeneratorPage() {
         },
       ]}
       heroImage={{
-        src: "https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?w=1200&q=80",
+        src: "https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?w=1200&q=60",
         alt: "Clean commercial kitchen ready for food preparation",
       }}
       relatedLinks={[
