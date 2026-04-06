@@ -3,9 +3,9 @@ import Link from "next/link";
 import { faqs } from "@/data/faqs";
 
 export const metadata: Metadata = {
-  title: "Frequently Asked Questions | PinkPepper",
+  title: "FAQs — HACCP, Allergens, Regulations & More | PinkPepper",
   description:
-    "Common questions about PinkPepper's AI food safety compliance software, HACCP plans, allergen documentation, and how the platform works for EU and UK food businesses.",
+    "Answers to common questions about PinkPepper: HACCP plans, allergen compliance, EU & UK regulations covered, data security, Consultant vs Auditor mode, and pricing.",
   alternates: {
     canonical: "https://pinkpepper.io/faqs",
   },
