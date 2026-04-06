@@ -100,9 +100,14 @@ export default function PricingActions({
   }
 
   return (
-    <div>
+    <div className="w-full">
       {error && <p className="mb-2 text-xs text-red-600">{error}</p>}
-      <button onClick={startCheckout} disabled={loading} className={className}>
+      <button
+        type="button"
+        onClick={startCheckout}
+        disabled={loading}
+        className={`${className} inline-flex items-center justify-center appearance-none`}
+      >
         {loading ? "Loading..." : label}
       </button>
     </div>
