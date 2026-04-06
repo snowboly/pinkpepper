@@ -42,9 +42,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "PinkPepper | AI Food Safety Compliance Software",
+    title: "PinkPepper | AI HACCP & Food Safety Software — EU & UK",
     description:
-      "Generate HACCP plans, allergen documentation, SOPs, and audit-ready records with AI food safety compliance software for EU and UK businesses.",
+      "HACCP plans, allergen records, SOPs & audit-ready documents in minutes. AI food safety software grounded in 35+ EU & UK regulations. Try free.",
     images: ["https://www.pinkpepper.io/social-card.png"],
   },
   manifest: "/logo/site.webmanifest",

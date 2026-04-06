@@ -132,6 +132,8 @@ describe("SEO surface", () => {
     expect(layout).toContain("width: 1200");
     expect(layout).toContain("height: 630");
     expect(layout).toContain('images: ["https://www.pinkpepper.io/social-card.png"]');
+    expect(layout).toContain('title: "PinkPepper | AI HACCP & Food Safety Software — EU & UK"');
+    expect(layout).toContain("grounded in 35+ EU & UK regulations. Try free.");
   });
 
   it("allows article imagery from the configured external sources", () => {
