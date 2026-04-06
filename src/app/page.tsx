@@ -45,9 +45,14 @@ export default function HomePage() {
       <section className="relative overflow-hidden pb-20 pt-16 md:pb-28 md:pt-28">
         {/* Background image + dark overlay */}
         <div className="absolute inset-0 -z-10">
-          <div
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: "url('/hero-bg.jpg'), linear-gradient(135deg, #1e1b2e 0%, #2d1f3d 40%, #3b1a2a 70%, #1a1020 100%)" }}
+          <Image
+            src="/hero-bg.jpg"
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
+            quality={55}
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/65 via-black/55 to-black/70" />
         </div>

@@ -47,7 +47,7 @@ export default function AllergenDocumentationPage() {
         },
       ]}
       heroImage={{
-        src: "https://images.unsplash.com/photo-1590846406792-0adc7f938f1d?w=1200&q=80",
+        src: "https://images.unsplash.com/photo-1590846406792-0adc7f938f1d?w=1200&q=60",
         alt: "Chef checking ingredients during food preparation",
       }}
       relatedLinks={[
