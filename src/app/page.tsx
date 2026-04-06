@@ -134,41 +134,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="border-b border-[#F1F5F9] bg-white py-12">
-        <div className="pp-container">
-          <div className="mx-auto max-w-4xl">
-            <p className="mb-6 text-center text-xs font-semibold uppercase tracking-[0.18em] text-[#94A3B8]">Trusted by food businesses across the EU &amp; UK</p>
-            <div className="grid gap-6 md:grid-cols-4">
-              {[
-                { stat: "35+", label: "EU & UK regulations in our knowledge base" },
-                { stat: "7", label: "Codex HACCP principles covered end-to-end" },
-                { stat: "15", label: "Free compliance templates available" },
-                { stat: "6", label: "Languages supported" },
-              ].map((item) => (
-                <div key={item.label} className="text-center">
-                  <p className="text-3xl font-extrabold text-[#0F172A]">{item.stat}</p>
-                  <p className="mt-1 text-sm text-[#64748B]">{item.label}</p>
-                </div>
-              ))}
-            </div>
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-[#94A3B8]">
-              <span>EC 852/2004</span>
-              <span className="hidden sm:inline">·</span>
-              <span>EU 1169/2011</span>
-              <span className="hidden sm:inline">·</span>
-              <span>UK Food Safety Act 1990</span>
-              <span className="hidden sm:inline">·</span>
-              <span>BRCGS</span>
-              <span className="hidden sm:inline">·</span>
-              <span>SQF</span>
-              <span className="hidden sm:inline">·</span>
-              <span>FSSC 22000</span>
-              <span className="hidden sm:inline">·</span>
-              <span>ISO 22000</span>
-            </div>
-          </div>
-        </div>
-      </section>
 
       <section className="relative overflow-hidden border-b border-[#F1F5F9] bg-[#F8FAFC] py-24">
         <div className="pp-container">
