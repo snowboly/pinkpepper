@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "PinkPepper - AI Food Safety Assistant for EU and UK food businesses";
+export const alt = "PinkPepper - AI Food Safety Compliance Software for EU and UK food businesses";
 export const size = {
   width: 1200,
   height: 630,

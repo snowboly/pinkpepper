@@ -128,8 +128,8 @@ describe("SEO surface", () => {
   it("points social metadata at the generated OG image route", () => {
     const layout = readPage("src/app/layout.tsx");
 
-    expect(layout).toContain('url: "/og-image"');
-    expect(layout).toContain('images: ["/og-image"]');
+    expect(layout).toContain('url: "/logo/LogoV3.png"');
+    expect(layout).toContain('images: ["/logo/LogoV3.png"]');
   });
 
   it("allows article imagery from the configured external sources", () => {
