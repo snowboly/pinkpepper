@@ -33,8 +33,8 @@ export const metadata: Metadata = {
       images: [
         {
           url: "https://www.pinkpepper.io/opengraph-image",
-          width: 1200,
-          height: 630,
+          width: 1920,
+          height: 1280,
           alt: "PinkPepper - AI Food Safety Compliance Software for EU and UK Businesses",
         },
       ],
