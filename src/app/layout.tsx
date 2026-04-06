@@ -17,9 +17,9 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://pinkpepper.io"),
+  metadataBase: new URL("https://www.pinkpepper.io"),
   alternates: {
-    canonical: "https://pinkpepper.io",
+    canonical: "https://www.pinkpepper.io",
   },
   title: "PinkPepper | AI Food Safety Compliance Software for EU & UK Businesses",
   description:
@@ -28,13 +28,13 @@ export const metadata: Metadata = {
     title: "PinkPepper | AI Food Safety Compliance Software for EU & UK Businesses",
     description:
       "Generate HACCP plans, allergen documentation, SOPs, and audit-ready compliance records with AI food safety compliance software built for EU and UK businesses.",
-    url: "https://pinkpepper.io",
+    url: "https://www.pinkpepper.io",
     siteName: "PinkPepper",
     images: [
       {
-        url: "/logo/LogoV3.png",
-        width: 512,
-        height: 512,
+        url: "https://www.pinkpepper.io/hero-bg.jpg",
+        width: 5184,
+        height: 3456,
         alt: "PinkPepper - AI Food Safety Compliance Software for EU and UK Businesses",
       },
     ],
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     title: "PinkPepper | AI Food Safety Compliance Software",
     description:
       "Generate HACCP plans, allergen documentation, SOPs, and audit-ready records with AI food safety compliance software for EU and UK businesses.",
-    images: ["/logo/LogoV3.png"],
+    images: ["https://www.pinkpepper.io/hero-bg.jpg"],
   },
   manifest: "/logo/site.webmanifest",
   robots: {
@@ -67,8 +67,8 @@ const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
   name: "PinkPepper",
-  url: "https://pinkpepper.io",
-  logo: "https://pinkpepper.io/logo/android-chrome-512x512.png",
+  url: "https://www.pinkpepper.io",
+  logo: "https://www.pinkpepper.io/logo/android-chrome-512x512.png",
   description:
     "AI food safety compliance software for EU and UK food businesses. Generate HACCP plans, allergen documentation, SOPs, and audit-ready compliance packs.",
   contactPoint: {
@@ -83,7 +83,7 @@ const websiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
   name: "PinkPepper",
-  url: "https://pinkpepper.io",
+  url: "https://www.pinkpepper.io",
   description:
     "AI food safety compliance software for HACCP plans, allergen management, SOP generation, and EU/UK compliance documentation.",
   inLanguage: ["en", "de", "fr", "es", "pt", "it"],
