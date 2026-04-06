@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { FeatureTemplate } from "@/components/site/FeatureTemplate";
 
 export const metadata: Metadata = {
-  title: "Food Safety SOP Generator | PinkPepper",
+  title: "Food Safety SOP Generator — AI-Powered | PinkPepper",
   description:
-    "Create food safety SOPs, hygiene procedures, cleaning schedules, monitoring logs, and training records with PinkPepper.",
+    "Generate cleaning SOPs, hygiene procedures, temperature logs & training records in minutes. Grounded in EC 852/2004 & UK FSA guidance. Try free.",
   alternates: {
     canonical: "https://pinkpepper.io/features/food-safety-sop-generator",
   },
@@ -13,6 +13,8 @@ export const metadata: Metadata = {
 export default function FoodSafetySopGeneratorPage() {
   return (
     <FeatureTemplate
+      breadcrumbName="Food Safety SOP Generator"
+      breadcrumbUrl="https://pinkpepper.io/features/food-safety-sop-generator"
       eyebrow="SOP generation"
       title="Generate food safety SOPs and records that match the way your site works"
       description="PinkPepper helps teams create standard operating procedures, monitoring logs, cleaning schedules, hygiene policies, and daily checklists without copying old templates from site to site."

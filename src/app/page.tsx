@@ -17,9 +17,9 @@ import { HeroChatForm } from "@/components/homepage/HeroChatForm";
 import { homepageFaqs } from "@/data/faqs";
 
 export const metadata: Metadata = {
-  title: "PinkPepper | AI Food Safety Compliance Software for EU & UK Businesses",
+  title: "PinkPepper | AI HACCP & Food Safety Software for EU & UK Businesses",
   description:
-    "PinkPepper is AI food safety compliance software for EU and UK food businesses that need HACCP plans, allergen documentation, SOPs, audit prep, and food safety records.",
+    "Generate HACCP plans, allergen records, SOPs & audit-ready documents in minutes. AI food safety software grounded in 35+ EU & UK regulations. Start free.",
   alternates: {
     canonical: "https://pinkpepper.io",
   },
@@ -56,16 +56,16 @@ export default function HomePage() {
           <div className="mx-auto max-w-5xl text-center">
             <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-5 py-2.5 text-sm font-semibold text-white/90 shadow-sm backdrop-blur-sm">
               <Sparkles className="h-4 w-4" />
-              AI food safety compliance software for EU and UK businesses
+              Built for EU &amp; UK food safety regulations
             </div>
 
             <h1 className="pp-display mx-auto mb-8 max-w-4xl text-2xl leading-[1.15] tracking-[-0.02em] text-white sm:text-3xl md:text-4xl lg:text-5xl">
-              AI food safety compliance software for day-to-day decisions and audit-ready review.
+              HACCP plans, SOPs &amp; audit&nbsp;prep in minutes — not&nbsp;weeks.
             </h1>
 
             <p className="mx-auto mb-8 max-w-3xl text-base leading-relaxed text-white/80 sm:text-lg">
-              Use Consultant mode for practical compliance guidance, Auditor mode for structured findings and CAPA, and
-              bring in qualified food safety consultants when a human review is needed.
+              PinkPepper is AI food safety compliance software that saves your team 10+ hours a week on documentation.
+              Get regulation-grounded answers, generate audit-ready records, and escalate to human consultants when the risk is higher.
             </p>
 
             <div className="mb-8 flex justify-center">
@@ -113,16 +113,16 @@ export default function HomePage() {
           <div className="grid gap-4 md:grid-cols-3">
             {[
               {
-                title: "EU and UK source grounding",
-                body: "Built around food safety regulations, official guidance, and practical references instead of generic AI copy.",
+                title: "Grounded in 35+ EU & UK regulations",
+                body: "Every answer references EC 852/2004, UK FSA guidance, Codex HACCP, and more — not generic AI copy scraped from the web.",
               },
               {
-                title: "Export-ready outputs",
-                body: "Turn useful conversations into clean records, templates, and handover material without reworking everything manually.",
+                title: "Save 10+ hours every week",
+                body: "Generate HACCP plans, SOPs, allergen matrices, and audit-ready records in minutes instead of starting from blank pages.",
               },
               {
-                title: "Clear escalation path",
-                body: "Handle day-to-day questions in Consultant, switch to Auditor for formal findings, and escalate to human consultancy when the risk is higher.",
+                title: "Human consultants when it matters",
+                body: "Handle routine compliance with AI, then escalate to qualified food safety professionals for higher-risk reviews and sign-off.",
               },
             ].map((item) => (
               <div key={item.title} className="rounded-2xl border border-[#E2E8F0] bg-[#F8FAFC] p-5">
@@ -130,6 +130,42 @@ export default function HomePage() {
                 <p className="mt-2 text-sm leading-relaxed text-[#64748B]">{item.body}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="border-b border-[#F1F5F9] bg-white py-12">
+        <div className="pp-container">
+          <div className="mx-auto max-w-4xl">
+            <p className="mb-6 text-center text-xs font-semibold uppercase tracking-[0.18em] text-[#94A3B8]">Trusted by food businesses across the EU &amp; UK</p>
+            <div className="grid gap-6 md:grid-cols-4">
+              {[
+                { stat: "35+", label: "EU & UK regulations in our knowledge base" },
+                { stat: "7", label: "Codex HACCP principles covered end-to-end" },
+                { stat: "15", label: "Free compliance templates available" },
+                { stat: "6", label: "Languages supported" },
+              ].map((item) => (
+                <div key={item.label} className="text-center">
+                  <p className="text-3xl font-extrabold text-[#0F172A]">{item.stat}</p>
+                  <p className="mt-1 text-sm text-[#64748B]">{item.label}</p>
+                </div>
+              ))}
+            </div>
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-[#94A3B8]">
+              <span>EC 852/2004</span>
+              <span className="hidden sm:inline">·</span>
+              <span>EU 1169/2011</span>
+              <span className="hidden sm:inline">·</span>
+              <span>UK Food Safety Act 1990</span>
+              <span className="hidden sm:inline">·</span>
+              <span>BRCGS</span>
+              <span className="hidden sm:inline">·</span>
+              <span>SQF</span>
+              <span className="hidden sm:inline">·</span>
+              <span>FSSC 22000</span>
+              <span className="hidden sm:inline">·</span>
+              <span>ISO 22000</span>
+            </div>
           </div>
         </div>
       </section>
@@ -290,9 +326,10 @@ export default function HomePage() {
               </Link>
             </div>
 
-            <div className="flex flex-col rounded-3xl border border-[#E2E8F0] bg-white p-8">
+            <div className="relative flex flex-col rounded-3xl border-2 border-[#E11D48] bg-white p-8">
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-[#E11D48] px-4 py-1 text-xs font-bold text-white">Most Popular</div>
               <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-[#94A3B8]">Plus</h3>
-              <p className="mt-4 min-h-[4.5rem] text-sm leading-relaxed text-[#64748B]">For teams that need regular day-to-day use, uploads, and template access.</p>
+              <p className="mt-4 min-h-[4.5rem] text-sm leading-relaxed text-[#64748B]">For teams that use PinkPepper daily for HACCP, SOPs, allergen records, and template access.</p>
               <div className="mt-6 flex items-baseline gap-1">
                 <span className="text-5xl font-bold tracking-tight text-[#0F172A]"><span className="text-2xl align-super">€</span>19</span>
                 <span className="text-base text-[#94A3B8]">/month</span>
@@ -442,16 +479,16 @@ export default function HomePage() {
 
         <div className="pp-container text-center">
           <h2 className="pp-display mx-auto mb-5 max-w-3xl text-4xl text-[#0F172A] md:text-5xl">
-            Ready to run compliance with less friction?
+            Stop spending hours on compliance paperwork.
           </h2>
           <p className="mx-auto mb-10 max-w-2xl text-lg text-[#64748B]">
-            Start generating practical food safety documentation today, then scale with exports and review workflows.
+            Try PinkPepper free on a real compliance question. No credit card required.
           </p>
           <Link
             href="/signup"
             className="pp-interactive inline-flex items-center gap-3 rounded-full bg-[#E11D48] px-10 py-4 text-lg font-semibold text-white shadow-xl shadow-[#E11D48]/20 transition-all duration-200 hover:bg-[#BE123C] hover:shadow-2xl hover:shadow-[#E11D48]/30 active:scale-[0.97]"
           >
-            Start for free
+            Start free — no card needed
             <ArrowRight className="h-5 w-5" />
           </Link>
         </div>

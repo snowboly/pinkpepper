@@ -21,13 +21,13 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://pinkpepper.io",
   },
-  title: "PinkPepper | AI Food Safety Compliance Software for EU & UK Businesses",
+  title: "PinkPepper | AI HACCP & Food Safety Software for EU & UK Businesses",
   description:
-    "PinkPepper is AI food safety compliance software for EU and UK food businesses that need HACCP plans, allergen documentation, SOPs, audit prep, and food safety records.",
+    "Generate HACCP plans, allergen records, SOPs & audit-ready documents in minutes. AI food safety software grounded in 35+ EU & UK regulations. Start free.",
   openGraph: {
-    title: "PinkPepper | AI Food Safety Compliance Software for EU & UK Businesses",
+    title: "PinkPepper | AI HACCP & Food Safety Software for EU & UK Businesses",
     description:
-      "Generate HACCP plans, allergen documentation, SOPs, and audit-ready compliance records with AI food safety compliance software built for EU and UK businesses.",
+      "Generate HACCP plans, allergen records, SOPs & audit-ready documents in minutes. Save 10+ hours/week on compliance. Grounded in 35+ EU & UK regulations.",
     url: "https://pinkpepper.io",
     siteName: "PinkPepper",
     images: [
@@ -42,9 +42,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "PinkPepper | AI Food Safety Compliance Software",
+    title: "PinkPepper | AI HACCP & Food Safety Software — EU & UK",
     description:
-      "Generate HACCP plans, allergen documentation, SOPs, and audit-ready records with AI food safety compliance software for EU and UK businesses.",
+      "HACCP plans, allergen records, SOPs & audit-ready documents in minutes. AI food safety software grounded in 35+ EU & UK regulations. Try free.",
     images: ["/og-image"],
   },
   manifest: "/logo/site.webmanifest",
