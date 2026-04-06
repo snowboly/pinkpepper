@@ -61,47 +61,56 @@ const services = [
 ];
 
 const includedItems = [
-  "Practical support for HACCP, SOPs, allergen records, and audit preparation",
-  "Templates, exports, and working drafts your team can reuse internally",
-  "A clearer route from day-to-day questions to specialist support when needed",
+  "HACCP plans, SOPs, allergen records, and audit-ready documents — generated in minutes, not days",
+  "15 free downloadable templates, conversation exports, and reusable working drafts",
+  "AI for routine work, human food safety consultants for higher-risk review and sign-off",
 ];
 
 const reasons = [
   {
-    title: "Written for real compliance work",
-    body: "The page is built around the documents and checks teams actually need to complete, not abstract product language.",
+    title: "Save €18,000+/year on compliance costs",
+    body: "Replace ad-hoc hourly consultant retainers with targeted escalations. At €150/hr, avoiding 120 unnecessary consultant hours covers the saving.",
   },
   {
-    title: "Grounded in EU and UK food safety context",
-    body: "PinkPepper is aimed at the operational and regulatory work food businesses face in practice.",
+    title: "Grounded in 35+ EU & UK regulations",
+    body: "Every answer references EC 852/2004, EU 1169/2011, UK FSA guidance, Codex HACCP, BRCGS, SQF, and FSSC 22000 — not generic AI copy.",
   },
   {
-    title: "Useful when speed matters, safer when judgment matters",
-    body: "Move faster on the routine work, then bring in specialist backup when the stakes are higher.",
+    title: "From question to audit-ready document in minutes",
+    body: "Move faster on routine documentation, then switch to Auditor mode for structured findings or escalate to human consultants for higher-risk sign-off.",
   },
 ];
 
 export const metadata: Metadata = {
-  title: "Food Safety Services for HACCP, SOPs, Allergen Records & Audit Prep | PinkPepper Features",
+  title: "HACCP Plans, SOPs, Allergen Records & Audit Prep | PinkPepper Features",
   description:
-    "Explore PinkPepper services for HACCP plans, allergen documentation, SOP support, audit preparation, exports, templates, and specialist food safety support.",
+    "Generate HACCP plans, allergen matrices, SOPs & audit-ready packs in minutes. 15 free templates. AI grounded in EU & UK food safety regulations.",
   alternates: {
     canonical: "https://pinkpepper.io/features",
   },
 };
 
 export default function FeaturesPage() {
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://pinkpepper.io" },
+      { "@type": "ListItem", position: 2, name: "Features", item: "https://pinkpepper.io/features" },
+    ],
+  };
+
   return (
     <main className="overflow-hidden">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <section className="border-b border-[#F1F5F9] bg-white py-16 md:py-24">
         <div className="pp-container max-w-5xl">
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">Services</p>
           <h1 className="pp-display mt-4 max-w-4xl text-4xl text-[#0F172A] md:text-6xl">
-            Food safety support for teams that need practical compliance work done properly.
+            Cut compliance admin by 10+ hours a week.
           </h1>
           <p className="mt-6 max-w-3xl text-lg leading-relaxed text-[#475569]">
-            PinkPepper helps food businesses move faster on HACCP, allergen records, SOPs, audit preparation, templates,
-            exports, and higher-risk review work without turning the page into software jargon.
+            Generate HACCP plans, allergen matrices, SOPs, audit checklists, and export-ready records in minutes — grounded in 35+ EU &amp; UK food safety regulations. Escalate to human consultants when the stakes are higher.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link

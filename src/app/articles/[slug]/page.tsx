@@ -46,8 +46,36 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
     ...articleManifest.filter((candidate) => candidate.slug !== article.slug && candidate.category !== article.category),
   ].slice(0, 3);
 
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: article.title,
+    description: article.excerpt,
+    datePublished: article.publishedAt,
+    author: {
+      "@type": "Organization",
+      name: "PinkPepper",
+      url: "https://pinkpepper.io",
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "PinkPepper",
+      url: "https://pinkpepper.io",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://pinkpepper.io/logo/android-chrome-512x512.png",
+      },
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `https://pinkpepper.io/articles/${article.slug}`,
+    },
+    ...(article.image ? { image: article.image } : {}),
+  };
+
   return (
     <main className="overflow-hidden">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
       <section className="border-b border-[#F1F5F9] bg-[#F8FAFC] py-16 md:py-24">
         <div className="pp-container max-w-5xl">
           <div className="pp-article-hero-meta max-w-4xl">

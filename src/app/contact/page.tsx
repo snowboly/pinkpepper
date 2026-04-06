@@ -2,9 +2,9 @@ import Link from "next/link";
 import { Mail } from "lucide-react";
 
 export const metadata = {
-  title: "Contact & Support | PinkPepper Food Safety Compliance Software",
+  title: "Contact PinkPepper — Food Safety Compliance Support",
   description:
-    "Get in touch with PinkPepper for food safety compliance questions, account support, and feedback across EU and UK food businesses.",
+    "Questions about HACCP plans, pricing, or enterprise plans? Contact PinkPepper for food safety compliance support. We respond within 1 business day.",
   alternates: {
     canonical: "https://pinkpepper.io/contact",
   },

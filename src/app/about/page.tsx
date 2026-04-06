@@ -3,9 +3,9 @@ import Link from "next/link";
 import { ArrowRight, BookOpen, Brain, FileCheck, ShieldCheck, Users } from "lucide-react";
 
 export const metadata = {
-  title: "About PinkPepper | AI Food Safety Software Built by a Food Scientist",
+  title: "About PinkPepper | AI Food Safety Software by a Food Scientist",
   description:
-    "Learn how PinkPepper gives EU and UK food businesses Consultant and Auditor workflows inside one AI food safety compliance platform, with human consultancy when needed.",
+    "Built by a food scientist with hands-on compliance experience. PinkPepper combines AI grounded in 35+ EU & UK regulations with human food safety consultancy.",
   alternates: {
     canonical: "https://pinkpepper.io/about",
   },
@@ -19,13 +19,13 @@ export default function AboutPage() {
         <div className="pp-container max-w-3xl">
           <p className="text-sm font-semibold uppercase tracking-widest text-[#E11D48]">About Us</p>
           <h1 className="mt-4 text-4xl font-black tracking-tight text-[#0F172A] md:text-5xl">
-            Food safety compliance,
-            <br className="hidden sm:block" /> powered by AI&nbsp;&amp;&nbsp;human expertise
+            Built by a food scientist.
+            <br className="hidden sm:block" /> Grounded in 35+ regulations.
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-[#475569]">
-            PinkPepper is AI food safety compliance software built exclusively for food businesses operating under
-            EU&nbsp;&amp;&nbsp;UK regulations. Use Consultant mode for practical guidance, Auditor mode for structured
-            findings and CAPA, and bring in human food safety specialists when the work needs a real review.
+            PinkPepper is AI food safety software built exclusively for EU&nbsp;&amp;&nbsp;UK food businesses.
+            Generate HACCP plans, SOPs, and allergen records in minutes — then escalate to human food safety
+            consultants when the work needs specialist review.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3 text-sm font-medium text-[#475569]">
             <Link
@@ -248,17 +248,17 @@ export default function AboutPage() {
       <section className="relative overflow-hidden border-t border-[#F1F5F9] py-20 text-center">
         <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_80%_50%_at_50%_110%,#FFF1F2,transparent)]" />
         <div className="pp-container max-w-2xl">
-          <h2 className="text-3xl font-bold tracking-tight text-[#0F172A]">Put this to work in your operation</h2>
+          <h2 className="text-3xl font-bold tracking-tight text-[#0F172A]">Stop spending hours on compliance paperwork</h2>
           <p className="mt-4 text-lg text-[#475569]">
-            Start generating HACCP plans, SOPs, and allergen records today. Upgrade to Pro when you need a qualified
-            food safety consultant to review the work.
+            Try PinkPepper free on a real compliance question. No credit card required.
+            Upgrade to Pro when you need Auditor mode and human consultancy.
           </p>
           <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
             <Link
               href="/signup"
               className="inline-flex items-center gap-2 rounded-full bg-[#E11D48] px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-[#E11D48]/20 transition-all hover:bg-[#BE123C]"
             >
-              Get Started
+              Start free — no card needed
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>

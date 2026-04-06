@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import RandomArticleLinks from "@/components/homepage/RandomArticleLinks";
@@ -15,6 +16,14 @@ import { DemoTabSwitcher } from "@/components/homepage/DemoTabSwitcher";
 import { HeroChatForm } from "@/components/homepage/HeroChatForm";
 import { homepageFaqs } from "@/data/faqs";
 
+export const metadata: Metadata = {
+  title: "PinkPepper | AI HACCP & Food Safety Software for EU & UK Businesses",
+  description:
+    "Generate HACCP plans, allergen records, SOPs & audit-ready documents in minutes. AI food safety software grounded in 35+ EU & UK regulations. Start free.",
+  alternates: {
+    canonical: "https://pinkpepper.io",
+  },
+};
 
 export default function HomePage() {
   const faqSchema = {
@@ -36,9 +45,14 @@ export default function HomePage() {
       <section className="relative overflow-hidden pb-20 pt-16 md:pb-28 md:pt-28">
         {/* Background image + dark overlay */}
         <div className="absolute inset-0 -z-10">
-          <div
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: "url('/hero-bg.jpg'), linear-gradient(135deg, #1e1b2e 0%, #2d1f3d 40%, #3b1a2a 70%, #1a1020 100%)" }}
+          <Image
+            src="/hero-bg.jpg"
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
+            quality={55}
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/65 via-black/55 to-black/70" />
         </div>
@@ -47,16 +61,16 @@ export default function HomePage() {
           <div className="mx-auto max-w-5xl text-center">
             <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-5 py-2.5 text-sm font-semibold text-white/90 shadow-sm backdrop-blur-sm">
               <Sparkles className="h-4 w-4" />
-              AI food safety compliance software for EU and UK businesses
+              Built for EU &amp; UK food safety regulations
             </div>
 
             <h1 className="pp-display mx-auto mb-8 max-w-4xl text-2xl leading-[1.15] tracking-[-0.02em] text-white sm:text-3xl md:text-4xl lg:text-5xl">
-              AI food safety compliance software for day-to-day decisions and audit-ready review.
+              HACCP plans, SOPs &amp; audit&nbsp;prep in minutes — not&nbsp;weeks.
             </h1>
 
             <p className="mx-auto mb-8 max-w-3xl text-base leading-relaxed text-white/80 sm:text-lg">
-              Use Consultant mode for practical compliance guidance, Auditor mode for structured findings and CAPA, and
-              bring in qualified food safety consultants when a human review is needed.
+              PinkPepper is AI food safety compliance software that saves your team 10+ hours a week on documentation.
+              Get regulation-grounded answers, generate audit-ready records, and escalate to human consultants when the risk is higher.
             </p>
 
             <div className="mb-8 flex justify-center">
@@ -115,16 +129,16 @@ export default function HomePage() {
           <div className="grid gap-4 md:grid-cols-3">
             {[
               {
-                title: "EU and UK source grounding",
-                body: "Built around food safety regulations, official guidance, and practical references instead of generic AI copy.",
+                title: "Grounded in 35+ EU & UK regulations",
+                body: "Every answer references EC 852/2004, UK FSA guidance, Codex HACCP, and more — not generic AI copy scraped from the web.",
               },
               {
-                title: "Export-ready outputs",
-                body: "Turn useful conversations into clean records, templates, and handover material without reworking everything manually.",
+                title: "Save 10+ hours every week",
+                body: "Generate HACCP plans, SOPs, allergen matrices, and audit-ready records in minutes instead of starting from blank pages.",
               },
               {
-                title: "Clear escalation path",
-                body: "Handle day-to-day questions in Consultant, switch to Auditor for formal findings, and escalate to human consultancy when the risk is higher.",
+                title: "Human consultants when it matters",
+                body: "Handle routine compliance with AI, then escalate to qualified food safety professionals for higher-risk reviews and sign-off.",
               },
             ].map((item) => (
               <div key={item.title} className="rounded-2xl border border-[#E2E8F0] bg-[#F8FAFC] p-5">
@@ -135,6 +149,7 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
 
       <section className="relative overflow-hidden border-b border-[#F1F5F9] bg-[#F8FAFC] py-24">
         <div className="pp-container">
@@ -274,7 +289,7 @@ export default function HomePage() {
           <div className="mx-auto grid max-w-5xl gap-6 lg:grid-cols-3">
             <div className="flex flex-col rounded-3xl border border-[#E2E8F0] bg-[#FCFDFE] p-8">
               <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-[#94A3B8]">Free</h3>
-              <p className="mt-4 min-h-[4.5rem] text-sm leading-relaxed text-[#64748B]">Use PinkPepper on real questions before you commit.</p>
+              <p className="mt-4 min-h-[4.5rem] text-sm leading-relaxed text-[#64748B]">Best for testing fit on live questions and everyday checks before you commit.</p>
               <div className="mt-6 flex items-baseline gap-1">
                 <span className="text-5xl font-bold tracking-tight text-[#0F172A]"><span className="text-2xl align-super">€</span>0</span>
                 <span className="text-base text-[#94A3B8]">/month</span>
@@ -285,24 +300,26 @@ export default function HomePage() {
                 <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />Write, edit, and create food safety content</li>
                 <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />Analyze text and images</li>
                 <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />Access to curated knowledge base</li>
-                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />1 premium expert answer per day</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />Everyday compliance guidance</li>
               </ul>
               <Link href="/signup" className="mt-8 block rounded-xl border border-[#E2E8F0] bg-white py-3.5 text-center text-sm font-semibold text-[#0F172A] transition-all duration-200 hover:bg-[#F8FAFC] hover:-translate-y-0.5 hover:shadow-md active:scale-[0.98]">
-                Get started
+                Get started free
               </Link>
             </div>
 
-            <div className="flex flex-col rounded-3xl border border-[#E2E8F0] bg-white p-8">
+            <div className="relative flex flex-col rounded-3xl border-2 border-[#E11D48] bg-white p-8">
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-[#E11D48] px-4 py-1 text-xs font-bold text-white">Most Popular</div>
               <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-[#94A3B8]">Plus</h3>
-              <p className="mt-4 min-h-[4.5rem] text-sm leading-relaxed text-[#64748B]">For teams that need regular day-to-day use, uploads, and template access.</p>
+              <p className="mt-4 min-h-[4.5rem] text-sm leading-relaxed text-[#64748B]">For teams that use PinkPepper daily for HACCP, SOPs, allergen records, and downloadable templates.</p>
               <div className="mt-6 flex items-baseline gap-1">
                 <span className="text-5xl font-bold tracking-tight text-[#0F172A]"><span className="text-2xl align-super">€</span>19</span>
-                <span className="text-base text-[#94A3B8]">/month</span>
+                <span className="text-base text-[#94A3B8]">/month + VAT</span>
               </div>
               <div className="my-6 border-t border-[#FCE7F3]" />
               <ul className="flex-1 space-y-3.5 text-sm text-[#475569]">
-                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />Everything in Free, plus:</li>
-                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />3 premium expert answers per day</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />Everything in Free, plus</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />Heavier day-to-day Consultant use</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />Higher daily usage limits</li>
                 <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />Unlimited saved conversations and projects</li>
                 <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />Access to downloadable templates</li>
               </ul>
@@ -316,15 +333,16 @@ export default function HomePage() {
 
             <div className="flex flex-col rounded-3xl border border-[#F9A8D4] bg-[#FFF8FB] p-8">
               <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-[#BE123C]">Pro</h3>
-              <p className="mt-4 min-h-[4.5rem] text-sm leading-relaxed text-[#64748B]">For operators who want both AI modes, stronger audit workflows, and human specialist backup for higher-risk work.</p>
+              <p className="mt-4 min-h-[4.5rem] text-sm leading-relaxed text-[#64748B]">For teams that want both AI modes, stronger audit workflows, and human food safety consultancy for higher-risk work.</p>
               <div className="mt-6 flex items-baseline gap-1">
                 <span className="text-5xl font-bold tracking-tight text-[#0F172A]"><span className="text-2xl align-super">€</span>99</span>
-                <span className="text-base text-[#94A3B8]">/month</span>
+                <span className="text-base text-[#94A3B8]">/month + VAT</span>
               </div>
               <div className="my-6 border-t border-[#F1F5F9]" />
               <ul className="flex-1 space-y-3.5 text-sm text-[#475569]">
-                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />Everything in Plus, plus:</li>
-                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />8 premium expert answers per day</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />Everything in Plus, plus</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />More capacity for higher-risk work</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />Highest daily usage limits</li>
                 <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />Access to Auditor mode</li>
                 <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />2h/month of human food safety consultancy</li>
                 <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />Priority support</li>
@@ -444,16 +462,16 @@ export default function HomePage() {
 
         <div className="pp-container text-center">
           <h2 className="pp-display mx-auto mb-5 max-w-3xl text-4xl text-[#0F172A] md:text-5xl">
-            Ready to run compliance with less friction?
+            Stop spending hours on compliance paperwork.
           </h2>
           <p className="mx-auto mb-10 max-w-2xl text-lg text-[#64748B]">
-            Start generating practical food safety documentation today, then scale with exports and review workflows.
+            Try PinkPepper free on a real compliance question. No credit card required.
           </p>
           <Link
             href="/signup"
             className="pp-interactive inline-flex items-center gap-3 rounded-full bg-[#E11D48] px-10 py-4 text-lg font-semibold text-white shadow-xl shadow-[#E11D48]/20 transition-all duration-200 hover:bg-[#BE123C] hover:shadow-2xl hover:shadow-[#E11D48]/30 active:scale-[0.97]"
           >
-            Start for free
+            Start free — no card needed
             <ArrowRight className="h-5 w-5" />
           </Link>
         </div>
