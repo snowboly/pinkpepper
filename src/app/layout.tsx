@@ -32,9 +32,9 @@ export const metadata: Metadata = {
     siteName: "PinkPepper",
     images: [
       {
-        url: "https://www.pinkpepper.io/hero-bg.jpg",
-        width: 5184,
-        height: 3456,
+        url: "https://www.pinkpepper.io/social-card.png",
+        width: 1200,
+        height: 630,
         alt: "PinkPepper - AI Food Safety Compliance Software for EU and UK Businesses",
       },
     ],
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     title: "PinkPepper | AI Food Safety Compliance Software",
     description:
       "Generate HACCP plans, allergen documentation, SOPs, and audit-ready records with AI food safety compliance software for EU and UK businesses.",
-    images: ["https://www.pinkpepper.io/hero-bg.jpg"],
+    images: ["https://www.pinkpepper.io/social-card.png"],
   },
   manifest: "/logo/site.webmanifest",
   robots: {
