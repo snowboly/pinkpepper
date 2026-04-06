@@ -125,11 +125,15 @@ describe("SEO surface", () => {
     expect(layout).toContain("EU and UK food businesses");
   });
 
-  it("points social metadata at the generated OG image route", () => {
+  it("points social metadata at a dedicated static social card", () => {
     const layout = readPage("src/app/layout.tsx");
 
-    expect(layout).toContain('url: "https://www.pinkpepper.io/hero-bg.jpg"');
-    expect(layout).toContain('images: ["https://www.pinkpepper.io/hero-bg.jpg"]');
+    expect(layout).toContain('url: "https://www.pinkpepper.io/social-card.png"');
+    expect(layout).toContain("width: 1200");
+    expect(layout).toContain("height: 630");
+    expect(layout).toContain('images: ["https://www.pinkpepper.io/social-card.png"]');
+    expect(layout).toContain('title: "PinkPepper | AI HACCP & Food Safety Software — EU & UK"');
+    expect(layout).toContain("grounded in 35+ EU & UK regulations. Try free.");
   });
 
   it("allows article imagery from the configured external sources", () => {

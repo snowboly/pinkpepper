@@ -32,20 +32,20 @@ export const metadata: Metadata = {
     siteName: "PinkPepper",
     images: [
       {
-        url: "https://www.pinkpepper.io/hero-bg.jpg",
-        width: 5184,
-        height: 3456,
+        url: "https://www.pinkpepper.io/social-card.png",
+        width: 1200,
+        height: 630,
         alt: "PinkPepper - AI Food Safety Compliance Software for EU and UK Businesses",
       },
     ],
     type: "website",
   },
-    twitter: {
-      card: "summary_large_image",
-      title: "PinkPepper | AI HACCP & Food Safety Software — EU & UK",
-      description:
-        "HACCP plans, allergen records, SOPs & audit-ready documents in minutes. AI food safety software grounded in 35+ EU & UK regulations. Try free.",
-      images: ["https://www.pinkpepper.io/hero-bg.jpg"],
+  twitter: {
+    card: "summary_large_image",
+    title: "PinkPepper | AI HACCP & Food Safety Software — EU & UK",
+    description:
+      "HACCP plans, allergen records, SOPs & audit-ready documents in minutes. AI food safety software grounded in 35+ EU & UK regulations. Try free.",
+    images: ["https://www.pinkpepper.io/social-card.png"],
   },
   manifest: "/logo/site.webmanifest",
   robots: {
