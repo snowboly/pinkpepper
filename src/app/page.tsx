@@ -109,17 +109,6 @@ export default function HomePage() {
             </div>
 
             <HeroChatForm />
-
-            <div className="mt-6 flex justify-center">
-              <a
-                href="https://www.linkedin.com/company/pinkpepperio"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-medium text-white/80 backdrop-blur-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-white/30 hover:bg-white/15 hover:text-white"
-              >
-                Follow PinkPepper on LinkedIn
-              </a>
-            </div>
           </div>
         </div>
       </section>

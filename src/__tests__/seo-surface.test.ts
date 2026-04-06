@@ -364,4 +364,13 @@ describe("premium quality regressions", () => {
     expect(pricing).not.toContain("100 AI queries per day");
     expect(pricing).not.toContain("voice transcriptions");
   });
+
+  it("normalizes paid pricing CTA buttons to match the link CTA layout", () => {
+    const pricingActions = readPage("src/components/pricing/PricingActions.tsx");
+
+    expect(pricingActions).toContain('className="w-full"');
+    expect(pricingActions).toContain("appearance-none");
+    expect(pricingActions).toContain("items-center justify-center");
+  });
 });
+
