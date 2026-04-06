@@ -1,7 +1,7 @@
 import { MetadataRoute } from "next";
 import { getArticleManifest } from "@/lib/articles";
 
-const BASE_URL = "https://pinkpepper.io";
+const BASE_URL = "https://www.pinkpepper.io";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const articles = await getArticleManifest().catch(() => []);
