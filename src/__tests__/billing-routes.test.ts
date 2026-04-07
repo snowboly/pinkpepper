@@ -137,12 +137,32 @@ describe("billing route origin validation", () => {
     await expect(response.json()).resolves.toEqual({ url: "https://checkout.stripe.test/session_123" });
   });
 
-  it("allows checkout when browser omits Origin header", async () => {
+  it("rejects checkout when both Origin and Referer are missing (CSRF fail-closed)", async () => {
+    // H2: a state-changing POST that carries neither Origin nor Referer is
+    // not a legitimate same-origin browser flow (modern browsers always
+    // send at least one on cross-origin POSTs). The billing guard must
+    // fail closed so cookie-replay / non-browser CSRF vectors are rejected.
     const response = await checkoutPost(
       new Request("https://pinkpepper.io/api/billing/checkout", {
         method: "POST",
         headers: {
           host: "pinkpepper.io",
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({ plan: "plus" }),
+      }),
+    );
+
+    expect(response.status).toBe(403);
+  });
+
+  it("allows checkout when Origin is omitted but Referer is same-origin", async () => {
+    const response = await checkoutPost(
+      new Request("https://pinkpepper.io/api/billing/checkout", {
+        method: "POST",
+        headers: {
+          host: "pinkpepper.io",
+          referer: "https://pinkpepper.io/pricing",
           "content-type": "application/json",
         },
         body: JSON.stringify({ plan: "plus" }),

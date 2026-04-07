@@ -75,8 +75,19 @@ export function buildContentSecurityPolicy(nonce: string): string {
  * Read the per-request CSP nonce from the incoming request headers.
  * Server components must call this and pass the result as `nonce={...}`
  * on any `<script>` they emit, otherwise the browser will block them.
+ *
+ * Returns `undefined` when called outside a request scope (e.g. during
+ * unit tests that render a page component directly, or during static
+ * prerendering). At runtime every request passes through middleware
+ * which sets the nonce, so a missing nonce always means "not in a
+ * request" — rendering without a nonce in that context is safe because
+ * there is no CSP header to enforce either.
  */
 export async function getCspNonce(): Promise<string | undefined> {
-  const h = await headers();
-  return h.get(NONCE_HEADER) ?? undefined;
+  try {
+    const h = await headers();
+    return h.get(NONCE_HEADER) ?? undefined;
+  } catch {
+    return undefined;
+  }
 }
