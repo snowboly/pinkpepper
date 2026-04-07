@@ -12,18 +12,9 @@ const securityHeaders = [
     key: "Strict-Transport-Security",
     value: "max-age=63072000; includeSubDomains; preload",
   },
-  {
-    key: "Content-Security-Policy",
-    value: [
-      "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com",
-      "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' blob: data: https://*.supabase.co https://images.unsplash.com https://images.pexels.com",
-      "connect-src 'self' https://*.supabase.co https://api.groq.com https://api.openai.com https://api.stripe.com https://js.stripe.com https://va.vercel-scripts.com",
-      "frame-src https://js.stripe.com https://hooks.stripe.com",
-      "frame-ancestors 'none'",
-    ].join("; "),
-  },
+  // NOTE: Content-Security-Policy is set per-request in `middleware.ts` so
+  // that each response can carry a fresh nonce. Do NOT add a static CSP
+  // header here — it would shadow the nonced policy and break scripts.
 ];
 
 const nextConfig: NextConfig = {

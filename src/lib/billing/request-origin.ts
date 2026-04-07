@@ -1,3 +1,27 @@
+/**
+ * Return the canonical origin we consider "ours" for redirect/callback URLs.
+ *
+ * Trust order:
+ *   1. `NEXT_PUBLIC_SITE_URL` (operator-controlled, not attacker-spoofable)
+ *   2. Fall back to `x-forwarded-host` / `host` + proto ONLY when the env
+ *      var is absent. This fallback exists so dev/preview deployments keep
+ *      working, but it MUST NOT be used as a security boundary — callers
+ *      that pass this value into a redirect or Stripe callback URL should
+ *      insist on the env-pinned value in production.
+ */
+export function getTrustedSiteOrigin(request?: Request): string | null {
+  const configured = process.env.NEXT_PUBLIC_SITE_URL;
+  if (configured) {
+    try {
+      return new URL(configured).origin;
+    } catch {
+      // fall through
+    }
+  }
+  if (!request) return null;
+  return deriveRequestOrigin(request);
+}
+
 function deriveRequestOrigin(request: Request): string | null {
   // Prefer the server-configured site URL so we do not trust attacker-supplied
   // x-forwarded-* headers when deciding which origin is "ours".
@@ -31,6 +55,12 @@ function deriveRequestOrigin(request: Request): string | null {
   }
 }
 
+/**
+ * Generic same-origin guard. Re-exported as `isAllowedBillingRequest` for
+ * the original billing call sites; new callers that are not billing-specific
+ * (account deletion, other destructive POST/DELETE endpoints) should import
+ * this name instead.
+ */
 export function isAllowedBillingRequest(request: Request): boolean {
   // Only POST (and other state-changing verbs) are protected; GET/HEAD are
   // safe and should not be gated here. Callers today only invoke this from POST
@@ -71,3 +101,6 @@ export function isAllowedBillingRequest(request: Request): boolean {
   // same-origin browser flow and must be rejected to prevent CSRF.
   return false;
 }
+
+/** Alias with a name that reflects the generic semantics of the helper. */
+export const isSameOriginRequest = isAllowedBillingRequest;

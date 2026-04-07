@@ -116,7 +116,14 @@ export default function SettingsForm({
     setDeleteLoading(true);
     setDeleteError(null);
     try {
-      const res = await fetch("/api/account/delete", { method: "DELETE" });
+      // The server requires both a typed confirmation phrase and the
+      // authenticated user's email address to destroy the account; this
+      // defeats one-click CSRF variants and accidental no-confirm wipes.
+      const res = await fetch("/api/account/delete", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ confirm: "DELETE MY ACCOUNT", email }),
+      });
       if (!res.ok) {
         const data = await res.json() as { error?: string };
         setDeleteError(data.error ?? t("unexpectedError"));
