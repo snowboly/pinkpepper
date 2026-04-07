@@ -153,4 +153,21 @@ describe("article content processing", () => {
     expect(result.processedContent).toContain("<strong>emphasis</strong>");
     expect(result.processedContent).toContain("Legitimate text");
   });
+
+  it("neutralises unquoted dangerous href/src attributes from article bodies", () => {
+    const raw = [
+      "<p>Safe intro</p>",
+      "<a href=javascript:alert(1)>bad link</a>",
+      "<img src=data:text/html,<script>alert(2)</script> alt=test>",
+      "<a href=https://example.com>good link</a>",
+    ].join("");
+
+    const result = processArticleContent(raw);
+
+    expect(result.processedContent).not.toContain("javascript:");
+    expect(result.processedContent).not.toContain("data:text/html");
+    expect(result.processedContent).toContain('href="#"');
+    expect(result.processedContent).toContain('src="#"');
+    expect(result.processedContent).toContain("https://example.com");
+  });
 });

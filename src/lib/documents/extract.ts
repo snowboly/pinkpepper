@@ -77,6 +77,20 @@ function sniffKind(buffer: Uint8Array): SniffedKind {
   }
 }
 
+export function detectDocumentMimeFromBytes(bytes: Uint8Array): string | null {
+  switch (sniffKind(bytes)) {
+    case "pdf":
+      return "application/pdf";
+    case "docx-or-zip":
+      return "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+    case "utf8-text":
+      return "text/plain";
+    case "unknown":
+    default:
+      return null;
+  }
+}
+
 function normalizeWhitespace(value: string) {
   return value.replace(/\r\n/g, "\n").replace(/\n{3,}/g, "\n\n").trim();
 }

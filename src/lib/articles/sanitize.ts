@@ -88,24 +88,29 @@ function stripStyleAttributes(html: string): string {
 }
 
 function neutraliseDangerousUrls(html: string): string {
-  // Match href="..." and src="..." (both quote styles). If the value
-  // starts with javascript:, vbscript:, or data: (except safe data:image)
-  // rewrite it to "#".
-  const attrWithUrl = /(\s(?:href|src)\s*=\s*)(["'])([^"']*)\2/gi;
-  return html.replace(attrWithUrl, (_match, prefix: string, quote: string, value: string) => {
-    const lowered = value.trim().toLowerCase();
-    const isJs = lowered.startsWith("javascript:");
-    const isVb = lowered.startsWith("vbscript:");
-    // data: URLs are blocked except for data:image/* in src attributes,
-    // which are common in legitimate inline thumbnails. Still, we err on
-    // the side of dropping data: entirely here because the primary image
-    // source in PinkPepper articles is via next/image with https URLs.
-    const isData = lowered.startsWith("data:");
-    if (isJs || isVb || isData) {
-      return `${prefix}${quote}#${quote}`;
+  // Match href/src attributes with quoted OR bareword values. If the
+  // value starts with javascript:, vbscript:, or data:, rewrite it to "#".
+  const attrWithUrl =
+    /(\s(?:href|src)\s*=\s*)(?:(["'])([^"']*)\2|([^\s>]+))/gi;
+  return html.replace(
+    attrWithUrl,
+    (_match, prefix: string, quote: string | undefined, quotedValue: string | undefined, bareValue: string | undefined) => {
+      const value = quotedValue ?? bareValue ?? "";
+      const lowered = value.trim().toLowerCase();
+      const isJs = lowered.startsWith("javascript:");
+      const isVb = lowered.startsWith("vbscript:");
+      // data: URLs are blocked except for data:image/* in src attributes,
+      // which are common in legitimate inline thumbnails. Still, we err on
+      // the side of dropping data: entirely here because the primary image
+      // source in PinkPepper articles is via next/image with https URLs.
+      const isData = lowered.startsWith("data:");
+      const safeQuote = quote ?? '"';
+      if (isJs || isVb || isData) {
+        return `${prefix}${safeQuote}#${safeQuote}`;
+      }
+      return `${prefix}${safeQuote}${value}${safeQuote}`;
     }
-    return `${prefix}${quote}${value}${quote}`;
-  });
+  );
 }
 
 /**
