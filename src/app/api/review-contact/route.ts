@@ -5,6 +5,22 @@ import { sendEmail } from "@/lib/email";
 export const dynamic = "force-dynamic";
 
 const MAX_FILE_BYTES = 10 * 1024 * 1024; // 10 MB
+const ALLOWED_FILE_TYPES = new Set(["application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"]);
+
+/** Escape special HTML characters to prevent HTML injection in email bodies. */
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#x27;");
+}
+
+/** Strip CR and LF to prevent email header injection. */
+function stripNewlines(str: string): string {
+  return str.replace(/[\r\n]/g, " ");
+}
 
 export async function POST(request: Request) {
   const supabase = await createClient();
@@ -39,25 +55,39 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "File must be smaller than 10 MB." }, { status: 400 });
   }
 
+  if (!ALLOWED_FILE_TYPES.has(file.type)) {
+    return NextResponse.json({ error: "Only PDF and DOCX files are accepted." }, { status: 400 });
+  }
+
   const adminInbox = process.env.REVIEW_CONTACT_EMAIL ?? "support@pinkpepper.io";
 
   const fileBuffer = Buffer.from(await file.arrayBuffer());
 
+  // Escape all user-controlled values before interpolating into HTML to prevent injection.
+  const safeEmail = escapeHtml(user.email ?? "");
+  const safeSubject = escapeHtml(subject);
+  const safeMessage = escapeHtml(message);
+  const safeFileName = escapeHtml(file.name);
+
   const html = `
     <p style="font-family:sans-serif;font-size:14px;color:#0f172a;">
-      <strong>From:</strong> ${user.email}<br/>
-      <strong>Subject:</strong> ${subject}
+      <strong>From:</strong> ${safeEmail}<br/>
+      <strong>Subject:</strong> ${safeSubject}
     </p>
     <hr style="border:none;border-top:1px solid #e2e8f0;margin:16px 0;" />
-    <p style="font-family:sans-serif;font-size:14px;color:#334155;white-space:pre-wrap;">${message.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</p>
+    <p style="font-family:sans-serif;font-size:14px;color:#334155;white-space:pre-wrap;">${safeMessage}</p>
     <hr style="border:none;border-top:1px solid #e2e8f0;margin:16px 0;" />
-    <p style="font-family:sans-serif;font-size:12px;color:#64748b;">Document attached: ${file.name}</p>
+    <p style="font-family:sans-serif;font-size:12px;color:#64748b;">Document attached: ${safeFileName}</p>
   `;
+
+  // Strip CR/LF from subject and sender to prevent email header injection.
+  const safeSubjectHeader = stripNewlines(subject);
+  const safeEmailHeader = stripNewlines(user.email ?? "");
 
   try {
     await sendEmail({
       to: adminInbox,
-      subject: `[Review Request] ${subject} — ${user.email}`,
+      subject: `[Review Request] ${safeSubjectHeader} — ${safeEmailHeader}`,
       html,
       attachments: [{ filename: file.name, content: fileBuffer }],
     });
