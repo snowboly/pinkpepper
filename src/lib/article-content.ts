@@ -1,3 +1,5 @@
+import { sanitizeArticleHtml } from "@/lib/articles/sanitize";
+
 export type ArticleHeading = {
   id: string;
   text: string;
@@ -53,7 +55,15 @@ export function getArticleHeadings(html: string): ArticleHeading[] {
 }
 
 export function processArticleContent(rawContent: string): ProcessedArticleContent {
-  const normalizedContent = normalizeArticleContent(rawContent);
+  // Defense-in-depth: scrub dangerous tags/attributes before any further
+  // transformation, so the downstream regex passes (and ultimately the
+  // `dangerouslySetInnerHTML` sink on the article detail page) can never
+  // see a <script>, inline event handler, javascript: URL, or <iframe>.
+  // CSP + nonces already block script execution at the browser layer;
+  // this sanitiser closes the remaining non-script vectors and keeps the
+  // article body to an editorial tag vocabulary.
+  const sanitizedRaw = sanitizeArticleHtml(rawContent);
+  const normalizedContent = normalizeArticleContent(sanitizedRaw);
   const headings = getArticleHeadings(normalizedContent);
 
   let processedContent = normalizedContent.replace(
