@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
 import { getStripe } from "@/lib/billing/stripe";
-import { isAllowedBillingRequest } from "@/lib/billing/request-origin";
+import { isAllowedBillingRequest, getTrustedSiteOrigin } from "@/lib/billing/request-origin";
 import { billingLimiter, checkRateLimit } from "@/lib/ratelimit";
 import { getStripePriceIdForPlan, hasStripePriceConfigError } from "@/lib/billing/price-config";
 
@@ -40,7 +40,15 @@ export async function POST(request: Request) {
     if (!plan || !priceId) {
       return NextResponse.json({ error: "Invalid plan." }, { status: 400 });
     }
-    const appUrl = process.env.NEXT_PUBLIC_SITE_URL || new URL(request.url).origin;
+    // Stripe callback URLs must not be attacker-spoofable via a manipulated
+    // Host header — Stripe blindly redirects users there on completion.
+    const appUrl = getTrustedSiteOrigin(request);
+    if (!appUrl) {
+      return NextResponse.json(
+        { error: "Site URL is not configured." },
+        { status: 500 }
+      );
+    }
     const stripe = getStripe();
 
     const { data: subRow } = await supabase

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
 import { getStripe } from "@/lib/billing/stripe";
-import { isAllowedBillingRequest } from "@/lib/billing/request-origin";
+import { isAllowedBillingRequest, getTrustedSiteOrigin } from "@/lib/billing/request-origin";
 import { billingLimiter, checkRateLimit } from "@/lib/ratelimit";
 
 export const dynamic = "force-dynamic";
@@ -36,7 +36,12 @@ export async function POST(request: Request) {
   }
 
   const stripe = getStripe();
-  const appUrl = process.env.NEXT_PUBLIC_SITE_URL || new URL(request.url).origin;
+  // Stripe Customer Portal return_url must be env-pinned — a spoofed Host
+  // header would otherwise let a proxy misconfig send users to attacker.com.
+  const appUrl = getTrustedSiteOrigin(request);
+  if (!appUrl) {
+    return NextResponse.json({ error: "Site URL is not configured." }, { status: 500 });
+  }
 
   const portal = await stripe.billingPortal.sessions.create({
     customer: customerId,
