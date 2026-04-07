@@ -1,11 +1,16 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/utils/supabase/server";
+import { detectDocumentMimeFromBytes } from "@/lib/documents/extract";
 import { sendEmail } from "@/lib/email";
+import { sanitizeUntrustedFilename } from "@/lib/rag";
+import { createClient } from "@/utils/supabase/server";
 
 export const dynamic = "force-dynamic";
 
 const MAX_FILE_BYTES = 10 * 1024 * 1024; // 10 MB
-const ALLOWED_FILE_TYPES = new Set(["application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"]);
+const ALLOWED_FILE_TYPES = new Set([
+  "application/pdf",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+]);
 
 /** Escape special HTML characters to prevent HTML injection in email bodies. */
 function escapeHtml(str: string): string {
@@ -55,19 +60,21 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "File must be smaller than 10 MB." }, { status: 400 });
   }
 
-  if (!ALLOWED_FILE_TYPES.has(file.type)) {
-    return NextResponse.json({ error: "Only PDF and DOCX files are accepted." }, { status: 400 });
-  }
-
   const adminInbox = process.env.REVIEW_CONTACT_EMAIL ?? "support@pinkpepper.io";
 
   const fileBuffer = Buffer.from(await file.arrayBuffer());
+  const detectedMime = detectDocumentMimeFromBytes(fileBuffer);
+
+  if (!detectedMime || !ALLOWED_FILE_TYPES.has(detectedMime)) {
+    return NextResponse.json({ error: "Only PDF and DOCX files are accepted." }, { status: 400 });
+  }
 
   // Escape all user-controlled values before interpolating into HTML to prevent injection.
   const safeEmail = escapeHtml(user.email ?? "");
   const safeSubject = escapeHtml(subject);
   const safeMessage = escapeHtml(message);
-  const safeFileName = escapeHtml(file.name);
+  const sanitizedFileName = sanitizeUntrustedFilename(file.name);
+  const safeFileName = escapeHtml(sanitizedFileName);
 
   const html = `
     <p style="font-family:sans-serif;font-size:14px;color:#0f172a;">
@@ -87,9 +94,9 @@ export async function POST(request: Request) {
   try {
     await sendEmail({
       to: adminInbox,
-      subject: `[Review Request] ${safeSubjectHeader} — ${safeEmailHeader}`,
+      subject: `[Review Request] ${safeSubjectHeader} - ${safeEmailHeader}`,
       html,
-      attachments: [{ filename: file.name, content: fileBuffer }],
+      attachments: [{ filename: sanitizedFileName, content: fileBuffer }],
     });
   } catch (err) {
     console.error("review-contact sendEmail failed:", err);

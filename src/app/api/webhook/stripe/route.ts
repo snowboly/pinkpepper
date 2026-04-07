@@ -41,10 +41,14 @@ async function handleInvoicePaymentFailed(invoice: Stripe.Invoice) {
       })
     : undefined;
 
-  await sendBillingEmail({
-    to: email,
-    ...buildPaymentFailedEmail({ tier: row.tier ?? "free", nextRetryDate }),
-  });
+  try {
+    await sendBillingEmail({
+      to: email,
+      ...buildPaymentFailedEmail({ tier: row.tier ?? "free", nextRetryDate }),
+    });
+  } catch (err) {
+    console.error("Stripe payment-failed email dispatch failed:", err);
+  }
 }
 
 function getCurrentPeriodEndUnix(subscription: Stripe.Subscription): number | null {
@@ -169,7 +173,11 @@ export async function syncSubscriptionFromStripe(
       });
     }
 
-    await sendBillingEmail({ to: email, ...emailContent });
+    try {
+      await sendBillingEmail({ to: email, ...emailContent });
+    } catch (err) {
+      console.error("Stripe subscription email dispatch failed:", err);
+    }
   }
 }
 
