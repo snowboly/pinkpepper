@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getArticleBySlug, getArticleManifest } from "@/lib/articles";
+import { getCspNonce } from "@/lib/security/csp";
 import { processArticleContent } from "@/lib/article-content";
 
 type ArticlePageProps = {
@@ -35,6 +36,7 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
   const { slug } = await params;
   const article = await getArticleBySlug(slug);
   const articleManifest = await getArticleManifest();
+  const nonce = await getCspNonce();
 
   if (!article) {
     notFound();
@@ -75,7 +77,7 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
 
   return (
     <main className="overflow-hidden">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
+      <script type="application/ld+json" nonce={nonce} dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
       <section className="border-b border-[#F1F5F9] bg-[#F8FAFC] py-16 md:py-24">
         <div className="pp-container max-w-5xl">
           <div className="pp-article-hero-meta max-w-4xl">

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { getCspNonce } from "@/lib/security/csp";
 
 const services = [
   {
@@ -90,7 +91,8 @@ export const metadata: Metadata = {
   },
 };
 
-export default function FeaturesPage() {
+export default async function FeaturesPage() {
+  const nonce = await getCspNonce();
   const breadcrumbSchema = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -102,7 +104,7 @@ export default function FeaturesPage() {
 
   return (
     <main className="overflow-hidden">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <script type="application/ld+json" nonce={nonce} dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <section className="border-b border-[#F1F5F9] bg-white py-16 md:py-24">
         <div className="pp-container max-w-5xl">
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">Services</p>

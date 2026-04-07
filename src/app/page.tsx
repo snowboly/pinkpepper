@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import RandomArticleLinks from "@/components/homepage/RandomArticleLinks";
 import PricingActions from "@/components/pricing/PricingActions";
+import { getCspNonce } from "@/lib/security/csp";
 import {
   ArrowRight,
   BookOpen,
@@ -25,7 +26,8 @@ export const metadata: Metadata = {
   },
 };
 
-export default function HomePage() {
+export default async function HomePage() {
+  const nonce = await getCspNonce();
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -41,7 +43,7 @@ export default function HomePage() {
 
   return (
     <main className="overflow-hidden">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" nonce={nonce} dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <section className="relative overflow-hidden pb-20 pt-16 md:pb-28 md:pt-28">
         {/* Background image + dark overlay */}
         <div className="absolute inset-0 -z-10">

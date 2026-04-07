@@ -4,6 +4,7 @@ import { CheckCircle2, Mail } from "lucide-react";
 import PricingActions from "@/components/pricing/PricingActions";
 import { faqs as sharedFaqs } from "@/data/faqs";
 import { createClient } from "@/utils/supabase/server";
+import { getCspNonce } from "@/lib/security/csp";
 
 export const metadata: Metadata = {
   title: "Pricing — From €0/mo | PinkPepper Food Safety Software",
@@ -42,6 +43,7 @@ const pricingFaqs = [
 ];
 
 export default async function PricingPage() {
+  const nonce = await getCspNonce();
   let isLoggedIn = false;
   try {
     const supabase = await createClient();
@@ -125,10 +127,12 @@ export default async function PricingPage() {
     <main className="overflow-hidden">
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareApplicationSchema) }}
       />
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: JSON.stringify(pricingFaqSchema) }}
       />
 
