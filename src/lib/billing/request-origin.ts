@@ -31,6 +31,12 @@ function deriveRequestOrigin(request: Request): string | null {
   }
 }
 
+/**
+ * Generic same-origin guard. Re-exported as `isAllowedBillingRequest` for
+ * the original billing call sites; new callers that are not billing-specific
+ * (account deletion, other destructive POST/DELETE endpoints) should import
+ * this name instead.
+ */
 export function isAllowedBillingRequest(request: Request): boolean {
   // Only POST (and other state-changing verbs) are protected; GET/HEAD are
   // safe and should not be gated here. Callers today only invoke this from POST
@@ -71,3 +77,6 @@ export function isAllowedBillingRequest(request: Request): boolean {
   // same-origin browser flow and must be rejected to prevent CSRF.
   return false;
 }
+
+/** Alias with a name that reflects the generic semantics of the helper. */
+export const isSameOriginRequest = isAllowedBillingRequest;
