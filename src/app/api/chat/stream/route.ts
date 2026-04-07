@@ -15,6 +15,10 @@ import {
   getExportGuidance,
   filterAuthorityFallbackChunks,
   getUncertaintyHandlingInstructions,
+  UNTRUSTED_CONTENT_SYSTEM_NOTE,
+  buildUntrustedDocumentBlock,
+  userChunksToUntrusted,
+  type UserDocumentChunk,
 } from "@/lib/rag";
 import { getVerificationState } from "@/lib/rag/verification";
 import { inferQueryJurisdiction, type Jurisdiction } from "@/lib/rag/source-taxonomy";
@@ -540,7 +544,7 @@ export async function POST(request: Request) {
 
   // RAG retrieval (knowledge base + user uploaded documents)
   let retrievedChunks: KnowledgeChunk[] = [];
-  let userDocContext = "";
+  let userDocChunks: UserDocumentChunk[] = [];
   let ragEnabled = false;
   const queryJurisdiction = inferQueryJurisdiction(message);
   const useAuthorityFilters = shouldPreferAuthoritativeSources(message, mode);
@@ -695,10 +699,10 @@ export async function POST(request: Request) {
 
     retrievedChunks = kChunks;
     ragEnabled = kChunks.length > 0;
-    if (uChunks.length > 0) {
-      userDocContext = "\n\nUSER UPLOADED DOCUMENTS:\n" +
-        uChunks.map((c) => `[${c.file_name}] ${c.content}`).join("\n---\n");
-    }
+    // User-uploaded chunks are UNTRUSTED. They are NOT concatenated into the
+    // system prompt. They are wrapped in <untrusted_document> tags and placed
+    // into a separate user-role turn below (see `untrustedUserMessage`).
+    userDocChunks = uChunks;
   } catch (ragError) {
     console.error("RAG retrieval error:", ragError);
   }
@@ -720,8 +724,9 @@ export async function POST(request: Request) {
   if (shouldUseRetrievedContextPrompt(ragEnabled, useAuthorityFilters)) {
     const ragPrompt = buildRAGPrompt(message, retrievedChunks, mode, preferredLanguage, currentDate, businessTypeLabel, tier);
     systemPrompt =
+      UNTRUSTED_CONTENT_SYSTEM_NOTE +
+      "\n\n" +
       ragPrompt.systemPrompt +
-      userDocContext +
       `\n\nINTRODUCTION RULE:\n${buildIntroductionInstruction(hasAssistantHistory)}` +
       `\n\nPERSONA:\n${persona.promptFragment}`;
     temperature = ragPrompt.temperature;
@@ -760,6 +765,8 @@ export async function POST(request: Request) {
     ].filter(Boolean).join("\n") + "\n\n";
 
     systemPrompt =
+      UNTRUSTED_CONTENT_SYSTEM_NOTE +
+      "\n\n" +
       fallbackHeader +
       "You are a food safety compliance expert working for PinkPepper. Your name and persona are defined in the PERSONA section below — always introduce yourself by that name, not as 'PinkPepper'. PinkPepper is the product/company you represent.\n\n" +
       "ABOUT PINKPEPPER (answer when users ask about you, the product, or their plan):\n" +
@@ -799,11 +806,21 @@ export async function POST(request: Request) {
       (uncertaintyHandlingInstructions ? uncertaintyHandlingInstructions + "\n\n" : "") +
       "INTRODUCTION RULE:\n" + buildIntroductionInstruction(hasAssistantHistory) + "\n\n" +
       "PERSONA:\n" + persona.promptFragment + "\n\n" +
-      modeInstruction + userDocContext;
+      modeInstruction;
     temperature = mode === "audit" ? 0.0 : mode === "document" ? 0.2 : 0.1;
   }
 
   const maxTokens = isAdmin ? 8192 : caps.maxResponseTokens;
+
+  // User-uploaded document content is UNTRUSTED. Wrap it in <untrusted_document>
+  // tags and forward it as a separate user-role turn so the model's instruction
+  // hierarchy treats it as data, not as system instructions. Sanitisation strips
+  // chat-template control tokens and caps length — see lib/rag/untrusted-content.ts.
+  const untrustedBlock = buildUntrustedDocumentBlock(userChunksToUntrusted(userDocChunks));
+  const untrustedTurn: ChatRequestMessage[] = untrustedBlock
+    ? [{ role: "user", content: untrustedBlock }]
+    : [];
+
   const upstream = await requestChatStream({
     groqKey: groqKey ?? undefined,
     openaiKey: openaiKey ?? undefined,
@@ -814,6 +831,7 @@ export async function POST(request: Request) {
     messages: [
       { role: "system", content: systemPrompt },
       ...history,
+      ...untrustedTurn,
       { role: "user", content: message },
     ],
   });
