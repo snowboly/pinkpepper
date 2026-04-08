@@ -106,7 +106,7 @@ export default function PricingActions({
         type="button"
         onClick={startCheckout}
         disabled={loading}
-        className={className}
+        className={`${className} flex items-center justify-center appearance-none`}
       >
         {loading ? "Loading..." : label}
       </button>
