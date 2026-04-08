@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { track } from "@vercel/analytics";
 import { createClient } from "@/utils/supabase/client";
 
@@ -48,6 +48,7 @@ export default function PricingActions({
 }: Props) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const checkoutInFlight = useRef(false);
 
   if (isLoggedIn === false) {
     return (
@@ -62,6 +63,8 @@ export default function PricingActions({
   }
 
   async function startCheckout() {
+    if (checkoutInFlight.current) return;
+    checkoutInFlight.current = true;
     setLoading(true);
     setError(null);
     try {
@@ -95,6 +98,7 @@ export default function PricingActions({
     } catch {
       setError("Network error. Please try again.");
     } finally {
+      checkoutInFlight.current = false;
       setLoading(false);
     }
   }
@@ -106,7 +110,7 @@ export default function PricingActions({
         type="button"
         onClick={startCheckout}
         disabled={loading}
-        className={`${className} inline-flex items-center justify-center appearance-none`}
+        className={`${className} w-full flex items-center justify-center appearance-none`}
       >
         {loading ? "Loading..." : label}
       </button>

@@ -371,6 +371,23 @@ describe("premium quality regressions", () => {
     expect(pricingActions).toContain('className="w-full"');
     expect(pricingActions).toContain("appearance-none");
     expect(pricingActions).toContain("items-center justify-center");
+    expect(pricingActions).toContain('className={`${className} w-full flex items-center justify-center appearance-none`}');
+    expect(pricingActions).not.toContain("inline-flex");
+  });
+
+  it("guards checkout launchers against rapid double clicks", () => {
+    const pricingActions = readPage("src/components/pricing/PricingActions.tsx");
+    const upgradeModal = readPage("src/components/dashboard/UpgradeModal.tsx");
+
+    expect(pricingActions).toContain("const checkoutInFlight = useRef(false);");
+    expect(pricingActions).toContain("if (checkoutInFlight.current) return;");
+    expect(pricingActions).toContain("checkoutInFlight.current = true;");
+    expect(pricingActions).toContain("checkoutInFlight.current = false;");
+
+    expect(upgradeModal).toContain("const checkoutInFlight = useRef(false);");
+    expect(upgradeModal).toContain("if (checkoutInFlight.current) return;");
+    expect(upgradeModal).toContain("checkoutInFlight.current = true;");
+    expect(upgradeModal).toContain("checkoutInFlight.current = false;");
   });
 });
 

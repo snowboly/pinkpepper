@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { track } from "@vercel/analytics";
 import type { SubscriptionTier } from "@/lib/tier";
@@ -50,6 +50,7 @@ export default function UpgradeModal({ trigger, currentTier, onClose }: UpgradeM
   const t = useTranslations("upgrade");
   const [loading, setLoading] = useState<SubscriptionTier | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const checkoutInFlight = useRef(false);
   const heading = trigger === "template_download"
     ? "Download DOCX templates"
     : t(`triggers.${trigger}.heading`);
@@ -66,6 +67,8 @@ export default function UpgradeModal({ trigger, currentTier, onClose }: UpgradeM
   }, [currentTier, trigger]);
 
   async function checkout(plan: SubscriptionTier) {
+    if (checkoutInFlight.current) return;
+    checkoutInFlight.current = true;
     track("checkout_started", { plan, source: "upgrade_modal", trigger, currentTier });
     setLoading(plan);
     setError(null);
@@ -84,6 +87,7 @@ export default function UpgradeModal({ trigger, currentTier, onClose }: UpgradeM
     } catch {
       setError(t("networkError"));
     } finally {
+      checkoutInFlight.current = false;
       setLoading(null);
     }
   }
