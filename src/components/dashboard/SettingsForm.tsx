@@ -21,10 +21,6 @@ type SettingsFormProps = {
   chatLanguage: string;
   usage: number;
   usageLimit: number | null;
-  expertUsage: number;
-  expertUsageLimit: number | null;
-  imageUsage: number;
-  imageUsageLimit: number | null;
 };
 
 export default function SettingsForm({
@@ -34,10 +30,6 @@ export default function SettingsForm({
   chatLanguage: initialChatLanguage,
   usage,
   usageLimit,
-  expertUsage,
-  expertUsageLimit,
-  imageUsage,
-  imageUsageLimit,
 }: SettingsFormProps) {
   const t = useTranslations("settings");
   const currentLocale = useLocale() as Locale;
@@ -160,25 +152,13 @@ export default function SettingsForm({
       {!isAdmin && (
         <div className="rounded-2xl border border-[#E2E8F0] bg-white p-6">
           <h2 className="text-sm font-semibold text-[#0F172A] mb-1">{t("usage")}</h2>
-          <p className="text-xs text-[#94A3B8] mb-4">Resets daily · reviews reset monthly</p>
+          <p className="text-xs text-[#94A3B8] mb-4">Resets daily</p>
           <div className="space-y-4">
             <UsageBar
               label={t("dailyMessages")}
               used={usage}
               limit={usageLimit}
               color="#E11D48"
-            />
-            <UsageBar
-              label={t("dailyExpertAnswers")}
-              used={expertUsage}
-              limit={expertUsageLimit}
-              color="#2563EB"
-            />
-            <UsageBar
-              label={t("dailyImageAnalyses")}
-              used={imageUsage}
-              limit={imageUsageLimit}
-              color="#0F766E"
             />
           </div>
         </div>
