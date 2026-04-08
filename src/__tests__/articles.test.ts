@@ -110,4 +110,64 @@ describe("article content processing", () => {
     expect(result.processedContent).toContain("pp-article-callout");
     expect(result.processedContent).toContain("pp-article-figure");
   });
+
+  it("scrubs dangerous tags, event handlers, and javascript: urls from article bodies", () => {
+    const raw = [
+      "<h2>Intro</h2>",
+      "<script>alert('xss')</script>",
+      "<style>body{display:none}</style>",
+      "<iframe src=\"https://evil.example\"></iframe>",
+      "<p onclick=\"alert(1)\">Click me</p>",
+      "<a href=\"javascript:alert(2)\">bad</a>",
+      "<a href=\"vbscript:msgbox\">worse</a>",
+      "<img src=\"data:text/html,<script>alert(3)</script>\" />",
+      "<form action=\"https://evil.example\"><input name=\"x\" /></form>",
+      "<p style=\"background:url(javascript:alert(4))\">styled</p>",
+      "<p>Legitimate text with <strong>emphasis</strong>.</p>",
+    ].join("");
+
+    const result = processArticleContent(raw);
+
+    // Structurally dangerous tags are removed whole:
+    expect(result.processedContent).not.toContain("<script");
+    expect(result.processedContent).not.toContain("</script>");
+    expect(result.processedContent).not.toContain("<style");
+    expect(result.processedContent).not.toContain("<iframe");
+    expect(result.processedContent).not.toContain("<form");
+    expect(result.processedContent).not.toContain("<input");
+
+    // Event handlers stripped from surviving tags:
+    expect(result.processedContent).not.toMatch(/\sonclick\s*=/i);
+
+    // Dangerous URL schemes neutralised:
+    expect(result.processedContent).not.toContain("javascript:");
+    expect(result.processedContent).not.toContain("vbscript:");
+    expect(result.processedContent).not.toMatch(/src\s*=\s*"data:/i);
+
+    // Inline style attributes stripped:
+    expect(result.processedContent).not.toMatch(/\sstyle\s*=/i);
+
+    // Legitimate editorial content preserved:
+    expect(result.processedContent).toContain("<h2");
+    expect(result.processedContent).toContain("Intro");
+    expect(result.processedContent).toContain("<strong>emphasis</strong>");
+    expect(result.processedContent).toContain("Legitimate text");
+  });
+
+  it("neutralises unquoted dangerous href/src attributes from article bodies", () => {
+    const raw = [
+      "<p>Safe intro</p>",
+      "<a href=javascript:alert(1)>bad link</a>",
+      "<img src=data:text/html,<script>alert(2)</script> alt=test>",
+      "<a href=https://example.com>good link</a>",
+    ].join("");
+
+    const result = processArticleContent(raw);
+
+    expect(result.processedContent).not.toContain("javascript:");
+    expect(result.processedContent).not.toContain("data:text/html");
+    expect(result.processedContent).toContain('href="#"');
+    expect(result.processedContent).toContain('src="#"');
+    expect(result.processedContent).toContain("https://example.com");
+  });
 });

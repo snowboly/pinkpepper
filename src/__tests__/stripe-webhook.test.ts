@@ -1,7 +1,15 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type Stripe from "stripe";
 
-const { adminState, sendBillingEmailMock, getUserByIdMock, stripeRetrieveCustomerMock } = vi.hoisted(() => ({
+const {
+  adminState,
+  sendBillingEmailMock,
+  getUserByIdMock,
+  stripeRetrieveCustomerMock,
+  stripeRetrieveSubscriptionMock,
+  consoleWarnMock,
+  consoleErrorMock,
+} = vi.hoisted(() => ({
   adminState: {
     subscriptionRow: null as { user_id: string } | null,
     upserts: [] as Array<Record<string, unknown>>,
@@ -11,6 +19,9 @@ const { adminState, sendBillingEmailMock, getUserByIdMock, stripeRetrieveCustome
   sendBillingEmailMock: vi.fn(),
   getUserByIdMock: vi.fn(),
   stripeRetrieveCustomerMock: vi.fn(),
+  stripeRetrieveSubscriptionMock: vi.fn(),
+  consoleWarnMock: vi.fn(),
+  consoleErrorMock: vi.fn(),
 }));
 
 vi.mock("@/utils/supabase/admin", () => ({
@@ -63,6 +74,9 @@ vi.mock("@/lib/billing/stripe", () => ({
     customers: {
       retrieve: stripeRetrieveCustomerMock,
     },
+    subscriptions: {
+      retrieve: stripeRetrieveSubscriptionMock,
+    },
   }),
 }));
 
@@ -79,10 +93,15 @@ import {
 
 describe("syncSubscriptionFromStripe", () => {
   beforeEach(() => {
+    vi.spyOn(console, "warn").mockImplementation(consoleWarnMock);
+    vi.spyOn(console, "error").mockImplementation(consoleErrorMock);
     Object.assign(adminState, initialAdminState());
     sendBillingEmailMock.mockReset();
     getUserByIdMock.mockReset();
     stripeRetrieveCustomerMock.mockReset();
+    stripeRetrieveSubscriptionMock.mockReset();
+    consoleWarnMock.mockReset();
+    consoleErrorMock.mockReset();
     process.env.STRIPE_PRO_PRICE_ID = "price_pro";
   });
 
@@ -91,6 +110,7 @@ describe("syncSubscriptionFromStripe", () => {
       id: "cus_123",
       metadata: { user_id: "user_123" },
     });
+    stripeRetrieveSubscriptionMock.mockRejectedValue(new Error("not needed in this test"));
     getUserByIdMock.mockResolvedValue({
       data: { user: { email: "owner@example.com" } },
     });
@@ -125,6 +145,7 @@ describe("syncSubscriptionFromStripe", () => {
 
   it("uses the cancelled paid tier in the cancellation email", async () => {
     adminState.subscriptionRow = { user_id: "user_123" };
+    stripeRetrieveSubscriptionMock.mockRejectedValue(new Error("not needed in this test"));
     getUserByIdMock.mockResolvedValue({
       data: { user: { email: "owner@example.com" } },
     });
@@ -153,5 +174,41 @@ describe("syncSubscriptionFromStripe", () => {
       })
     );
     expect(adminState.profileUpdates[0]).toMatchObject({ tier: "free" });
+  });
+
+  it("does not fail subscription sync when billing email delivery fails", async () => {
+    adminState.subscriptionRow = { user_id: "user_123" };
+    stripeRetrieveSubscriptionMock.mockRejectedValue(new Error("not needed in this test"));
+    getUserByIdMock.mockResolvedValue({
+      data: { user: { email: "owner@example.com" } },
+    });
+    sendBillingEmailMock.mockRejectedValueOnce(new Error("smtp down"));
+
+    await expect(
+      syncSubscriptionFromStripe(
+        {
+          id: "sub_123",
+          customer: "cus_123",
+          status: "active",
+          items: {
+            data: [
+              {
+                price: { id: "price_pro" },
+                current_period_end: 1_710_000_000,
+              },
+            ],
+          },
+        } as unknown as Stripe.Subscription,
+        "customer.subscription.updated"
+      )
+    ).resolves.toBeUndefined();
+
+    expect(adminState.upserts[0]).toMatchObject({
+      user_id: "user_123",
+      stripe_customer_id: "cus_123",
+      tier: "pro",
+    });
+    expect(adminState.profileUpdates[0]).toMatchObject({ tier: "pro" });
+    expect(sendBillingEmailMock).toHaveBeenCalledTimes(1);
   });
 });

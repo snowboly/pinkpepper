@@ -41,10 +41,14 @@ async function handleInvoicePaymentFailed(invoice: Stripe.Invoice) {
       })
     : undefined;
 
-  await sendBillingEmail({
-    to: email,
-    ...buildPaymentFailedEmail({ tier: row.tier ?? "free", nextRetryDate }),
-  });
+  try {
+    await sendBillingEmail({
+      to: email,
+      ...buildPaymentFailedEmail({ tier: row.tier ?? "free", nextRetryDate }),
+    });
+  } catch (err) {
+    console.error("Stripe payment-failed email dispatch failed:", err);
+  }
 }
 
 function getCurrentPeriodEndUnix(subscription: Stripe.Subscription): number | null {
@@ -89,12 +93,29 @@ export async function syncSubscriptionFromStripe(
   const customerId =
     typeof subscription.customer === "string" ? subscription.customer : subscription.customer.id;
 
-  const priceId = subscription.items.data[0]?.price?.id ?? null;
+  // Re-fetch the subscription fresh from Stripe so we write the CURRENT
+  // authoritative state regardless of webhook delivery order. Stripe does
+  // not guarantee in-order delivery; a stale "updated" event arriving
+  // after a newer "deleted" event would otherwise revert the user's tier.
+  // Only the event-type metadata (for email dispatch) is taken from the
+  // original payload.
+  let authoritative: Stripe.Subscription = subscription;
+  try {
+    const stripe = getStripe();
+    authoritative = await stripe.subscriptions.retrieve(subscription.id);
+  } catch (e) {
+    console.warn(
+      `[stripe-webhook] Failed to re-fetch subscription ${subscription.id}; falling back to payload:`,
+      e
+    );
+  }
+
+  const priceId = authoritative.items.data[0]?.price?.id ?? null;
 
   const snapshot = parseStripeSubscription({
-    status: subscription.status,
+    status: authoritative.status,
     priceId,
-    currentPeriodEndUnix: getCurrentPeriodEndUnix(subscription),
+    currentPeriodEndUnix: getCurrentPeriodEndUnix(authoritative),
   });
   const userId = await resolveUserIdForCustomer(customerId);
 
@@ -104,7 +125,7 @@ export async function syncSubscriptionFromStripe(
       {
         user_id: userId,
         stripe_customer_id: customerId,
-        stripe_subscription_id: subscription.id,
+        stripe_subscription_id: authoritative.id,
         stripe_price_id: snapshot.stripePriceId,
         status: snapshot.status,
         tier: snapshot.tier,
@@ -152,7 +173,11 @@ export async function syncSubscriptionFromStripe(
       });
     }
 
-    await sendBillingEmail({ to: email, ...emailContent });
+    try {
+      await sendBillingEmail({ to: email, ...emailContent });
+    } catch (err) {
+      console.error("Stripe subscription email dispatch failed:", err);
+    }
   }
 }
 
@@ -176,6 +201,34 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     );
 }
 
+/**
+ * Claim an event id by inserting into `webhook_events_processed`. Returns
+ * true if THIS invocation is the one that should process the event, false
+ * if another worker (or an earlier retry) has already processed it.
+ *
+ * This closes the idempotency gap: Stripe routinely retries events on any
+ * non-2xx or on network errors, which without this guard would re-run all
+ * handlers (including side-effects like customer emails) and could race
+ * with parallel instances.
+ */
+async function claimStripeEvent(eventId: string, eventType: string): Promise<boolean> {
+  const admin = createAdminClient();
+  const { error } = await admin
+    .from("webhook_events_processed")
+    .insert({ event_id: eventId, event_type: eventType });
+
+  if (!error) return true;
+
+  // Unique-violation on the primary key means another worker already
+  // claimed this event. Supabase/PostgREST surfaces this as code 23505.
+  // Anything else is a real error — re-raise it so Stripe retries.
+  const pgError = error as { code?: string };
+  if (pgError?.code === "23505") {
+    return false;
+  }
+  throw error;
+}
+
 export async function POST(request: Request) {
   const sig = request.headers.get("stripe-signature");
   const secret = process.env.STRIPE_WEBHOOK_SECRET;
@@ -192,6 +245,20 @@ export async function POST(request: Request) {
     event = stripe.webhooks.constructEvent(body, sig, secret);
   } catch {
     return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
+  }
+
+  // Idempotency: if this event has already been processed, return 200
+  // immediately so Stripe stops retrying and we do not re-run side-effects
+  // (email dispatch, upserts against stale payloads, etc.).
+  let claimed: boolean;
+  try {
+    claimed = await claimStripeEvent(event.id, event.type);
+  } catch (err) {
+    console.error("Stripe webhook idempotency claim failed:", err);
+    return NextResponse.json({ error: "Webhook processing failed" }, { status: 500 });
+  }
+  if (!claimed) {
+    return NextResponse.json({ received: true, duplicate: true });
   }
 
   try {
@@ -216,6 +283,15 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ received: true });
   } catch (err) {
+    // Handler failed after we claimed the event — release the claim so
+    // Stripe's retry can re-process it, rather than turning a transient
+    // failure into permanent data loss.
+    try {
+      const admin = createAdminClient();
+      await admin.from("webhook_events_processed").delete().eq("event_id", event.id);
+    } catch (releaseErr) {
+      console.error("Failed to release stripe event claim:", releaseErr);
+    }
     console.error("Stripe webhook processing error:", err);
     return NextResponse.json({ error: "Webhook processing failed" }, { status: 500 });
   }

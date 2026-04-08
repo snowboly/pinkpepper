@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { FeatureTemplate } from "@/components/site/FeatureTemplate";
 
 export const metadata: Metadata = {
-  title: "Allergen Documentation Software | PinkPepper",
+  title: "Allergen Documentation Software — EU 1169/2011 | PinkPepper",
   description:
-    "Generate allergen matrices, cross-contact controls, menu-change records, and allergen documentation for EU and UK food businesses.",
+    "Generate allergen matrices, cross-contact controls & menu records aligned with EU 1169/2011 and Natasha's Law. AI-powered for EU & UK food businesses.",
   alternates: {
     canonical: "https://pinkpepper.io/features/allergen-documentation",
   },
@@ -13,6 +13,8 @@ export const metadata: Metadata = {
 export default function AllergenDocumentationPage() {
   return (
     <FeatureTemplate
+      breadcrumbName="Allergen Documentation"
+      breadcrumbUrl="https://pinkpepper.io/features/allergen-documentation"
       eyebrow="Allergen management"
       title="Create allergen documentation that operations teams can actually use"
       description="PinkPepper helps food businesses document allergen risks with matrices, recipe controls, label checks, cross-contact procedures, and menu-change workflows that are easier to maintain than spreadsheet sprawl."
@@ -45,7 +47,7 @@ export default function AllergenDocumentationPage() {
         },
       ]}
       heroImage={{
-        src: "https://images.unsplash.com/photo-1590846406792-0adc7f938f1d?w=1200&q=80",
+        src: "https://images.unsplash.com/photo-1590846406792-0adc7f938f1d?w=1200&q=60",
         alt: "Chef checking ingredients during food preparation",
       }}
       relatedLinks={[

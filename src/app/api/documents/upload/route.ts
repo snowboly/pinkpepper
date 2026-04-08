@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient as createSupabaseServer } from "@/utils/supabase/server";
 import { createClient } from "@supabase/supabase-js";
 import { extractDocumentText } from "@/lib/documents/extract";
-import { generateEmbeddings } from "@/lib/rag";
+import { generateEmbeddings, sanitizeUntrustedFilename } from "@/lib/rag";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -65,12 +65,17 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "File must be between 1 byte and 10MB." }, { status: 400 });
   }
 
+  // Normalise the client-supplied filename before it is used as a DB key,
+  // prompt-injected into the model, or echoed back to other users. Strips
+  // path separators, control chars, bracket characters, and caps length.
+  const safeFileName = sanitizeUntrustedFilename(file.name) || "upload";
+
   const extraction = await extractDocumentText(file);
 
   if (!extraction.text) {
     return NextResponse.json({
-      fileName: file.name,
-      mimeType: file.type,
+      fileName: safeFileName,
+      mimeType: extraction.detectedMime ?? null,
       size: file.size,
       extractedText: "",
       extractionStrategy: extraction.strategy,
@@ -89,7 +94,7 @@ export async function POST(request: Request) {
     const embeddings = await generateEmbeddings(texts);
 
     if (!effectiveConversationId) {
-      const titleSource = draftTitle || file.name;
+      const titleSource = draftTitle || safeFileName;
       const title = titleSource.length > 80 ? `${titleSource.slice(0, 77)}...` : titleSource;
       const { data: conversation, error: conversationError } = await supabase
         .from("conversations")
@@ -108,7 +113,7 @@ export async function POST(request: Request) {
     const rows = chunks.map((content, i) => ({
       user_id: user.id,
       conversation_id: effectiveConversationId,
-      file_name: file.name,
+      file_name: safeFileName,
       content,
       embedding: embeddings[i].embedding,
       chunk_index: i,
@@ -147,8 +152,8 @@ export async function POST(request: Request) {
   }
 
   return NextResponse.json({
-    fileName: file.name,
-    mimeType: file.type,
+    fileName: safeFileName,
+    mimeType: extraction.detectedMime ?? null,
     size: file.size,
     extractedText: extraction.text,
     extractionStrategy: extraction.strategy,

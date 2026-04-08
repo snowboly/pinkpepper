@@ -137,11 +137,15 @@ describe("SEO surface", () => {
   });
 
   it("allows article imagery from the configured external sources", () => {
+    // next/image remote patterns still live in next.config.ts; the CSP
+    // img-src allowlist moved to src/lib/security/csp.ts when CSP became
+    // per-request (middleware generates a nonce per response).
     const nextConfig = readPage("next.config.ts");
+    const csp = readPage("src/lib/security/csp.ts");
 
     expect(nextConfig).toContain('hostname: "images.unsplash.com"');
     expect(nextConfig).toContain('hostname: "images.pexels.com"');
-    expect(nextConfig).toContain("img-src 'self' blob: data: https://*.supabase.co https://images.unsplash.com https://images.pexels.com");
+    expect(csp).toContain("img-src 'self' blob: data: https://*.supabase.co https://images.unsplash.com https://images.pexels.com");
   });
 
   it("includes public marketing pages and excludes auth/dashboard routes from sitemap and robots", async () => {

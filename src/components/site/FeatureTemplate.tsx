@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { CheckCircle2, ArrowRight } from "lucide-react";
+import { getCspNonce } from "@/lib/security/csp";
 
 type Section = {
   title: string;
@@ -17,9 +18,11 @@ type FeatureTemplateProps = {
   sections: Section[];
   relatedLinks: Array<{ href: string; label: string; description: string }>;
   heroImage?: { src: string; alt: string };
+  breadcrumbName?: string;
+  breadcrumbUrl?: string;
 };
 
-export function FeatureTemplate({
+export async function FeatureTemplate({
   eyebrow,
   title,
   description,
@@ -29,9 +32,25 @@ export function FeatureTemplate({
   sections,
   relatedLinks,
   heroImage,
+  breadcrumbName,
+  breadcrumbUrl,
 }: FeatureTemplateProps) {
+  const nonce = await getCspNonce();
+  const breadcrumbSchema = breadcrumbName && breadcrumbUrl ? {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://pinkpepper.io" },
+      { "@type": "ListItem", position: 2, name: "Features", item: "https://pinkpepper.io/features" },
+      { "@type": "ListItem", position: 3, name: breadcrumbName, item: breadcrumbUrl },
+    ],
+  } : null;
+
   return (
     <main className="overflow-hidden">
+      {breadcrumbSchema && (
+        <script type="application/ld+json" nonce={nonce} dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      )}
       <section className="relative border-b border-[#F1F5F9] bg-white py-16 md:py-24">
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,#FFF1F2,transparent_55%)]" />
         <div className="pp-container grid gap-10 lg:grid-cols-[1.2fr_0.8fr] lg:items-start">
