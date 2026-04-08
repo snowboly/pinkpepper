@@ -173,6 +173,47 @@ describe("billing route origin validation", () => {
     await expect(response.json()).resolves.toEqual({ url: "https://checkout.stripe.test/session_123" });
   });
 
+  it("allows checkout from the www variant when NEXT_PUBLIC_SITE_URL is the apex", async () => {
+    // Regression: DNS serves both https://pinkpepper.io and
+    // https://www.pinkpepper.io. If NEXT_PUBLIC_SITE_URL is pinned to one,
+    // visitors on the other must not be rejected as CSRF.
+    process.env.NEXT_PUBLIC_SITE_URL = "https://pinkpepper.io/";
+
+    const response = await checkoutPost(
+      new Request("https://www.pinkpepper.io/api/billing/checkout", {
+        method: "POST",
+        headers: {
+          host: "www.pinkpepper.io",
+          origin: "https://www.pinkpepper.io",
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({ plan: "plus" }),
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    await expect(response.json()).resolves.toEqual({ url: "https://checkout.stripe.test/session_123" });
+  });
+
+  it("allows checkout from the apex when NEXT_PUBLIC_SITE_URL is the www variant", async () => {
+    process.env.NEXT_PUBLIC_SITE_URL = "https://www.pinkpepper.io/";
+
+    const response = await checkoutPost(
+      new Request("https://pinkpepper.io/api/billing/checkout", {
+        method: "POST",
+        headers: {
+          host: "pinkpepper.io",
+          origin: "https://pinkpepper.io",
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({ plan: "pro" }),
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    await expect(response.json()).resolves.toEqual({ url: "https://checkout.stripe.test/session_123" });
+  });
+
   it("rejects checkout from a different origin", async () => {
     const response = await checkoutPost(
       new Request("https://pinkpepper.io/api/billing/checkout", {
@@ -180,6 +221,24 @@ describe("billing route origin validation", () => {
         headers: {
           host: "pinkpepper.io",
           origin: "https://evil.com",
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({ plan: "plus" }),
+      }),
+    );
+
+    expect(response.status).toBe(403);
+  });
+
+  it("rejects checkout from a look-alike subdomain (not a real www/apex sibling)", async () => {
+    process.env.NEXT_PUBLIC_SITE_URL = "https://www.pinkpepper.io/";
+
+    const response = await checkoutPost(
+      new Request("https://www.pinkpepper.io/api/billing/checkout", {
+        method: "POST",
+        headers: {
+          host: "www.pinkpepper.io",
+          origin: "https://pinkpepper.io.evil.com",
           "content-type": "application/json",
         },
         body: JSON.stringify({ plan: "plus" }),

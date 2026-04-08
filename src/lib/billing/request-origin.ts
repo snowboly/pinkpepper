@@ -56,6 +56,41 @@ function deriveRequestOrigin(request: Request): string | null {
 }
 
 /**
+ * Given an origin like `https://www.pinkpepper.io`, return the set of origins
+ * that should be considered the same site. This exists so that users landing
+ * on either the apex (`pinkpepper.io`) or the `www.` variant can POST to our
+ * own billing routes without tripping the CSRF guard when `NEXT_PUBLIC_SITE_URL`
+ * is pinned to only one of them.
+ *
+ * This does NOT open the guard to unrelated domains — we only add the direct
+ * www <-> apex counterpart of the already-trusted canonical origin, both of
+ * which are operator-controlled.
+ */
+function sameSiteOriginsFor(origin: string): Set<string> {
+  const origins = new Set<string>();
+  try {
+    const url = new URL(origin);
+    origins.add(url.origin);
+
+    // Only toggle www for hostnames that look like a registrable domain —
+    // avoid turning "localhost" into "www.localhost".
+    const hostname = url.hostname;
+    const isRegistrableDomain = hostname.includes(".") && !/^[0-9.]+$/.test(hostname);
+    if (!isRegistrableDomain) {
+      return origins;
+    }
+
+    const sibling = hostname.startsWith("www.") ? hostname.slice(4) : `www.${hostname}`;
+    const siblingUrl = new URL(url.toString());
+    siblingUrl.hostname = sibling;
+    origins.add(siblingUrl.origin);
+  } catch {
+    // fall through with whatever we had
+  }
+  return origins;
+}
+
+/**
  * Generic same-origin guard. Re-exported as `isAllowedBillingRequest` for
  * the original billing call sites; new callers that are not billing-specific
  * (account deletion, other destructive POST/DELETE endpoints) should import
@@ -76,10 +111,14 @@ export function isAllowedBillingRequest(request: Request): boolean {
     return false;
   }
 
+  // Accept both the canonical origin and its www/apex counterpart so that
+  // visitors on either host variant can hit the same API without a 403.
+  const allowedOrigins = sameSiteOriginsFor(expectedOrigin);
+
   const headerOrigin = request.headers.get("origin");
   if (headerOrigin) {
     try {
-      return new URL(headerOrigin).origin === expectedOrigin;
+      return allowedOrigins.has(new URL(headerOrigin).origin);
     } catch {
       return false;
     }
@@ -90,7 +129,7 @@ export function isAllowedBillingRequest(request: Request): boolean {
   const referer = request.headers.get("referer");
   if (referer) {
     try {
-      return new URL(referer).origin === expectedOrigin;
+      return allowedOrigins.has(new URL(referer).origin);
     } catch {
       return false;
     }
