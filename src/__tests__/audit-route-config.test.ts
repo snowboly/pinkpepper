@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { buildVirtualAuditSystemPrompt } from "@/app/api/audit/stream/route";
 import { getAuditPersona } from "@/lib/personas";
+import { readFileSync } from "node:fs";
+import path from "node:path";
 
 describe("buildVirtualAuditSystemPrompt", () => {
   it("uses a finding-first audit contract when the prompt already contains evidence", () => {
@@ -58,5 +60,17 @@ describe("audit persona", () => {
     expect(persona.name).toBe("Lead Auditor John");
     expect(persona.avatar).toBe("lead-auditor-john");
     expect(persona.promptFragment).toContain("Lead Auditor John");
+  });
+});
+
+describe("audit provider routing", () => {
+  it("uses deepseek-chat as the default auditor model and keeps Groq llama as fallback", () => {
+    const routeSource = readFileSync(
+      path.join(process.cwd(), "src/app/api/audit/stream/route.ts"),
+      "utf8"
+    );
+
+    expect(routeSource).toContain('const primaryModel = process.env.DEEPSEEK_MODEL ?? "deepseek-chat"');
+    expect(routeSource).toContain('const fallbackModel = process.env.GROQ_MODEL ?? "llama-3.3-70b-versatile"');
   });
 });

@@ -13,30 +13,30 @@ import {
 } from "@/app/api/chat/stream/route";
 
 describe("resolveChatModels", () => {
-  it("uses llama 3.3 as the primary chat model", () => {
+  it("uses deepseek-chat as the primary chat model", () => {
     const models = resolveChatModels();
 
-    expect(models.primary).toBe("llama-3.3-70b-versatile");
+    expect(models.primary).toBe("deepseek-chat");
   });
 
-  it("uses gpt-4o-mini as the fallback chat model", () => {
+  it("uses llama 3.3 as the fallback chat model", () => {
     const models = resolveChatModels();
 
-    expect(models.fallback).toBe("gpt-4o-mini");
+    expect(models.fallback).toBe("llama-3.3-70b-versatile");
   });
 
   it("allows an explicit primary-model override without changing the fallback", () => {
     const models = resolveChatModels("custom-model");
 
     expect(models.primary).toBe("custom-model");
-    expect(models.fallback).toBe("gpt-4o-mini");
+    expect(models.fallback).toBe("llama-3.3-70b-versatile");
   });
 
-  it("prefers gpt-4.1 first for high-risk compliance questions", () => {
-    const models = resolveChatModels("custom-groq-model", { preferOpenAI: true });
+  it("prefers gpt-4.1 first for high-risk compliance questions while keeping the llama fallback", () => {
+    const models = resolveChatModels("custom-deepseek-model", { preferOpenAI: true });
 
     expect(models.primary).toBe("gpt-4.1");
-    expect(models.fallback).toBe("custom-groq-model");
+    expect(models.fallback).toBe("llama-3.3-70b-versatile");
   });
 });
 
