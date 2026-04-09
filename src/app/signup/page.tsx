@@ -15,6 +15,9 @@ export default function SignupPage() {
   const [loading, setLoading] = useState(false);
   const [magicLoading, setMagicLoading] = useState(false);
   const [magicSent, setMagicSent] = useState(false);
+  const [signupDone, setSignupDone] = useState(false);
+  const [resendLoading, setResendLoading] = useState(false);
+  const [resendMessage, setResendMessage] = useState<string | null>(null);
 
   useEffect(() => {
     if (searchParams.get("error") === "confirm_email") {
@@ -60,9 +63,33 @@ export default function SignupPage() {
         return;
       }
 
-      setMessage("Check your inbox and click the verification link to activate your account.");
+      setSignupDone(true);
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function onResendConfirmation() {
+    if (!email) return;
+    setResendLoading(true);
+    setResendMessage(null);
+    try {
+      const supabase = createClient();
+      const origin = process.env.NEXT_PUBLIC_SITE_URL ?? window.location.origin;
+      const { error: resendError } = await supabase.auth.resend({
+        type: "signup",
+        email,
+        options: {
+          emailRedirectTo: `${origin}/auth/callback?next=/dashboard&flow=signup`,
+        },
+      });
+      if (resendError) {
+        setResendMessage("Could not resend — " + resendError.message);
+      } else {
+        setResendMessage("Sent! Check your inbox (and spam folder).");
+      }
+    } finally {
+      setResendLoading(false);
     }
   }
 
@@ -108,71 +135,89 @@ export default function SignupPage() {
           <p className="mt-2 text-sm text-[#6B6B6B]">Create your PinkPepper account.</p>
 
           {error && <p className="mt-4 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
-          {message && <p className="mt-4 rounded-xl border border-[#E8DADA] bg-[#FAF6F5] px-3 py-2 text-sm">{message}</p>}
 
-          <form onSubmit={onSubmit} className="mt-6 space-y-4">
-            <div>
-              <label className="mb-1 block text-sm font-medium text-[#2B2B2B]">Email</label>
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-xl border border-[#E8DADA] bg-white px-3 py-2.5 outline-none ring-[#D96C6C]/20 focus:ring-4"
-                placeholder="you@company.com"
-              />
+          {signupDone ? (
+            <div className="mt-6 rounded-2xl border border-[#E8DADA] bg-[#FAF6F5] p-5 text-center">
+              <p className="text-sm font-semibold text-[#2B2B2B]">Check your inbox</p>
+              <p className="mt-1 text-sm text-[#6B6B6B]">We sent a verification link to <span className="font-medium text-[#2B2B2B]">{email}</span>. Click it to activate your account.</p>
+              <p className="mt-3 text-xs text-[#9B9B9B]">Don&apos;t see it? Check your spam folder, or</p>
+              <button
+                type="button"
+                disabled={resendLoading}
+                onClick={onResendConfirmation}
+                className="mt-2 rounded-xl border border-[#E8DADA] bg-white px-4 py-2 text-sm font-semibold text-[#D96C6C] transition-colors hover:bg-[#F2E8E8] disabled:opacity-60"
+              >
+                {resendLoading ? "Sending..." : "Resend confirmation email"}
+              </button>
+              {resendMessage && <p className="mt-2 text-xs text-[#6B6B6B]">{resendMessage}</p>}
             </div>
-            <div>
-              <label className="mb-1 block text-sm font-medium text-[#2B2B2B]">Password</label>
-              <input
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full rounded-xl border border-[#E8DADA] bg-white px-3 py-2.5 outline-none ring-[#D96C6C]/20 focus:ring-4"
-                placeholder="At least 8 characters"
-              />
-            </div>
-            <div>
-              <label className="mb-1 block text-sm font-medium text-[#2B2B2B]">Confirm Password</label>
-              <input
-                type="password"
-                required
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full rounded-xl border border-[#E8DADA] bg-white px-3 py-2.5 outline-none ring-[#D96C6C]/20 focus:ring-4"
-                placeholder="Repeat password"
-              />
-            </div>
-            <button disabled={loading} type="submit" className="w-full rounded-xl bg-[#D96C6C] py-3 font-bold text-white transition-colors hover:bg-[#C95A5A] disabled:opacity-70">
-              {loading ? "Creating account..." : "Create account"}
-            </button>
-          </form>
-
-          <div className="my-5 flex items-center gap-3">
-            <div className="h-px flex-1 bg-[#E8DADA]" />
-            <span className="text-xs text-[#9B9B9B]">or</span>
-            <div className="h-px flex-1 bg-[#E8DADA]" />
-          </div>
-
-          {magicSent ? (
-            <p className="rounded-xl border border-[#E8DADA] bg-[#FAF6F5] px-3 py-2.5 text-center text-sm text-[#2B2B2B]">
-              Magic link sent — check your inbox.
-            </p>
           ) : (
-            <button
-              type="button"
-              disabled={magicLoading}
-              onClick={onMagicLink}
-              className="w-full rounded-xl border border-[#E8DADA] bg-[#FAF6F5] py-3 text-sm font-semibold text-[#2B2B2B] transition-colors hover:bg-[#F2E8E8] disabled:opacity-70"
-            >
-              {magicLoading ? "Sending link..." : "Sign up with magic link"}
-            </button>
-          )}
+            <>
+              <form onSubmit={onSubmit} className="mt-6 space-y-4">
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-[#2B2B2B]">Email</label>
+                  <input
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full rounded-xl border border-[#E8DADA] bg-white px-3 py-2.5 outline-none ring-[#D96C6C]/20 focus:ring-4"
+                    placeholder="you@company.com"
+                  />
+                </div>
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-[#2B2B2B]">Password</label>
+                  <input
+                    type="password"
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full rounded-xl border border-[#E8DADA] bg-white px-3 py-2.5 outline-none ring-[#D96C6C]/20 focus:ring-4"
+                    placeholder="At least 8 characters"
+                  />
+                </div>
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-[#2B2B2B]">Confirm Password</label>
+                  <input
+                    type="password"
+                    required
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    className="w-full rounded-xl border border-[#E8DADA] bg-white px-3 py-2.5 outline-none ring-[#D96C6C]/20 focus:ring-4"
+                    placeholder="Repeat password"
+                  />
+                </div>
+                <button disabled={loading} type="submit" className="w-full rounded-xl bg-[#D96C6C] py-3 font-bold text-white transition-colors hover:bg-[#C95A5A] disabled:opacity-70">
+                  {loading ? "Creating account..." : "Create account"}
+                </button>
+              </form>
 
-          <p className="mt-4 text-sm text-[#6B6B6B]">
-            Already have an account? <Link href="/login" className="underline">Log in</Link>
-          </p>
+              <div className="my-5 flex items-center gap-3">
+                <div className="h-px flex-1 bg-[#E8DADA]" />
+                <span className="text-xs text-[#9B9B9B]">or</span>
+                <div className="h-px flex-1 bg-[#E8DADA]" />
+              </div>
+
+              {magicSent ? (
+                <p className="rounded-xl border border-[#E8DADA] bg-[#FAF6F5] px-3 py-2.5 text-center text-sm text-[#2B2B2B]">
+                  Magic link sent — check your inbox.
+                </p>
+              ) : (
+                <button
+                  type="button"
+                  disabled={magicLoading}
+                  onClick={onMagicLink}
+                  className="w-full rounded-xl border border-[#E8DADA] bg-[#FAF6F5] py-3 text-sm font-semibold text-[#2B2B2B] transition-colors hover:bg-[#F2E8E8] disabled:opacity-70"
+                >
+                  {magicLoading ? "Sending link..." : "Sign up with magic link"}
+                </button>
+              )}
+
+              <p className="mt-4 text-sm text-[#6B6B6B]">
+                Already have an account? <Link href="/login" className="underline">Log in</Link>
+              </p>
+            </>
+          )}
         </div>
       </div>
     </main>
