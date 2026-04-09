@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import { getTrustedSiteOrigin } from "@/lib/billing/request-origin";
 
 export async function POST(request: Request) {
-  // Always redirect back to the current deployment origin. Using the request
-  // URL avoids cross-origin jumps when NEXT_PUBLIC_SITE_URL points at a
-  // different environment (for example production while testing preview/local).
-  const target = new URL("/", request.url).toString();
+  // Prefer env-pinned origin to avoid host-header based open redirects.
+  const trustedOrigin = getTrustedSiteOrigin(request);
+  const target = trustedOrigin ? `${trustedOrigin}/` : new URL("/", request.url).toString();
   const response = NextResponse.redirect(target, { status: 303 });
 
   const cookieStore = await cookies();
