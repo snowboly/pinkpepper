@@ -1,15 +1,12 @@
 import { NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
-import { getTrustedSiteOrigin } from "@/lib/billing/request-origin";
 
 export async function POST(request: Request) {
-  // Build the redirect response first so Supabase can write cookie
-  // deletions directly onto it. Mutations via cookies() from next/headers
-  // do not propagate onto a NextResponse.redirect(), so the session would
-  // never actually clear in the browser without this pattern.
-  const origin = getTrustedSiteOrigin(request);
-  const target = origin ? `${origin}/` : new URL("/", request.url).toString();
+  // Always redirect back to the current deployment origin. Using the request
+  // URL avoids cross-origin jumps when NEXT_PUBLIC_SITE_URL points at a
+  // different environment (for example production while testing preview/local).
+  const target = new URL("/", request.url).toString();
   const response = NextResponse.redirect(target, { status: 303 });
 
   const cookieStore = await cookies();
@@ -22,14 +19,23 @@ export async function POST(request: Request) {
           return cookieStore.getAll();
         },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) =>
-            response.cookies.set(name, value, options)
-          );
+          cookiesToSet.forEach(({ name, value, options }) => {
+            response.cookies.set(name, value, options);
+          });
         },
       },
     }
   );
 
   await supabase.auth.signOut();
+
+  // Defensive cookie cleanup: if Supabase cannot revoke the session server-side,
+  // still clear any auth cookies so the browser exits the logged-in state.
+  for (const { name } of cookieStore.getAll()) {
+    if (name.includes("auth-token") && name.includes("sb-")) {
+      response.cookies.delete(name);
+    }
+  }
+
   return response;
 }
