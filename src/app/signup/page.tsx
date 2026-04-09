@@ -135,6 +135,7 @@ export default function SignupPage() {
           <p className="mt-2 text-sm text-[#6B6B6B]">Create your PinkPepper account.</p>
 
           {error && <p className="mt-4 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
+          {message && <p className="mt-4 rounded-xl border border-[#E8DADA] bg-[#FAF6F5] px-3 py-2 text-sm text-[#2B2B2B]">{message}</p>}
 
           {signupDone ? (
             <div className="mt-6 rounded-2xl border border-[#E8DADA] bg-[#FAF6F5] p-5 text-center">
