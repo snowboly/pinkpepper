@@ -8,6 +8,58 @@ import { getAuditPersona } from "@/lib/personas";
 
 export const dynamic = "force-dynamic";
 
+async function requestAuditStream(input: {
+  provider: "openai" | "groq";
+  apiKey: string;
+  model: string;
+  messages: Array<{ role: "system" | "user" | "assistant"; content: string }>;
+}) {
+  const { provider, apiKey, model, messages } = input;
+  const url =
+    provider === "openai"
+      ? "https://api.openai.com/v1/chat/completions"
+      : "https://api.groq.com/openai/v1/chat/completions";
+
+  let response: Response | null = null;
+  const maxRetries = provider === "groq" ? 3 : 2;
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    try {
+      response = await fetch(url, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          "Content-Type": "application/json",
+        },
+        signal: AbortSignal.timeout(30_000),
+        body: JSON.stringify({
+          model,
+          temperature: 0.0,
+          stream: true,
+          messages,
+        }),
+      });
+
+      if (response.ok || (response.status < 500 && response.status !== 429)) {
+        return response;
+      }
+
+      if (attempt < maxRetries - 1) {
+        const backoffMs = Math.pow(2, attempt) * 1000;
+        await new Promise((r) => setTimeout(r, backoffMs));
+      }
+    } catch (fetchErr) {
+      if (attempt < maxRetries - 1) {
+        const backoffMs = Math.pow(2, attempt) * 1000;
+        await new Promise((r) => setTimeout(r, backoffMs));
+      } else {
+        console.error(`${provider} API fetch failed after retries (audit):`, fetchErr);
+      }
+    }
+  }
+
+  return response;
+}
+
 export function buildVirtualAuditSystemPrompt(contextBlock: string, hasUserDocuments: boolean) {
   const auditPersona = getAuditPersona();
   const documentEvidenceInstruction = hasUserDocuments
@@ -71,9 +123,10 @@ export function buildVirtualAuditSystemPrompt(contextBlock: string, hasUserDocum
 
 export async function POST(request: Request) {
   const auditPersona = getAuditPersona();
+  const openaiKey = process.env.OPENAI_API_KEY;
   const groqKey = process.env.GROQ_API_KEY;
-  if (!groqKey) {
-    return Response.json({ error: "GROQ_API_KEY is not configured." }, { status: 500 });
+  if (!openaiKey && !groqKey) {
+    return Response.json({ error: "Neither OPENAI_API_KEY nor GROQ_API_KEY is configured." }, { status: 500 });
   }
 
   const supabase = await createSupabaseServer();
@@ -119,13 +172,23 @@ export async function POST(request: Request) {
   }
 
   let used = 0;
+  let auditorUsed = 0;
   try {
-    used = await countUsageSince({
-      supabase,
-      userId: user.id,
-      eventType: "chat_prompt",
-      sinceIso: utcDayStartIso(),
-    });
+    const dayStart = utcDayStartIso();
+    [used, auditorUsed] = await Promise.all([
+      countUsageSince({
+        supabase,
+        userId: user.id,
+        eventType: "chat_prompt",
+        sinceIso: dayStart,
+      }),
+      countUsageSince({
+        supabase,
+        userId: user.id,
+        eventType: "auditor_message",
+        sinceIso: dayStart,
+      }),
+    ]);
   } catch {
     return Response.json({ error: "Unable to read usage." }, { status: 500 });
   }
@@ -135,6 +198,16 @@ export async function POST(request: Request) {
       {
         error: "Daily message limit reached for your plan. Upgrade to continue today.",
         usage: { used, limit: caps.dailyMessages, tier },
+      },
+      { status: 402 }
+    );
+  }
+
+  if (!isAdmin && auditorUsed >= caps.dailyAuditorMessages) {
+    return Response.json(
+      {
+        error: "Daily Auditor limit reached for your plan. Switch to Consultant or come back tomorrow.",
+        usage: { used: auditorUsed, limit: caps.dailyAuditorMessages, tier, isAdmin, mode: "virtual_audit" },
       },
       { status: 402 }
     );
@@ -177,7 +250,7 @@ export async function POST(request: Request) {
     .limit(historyLimit);
 
   const history = (historyRows ?? []).reverse().map((row: { role: string; content: string }) => ({
-    role: row.role,
+    role: row.role as "user" | "assistant" | "system",
     content: row.content,
   }));
 
@@ -221,55 +294,44 @@ export async function POST(request: Request) {
 
   const systemPrompt = buildVirtualAuditSystemPrompt(contextBlock, userChunks.length > 0);
 
-  const model = process.env.GROQ_MODEL ?? "llama-3.3-70b-versatile";
+  const primaryModel = "gpt-4.1";
+  const fallbackModel = process.env.GROQ_MODEL ?? "llama-3.3-70b-versatile";
+  const messages = [
+    { role: "system" as const, content: systemPrompt },
+    ...history,
+    { role: "user" as const, content: message },
+  ];
 
-  const groqPayload = {
-    model,
-    temperature: 0.0,
-    stream: true,
-    messages: [
-      { role: "system", content: systemPrompt },
-      ...history,
-      { role: "user", content: message },
-    ],
-  };
-
+  let upstreamProvider: "openai" | "groq" = "openai";
+  let model = primaryModel;
   let groqRes: Response | null = null;
-  const maxRetries = 3;
-  for (let attempt = 0; attempt < maxRetries; attempt++) {
-    try {
-      groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${groqKey}`,
-          "Content-Type": "application/json",
-        },
-        signal: AbortSignal.timeout(30_000),
-        body: JSON.stringify(groqPayload),
-      });
 
-      if (groqRes.ok || (groqRes.status < 500 && groqRes.status !== 429)) {
-        break;
-      }
+  if (openaiKey) {
+    groqRes = await requestAuditStream({
+      provider: "openai",
+      apiKey: openaiKey,
+      model: primaryModel,
+      messages,
+    });
+  }
 
-      if (attempt < maxRetries - 1) {
-        const backoffMs = Math.pow(2, attempt) * 1000;
-        await new Promise((r) => setTimeout(r, backoffMs));
-      }
-    } catch (fetchErr) {
-      if (attempt < maxRetries - 1) {
-        const backoffMs = Math.pow(2, attempt) * 1000;
-        await new Promise((r) => setTimeout(r, backoffMs));
-      } else {
-        console.error("Groq API fetch failed after retries (audit):", fetchErr);
-        return Response.json({ error: "AI audit service temporarily unavailable." }, { status: 502 });
-      }
+  if ((!groqRes || !groqRes.ok) && groqKey) {
+    if (groqRes) {
+      console.error("OpenAI API error (audit):", await groqRes.text());
     }
+    upstreamProvider = "groq";
+    model = fallbackModel;
+    groqRes = await requestAuditStream({
+      provider: "groq",
+      apiKey: groqKey,
+      model: fallbackModel,
+      messages,
+    });
   }
 
   if (!groqRes || !groqRes.ok) {
     const details = groqRes ? await groqRes.text() : "No response";
-    console.error("Groq API error after retries (audit):", details);
+    console.error(`${upstreamProvider} API error after retries (audit):`, details);
     return Response.json({ error: "AI audit service temporarily unavailable." }, { status: 502 });
   }
 
@@ -353,12 +415,20 @@ export async function POST(request: Request) {
           metadata: { persona: { id: auditPersona.id, name: auditPersona.name, avatar: auditPersona.avatar }, mode: "virtual_audit" },
         });
 
-        await supabase.from("usage_events").insert({
-          user_id: user.id,
-          event_type: "chat_prompt",
-          event_count: 1,
-          metadata: { conversation_id: conversationId, model, rag_enabled: ragEnabled, mode: "virtual_audit" },
-        });
+        await supabase.from("usage_events").insert([
+          {
+            user_id: user.id,
+            event_type: "chat_prompt",
+            event_count: 1,
+            metadata: { conversation_id: conversationId, model, provider: upstreamProvider, rag_enabled: ragEnabled, mode: "virtual_audit" },
+          },
+          {
+            user_id: user.id,
+            event_type: "auditor_message",
+            event_count: 1,
+            metadata: { conversation_id: conversationId, model, provider: upstreamProvider, mode: "virtual_audit" },
+          },
+        ]);
 
         // Mark as completed only after DB persistence succeeds
         streamCompleted = true;
@@ -374,6 +444,10 @@ export async function POST(request: Request) {
                 limit: isAdmin ? null : caps.dailyMessages,
                 tier,
                 isAdmin,
+              },
+              auditorUsage: {
+                used: auditorUsed + 1,
+                limit: isAdmin ? null : caps.dailyAuditorMessages,
               },
             })}\n\n`
           )
@@ -405,18 +479,33 @@ export async function POST(request: Request) {
               },
             });
 
-            await supabase.from("usage_events").insert({
-              user_id: user.id,
-              event_type: "chat_prompt",
-              event_count: 1,
-              metadata: {
-                conversation_id: conversationId,
-                model,
-                rag_enabled: ragEnabled,
-                mode: "virtual_audit",
-                interrupted: true,
+            await supabase.from("usage_events").insert([
+              {
+                user_id: user.id,
+                event_type: "chat_prompt",
+                event_count: 1,
+                metadata: {
+                  conversation_id: conversationId,
+                  model,
+                  provider: upstreamProvider,
+                  rag_enabled: ragEnabled,
+                  mode: "virtual_audit",
+                  interrupted: true,
+                },
               },
-            });
+              {
+                user_id: user.id,
+                event_type: "auditor_message",
+                event_count: 1,
+                metadata: {
+                  conversation_id: conversationId,
+                  model,
+                  provider: upstreamProvider,
+                  mode: "virtual_audit",
+                  interrupted: true,
+                },
+              },
+            ]);
           } catch (saveErr) {
             console.error("[audit/stream] Failed to save interrupted message:", saveErr);
           }

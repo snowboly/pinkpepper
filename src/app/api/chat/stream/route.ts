@@ -39,8 +39,8 @@ function shouldPreferAuthoritativeSources(message: string, mode: "qa" | "documen
   );
 }
 
-const PRIMARY_CHAT_MODEL = "llama-3.3-70b-versatile";
-const FALLBACK_CHAT_MODEL = "gpt-4o-mini";
+const PRIMARY_CHAT_MODEL = "deepseek-chat";
+const FALLBACK_CHAT_MODEL = "llama-3.3-70b-versatile";
 const HIGH_RISK_OPENAI_MODEL = "gpt-4.1";
 
 type ChatRequestMessage = {
@@ -49,7 +49,7 @@ type ChatRequestMessage = {
 };
 
 type ChatStreamAttempt = {
-  provider: "groq" | "openai";
+  provider: "groq" | "openai" | "deepseek";
   model: string;
   response: Response;
 };
@@ -95,7 +95,7 @@ export function shouldUsePremiumExpertModel(input: {
   return expertUsed < dailyExpertAnswers;
 }
 
-export function isPremiumExpertResponse(upstream: { provider: "groq" | "openai"; model: string }) {
+export function isPremiumExpertResponse(upstream: { provider: "groq" | "openai" | "deepseek"; model: string }) {
   return upstream.provider === "openai" && upstream.model === HIGH_RISK_OPENAI_MODEL;
 }
 
@@ -106,7 +106,7 @@ export function resolveChatModels(
   if (options?.preferOpenAI) {
     return {
       primary: HIGH_RISK_OPENAI_MODEL,
-      fallback: modelOverride?.trim() || PRIMARY_CHAT_MODEL,
+      fallback: FALLBACK_CHAT_MODEL,
     };
   }
 
@@ -228,7 +228,7 @@ function shouldRetryStatus(status: number) {
 }
 
 async function requestStreamingCompletion(input: {
-  provider: "groq" | "openai";
+  provider: "groq" | "openai" | "deepseek";
   apiKey: string;
   model: string;
   temperature: number;
@@ -236,9 +236,12 @@ async function requestStreamingCompletion(input: {
   messages: ChatRequestMessage[];
 }) {
   const { provider, apiKey, model, temperature, maxTokens, messages } = input;
-  const url = provider === "groq"
-    ? "https://api.groq.com/openai/v1/chat/completions"
-    : "https://api.openai.com/v1/chat/completions";
+  const url =
+    provider === "groq"
+      ? "https://api.groq.com/openai/v1/chat/completions"
+      : provider === "deepseek"
+      ? "https://api.deepseek.com/chat/completions"
+      : "https://api.openai.com/v1/chat/completions";
   const maxRetries = provider === "groq" ? 3 : 2;
 
   let lastResponse: Response | null = null;
@@ -283,6 +286,7 @@ async function requestStreamingCompletion(input: {
 }
 
 async function requestChatStream(input: {
+  deepseekKey?: string;
   groqKey?: string;
   openaiKey?: string;
   modelOverride?: string | null;
@@ -291,7 +295,7 @@ async function requestChatStream(input: {
   maxTokens: number;
   messages: ChatRequestMessage[];
 }): Promise<ChatStreamAttempt | null> {
-  const { groqKey, openaiKey, modelOverride, preferOpenAI, temperature, maxTokens, messages } =
+  const { deepseekKey, groqKey, openaiKey, modelOverride, preferOpenAI, temperature, maxTokens, messages } =
     input;
   const models = resolveChatModels(modelOverride, { preferOpenAI });
 
@@ -311,6 +315,29 @@ async function requestChatStream(input: {
 
     if (openaiResponse) {
       console.error("[chat/stream] openai upstream error:", await openaiResponse.text());
+    }
+  }
+
+  if (deepseekKey && !preferOpenAI) {
+    const deepseekResponse = await requestStreamingCompletion({
+      provider: "deepseek",
+      apiKey: deepseekKey,
+      model: models.primary,
+      temperature,
+      maxTokens,
+      messages,
+    });
+
+    if (deepseekResponse?.ok) {
+      return {
+        provider: "deepseek",
+        model: models.primary,
+        response: deepseekResponse,
+      };
+    }
+
+    if (deepseekResponse) {
+      console.error("[chat/stream] deepseek upstream error:", await deepseekResponse.text());
     }
   }
 
@@ -337,37 +364,15 @@ async function requestChatStream(input: {
     }
   }
 
-  if (openaiKey && !preferOpenAI) {
-    const openaiResponse = await requestStreamingCompletion({
-      provider: "openai",
-      apiKey: openaiKey,
-      model: preferOpenAI ? models.primary : models.fallback,
-      temperature,
-      maxTokens,
-      messages,
-    });
-
-    if (openaiResponse?.ok) {
-      return {
-        provider: "openai",
-        model: preferOpenAI ? models.primary : models.fallback,
-        response: openaiResponse,
-      };
-    }
-
-    if (openaiResponse) {
-      console.error("[chat/stream] openai upstream error:", await openaiResponse.text());
-    }
-  }
-
   return null;
 }
 
 export async function POST(request: Request) {
+  const deepseekKey = process.env.DEEPSEEK_API_KEY;
   const groqKey = process.env.GROQ_API_KEY;
   const openaiKey = process.env.OPENAI_API_KEY;
-  if (!groqKey && !openaiKey) {
-    return Response.json({ error: "Neither GROQ_API_KEY nor OPENAI_API_KEY is configured." }, { status: 500 });
+  if (!deepseekKey && !groqKey && !openaiKey) {
+    return Response.json({ error: "No AI provider API key is configured." }, { status: 500 });
   }
 
   const supabase = await createSupabaseServer();
@@ -805,9 +810,10 @@ export async function POST(request: Request) {
 
   const maxTokens = isAdmin ? 8192 : caps.maxResponseTokens;
   const upstream = await requestChatStream({
+    deepseekKey: deepseekKey ?? undefined,
     groqKey: groqKey ?? undefined,
     openaiKey: openaiKey ?? undefined,
-    modelOverride: process.env.GROQ_MODEL,
+    modelOverride: process.env.DEEPSEEK_MODEL,
     preferOpenAI: usePremiumExpertModel,
     temperature,
     maxTokens,
