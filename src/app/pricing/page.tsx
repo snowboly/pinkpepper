@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { CheckCircle2, Mail } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import PricingActions from "@/components/pricing/PricingActions";
 import { faqs as sharedFaqs } from "@/data/faqs";
 import { createClient } from "@/utils/supabase/server";
@@ -15,15 +16,7 @@ export const metadata: Metadata = {
   },
 };
 
-const pricingFaqs = [
-  (() => {
-    const modeFaq = sharedFaqs.find((faq) => faq.id === "consultant-vs-auditor");
-    if (!modeFaq) {
-      throw new Error("Missing consultant-vs-auditor FAQ");
-    }
-
-    return { q: modeFaq.question, a: modeFaq.answer };
-  })(),
+const staticPricingFaqs = [
   {
     q: "How do the consultancy hours work on Pro?",
     a: "Pro includes 2 hours of human food safety consultancy each month. This is separate from the in-app Consultant and Auditor modes. Use it for review, guidance, and higher-risk support. Hours do not roll over.",
@@ -44,6 +37,8 @@ const pricingFaqs = [
 
 export default async function PricingPage() {
   const nonce = await getCspNonce();
+  const t = await getTranslations("pricing");
+
   let isLoggedIn = false;
   try {
     const supabase = await createClient();
@@ -54,6 +49,16 @@ export default async function PricingPage() {
   } catch {
     isLoggedIn = false;
   }
+
+  const modeFaq = sharedFaqs.find((faq) => faq.id === "consultant-vs-auditor");
+  if (!modeFaq) {
+    throw new Error("Missing consultant-vs-auditor FAQ");
+  }
+
+  const pricingFaqs = [
+    { q: modeFaq.question, a: modeFaq.answer },
+    ...staticPricingFaqs,
+  ];
 
   const ctaBase =
     "mt-8 block w-full rounded-xl py-3.5 text-center text-sm font-semibold transition-colors";
@@ -139,23 +144,23 @@ export default async function PricingPage() {
       <section className="py-16 md:py-20">
         <div className="pp-container max-w-4xl text-center">
           <h1 className="pp-display text-4xl font-black tracking-tight text-[#0F172A] md:text-5xl">
-            Save €18,000+/year on compliance costs.
+            {t("title")}
           </h1>
           <p className="mt-5 text-lg leading-relaxed text-[#475569]">
-            Start free. Upgrade when you need more daily capacity, downloadable templates, Auditor mode, or human food safety consultancy.
+            {t("description")}
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3 text-sm font-medium text-[#475569]">
             <Link href="/features" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
-              See services
+              {t("linkServices")}
             </Link>
             <Link href="/features/haccp-plan-generator" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
-              Review HACCP plan workflows
+              {t("linkHaccp")}
             </Link>
             <Link href="/resources/food-safety-document-checklist" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
-              Review the document checklist
+              {t("linkChecklist")}
             </Link>
             <Link href="/contact" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
-              Talk to us
+              {t("linkContact")}
             </Link>
           </div>
         </div>
@@ -165,123 +170,123 @@ export default async function PricingPage() {
         <div className="pp-container">
           <div className="mx-auto grid max-w-5xl gap-6 lg:grid-cols-3">
             <div className="flex flex-col rounded-3xl border border-[#E2E8F0] bg-[#FCFDFE] p-8">
-              <h2 className="text-xs font-semibold uppercase tracking-[0.18em] text-[#94A3B8]">Free</h2>
+              <h2 className="text-xs font-semibold uppercase tracking-[0.18em] text-[#94A3B8]">{t("freeTitle")}</h2>
               <p className="mt-4 min-h-[4.5rem] text-sm leading-relaxed text-[#64748B]">
-                Best for testing fit on live questions and everyday checks before you commit.
+                {t("freeDesc")}
               </p>
               <div className="mt-6 flex items-baseline gap-1">
                 <span className="text-5xl font-bold tracking-tight text-[#0F172A]"><span className="text-2xl align-super">EUR </span>0</span>
-                <span className="text-base text-[#94A3B8]">/month</span>
+                <span className="text-base text-[#94A3B8]">{t("monthly")}</span>
               </div>
               <div className="my-6 border-t border-[#F1F5F9]" />
               <ul className="flex-1 space-y-3.5 text-sm text-[#475569]">
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />
-                  Chat on web and mobile (app coming soon)
+                  {t("freeFeature1")}
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />
-                  Write, edit, and create food safety content
+                  {t("freeFeature2")}
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />
-                  Analyze text and images
+                  {t("freeFeature3")}
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />
-                  Access to curated knowledge base
+                  {t("freeFeature4")}
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />
-                  Everyday compliance guidance
+                  {t("freeFeature5")}
                 </li>
               </ul>
               <Link href="/signup" className={ctaNeutral}>
-                Get started free
+                {t("freeButton")}
               </Link>
             </div>
 
             <div className="relative flex flex-col rounded-3xl border-2 border-[#E11D48] bg-white p-8">
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-[#E11D48] px-4 py-1 text-xs font-bold text-white">Most Popular</div>
-              <h2 className="text-xs font-semibold uppercase tracking-[0.18em] text-[#94A3B8]">Plus</h2>
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-[#E11D48] px-4 py-1 text-xs font-bold text-white">{t("mostPopular")}</div>
+              <h2 className="text-xs font-semibold uppercase tracking-[0.18em] text-[#94A3B8]">{t("plusTitle")}</h2>
               <p className="mt-4 min-h-[4.5rem] text-sm leading-relaxed text-[#64748B]">
-                For teams that use PinkPepper daily for HACCP, SOPs, allergen records, and downloadable templates.
+                {t("plusDesc")}
               </p>
               <div className="mt-6 flex items-baseline gap-1">
                 <span className="text-5xl font-bold tracking-tight text-[#0F172A]"><span className="text-2xl align-super">EUR </span>19</span>
-                <span className="text-base text-[#94A3B8]">/month + VAT</span>
+                <span className="text-base text-[#94A3B8]">{t("monthlyVat")}</span>
               </div>
               <div className="my-6 border-t border-[#FCE7F3]" />
               <ul className="flex-1 space-y-3.5 text-sm text-[#475569]">
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  Everything in Free, plus
+                  {t("plusFeature1")}
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  Heavier day-to-day Consultant use
+                  {t("plusFeature2")}
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  Higher daily usage limits
+                  {t("plusFeature3")}
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  Unlimited saved conversations and projects
+                  {t("plusFeature4")}
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  Access to downloadable templates
+                  {t("plusFeature5")}
                 </li>
               </ul>
               <PricingActions
                 isLoggedIn={isLoggedIn}
                 plan="plus"
-                label="Choose Plus"
+                label={t("plusButton")}
                 className={ctaSecondary}
               />
             </div>
 
             <div className="flex flex-col rounded-3xl border border-[#F9A8D4] bg-[#FFF8FB] p-8">
-              <h2 className="text-xs font-semibold uppercase tracking-[0.18em] text-[#BE123C]">Pro</h2>
+              <h2 className="text-xs font-semibold uppercase tracking-[0.18em] text-[#BE123C]">{t("proTitle")}</h2>
               <p className="mt-4 min-h-[4.5rem] text-sm leading-relaxed text-[#64748B]">
-                For teams that want both AI modes, stronger audit workflows, and human food safety consultancy for higher-risk work.
+                {t("proDesc")}
               </p>
               <div className="mt-6 flex items-baseline gap-1">
                 <span className="text-5xl font-bold tracking-tight text-[#0F172A]"><span className="text-2xl align-super">EUR </span>99</span>
-                <span className="text-base text-[#94A3B8]">/month + VAT</span>
+                <span className="text-base text-[#94A3B8]">{t("monthlyVat")}</span>
               </div>
               <div className="my-6 border-t border-[#F1F5F9]" />
               <ul className="flex-1 space-y-3.5 text-sm text-[#475569]">
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  Everything in Plus, plus
+                  {t("proFeature1")}
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  More capacity for higher-risk work
+                  {t("proFeature2")}
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  Highest daily usage limits
+                  {t("proFeature3")}
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  Access to Auditor mode
+                  {t("proFeature4")}
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  2h/month of human food safety consultancy
+                  {t("proFeature5")}
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  Priority support
+                  {t("proFeature6")}
                 </li>
               </ul>
               <PricingActions
                 isLoggedIn={isLoggedIn}
                 plan="pro"
-                label="Choose Pro"
+                label={t("proButton")}
                 className={ctaPrimary}
               />
             </div>
@@ -291,7 +296,7 @@ export default async function PricingPage() {
 
       <section className="border-t border-[#F1F5F9] bg-[#F8FAFC] py-16">
         <div className="pp-container max-w-3xl">
-          <h2 className="mb-10 text-center text-2xl font-bold text-[#0F172A]">Frequently asked questions</h2>
+          <h2 className="mb-10 text-center text-2xl font-bold text-[#0F172A]">{t("faqTitle")}</h2>
           <div className="space-y-6">
             {pricingFaqs.map(({ q, a }) => (
               <div key={q} className="rounded-2xl border border-[#E2E8F0] bg-white p-6">
@@ -310,16 +315,14 @@ export default async function PricingPage() {
               <Mail className="h-5 w-5 text-[#E11D48]" />
             </div>
             <div className="flex-1">
-              <h3 className="font-semibold text-[#0F172A]">Need help choosing?</h3>
-              <p className="mt-1 text-sm text-[#64748B]">
-                If you are unsure which plan fits your workload, talk to us and we will help you decide.
-              </p>
+              <h3 className="font-semibold text-[#0F172A]">{t("helpTitle")}</h3>
+              <p className="mt-1 text-sm text-[#64748B]">{t("helpBody")}</p>
             </div>
             <Link
               href="/contact"
               className="flex-shrink-0 rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] px-5 py-2.5 text-sm font-semibold text-[#0F172A] transition-colors hover:bg-[#F1F5F9]"
             >
-              Contact us
+              {t("helpButton")}
             </Link>
           </div>
         </div>

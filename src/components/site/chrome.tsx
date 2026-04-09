@@ -1,25 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import { createClient } from "@/utils/supabase/server";
-
-type NavItem =
-  | { href: string; label: string }
-  | { label: string; children: { href: string; label: string }[] };
-
-const nav: NavItem[] = [
-  { href: "/features", label: "Services" },
-  {
-    label: "Resources",
-    children: [
-      { href: "/resources", label: "Free Templates" },
-      { href: "/articles", label: "Articles" },
-      { href: "/faqs", label: "FAQs" },
-    ],
-  },
-  { href: "/pricing", label: "Pricing" },
-  { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
-];
 
 function getUserInitials(email: string | null | undefined, fullName: string | null | undefined) {
   if (fullName) {
@@ -32,6 +14,8 @@ function getUserInitials(email: string | null | undefined, fullName: string | nu
 }
 
 export async function SiteHeader() {
+  const t = await getTranslations("nav");
+
   let user = null;
   try {
     const supabase = await createClient();
@@ -44,6 +28,24 @@ export async function SiteHeader() {
     (typeof user?.user_metadata?.full_name === "string" ? user.user_metadata.full_name : null) ??
     (typeof user?.user_metadata?.name === "string" ? user.user_metadata.name : null);
   const initials = getUserInitials(user?.email, fullName);
+
+  const nav = [
+    { href: "/features", label: t("services") },
+    {
+      label: t("resources"),
+      children: [
+        { href: "/resources", label: t("freeTemplates") },
+        { href: "/articles", label: t("articles") },
+        { href: "/faqs", label: t("faqs") },
+      ],
+    },
+    { href: "/pricing", label: t("pricing") },
+    { href: "/about", label: t("about") },
+    { href: "/contact", label: t("contact") },
+  ] as Array<
+    | { href: string; label: string }
+    | { label: string; children: { href: string; label: string }[] }
+  >;
 
   return (
     <header className="site-header sticky top-0 z-50 border-b border-[#E2E8F0]/80 bg-white/75 backdrop-blur-xl">
@@ -102,7 +104,7 @@ export async function SiteHeader() {
         <div className="flex items-center gap-3 md:gap-4">
           <details className="relative lg:hidden">
             <summary
-              aria-label="Open navigation menu"
+              aria-label={t("openNavMenu")}
               className="pp-interactive flex h-9 w-9 list-none items-center justify-center rounded-full border border-[#E2E8F0] bg-white text-[#0F172A] hover:border-[#CBD5E1] hover:bg-[#F8FAFC] md:h-10 md:w-10"
             >
               <span className="flex flex-col gap-1">
@@ -150,13 +152,13 @@ export async function SiteHeader() {
                       href="/login"
                       className="rounded-2xl px-3 py-3 text-sm font-medium text-[#0F172A] hover:bg-[#F8FAFC]"
                     >
-                      Log in
+                      {t("logIn")}
                     </Link>
                     <Link
                       href="/signup"
                       className="pp-interactive mt-2 rounded-2xl bg-[#E11D48] px-3 py-3 text-center text-sm font-semibold text-white hover:bg-[#BE123C]"
                     >
-                      Get started
+                      {t("getStarted")}
                     </Link>
                   </>
                 )}
@@ -166,7 +168,7 @@ export async function SiteHeader() {
           {user ? (
             <details className="group relative">
               <summary
-                aria-label="Open account menu"
+                aria-label={t("openAccountMenu")}
                 className="pp-interactive flex h-9 w-9 list-none items-center justify-center rounded-full border border-[#E2E8F0] bg-white text-xs font-bold tracking-wide text-[#0F172A] hover:border-[#CBD5E1] hover:bg-[#F8FAFC] md:h-10 md:w-10"
                 title={user.email ?? "Account"}
               >
@@ -177,20 +179,20 @@ export async function SiteHeader() {
                   href="/dashboard"
                   className="block rounded-xl px-3 py-2.5 text-sm font-medium text-[#0F172A] hover:bg-[#F8FAFC]"
                 >
-                  Dashboard
+                  {t("dashboard")}
                 </Link>
                 <Link
                   href="/dashboard/settings"
                   className="block rounded-xl px-3 py-2.5 text-sm font-medium text-[#0F172A] hover:bg-[#F8FAFC]"
                 >
-                  Settings
+                  {t("settings")}
                 </Link>
                 <form action="/api/auth/signout" method="POST">
                   <button
                     type="submit"
                     className="block w-full rounded-xl px-3 py-2.5 text-left text-sm font-medium text-[#E11D48] hover:bg-[#FFF1F2]"
                   >
-                    Log out
+                    {t("logOut")}
                   </button>
                 </form>
               </div>
@@ -201,13 +203,13 @@ export async function SiteHeader() {
                 href="/login"
                 className="hidden text-sm font-semibold text-[#64748B] transition-all duration-200 hover:text-[#0F172A] sm:block"
               >
-                Log in
+                {t("logIn")}
               </Link>
               <Link
                 href="/signup"
                 className="pp-interactive rounded-full bg-[#E11D48] px-4 py-2 text-sm font-semibold text-white hover:bg-[#BE123C] hover:shadow-lg hover:shadow-[#E11D48]/30 active:scale-[0.97] md:px-5 md:py-2.5"
               >
-                Get started
+                {t("getStarted")}
               </Link>
             </>
           )}
@@ -217,7 +219,10 @@ export async function SiteHeader() {
   );
 }
 
-export function SiteFooter() {
+export async function SiteFooter() {
+  const t = await getTranslations("nav");
+  const year = new Date().getFullYear();
+
   return (
     <footer className="site-footer border-t border-[#F1F5F9] bg-[linear-gradient(180deg,#fff_0%,#fff7f8_100%)] py-16">
       <div className="pp-container mb-12 grid gap-12 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1.5fr]">
@@ -232,7 +237,7 @@ export function SiteFooter() {
             />
           </Link>
           <p className="mt-4 text-sm leading-relaxed text-[#6B6B6B]">
-            AI food safety compliance software for EU and UK food businesses.
+            {t("footerTagline")}
           </p>
           <div className="mt-5 flex items-center gap-3">
             <a
@@ -249,41 +254,41 @@ export function SiteFooter() {
           </div>
         </div>
         <div>
-          <h4 className="mb-4 text-sm font-semibold text-[#1A1A1A]">Product</h4>
+          <h4 className="mb-4 text-sm font-semibold text-[#1A1A1A]">{t("footerProduct")}</h4>
           <ul className="space-y-3 text-sm text-[#6B6B6B]">
-            <li><Link href="/features" className="pp-shell-link">Services</Link></li>
-            <li><Link href="/use-cases" className="pp-shell-link">Use Cases</Link></li>
-            <li><Link href="/pricing" className="pp-shell-link">Pricing</Link></li>
-            <li><Link href="/about" className="pp-shell-link">About</Link></li>
-            <li><Link href="/login" className="pp-shell-link">Log In</Link></li>
-            <li><Link href="/signup" className="pp-shell-link">Create Account</Link></li>
+            <li><Link href="/features" className="pp-shell-link">{t("services")}</Link></li>
+            <li><Link href="/use-cases" className="pp-shell-link">{t("footerUseCases")}</Link></li>
+            <li><Link href="/pricing" className="pp-shell-link">{t("footerPricing")}</Link></li>
+            <li><Link href="/about" className="pp-shell-link">{t("footerAbout")}</Link></li>
+            <li><Link href="/login" className="pp-shell-link">{t("footerLogIn")}</Link></li>
+            <li><Link href="/signup" className="pp-shell-link">{t("footerCreateAccount")}</Link></li>
           </ul>
         </div>
         <div>
-          <h4 className="mb-4 text-sm font-semibold text-[#1A1A1A]">Resources</h4>
+          <h4 className="mb-4 text-sm font-semibold text-[#1A1A1A]">{t("footerResources")}</h4>
           <ul className="space-y-3 text-sm text-[#6B6B6B]">
-            <li><Link href="/resources" className="pp-shell-link">Free Templates</Link></li>
-            <li><Link href="/articles" className="pp-shell-link">Articles</Link></li>
-            <li><Link href="/faqs" className="pp-shell-link">FAQs</Link></li>
-            <li><Link href="/contact" className="pp-shell-link">Contact & Support</Link></li>
+            <li><Link href="/resources" className="pp-shell-link">{t("footerFreeTemplates")}</Link></li>
+            <li><Link href="/articles" className="pp-shell-link">{t("footerArticles")}</Link></li>
+            <li><Link href="/faqs" className="pp-shell-link">{t("footerFaqs")}</Link></li>
+            <li><Link href="/contact" className="pp-shell-link">{t("footerContactSupport")}</Link></li>
           </ul>
         </div>
         <div>
-          <h4 className="mb-4 text-sm font-semibold text-[#1A1A1A]">Security & Legal</h4>
+          <h4 className="mb-4 text-sm font-semibold text-[#1A1A1A]">{t("footerLegal")}</h4>
           <ul className="space-y-3 text-sm text-[#6B6B6B]">
-            <li><Link href="/security" className="pp-shell-link">Security</Link></li>
-            <li><Link href="/legal/terms" className="pp-shell-link">Terms of Service</Link></li>
-            <li><Link href="/legal/privacy" className="pp-shell-link">Privacy Policy</Link></li>
-            <li><Link href="/legal/cookies" className="pp-shell-link">Cookie Policy</Link></li>
-            <li><Link href="/legal/dpa" className="pp-shell-link">DPA</Link></li>
-            <li><Link href="/legal/acceptable-use" className="pp-shell-link">Acceptable Use</Link></li>
-            <li><Link href="/legal/refund" className="pp-shell-link">Refund Policy</Link></li>
+            <li><Link href="/security" className="pp-shell-link">{t("footerSecurity")}</Link></li>
+            <li><Link href="/legal/terms" className="pp-shell-link">{t("footerTerms")}</Link></li>
+            <li><Link href="/legal/privacy" className="pp-shell-link">{t("footerPrivacy")}</Link></li>
+            <li><Link href="/legal/cookies" className="pp-shell-link">{t("footerCookies")}</Link></li>
+            <li><Link href="/legal/dpa" className="pp-shell-link">{t("footerDpa")}</Link></li>
+            <li><Link href="/legal/acceptable-use" className="pp-shell-link">{t("footerAcceptableUse")}</Link></li>
+            <li><Link href="/legal/refund" className="pp-shell-link">{t("footerRefund")}</Link></li>
           </ul>
         </div>
       </div>
       <div className="pp-container border-t border-[#F1F5F9] pt-8">
         <div className="flex flex-col items-center justify-between gap-4 text-center text-sm text-[#9B9B9B] md:flex-row md:text-left">
-          <p>&copy; {new Date().getFullYear()} PinkPepper.io. All rights reserved.</p>
+          <p>{t("footerCopyright", { year })}</p>
         </div>
       </div>
     </footer>

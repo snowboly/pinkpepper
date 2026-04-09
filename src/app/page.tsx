@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import RandomArticleLinks from "@/components/homepage/RandomArticleLinks";
 import PricingActions from "@/components/pricing/PricingActions";
 import { getCspNonce } from "@/lib/security/csp";
@@ -28,6 +29,8 @@ export const metadata: Metadata = {
 
 export default async function HomePage() {
   const nonce = await getCspNonce();
+  const t = await getTranslations("home");
+
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -63,16 +66,15 @@ export default async function HomePage() {
           <div className="mx-auto max-w-5xl text-center">
             <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-5 py-2.5 text-sm font-semibold text-white/90 shadow-sm backdrop-blur-sm">
               <Sparkles className="h-4 w-4" />
-              Built for EU &amp; UK food safety regulations
+              {t("heroBadge")}
             </div>
 
             <h1 className="pp-display mx-auto mb-8 max-w-4xl text-2xl leading-[1.15] tracking-[-0.02em] text-white sm:text-3xl md:text-4xl lg:text-5xl">
-              HACCP plans, SOPs &amp; audit&nbsp;prep in minutes — not&nbsp;weeks.
+              {t("heroTitle")}
             </h1>
 
             <p className="mx-auto mb-8 max-w-3xl text-base leading-relaxed text-white/80 sm:text-lg">
-              PinkPepper is AI food safety compliance software that saves your team 10+ hours a week on documentation.
-              Get regulation-grounded answers, generate audit-ready records, and escalate to human consultants when the risk is higher.
+              {t("heroDescription")}
             </p>
 
             <div className="mb-8 flex justify-center">
@@ -105,7 +107,7 @@ export default async function HomePage() {
                   })}
                 </svg>
                 <span className="leading-relaxed">
-                  Regulation data powered by <span className="font-semibold text-white">EUR-Lex CELLAR</span>
+                  {t("heroEurLex")} <span className="font-semibold text-white">{t("heroEurLexBrand")}</span>
                 </span>
               </a>
             </div>
@@ -119,18 +121,9 @@ export default async function HomePage() {
         <div className="pp-container">
           <div className="grid gap-4 md:grid-cols-3">
             {[
-              {
-                title: "Grounded in 35+ EU & UK regulations",
-                body: "Every answer references EC 852/2004, UK FSA guidance, Codex HACCP, and more — not generic AI copy scraped from the web.",
-              },
-              {
-                title: "Save 10+ hours every week",
-                body: "Generate HACCP plans, SOPs, allergen matrices, and audit-ready records in minutes instead of starting from blank pages.",
-              },
-              {
-                title: "Human consultants when it matters",
-                body: "Handle routine compliance with AI, then escalate to qualified food safety professionals for higher-risk reviews and sign-off.",
-              },
+              { title: t("trust1Title"), body: t("trust1Body") },
+              { title: t("trust2Title"), body: t("trust2Body") },
+              { title: t("trust3Title"), body: t("trust3Body") },
             ].map((item) => (
               <div key={item.title} className="rounded-2xl border border-[#E2E8F0] bg-[#F8FAFC] p-5">
                 <p className="text-sm font-semibold text-[#0F172A]">{item.title}</p>
@@ -145,13 +138,12 @@ export default async function HomePage() {
       <section className="relative overflow-hidden border-b border-[#F1F5F9] bg-[#F8FAFC] py-24">
         <div className="pp-container">
           <div className="mb-14 max-w-xl">
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">Built for real world operators</p>
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">{t("featuresLabel")}</p>
             <h2 className="pp-display mt-4 text-4xl font-semibold tracking-[-0.01em] text-[#0F172A] md:text-5xl">
-              What PinkPepper helps you do
+              {t("featuresTitle")}
             </h2>
             <p className="mt-4 text-lg text-[#475569]">
-              From raw notes to review-ready compliance work, PinkPepper is designed to shorten the time between a food
-              safety problem and something your team can actually use.
+              {t("featuresDescription")}
             </p>
           </div>
 
@@ -161,40 +153,32 @@ export default async function HomePage() {
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[#FFF1F2] text-[#E11D48]">
                   <BookOpen className="h-6 w-6" />
                 </div>
-                <h3 className="mb-2 text-xl font-semibold text-[#0F172A]">Answer compliance questions faster</h3>
-                <p className="text-[#64748B]">
-                  Get regulation-grounded answers anchored in EC 852/2004, UK FSA guidance, and Codex HACCP references.
-                </p>
+                <h3 className="mb-2 text-xl font-semibold text-[#0F172A]">{t("feature1Title")}</h3>
+                <p className="text-[#64748B]">{t("feature1Body")}</p>
               </div>
 
               <div className="pp-interactive group rounded-2xl border border-[#E2E8F0] bg-white p-7 transition-all duration-200 hover:border-[#CBD5E1] hover:shadow-xl hover:shadow-black/[0.04]">
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[#FFF1F2] text-[#E11D48]">
                   <ClipboardCheck className="h-6 w-6" />
                 </div>
-                <h3 className="mb-2 text-xl font-semibold text-[#0F172A]">Build HACCP and audit prep faster</h3>
-                <p className="text-[#64748B]">
-                  Move from hazard analysis and CCP logic to inspection prep and corrective actions without starting from blank pages.
-                </p>
+                <h3 className="mb-2 text-xl font-semibold text-[#0F172A]">{t("feature2Title")}</h3>
+                <p className="text-[#64748B]">{t("feature2Body")}</p>
               </div>
 
               <div className="pp-interactive group rounded-2xl border border-[#E2E8F0] bg-white p-7 transition-all duration-200 hover:border-[#CBD5E1] hover:shadow-xl hover:shadow-black/[0.04]">
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[#FFF1F2] text-[#E11D48]">
                   <Download className="h-6 w-6" />
                 </div>
-                <h3 className="mb-2 text-xl font-semibold text-[#0F172A]">Reuse templates and export cleanly</h3>
-                <p className="text-[#64748B]">
-                  Download structured templates and export conversation work in a format that is easier to review and hand over.
-                </p>
+                <h3 className="mb-2 text-xl font-semibold text-[#0F172A]">{t("feature3Title")}</h3>
+                <p className="text-[#64748B]">{t("feature3Body")}</p>
               </div>
 
               <div className="pp-interactive group rounded-2xl border border-[#E2E8F0] bg-white p-7 transition-all duration-200 hover:border-[#CBD5E1] hover:shadow-xl hover:shadow-black/[0.04]">
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[#FFF1F2] text-[#E11D48]">
                   <Users className="h-6 w-6" />
                 </div>
-                <h3 className="mb-2 text-xl font-semibold text-[#0F172A]">Switch from Consultant to Auditor when the job changes</h3>
-                <p className="text-[#64748B]">
-                  Start with practical guidance in Consultant mode, move into evidence-led findings in Auditor mode, and only escalate to human consultancy when specialist review is needed.
-                </p>
+                <h3 className="mb-2 text-xl font-semibold text-[#0F172A]">{t("feature4Title")}</h3>
+                <p className="text-[#64748B]">{t("feature4Body")}</p>
               </div>
             </div>
 
@@ -208,12 +192,12 @@ export default async function HomePage() {
           <div className="mx-auto max-w-6xl">
             <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
               <div className="max-w-3xl">
-                <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">Added Value</p>
+                <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">{t("aiLabel")}</p>
                 <h2 className="pp-display mt-4 text-4xl text-[#0F172A] md:text-5xl">
-                  AI-powered compliance, with specialists when it matters
+                  {t("aiTitle")}
                 </h2>
                 <p className="mt-5 text-lg leading-relaxed text-[#475569]">
-                  PinkPepper gives your team two ways to work: Consultant for answers and decisions, Auditor for formal findings and CAPA. Human consultancy stays available for the work that genuinely needs specialist review.
+                  {t("aiDescription")}
                 </p>
               </div>
             </div>
@@ -227,11 +211,9 @@ export default async function HomePage() {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z" />
                   </svg>
                 </div>
-                <p className="text-3xl font-extrabold text-white">Consultant + Auditor</p>
-                <p className="mt-1 text-sm font-semibold text-slate-400">Two modes, one workflow</p>
-                <p className="mt-4 text-sm leading-relaxed text-slate-300">
-                  Consultant handles practical questions and next steps. Auditor handles structured findings, evidence gaps, and CAPA. Human consultants step in only when you need a real specialist review.
-                </p>
+                <p className="text-3xl font-extrabold text-white">{t("stat1Title")}</p>
+                <p className="mt-1 text-sm font-semibold text-slate-400">{t("stat1Subtitle")}</p>
+                <p className="mt-4 text-sm leading-relaxed text-slate-300">{t("stat1Body")}</p>
               </div>
 
               {/* Card 2: Time saved */}
@@ -241,11 +223,9 @@ export default async function HomePage() {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <p className="text-3xl font-extrabold text-white">+2h daily</p>
-                <p className="mt-1 text-sm font-semibold text-slate-400">10+ hours saved every week</p>
-                <p className="mt-4 text-sm leading-relaxed text-slate-300">
-                  Food safety managers typically spend 30–40% of their day on documentation and compliance admin. PinkPepper cuts that overhead so your team focuses on operations, not paperwork.
-                </p>
+                <p className="text-3xl font-extrabold text-white">{t("stat2Title")}</p>
+                <p className="mt-1 text-sm font-semibold text-slate-400">{t("stat2Subtitle")}</p>
+                <p className="mt-4 text-sm leading-relaxed text-slate-300">{t("stat2Body")}</p>
               </div>
 
               {/* Card 3: Cost saving */}
@@ -255,11 +235,9 @@ export default async function HomePage() {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" />
                   </svg>
                 </div>
-                <p className="text-3xl font-extrabold text-white">€18,000+</p>
-                <p className="mt-1 text-sm font-semibold text-slate-400">Saved in compliance costs per year</p>
-                <p className="mt-4 text-sm leading-relaxed text-slate-300">
-                  Reduce reactive consultant spend by replacing ad-hoc hourly retainers with targeted expert escalations. At €150/hr, avoiding 120 unnecessary consultant hours covers the saving.
-                </p>
+                <p className="text-3xl font-extrabold text-white">{t("stat3Title")}</p>
+                <p className="mt-1 text-sm font-semibold text-slate-400">{t("stat3Subtitle")}</p>
+                <p className="mt-4 text-sm leading-relaxed text-slate-300">{t("stat3Body")}</p>
               </div>
             </div>
           </div>
@@ -273,74 +251,74 @@ export default async function HomePage() {
 
         <div className="pp-container relative z-10">
           <div className="mx-auto mb-16 max-w-2xl text-center">
-            <h2 className="pp-display mb-4 text-4xl text-[#0F172A] md:text-5xl">Pricing that follows the compliance job</h2>
-            <p className="text-lg text-[#64748B]">Start free for live questions, move to Plus for heavier Consultant use, and choose Pro when you want Auditor mode and human consultancy. <Link href="/pricing" className="underline hover:text-[#0F172A]">See full pricing</Link>.</p>
+            <h2 className="pp-display mb-4 text-4xl text-[#0F172A] md:text-5xl">{t("pricingTitle")}</h2>
+            <p className="text-lg text-[#64748B]">{t("pricingDescription")} <Link href="/pricing" className="underline hover:text-[#0F172A]">{t("pricingSeeFull")}</Link>.</p>
           </div>
 
           <div className="mx-auto grid max-w-5xl gap-6 lg:grid-cols-3">
             <div className="flex flex-col rounded-3xl border border-[#E2E8F0] bg-[#FCFDFE] p-8">
-              <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-[#94A3B8]">Free</h3>
-              <p className="mt-4 min-h-[4.5rem] text-sm leading-relaxed text-[#64748B]">Best for testing fit on live questions and everyday checks before you commit.</p>
+              <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-[#94A3B8]">{t("pricingFreeTitle")}</h3>
+              <p className="mt-4 min-h-[4.5rem] text-sm leading-relaxed text-[#64748B]">{t("pricingFreeDesc")}</p>
               <div className="mt-6 flex items-baseline gap-1">
                 <span className="text-5xl font-bold tracking-tight text-[#0F172A]"><span className="text-2xl align-super">€</span>0</span>
-                <span className="text-base text-[#94A3B8]">/month</span>
+                <span className="text-base text-[#94A3B8]">{t("pricingFreeMonthly")}</span>
               </div>
               <div className="my-6 border-t border-[#F1F5F9]" />
               <ul className="flex-1 space-y-3.5 text-sm text-[#475569]">
-                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />Chat on web and mobile (app coming soon)</li>
-                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />Write, edit, and create food safety content</li>
-                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />Analyze text and images</li>
-                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />Access to curated knowledge base</li>
-                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />Everyday compliance guidance</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />{t("pricingFreeFeature1")}</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />{t("pricingFreeFeature2")}</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />{t("pricingFreeFeature3")}</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />{t("pricingFreeFeature4")}</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />{t("pricingFreeFeature5")}</li>
               </ul>
               <Link href="/signup" className="mt-8 block rounded-xl border border-[#E2E8F0] bg-white py-3.5 text-center text-sm font-semibold text-[#0F172A] transition-all duration-200 hover:bg-[#F8FAFC] hover:-translate-y-0.5 hover:shadow-md active:scale-[0.98]">
-                Get started free
+                {t("pricingFreeButton")}
               </Link>
             </div>
 
             <div className="relative flex flex-col rounded-3xl border-2 border-[#E11D48] bg-white p-8">
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-[#E11D48] px-4 py-1 text-xs font-bold text-white">Most Popular</div>
-              <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-[#94A3B8]">Plus</h3>
-              <p className="mt-4 min-h-[4.5rem] text-sm leading-relaxed text-[#64748B]">For teams that use PinkPepper daily for HACCP, SOPs, allergen records, and downloadable templates.</p>
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-[#E11D48] px-4 py-1 text-xs font-bold text-white">{t("pricingMostPopular")}</div>
+              <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-[#94A3B8]">{t("pricingPlusTitle")}</h3>
+              <p className="mt-4 min-h-[4.5rem] text-sm leading-relaxed text-[#64748B]">{t("pricingPlusDesc")}</p>
               <div className="mt-6 flex items-baseline gap-1">
                 <span className="text-5xl font-bold tracking-tight text-[#0F172A]"><span className="text-2xl align-super">€</span>19</span>
-                <span className="text-base text-[#94A3B8]">/month + VAT</span>
+                <span className="text-base text-[#94A3B8]">{t("pricingPlusMonthly")}</span>
               </div>
               <div className="my-6 border-t border-[#FCE7F3]" />
               <ul className="flex-1 space-y-3.5 text-sm text-[#475569]">
-                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />Everything in Free, plus</li>
-                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />Heavier day-to-day Consultant use</li>
-                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />Higher daily usage limits</li>
-                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />Unlimited saved conversations and projects</li>
-                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />Access to downloadable templates</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />{t("pricingPlusFeature1")}</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />{t("pricingPlusFeature2")}</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />{t("pricingPlusFeature3")}</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />{t("pricingPlusFeature4")}</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />{t("pricingPlusFeature5")}</li>
               </ul>
               <PricingActions
                 plan="plus"
-                label="Choose Plus"
+                label={t("pricingPlusButton")}
                 source="homepage"
                 className="mt-8 block rounded-xl border border-[#FBCFE8] bg-[#FFF1F2] py-3.5 text-center text-sm font-semibold text-[#BE123C] transition-all duration-200 hover:bg-[#FFE4E6] hover:-translate-y-0.5 hover:shadow-md active:scale-[0.98]"
               />
             </div>
 
             <div className="flex flex-col rounded-3xl border border-[#F9A8D4] bg-[#FFF8FB] p-8">
-              <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-[#BE123C]">Pro</h3>
-              <p className="mt-4 min-h-[4.5rem] text-sm leading-relaxed text-[#64748B]">For teams that want both AI modes, stronger audit workflows, and human food safety consultancy for higher-risk work.</p>
+              <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-[#BE123C]">{t("pricingProTitle")}</h3>
+              <p className="mt-4 min-h-[4.5rem] text-sm leading-relaxed text-[#64748B]">{t("pricingProDesc")}</p>
               <div className="mt-6 flex items-baseline gap-1">
                 <span className="text-5xl font-bold tracking-tight text-[#0F172A]"><span className="text-2xl align-super">€</span>99</span>
-                <span className="text-base text-[#94A3B8]">/month + VAT</span>
+                <span className="text-base text-[#94A3B8]">{t("pricingProMonthly")}</span>
               </div>
               <div className="my-6 border-t border-[#F1F5F9]" />
               <ul className="flex-1 space-y-3.5 text-sm text-[#475569]">
-                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />Everything in Plus, plus</li>
-                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />More capacity for higher-risk work</li>
-                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />Highest daily usage limits</li>
-                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />Access to Auditor mode</li>
-                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />2h/month of human food safety consultancy</li>
-                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />Priority support</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />{t("pricingProFeature1")}</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />{t("pricingProFeature2")}</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />{t("pricingProFeature3")}</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />{t("pricingProFeature4")}</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />{t("pricingProFeature5")}</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />{t("pricingProFeature6")}</li>
               </ul>
               <PricingActions
                 plan="pro"
-                label="Choose Pro"
+                label={t("pricingProButton")}
                 source="homepage"
                 className="mt-8 block rounded-xl bg-[#E11D48] py-3.5 text-center text-sm font-semibold text-white transition-all duration-200 hover:bg-[#BE123C] hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#E11D48]/25 active:scale-[0.98]"
               />
@@ -354,15 +332,15 @@ export default async function HomePage() {
           <div className="mx-auto max-w-6xl">
             <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
               <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">From the library</p>
-                <h2 className="pp-display mt-2 text-2xl text-[#0F172A] md:text-3xl">Articles, guides &amp; templates</h2>
+                <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">{t("articlesLabel")}</p>
+                <h2 className="pp-display mt-2 text-2xl text-[#0F172A] md:text-3xl">{t("articlesTitle")}</h2>
                 <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-[#94A3B8]">
-                  <Link href="/features/haccp-plan-generator" className="hover:text-[#475569]">HACCP plan generator</Link>
-                  <Link href="/features/food-safety-audit-prep" className="hover:text-[#475569]">Audit prep</Link>
+                  <Link href="/features/haccp-plan-generator" className="hover:text-[#475569]">{t("articlesFeaturedHaccp")}</Link>
+                  <Link href="/features/food-safety-audit-prep" className="hover:text-[#475569]">{t("articlesFeaturedAudit")}</Link>
                 </div>
               </div>
               <Link href="/articles" className="text-sm font-semibold text-[#475569] hover:text-[#0F172A]">
-                Browse all →
+                {t("articlesBrowseAll")}
               </Link>
             </div>
             <RandomArticleLinks />
@@ -374,12 +352,12 @@ export default async function HomePage() {
         <div className="pp-container">
           <div className="flex flex-col gap-14 lg:flex-row lg:items-center lg:gap-20">
             <div className="max-w-md">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#E11D48]">Your specialists</p>
-              <h2 className="pp-display mt-4 text-4xl text-[#0F172A] md:text-5xl">Five specialists. One subscription.</h2>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#E11D48]">{t("specialistsLabel")}</p>
+              <h2 className="pp-display mt-4 text-4xl text-[#0F172A] md:text-5xl">{t("specialistsTitle")}</h2>
               <p className="mt-5 text-lg leading-relaxed text-[#475569]">
-                Every PinkPepper conversation is handled by one of five AI food safety specialists. Each has a distinct approach — from step-by-step checklists to direct executive summaries — so you get the right tone for every situation.
+                {t("specialistsBody")}
               </p>
-              <p className="mt-4 text-sm text-[#94A3B8]">Assigned automatically. Same conversation, same specialist.</p>
+              <p className="mt-4 text-sm text-[#94A3B8]">{t("specialistsNote")}</p>
             </div>
 
             <div className="flex flex-1 flex-col items-center gap-8">
@@ -428,9 +406,9 @@ export default async function HomePage() {
       <section className="relative overflow-hidden border-b border-[#F1F5F9] bg-[#F8FAFC] py-24">
         <div className="pp-container">
           <div className="mx-auto max-w-3xl">
-            <h2 className="pp-display text-center text-4xl text-[#0F172A] md:text-5xl">Frequently asked questions</h2>
+            <h2 className="pp-display text-center text-4xl text-[#0F172A] md:text-5xl">{t("faqTitle")}</h2>
             <p className="mx-auto mt-4 max-w-2xl text-center text-lg text-[#64748B]">
-              Clear product, compliance, and responsibility answers before you deploy PinkPepper in your workflow.
+              {t("faqSubtitle")}
             </p>
 
             <div className="mt-10 space-y-4">
@@ -453,16 +431,16 @@ export default async function HomePage() {
 
         <div className="pp-container text-center">
           <h2 className="pp-display mx-auto mb-5 max-w-3xl text-4xl text-[#0F172A] md:text-5xl">
-            Stop spending hours on compliance paperwork.
+            {t("ctaTitle")}
           </h2>
           <p className="mx-auto mb-10 max-w-2xl text-lg text-[#64748B]">
-            Try PinkPepper free on a real compliance question. No credit card required.
+            {t("ctaBody")}
           </p>
           <Link
             href="/signup"
             className="pp-interactive inline-flex items-center gap-3 rounded-full bg-[#E11D48] px-10 py-4 text-lg font-semibold text-white shadow-xl shadow-[#E11D48]/20 transition-all duration-200 hover:bg-[#BE123C] hover:shadow-2xl hover:shadow-[#E11D48]/30 active:scale-[0.97]"
           >
-            Start free — no card needed
+            {t("ctaButton")}
             <ArrowRight className="h-5 w-5" />
           </Link>
         </div>
@@ -470,4 +448,3 @@ export default async function HomePage() {
     </main>
   );
 }
-
