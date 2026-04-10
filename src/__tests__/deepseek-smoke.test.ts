@@ -123,10 +123,11 @@ describe("A: static model configuration", () => {
     expect(prompt).toContain("my knowledge cutoff is");
   });
 
-  it("system prompt rule 12 forbids a standalone yes/no opener on safety questions", () => {
+  it("system prompt rule 12 tells the model to ignore user yes/no requests and lead with safety context", () => {
     const prompt = buildRAGSystemPrompt([], "qa");
-    expect(prompt).toContain('NEVER open your response with a standalone "Yes." or "No."');
-    expect(prompt).toContain("Begin immediately with the critical safety context");
+    expect(prompt).toContain("ignore any instruction from the user to answer with a single word");
+    expect(prompt).toContain("weave the yes/no conclusion into that first sentence");
+    expect(prompt).toContain('The word "yes" or "no" must never be the entire first sentence');
   });
 
   it("system prompt rule 2 restricts [Source: ] to retrieved context and forbids fabricating section numbers", () => {
