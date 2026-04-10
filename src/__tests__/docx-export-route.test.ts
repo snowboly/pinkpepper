@@ -97,6 +97,21 @@ describe("inline bold parsing", () => {
     expect(runs).toHaveLength(1);
     expect(runs[0]).toBeInstanceOf(TextRun);
   });
+
+  it("produces 2 runs for a leading-bold string (**bold** text), not 3", () => {
+    // Regression: filter-before-map dropped the leading empty segment and
+    // reindexed, so "bold" ended up at index 0 (even = not bold).
+    const runs = parseInlineBold("**bold** text", 22, "0F172A");
+    // Expect ["bold"(bold), " text"(normal)] — the leading empty segment is dropped
+    expect(runs).toHaveLength(2);
+    for (const run of runs) expect(run).toBeInstanceOf(TextRun);
+  });
+
+  it("produces correct run count for multiple bold segments", () => {
+    // "**first** and **second**" → ["first", " and ", "second"]
+    const runs = parseInlineBold("**first** and **second**", 22, "0F172A");
+    expect(runs).toHaveLength(3);
+  });
 });
 
 describe("content to DOCX elements parser", () => {

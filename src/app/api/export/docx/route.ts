@@ -124,18 +124,17 @@ function buildTranscriptTable(tableLines: string[]): Table {
 
 export function parseInlineBold(text: string, size: number, color: string): TextRun[] {
   const segments = text.split(/\*\*(.+?)\*\*/);
+  // Use the original split index for parity (odd = bold), then drop nulls.
+  // Filtering BEFORE the map would reindex and invert bold state for strings
+  // that start with **bold** (the leading empty segment would be removed,
+  // shifting every subsequent segment by one position).
   return segments
-    .filter((s) => s.length > 0)
-    .map(
-      (segment, i) =>
-        new TextRun({
-          text: segment,
-          bold: i % 2 === 1,
-          size,
-          font: CALIBRI,
-          color,
-        })
-    );
+    .map((segment, i) =>
+      segment.length === 0
+        ? null
+        : new TextRun({ text: segment, bold: i % 2 === 1, size, font: CALIBRI, color })
+    )
+    .filter((run): run is TextRun => run !== null);
 }
 
 // ---------------------------------------------------------------------------
