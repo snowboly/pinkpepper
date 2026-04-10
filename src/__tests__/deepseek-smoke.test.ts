@@ -123,11 +123,22 @@ describe("A: static model configuration", () => {
     expect(prompt).toContain("my knowledge cutoff is");
   });
 
-  it("system prompt rule 12 forbids bare yes/no on safety questions", () => {
+  it("system prompt rule 12 forbids a standalone yes/no opener on safety questions", () => {
     const prompt = buildRAGSystemPrompt([], "qa");
-    expect(prompt).toContain(
-      "NEVER answer a food safety question with a bare \"yes\" or \"no\""
-    );
+    expect(prompt).toContain('NEVER open your response with a standalone "Yes." or "No."');
+    expect(prompt).toContain("Begin immediately with the critical safety context");
+  });
+
+  it("system prompt rule 2 requires every source reference to be tagged", () => {
+    const prompt = buildRAGSystemPrompt([], "qa");
+    expect(prompt).toContain("every time you reference a regulation, standard, or guidance document");
+    expect(prompt).toContain("Do NOT mention a regulation or guidance in prose without tagging it");
+    expect(prompt).toContain("Do NOT invent document names, publication dates, or section numbers");
+  });
+
+  it("system prompt rule 8 forbids inventing documents when retrieval is empty", () => {
+    const prompt = buildRAGSystemPrompt([], "qa");
+    expect(prompt).toContain("do NOT invent or name any document, publication date, or regulatory text from memory");
   });
 
   it("system prompt rule 4 requires EU/UK distinction", () => {
