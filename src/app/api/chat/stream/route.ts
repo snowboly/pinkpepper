@@ -41,7 +41,6 @@ function shouldPreferAuthoritativeSources(message: string, mode: "qa" | "documen
 
 const PRIMARY_CHAT_MODEL = "deepseek-chat";
 const FALLBACK_CHAT_MODEL = "llama-3.3-70b-versatile";
-const HIGH_RISK_OPENAI_MODEL = "gpt-4.1";
 
 type ChatRequestMessage = {
   role: "system" | "user" | "assistant";
@@ -49,67 +48,14 @@ type ChatRequestMessage = {
 };
 
 type ChatStreamAttempt = {
-  provider: "groq" | "openai" | "deepseek";
+  provider: "groq" | "deepseek";
   model: string;
   response: Response;
 };
 
-export function shouldPreferOpenAIForQuery(
-  mode: "qa" | "document" | "audit",
-  message: string
-) {
-  if (mode === "audit") {
-    return true;
-  }
-
-  if (mode !== "qa") {
-    return false;
-  }
-
-  const intent = classifyQAIntent(message);
-  return (
-    intent === "legal_applicability" ||
-    intent === "label_requirements" ||
-    intent === "allergen_control" ||
-    intent === "inspection_readiness"
-  );
-}
-
-export function shouldUsePremiumExpertModel(input: {
-  preferOpenAI: boolean;
-  hasOpenAIKey: boolean;
-  isAdmin: boolean;
-  expertUsed: number;
-  dailyExpertAnswers: number;
-}) {
-  const { preferOpenAI, hasOpenAIKey, isAdmin, expertUsed, dailyExpertAnswers } = input;
-
-  if (!preferOpenAI || !hasOpenAIKey) {
-    return false;
-  }
-
-  if (isAdmin) {
-    return true;
-  }
-
-  return expertUsed < dailyExpertAnswers;
-}
-
-export function isPremiumExpertResponse(upstream: { provider: "groq" | "openai" | "deepseek"; model: string }) {
-  return upstream.provider === "openai" && upstream.model === HIGH_RISK_OPENAI_MODEL;
-}
-
 export function resolveChatModels(
-  modelOverride?: string | null,
-  options?: { preferOpenAI?: boolean }
+  modelOverride?: string | null
 ) {
-  if (options?.preferOpenAI) {
-    return {
-      primary: HIGH_RISK_OPENAI_MODEL,
-      fallback: FALLBACK_CHAT_MODEL,
-    };
-  }
-
   return {
     primary: modelOverride?.trim() || PRIMARY_CHAT_MODEL,
     fallback: FALLBACK_CHAT_MODEL,
@@ -228,7 +174,7 @@ function shouldRetryStatus(status: number) {
 }
 
 async function requestStreamingCompletion(input: {
-  provider: "groq" | "openai" | "deepseek";
+  provider: "groq" | "deepseek";
   apiKey: string;
   model: string;
   temperature: number;
@@ -239,9 +185,7 @@ async function requestStreamingCompletion(input: {
   const url =
     provider === "groq"
       ? "https://api.groq.com/openai/v1/chat/completions"
-      : provider === "deepseek"
-      ? "https://api.deepseek.com/chat/completions"
-      : "https://api.openai.com/v1/chat/completions";
+      : "https://api.deepseek.com/chat/completions";
   const maxRetries = provider === "groq" ? 3 : 2;
 
   let lastResponse: Response | null = null;
@@ -288,37 +232,15 @@ async function requestStreamingCompletion(input: {
 async function requestChatStream(input: {
   deepseekKey?: string;
   groqKey?: string;
-  openaiKey?: string;
   modelOverride?: string | null;
-  preferOpenAI?: boolean;
   temperature: number;
   maxTokens: number;
   messages: ChatRequestMessage[];
 }): Promise<ChatStreamAttempt | null> {
-  const { deepseekKey, groqKey, openaiKey, modelOverride, preferOpenAI, temperature, maxTokens, messages } =
-    input;
-  const models = resolveChatModels(modelOverride, { preferOpenAI });
+  const { deepseekKey, groqKey, modelOverride, temperature, maxTokens, messages } = input;
+  const models = resolveChatModels(modelOverride);
 
-  if (preferOpenAI && openaiKey) {
-    const openaiResponse = await requestStreamingCompletion({
-      provider: "openai",
-      apiKey: openaiKey,
-      model: models.primary,
-      temperature,
-      maxTokens,
-      messages,
-    });
-
-    if (openaiResponse?.ok) {
-      return { provider: "openai", model: models.primary, response: openaiResponse };
-    }
-
-    if (openaiResponse) {
-      console.error("[chat/stream] openai upstream error:", await openaiResponse.text());
-    }
-  }
-
-  if (deepseekKey && !preferOpenAI) {
+  if (deepseekKey) {
     const deepseekResponse = await requestStreamingCompletion({
       provider: "deepseek",
       apiKey: deepseekKey,
@@ -345,7 +267,7 @@ async function requestChatStream(input: {
     const groqResponse = await requestStreamingCompletion({
       provider: "groq",
       apiKey: groqKey,
-      model: preferOpenAI ? models.fallback : models.primary,
+      model: models.fallback,
       temperature,
       maxTokens,
       messages,
@@ -354,7 +276,7 @@ async function requestChatStream(input: {
     if (groqResponse?.ok) {
       return {
         provider: "groq",
-        model: preferOpenAI ? models.fallback : models.primary,
+        model: models.fallback,
         response: groqResponse,
       };
     }
@@ -370,9 +292,8 @@ async function requestChatStream(input: {
 export async function POST(request: Request) {
   const deepseekKey = process.env.DEEPSEEK_API_KEY;
   const groqKey = process.env.GROQ_API_KEY;
-  const openaiKey = process.env.OPENAI_API_KEY;
-  if (!deepseekKey && !groqKey && !openaiKey) {
-    return Response.json({ error: "No AI provider API key is configured." }, { status: 500 });
+  if (!deepseekKey && !groqKey) {
+    return Response.json({ error: "Neither DEEPSEEK_API_KEY nor GROQ_API_KEY is configured." }, { status: 500 });
   }
 
   const supabase = await createSupabaseServer();
@@ -433,26 +354,15 @@ export async function POST(request: Request) {
   }
 
   const mode = detectQueryMode(message);
-  const preferOpenAI = shouldPreferOpenAIForQuery(mode, message);
 
   let used = 0;
-  let expertUsed = 0;
   try {
-    const dayStart = utcDayStartIso();
-    [used, expertUsed] = await Promise.all([
-      countUsageSince({
-        supabase,
-        userId: user.id,
-        eventType: "chat_prompt",
-        sinceIso: dayStart,
-      }),
-      countUsageSince({
-        supabase,
-        userId: user.id,
-        eventType: "expert_answer",
-        sinceIso: dayStart,
-      }),
-    ]);
+    used = await countUsageSince({
+      supabase,
+      userId: user.id,
+      eventType: "chat_prompt",
+      sinceIso: utcDayStartIso(),
+    });
   } catch {
     return Response.json({ error: "Unable to read usage." }, { status: 500 });
   }
@@ -466,14 +376,6 @@ export async function POST(request: Request) {
       { status: 402 }
     );
   }
-
-  const usePremiumExpertModel = shouldUsePremiumExpertModel({
-    preferOpenAI,
-    hasOpenAIKey: Boolean(openaiKey),
-    isAdmin,
-    expertUsed,
-    dailyExpertAnswers: caps.dailyExpertAnswers,
-  });
 
   // Resolve or create conversation
   let conversationId = body.conversationId ?? null;
@@ -770,10 +672,10 @@ export async function POST(request: Request) {
       "ABOUT PINKPEPPER (answer when users ask about you, the product, or their plan):\n" +
       "PinkPepper is a food safety compliance SaaS that helps food businesses with HACCP plans, SOPs, audit preparation, allergen law, and EU/UK food safety compliance.\n" +
       "Subscription tiers:\n" +
-      `- Free: ${TIER_CAPABILITIES.free.dailyMessages} messages/day (${used} used today on the current ${tier} plan), ${TIER_CAPABILITIES.free.dailyImageUploads} image analysis/day, ${TIER_CAPABILITIES.free.maxSavedConversations} saved conversations with ${TIER_CAPABILITIES.free.conversationRetentionDays}-day retention, no conversation export, no template downloads, no virtual audit, no consultancy.\n` +
-      `- Plus: ${TIER_CAPABILITIES.plus.dailyMessages} messages/day, ${TIER_CAPABILITIES.plus.dailyImageUploads} image analyses/day, unlimited conversations, no conversation export, DOCX template downloads, no virtual audit.\n` +
-      `- Pro: ${TIER_CAPABILITIES.pro.dailyMessages} messages/day, ${TIER_CAPABILITIES.pro.dailyImageUploads} image analyses/day, unlimited conversations, DOCX conversation export, DOCX template downloads, Virtual Audit mode, 2 hours of food safety consultancy/month (${TIER_CAPABILITIES.pro.reviewTurnaround} response time).\n` +
-      "Features: AI chatbot (you), downloadable document templates, virtual audit mode, image analysis for food safety, DOCX conversation export, and food safety consultancy (Pro only).\n" +
+      `- Free: ${TIER_CAPABILITIES.free.dailyMessages} messages/day (${used} used today on the current ${tier} plan), ${TIER_CAPABILITIES.free.dailyImageUploads} image analysis/day, ${TIER_CAPABILITIES.free.maxSavedConversations} saved conversations with ${TIER_CAPABILITIES.free.conversationRetentionDays}-day retention, no conversation export, no template downloads, no Auditor mode, no consultancy.\n` +
+      `- Plus: ${TIER_CAPABILITIES.plus.dailyMessages} messages/day, ${TIER_CAPABILITIES.plus.dailyImageUploads} image analyses/day, unlimited conversations, no conversation export, DOCX template downloads, no Auditor mode.\n` +
+      `- Pro: ${TIER_CAPABILITIES.pro.dailyMessages} messages/day, ${TIER_CAPABILITIES.pro.dailyAuditorMessages} Auditor messages/day, ${TIER_CAPABILITIES.pro.dailyImageUploads} image analyses/day, unlimited conversations, DOCX conversation export, DOCX template downloads, Auditor mode, 2 hours of food safety consultancy/month (${TIER_CAPABILITIES.pro.reviewTurnaround} response time).\n` +
+      "Features: AI chatbot (you), downloadable document templates, Auditor mode, image analysis for food safety, DOCX conversation export, and food safety consultancy (Pro only).\n" +
       "If asked about upgrading, direct users to the upgrade option in the sidebar or settings.\n\n" +
       "Your expertise covers:\n" +
       "- HACCP principles (Codex Alimentarius CAC/RCP 1-1969, Rev. 2003)\n" +
@@ -794,7 +696,7 @@ export async function POST(request: Request) {
       `5. ${languageInstruction} Keep legal references (regulation names, article numbers) in their original form.\n` +
       `6. ${getExportGuidance(tier)}\n` +
       "7. NEVER answer a food safety question with a bare 'yes' or 'no' when the answer has health or legal implications. Always provide the critical safety context, temperature, or regulatory basis — even when the user explicitly asks for a one-word answer.\n" +
-      "8. If the user asks an audit-style question (e.g. 'audit my procedures', 'review our HACCP', 'assess our compliance') and the current mode is Q&A, suggest switching to Virtual Audit mode: 'For a formal audit with compliance ratings and corrective actions, try switching to **Virtual Audit** mode using the toggle above the chat.'\n" +
+      "8. If the user asks an audit-style question (e.g. 'audit my procedures', 'review our HACCP', 'assess our compliance') and the current mode is Q&A, suggest switching to Auditor mode: 'For a formal audit with compliance ratings and corrective actions, try switching to **Auditor** mode using the toggle above the chat.'\n" +
       `9. If the user is on the Pro plan and asks about requesting a consultancy review or speaking to a food safety consultant, direct them to use the **\"Send Document for Review\"** button in the sidebar. Do not just describe the service.\n` +
       "10. NEVER mention, reference, or hint at a model training cutoff date. Do NOT say phrases like 'my training data goes up to', 'my knowledge cutoff is', 'as of my last update', or similar. You are NOT a generic AI — you are a PinkPepper food safety specialist grounded in a curated, regularly updated library of EU and UK food safety regulations and official guidance. If asked how current your information is, explain this. For the very latest changes, recommend verifying with EUR-Lex, the FSA, FSS, or the relevant authority.\n" +
       "11. Only introduce yourself by name on the FIRST message of a conversation. If the conversation history already contains your introduction, do NOT repeat it. Jump straight into answering the question.\n" +
@@ -812,9 +714,7 @@ export async function POST(request: Request) {
   const upstream = await requestChatStream({
     deepseekKey: deepseekKey ?? undefined,
     groqKey: groqKey ?? undefined,
-    openaiKey: openaiKey ?? undefined,
     modelOverride: process.env.DEEPSEEK_MODEL,
-    preferOpenAI: usePremiumExpertModel,
     temperature,
     maxTokens,
     messages: [
@@ -936,7 +836,7 @@ export async function POST(request: Request) {
         // Record usage event
         const usageEvents: Array<{
           user_id: string;
-          event_type: "chat_prompt" | "expert_answer";
+          event_type: "chat_prompt";
           event_count: number;
           metadata: Record<string, string | boolean | null>;
         }> = [
@@ -953,20 +853,6 @@ export async function POST(request: Request) {
             },
           },
         ];
-
-        if (isPremiumExpertResponse(upstream)) {
-          usageEvents.push({
-            user_id: user.id,
-            event_type: "expert_answer",
-            event_count: 1,
-            metadata: {
-              conversation_id: conversationId,
-              model: upstream.model,
-              provider: upstream.provider,
-              mode,
-            },
-          });
-        }
 
         await supabase.from("usage_events").insert(usageEvents);
 
@@ -1014,7 +900,7 @@ export async function POST(request: Request) {
 
             const interruptedEvents: Array<{
               user_id: string;
-              event_type: "chat_prompt" | "expert_answer";
+              event_type: "chat_prompt";
               event_count: number;
               metadata: Record<string, string | boolean | null>;
             }> = [
@@ -1032,21 +918,6 @@ export async function POST(request: Request) {
                 },
               },
             ];
-
-            if (isPremiumExpertResponse(upstream)) {
-              interruptedEvents.push({
-                user_id: user.id,
-                event_type: "expert_answer",
-                event_count: 1,
-                metadata: {
-                  conversation_id: conversationId,
-                  model: upstream.model,
-                  provider: upstream.provider,
-                  mode,
-                  interrupted: true,
-                },
-              });
-            }
 
             await supabase.from("usage_events").insert(interruptedEvents);
           } catch (saveErr) {

@@ -67,7 +67,7 @@ export function buildVirtualAuditSystemPrompt(contextBlock: string, hasUserDocum
     : "- No user-uploaded documents are available for this turn. Do NOT say you reviewed uploaded records, uploaded files, or attached documents.\n";
 
   return (
-    `You are ${auditPersona.name}, PinkPepper's Virtual Auditor, acting as a strict senior food safety auditor conducting an interactive EU/UK food safety management system audit.\n\n` +
+    `You are ${auditPersona.name}, PinkPepper's Auditor, acting as a strict senior food safety auditor conducting an interactive EU/UK food safety management system audit.\n\n` +
     "INTERACTIVE AUDIT BEHAVIOUR (CRITICAL):\n" +
     `- Your name is ${auditPersona.name}. If you introduce yourself, use that name only.\n` +
     "- This mode is for formal audit assessment, findings, evidence gaps, and CAPA tracking. It is not the main consultant-advice mode.\n" +
@@ -108,7 +108,7 @@ export function buildVirtualAuditSystemPrompt(contextBlock: string, hasUserDocum
     "- Track which areas have been covered and which remain. Remind the user of progress only when it adds value.\n\n" +
     "FINAL REPORT (only when user asks for it):\n" +
     "When the user requests the final report, produce it in this format:\n" +
-    "## Virtual Audit Report\n" +
+    "## Auditor Report\n" +
     "### Scope\n" +
     "### Evidence Reviewed\n" +
     "### Findings\n" +
@@ -160,7 +160,7 @@ export async function POST(request: Request) {
 
   if (!isAdmin && tier !== "pro") {
     return Response.json(
-      { error: "Virtual Audit mode is available on Pro.", usage: { tier, isAdmin } },
+      { error: "Auditor mode is available on Pro.", usage: { tier, isAdmin } },
       { status: 402 }
     );
   }
@@ -209,7 +209,7 @@ export async function POST(request: Request) {
         error: "Daily Auditor limit reached for your plan. Switch to Consultant or come back tomorrow.",
         usage: { used: auditorUsed, limit: caps.dailyAuditorMessages, tier, isAdmin, mode: "virtual_audit" },
       },
-      { status: 402 }
+      { status: 429 }
     );
   }
 
