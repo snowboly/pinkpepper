@@ -74,3 +74,12 @@ describe("audit provider routing", () => {
     expect(routeSource).toContain('const fallbackModel = process.env.GROQ_MODEL ?? "llama-3.3-70b-versatile"');
   });
 });
+
+describe("audit source-tag hallucination guard", () => {
+  it("forbids [Source: ] tags for documents not in the retrieved context block", () => {
+    const prompt = buildVirtualAuditSystemPrompt("No regulation context found.", false);
+
+    expect(prompt).toContain("Do NOT use [Source: ] tags for documents that are not present in the RETRIEVED CONTEXT block");
+    expect(prompt).toContain("Never fabricate document names, template titles, or section numbers to attach a source tag to");
+  });
+});

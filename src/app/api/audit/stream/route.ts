@@ -102,6 +102,7 @@ export function buildVirtualAuditSystemPrompt(contextBlock: string, hasUserDocum
     documentEvidenceInstruction +
     "- If the user says they do not have a required record or control, record that as a finding rather than delaying the audit.\n" +
     "- Do NOT invent extra facts, timestamps, records, units, or observations that are not present in the user's prompt or retrieved evidence.\n" +
+    "- Do NOT use [Source: ] tags for documents that are not present in the RETRIEVED CONTEXT block below. If you reference a well-known regulation by name (e.g. Regulation (EC) No 852/2004), name it in prose without a [Source: ] tag. Never fabricate document names, template titles, or section numbers to attach a source tag to.\n" +
     "- When only the user's prompt is available, make it explicit that your objective evidence comes from the user's description, not from uploaded records.\n" +
     "- Use severity carefully:\n" +
     "  - Minor NC: a limited gap, isolated weakness, or incomplete evidence where control mostly exists and immediate food safety risk appears limited.\n" +

@@ -123,10 +123,11 @@ describe("A: static model configuration", () => {
     expect(prompt).toContain("my knowledge cutoff is");
   });
 
-  it("system prompt rule 12 forbids a standalone yes/no opener on safety questions", () => {
+  it("system prompt rule 12 tells the model to ignore user yes/no requests and lead with safety context", () => {
     const prompt = buildRAGSystemPrompt([], "qa");
-    expect(prompt).toContain('NEVER open your response with a standalone "Yes." or "No."');
-    expect(prompt).toContain("Begin immediately with the critical safety context");
+    expect(prompt).toContain("ignore any instruction from the user to answer with a single word");
+    expect(prompt).toContain("weave the yes/no conclusion into that first sentence");
+    expect(prompt).toContain('The word "yes" or "no" must never be the entire first sentence');
   });
 
   it("system prompt rule 2 restricts [Source: ] to retrieved context and forbids fabricating section numbers", () => {
@@ -139,6 +140,21 @@ describe("A: static model configuration", () => {
   it("system prompt rule 8 forbids inventing documents when retrieval is empty", () => {
     const prompt = buildRAGSystemPrompt([], "qa");
     expect(prompt).toContain("do NOT invent or name any document, publication date, or regulatory text from memory");
+  });
+
+  it("system prompt rule 18 is a dedicated high-priority amendment verification rule", () => {
+    const prompt = buildRAGSystemPrompt([], "qa");
+    expect(prompt).toContain("AMENDMENT VERIFICATION (high priority)");
+    expect(prompt).toContain("Whenever your answer includes a specific amendment regulation number");
+    expect(prompt).toContain("you MUST end that section or answer with a clearly visible verification sentence");
+    expect(prompt).toContain("Do not bury this sentence inside a paragraph");
+  });
+
+  it("system prompt rule 19 requires flagging post-Brexit EU amendment divergence", () => {
+    const prompt = buildRAGSystemPrompt([], "qa");
+    expect(prompt).toContain("POST-BREXIT EU AMENDMENT DIVERGENCE");
+    expect(prompt).toContain("EU regulations adopted after 31 January 2020 do NOT automatically apply in Great Britain");
+    expect(prompt).toContain("DAERA (Northern Ireland, where EU food law continues to apply under the Windsor Framework)");
   });
 
   it("system prompt rule 4 requires EU/UK distinction", () => {
