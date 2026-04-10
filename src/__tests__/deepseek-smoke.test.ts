@@ -129,11 +129,11 @@ describe("A: static model configuration", () => {
     expect(prompt).toContain("Begin immediately with the critical safety context");
   });
 
-  it("system prompt rule 2 requires every source reference to be tagged", () => {
+  it("system prompt rule 2 restricts [Source: ] to retrieved context and forbids fabricating section numbers", () => {
     const prompt = buildRAGSystemPrompt([], "qa");
-    expect(prompt).toContain("every time you reference a regulation, standard, or guidance document");
-    expect(prompt).toContain("Do NOT mention a regulation or guidance in prose without tagging it");
-    expect(prompt).toContain("Do NOT invent document names, publication dates, or section numbers");
+    expect(prompt).toContain("Use the [Source: ] tag exclusively for documents that appear in the CONTEXT DOCUMENTS section");
+    expect(prompt).toContain("do NOT attach a [Source: ] tag and do NOT fabricate a section number");
+    expect(prompt).toContain("[Source: ] signals to the user that you have the actual text in context");
   });
 
   it("system prompt rule 8 forbids inventing documents when retrieval is empty", () => {
@@ -280,8 +280,10 @@ Food businesses must ensure that food is stored at appropriate temperatures and 
       500
     );
 
-    // Should cite the regulation using Source format
-    expect(reply).toMatch(/\[Source:|Regulation.*852\/2004/i);
+    // Must contain at least one [Source: ] tag — the injected context chunk must be cited
+    expect(reply).toContain("[Source:");
+    // The cited regulation name must appear somewhere in the reply
+    expect(reply).toContain("852/2004");
   });
 
   it.skipIf(skip)("refuses to give a bare yes/no on a safety-critical question", async () => {
