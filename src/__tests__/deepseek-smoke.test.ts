@@ -142,11 +142,19 @@ describe("A: static model configuration", () => {
     expect(prompt).toContain("do NOT invent or name any document, publication date, or regulatory text from memory");
   });
 
-  it("system prompt rule 8 requires a verification sentence when citing amendment numbers or dates from memory", () => {
+  it("system prompt rule 18 is a dedicated high-priority amendment verification rule", () => {
     const prompt = buildRAGSystemPrompt([], "qa");
-    expect(prompt).toContain("whenever your answer includes a specific amendment regulation number");
-    expect(prompt).toContain("you MUST close that answer with an explicit verification sentence");
-    expect(prompt).toContain("if the amendment number or date is not in the retrieved chunks, say so and add the caveat");
+    expect(prompt).toContain("AMENDMENT VERIFICATION (high priority)");
+    expect(prompt).toContain("Whenever your answer includes a specific amendment regulation number");
+    expect(prompt).toContain("you MUST end that section or answer with a clearly visible verification sentence");
+    expect(prompt).toContain("Do not bury this sentence inside a paragraph");
+  });
+
+  it("system prompt rule 19 requires flagging post-Brexit EU amendment divergence", () => {
+    const prompt = buildRAGSystemPrompt([], "qa");
+    expect(prompt).toContain("POST-BREXIT EU AMENDMENT DIVERGENCE");
+    expect(prompt).toContain("EU regulations adopted after 31 January 2020 do NOT automatically apply in Great Britain");
+    expect(prompt).toContain("DAERA (Northern Ireland, where EU food law continues to apply under the Windsor Framework)");
   });
 
   it("system prompt rule 4 requires EU/UK distinction", () => {
