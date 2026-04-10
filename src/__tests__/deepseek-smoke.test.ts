@@ -142,6 +142,13 @@ describe("A: static model configuration", () => {
     expect(prompt).toContain("do NOT invent or name any document, publication date, or regulatory text from memory");
   });
 
+  it("system prompt rule 8 requires a verification sentence when citing amendment numbers or dates from memory", () => {
+    const prompt = buildRAGSystemPrompt([], "qa");
+    expect(prompt).toContain("whenever your answer includes a specific amendment regulation number");
+    expect(prompt).toContain("you MUST close that answer with an explicit verification sentence");
+    expect(prompt).toContain("if the amendment number or date is not in the retrieved chunks, say so and add the caveat");
+  });
+
   it("system prompt rule 4 requires EU/UK distinction", () => {
     const prompt = buildRAGSystemPrompt([], "qa");
     expect(prompt).toContain(
