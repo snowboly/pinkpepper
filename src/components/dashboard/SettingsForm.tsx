@@ -116,7 +116,14 @@ export default function SettingsForm({
     setDeleteLoading(true);
     setDeleteError(null);
     try {
-      const res = await fetch("/api/account/delete", { method: "DELETE" });
+      // The server requires both a typed confirmation phrase and the
+      // authenticated user's email address to destroy the account; this
+      // defeats one-click CSRF variants and accidental no-confirm wipes.
+      const res = await fetch("/api/account/delete", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ confirm: "DELETE MY ACCOUNT", email }),
+      });
       if (!res.ok) {
         const data = await res.json() as { error?: string };
         setDeleteError(data.error ?? t("unexpectedError"));
@@ -153,7 +160,7 @@ export default function SettingsForm({
       {!isAdmin && (
         <div className="rounded-2xl border border-[#E2E8F0] bg-white p-6">
           <h2 className="text-sm font-semibold text-[#0F172A] mb-1">{t("usage")}</h2>
-          <p className="text-xs text-[#94A3B8] mb-4">Resets daily · reviews reset monthly</p>
+          <p className="text-xs text-[#94A3B8] mb-4">Resets daily</p>
           <div className="space-y-4">
             <UsageBar
               label={t("dailyMessages")}

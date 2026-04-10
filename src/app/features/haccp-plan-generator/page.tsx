@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { FeatureTemplate } from "@/components/site/FeatureTemplate";
 
 export const metadata: Metadata = {
-  title: "HACCP Plan Generator | PinkPepper",
+  title: "HACCP Plan Generator — AI-Powered | PinkPepper",
   description:
-    "Generate HACCP plans for restaurants, cafes, caterers, and food manufacturers with AI structured for EU and UK food safety compliance.",
+    "Generate HACCP plans covering all 7 Codex principles in minutes. Built for EU & UK restaurants, cafes, caterers & manufacturers. Try free.",
   alternates: {
     canonical: "https://pinkpepper.io/features/haccp-plan-generator",
   },
@@ -13,6 +13,8 @@ export const metadata: Metadata = {
 export default function HaccpPlanGeneratorPage() {
   return (
     <FeatureTemplate
+      breadcrumbName="HACCP Plan Generator"
+      breadcrumbUrl="https://pinkpepper.io/features/haccp-plan-generator"
       eyebrow="HACCP software"
       title="Generate HACCP plans without starting from a blank document"
       description="PinkPepper helps food businesses turn operating details into structured HACCP plans with hazards, CCPs, monitoring steps, corrective actions, and recordkeeping logic that teams can review and export."
@@ -45,7 +47,7 @@ export default function HaccpPlanGeneratorPage() {
         },
       ]}
       heroImage={{
-        src: "https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?w=1200&q=80",
+        src: "https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?w=1200&q=60",
         alt: "Clean commercial kitchen ready for food preparation",
       }}
       relatedLinks={[
