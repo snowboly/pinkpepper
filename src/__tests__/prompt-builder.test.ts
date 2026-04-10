@@ -119,7 +119,7 @@ describe("buildRAGSystemPrompt", () => {
 
   it("instructs the model not to fill legal gaps from memory", () => {
     const prompt = buildRAGSystemPrompt([], "qa", "English", "2026-03-23");
-    expect(prompt).toContain("do not answer legal questions from model memory when retrieval is weak");
+    expect(prompt).toContain("do NOT invent or name any document, publication date, or regulatory text from memory");
   });
 });
 
