@@ -52,6 +52,8 @@ export type ChatWorkspaceProps = {
   initialTier: SubscriptionTier;
   initialUsage: number;
   usageLimit: number;
+  initialAuditorUsage: number;
+  auditorUsageLimit: number;
   dailyImageUploads: number;
   canExportPdf: boolean;
   canExportWord: boolean;

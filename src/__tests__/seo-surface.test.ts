@@ -362,6 +362,7 @@ describe("premium quality regressions", () => {
     const pricing = readPage("src/app/pricing/page.tsx");
 
     expect(pricing).toContain("Auditor mode");
+    expect(pricing).toContain("5 Auditor messages per day");
     expect(pricing).toContain("2h/month of human food safety consultancy");
     expect(pricing).toContain("separate from the in-app Consultant and Auditor modes");
     expect(pricing).not.toContain("Full PDF and DOCX export");

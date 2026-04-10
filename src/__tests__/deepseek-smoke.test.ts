@@ -16,10 +16,7 @@
 import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import path from "node:path";
-import {
-  resolveChatModels,
-  shouldPreferOpenAIForQuery,
-} from "@/app/api/chat/stream/route";
+import { resolveChatModels } from "@/app/api/chat/stream/route";
 import { buildRAGSystemPrompt, getExportGuidance } from "@/lib/rag/prompt-builder";
 import { buildVirtualAuditSystemPrompt } from "@/app/api/audit/stream/route";
 
@@ -93,27 +90,14 @@ describe("A: static model configuration", () => {
     expect(fallback).toBe("llama-3.3-70b-versatile");
   });
 
-  it("high-risk compliance questions still route to gpt-4.1, not deepseek", () => {
-    const { primary } = resolveChatModels(undefined, { preferOpenAI: true });
-    expect(primary).toBe("gpt-4.1");
-  });
-
-  it("legal applicability questions prefer OpenAI over deepseek", () => {
-    expect(
-      shouldPreferOpenAIForQuery(
-        "qa",
-        "I run a restaurant in London. What food safety regulations apply to me?"
-      )
-    ).toBe(true);
-  });
-
-  it("audit stream source uses deepseek-chat as default and llama as fallback", () => {
+  it("audit stream source uses gpt-4.1 as default and llama as fallback", () => {
     const src = readFileSync(
       path.join(process.cwd(), "src/app/api/audit/stream/route.ts"),
       "utf8"
     );
-    expect(src).toContain('const primaryModel = process.env.DEEPSEEK_MODEL ?? "deepseek-chat"');
+    expect(src).toContain('const primaryModel = "gpt-4.1"');
     expect(src).toContain('const fallbackModel = process.env.GROQ_MODEL ?? "llama-3.3-70b-versatile"');
+    expect(src).toContain('const openaiKey = process.env.OPENAI_API_KEY;');
   });
 
   it("system prompt rule 15 forbids training-cutoff language", () => {

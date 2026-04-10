@@ -21,6 +21,10 @@ type SettingsFormProps = {
   chatLanguage: string;
   usage: number;
   usageLimit: number | null;
+  auditorUsage: number;
+  auditorUsageLimit: number | null;
+  imageUsage: number;
+  imageUsageLimit: number | null;
 };
 
 export default function SettingsForm({
@@ -30,6 +34,10 @@ export default function SettingsForm({
   chatLanguage: initialChatLanguage,
   usage,
   usageLimit,
+  auditorUsage,
+  auditorUsageLimit,
+  imageUsage,
+  imageUsageLimit,
 }: SettingsFormProps) {
   const t = useTranslations("settings");
   const currentLocale = useLocale() as Locale;
@@ -159,6 +167,18 @@ export default function SettingsForm({
               used={usage}
               limit={usageLimit}
               color="#E11D48"
+            />
+            <UsageBar
+              label={t("dailyAuditorMessages")}
+              used={auditorUsage}
+              limit={auditorUsageLimit}
+              color="#2563EB"
+            />
+            <UsageBar
+              label={t("dailyImageAnalyses")}
+              used={imageUsage}
+              limit={imageUsageLimit}
+              color="#0F766E"
             />
           </div>
         </div>

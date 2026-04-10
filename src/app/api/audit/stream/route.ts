@@ -18,15 +18,15 @@ import { getAuditPersona } from "@/lib/personas";
 export const dynamic = "force-dynamic";
 
 async function requestAuditStream(input: {
-  provider: "deepseek" | "groq";
+  provider: "openai" | "groq";
   apiKey: string;
   model: string;
   messages: Array<{ role: "system" | "user" | "assistant"; content: string }>;
 }) {
   const { provider, apiKey, model, messages } = input;
   const url =
-    provider === "deepseek"
-      ? "https://api.deepseek.com/chat/completions"
+    provider === "openai"
+      ? "https://api.openai.com/v1/chat/completions"
       : "https://api.groq.com/openai/v1/chat/completions";
 
   let response: Response | null = null;
@@ -77,7 +77,7 @@ export function buildVirtualAuditSystemPrompt(contextBlock: string, hasUserDocum
 
   return (
     UNTRUSTED_CONTENT_SYSTEM_NOTE + "\n\n" +
-    `You are ${auditPersona.name}, PinkPepper's Virtual Auditor, acting as a strict senior food safety auditor conducting an interactive EU/UK food safety management system audit.\n\n` +
+    `You are ${auditPersona.name}, PinkPepper's Auditor, acting as a strict senior food safety auditor conducting an interactive EU/UK food safety management system audit.\n\n` +
     "INTERACTIVE AUDIT BEHAVIOUR (CRITICAL):\n" +
     `- Your name is ${auditPersona.name}. If you introduce yourself, use that name only.\n` +
     "- This mode is for formal audit assessment, findings, evidence gaps, and CAPA tracking. It is not the main consultant-advice mode.\n" +
@@ -119,7 +119,7 @@ export function buildVirtualAuditSystemPrompt(contextBlock: string, hasUserDocum
     "- Track which areas have been covered and which remain. Remind the user of progress only when it adds value.\n\n" +
     "FINAL REPORT (only when user asks for it):\n" +
     "When the user requests the final report, produce it in this format:\n" +
-    "## Virtual Audit Report\n" +
+    "## Auditor Report\n" +
     "### Scope\n" +
     "### Evidence Reviewed\n" +
     "### Findings\n" +
@@ -134,10 +134,10 @@ export function buildVirtualAuditSystemPrompt(contextBlock: string, hasUserDocum
 
 export async function POST(request: Request) {
   const auditPersona = getAuditPersona();
-  const deepseekKey = process.env.DEEPSEEK_API_KEY;
+  const openaiKey = process.env.OPENAI_API_KEY;
   const groqKey = process.env.GROQ_API_KEY;
-  if (!deepseekKey && !groqKey) {
-    return Response.json({ error: "Neither DEEPSEEK_API_KEY nor GROQ_API_KEY is configured." }, { status: 500 });
+  if (!openaiKey && !groqKey) {
+    return Response.json({ error: "Neither OPENAI_API_KEY nor GROQ_API_KEY is configured." }, { status: 500 });
   }
 
   const supabase = await createSupabaseServer();
@@ -171,7 +171,7 @@ export async function POST(request: Request) {
 
   if (!isAdmin && tier !== "pro") {
     return Response.json(
-      { error: "Virtual Audit mode is available on Pro.", usage: { tier, isAdmin } },
+      { error: "Auditor mode is available on Pro.", usage: { tier, isAdmin } },
       { status: 402 }
     );
   }
@@ -183,13 +183,23 @@ export async function POST(request: Request) {
   }
 
   let used = 0;
+  let auditorUsed = 0;
   try {
-    used = await countUsageSince({
-      supabase,
-      userId: user.id,
-      eventType: "chat_prompt",
-      sinceIso: utcDayStartIso(),
-    });
+    const dayStart = utcDayStartIso();
+    [used, auditorUsed] = await Promise.all([
+      countUsageSince({
+        supabase,
+        userId: user.id,
+        eventType: "chat_prompt",
+        sinceIso: dayStart,
+      }),
+      countUsageSince({
+        supabase,
+        userId: user.id,
+        eventType: "auditor_message",
+        sinceIso: dayStart,
+      }),
+    ]);
   } catch {
     return Response.json({ error: "Unable to read usage." }, { status: 500 });
   }
@@ -201,6 +211,16 @@ export async function POST(request: Request) {
         usage: { used, limit: caps.dailyMessages, tier },
       },
       { status: 402 }
+    );
+  }
+
+  if (!isAdmin && auditorUsed >= caps.dailyAuditorMessages) {
+    return Response.json(
+      {
+        error: "Daily Auditor limit reached for your plan. Switch to Consultant or come back tomorrow.",
+        usage: { used: auditorUsed, limit: caps.dailyAuditorMessages, tier, isAdmin, mode: "virtual_audit" },
+      },
+      { status: 429 }
     );
   }
 
@@ -286,7 +306,7 @@ export async function POST(request: Request) {
     ? [{ role: "user" as const, content: untrustedBlock }]
     : [];
 
-  const primaryModel = process.env.DEEPSEEK_MODEL ?? "deepseek-chat";
+  const primaryModel = "gpt-4.1";
   const fallbackModel = process.env.GROQ_MODEL ?? "llama-3.3-70b-versatile";
   const messages = [
     { role: "system" as const, content: systemPrompt },
@@ -295,14 +315,14 @@ export async function POST(request: Request) {
     { role: "user" as const, content: message },
   ];
 
-  let upstreamProvider: "deepseek" | "groq" = "deepseek";
+  let upstreamProvider: "openai" | "groq" = "openai";
   let model = primaryModel;
   let groqRes: Response | null = null;
 
-  if (deepseekKey) {
+  if (openaiKey) {
     groqRes = await requestAuditStream({
-      provider: "deepseek",
-      apiKey: deepseekKey,
+      provider: "openai",
+      apiKey: openaiKey,
       model: primaryModel,
       messages,
     });
@@ -310,7 +330,7 @@ export async function POST(request: Request) {
 
   if ((!groqRes || !groqRes.ok) && groqKey) {
     if (groqRes) {
-      console.error("DeepSeek API error (audit):", await groqRes.text());
+      console.error("OpenAI API error (audit):", await groqRes.text());
     }
     upstreamProvider = "groq";
     model = fallbackModel;
@@ -408,12 +428,20 @@ export async function POST(request: Request) {
           metadata: { persona: { id: auditPersona.id, name: auditPersona.name, avatar: auditPersona.avatar }, mode: "virtual_audit" },
         });
 
-        await supabase.from("usage_events").insert({
-          user_id: user.id,
-          event_type: "chat_prompt",
-          event_count: 1,
-          metadata: { conversation_id: conversationId, model, provider: upstreamProvider, rag_enabled: ragEnabled, mode: "virtual_audit" },
-        });
+        await supabase.from("usage_events").insert([
+          {
+            user_id: user.id,
+            event_type: "chat_prompt",
+            event_count: 1,
+            metadata: { conversation_id: conversationId, model, provider: upstreamProvider, rag_enabled: ragEnabled, mode: "virtual_audit" },
+          },
+          {
+            user_id: user.id,
+            event_type: "auditor_message",
+            event_count: 1,
+            metadata: { conversation_id: conversationId, model, provider: upstreamProvider, mode: "virtual_audit" },
+          },
+        ]);
 
         // Mark as completed only after DB persistence succeeds
         streamCompleted = true;
@@ -429,6 +457,10 @@ export async function POST(request: Request) {
                 limit: isAdmin ? null : caps.dailyMessages,
                 tier,
                 isAdmin,
+              },
+              auditorUsage: {
+                used: auditorUsed + 1,
+                limit: isAdmin ? null : caps.dailyAuditorMessages,
               },
             })}\n\n`
           )
@@ -460,19 +492,33 @@ export async function POST(request: Request) {
               },
             });
 
-            await supabase.from("usage_events").insert({
-              user_id: user.id,
-              event_type: "chat_prompt",
-              event_count: 1,
-              metadata: {
-                conversation_id: conversationId,
-                model,
-                provider: upstreamProvider,
-                rag_enabled: ragEnabled,
-                mode: "virtual_audit",
-                interrupted: true,
+            await supabase.from("usage_events").insert([
+              {
+                user_id: user.id,
+                event_type: "chat_prompt",
+                event_count: 1,
+                metadata: {
+                  conversation_id: conversationId,
+                  model,
+                  provider: upstreamProvider,
+                  rag_enabled: ragEnabled,
+                  mode: "virtual_audit",
+                  interrupted: true,
+                },
               },
-            });
+              {
+                user_id: user.id,
+                event_type: "auditor_message",
+                event_count: 1,
+                metadata: {
+                  conversation_id: conversationId,
+                  model,
+                  provider: upstreamProvider,
+                  mode: "virtual_audit",
+                  interrupted: true,
+                },
+              },
+            ]);
           } catch (saveErr) {
             console.error("[audit/stream] Failed to save interrupted message:", saveErr);
           }

@@ -327,8 +327,8 @@
         "body": "Upgrade for 25 messages per day on Plus or 100 per day on Pro."
       },
       "expert_limit": {
-        "heading": "You've reached your daily expert answer limit",
-        "body": "Expert answers use our premium compliance model. Upgrade for 3 expert answers per day on Plus or 8 per day on Pro."
+        "heading": "You've reached your daily Auditor limit",
+        "body": "Auditor mode is available on Pro with 5 Auditor messages per day."
       },
       "image_limit": {
         "heading": "Unlock photo analysis",
@@ -451,7 +451,7 @@
     "save": "Save",
     "usage": "Usage",
     "dailyMessages": "Messages today",
-    "dailyExpertAnswers": "Expert answers today",
+    "dailyAuditorMessages": "Auditor messages today",
     "dailyImageAnalyses": "Image analyses today",
     "dangerZone": "Danger Zone",
     "deleteAccount": "Delete account",
