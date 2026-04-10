@@ -9,7 +9,12 @@ import {
   PageNumber,
   Packer,
   Paragraph,
+  ShadingType,
+  Table,
+  TableCell,
+  TableRow,
   TextRun,
+  WidthType,
 } from "docx";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
@@ -26,8 +31,175 @@ import { exportLimiter, checkRateLimit } from "@/lib/ratelimit";
 
 export const dynamic = "force-dynamic";
 
+const CALIBRI = "Calibri";
 const BRAND_COLOR = "E11D48";
 const GRAY_COLOR = "64748B";
+const TEXT_COLOR = "0F172A";
+const ALT_ROW_COLOR = "F1F5F9";
+const BORDER_COLOR = "CBD5E1";
+
+const borderOpts = { style: BorderStyle.SINGLE, size: 4, color: BORDER_COLOR };
+
+// ---------------------------------------------------------------------------
+// Helpers: markdown table detection and rendering
+// ---------------------------------------------------------------------------
+
+export function isTableLine(line: string): boolean {
+  return /^\|.+\|$/.test(line.trim());
+}
+
+export function isSeparatorLine(line: string): boolean {
+  return /^\|[\s\-:|]+\|$/.test(line.trim());
+}
+
+export function splitTableCells(line: string): string[] {
+  return line
+    .trim()
+    .replace(/^\|/, "")
+    .replace(/\|$/, "")
+    .split("|")
+    .map((cell) => cell.trim());
+}
+
+function buildTranscriptTable(tableLines: string[]): Table {
+  const headerCells = splitTableCells(tableLines[0]);
+  const dataRows = tableLines.slice(2); // skip header row and separator row
+
+  const headerRow = new TableRow({
+    tableHeader: true,
+    children: headerCells.map(
+      (cell) =>
+        new TableCell({
+          children: [
+            new Paragraph({
+              alignment: AlignmentType.CENTER,
+              children: [
+                new TextRun({ text: cell, bold: true, color: "FFFFFF", size: 18, font: CALIBRI }),
+              ],
+            }),
+          ],
+          shading: { type: ShadingType.SOLID, color: BRAND_COLOR },
+        })
+    ),
+  });
+
+  const bodyRows = dataRows.map((rowLine, ri) => {
+    const cells = splitTableCells(rowLine);
+    // Pad if this row has fewer cells than the header
+    while (cells.length < headerCells.length) cells.push("");
+
+    return new TableRow({
+      children: cells.slice(0, headerCells.length).map(
+        (cell) =>
+          new TableCell({
+            children: [
+              new Paragraph({
+                children: parseInlineBold(cell, 18, TEXT_COLOR),
+              }),
+            ],
+            shading:
+              ri % 2 === 1 ? { type: ShadingType.SOLID, color: ALT_ROW_COLOR } : undefined,
+          })
+      ),
+    });
+  });
+
+  return new Table({
+    width: { size: 100, type: WidthType.PERCENTAGE },
+    borders: {
+      top: borderOpts,
+      bottom: borderOpts,
+      left: borderOpts,
+      right: borderOpts,
+      insideHorizontal: borderOpts,
+      insideVertical: borderOpts,
+    },
+    rows: [headerRow, ...bodyRows],
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Helpers: inline markdown bold (**text**) → TextRun[]
+// ---------------------------------------------------------------------------
+
+export function parseInlineBold(text: string, size: number, color: string): TextRun[] {
+  const segments = text.split(/\*\*(.+?)\*\*/);
+  return segments
+    .filter((s) => s.length > 0)
+    .map(
+      (segment, i) =>
+        new TextRun({
+          text: segment,
+          bold: i % 2 === 1,
+          size,
+          font: CALIBRI,
+          color,
+        })
+    );
+}
+
+// ---------------------------------------------------------------------------
+// Main content parser: splits a message string into Paragraph and Table nodes
+// ---------------------------------------------------------------------------
+
+export function parseContentToDocxElements(content: string): (Paragraph | Table)[] {
+  const lines = content.replace(/\r\n/g, "\n").split("\n");
+  const elements: (Paragraph | Table)[] = [];
+  let i = 0;
+
+  while (i < lines.length) {
+    const line = lines[i];
+
+    // Skip blank lines
+    if (line.trim().length === 0) {
+      i++;
+      continue;
+    }
+
+    // Markdown table block: collect consecutive table lines
+    if (isTableLine(line)) {
+      const tableLines: string[] = [line];
+      i++;
+      while (i < lines.length && isTableLine(lines[i])) {
+        tableLines.push(lines[i]);
+        i++;
+      }
+
+      // Valid table: header + separator + at least one data row
+      if (tableLines.length >= 3 && isSeparatorLine(tableLines[1])) {
+        elements.push(buildTranscriptTable(tableLines));
+        // Add a small spacer paragraph after the table
+        elements.push(new Paragraph({ children: [], spacing: { after: 160 } }));
+      } else {
+        // Not a valid table — render as plain text
+        for (const tl of tableLines) {
+          elements.push(
+            new Paragraph({
+              children: parseInlineBold(tl, 22, TEXT_COLOR),
+              spacing: { after: 120 },
+            })
+          );
+        }
+      }
+      continue;
+    }
+
+    // Regular text line (with inline bold support)
+    elements.push(
+      new Paragraph({
+        children: parseInlineBold(line, 22, TEXT_COLOR),
+        spacing: { after: 120 },
+      })
+    );
+    i++;
+  }
+
+  return elements;
+}
+
+// ---------------------------------------------------------------------------
+// Route helpers
+// ---------------------------------------------------------------------------
 
 export function getStructuredGeneratedDocument(
   messages: Array<{
@@ -55,12 +227,12 @@ function buildHeaderItems() {
       const logoBuffer = await readFile(logoPath);
       return [
         new ImageRun({ data: logoBuffer, transformation: { width: 120, height: 32 }, type: "png" }),
-        new TextRun({ text: "  |  Food Safety Compliance", color: GRAY_COLOR, size: 16 }),
+        new TextRun({ text: "  |  Food Safety Compliance", color: GRAY_COLOR, size: 16, font: CALIBRI }),
       ];
     } catch {
       return [
-        new TextRun({ text: "PinkPepper", bold: true, color: BRAND_COLOR, size: 20 }),
-        new TextRun({ text: "  |  Food Safety Compliance", color: GRAY_COLOR, size: 16 }),
+        new TextRun({ text: "PinkPepper", bold: true, color: BRAND_COLOR, size: 20, font: CALIBRI }),
+        new TextRun({ text: "  |  Food Safety Compliance", color: GRAY_COLOR, size: 16, font: CALIBRI }),
       ];
     }
   };
@@ -77,6 +249,10 @@ function formatTimestamp(value: string | null) {
     minute: "2-digit",
   });
 }
+
+// ---------------------------------------------------------------------------
+// POST handler
+// ---------------------------------------------------------------------------
 
 export async function POST(request: Request) {
   try {
@@ -114,27 +290,18 @@ export async function POST(request: Request) {
       const transcriptParagraphs = docData.messages.flatMap((message) => {
         const speaker = message.role === "assistant" ? "PinkPepper" : "You";
         const timestamp = formatTimestamp(message.createdAt);
-        const contentParagraphs = message.content
-          .replace(/\r\n/g, "\n")
-          .split("\n")
-          .filter((line) => line.trim().length > 0)
-          .map(
-            (line) =>
-              new Paragraph({
-                children: [new TextRun({ text: line, size: 22 })],
-                spacing: { after: 120 },
-              })
-          );
 
         return [
           new Paragraph({
             spacing: { before: 240, after: 100 },
             children: [
-              new TextRun({ text: speaker, bold: true, color: BRAND_COLOR, size: 24 }),
-              ...(timestamp ? [new TextRun({ text: `  -  ${timestamp}`, color: GRAY_COLOR, size: 18 })] : []),
+              new TextRun({ text: speaker, bold: true, color: BRAND_COLOR, size: 24, font: CALIBRI }),
+              ...(timestamp
+                ? [new TextRun({ text: `  -  ${timestamp}`, color: GRAY_COLOR, size: 18, font: CALIBRI })]
+                : []),
             ],
           }),
-          ...contentParagraphs,
+          ...parseContentToDocxElements(message.content),
         ];
       });
 
@@ -159,10 +326,10 @@ export async function POST(request: Request) {
                     alignment: AlignmentType.CENTER,
                     border: { top: { style: BorderStyle.SINGLE, size: 1, color: "E2E8F0", space: 4 } },
                     children: [
-                      new TextRun({ text: "Generated by PinkPepper - Conversation transcript - Page ", size: 16, color: GRAY_COLOR }),
-                      new TextRun({ children: [PageNumber.CURRENT], size: 16, color: GRAY_COLOR }),
-                      new TextRun({ text: " of ", size: 16, color: GRAY_COLOR }),
-                      new TextRun({ children: [PageNumber.TOTAL_PAGES], size: 16, color: GRAY_COLOR }),
+                      new TextRun({ text: "Generated by PinkPepper - Conversation transcript - Page ", size: 16, color: GRAY_COLOR, font: CALIBRI }),
+                      new TextRun({ children: [PageNumber.CURRENT], size: 16, color: GRAY_COLOR, font: CALIBRI }),
+                      new TextRun({ text: " of ", size: 16, color: GRAY_COLOR, font: CALIBRI }),
+                      new TextRun({ children: [PageNumber.TOTAL_PAGES], size: 16, color: GRAY_COLOR, font: CALIBRI }),
                     ],
                   }),
                 ],
@@ -171,10 +338,16 @@ export async function POST(request: Request) {
             children: [
               new Paragraph({
                 heading: HeadingLevel.HEADING_1,
-                children: [new TextRun({ text: docData.conversationTitle, bold: true, color: BRAND_COLOR, size: 48 })],
+                children: [
+                  new TextRun({ text: docData.conversationTitle, bold: true, color: BRAND_COLOR, size: 48, font: CALIBRI }),
+                ],
                 spacing: { after: 200 },
               }),
-              new Paragraph({ children: [new TextRun(`Exported: ${new Date().toISOString()}`)] }),
+              new Paragraph({
+                children: [
+                  new TextRun({ text: `Exported: ${new Date().toISOString()}`, size: 20, font: CALIBRI, color: GRAY_COLOR }),
+                ],
+              }),
               new Paragraph({
                 children: [
                   new TextRun({
@@ -182,6 +355,7 @@ export async function POST(request: Request) {
                     italics: true,
                     color: GRAY_COLOR,
                     size: 18,
+                    font: CALIBRI,
                   }),
                 ],
                 spacing: { after: 240 },
