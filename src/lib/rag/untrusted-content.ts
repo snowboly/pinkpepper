@@ -101,7 +101,6 @@ export function sanitizeUntrustedText(input: string): string {
   out = out.replace(ROLE_MARKER_PATTERN, "$1$2\u200b:");
 
   // 3. Collapse NUL bytes and exotic control chars (keep \n \r \t).
-  // eslint-disable-next-line no-control-regex
   out = out.replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/g, " ");
 
   // 4. Cap length so a single chunk cannot dominate the context window.
@@ -122,7 +121,6 @@ export function sanitizeUntrustedFilename(name: string | null | undefined): stri
   // Drop any path components — filenames should never contain slashes.
   const base = name.split(/[\\/]/).pop() ?? "document";
   const cleaned = base
-    // eslint-disable-next-line no-control-regex
     .replace(/[\u0000-\u001f\u007f<>[\]{}"`|]/g, "_")
     .replace(/\s+/g, " ")
     .trim();
