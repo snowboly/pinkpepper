@@ -1,0 +1,150 @@
+PINKPEPPER MOCK DOCUMENT
+German Soup Manufacturer - Release Control Review
+Document type: Pre-release change-control and label review pack
+Site: NordKessel Suppen GmbH
+Country: Germany
+Product: Creamy Vegetable Soup
+Date: 2026-04-05
+
+==================================================
+1. RECIPE CHANGE SUMMARY
+==================================================
+
+Previous recipe status:
+- No milk added ingredient
+- No celery added ingredient
+
+New recipe change approved by Product Development on 2026-04-02:
+- Add cream
+- Add celery puree
+- Remove sunflower oil
+
+Product impact note:
+- Texture richer
+- Allergen profile changed
+- Nutrition panel requires recalculation
+
+Open points:
+- Label text update in progress
+- Final artwork not yet signed by QA
+
+==================================================
+2. INGREDIENT / ALLERGEN CHANGE NOTE
+==================================================
+
+New intentional ingredients introduced:
+- Cream (milk)
+- Celery puree
+
+Declared allergen impact:
+- Milk: YES
+- Celery: YES
+
+Cross-functional review:
+- Technical: signed
+- QA: pending
+- Packaging: pending
+
+Comment:
+"Matrix update to be completed before first release."
+
+==================================================
+3. CURRENT ALLERGEN MATRIX EXTRACT
+==================================================
+
+Product: Creamy Vegetable Soup
+Version shown in matrix: V4
+Matrix last updated: 2026-03-18
+
+Allergen status shown:
+- Cereals containing gluten: No
+- Milk: No
+- Celery: No
+- Mustard: No
+- Soy: No
+
+Note at bottom of matrix:
+"To be reviewed at next monthly QA meeting."
+
+==================================================
+4. PACKAGING / LABEL STATUS
+==================================================
+
+Packaging on line at start of shift:
+- 1,200 printed sleeves marked "Creamy Vegetable Soup"
+- Current printed ingredient statement does NOT include milk
+- Current printed ingredient statement does NOT include celery
+
+Line leader note:
+"Old sleeves still beside filler. New print run expected this afternoon."
+
+Temporary instruction:
+"Do not start packing until QA confirms."
+
+Observed line status at 08:10:
+- Sleeves present on line
+- Product scheduled for packing at 09:00
+
+==================================================
+5. ARTWORK APPROVAL RECORD
+==================================================
+
+Artwork file:
+- CVS_Label_V5_DE.pdf
+
+Required approvals:
+- Regulatory: signed
+- Packaging: signed
+- QA final approval: NOT SIGNED
+
+Open comments:
+- Check allergen emphasis in ingredients list
+- Confirm revised nutrition values
+- Confirm QUID for cream if retained in front-of-pack claim
+
+==================================================
+6. RELEASE CHECKLIST
+==================================================
+
+Product: Creamy Vegetable Soup V5
+Batch planned: CVS-260405-A
+
+Checklist items:
+- Recipe version updated in ERP: Yes
+- Raw material specs reviewed: Yes
+- Finished product spec updated: No
+- Allergen matrix updated: No
+- Label artwork approved: No
+- Old packaging removed from line: No
+- Shelf-life review complete: Pending
+- First batch release authorised by QA: Blank
+
+Release comment:
+"Target to release today if labels arrive in time."
+
+==================================================
+7. INTERNAL EMAIL EXTRACT
+==================================================
+
+From: QA Supervisor
+To: Production, Packaging
+Subject: Soup changeover
+
+"Please do not use existing sleeves for the new creamy vegetable soup recipe.
+Milk and celery are now intentional ingredients.
+I have not yet signed the final artwork or release checklist."
+
+Reply from Production:
+"Understood. Existing sleeves remain near the line until stores can collect them."
+
+==================================================
+8. DOCUMENT GAPS NOT PROVIDED IN THIS PACK
+==================================================
+
+Not included:
+- Revised finished product specification
+- Final approved artwork copy
+- Nutrition recalculation record
+- Shelf-life assessment
+- Line clearance record
+- QA release authorisation

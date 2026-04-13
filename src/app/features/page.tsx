@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { getCspNonce } from "@/lib/security/csp";
 
 const featurePages = [
   {
@@ -51,17 +52,28 @@ const supportingLinks = [
 ];
 
 export const metadata: Metadata = {
-  title: "Food Safety Services for HACCP, SOPs, Allergen Records & Audit Prep | PinkPepper Features",
+  title: "HACCP Plans, SOPs, Allergen Records & Audit Prep | PinkPepper Features",
   description:
-    "Explore PinkPepper services for HACCP plans, allergen documentation, SOP support, audit preparation, exports, templates, and specialist food safety support.",
+    "Generate HACCP plans, allergen matrices, SOPs & audit-ready packs in minutes. 15 free templates. AI grounded in EU & UK food safety regulations.",
   alternates: {
     canonical: "https://pinkpepper.io/features",
   },
 };
 
-export default function FeaturesPage() {
+export default async function FeaturesPage() {
+  const nonce = await getCspNonce();
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://pinkpepper.io" },
+      { "@type": "ListItem", position: 2, name: "Features", item: "https://pinkpepper.io/features" },
+    ],
+  };
+
   return (
     <main className="overflow-hidden">
+      <script type="application/ld+json" nonce={nonce} dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <section className="border-b border-[#F1F5F9] bg-white py-16 md:py-24">
         <div className="pp-container max-w-5xl">
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">Services</p>

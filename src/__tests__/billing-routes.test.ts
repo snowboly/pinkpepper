@@ -84,11 +84,12 @@ describe("billing route origin validation", () => {
     process.env.STRIPE_PRO_PRICE_ID = "price_pro";
   });
 
-  it("allows checkout from the same origin when NEXT_PUBLIC_SITE_URL has a trailing slash", async () => {
+  it("allows checkout with same-origin request", async () => {
     const response = await checkoutPost(
       new Request("https://pinkpepper.io/api/billing/checkout", {
         method: "POST",
         headers: {
+          host: "pinkpepper.io",
           origin: "https://pinkpepper.io",
           "content-type": "application/json",
         },
@@ -100,13 +101,14 @@ describe("billing route origin validation", () => {
     await expect(response.json()).resolves.toEqual({ url: "https://checkout.stripe.test/session_123" });
   });
 
-  it("allows billing-portal access from the same origin when NEXT_PUBLIC_SITE_URL has a trailing slash", async () => {
+  it("allows billing-portal access with same-origin request", async () => {
     billingState.subscriptionRow = { stripe_customer_id: "cus_123" };
 
     const response = await portalPost(
       new Request("https://pinkpepper.io/api/billing/portal", {
         method: "POST",
         headers: {
+          host: "pinkpepper.io",
           origin: "https://pinkpepper.io",
         },
       }),
@@ -114,5 +116,177 @@ describe("billing route origin validation", () => {
 
     expect(response.status).toBe(200);
     await expect(response.json()).resolves.toEqual({ url: "https://billing.stripe.test/session_123" });
+  });
+
+  it("allows checkout behind reverse proxy with x-forwarded-host/proto", async () => {
+    const response = await checkoutPost(
+      new Request("http://localhost:3000/api/billing/checkout", {
+        method: "POST",
+        headers: {
+          host: "localhost:3000",
+          "x-forwarded-host": "pinkpepper.io",
+          "x-forwarded-proto": "https",
+          origin: "https://pinkpepper.io",
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({ plan: "plus" }),
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    await expect(response.json()).resolves.toEqual({ url: "https://checkout.stripe.test/session_123" });
+  });
+
+  it("rejects checkout when both Origin and Referer are missing (CSRF fail-closed)", async () => {
+    // H2: a state-changing POST that carries neither Origin nor Referer is
+    // not a legitimate same-origin browser flow (modern browsers always
+    // send at least one on cross-origin POSTs). The billing guard must
+    // fail closed so cookie-replay / non-browser CSRF vectors are rejected.
+    const response = await checkoutPost(
+      new Request("https://pinkpepper.io/api/billing/checkout", {
+        method: "POST",
+        headers: {
+          host: "pinkpepper.io",
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({ plan: "plus" }),
+      }),
+    );
+
+    expect(response.status).toBe(403);
+  });
+
+  it("allows checkout when Origin is omitted but Referer is same-origin", async () => {
+    const response = await checkoutPost(
+      new Request("https://pinkpepper.io/api/billing/checkout", {
+        method: "POST",
+        headers: {
+          host: "pinkpepper.io",
+          referer: "https://pinkpepper.io/pricing",
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({ plan: "plus" }),
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    await expect(response.json()).resolves.toEqual({ url: "https://checkout.stripe.test/session_123" });
+  });
+
+  it("allows checkout from the www variant when NEXT_PUBLIC_SITE_URL is the apex", async () => {
+    // Regression: DNS serves both https://pinkpepper.io and
+    // https://www.pinkpepper.io. If NEXT_PUBLIC_SITE_URL is pinned to one,
+    // visitors on the other must not be rejected as CSRF.
+    process.env.NEXT_PUBLIC_SITE_URL = "https://pinkpepper.io/";
+
+    const response = await checkoutPost(
+      new Request("https://www.pinkpepper.io/api/billing/checkout", {
+        method: "POST",
+        headers: {
+          host: "www.pinkpepper.io",
+          origin: "https://www.pinkpepper.io",
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({ plan: "plus" }),
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    await expect(response.json()).resolves.toEqual({ url: "https://checkout.stripe.test/session_123" });
+  });
+
+  it("allows checkout from the apex when NEXT_PUBLIC_SITE_URL is the www variant", async () => {
+    process.env.NEXT_PUBLIC_SITE_URL = "https://www.pinkpepper.io/";
+
+    const response = await checkoutPost(
+      new Request("https://pinkpepper.io/api/billing/checkout", {
+        method: "POST",
+        headers: {
+          host: "pinkpepper.io",
+          origin: "https://pinkpepper.io",
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({ plan: "pro" }),
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    await expect(response.json()).resolves.toEqual({ url: "https://checkout.stripe.test/session_123" });
+  });
+
+  it("rejects checkout from a different origin", async () => {
+    const response = await checkoutPost(
+      new Request("https://pinkpepper.io/api/billing/checkout", {
+        method: "POST",
+        headers: {
+          host: "pinkpepper.io",
+          origin: "https://evil.com",
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({ plan: "plus" }),
+      }),
+    );
+
+    expect(response.status).toBe(403);
+  });
+
+  it("rejects checkout from a look-alike subdomain (not a real www/apex sibling)", async () => {
+    process.env.NEXT_PUBLIC_SITE_URL = "https://www.pinkpepper.io/";
+
+    const response = await checkoutPost(
+      new Request("https://www.pinkpepper.io/api/billing/checkout", {
+        method: "POST",
+        headers: {
+          host: "www.pinkpepper.io",
+          origin: "https://pinkpepper.io.evil.com",
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({ plan: "plus" }),
+      }),
+    );
+
+    expect(response.status).toBe(403);
+  });
+
+  it("returns a billing configuration error when a plan env uses a Stripe product id", async () => {
+    process.env.STRIPE_PLUS_PRICE_ID = "prod_bad";
+
+    const response = await checkoutPost(
+      new Request("https://pinkpepper.io/api/billing/checkout", {
+        method: "POST",
+        headers: {
+          host: "pinkpepper.io",
+          origin: "https://pinkpepper.io",
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({ plan: "plus" }),
+      }),
+    );
+
+    expect(response.status).toBe(500);
+    await expect(response.json()).resolves.toEqual({
+      error: "Billing is misconfigured. Stripe price IDs must start with `price_`.",
+    });
+  });
+
+  it("returns structured json when Stripe checkout creation throws", async () => {
+    createCheckoutSessionMock.mockRejectedValueOnce(new Error("Stripe API down"));
+
+    const response = await checkoutPost(
+      new Request("https://pinkpepper.io/api/billing/checkout", {
+        method: "POST",
+        headers: {
+          host: "pinkpepper.io",
+          origin: "https://pinkpepper.io",
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({ plan: "plus" }),
+      }),
+    );
+
+    expect(response.status).toBe(500);
+    await expect(response.json()).resolves.toEqual({
+      error: "Unable to start checkout right now. Please try again in a moment.",
+    });
   });
 });

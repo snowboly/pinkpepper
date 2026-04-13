@@ -27,20 +27,33 @@ export async function GET() {
   const { tier, isAdmin } = resolveUserAccess(profile, user.email, subscription);
 
   let usage = 0;
+  let auditorUsage = 0;
   try {
-    usage = await countUsageSince({
-      supabase,
-      userId: user.id,
-      eventType: "chat_prompt",
-      sinceIso: utcDayStartIso(),
-    });
+    const dayStart = utcDayStartIso();
+    [usage, auditorUsage] = await Promise.all([
+      countUsageSince({
+        supabase,
+        userId: user.id,
+        eventType: "chat_prompt",
+        sinceIso: dayStart,
+      }),
+      countUsageSince({
+        supabase,
+        userId: user.id,
+        eventType: "auditor_message",
+        sinceIso: dayStart,
+      }),
+    ]);
   } catch {
     // non-critical
   }
 
   const caps = isAdmin
-    ? { dailyMessages: Number.MAX_SAFE_INTEGER }
-    : { dailyMessages: TIER_CAPABILITIES[tier].dailyMessages };
+    ? { dailyMessages: Number.MAX_SAFE_INTEGER, dailyAuditorMessages: Number.MAX_SAFE_INTEGER }
+    : {
+        dailyMessages: TIER_CAPABILITIES[tier].dailyMessages,
+        dailyAuditorMessages: TIER_CAPABILITIES[tier].dailyAuditorMessages,
+      };
 
   return NextResponse.json({
     tier,
@@ -48,5 +61,7 @@ export async function GET() {
     subscription: subscription ?? null,
     usage,
     usageLimit: caps.dailyMessages,
+    auditorUsage,
+    auditorUsageLimit: caps.dailyAuditorMessages,
   });
 }

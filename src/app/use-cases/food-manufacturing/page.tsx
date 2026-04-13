@@ -62,7 +62,7 @@ export default function FoodManufacturingUseCasePage() {
         {
           href: "/pricing",
           label: "Pricing",
-          description: "Compare plans for higher-volume document work, exports, and food safety consultancy.",
+          description: "Compare plans for higher-volume document work, Auditor workflows, and human consultancy.",
         },
       ]}
     />

@@ -1,6 +1,6 @@
 import type { Citation } from "@/lib/rag/citations";
 import type { VerificationState } from "@/lib/rag/verification";
-import type { Message } from "./types";
+import type { Message, PersonaInfo } from "./types";
 
 export function parseMessageArtifact(value: unknown): Message["artifact"] | undefined {
   if (!value || typeof value !== "object") {
@@ -78,6 +78,32 @@ export function parseMessageVerificationState(value: unknown): VerificationState
   }
 
   return null;
+}
+
+export function parseMessagePersona(value: unknown): PersonaInfo | undefined {
+  if (!value || typeof value !== "object") {
+    return undefined;
+  }
+
+  const persona = (value as { persona?: unknown }).persona;
+  if (!persona || typeof persona !== "object") {
+    return undefined;
+  }
+
+  const candidate = persona as Record<string, unknown>;
+  if (
+    typeof candidate.id !== "string" ||
+    typeof candidate.name !== "string" ||
+    typeof candidate.avatar !== "string"
+  ) {
+    return undefined;
+  }
+
+  return {
+    id: candidate.id,
+    name: candidate.name,
+    avatar: candidate.avatar,
+  };
 }
 
 export function formatVerificationLabel(state: VerificationState): string {

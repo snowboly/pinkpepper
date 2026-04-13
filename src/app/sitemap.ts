@@ -1,7 +1,7 @@
 import { MetadataRoute } from "next";
 import { getArticleManifest } from "@/lib/articles";
 
-const BASE_URL = "https://pinkpepper.io";
+const BASE_URL = "https://www.pinkpepper.io";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const articles = await getArticleManifest().catch(() => []);
@@ -27,6 +27,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/resources/temperature-monitoring-log-template`, lastModified: new Date("2026-03-14"), changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE_URL}/resources/supplier-approval-questionnaire`, lastModified: new Date("2026-03-14"), changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE_URL}/resources/food-safety-document-checklist`, lastModified: new Date("2026-03-14"), changeFrequency: "monthly", priority: 0.8 },
+    { url: `${BASE_URL}/resources/corrective-action-log-template`, lastModified: new Date("2026-03-14"), changeFrequency: "monthly", priority: 0.7 },
+    { url: `${BASE_URL}/resources/product-recall-procedure-template`, lastModified: new Date("2026-03-14"), changeFrequency: "monthly", priority: 0.7 },
+    { url: `${BASE_URL}/resources/employee-food-safety-training-record`, lastModified: new Date("2026-03-14"), changeFrequency: "monthly", priority: 0.7 },
+    { url: `${BASE_URL}/resources/personal-hygiene-policy-template`, lastModified: new Date("2026-03-14"), changeFrequency: "monthly", priority: 0.7 },
+    { url: `${BASE_URL}/resources/pest-control-log-template`, lastModified: new Date("2026-03-14"), changeFrequency: "monthly", priority: 0.7 },
+    { url: `${BASE_URL}/resources/waste-management-log-template`, lastModified: new Date("2026-03-14"), changeFrequency: "monthly", priority: 0.7 },
+    { url: `${BASE_URL}/resources/waste-management-sop-template`, lastModified: new Date("2026-03-14"), changeFrequency: "monthly", priority: 0.7 },
+    { url: `${BASE_URL}/resources/traceability-log-template`, lastModified: new Date("2026-03-14"), changeFrequency: "monthly", priority: 0.7 },
+    { url: `${BASE_URL}/resources/food-safety-management-system-template`, lastModified: new Date("2026-03-14"), changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE_URL}/pricing`, lastModified: new Date("2026-03-18"), changeFrequency: "monthly", priority: 0.9 },
     { url: `${BASE_URL}/articles`, lastModified: new Date("2026-03-20"), changeFrequency: "weekly", priority: 0.7 },
     ...articles.map((article) => ({

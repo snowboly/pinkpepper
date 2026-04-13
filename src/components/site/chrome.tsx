@@ -236,7 +236,7 @@ export function SiteFooter() {
           </p>
           <div className="mt-5 flex items-center gap-3">
             <a
-              href="https://www.linkedin.com/company/pinkpepper-io"
+              href="https://www.linkedin.com/company/pinkpepperio"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="PinkPepper on LinkedIn"

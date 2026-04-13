@@ -96,6 +96,30 @@
     "recordingPermissionError": "Microphone access is blocked. Please allow microphone permission and try again.",
     "transcriptionError": "We could not transcribe your recording. Please try again.",
     "transcriptionEmptyError": "No speech was detected. Please try recording again."
+    ,
+    "modeGuidance": {
+      "examplesLabel": "Try asking:",
+      "consultant": {
+        "label": "Consultant mode",
+        "badge": "Best advice",
+        "bestFor": "Best for questions, decisions, and practical compliance guidance.",
+        "useWhen": "Use Consultant when you want a clear answer, a next step, or help applying food safety rules to your business.",
+        "examples": [
+          "\"Can we label this soup gluten-free if we also handle wheat on site?\"",
+          "\"What records should I keep every week so I’m ready for an inspection?\""
+        ]
+      },
+      "auditor": {
+        "label": "Auditor mode",
+        "badge": "Formal findings",
+        "bestFor": "Best for structured findings, evidence gaps, CAPA, and report-style reviews.",
+        "useWhen": "Use Auditor when you want a formal assessment based on uploaded records or a prompt-based preliminary audit.",
+        "examples": [
+          "\"Audit these uploaded records for illness exclusion, fridge monitoring, and allergen control.\"",
+          "\"Run a preliminary audit of this manufacturer before release and give me findings with severity and CAPA.\""
+        ]
+      }
+    }
   },
   "sidebar": {
     "newChat": "New chat",
@@ -256,22 +280,25 @@
         "q5": "Who is responsible for cleaning and who verifies it?"
       }
     },
-    "ask": "Ask",
-    "virtualAudit": "Virtual Audit",
+    "ask": "Consultant",
+    "virtualAudit": "Auditor",
     "adminPanel": "Admin panel",
     "requestReview": "Request review",
-    "generateReport": "Generate report",
+    "generateReport": "Generate audit report",
     "exporting": "Exporting...",
     "exportConversation": "Export Conversation",
     "pdf": "Export PDF",
     "docx": "Export DOCX",
+    "dropAttachmentToAnalyse": "Drop image or document to attach",
+    "dropAttachmentHint": "Photo, PDF, DOCX, TXT, or Markdown file",
+    "dropDocumentHint": "PDF, DOCX, TXT, or Markdown file",
     "dropPhotoToAnalyse": "Drop photo to analyse",
     "dropPhotoHint": "Kitchen, label, or food product",
     "collapseSidebar": "Collapse sidebar",
     "expandSidebar": "Expand sidebar",
     "wizardCancelled": "Document builder cancelled. You can start again from any starter card.",
     "wizardGenerating": "Perfect. I have enough information. Generating your full document now.",
-    "virtualAuditPlaceholder": "Virtual Audit mode: describe scope, upload evidence, or ask for final audit report..."
+    "virtualAuditPlaceholder": "Auditor mode: upload evidence, describe scope, or request the final audit report..."
   },
   "onboarding": {
     "welcome": "Welcome to PinkPepper",
@@ -298,6 +325,10 @@
       "message_limit": {
         "heading": "You've reached your daily message limit",
         "body": "Upgrade for 25 messages per day on Plus or 100 per day on Pro."
+      },
+      "expert_limit": {
+        "heading": "You've reached your daily Auditor limit",
+        "body": "Auditor mode is available on Pro with 5 Auditor messages per day."
       },
       "image_limit": {
         "heading": "Unlock photo analysis",
@@ -420,6 +451,7 @@
     "save": "Save",
     "usage": "Usage",
     "dailyMessages": "Messages today",
+    "dailyAuditorMessages": "Auditor messages today",
     "dailyImageAnalyses": "Image analyses today",
     "dangerZone": "Danger Zone",
     "deleteAccount": "Delete account",

@@ -1,85 +1,101 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
 import { getStripe } from "@/lib/billing/stripe";
+import { isAllowedBillingRequest, getTrustedSiteOrigin } from "@/lib/billing/request-origin";
 import { billingLimiter, checkRateLimit } from "@/lib/ratelimit";
+import { getStripePriceIdForPlan, hasStripePriceConfigError } from "@/lib/billing/price-config";
 
 export const dynamic = "force-dynamic";
 
-const PLAN_TO_PRICE_ENV: Record<string, string | undefined> = {
-  plus: process.env.STRIPE_PLUS_PRICE_ID,
-  pro: process.env.STRIPE_PRO_PRICE_ID,
-};
-
 export async function POST(request: Request) {
-  const origin = request.headers.get("origin");
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
-  const allowedOrigin = siteUrl ? new URL(siteUrl).origin : null;
-  if (!origin || !allowedOrigin || origin !== allowedOrigin) {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-  }
+  try {
+    if (!isAllowedBillingRequest(request)) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
 
-  const ip = request.headers.get("x-forwarded-for")?.split(",")[0].trim() ?? "unknown";
-  const rateLimitRes = await checkRateLimit(billingLimiter, ip);
-  if (rateLimitRes) return rateLimitRes;
+    const ip = request.headers.get("x-forwarded-for")?.split(",")[0].trim() ?? "unknown";
+    const rateLimitRes = await checkRateLimit(billingLimiter, ip);
+    if (rateLimitRes) return rateLimitRes;
 
-  const supabase = await createClient();
+    const supabase = await createClient();
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
-  if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
-  const body = (await request.json()) as { plan?: "plus" | "pro" };
-  const plan = body.plan;
-  if (!plan || !PLAN_TO_PRICE_ENV[plan]) {
-    return NextResponse.json({ error: "Invalid plan." }, { status: 400 });
-  }
+    const body = (await request.json()) as { plan?: "plus" | "pro" };
+    const plan = body.plan;
+    if (hasStripePriceConfigError(plan)) {
+      return NextResponse.json(
+        { error: "Billing is misconfigured. Stripe price IDs must start with `price_`." },
+        { status: 500 }
+      );
+    }
 
-  const priceId = PLAN_TO_PRICE_ENV[plan]!;
-  const appUrl = process.env.NEXT_PUBLIC_SITE_URL || new URL(request.url).origin;
-  const stripe = getStripe();
+    const priceId = getStripePriceIdForPlan(plan);
+    if (!plan || !priceId) {
+      return NextResponse.json({ error: "Invalid plan." }, { status: 400 });
+    }
+    // Stripe callback URLs must not be attacker-spoofable via a manipulated
+    // Host header — Stripe blindly redirects users there on completion.
+    const appUrl = getTrustedSiteOrigin(request);
+    if (!appUrl) {
+      return NextResponse.json(
+        { error: "Site URL is not configured." },
+        { status: 500 }
+      );
+    }
+    const stripe = getStripe();
 
-  const { data: subRow } = await supabase
-    .from("subscriptions")
-    .select("stripe_customer_id")
-    .eq("user_id", user.id)
-    .maybeSingle();
+    const { data: subRow } = await supabase
+      .from("subscriptions")
+      .select("stripe_customer_id")
+      .eq("user_id", user.id)
+      .maybeSingle();
 
-  let customerId = subRow?.stripe_customer_id ?? null;
+    let customerId = subRow?.stripe_customer_id ?? null;
 
-  if (!customerId) {
-    const customer = await stripe.customers.create({
-      email: user.email,
+    if (!customerId) {
+      const customer = await stripe.customers.create({
+        email: user.email,
+        metadata: {
+          user_id: user.id,
+        },
+      });
+      customerId = customer.id;
+
+      await supabase.from("subscriptions").upsert(
+        {
+          user_id: user.id,
+          stripe_customer_id: customerId,
+        },
+        { onConflict: "user_id" }
+      );
+    }
+
+    const session = await stripe.checkout.sessions.create({
+      mode: "subscription",
+      customer: customerId,
+      line_items: [{ price: priceId, quantity: 1 }],
+      success_url: `${appUrl}/dashboard?billing=success`,
+      cancel_url: `${appUrl}/pricing?billing=cancelled`,
+      allow_promotion_codes: true,
       metadata: {
         user_id: user.id,
+        plan,
       },
     });
-    customerId = customer.id;
 
-    await supabase.from("subscriptions").upsert(
-      {
-        user_id: user.id,
-        stripe_customer_id: customerId,
-      },
-      { onConflict: "user_id" }
+    return NextResponse.json({ url: session.url });
+  } catch (error) {
+    console.error("Billing checkout error:", error);
+    return NextResponse.json(
+      { error: "Unable to start checkout right now. Please try again in a moment." },
+      { status: 500 }
     );
   }
-
-  const session = await stripe.checkout.sessions.create({
-    mode: "subscription",
-    customer: customerId,
-    line_items: [{ price: priceId, quantity: 1 }],
-    success_url: `${appUrl}/dashboard?billing=success`,
-    cancel_url: `${appUrl}/pricing?billing=cancelled`,
-    allow_promotion_codes: true,
-    metadata: {
-      user_id: user.id,
-      plan,
-    },
-  });
-
-  return NextResponse.json({ url: session.url });
 }

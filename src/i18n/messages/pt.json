@@ -75,7 +75,30 @@
     "recordingUnsupported": "Voice recording is not supported in this browser.",
     "recordingPermissionError": "Microphone access is blocked. Please allow microphone permission and try again.",
     "transcriptionError": "We could not transcribe your recording. Please try again.",
-    "transcriptionEmptyError": "No speech was detected. Please try recording again."
+    "transcriptionEmptyError": "No speech was detected. Please try recording again.",
+    "modeGuidance": {
+      "examplesLabel": "Try asking:",
+      "consultant": {
+        "label": "Consultant mode",
+        "badge": "Best advice",
+        "bestFor": "Best for questions, decisions, and practical compliance guidance.",
+        "useWhen": "Use Consultant when you want a clear answer, a next step, or help applying food safety rules to your business.",
+        "examples": [
+          "\"Can we label this soup gluten-free if we also handle wheat on site?\"",
+          "\"What records should I keep every week so I’m ready for an inspection?\""
+        ]
+      },
+      "auditor": {
+        "label": "Auditor mode",
+        "badge": "Formal findings",
+        "bestFor": "Best for structured findings, evidence gaps, CAPA, and report-style reviews.",
+        "useWhen": "Use Auditor when you want a formal assessment based on uploaded records or a prompt-based preliminary audit.",
+        "examples": [
+          "\"Audit these uploaded records for illness exclusion, fridge monitoring, and allergen control.\"",
+          "\"Run a preliminary audit of this manufacturer before release and give me findings with severity and CAPA.\""
+        ]
+      }
+    }
   },
   "sidebar": {
     "newChat": "Nova conversa",
@@ -151,22 +174,25 @@
         "q5": "Quem aprova os fornecedores e onde são guardados os registos?"
       }
     },
-    "ask": "Perguntar",
-    "virtualAudit": "Auditoria virtual",
+    "ask": "Consultor",
+    "virtualAudit": "Auditor",
     "adminPanel": "Painel de administração",
     "requestReview": "Solicitar revisão",
-    "generateReport": "Gerar relatório",
+    "generateReport": "Gerar relatório de auditoria",
     "exporting": "A exportar...",
     "exportConversation": "Exportar conversa",
     "pdf": "PDF",
     "docx": "DOCX",
+    "dropAttachmentToAnalyse": "Largue uma imagem ou documento para anexar",
+    "dropAttachmentHint": "Foto, PDF, DOCX, TXT ou ficheiro Markdown",
+    "dropDocumentHint": "PDF, DOCX, TXT ou ficheiro Markdown",
     "dropPhotoToAnalyse": "Largue uma foto para análise",
     "dropPhotoHint": "Cozinha, rótulo ou produto alimentar",
     "collapseSidebar": "Recolher barra lateral",
     "expandSidebar": "Expandir barra lateral",
     "wizardCancelled": "Gerador de documentos cancelado. Pode recomeçar a partir de qualquer cartão inicial.",
     "wizardGenerating": "Perfeito. Tenho informação suficiente. A gerar o documento completo agora.",
-    "virtualAuditPlaceholder": "Modo Auditoria virtual: descreva o âmbito, carregue evidências ou solicite o relatório final de auditoria..."
+    "virtualAuditPlaceholder": "Modo Auditor: carregue evidências, descreva o âmbito ou peça o relatório final de auditoria..."
   },
   "onboarding": {
     "welcome": "Bem-vindo ao PinkPepper",
@@ -193,6 +219,10 @@
       "message_limit": {
         "heading": "Atingiu o seu limite diário de mensagens",
         "body": "Atualize para continuar a conversar. O Plus oferece 7× mais mensagens por dia — o Pro oferece 65×."
+      },
+      "expert_limit": {
+        "heading": "Atingiu o seu limite diário de respostas especializadas",
+        "body": "As respostas especializadas usam o nosso modelo premium de compliance. Atualize para 3 respostas especializadas por dia no Plus ou 8 por dia no Pro."
       },
       "image_limit": {
         "heading": "Desbloqueie a análise de fotografias",
@@ -335,6 +365,7 @@
     "save": "Guardar",
     "usage": "Utilização",
     "dailyMessages": "Mensagens hoje",
+    "dailyAuditorMessages": "Mensagens de Auditor hoje",
     "dailyImageAnalyses": "AnÃ¡lises de imagens hoje",
     "dangerZone": "Zona de perigo",
     "deleteAccount": "Eliminar conta",

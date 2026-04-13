@@ -49,7 +49,7 @@ const relatedLinks = [
 export const metadata: Metadata = {
   title: "Food Safety Software for Restaurants, Cafes, Caterers & Manufacturers | PinkPepper",
   description:
-    "See how PinkPepper supports restaurants, cafes, caterers, and food manufacturers with food safety compliance workflows.",
+    "AI food safety software built for your operation. HACCP plans, SOPs, allergen records & audit prep for restaurants, cafes, caterers & manufacturers.",
   alternates: {
     canonical: "https://pinkpepper.io/use-cases",
   },

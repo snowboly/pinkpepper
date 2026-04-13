@@ -67,7 +67,7 @@ export default function MessageItem({ message }: MessageItemProps) {
           {message.persona ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
-              src={`/${message.persona.name.toLowerCase()}.svg`}
+              src={`/${message.persona.avatar}.svg`}
               alt={message.persona.name}
               className="h-7 w-7 flex-shrink-0 rounded-full"
             />

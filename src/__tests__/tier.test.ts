@@ -15,6 +15,7 @@ describe("TIER_CAPABILITIES – free tier", () => {
   const free = TIER_CAPABILITIES.free;
 
   it("dailyMessages is 5", () => expect(free.dailyMessages).toBe(5));
+  it("dailyAuditorMessages is 0", () => expect(free.dailyAuditorMessages).toBe(0));
   it("dailyImageUploads is 1", () => expect(free.dailyImageUploads).toBe(1));
   it("maxSavedConversations is 10", () => expect(free.maxSavedConversations).toBe(10));
   it("conversationRetentionDays is 30", () => expect(free.conversationRetentionDays).toBe(30));
@@ -31,6 +32,7 @@ describe("TIER_CAPABILITIES – plus tier", () => {
   const plus = TIER_CAPABILITIES.plus;
 
   it("dailyMessages is 25", () => expect(plus.dailyMessages).toBe(25));
+  it("dailyAuditorMessages is 0", () => expect(plus.dailyAuditorMessages).toBe(0));
   it("dailyImageUploads is 5", () => expect(plus.dailyImageUploads).toBe(5));
   it("maxSavedConversations is unlimited (null)", () => expect(plus.maxSavedConversations).toBeNull());
   it("conversationRetentionDays is unlimited (null)", () => expect(plus.conversationRetentionDays).toBeNull());
@@ -47,6 +49,7 @@ describe("TIER_CAPABILITIES – pro tier", () => {
   const pro = TIER_CAPABILITIES.pro;
 
   it("dailyMessages is 100", () => expect(pro.dailyMessages).toBe(100));
+  it("dailyAuditorMessages is 5", () => expect(pro.dailyAuditorMessages).toBe(5));
   it("dailyImageUploads is 15", () => expect(pro.dailyImageUploads).toBe(15));
   it("maxSavedConversations is unlimited (null)", () => expect(pro.maxSavedConversations).toBeNull());
   it("conversationRetentionDays is unlimited (null)", () => expect(pro.conversationRetentionDays).toBeNull());
@@ -69,6 +72,7 @@ describe("cross-tier invariants", () => {
   // Numeric limits where higher tiers should always be >=
   const numericKeys: (keyof TierCapabilities)[] = [
     "dailyMessages",
+    "dailyAuditorMessages",
     "dailyImageUploads",
     "maxResponseTokens",
   ];
@@ -130,6 +134,7 @@ describe("TIER_CAPABILITIES structure", () => {
   it("every tier has all required capability keys", () => {
     const requiredKeys: (keyof TierCapabilities)[] = [
       "dailyMessages",
+      "dailyAuditorMessages",
       "dailyImageUploads",
       "maxSavedConversations",
       "conversationRetentionDays",
@@ -153,6 +158,7 @@ describe("TIER_CAPABILITIES structure", () => {
     for (const tier of ["free", "plus", "pro"] as SubscriptionTier[]) {
       const caps = TIER_CAPABILITIES[tier];
       expect(caps.dailyMessages).toBeGreaterThanOrEqual(0);
+      expect(caps.dailyAuditorMessages).toBeGreaterThanOrEqual(0);
       expect(caps.dailyImageUploads).toBeGreaterThanOrEqual(0);
       expect(caps.maxResponseTokens).toBeGreaterThan(0);
     }
@@ -226,6 +232,23 @@ describe("parseStripeSubscription", () => {
       tier: "free",
       stripePriceId: "price_pro",
       status: "canceled",
+    });
+  });
+
+  it("matches Stripe prices consistently when env values contain whitespace", () => {
+    process.env.STRIPE_PLUS_PRICE_ID = "  price_plus  ";
+
+    expect(
+      parseStripeSubscription({
+        status: "active",
+        priceId: "price_plus",
+        currentPeriodEndUnix: 1_710_000_000,
+      })
+    ).toMatchObject({
+      planTier: "plus",
+      tier: "plus",
+      stripePriceId: "price_plus",
+      status: "active",
     });
   });
 });

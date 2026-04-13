@@ -75,7 +75,30 @@
     "recordingUnsupported": "Voice recording is not supported in this browser.",
     "recordingPermissionError": "Microphone access is blocked. Please allow microphone permission and try again.",
     "transcriptionError": "We could not transcribe your recording. Please try again.",
-    "transcriptionEmptyError": "No speech was detected. Please try recording again."
+    "transcriptionEmptyError": "No speech was detected. Please try recording again.",
+    "modeGuidance": {
+      "examplesLabel": "Try asking:",
+      "consultant": {
+        "label": "Consultant mode",
+        "badge": "Best advice",
+        "bestFor": "Best for questions, decisions, and practical compliance guidance.",
+        "useWhen": "Use Consultant when you want a clear answer, a next step, or help applying food safety rules to your business.",
+        "examples": [
+          "\"Can we label this soup gluten-free if we also handle wheat on site?\"",
+          "\"What records should I keep every week so I’m ready for an inspection?\""
+        ]
+      },
+      "auditor": {
+        "label": "Auditor mode",
+        "badge": "Formal findings",
+        "bestFor": "Best for structured findings, evidence gaps, CAPA, and report-style reviews.",
+        "useWhen": "Use Auditor when you want a formal assessment based on uploaded records or a prompt-based preliminary audit.",
+        "examples": [
+          "\"Audit these uploaded records for illness exclusion, fridge monitoring, and allergen control.\"",
+          "\"Run a preliminary audit of this manufacturer before release and give me findings with severity and CAPA.\""
+        ]
+      }
+    }
   },
   "sidebar": {
     "newChat": "Nouvelle conversation",
@@ -151,22 +174,25 @@
         "q5": "Qui approuve les fournisseurs et où sont conservés les enregistrements ?"
       }
     },
-    "ask": "Demander",
-    "virtualAudit": "Audit virtuel",
+    "ask": "Consultant",
+    "virtualAudit": "Auditeur",
     "adminPanel": "Panneau d'administration",
     "requestReview": "Demander un avis",
-    "generateReport": "Générer le rapport",
+    "generateReport": "Générer le rapport d'audit",
     "exporting": "Exportation...",
     "exportConversation": "Exporter la conversation",
     "pdf": "PDF",
     "docx": "DOCX",
+    "dropAttachmentToAnalyse": "Déposez une image ou un document à joindre",
+    "dropAttachmentHint": "Photo, PDF, DOCX, TXT ou fichier Markdown",
+    "dropDocumentHint": "PDF, DOCX, TXT ou fichier Markdown",
     "dropPhotoToAnalyse": "Déposez une photo pour l'analyser",
     "dropPhotoHint": "Cuisine, étiquette ou produit alimentaire",
     "collapseSidebar": "Réduire la barre latérale",
     "expandSidebar": "Développer la barre latérale",
     "wizardCancelled": "Générateur de documents annulé. Vous pouvez recommencer depuis n'importe quelle carte de démarrage.",
     "wizardGenerating": "Parfait. J'ai suffisamment d'informations. Génération de votre document complet en cours.",
-    "virtualAuditPlaceholder": "Mode Audit virtuel : décrivez le périmètre, chargez des preuves ou demandez le rapport final d'audit..."
+    "virtualAuditPlaceholder": "Mode Auditeur : chargez des preuves, décrivez le périmètre ou demandez le rapport final d'audit..."
   },
   "onboarding": {
     "welcome": "Bienvenue sur PinkPepper",
@@ -193,6 +219,10 @@
       "message_limit": {
         "heading": "Vous avez atteint votre limite quotidienne de messages",
         "body": "Passez à un plan supérieur pour continuer à échanger. Plus vous offre 7× plus de messages par jour — Pro vous en offre 65×."
+      },
+      "expert_limit": {
+        "heading": "Vous avez atteint votre limite quotidienne de réponses expertes",
+        "body": "Les réponses expertes utilisent notre modèle premium de conformité. Passez à Plus pour 3 réponses expertes par jour ou à Pro pour 8 par jour."
       },
       "image_limit": {
         "heading": "Débloquez l'analyse photo",
@@ -335,6 +365,7 @@
     "save": "Enregistrer",
     "usage": "Utilisation",
     "dailyMessages": "Messages aujourd'hui",
+    "dailyAuditorMessages": "Messages Auditor aujourd'hui",
     "dailyImageAnalyses": "Analyses d'images aujourd'hui",
     "dangerZone": "Zone dangereuse",
     "deleteAccount": "Supprimer le compte",

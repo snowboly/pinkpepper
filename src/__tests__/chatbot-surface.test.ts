@@ -224,4 +224,78 @@ describe("chat workspace chrome", () => {
     expect(workspace).not.toContain('void exportDocument("pdf")');
     expect(workspace).not.toContain('{tw("pdf")}');
   });
+
+  it("keeps first-turn document uploads scoped to a single conversation", () => {
+    const workspace = readWorkspaceFile("src/components/dashboard/ChatWorkspace.tsx");
+    const uploadRoute = readWorkspaceFile("src/app/api/documents/upload/route.ts");
+
+    expect(workspace).toContain("let activeConversationId = activeSession.conversationId;");
+    expect(workspace).toContain('fd.append("draftTitle"');
+    expect(workspace).toContain("activeConversationId = data.conversationId;");
+    expect(workspace).toContain("if (!res.ok || (!data.extractedText && (data.chunksStored ?? 0) === 0))");
+    expect(workspace).toContain("[Uploaded document content fallback:");
+    expect(workspace).toContain("body: JSON.stringify({ message: value, conversationId: activeConversationId })");
+
+    expect(uploadRoute).toContain('.eq("conversation_id", effectiveConversationId)');
+    expect(uploadRoute).toContain('.is("conversation_id", null)');
+    expect(uploadRoute).toContain("conversationId: effectiveConversationId");
+    expect(uploadRoute).toContain("extractedText: extraction.text");
+  });
+
+  it("supports dropped documents in the workspace instead of treating drag-and-drop as image-only", () => {
+    const workspace = readWorkspaceFile("src/components/dashboard/ChatWorkspace.tsx");
+    const attachments = readWorkspaceFile("src/components/dashboard/useAttachments.ts");
+
+    expect(workspace).toContain("handleDroppedAttachment(file)");
+    expect(workspace).toContain('tw("dropAttachmentToAnalyse")');
+    expect(workspace).toContain('tw("dropDocumentHint")');
+    expect(workspace).not.toContain('{isDraggingOver && canUploadImages && (');
+
+    expect(attachments).toContain("handleDocumentSelect");
+    expect(attachments).toContain("handleDroppedAttachment");
+    expect(attachments).toContain("Only images, PDF, DOCX, TXT, and Markdown files are supported.");
+  });
+
+  it("rebrands the workspace mode toggle to consultant and auditor", () => {
+    const en = readWorkspaceFile("src/i18n/messages/en.json");
+
+    expect(en).toContain('"ask": "Consultant"');
+    expect(en).toContain('"virtualAudit": "Auditor"');
+    expect(en).toContain('"generateReport": "Generate audit report"');
+    expect(en).toContain('"virtualAuditPlaceholder": "Auditor mode: upload evidence, describe scope, or request the final audit report..."');
+  });
+
+  it("adds empty-state guidance that explains consultant and auditor modes", () => {
+    const workspace = readWorkspaceFile("src/components/dashboard/ChatWorkspace.tsx");
+    const messages = readWorkspaceFile("src/components/dashboard/ChatMessages.tsx");
+    const en = readWorkspaceFile("src/i18n/messages/en.json");
+
+    expect(workspace).toContain('workspaceMode={workspaceMode}');
+
+    expect(messages).toContain('workspaceMode: "ask" | "virtual_audit";');
+    expect(messages).toContain('const modeKey = workspaceMode === "virtual_audit" ? "auditor" : "consultant";');
+    expect(messages).toContain('t(`modeGuidance.${modeKey}.bestFor`)');
+    expect(messages).toContain('t(`modeGuidance.${modeKey}.useWhen`)');
+    expect(messages).toContain('t(`modeGuidance.${modeKey}.examples.0`)');
+    expect(messages).toContain('t("modeGuidance.examplesLabel")');
+
+    expect(en).toContain('"modeGuidance"');
+    expect(en).toContain('"bestFor"');
+    expect(en).toContain('"useWhen"');
+    expect(en).toContain('"examples"');
+  });
+
+  it("keeps consultant and auditor workspace sessions separate when toggling modes", () => {
+    const workspace = readWorkspaceFile("src/components/dashboard/ChatWorkspace.tsx");
+
+    expect(workspace).toContain('type ModeSessionState = {');
+    expect(workspace).toContain('const [modeSessions, setModeSessions] = useState<Record<WorkspaceMode, ModeSessionState>>');
+    expect(workspace).toContain('const activeSession = modeSessions[workspaceMode];');
+    expect(workspace).toContain('const consultantAttachments = useAttachments');
+    expect(workspace).toContain('const auditorAttachments = useAttachments');
+    expect(workspace).toContain('const activeAttachments = workspaceMode === "virtual_audit" ? auditorAttachments : consultantAttachments;');
+    expect(workspace).not.toContain('setCurrentPersona(getAuditPersona())');
+    expect(workspace).not.toContain('setPrompt("")');
+    expect(workspace).toContain('onPromptChange={(value) => updateActiveSession({ prompt: value })}');
+  });
 });

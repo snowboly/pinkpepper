@@ -6,6 +6,9 @@ import { countUsageSince, utcDayStartIso } from "@/lib/policy";
 import { FOOD_SAFETY_VISION_SYSTEM_PROMPT } from "@/lib/rag/vision-prompt";
 import { visionLimiter, checkRateLimit } from "@/lib/ratelimit";
 import { getPersonaForConversation } from "@/lib/personas";
+import { readAndSniffImageFile } from "@/lib/security/image-sniffer";
+
+const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
 
 export const dynamic = "force-dynamic";
 
@@ -26,7 +29,7 @@ async function handleImageAnalysis(
     return NextResponse.json({ error: "Image analysis is not configured." }, { status: 500 });
   }
 
-  const visionModel = process.env.OPENAI_VISION_MODEL ?? "gpt-4o-mini";
+  const visionModel = process.env.OPENAI_VISION_MODEL ?? "gpt-4.1";
   const dataUrl = `data:${imageMimeType};base64,${imageBase64}`;
   const userText = message.trim() || "Analyse this image for food safety concerns.";
 
@@ -100,7 +103,7 @@ async function handleImageAnalysis(
     citations: [],
     ragEnabled: false,
     imageAnalysis: true,
-    persona: { id: persona.id, name: persona.name },
+    persona: { id: persona.id, name: persona.name, avatar: persona.avatar },
     usage: {
       used: usage.used,
       limit: usage.limit,
@@ -200,18 +203,17 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "No image file provided." }, { status: 400 });
   }
 
-  // Validate image type and size
-  const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
-  if (!allowedTypes.includes(imageFile.type)) {
-    return NextResponse.json({ error: "Only JPEG, PNG, WebP, and GIF images are supported." }, { status: 400 });
+  // Validate image by sniffing magic bytes — NEVER trust `File.type`, which is
+  // client-supplied and can be spoofed to sneak a non-image payload (SVG,
+  // HTML, polyglot) past the vision pipeline. `readAndSniffImageFile`
+  // enforces the size cap, inspects the header, and returns a canonical MIME
+  // that we then forward to the upstream vision endpoint.
+  const sniff = await readAndSniffImageFile(imageFile, MAX_IMAGE_BYTES);
+  if (!sniff.ok || !sniff.buffer) {
+    return NextResponse.json({ error: sniff.ok ? "Invalid image." : sniff.reason }, { status: 400 });
   }
-  if (imageFile.size > 5 * 1024 * 1024) {
-    return NextResponse.json({ error: "Image must be under 5MB." }, { status: 400 });
-  }
-
-  // Convert to base64
-  const arrayBuffer = await imageFile.arrayBuffer();
-  const base64 = Buffer.from(arrayBuffer).toString("base64");
+  const sniffedMime = sniff.mime;
+  const base64 = Buffer.from(sniff.buffer).toString("base64");
 
   // Resolve conversation
   let conversationId = conversationIdRaw;
@@ -268,7 +270,7 @@ export async function POST(request: Request) {
     user.id,
     conversationId,
     base64,
-    imageFile.type,
+    sniffedMime,
     message,
     isAdmin,
     tier,

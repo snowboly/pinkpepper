@@ -75,7 +75,30 @@
     "recordingUnsupported": "Voice recording is not supported in this browser.",
     "recordingPermissionError": "Microphone access is blocked. Please allow microphone permission and try again.",
     "transcriptionError": "We could not transcribe your recording. Please try again.",
-    "transcriptionEmptyError": "No speech was detected. Please try recording again."
+    "transcriptionEmptyError": "No speech was detected. Please try recording again.",
+    "modeGuidance": {
+      "examplesLabel": "Try asking:",
+      "consultant": {
+        "label": "Consultant mode",
+        "badge": "Best advice",
+        "bestFor": "Best for questions, decisions, and practical compliance guidance.",
+        "useWhen": "Use Consultant when you want a clear answer, a next step, or help applying food safety rules to your business.",
+        "examples": [
+          "\"Can we label this soup gluten-free if we also handle wheat on site?\"",
+          "\"What records should I keep every week so I’m ready for an inspection?\""
+        ]
+      },
+      "auditor": {
+        "label": "Auditor mode",
+        "badge": "Formal findings",
+        "bestFor": "Best for structured findings, evidence gaps, CAPA, and report-style reviews.",
+        "useWhen": "Use Auditor when you want a formal assessment based on uploaded records or a prompt-based preliminary audit.",
+        "examples": [
+          "\"Audit these uploaded records for illness exclusion, fridge monitoring, and allergen control.\"",
+          "\"Run a preliminary audit of this manufacturer before release and give me findings with severity and CAPA.\""
+        ]
+      }
+    }
   },
   "sidebar": {
     "newChat": "Neuer Chat",
@@ -151,22 +174,25 @@
         "q5": "Wer genehmigt Lieferanten und wo werden die Aufzeichnungen aufbewahrt?"
       }
     },
-    "ask": "Fragen",
-    "virtualAudit": "Virtuelles Audit",
+    "ask": "Berater",
+    "virtualAudit": "Auditor",
     "adminPanel": "Admin-Bereich",
     "requestReview": "Überprüfung anfordern",
-    "generateReport": "Bericht erstellen",
+    "generateReport": "Auditbericht erstellen",
     "exporting": "Wird exportiert...",
     "exportConversation": "Konversation exportieren",
     "pdf": "PDF",
     "docx": "DOCX",
+    "dropAttachmentToAnalyse": "Bild oder Dokument zum Anhängen ablegen",
+    "dropAttachmentHint": "Foto, PDF, DOCX, TXT oder Markdown-Datei",
+    "dropDocumentHint": "PDF, DOCX, TXT oder Markdown-Datei",
     "dropPhotoToAnalyse": "Foto zum Analysieren ablegen",
     "dropPhotoHint": "Küche, Etikett oder Lebensmittelprodukt",
     "collapseSidebar": "Seitenleiste einklappen",
     "expandSidebar": "Seitenleiste ausklappen",
     "wizardCancelled": "Dokumenten-Generator abgebrochen. Sie können jederzeit von einer Startkarte aus neu beginnen.",
     "wizardGenerating": "Perfekt. Ich habe genügend Informationen. Ihr vollständiges Dokument wird jetzt erstellt.",
-    "virtualAuditPlaceholder": "Virtueller Audit-Modus: Beschreiben Sie den Umfang, laden Sie Nachweise hoch oder fordern Sie den Abschlussbericht an..."
+    "virtualAuditPlaceholder": "Auditor-Modus: Nachweise hochladen, Umfang beschreiben oder den Abschlussbericht anfordern..."
   },
   "onboarding": {
     "welcome": "Willkommen bei PinkPepper",
@@ -193,6 +219,10 @@
       "message_limit": {
         "heading": "Sie haben Ihr tägliches Nachrichtenlimit erreicht",
         "body": "Upgraden Sie, um weiter zu chatten. Plus bietet Ihnen 7× mehr Nachrichten pro Tag – Pro bietet 65×."
+      },
+      "expert_limit": {
+        "heading": "Sie haben Ihr tägliches Expertenantwort-Limit erreicht",
+        "body": "Expertenantworten nutzen unser Premium-Compliance-Modell. Upgraden Sie auf 3 Expertenantworten pro Tag mit Plus oder 8 pro Tag mit Pro."
       },
       "image_limit": {
         "heading": "Fotoanalyse freischalten",
@@ -335,6 +365,7 @@
     "save": "Speichern",
     "usage": "Nutzung",
     "dailyMessages": "Nachrichten heute",
+    "dailyAuditorMessages": "Auditor-Nachrichten heute",
     "dailyImageAnalyses": "Bildanalysen heute",
     "dangerZone": "Gefahrenbereich",
     "deleteAccount": "Konto löschen",

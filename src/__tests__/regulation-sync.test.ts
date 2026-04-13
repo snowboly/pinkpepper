@@ -9,6 +9,7 @@ import {
 } from "@/lib/rag/cellar-client";
 import {
   DEFAULT_SINCE_DATE,
+  buildRegulationChunkMetadata,
   summarizeRegulationSyncHealth,
   writeSyncLogEntry,
 } from "@/lib/rag/regulation-sync";
@@ -43,6 +44,25 @@ describe("celexToSourceName", () => {
   it("formats consolidated regulation CELEX numbers into canonical source names", () => {
     expect(celexToSourceName("02004R0852-20210324")).toBe("Regulation (EC) No 852/2004");
     expect(celexToSourceName("02011R1169-20250401")).toBe("Regulation (EU) No 1169/2011");
+  });
+});
+
+describe("buildRegulationChunkMetadata", () => {
+  it("adds authoritative metadata for EU regulation sync chunks", () => {
+    expect(
+      buildRegulationChunkMetadata("Regulation (EU) No 1169/2011", {
+        celex: "02011R1169-20250401",
+        baseCelex: "32011R1169",
+        title: "Food information to consumers",
+        dateDocument: "2011-10-25",
+        dateLastModified: "2025-04-01",
+      })
+    ).toMatchObject({
+      jurisdiction: "eu",
+      source_class: "primary_law",
+      celexNumber: "02011R1169-20250401",
+      baseCelexNumber: "32011R1169",
+    });
   });
 });
 

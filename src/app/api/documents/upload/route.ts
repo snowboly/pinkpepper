@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient as createSupabaseServer } from "@/utils/supabase/server";
 import { createClient } from "@supabase/supabase-js";
 import { extractDocumentText } from "@/lib/documents/extract";
-import { generateEmbeddings } from "@/lib/rag";
+import { generateEmbeddings, sanitizeUntrustedFilename } from "@/lib/rag";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -53,6 +53,10 @@ export async function POST(request: Request) {
   }
 
   const file = formData.get("file");
+  let effectiveConversationId = (formData.get("conversationId") as string | null) ?? null;
+  const draftTitle = typeof formData.get("draftTitle") === "string"
+    ? String(formData.get("draftTitle")).trim()
+    : "";
   if (!(file instanceof File)) {
     return NextResponse.json({ error: "No file provided." }, { status: 400 });
   }
@@ -61,12 +65,17 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "File must be between 1 byte and 10MB." }, { status: 400 });
   }
 
+  // Normalise the client-supplied filename before it is used as a DB key,
+  // prompt-injected into the model, or echoed back to other users. Strips
+  // path separators, control chars, bracket characters, and caps length.
+  const safeFileName = sanitizeUntrustedFilename(file.name) || "upload";
+
   const extraction = await extractDocumentText(file);
 
   if (!extraction.text) {
     return NextResponse.json({
-      fileName: file.name,
-      mimeType: file.type,
+      fileName: safeFileName,
+      mimeType: extraction.detectedMime ?? null,
       size: file.size,
       extractedText: "",
       extractionStrategy: extraction.strategy,
@@ -78,14 +87,33 @@ export async function POST(request: Request) {
   // Chunk, embed, and store in user_document_chunks
   const chunks = chunkText(extraction.text);
   let chunksStored = 0;
+  let storageWarning: string | undefined;
 
   try {
     const texts = chunks.map((c) => c);
     const embeddings = await generateEmbeddings(texts);
 
+    if (!effectiveConversationId) {
+      const titleSource = draftTitle || safeFileName;
+      const title = titleSource.length > 80 ? `${titleSource.slice(0, 77)}...` : titleSource;
+      const { data: conversation, error: conversationError } = await supabase
+        .from("conversations")
+        .insert({ user_id: user.id, title })
+        .select("id")
+        .single();
+
+      if (conversationError || !conversation) {
+        console.error("Failed to create conversation for document upload:", conversationError);
+        return NextResponse.json({ error: "Failed to create conversation for document upload." }, { status: 500 });
+      }
+
+      effectiveConversationId = conversation.id;
+    }
+
     const rows = chunks.map((content, i) => ({
       user_id: user.id,
-      file_name: file.name,
+      conversation_id: effectiveConversationId,
+      file_name: safeFileName,
       content,
       embedding: embeddings[i].embedding,
       chunk_index: i,
@@ -94,11 +122,19 @@ export async function POST(request: Request) {
     const adminSupabase = getAdminSupabase();
 
     // Delete any existing chunks for this file before inserting fresh ones
-    await adminSupabase
+    const deleteQuery = adminSupabase
       .from("user_document_chunks")
       .delete()
       .eq("user_id", user.id)
       .eq("file_name", file.name);
+
+    if (effectiveConversationId) {
+      deleteQuery.eq("conversation_id", effectiveConversationId);
+    } else {
+      deleteQuery.is("conversation_id", null);
+    }
+
+    await deleteQuery;
 
     const { error: insertError } = await adminSupabase
       .from("user_document_chunks")
@@ -106,20 +142,23 @@ export async function POST(request: Request) {
 
     if (insertError) {
       console.error("Failed to store document chunks:", insertError);
+      storageWarning = "Text was extracted, but the document could not be stored for retrieval.";
     } else {
       chunksStored = rows.length;
     }
   } catch (e) {
     console.error("Embedding/storage error:", e);
+    storageWarning = "Text was extracted, but embeddings/storage failed.";
   }
 
   return NextResponse.json({
-    fileName: file.name,
-    mimeType: file.type,
+    fileName: safeFileName,
+    mimeType: extraction.detectedMime ?? null,
     size: file.size,
-    extractedText: extraction.text.slice(0, 500), // preview only
+    extractedText: extraction.text,
     extractionStrategy: extraction.strategy,
-    warning: extraction.warning,
+    warning: extraction.warning ?? storageWarning,
+    conversationId: effectiveConversationId,
     chunksStored,
   });
 }

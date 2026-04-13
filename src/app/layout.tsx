@@ -4,6 +4,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import { CookieBanner } from "@/components/site/CookieBanner";
 import { SiteFooter, SiteHeader } from "@/components/site/chrome";
+import { getCspNonce } from "@/lib/security/csp";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -17,22 +18,22 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://pinkpepper.io"),
+  metadataBase: new URL("https://www.pinkpepper.io"),
   alternates: {
-    canonical: "https://pinkpepper.io",
+    canonical: "https://www.pinkpepper.io",
   },
-  title: "PinkPepper | AI Food Safety Compliance Software for EU & UK Businesses",
+  title: "PinkPepper | AI HACCP & Food Safety Software for EU & UK Businesses",
   description:
-    "PinkPepper is AI food safety compliance software for EU and UK food businesses that need HACCP plans, allergen documentation, SOPs, audit prep, and food safety records.",
-  openGraph: {
-    title: "PinkPepper | AI Food Safety Compliance Software for EU & UK Businesses",
-    description:
-      "Generate HACCP plans, allergen documentation, SOPs, and audit-ready compliance records with AI food safety compliance software built for EU and UK businesses.",
-    url: "https://pinkpepper.io",
+    "Generate HACCP plans, allergen records, SOPs & audit-ready documents in minutes. AI food safety software grounded in 35+ EU & UK regulations. Start free.",
+    openGraph: {
+      title: "PinkPepper | AI HACCP & Food Safety Software for EU & UK Businesses",
+      description:
+        "Generate HACCP plans, allergen records, SOPs & audit-ready documents in minutes. Save 10+ hours/week on compliance. Grounded in 35+ EU & UK regulations.",
+      url: "https://www.pinkpepper.io",
     siteName: "PinkPepper",
     images: [
       {
-        url: "/og-image",
+        url: "https://www.pinkpepper.io/social-card.png",
         width: 1200,
         height: 630,
         alt: "PinkPepper - AI Food Safety Compliance Software for EU and UK Businesses",
@@ -42,10 +43,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "PinkPepper | AI Food Safety Compliance Software",
+    title: "PinkPepper | AI HACCP & Food Safety Software — EU & UK",
     description:
-      "Generate HACCP plans, allergen documentation, SOPs, and audit-ready records with AI food safety compliance software for EU and UK businesses.",
-    images: ["/og-image"],
+      "HACCP plans, allergen records, SOPs & audit-ready documents in minutes. AI food safety software grounded in 35+ EU & UK regulations. Try free.",
+    images: ["https://www.pinkpepper.io/social-card.png"],
   },
   manifest: "/logo/site.webmanifest",
   robots: {
@@ -67,8 +68,8 @@ const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
   name: "PinkPepper",
-  url: "https://pinkpepper.io",
-  logo: "https://pinkpepper.io/logo/android-chrome-512x512.png",
+  url: "https://www.pinkpepper.io",
+  logo: "https://www.pinkpepper.io/logo/android-chrome-512x512.png",
   description:
     "AI food safety compliance software for EU and UK food businesses. Generate HACCP plans, allergen documentation, SOPs, and audit-ready compliance packs.",
   contactPoint: {
@@ -83,7 +84,7 @@ const websiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
   name: "PinkPepper",
-  url: "https://pinkpepper.io",
+  url: "https://www.pinkpepper.io",
   description:
     "AI food safety compliance software for HACCP plans, allergen management, SOP generation, and EU/UK compliance documentation.",
   inLanguage: ["en", "de", "fr", "es", "pt", "it"],
@@ -92,16 +93,19 @@ const websiteSchema = {
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const locale = await getLocale();
   const messages = await getMessages();
+  const nonce = await getCspNonce();
 
   return (
     <html lang={locale}>
       <head>
         <script
           type="application/ld+json"
+          nonce={nonce}
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
         />
         <script
           type="application/ld+json"
+          nonce={nonce}
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
         />
       </head>

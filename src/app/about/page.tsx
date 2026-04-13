@@ -3,9 +3,9 @@ import Link from "next/link";
 import { ArrowRight, BookOpen, Brain, FileCheck, ShieldCheck, Users } from "lucide-react";
 
 export const metadata = {
-  title: "About PinkPepper | AI Food Safety Software Built by a Food Scientist",
+  title: "About PinkPepper | AI Food Safety Software by a Food Scientist",
   description:
-    "Learn how PinkPepper combines AI food safety compliance software with food safety consultancy for EU and UK food businesses.",
+    "Built by a food scientist with hands-on compliance experience. PinkPepper combines AI grounded in 35+ EU & UK regulations with human food safety consultancy.",
   alternates: {
     canonical: "https://pinkpepper.io/about",
   },
@@ -207,7 +207,7 @@ export default function AboutPage() {
               href="/signup"
               className="inline-flex items-center gap-2 rounded-full bg-[#E11D48] px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-[#E11D48]/20 transition-all hover:bg-[#BE123C]"
             >
-              Get Started
+              Start free - no card needed
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>

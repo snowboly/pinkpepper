@@ -1,6 +1,11 @@
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { generateEmbedding } from "./embeddings";
-import { type Jurisdiction, type SourceClass } from "./source-taxonomy";
+import {
+  inferJurisdiction,
+  inferSourceClass,
+  type Jurisdiction,
+  type SourceClass,
+} from "./source-taxonomy";
 
 let supabaseClient: SupabaseClient | null = null;
 
@@ -45,15 +50,71 @@ const SOURCE_CLASS_WEIGHT: Record<SourceClass, number> = {
   internal_practice: 1,
 };
 
+function normalizeChunkJurisdiction(chunk: KnowledgeChunk): Jurisdiction {
+  const metadataJurisdiction = chunk.metadata?.jurisdiction;
+  if (
+    metadataJurisdiction === "eu" ||
+    metadataJurisdiction === "gb" ||
+    metadataJurisdiction === "mixed" ||
+    metadataJurisdiction === "unknown"
+  ) {
+    return metadataJurisdiction;
+  }
+
+  return inferJurisdiction([chunk.source_type, chunk.source_name].filter(Boolean).join(" "));
+}
+
+function normalizeChunkSourceClass(chunk: KnowledgeChunk): SourceClass {
+  const metadataSourceClass = chunk.metadata?.source_class;
+  if (
+    metadataSourceClass === "primary_law" ||
+    metadataSourceClass === "official_guidance" ||
+    metadataSourceClass === "reference_standard" ||
+    metadataSourceClass === "internal_practice"
+  ) {
+    return metadataSourceClass;
+  }
+
+  return inferSourceClass([chunk.source_type, chunk.source_name].filter(Boolean).join(" "));
+}
+
 export function rankRetrievedChunks(chunks: KnowledgeChunk[]): KnowledgeChunk[] {
   return [...chunks].sort((a, b) => {
-    const aSourceClass = String(a.metadata?.source_class ?? "internal_practice") as SourceClass;
-    const bSourceClass = String(b.metadata?.source_class ?? "internal_practice") as SourceClass;
+    const aSourceClass = normalizeChunkSourceClass(a);
+    const bSourceClass = normalizeChunkSourceClass(b);
     const aWeight = SOURCE_CLASS_WEIGHT[aSourceClass] ?? 0;
     const bWeight = SOURCE_CLASS_WEIGHT[bSourceClass] ?? 0;
 
     return bWeight - aWeight || b.similarity - a.similarity;
   });
+}
+
+export function filterAuthorityFallbackChunks(
+  chunks: KnowledgeChunk[],
+  options: Pick<RetrievalOptions, "jurisdiction" | "sourceClasses">
+): KnowledgeChunk[] {
+  const jurisdictionFilter = normalizeJurisdictionFilter(options.jurisdiction);
+  const sourceClasses = options.sourceClasses;
+
+  return rankRetrievedChunks(
+    chunks.filter((chunk) => {
+      const chunkJurisdiction = normalizeChunkJurisdiction(chunk);
+      const chunkSourceClass = normalizeChunkSourceClass(chunk);
+
+      const matchesJurisdiction =
+        !jurisdictionFilter ||
+        chunkJurisdiction === jurisdictionFilter ||
+        chunkJurisdiction === "mixed" ||
+        chunkJurisdiction === "unknown";
+
+      const matchesSourceClass =
+        !sourceClasses ||
+        sourceClasses.length === 0 ||
+        sourceClasses.includes(chunkSourceClass);
+
+      return matchesJurisdiction && matchesSourceClass;
+    })
+  );
 }
 
 type SearchKnowledgeRpcName =
@@ -203,24 +264,91 @@ export type UserDocumentChunk = {
   similarity: number;
 };
 
+export type UserDocumentRetrievalOptions = {
+  topK?: number;
+  threshold?: number;
+  conversationId?: string;
+};
+
+type UserDocumentSearchRpcArgs = {
+  p_user_id: string;
+  query_embedding: number[];
+  match_threshold: number;
+  match_count: number;
+  p_conversation_id?: string;
+};
+
+export function buildUserDocumentSearchRpcArgs(input: {
+  userId: string;
+  queryEmbedding: number[];
+  threshold: number;
+  topK: number;
+  conversationId?: string;
+}): UserDocumentSearchRpcArgs {
+  const args: UserDocumentSearchRpcArgs = {
+    p_user_id: input.userId,
+    query_embedding: input.queryEmbedding,
+    match_threshold: input.threshold,
+    match_count: input.topK,
+  };
+
+  if (input.conversationId) {
+    args.p_conversation_id = input.conversationId;
+  }
+
+  return args;
+}
+
+export function shouldRetryLegacyUserDocumentSearch(error: unknown): boolean {
+  if (!error || typeof error !== "object") {
+    return false;
+  }
+
+  const code = "code" in error ? error.code : undefined;
+  const details = "details" in error ? String(error.details) : "";
+  const message = "message" in error ? String(error.message) : "";
+
+  return (
+    code === "PGRST202" &&
+    /p_conversation_id/i.test(`${details} ${message}`)
+  );
+}
+
 /**
- * Retrieve relevant chunks from a specific user's uploaded documents
+ * Retrieve relevant chunks from a specific user's uploaded documents.
+ * When conversationId is supplied, only chunks from that conversation are searched,
+ * so document grounding persists across all follow-up turns automatically.
  */
 export async function retrieveUserDocumentContext(
   query: string,
   userId: string,
-  options: RetrievalOptions = {}
+  options: UserDocumentRetrievalOptions = {}
 ): Promise<UserDocumentChunk[]> {
-  const { topK, threshold } = { ...DEFAULT_OPTIONS, ...options };
+  const { topK, threshold, conversationId } = { ...DEFAULT_OPTIONS, ...options };
 
   const { embedding } = await generateEmbedding(query);
 
-  const { data, error } = await getSupabase().rpc("search_user_document_chunks", {
-    p_user_id: userId,
-    query_embedding: embedding,
-    match_threshold: threshold,
-    match_count: topK,
+  const rpcArgs = buildUserDocumentSearchRpcArgs({
+    userId,
+    queryEmbedding: embedding,
+    threshold,
+    topK,
+    conversationId,
   });
+
+  let { data, error } = await getSupabase().rpc("search_user_document_chunks", rpcArgs);
+
+  if (error && conversationId && shouldRetryLegacyUserDocumentSearch(error)) {
+    const legacyArgs = buildUserDocumentSearchRpcArgs({
+      userId,
+      queryEmbedding: embedding,
+      threshold,
+      topK,
+    });
+    const legacyResult = await getSupabase().rpc("search_user_document_chunks", legacyArgs);
+    data = legacyResult.data;
+    error = legacyResult.error;
+  }
 
   if (error) {
     console.error("User document retrieval error:", error);

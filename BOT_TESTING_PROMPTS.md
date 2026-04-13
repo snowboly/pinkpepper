@@ -95,14 +95,17 @@ Requires allergen information on non-prepacked foods, such as foods sold loose o
 Takeaway summary: While the EU and UK have similar allergen labelling requirements, the UK has additional requirements, such as Natasha's Law, which mandates labelling of PPDS foods. Food businesses operating in both the EU and UK must ensure they comply with the relevant regulations and provide clear and accurate allergen information to consumers. [Source: Regulation (EU) No 1169/2011, Food Information Regulations 2014 (FIR), Natasha's Law]
 
 ### Private Standards / Certification
-19. "What is BRCGS and what does version 9 require?"
-20. "Explain the differences between BRC, SQF, and IFS Food standards."
-21. "What is FSSC 22000 and how does it relate to ISO 22000?"
-22. "What do I need to prepare for a BRCGS audit?"
+19. "What is BRCGS and what does version 9 require?" 
 
----
+20. "Explain the differences between BRC, SQF, and IFS Food standards." 
 
-## 2. Document Generation (Document Mode)
+21. "What is FSSC 22000 and how does it relate to ISO 22000?" - 
+
+22. "What do I need to prepare for a BRCGS audit?" - To prepare for a BRCGS audit, focus on the following key areas:
+
+
+
+## 2. Document Generation (Document Mode) - NO MORE DOC GENERATION
 
 ### HACCP Plans
 23. "Write me a HACCP plan for a small pizza restaurant."
@@ -176,8 +179,24 @@ Takeaway summary: While the EU and UK have similar allergen labelling requiremen
 ## 5. Business-Type Specific Questions
 
 ### Restaurant/Cafe
-65. "What food safety documents does a new restaurant need before opening?"
-66. "How do I set up a food safety management system for a small cafe?"
+65. "What food safety documents does a new restaurant need before opening?" - To open a new restaurant, you need a food safety management system (FSMS) based on HACCP principles, as required by Regulation (EC) 852/2004 [Source: Regulation (EC) 852/2004, Article 5]. Key documents include:
+
+Food Safety Policy: Outlines your commitment to food safety [Source: Document 4, Section 1].
+HACCP Plan: Identifies hazards, critical control points, and corrective actions [Source: Document 4, Section 6].
+Procedures for premises, equipment, and personal hygiene [Source: Document 6, Sections 3 and 4].
+Allergen management procedure, including Natasha's Law compliance for pre-packed foods [Source: pinkpepper-export.docx].
+Training records for all staff, including food handlers and supervisors [Source: Document 1, Training Requirements].
+Supplier approval procedure to ensure ingredients are safe and from approved sources [Source: Document 2]. These documents form the foundation of your FSMS, demonstrating your restaurant's commitment to serving safe food.
+
+66. "How do I set up a food safety management system for a small cafe?" - To set up a food safety management system for a small cafe, follow these essential steps:
+
+Develop a food safety policy: Outline your commitment to food safety, including responsibilities and objectives [Source: Document 1, Section 1].
+Conduct a hazard analysis: Identify biological, chemical, physical, and allergen hazards in your cafe [Source: Document 1, Section 6].
+Implement prerequisite programs (PRPs): Establish procedures for cleaning, pest control, personal hygiene, and supplier management [Source: Document 3, Clause 8.2].
+Create a HACCP plan: Identify critical control points, set critical limits, and establish monitoring and corrective action procedures [Source: Document 1, Section 6].
+Train staff: Provide food hygiene induction, allergen awareness, and role-specific training [Source: Document 5, Section 7].
+Maintain records: Keep records of training, temperature monitoring, cleaning, and customer complaints [Source: Document 5, Section 8].
+Regularly review and update: Review your food safety management system annually and update as necessary [Source: Document 5, Section 8].
 
 ### Food Manufacturer
 67. "What GMP requirements apply to a food manufacturing facility?"

@@ -8,7 +8,7 @@ import type { SubscriptionTier } from "@/lib/tier";
 import { TIER_CAPABILITIES } from "@/lib/tier";
 import type { Citation } from "@/lib/rag/citations";
 import type { VerificationState } from "@/lib/rag/verification";
-import { getPersonaForConversation } from "@/lib/personas";
+import { getAuditPersona, getPersonaForConversation } from "@/lib/personas";
 import type { Message, Conversation, Project, ChatWorkspaceProps, PersonaInfo } from "./types";
 import ChatSidebar from "./ChatSidebar";
 import ChatMessages from "./ChatMessages";
@@ -20,6 +20,7 @@ import { useAttachments } from "./useAttachments";
 import {
   parseMessageArtifact,
   parseMessageCitations,
+  parseMessagePersona,
   parseMessageVerificationState,
 } from "./chat-message-metadata";
 import { applyStreamError } from "./chat-stream-state";
@@ -27,12 +28,27 @@ import { applyStreamError } from "./chat-stream-state";
 type StreamUsage = { used: number; limit: number | null; tier: SubscriptionTier; isAdmin?: boolean };
 type StreamDoneData = { citations?: Citation[]; verificationState?: VerificationState; usage?: StreamUsage };
 type WorkspaceMode = "ask" | "virtual_audit";
+type ModeSessionState = {
+  prompt: string;
+  conversationId: string | null;
+  currentPersona: PersonaInfo | null;
+  messages: Message[];
+};
+
+const EMPTY_MODE_SESSION: ModeSessionState = {
+  prompt: "",
+  conversationId: null,
+  currentPersona: null,
+  messages: [],
+};
 
 export default function ChatWorkspace({
   userEmail,
   initialTier,
   initialUsage,
   usageLimit,
+  initialAuditorUsage,
+  auditorUsageLimit,
   dailyImageUploads,
   canExportWord,
   canReview,
@@ -41,10 +57,10 @@ export default function ChatWorkspace({
 }: ChatWorkspaceProps) {
   const tw = useTranslations("workspace");
   // ── Core chat state ──
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [prompt, setPrompt] = useState("");
-  const [conversationId, setConversationId] = useState<string | null>(null);
-  const [currentPersona, setCurrentPersona] = useState<PersonaInfo | null>(null);
+  const [modeSessions, setModeSessions] = useState<Record<WorkspaceMode, ModeSessionState>>({
+    ask: { ...EMPTY_MODE_SESSION },
+    virtual_audit: { ...EMPTY_MODE_SESSION },
+  });
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [loadingConversations, setLoadingConversations] = useState(true);
   const [loadingMessages, setLoadingMessages] = useState(false);
@@ -59,6 +75,8 @@ export default function ChatWorkspace({
   const [tier, setTier] = useState<SubscriptionTier>(initialTier);
   const [, setUsage] = useState(initialUsage);
   const [, setUsageLimit] = useState(usageLimit);
+  const [, setAuditorUsage] = useState(initialAuditorUsage);
+  const [, setAuditorUsageLimit] = useState(auditorUsageLimit);
   const [isAdmin, setIsAdmin] = useState(initialIsAdmin);
 
   // ── Export state ──
@@ -77,8 +95,9 @@ export default function ChatWorkspace({
   const [showReviewModal, setShowReviewModal] = useState(false);
 
   // ── Upgrade modal state ──
-  const [upgradeModalTrigger, setUpgradeModalTrigger] = useState<"message_limit" | "image_limit" | "export" | "review" | "audit_mode" | "template_download" | null>(null);
+  const [upgradeModalTrigger, setUpgradeModalTrigger] = useState<"message_limit" | "expert_limit" | "image_limit" | "export" | "review" | "audit_mode" | "template_download" | null>(null);
   const [workspaceMode, setWorkspaceMode] = useState<WorkspaceMode>("ask");
+  const activeSession = modeSessions[workspaceMode];
 
   // ── UI state ──
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -91,6 +110,26 @@ export default function ChatWorkspace({
 
   const canUploadImages = isAdmin || dailyImageUploads > 0;
 
+  const updateModeSession = useCallback((mode: WorkspaceMode, patch: Partial<ModeSessionState>) => {
+    setModeSessions((prev) => ({
+      ...prev,
+      [mode]: {
+        ...prev[mode],
+        ...patch,
+      },
+    }));
+  }, []);
+
+  const updateActiveSession = useCallback((patch: Partial<ModeSessionState>) => {
+    setModeSessions((prev) => ({
+      ...prev,
+      [workspaceMode]: {
+        ...prev[workspaceMode],
+        ...patch,
+      },
+    }));
+  }, [workspaceMode]);
+
   // Never allow API responses to downgrade a paid tier to free (e.g. due to a transient
   // DB error returning null profile data). Only refreshBillingStatus() should freely
   // change tier since it queries the authoritative billing endpoint.
@@ -101,8 +140,14 @@ export default function ChatWorkspace({
   }, []);
 
   const pushAssistantMessage = useCallback((content: string, persona?: PersonaInfo | null) => {
-    setMessages((prev) => [...prev, { role: "assistant", content, persona: persona ?? undefined }]);
-  }, []);
+    setModeSessions((prev) => ({
+      ...prev,
+      [workspaceMode]: {
+        ...prev[workspaceMode],
+        messages: [...prev[workspaceMode].messages, { role: "assistant", content, persona: persona ?? undefined }],
+      },
+    }));
+  }, [workspaceMode]);
 
   const clearTypingInterval = useCallback(() => {
     if (typingIntervalRef.current) {
@@ -112,8 +157,8 @@ export default function ChatWorkspace({
   }, []);
 
   const finalizeStreamingMessage = useCallback((doneData: StreamDoneData | null) => {
-    setMessages((prev) => {
-      const updated = [...prev];
+    setModeSessions((prev) => {
+      const updated = [...prev[workspaceMode].messages];
       const last = updated[updated.length - 1];
       if (last?.isStreaming) {
         updated[updated.length - 1] = {
@@ -123,14 +168,20 @@ export default function ChatWorkspace({
           verificationState: doneData?.verificationState ?? null,
         };
       }
-      return updated;
+      return {
+        ...prev,
+        [workspaceMode]: {
+          ...prev[workspaceMode],
+          messages: updated,
+        },
+      };
     });
     if (doneData?.usage) {
       setUsage(doneData.usage.used);
       safeTierUpdate(doneData.usage.tier);
       setIsAdmin(Boolean(doneData.usage.isAdmin));
     }
-  }, [safeTierUpdate]);
+  }, [safeTierUpdate, workspaceMode]);
 
   const startTypingDrain = useCallback(() => {
     if (typingIntervalRef.current) return;
@@ -141,12 +192,18 @@ export default function ChatWorkspace({
         const chunkSize = queue.length > 40 ? 4 : queue.length > 20 ? 3 : 2;
         const nextChunk = queue.slice(0, chunkSize);
         typingQueueRef.current = queue.slice(chunkSize);
-        setMessages((prev) => {
-          const updated = [...prev];
+        setModeSessions((prev) => {
+          const updated = [...prev[workspaceMode].messages];
           const last = updated[updated.length - 1];
           if (!last) return prev;
           updated[updated.length - 1] = { ...last, content: last.content + nextChunk };
-          return updated;
+          return {
+            ...prev,
+            [workspaceMode]: {
+              ...prev[workspaceMode],
+              messages: updated,
+            },
+          };
         });
         typingIntervalRef.current = requestAnimationFrame(drain);
         return;
@@ -159,11 +216,10 @@ export default function ChatWorkspace({
       typingIntervalRef.current = null;
     };
     typingIntervalRef.current = requestAnimationFrame(drain);
-  }, [finalizeStreamingMessage]);
+  }, [finalizeStreamingMessage, workspaceMode]);
 
-  // ── Drag & drop image onto chat area ──
+  // ── Drag & drop attachments onto chat area ──
   function handleDragOver(e: React.DragEvent) {
-    if (!canUploadImages) return;
     e.preventDefault();
     setIsDraggingOver(true);
   }
@@ -176,9 +232,8 @@ export default function ChatWorkspace({
   function handleDrop(e: React.DragEvent) {
     e.preventDefault();
     setIsDraggingOver(false);
-    if (!canUploadImages) return;
     const file = e.dataTransfer.files?.[0];
-    if (file) handleImageSelect(file);
+    if (file) handleDroppedAttachment(file);
   }
 
   // ── Derived values ──
@@ -199,16 +254,21 @@ export default function ChatWorkspace({
     ? "border-[#D97706] bg-[#FFFBEB] text-[#92400E]"
     : "border-[#E2E8F0] bg-white text-[#64748B]";
 
+  const consultantAttachments = useAttachments({ canUploadImages, setError });
+  const auditorAttachments = useAttachments({ canUploadImages, setError });
+  const activeAttachments = workspaceMode === "virtual_audit" ? auditorAttachments : consultantAttachments;
+
   const {
     attachedImage,
     imagePreview,
     attachedDocument,
-    setAttachedDocument,
     handleImageSelect,
+    handleDocumentSelect,
+    handleDroppedAttachment,
     clearImage,
     restoreImage,
     clearDocument,
-  } = useAttachments({ canUploadImages, setError });
+  } = activeAttachments;
 
   // ── Image helpers ──
   function trackWorkspaceEvent(eventName: string, payload: Record<string, string | number | boolean | null>) {
@@ -249,7 +309,15 @@ export default function ChatWorkspace({
     setBillingError(null);
     try {
       const res = await fetch("/api/billing/status");
-      const data = (await res.json()) as { tier?: SubscriptionTier; isAdmin?: boolean; usage?: number; usageLimit?: number; error?: string };
+      const data = (await res.json()) as {
+        tier?: SubscriptionTier;
+        isAdmin?: boolean;
+        usage?: number;
+        usageLimit?: number;
+        auditorUsage?: number;
+        auditorUsageLimit?: number;
+        error?: string;
+      };
       if (!res.ok || !data.tier) {
         setBillingError(data.error ?? "Failed to refresh billing status.");
         return;
@@ -258,6 +326,8 @@ export default function ChatWorkspace({
       setIsAdmin(Boolean(data.isAdmin));
       if (typeof data.usage === "number") setUsage(data.usage);
       if (typeof data.usageLimit === "number") setUsageLimit(data.usageLimit);
+      if (typeof data.auditorUsage === "number") setAuditorUsage(data.auditorUsage);
+      if (typeof data.auditorUsageLimit === "number") setAuditorUsageLimit(data.auditorUsageLimit);
     } catch {
       setBillingError("Network error while refreshing billing status.");
     }
@@ -281,7 +351,7 @@ export default function ChatWorkspace({
     }
   }, []);
 
-  async function loadConversationMessages(id: string) {
+  const loadConversationMessages = useCallback(async (id: string) => {
     abortControllerRef.current?.abort();
     setLoadingMessages(true);
     setError(null);
@@ -292,23 +362,31 @@ export default function ChatWorkspace({
         setError(data.error ?? "Failed to load messages.");
         return;
       }
-      const persona = getPersonaForConversation(id);
-      setCurrentPersona(persona);
-      setConversationId(id);
-      setMessages((data.messages ?? []).map((m) => ({
-        role: m.role,
-        content: m.content,
-        citations: parseMessageCitations(m.metadata),
-        verificationState: parseMessageVerificationState(m.metadata),
-        artifact: parseMessageArtifact(m.metadata),
-        ...(m.role === "assistant" ? { persona: { id: persona.id, name: persona.name } } : {}),
-      })));
+      const assistantPersona =
+        (data.messages ?? [])
+          .map((m) => parseMessagePersona(m.metadata))
+          .find((persona): persona is PersonaInfo => Boolean(persona)) ??
+        (workspaceMode === "virtual_audit" ? getAuditPersona() : getPersonaForConversation(id));
+      updateModeSession(workspaceMode, {
+        currentPersona: assistantPersona,
+        conversationId: id,
+        messages: (data.messages ?? []).map((m) => ({
+          role: m.role,
+          content: m.content,
+          citations: parseMessageCitations(m.metadata),
+          verificationState: parseMessageVerificationState(m.metadata),
+          artifact: parseMessageArtifact(m.metadata),
+          ...(m.role === "assistant"
+            ? { persona: parseMessagePersona(m.metadata) ?? assistantPersona }
+            : {}),
+        })),
+      });
     } catch {
       setError("Network error while loading messages.");
     } finally {
       setLoadingMessages(false);
     }
-  }
+  }, [updateModeSession, workspaceMode]);
 
   async function removeConversation(id: string) {
     setError(null);
@@ -320,9 +398,8 @@ export default function ChatWorkspace({
         return;
       }
       setConversations((prev) => prev.filter((c) => c.id !== id));
-      if (conversationId === id) {
-        setConversationId(null);
-        setMessages([]);
+      if (activeSession.conversationId === id) {
+        updateActiveSession({ conversationId: null, messages: [], currentPersona: null });
         window.history.replaceState(null, "", window.location.pathname);
       }
     } catch {
@@ -344,9 +421,8 @@ export default function ChatWorkspace({
         return;
       }
       setConversations((prev) => prev.filter((c) => c.id !== id));
-      if (conversationId === id) {
-        setConversationId(null);
-        setMessages([]);
+      if (activeSession.conversationId === id) {
+        updateActiveSession({ conversationId: null, messages: [], currentPersona: null });
         window.history.replaceState(null, "", window.location.pathname);
       }
     } catch {
@@ -450,9 +526,7 @@ export default function ChatWorkspace({
     typingQueueRef.current = "";
     pendingDoneRef.current = null;
     clearTypingInterval();
-    setConversationId(null);
-    setCurrentPersona(null);
-    setMessages([]);
+    updateActiveSession({ ...EMPTY_MODE_SESSION });
     setSidebarOpen(false);
     clearImage();
     clearDocument();
@@ -470,10 +544,6 @@ export default function ChatWorkspace({
       trackWorkspaceEvent("virtual_audit_started", { tier, source: "workspace_mode_toggle" });
     }
     setWorkspaceMode(nextMode);
-    // Start a fresh conversation when entering virtual audit mode
-    if (nextMode === "virtual_audit") {
-      startNewChat();
-    }
   }
 
   // ── Reviews ──
@@ -481,7 +551,7 @@ export default function ChatWorkspace({
   // ── Export ──
   async function exportDocument() {
     setError(null);
-    if (!conversationId) {
+    if (!activeSession.conversationId) {
       setError("Send at least one message before exporting.");
       return;
     }
@@ -491,11 +561,11 @@ export default function ChatWorkspace({
     }
     setExportLoading("docx");
     try {
-      trackWorkspaceEvent("export_started", { format: "docx", tier, source: "workspace", conversationId: conversationId ?? null });
+      trackWorkspaceEvent("export_started", { format: "docx", tier, source: "workspace", conversationId: activeSession.conversationId ?? null });
       const res = await fetch("/api/export/docx", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ conversationId }),
+        body: JSON.stringify({ conversationId: activeSession.conversationId }),
       });
       if (!res.ok) {
         const data = (await res.json()) as { error?: string };
@@ -511,7 +581,7 @@ export default function ChatWorkspace({
       a.click();
       a.remove();
       URL.revokeObjectURL(url);
-      trackWorkspaceEvent("export_completed", { format: "docx", tier, source: "workspace", conversationId: conversationId ?? null });
+      trackWorkspaceEvent("export_completed", { format: "docx", tier, source: "workspace", conversationId: activeSession.conversationId ?? null });
     } catch {
       setError("Network error while exporting.");
     } finally {
@@ -523,10 +593,11 @@ export default function ChatWorkspace({
   async function sendPromptValue(rawPrompt: string, options?: { displayPrompt?: string }) {
     let value = rawPrompt.trim();
     if ((!value && !attachedImage && !attachedDocument) || loading) return;
+    let activeConversationId = activeSession.conversationId;
 
     setLoading(true);
     setError(null);
-    setPrompt("");
+    updateActiveSession({ prompt: "" });
     if (textareaRef.current) textareaRef.current.style.height = "auto";
 
     // If a document is attached but no text was typed, provide a default query
@@ -542,7 +613,13 @@ export default function ChatWorkspace({
       imagePreview: imagePreview ?? undefined,
       documentName: attachedDocument?.name ?? undefined,
     };
-    setMessages((prev) => [...prev, userMessage]);
+    setModeSessions((prev) => ({
+      ...prev,
+      [workspaceMode]: {
+        ...prev[workspaceMode],
+        messages: [...prev[workspaceMode].messages, userMessage],
+      },
+    }));
 
     const currentImage = attachedImage;
     const currentImagePreview = imagePreview;
@@ -556,9 +633,19 @@ export default function ChatWorkspace({
       try {
         const fd = new FormData();
         fd.append("file", currentDocument);
+        if (activeConversationId) {
+          fd.append("conversationId", activeConversationId);
+        }
+        fd.append("draftTitle", (options?.displayPrompt ?? value) || currentDocument.name);
         const res = await fetch("/api/documents/upload", { method: "POST", body: fd });
-        const data = (await res.json()) as { chunksStored?: number; warning?: string; error?: string };
-        if (!res.ok || (data.chunksStored ?? 0) === 0) {
+        const data = (await res.json()) as {
+          chunksStored?: number;
+          extractedText?: string;
+          warning?: string;
+          error?: string;
+          conversationId?: string;
+        };
+        if (!res.ok || (!data.extractedText && (data.chunksStored ?? 0) === 0)) {
           const reason = data.warning ?? data.error ?? "could not extract text";
           pushAssistantMessage(
             `I received **${currentDocument.name}** but couldn't process it (${reason}). Please try a plain text or supported file format.`
@@ -566,9 +653,16 @@ export default function ChatWorkspace({
           setLoading(false);
           return;
         }
+        if (data.conversationId) {
+          activeConversationId = data.conversationId;
+          updateActiveSession({ conversationId: data.conversationId });
+        }
         // Partial extraction warning — inform the LLM so it can caveat its answer
         if (data.warning) {
           value += `\n\n[Note: The uploaded document "${currentDocument.name}" was only partially extracted: ${data.warning}]`;
+        }
+        if ((data.chunksStored ?? 0) === 0 && data.extractedText) {
+          value += `\n\n[Uploaded document content fallback: ${currentDocument.name}]\n${data.extractedText.slice(0, 12000)}`;
         }
         // Success — fall through to the streaming chat flow below.
         // retrieveUserDocumentContext() in /api/chat/stream will find the just-uploaded chunks.
@@ -587,12 +681,19 @@ export default function ChatWorkspace({
       typingQueueRef.current = "";
       pendingDoneRef.current = null;
       clearTypingInterval();
-      setMessages((prev) => [...prev, { role: "assistant", content: "", isStreaming: true, persona: currentPersona ?? undefined }]);
+      const activePersona = activeSession.currentPersona;
+      setModeSessions((prev) => ({
+        ...prev,
+        [workspaceMode]: {
+          ...prev[workspaceMode],
+          messages: [...prev[workspaceMode].messages, { role: "assistant", content: "", isStreaming: true, persona: activePersona ?? undefined }],
+        },
+      }));
       try {
         const fd = new FormData();
         fd.append("image", currentImage);
         fd.append("message", value);
-        if (conversationId) fd.append("conversationId", conversationId);
+        if (activeConversationId) fd.append("conversationId", activeConversationId);
         const res = await fetch("/api/chat", { method: "POST", body: fd });
         const data = (await res.json()) as {
           error?: string;
@@ -608,22 +709,34 @@ export default function ChatWorkspace({
           } else {
             setError(data.error ?? "Request failed");
           }
-          setMessages((prev) => prev.slice(0, -2)); // remove user + streaming placeholder
-          setPrompt(value);
+          setModeSessions((prev) => ({
+            ...prev,
+            [workspaceMode]: {
+              ...prev[workspaceMode],
+              messages: prev[workspaceMode].messages.slice(0, -2),
+              prompt: value,
+            },
+          }));
           restoreImage(currentImage, currentImagePreview);
           return;
         }
-        if (data.conversationId) setConversationId(data.conversationId);
+        if (data.conversationId) updateActiveSession({ conversationId: data.conversationId });
         if (data.persona) {
-          setCurrentPersona(data.persona);
+          updateActiveSession({ currentPersona: data.persona });
           // Stamp persona on the streaming placeholder
-          setMessages((prev) => {
-            const updated = [...prev];
+          setModeSessions((prev) => {
+            const updated = [...prev[workspaceMode].messages];
             const last = updated[updated.length - 1];
             if (last?.isStreaming) {
               updated[updated.length - 1] = { ...last, persona: data.persona };
             }
-            return updated;
+            return {
+              ...prev,
+              [workspaceMode]: {
+                ...prev[workspaceMode],
+                messages: updated,
+              },
+            };
           });
         }
         if (data.usage) {
@@ -640,8 +753,14 @@ export default function ChatWorkspace({
         await loadConversations(true);
       } catch {
         setError("Network error. Please try again.");
-        setMessages((prev) => prev.slice(0, -2)); // remove user + streaming placeholder
-        setPrompt(value);
+        setModeSessions((prev) => ({
+          ...prev,
+          [workspaceMode]: {
+            ...prev[workspaceMode],
+            messages: prev[workspaceMode].messages.slice(0, -2),
+            prompt: value,
+          },
+        }));
       } finally {
         setLoading(false);
       }
@@ -653,33 +772,52 @@ export default function ChatWorkspace({
     typingQueueRef.current = "";
     pendingDoneRef.current = null;
     clearTypingInterval();
-    setMessages((prev) => [...prev, { role: "assistant", content: "", isStreaming: true, persona: currentPersona ?? undefined }]);
+    const activePersona = activeSession.currentPersona;
+    setModeSessions((prev) => ({
+      ...prev,
+      [workspaceMode]: {
+        ...prev[workspaceMode],
+        messages: [...prev[workspaceMode].messages, { role: "assistant", content: "", isStreaming: true, persona: activePersona ?? undefined }],
+      },
+    }));
 
     try {
       const streamEndpoint = workspaceMode === "virtual_audit" ? "/api/audit/stream" : "/api/chat/stream";
       const res = await fetch(streamEndpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: value, conversationId }),
+        body: JSON.stringify({ message: value, conversationId: activeConversationId }),
         signal: abortControllerRef.current.signal,
       });
 
       if (!res.ok) {
         let errMsg = "Request failed";
         const isLimit = res.status === 402;
+        let responseUpgradeTrigger: "message_limit" | "expert_limit" | "audit_mode" | null = null;
         try {
-          const data = await res.json();
+          const data = await res.json() as { error?: string; upgradeTrigger?: "message_limit" | "expert_limit" | "audit_mode" };
           errMsg = data.error ?? errMsg;
+          if (data.upgradeTrigger) {
+            responseUpgradeTrigger = data.upgradeTrigger;
+          }
         } catch { /* body may not be JSON */ }
-        if (isLimit && workspaceMode === "virtual_audit") {
+        if (isLimit && responseUpgradeTrigger) {
+          setUpgradeModalTrigger(responseUpgradeTrigger);
+        } else if (isLimit && workspaceMode === "virtual_audit") {
           setUpgradeModalTrigger("audit_mode");
         } else if (isLimit) {
           setUpgradeModalTrigger("message_limit");
         } else {
           setError(errMsg);
         }
-        setMessages((prev) => prev.slice(0, -2)); // remove user + placeholder
-        setPrompt(value);
+        setModeSessions((prev) => ({
+          ...prev,
+          [workspaceMode]: {
+            ...prev[workspaceMode],
+            messages: prev[workspaceMode].messages.slice(0, -2),
+            prompt: value,
+          },
+        }));
         setLoading(false);
         return;
       }
@@ -719,18 +857,24 @@ export default function ChatWorkspace({
           }
 
           if (event.type === "metadata") {
-            if (event.conversationId) setConversationId(event.conversationId);
+            if (event.conversationId) updateActiveSession({ conversationId: event.conversationId });
             if (event.persona) {
               const p = event.persona as PersonaInfo;
-              setCurrentPersona(p);
+              updateActiveSession({ currentPersona: p });
               // Stamp persona on the streaming assistant message
-              setMessages((prev) => {
-                const updated = [...prev];
+              setModeSessions((prev) => {
+                const updated = [...prev[workspaceMode].messages];
                 const last = updated[updated.length - 1];
                 if (last?.isStreaming) {
                   updated[updated.length - 1] = { ...last, persona: p };
                 }
-                return updated;
+                return {
+                  ...prev,
+                  [workspaceMode]: {
+                    ...prev[workspaceMode],
+                    messages: updated,
+                  },
+                };
               });
             }
           } else if (event.type === "content" && event.delta) {
@@ -740,12 +884,21 @@ export default function ChatWorkspace({
             typingQueueRef.current = "";
             pendingDoneRef.current = null;
             clearTypingInterval();
-            setMessages((prev) => applyStreamError({
-              messages: prev,
-              promptValue: value,
-              errorMessage: event.message,
-            }).messages);
-            setPrompt(value);
+            setModeSessions((prev) => {
+              const result = applyStreamError({
+                messages: prev[workspaceMode].messages,
+                promptValue: value,
+                errorMessage: event.message,
+              });
+              return {
+                ...prev,
+                [workspaceMode]: {
+                  ...prev[workspaceMode],
+                  messages: result.messages,
+                  prompt: value,
+                },
+              };
+            });
             setError(event.message ?? "Stream interrupted");
           } else if (event.type === "done") {
             pendingDoneRef.current = {
@@ -770,25 +923,40 @@ export default function ChatWorkspace({
         pendingDoneRef.current = null;
         clearTypingInterval();
         // User navigated away — keep partial content visible
-        setMessages((prev) => {
-          const updated = [...prev];
+        setModeSessions((prev) => {
+          const updated = [...prev[workspaceMode].messages];
           const last = updated[updated.length - 1];
           if (last?.isStreaming) {
             updated[updated.length - 1] = { ...last, isStreaming: false };
           }
-          return updated;
+          return {
+            ...prev,
+            [workspaceMode]: {
+              ...prev[workspaceMode],
+              messages: updated,
+            },
+          };
         });
       } else {
         typingQueueRef.current = "";
         pendingDoneRef.current = null;
         clearTypingInterval();
-        setMessages((prev) => applyStreamError({
-          messages: prev,
-          promptValue: value,
-          errorMessage: "Network error. Please try again.",
-        }).messages);
+        setModeSessions((prev) => {
+          const result = applyStreamError({
+            messages: prev[workspaceMode].messages,
+            promptValue: value,
+            errorMessage: "Network error. Please try again.",
+          });
+          return {
+            ...prev,
+            [workspaceMode]: {
+              ...prev[workspaceMode],
+              messages: result.messages,
+              prompt: value,
+            },
+          };
+        });
         setError("Network error. Please try again.");
-        setPrompt(value);
       }
     } finally {
       setLoading(false);
@@ -798,13 +966,13 @@ export default function ChatWorkspace({
 
   async function sendPrompt(event: FormEvent) {
     event.preventDefault();
-    await sendPromptValue(prompt);
+    await sendPromptValue(activeSession.prompt);
   }
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      void sendPromptValue(prompt);
+      void sendPromptValue(activeSession.prompt);
     }
   }
 
@@ -815,29 +983,29 @@ export default function ChatWorkspace({
   // Track whether conversationId was set by user clicking sidebar (not by streaming metadata)
   const loadConvOnSelect = useRef<string | null>(null);
 
-  function selectConversation(id: string) {
+  const selectConversation = useCallback((id: string) => {
     loadConvOnSelect.current = id;
-    setConversationId(id);
+    updateActiveSession({ conversationId: id });
     setSidebarOpen(false);
     window.history.replaceState(null, "", `?c=${id}`);
-  }
+  }, [updateActiveSession]);
 
   useEffect(() => {
-    if (!conversationId) return;
+    if (!activeSession.conversationId) return;
     // Only load messages from DB when user explicitly selected a conversation,
     // NOT when conversationId was set by streaming metadata (which would abort the active stream).
-    if (loadConvOnSelect.current === conversationId) {
+    if (loadConvOnSelect.current === activeSession.conversationId) {
       loadConvOnSelect.current = null;
-      void loadConversationMessages(conversationId);
+      void loadConversationMessages(activeSession.conversationId);
     }
-  }, [conversationId]);
+  }, [activeSession.conversationId, loadConversationMessages]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get("billing") === "success") void refreshBillingStatus();
     const cId = params.get("c");
     if (cId) selectConversation(cId);
-  }, []);
+  }, [selectConversation]);
 
   useEffect(() => {
     return () => clearTypingInterval();
@@ -851,7 +1019,7 @@ export default function ChatWorkspace({
         <ChatSidebar
           conversations={conversations}
           projects={projects}
-          activeConversationId={conversationId}
+          activeConversationId={activeSession.conversationId}
           loadingConversations={loadingConversations}
           sidebarOpen={sidebarOpen}
           userEmail={userEmail}
@@ -896,11 +1064,11 @@ export default function ChatWorkspace({
               <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           </button>
-          {isDraggingOver && canUploadImages && (
+          {isDraggingOver && (
             <div className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center">
               <div className="rounded-2xl border-2 border-dashed border-[#E11D48] bg-white/90 px-8 py-6 text-center shadow-lg">
-                <p className="text-sm font-semibold text-[#E11D48]">{tw("dropPhotoToAnalyse")}</p>
-                <p className="text-xs text-[#64748B] mt-1">{tw("dropPhotoHint")}</p>
+                <p className="text-sm font-semibold text-[#E11D48]">{tw("dropAttachmentToAnalyse")}</p>
+                <p className="text-xs text-[#64748B] mt-1">{canUploadImages ? tw("dropAttachmentHint") : tw("dropDocumentHint")}</p>
               </div>
             </div>
           )}
@@ -919,11 +1087,12 @@ export default function ChatWorkspace({
 
 
           <ChatMessages
-            messages={messages}
+            messages={activeSession.messages}
             loading={loading}
             loadingMessages={loadingMessages}
             canUploadImages={canUploadImages}
-            currentPersona={currentPersona}
+            currentPersona={activeSession.currentPersona}
+            workspaceMode={workspaceMode}
           />
 
           <div className="flex-shrink-0 border-t border-[#E2E8F0] bg-white px-4 py-2">
@@ -979,7 +1148,7 @@ export default function ChatWorkspace({
                   {tw("generateReport")}
                 </button>
               )}
-              {conversationId && (
+              {activeSession.conversationId && (
                 <button
                   onClick={() => void exportDocument()}
                   disabled={exportLoading !== null}
@@ -993,18 +1162,18 @@ export default function ChatWorkspace({
 
           {/* Input */}
           <ChatInput
-            prompt={prompt}
+            prompt={activeSession.prompt}
             loading={loading}
             attachedImage={attachedImage}
             imagePreview={imagePreview}
             canUploadImages={canUploadImages}
             attachedDocument={attachedDocument}
-            onPromptChange={setPrompt}
+            onPromptChange={(value) => updateActiveSession({ prompt: value })}
             onSubmit={sendPrompt}
             onStop={() => abortControllerRef.current?.abort()}
             onImageSelect={handleImageSelect}
             onClearImage={clearImage}
-            onDocumentSelect={setAttachedDocument}
+            onDocumentSelect={handleDocumentSelect}
             onClearDocument={clearDocument}
             onKeyDown={handleKeyDown}
             textareaRef={textareaRef}

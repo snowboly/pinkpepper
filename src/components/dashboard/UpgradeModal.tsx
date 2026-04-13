@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { track } from "@vercel/analytics";
 import type { SubscriptionTier } from "@/lib/tier";
 
 type UpgradeModalProps = {
-  trigger: "message_limit" | "image_limit" | "export" | "review" | "audit_mode" | "template_download";
+  trigger: "message_limit" | "expert_limit" | "image_limit" | "export" | "review" | "audit_mode" | "template_download";
   currentTier: SubscriptionTier;
   onClose: () => void;
 };
@@ -26,10 +26,31 @@ const PLAN_DEFS = [
   },
 ];
 
+async function readCheckoutResponse(res: Response): Promise<{ url?: string; error?: string }> {
+  const contentType = res.headers.get("content-type") ?? "";
+  if (contentType.includes("application/json")) {
+    return (await res.json()) as { url?: string; error?: string };
+  }
+
+  const text = await res.text();
+  return { error: text || "Unable to start checkout." };
+}
+
+function openCheckout(url: string) {
+  const opened = window.open(url, "_blank", "noopener,noreferrer");
+  if (opened) {
+    opened.opener = null;
+    return;
+  }
+
+  window.location.href = url;
+}
+
 export default function UpgradeModal({ trigger, currentTier, onClose }: UpgradeModalProps) {
   const t = useTranslations("upgrade");
   const [loading, setLoading] = useState<SubscriptionTier | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const checkoutInFlight = useRef(false);
   const heading = trigger === "template_download"
     ? "Download DOCX templates"
     : t(`triggers.${trigger}.heading`);
@@ -46,6 +67,8 @@ export default function UpgradeModal({ trigger, currentTier, onClose }: UpgradeM
   }, [currentTier, trigger]);
 
   async function checkout(plan: SubscriptionTier) {
+    if (checkoutInFlight.current) return;
+    checkoutInFlight.current = true;
     track("checkout_started", { plan, source: "upgrade_modal", trigger, currentTier });
     setLoading(plan);
     setError(null);
@@ -55,15 +78,16 @@ export default function UpgradeModal({ trigger, currentTier, onClose }: UpgradeM
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ plan }),
       });
-      const data = (await res.json()) as { url?: string; error?: string };
+      const data = await readCheckoutResponse(res);
       if (!res.ok || !data.url) {
         setError(data.error ?? t("unableToCheckout"));
         return;
       }
-      window.location.href = data.url;
+      openCheckout(data.url);
     } catch {
       setError(t("networkError"));
     } finally {
+      checkoutInFlight.current = false;
       setLoading(null);
     }
   }

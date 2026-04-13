@@ -5,6 +5,7 @@ import type { VerificationState } from "@/lib/rag/verification";
 export type PersonaInfo = {
   id: string;
   name: string;
+  avatar: string;
 };
 
 export type MessageArtifact = {
@@ -51,6 +52,8 @@ export type ChatWorkspaceProps = {
   initialTier: SubscriptionTier;
   initialUsage: number;
   usageLimit: number;
+  initialAuditorUsage: number;
+  auditorUsageLimit: number;
   dailyImageUploads: number;
   canExportPdf: boolean;
   canExportWord: boolean;

@@ -2,36 +2,31 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { CheckCircle2, Mail } from "lucide-react";
 import PricingActions from "@/components/pricing/PricingActions";
+import { faqs as sharedFaqs } from "@/data/faqs";
 import { createClient } from "@/utils/supabase/server";
+import { getCspNonce } from "@/lib/security/csp";
 
 export const metadata: Metadata = {
-  title: "Pricing | PinkPepper - Food Safety Compliance Software",
+  title: "Pricing — From €0/mo | PinkPepper Food Safety Software",
   description:
-    "Pricing for food safety teams that need clearer day-to-day support, stronger audit preparation, downloadable templates, and specialist backup when the risk is higher.",
+    "Start free. Plus at €19/mo for daily HACCP & SOP use. Pro at €99/mo adds Auditor mode + 2h human consultancy. Save €18,000+/year on compliance costs.",
   alternates: {
     canonical: "https://pinkpepper.io/pricing",
   },
 };
 
-const planChanges = [
-  {
-    plan: "Free",
-    detail: "Chat on web and mobile, write and edit food safety content, analyze text and images, and access the curated knowledge base.",
-  },
-  {
-    plan: "Plus",
-    detail: "Everything in Free, plus more usage, unlimited saved conversations and projects, and access to downloadable templates.",
-  },
-  {
-    plan: "Pro",
-    detail: "Everything in Plus, plus the highest usage limits, virtual audit mode, 2h/month of food safety consultancy, and priority support.",
-  },
-];
+const pricingFaqs = [
+  (() => {
+    const modeFaq = sharedFaqs.find((faq) => faq.id === "consultant-vs-auditor");
+    if (!modeFaq) {
+      throw new Error("Missing consultant-vs-auditor FAQ");
+    }
 
-const faqs = [
+    return { q: modeFaq.question, a: modeFaq.answer };
+  })(),
   {
     q: "How do the consultancy hours work on Pro?",
-    a: "Pro includes 2 hours of food safety consultancy each month. Use them for review, guidance, and higher-risk support. Hours do not roll over.",
+    a: "Pro includes 2 hours of human food safety consultancy each month. This is separate from the in-app Consultant and Auditor modes. Use it for review, guidance, and higher-risk support. Hours do not roll over.",
   },
   {
     q: "Can I change plans later?",
@@ -48,6 +43,7 @@ const faqs = [
 ];
 
 export default async function PricingPage() {
+  const nonce = await getCspNonce();
   let isLoggedIn = false;
   try {
     const supabase = await createClient();
@@ -81,7 +77,7 @@ export default async function PricingPage() {
         price: "0",
         priceCurrency: "EUR",
         description:
-          "Chat on web and mobile, write and edit food safety content, analyze text and images, and access the curated knowledge base.",
+          "Chat on web and mobile, write and edit food safety content, analyze text and images, and use PinkPepper for everyday compliance questions and checks.",
       },
       {
         "@type": "Offer",
@@ -95,7 +91,7 @@ export default async function PricingPage() {
           unitCode: "MON",
         },
         description:
-          "Everything in Free, plus more usage, unlimited saved conversations and projects, and access to downloadable templates.",
+          "Everything in Free, plus more usage, unlimited saved conversations and projects, and downloadable templates for regular Consultant use.",
       },
       {
         "@type": "Offer",
@@ -109,25 +105,44 @@ export default async function PricingPage() {
           unitCode: "MON",
         },
         description:
-          "Everything in Plus, plus the highest usage limits, virtual audit mode, 2h/month of food safety consultancy, and priority support.",
+          "Everything in Plus, plus Auditor mode, 2h/month of human food safety consultancy, and priority support.",
       },
     ],
+  };
+
+  const pricingFaqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: pricingFaqs.map(({ q, a }) => ({
+      "@type": "Question",
+      name: q,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: a,
+      },
+    })),
   };
 
   return (
     <main className="overflow-hidden">
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareApplicationSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        nonce={nonce}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(pricingFaqSchema) }}
       />
 
       <section className="py-16 md:py-20">
         <div className="pp-container max-w-4xl text-center">
           <h1 className="pp-display text-4xl font-black tracking-tight text-[#0F172A] md:text-5xl">
-            Simple pricing for food safety teams.
+            Save €18,000+/year on compliance costs.
           </h1>
           <p className="mt-5 text-lg leading-relaxed text-[#475569]">
-            Start free, move to Plus for regular day-to-day use, and choose Pro when you need audit support and direct consultancy input.
+            Start free. Upgrade when you need more daily capacity, downloadable templates, Auditor mode, or human food safety consultancy.
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3 text-sm font-medium text-[#475569]">
             <Link href="/features" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
@@ -176,16 +191,21 @@ export default async function PricingPage() {
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />
                   Access to curated knowledge base
                 </li>
+                <li className="flex items-start gap-2.5">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />
+                  Everyday compliance guidance
+                </li>
               </ul>
               <Link href="/signup" className={ctaNeutral}>
                 Get started free
               </Link>
             </div>
 
-            <div className="flex flex-col rounded-3xl border border-[#E2E8F0] bg-white p-8">
+            <div className="relative flex flex-col rounded-3xl border-2 border-[#E11D48] bg-white p-8">
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-[#E11D48] px-4 py-1 text-xs font-bold text-white">Most Popular</div>
               <h2 className="text-xs font-semibold uppercase tracking-[0.18em] text-[#94A3B8]">Plus</h2>
               <p className="mt-4 min-h-[4.5rem] text-sm leading-relaxed text-[#64748B]">
-                For operators who need heavier day-to-day use, document uploads, and downloadable templates.
+                For teams that use PinkPepper daily for HACCP, SOPs, allergen records, and downloadable templates.
               </p>
               <div className="mt-6 flex items-baseline gap-1">
                 <span className="text-5xl font-bold tracking-tight text-[#0F172A]"><span className="text-2xl align-super">EUR </span>19</span>
@@ -195,11 +215,15 @@ export default async function PricingPage() {
               <ul className="flex-1 space-y-3.5 text-sm text-[#475569]">
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  Everything in Free, plus:
+                  Everything in Free, plus
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  More usage
+                  Heavier day-to-day Consultant use
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
+                  Higher daily usage limits
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
@@ -221,7 +245,7 @@ export default async function PricingPage() {
             <div className="flex flex-col rounded-3xl border border-[#F9A8D4] bg-[#FFF8FB] p-8">
               <h2 className="text-xs font-semibold uppercase tracking-[0.18em] text-[#BE123C]">Pro</h2>
               <p className="mt-4 min-h-[4.5rem] text-sm leading-relaxed text-[#64748B]">
-                For teams preparing for inspections, audits, and higher-stakes work that needs direct food safety consultancy.
+                For teams that want both AI modes, stronger audit workflows, and human food safety consultancy for higher-risk work.
               </p>
               <div className="mt-6 flex items-baseline gap-1">
                 <span className="text-5xl font-bold tracking-tight text-[#0F172A]"><span className="text-2xl align-super">EUR </span>99</span>
@@ -231,19 +255,27 @@ export default async function PricingPage() {
               <ul className="flex-1 space-y-3.5 text-sm text-[#475569]">
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  Everything in Plus, plus:
+                  Everything in Plus, plus
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  Highest usage limits
+                  More capacity for higher-risk work
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  Access to virtual audit mode
+                  Highest daily usage limits
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  2h/month of food safety consultancy
+                  5 Auditor messages per day
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
+                  Access to Auditor mode
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
+                  2h/month of human food safety consultancy
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
@@ -261,25 +293,11 @@ export default async function PricingPage() {
         </div>
       </section>
 
-      <section className="py-16">
-        <div className="pp-container max-w-4xl">
-          <h2 className="mb-8 text-center text-2xl font-bold text-[#0F172A]">What changes as you move up</h2>
-          <div className="grid gap-4 md:grid-cols-3">
-            {planChanges.map((item) => (
-              <div key={item.plan} className="rounded-2xl border border-[#E2E8F0] bg-[#F8FAFC] p-6">
-                <h3 className="mb-1 font-semibold text-[#0F172A]">{item.plan}</h3>
-                <p className="text-sm text-[#64748B]">{item.detail}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       <section className="border-t border-[#F1F5F9] bg-[#F8FAFC] py-16">
         <div className="pp-container max-w-3xl">
           <h2 className="mb-10 text-center text-2xl font-bold text-[#0F172A]">Frequently asked questions</h2>
           <div className="space-y-6">
-            {faqs.map(({ q, a }) => (
+            {pricingFaqs.map(({ q, a }) => (
               <div key={q} className="rounded-2xl border border-[#E2E8F0] bg-white p-6">
                 <h3 className="mb-2 text-sm font-semibold text-[#0F172A]">{q}</h3>
                 <p className="text-sm leading-relaxed text-[#64748B]">{a}</p>
