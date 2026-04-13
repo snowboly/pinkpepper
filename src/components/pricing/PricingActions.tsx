@@ -26,7 +26,7 @@ async function readCheckoutResponse(res: Response): Promise<{ url?: string; erro
 }
 
 function openCheckout(url: string) {
-  const opened = window.open(url, "_blank", "noopener,noreferrer");
+  const opened = window.open(url, "_blank");
   if (opened) {
     opened.opener = null;
     return;
