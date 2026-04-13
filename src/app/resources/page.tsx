@@ -3,7 +3,6 @@ import Link from "next/link";
 import { ResourcesGrid, type ResourceEntry } from "@/components/site/ResourcesGrid";
 
 const resources: ResourceEntry[] = [
-  // HACCP
   {
     href: "/resources/haccp-plan-template",
     title: "HACCP plan template",
@@ -25,7 +24,6 @@ const resources: ResourceEntry[] = [
     category: "haccp",
     categoryLabel: "HACCP",
   },
-  // Allergen
   {
     href: "/resources/allergen-matrix-template",
     title: "Allergen matrix template",
@@ -33,7 +31,6 @@ const resources: ResourceEntry[] = [
     category: "allergen",
     categoryLabel: "Allergen",
   },
-  // Cleaning
   {
     href: "/resources/cleaning-and-disinfection-sop",
     title: "Cleaning and disinfection SOP",
@@ -41,7 +38,6 @@ const resources: ResourceEntry[] = [
     category: "cleaning",
     categoryLabel: "Cleaning",
   },
-  // Monitoring
   {
     href: "/resources/temperature-monitoring-log-template",
     title: "Temperature monitoring log template",
@@ -70,7 +66,6 @@ const resources: ResourceEntry[] = [
     category: "monitoring",
     categoryLabel: "Monitoring",
   },
-  // Traceability
   {
     href: "/resources/traceability-log-template",
     title: "Traceability log template",
@@ -78,7 +73,6 @@ const resources: ResourceEntry[] = [
     category: "traceability",
     categoryLabel: "Traceability",
   },
-  // Supplier
   {
     href: "/resources/supplier-approval-questionnaire",
     title: "Supplier approval questionnaire",
@@ -86,7 +80,6 @@ const resources: ResourceEntry[] = [
     category: "supplier",
     categoryLabel: "Supplier",
   },
-  // Audit
   {
     href: "/resources/food-safety-audit-checklist",
     title: "Food safety audit checklist",
@@ -108,7 +101,6 @@ const resources: ResourceEntry[] = [
     category: "audit",
     categoryLabel: "Audit",
   },
-  // Training
   {
     href: "/resources/employee-food-safety-training-record",
     title: "Employee food safety training record",
@@ -125,32 +117,53 @@ const resources: ResourceEntry[] = [
   },
 ];
 
+const featuredResources = [
+  "/resources/haccp-plan-template",
+  "/resources/allergen-matrix-template",
+  "/resources/temperature-monitoring-log-template",
+  "/resources/food-safety-audit-checklist",
+  "/resources/corrective-action-log-template",
+];
+
+const relatedWorkflows = [
+  {
+    href: "/features/haccp-plan-generator",
+    title: "Turn a template into a working HACCP draft",
+    description: "See the product workflow behind hazard analysis, CCP structure, and corrective actions.",
+  },
+  {
+    href: "/features/allergen-documentation",
+    title: "Connect templates to allergen control",
+    description: "Follow the allergen documentation path if your biggest gaps are matrix upkeep and change control.",
+  },
+  {
+    href: "/use-cases/food-manufacturing",
+    title: "See how manufacturers use these records",
+    description: "Move from generic templates into a manufacturing-specific compliance workflow.",
+  },
+];
+
 export const metadata: Metadata = {
   title: "Free Food Safety Templates & Guides | HACCP, Allergen, SOP, Audit | PinkPepper",
   description:
-    "15 free food safety templates and guides for HACCP plans, allergen matrices, audit checklists, SOPs, temperature logs, traceability, and supplier approval — for EU and UK food businesses.",
+    "15 free food safety templates and guides for HACCP plans, allergen matrices, audit checklists, SOPs, temperature logs, traceability, and supplier approval for EU and UK food businesses.",
   alternates: {
     canonical: "https://pinkpepper.io/resources",
   },
 };
 
 export default function ResourcesPage() {
+  const priorityResources = resources.filter((resource) => featuredResources.includes(resource.href));
+
   return (
     <main className="overflow-hidden">
-      {/* Hero */}
       <section className="border-b border-[#F1F5F9] bg-white py-16 md:py-24">
         <div className="pp-container max-w-4xl">
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">
-            Free templates
-          </p>
-          <h1 className="pp-display mt-4 text-4xl text-[#0F172A] md:text-6xl">
-            Food safety templates and guides
-          </h1>
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">Free templates</p>
+          <h1 className="pp-display mt-4 text-4xl text-[#0F172A] md:text-6xl">Food safety templates and guides</h1>
           <p className="mt-6 max-w-3xl text-lg leading-relaxed text-[#475569]">
-            {resources.length} free templates covering HACCP, allergen management, cleaning, temperature
-            monitoring, traceability, supplier approval, audit preparation, and staff training. Use
-            them to understand what good food safety documents should contain before turning them into
-            site-specific drafts.
+            Use these resources to understand what strong food safety records should contain before you turn them into
+            site-specific documents. Start with the core templates below, then branch into narrower logs and policies.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
@@ -163,37 +176,71 @@ export default function ResourcesPage() {
               href="/features/haccp-plan-generator"
               className="rounded-full border border-[#E2E8F0] bg-white px-6 py-3 text-sm font-semibold text-[#0F172A] transition-colors hover:bg-[#F8FAFC]"
             >
-              See how it works
+              See the HACCP workflow
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Grid with category filter */}
+      <section className="border-b border-[#F1F5F9] bg-white py-14">
+        <div className="pp-container">
+          <div className="max-w-3xl">
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">Start with these</p>
+            <h2 className="pp-display mt-4 text-3xl text-[#0F172A] md:text-4xl">The five templates most teams need first</h2>
+          </div>
+          <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-5">
+            {priorityResources.map((resource) => (
+              <Link
+                key={resource.href}
+                href={resource.href}
+                className="rounded-3xl border border-[#E2E8F0] bg-[#F8FAFC] p-6 transition-all hover:-translate-y-0.5 hover:border-[#CBD5E1] hover:shadow-xl hover:shadow-black/[0.04]"
+              >
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#E11D48]">{resource.categoryLabel}</p>
+                <p className="mt-3 text-lg font-semibold leading-tight text-[#0F172A]">{resource.title}</p>
+                <p className="mt-3 text-sm leading-relaxed text-[#475569]">{resource.description}</p>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="border-b border-[#F1F5F9] bg-[#FFF7ED] py-14">
+        <div className="pp-container grid gap-5 md:grid-cols-3">
+          {relatedWorkflows.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="rounded-3xl border border-[#FED7AA] bg-white p-7 transition-all hover:-translate-y-0.5 hover:border-[#FDBA74] hover:shadow-xl hover:shadow-black/[0.04]"
+            >
+              <p className="text-lg font-semibold text-[#0F172A]">{item.title}</p>
+              <p className="mt-3 text-sm leading-relaxed text-[#475569]">{item.description}</p>
+            </Link>
+          ))}
+        </div>
+      </section>
+
       <section className="bg-[#F8FAFC] py-14">
         <div className="pp-container">
           <ResourcesGrid resources={resources} />
         </div>
       </section>
 
-      {/* CTA */}
       <section className="bg-white py-16">
         <div className="pp-container text-center">
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">Ready to start?</p>
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">Need more than a template?</p>
           <h2 className="pp-display mx-auto mt-3 max-w-xl text-3xl text-[#0F172A] md:text-4xl">
-            Start free. No card required.
+            Move from static documents into live compliance workflows
           </h2>
-          <p className="mx-auto mt-3 max-w-md text-base text-[#64748B]">
-            Try PinkPepper on a real compliance question today. Or{" "}
-            <Link href="/features" className="underline hover:text-[#0F172A]">explore the features</Link>{" "}
-            to see what&apos;s possible.
+          <p className="mx-auto mt-3 max-w-2xl text-base text-[#64748B]">
+            Use PinkPepper when you need help turning a template into a business-specific draft with clearer controls,
+            records, and next steps.
           </p>
           <div className="mt-7">
             <Link
-              href="/signup"
+              href="/features"
               className="pp-interactive inline-block rounded-full bg-[#E11D48] px-8 py-3.5 text-sm font-semibold text-white hover:bg-[#BE123C]"
             >
-              Get Started
+              Explore features
             </Link>
           </div>
         </div>

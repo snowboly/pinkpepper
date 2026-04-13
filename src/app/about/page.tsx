@@ -1,13 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import {
-  Brain,
-  FileCheck,
-  Users,
-  ShieldCheck,
-  ArrowRight,
-  BookOpen,
-} from "lucide-react";
+import { ArrowRight, BookOpen, Brain, FileCheck, ShieldCheck, Users } from "lucide-react";
 
 export const metadata = {
   title: "About PinkPepper | AI Food Safety Software Built by a Food Scientist",
@@ -18,68 +11,77 @@ export const metadata = {
   },
 };
 
+const corePages = [
+  {
+    href: "/features/haccp-plan-generator",
+    title: "HACCP workflows",
+    description: "See the main workflow for hazard analysis, CCP structure, and corrective action drafting.",
+  },
+  {
+    href: "/resources/haccp-plan-template",
+    title: "Template library",
+    description: "Use the strongest templates first if you need structure before a custom draft.",
+  },
+  {
+    href: "/use-cases/food-manufacturing",
+    title: "Food manufacturing use case",
+    description: "Follow the manufacturing path if records, traceability, and audit pressure drive most of your work.",
+  },
+];
+
 export default function AboutPage() {
   return (
     <main>
-      {/* ── Hero ────────────────────────────────────── */}
       <section className="relative overflow-hidden py-20 text-center md:py-28">
         <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_80%_50%_at_50%_-10%,#FFF1F2,transparent)]" />
         <div className="pp-container max-w-3xl">
-          <p className="text-sm font-semibold uppercase tracking-widest text-[#E11D48]">
-            About Us
-          </p>
+          <p className="text-sm font-semibold uppercase tracking-widest text-[#E11D48]">About PinkPepper</p>
           <h1 className="mt-4 text-4xl font-black tracking-tight text-[#0F172A] md:text-5xl">
-            Food safety compliance,
-            <br className="hidden sm:block" /> powered by AI&nbsp;&amp;&nbsp;human expertise
+            AI food safety compliance software built around real operational work
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-[#475569]">
-            PinkPepper is the AI compliance assistant built exclusively for food
-            businesses operating under EU&nbsp;&amp;&nbsp;UK regulations. We pair
-            a specialised AI agent with real food&nbsp;safety scientists so you
-            get answers you can trust&nbsp;&mdash; instantly.
+            PinkPepper was built for food businesses that need faster help with HACCP, allergen records, SOPs, audit
+            preparation, and day-to-day compliance questions without relying on generic AI output.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3 text-sm font-medium text-[#475569]">
-            <Link href="/pricing" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
-              View pricing
-            </Link>
-            <Link href="/features" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
+            <Link
+              href="/features"
+              className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]"
+            >
               Explore product features
             </Link>
-            <Link href="/features/haccp-plan-generator" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
-              Explore HACCP workflows
+            <Link
+              href="/resources"
+              className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]"
+            >
+              Browse templates
+            </Link>
+            <Link
+              href="/pricing"
+              className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]"
+            >
+              View pricing
             </Link>
           </div>
         </div>
       </section>
 
-      {/* ── Our Story ───────────────────────────────── */}
       <section className="border-t border-[#F1F5F9] bg-[#F8FAFC] py-16 md:py-20">
         <div className="pp-container max-w-4xl">
           <div className="flex flex-col items-center gap-10 md:flex-row md:items-start md:gap-14">
             <div className="flex-shrink-0">
               <div className="relative h-36 w-36 overflow-hidden rounded-2xl border-2 border-[#E11D48]/20 shadow-lg shadow-[#E11D48]/[0.06]">
-                <Image
-                  src="/joao.svg"
-                  alt="Dr Joao — Founder of PinkPepper"
-                  fill
-                  className="object-cover"
-                />
+                <Image src="/joao.svg" alt="Dr Joao - Founder of PinkPepper" fill className="object-cover" />
               </div>
-              <p className="mt-3 text-center text-sm font-semibold text-[#0F172A]">
-                Dr&nbsp;Joao
-              </p>
-              <p className="text-center text-xs text-[#64748B]">
-                Founder &amp; Scientific Lead
-              </p>
+              <p className="mt-3 text-center text-sm font-semibold text-[#0F172A]">Dr Joao</p>
+              <p className="text-center text-xs text-[#64748B]">Founder and scientific lead</p>
             </div>
 
-            <div className="space-y-5 text-[#475569] leading-relaxed">
-              <h2 className="text-2xl font-bold text-[#0F172A]">Our Story</h2>
+            <div className="space-y-5 leading-relaxed text-[#475569]">
+              <h2 className="text-2xl font-bold text-[#0F172A]">Why PinkPepper exists</h2>
               <p>
-                PinkPepper was founded by <strong>Dr&nbsp;Joao</strong>, a food
-                scientist with a background in <strong>chemistry and food science</strong> and
-                years of hands-on experience helping food businesses achieve and
-                maintain compliance.
+                PinkPepper was founded by <strong>Dr Joao</strong>, a food scientist with a background in chemistry and
+                food science and hands-on experience helping food businesses build and maintain compliance systems.
               </p>
               <p>
                 After building{" "}
@@ -91,58 +93,50 @@ export default function AboutPage() {
                 >
                   iLoveHACCP
                 </a>
-                &nbsp;&mdash; a free tool for building HACCP plans for EU&nbsp;&amp;&nbsp;UK food businesses&nbsp;&mdash; one thing became clear: creating the
-                plan is only the beginning. Businesses need ongoing, day-to-day
-                guidance on SOPs, allergen management, audit preparation, and
-                regulatory changes.
+                , it became obvious that creating the plan is only one part of the problem. Teams still need practical
+                help with allergen management, SOPs, audit preparation, and document review after the first HACCP draft
+                exists.
               </p>
-              <blockquote className="rounded-xl border border-[#E2E8F0] bg-[#FFF1F2] p-5 text-[#0F172A] italic">
-                &ldquo;Traditional consulting is too slow and too expensive for
-                most food businesses. I built PinkPepper to democratise access
-                to high-standard food safety systems&nbsp;&mdash; combining the
-                speed of AI with the rigour of scientific expertise.&rdquo;
-                <span className="mt-2 block text-sm font-semibold not-italic text-[#E11D48]">
-                  &mdash; Dr&nbsp;Joao
-                </span>
+              <blockquote className="rounded-xl border border-[#E2E8F0] bg-[#FFF1F2] p-5 italic text-[#0F172A]">
+                &ldquo;Traditional consulting is too slow and too expensive for routine compliance work. PinkPepper is
+                my attempt to make specialist-grade food safety support more available without turning it into vague
+                software copy.&rdquo;
+                <span className="mt-2 block text-sm font-semibold not-italic text-[#E11D48]">- Dr Joao</span>
               </blockquote>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── Why PinkPepper ──────────────────────────── */}
       <section className="border-t border-[#F1F5F9] py-16 md:py-20">
         <div className="pp-container max-w-4xl">
-          <h2 className="text-center text-2xl font-bold text-[#0F172A] md:text-3xl">
-            Why PinkPepper?
-          </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-center text-[#475569] leading-relaxed">
-            We&rsquo;re not another generic chatbot. PinkPepper is a specialised
-            food safety agent trained on EU&nbsp;&amp;&nbsp;UK regulations,
-            industry standards, and real-world compliance scenarios.
+          <h2 className="text-center text-2xl font-bold text-[#0F172A] md:text-3xl">What makes it different</h2>
+          <p className="mx-auto mt-4 max-w-2xl text-center leading-relaxed text-[#475569]">
+            PinkPepper is designed around the documents, questions, and recurring review work that food businesses
+            actually have to complete.
           </p>
 
           <div className="mt-12 grid gap-6 sm:grid-cols-2">
             {[
               {
                 icon: Brain,
-                title: "Specialised AI Agent",
-                body: "Our AI is grounded in a curated knowledge base of EU & UK food safety regulations, Codex Alimentarius, BRCGS, SQF, IFS, and FSSC 22000 standards — not scraped from the open web.",
+                title: "Specialized AI agent",
+                body: "Grounded in food safety workflows, not generic assistant patterns or broad open-web chatter.",
               },
               {
                 icon: FileCheck,
-                title: "HACCP, SOPs & Audit Prep",
-                body: "Generate compliant HACCP plans, standard operating procedures, cleaning schedules, and audit-ready documentation in minutes, not weeks.",
+                title: "Built around working documents",
+                body: "Focused on HACCP plans, SOPs, allergen records, monitoring logs, and audit-readiness work.",
               },
               {
                 icon: Users,
-                title: "Food Safety Consultancy",
-                body: "Critical documents deserve expert eyes. Our Pro plan includes 2 hours of food safety consultancy each month — guidance and specialist support from qualified professionals.",
+                title: "Consultant-backed direction",
+                body: "Designed to support real food safety work, with a clear path to human review when risk is higher.",
               },
               {
                 icon: ShieldCheck,
-                title: "Consultancy Without the Price Tag",
-                body: "Get consultant-level food safety guidance on demand. PinkPepper is designed to give small and mid-sized businesses access to the same standard of compliance support as large enterprises.",
+                title: "Practical over performative",
+                body: "The goal is usable compliance output that helps operations move, not impressive but empty AI prose.",
               },
             ].map((card) => (
               <div
@@ -152,121 +146,40 @@ export default function AboutPage() {
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[#FFF1F2] text-[#E11D48]">
                   <card.icon className="h-6 w-6" />
                 </div>
-                <h3 className="text-lg font-bold text-[#0F172A]">
-                  {card.title}
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-[#475569]">
-                  {card.body}
-                </p>
+                <h3 className="text-lg font-bold text-[#0F172A]">{card.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-[#475569]">{card.body}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── AI + Human Expertise ────────────────────── */}
       <section className="border-t border-[#F1F5F9] bg-[#F8FAFC] py-16 md:py-20">
         <div className="pp-container max-w-4xl">
-          <h2 className="text-center text-2xl font-bold text-[#0F172A] md:text-3xl">
-            AI&nbsp;+&nbsp;Human Expertise
-          </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-center text-[#475569] leading-relaxed">
-            Technology is powerful, but food safety is too important to leave
-            entirely to algorithms. That&rsquo;s why PinkPepper combines both.
-          </p>
-
-          <div className="mt-12 space-y-6">
-            {[
-              {
-                step: "1",
-                title: "Ask anything, anytime",
-                desc: "Use the AI assistant for instant answers on HACCP principles, allergen legislation, hygiene regulations, supplier approval, recall procedures, and more.",
-              },
-              {
-                step: "2",
-                title: "Generate documents",
-                desc: "Create HACCP plans, prerequisite programmes, SOPs, monitoring logs, and corrective action reports — tailored to your business type and regulatory context.",
-              },
-              {
-                step: "3",
-                title: "Consultancy & sign-off",
-                desc: "Submit critical documents for review by food safety professionals. Get feedback, corrections, and confidence before your next audit.",
-              },
-            ].map((item) => (
-              <div
-                key={item.step}
-                className="flex gap-5 rounded-2xl border border-[#E2E8F0] bg-white p-6"
+          <h2 className="text-center text-2xl font-bold text-[#0F172A] md:text-3xl">Core paths to explore next</h2>
+          <div className="mt-10 grid gap-6 md:grid-cols-3">
+            {corePages.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="rounded-3xl border border-[#E2E8F0] bg-white p-8 transition-all hover:-translate-y-0.5 hover:border-[#CBD5E1] hover:shadow-xl hover:shadow-black/[0.04]"
               >
-                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[#E11D48] text-sm font-bold text-white">
-                  {item.step}
-                </div>
-                <div>
-                  <h3 className="font-bold text-[#0F172A]">{item.title}</h3>
-                  <p className="mt-1 text-sm leading-relaxed text-[#475569]">
-                    {item.desc}
-                  </p>
-                </div>
-              </div>
+                <p className="text-xl font-semibold text-[#0F172A]">{item.title}</p>
+                <p className="mt-4 text-sm leading-relaxed text-[#475569]">{item.description}</p>
+              </Link>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── Built for Food Businesses ───────────────── */}
-      <section className="border-t border-[#F1F5F9] py-16 md:py-20">
-        <div className="pp-container max-w-4xl">
-          <h2 className="text-center text-2xl font-bold text-[#0F172A] md:text-3xl">
-            Built for Food Businesses
-          </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-center text-[#475569] leading-relaxed">
-            Whether you run a restaurant, a food manufacturing site, a catering
-            operation, or a retail business&nbsp;&mdash; PinkPepper speaks your
-            language.
-          </p>
-          <div className="mx-auto mt-10 max-w-2xl space-y-4 text-[#475569] leading-relaxed">
-            <div className="flex gap-3">
-              <div className="mt-1.5 h-2 w-2 flex-shrink-0 rounded-full bg-[#E11D48]" />
-              <p>
-                <strong className="text-[#0F172A]">Regulation (EC) 852/2004 &amp; 853/2004</strong>{" "}
-                — general and specific hygiene rules for food businesses
-              </p>
-            </div>
-            <div className="flex gap-3">
-              <div className="mt-1.5 h-2 w-2 flex-shrink-0 rounded-full bg-[#E11D48]" />
-              <p>
-                <strong className="text-[#0F172A]">UK Food Safety Act 1990</strong>{" "}
-                — post-Brexit UK compliance requirements
-              </p>
-            </div>
-            <div className="flex gap-3">
-              <div className="mt-1.5 h-2 w-2 flex-shrink-0 rounded-full bg-[#E11D48]" />
-              <p>
-                <strong className="text-[#0F172A]">BRCGS, SQF, IFS, FSSC 22000</strong>{" "}
-                — certification scheme support and audit preparation
-              </p>
-            </div>
-            <div className="flex gap-3">
-              <div className="mt-1.5 h-2 w-2 flex-shrink-0 rounded-full bg-[#E11D48]" />
-              <p>
-                <strong className="text-[#0F172A]">Allergen legislation</strong>{" "}
-                — EU FIC Regulation 1169/2011 and Natasha&apos;s Law
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Sister Product ──────────────────────────── */}
       <section className="border-t border-[#F1F5F9] bg-[#F8FAFC] py-16 md:py-20">
         <div className="pp-container max-w-3xl text-center">
           <div className="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-[#FFF1F2] text-[#E11D48]">
             <BookOpen className="h-6 w-6" />
           </div>
-          <h2 className="text-2xl font-bold text-[#0F172A]">
-            Part of the iLoveHACCP Family
-          </h2>
-          <p className="mx-auto mt-4 max-w-xl text-[#475569] leading-relaxed">
-            PinkPepper is the sister product to{" "}
+          <h2 className="text-2xl font-bold text-[#0F172A]">Part of the iLoveHACCP family</h2>
+          <p className="mx-auto mt-4 max-w-xl leading-relaxed text-[#475569]">
+            PinkPepper sits alongside{" "}
             <a
               href="https://www.ilovehaccp.com"
               target="_blank"
@@ -275,22 +188,19 @@ export default function AboutPage() {
             >
               iLoveHACCP.com
             </a>
-            , a free HACCP plan builder for EU&nbsp;&amp;&nbsp;UK food businesses. While iLoveHACCP helps you create the plan, PinkPepper is
-            your ongoing compliance companion&nbsp;&mdash; answering questions,
-            generating documents, and connecting you with experts.
+            . One helps teams get a HACCP plan started; the other focuses on the ongoing compliance work that comes
+            after that first plan exists.
           </p>
         </div>
       </section>
 
-      {/* ── CTA ─────────────────────────────────────── */}
       <section className="relative overflow-hidden border-t border-[#F1F5F9] py-20 text-center">
         <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_80%_50%_at_50%_110%,#FFF1F2,transparent)]" />
         <div className="pp-container max-w-2xl">
-          <h2 className="text-3xl font-bold tracking-tight text-[#0F172A]">
-            Put this to work in your operation
-          </h2>
+          <h2 className="text-3xl font-bold tracking-tight text-[#0F172A]">Put this to work in your operation</h2>
           <p className="mt-4 text-lg text-[#475569]">
-            Start generating HACCP plans, SOPs, and allergen records today. Upgrade to Pro when you need a qualified food safety consultant to review the work.
+            Start generating HACCP plans, SOPs, and allergen records today. Upgrade when you need more formal audit and
+            review workflows.
           </p>
           <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
             <Link
