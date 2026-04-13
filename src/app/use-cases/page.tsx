@@ -28,6 +28,24 @@ const useCases = [
   },
 ];
 
+const relatedLinks = [
+  {
+    href: "/features/haccp-plan-generator",
+    title: "HACCP plan generator",
+    description: "See the workflow behind hazard analysis, CCP structure, and corrective action drafting.",
+  },
+  {
+    href: "/features/food-safety-audit-prep",
+    title: "Audit prep",
+    description: "Move into the formal review path when the issue is evidence quality, gaps, or inspection pressure.",
+  },
+  {
+    href: "/resources/haccp-plan-template",
+    title: "HACCP plan template",
+    description: "Start with the template if you need a cleaner structure before using the product workflow.",
+  },
+];
+
 export const metadata: Metadata = {
   title: "Food Safety Software for Restaurants, Cafes, Caterers & Manufacturers | PinkPepper",
   description:
@@ -44,11 +62,12 @@ export default function UseCasesPage() {
         <div className="pp-container max-w-4xl">
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">Use-case hub</p>
           <h1 className="pp-display mt-4 text-4xl text-[#0F172A] md:text-6xl">
-            Food safety workflows mapped to the way different food businesses operate
+            Food safety workflows mapped to how different food businesses actually operate
           </h1>
           <p className="mt-6 max-w-3xl text-lg leading-relaxed text-[#475569]">
-            Restaurants, cafes, caterers, and manufacturers do not need the same controls, records, or review cycles.
-            These pages show how PinkPepper fits each operating model so teams can start from workflows that feel familiar.
+            Restaurants, cafes, caterers, and manufacturers do not run the same controls or records. Start with the
+            operating model that matches your business, then move into the relevant HACCP, allergen, SOP, and audit
+            workflows.
           </p>
         </div>
       </section>
@@ -69,27 +88,25 @@ export default function UseCasesPage() {
       </section>
 
       <section className="bg-white py-16">
-        <div className="pp-container grid gap-6 md:grid-cols-2">
-          <Link
-            href="/features/haccp-plan-generator"
-            className="rounded-3xl border border-[#E2E8F0] bg-white p-8 transition-all hover:-translate-y-0.5 hover:border-[#CBD5E1] hover:shadow-xl hover:shadow-black/[0.04]"
-          >
-            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#E11D48]">Features</p>
-            <p className="mt-3 text-2xl font-semibold text-[#0F172A]">Connect each use case to the right workflow</p>
-            <p className="mt-4 text-sm leading-relaxed text-[#475569]">
-              Move from business-type pages into HACCP, allergen, SOP, and audit-prep feature details.
-            </p>
-          </Link>
-          <Link
-            href="/pricing"
-            className="rounded-3xl border border-[#FBCFE8] bg-[#FFF1F2] p-8 transition-all hover:-translate-y-0.5 hover:border-[#FDA4AF] hover:shadow-xl hover:shadow-black/[0.04]"
-          >
-            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#E11D48]">Pricing</p>
-            <p className="mt-3 text-2xl font-semibold text-[#0F172A]">Choose a plan for your operating model</p>
-            <p className="mt-4 text-sm leading-relaxed text-[#475569]">
-              Compare plans once you know which documents, exports, and audit workflows your team needs most.
-            </p>
-          </Link>
+        <div className="pp-container">
+          <div className="mb-8 max-w-3xl">
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">Related workflows</p>
+            <h2 className="pp-display mt-4 text-3xl text-[#0F172A] md:text-4xl">
+              Go deeper once you know the operating context
+            </h2>
+          </div>
+          <div className="grid gap-6 md:grid-cols-3">
+            {relatedLinks.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="rounded-3xl border border-[#E2E8F0] bg-white p-8 transition-all hover:-translate-y-0.5 hover:border-[#CBD5E1] hover:shadow-xl hover:shadow-black/[0.04]"
+              >
+                <p className="text-xl font-semibold text-[#0F172A]">{item.title}</p>
+                <p className="mt-4 text-sm leading-relaxed text-[#475569]">{item.description}</p>
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
     </main>
