@@ -193,9 +193,9 @@ export default function FoodManufacturingUseCasePage() {
                 description: "Build hazard analysis and control logic around your manufacturing process flow.",
               },
               {
-                href: "/features/food-safety-audit-prep",
-                label: "Food safety audit prep",
-                description: "Prepare internal audit checklists, evidence packs, and corrective action tracking.",
+                href: "/features/allergen-documentation",
+                label: "Allergen documentation",
+                description: "Manage allergen declarations and supplier change records for manufacturing lines.",
               },
               {
                 href: "/articles/haccp-vs-brcgs-vs-ifs",

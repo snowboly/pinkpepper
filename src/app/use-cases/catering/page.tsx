@@ -55,9 +55,9 @@ export default function CateringUseCasePage() {
           description: "Build hazard analysis for prep, transport, service, and event-specific controls.",
         },
         {
-          href: "/features/food-safety-audit-prep",
-          label: "Food safety audit prep",
-          description: "Prepare evidence packs and corrective action reviews before customer or regulatory checks.",
+          href: "/features/allergen-documentation",
+          label: "Allergen documentation",
+          description: "Manage allergen declarations and menu-change records across changing event menus.",
         },
         {
           href: "/pricing",

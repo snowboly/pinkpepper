@@ -24,13 +24,6 @@ const featurePages = [
       "Practical support for the day-to-day documents that keep operations consistent, reviewable, and easier to hand over internally.",
     includes: ["Cleaning and hygiene procedures", "Temperature and training records", "Routine operational templates"],
   },
-  {
-    href: "/features/food-safety-audit-prep",
-    title: "Audit prep and corrective actions",
-    description:
-      "Get ready for inspections, customer audits, and follow-up actions with cleaner evidence, tighter drafts, and fewer loose ends.",
-    includes: ["Audit-readiness support", "Evidence pack preparation", "Corrective action follow-up"],
-  },
 ];
 
 const supportingLinks = [
