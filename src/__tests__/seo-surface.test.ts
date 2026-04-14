@@ -203,6 +203,7 @@ describe("public SEO copy and linking", () => {
 
     expect(markup).toContain("resource hub");
     expect(markup).toContain("operational compliance");
+    expectLink(markup, "/features/food-safety-audit-prep", "Audit prep");
   });
 
   it("renders article cards with article links and fallback imagery", async () => {
