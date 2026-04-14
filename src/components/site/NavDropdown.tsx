@@ -19,10 +19,13 @@ export function NavDropdown({
   const pathname = usePathname();
   const ref = useRef<HTMLDivElement>(null);
 
-  // Close whenever the route changes (Next.js client-side navigation)
-  useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
+  // Close on navigation: derive during render to avoid setState-in-effect lint error.
+  // React re-renders immediately when setState is called during render (before commit).
+  const prevPathname = useRef(pathname);
+  if (prevPathname.current !== pathname) {
+    prevPathname.current = pathname;
+    if (open) setOpen(false);
+  }
 
   // Close on outside click/touch
   useEffect(() => {
