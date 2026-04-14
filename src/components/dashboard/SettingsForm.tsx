@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { createClient } from "@/utils/supabase/client";
+import { validatePassword } from "@/lib/password";
 import { locales, type Locale } from "@/i18n/config";
 
 const LOCALE_LABELS: Record<Locale, string> = {
@@ -69,8 +70,9 @@ export default function SettingsForm({
     e.preventDefault();
     setPasswordMsg(null);
 
-    if (newPassword.length < 8) {
-      setPasswordMsg({ type: "error", text: t("passwordTooShort") });
+    const passwordError = validatePassword(newPassword);
+    if (passwordError) {
+      setPasswordMsg({ type: "error", text: passwordError });
       return;
     }
     if (newPassword !== confirmPassword) {
