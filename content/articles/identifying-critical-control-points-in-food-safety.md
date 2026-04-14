@@ -4,7 +4,7 @@ slug: "identifying-critical-control-points-in-food-safety"
 excerpt: "Understand the importance of Critical Control Points (CCPs) in food safety to prevent foodborne illnesses within the HACCP framework."
 category: "Fundamentals"
 publishedAt: "2025-12-03"
-image: "https://images.pexels.com/photos/8468814/pexels-photo-8468814.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+image: "https://images.pexels.com/photos/5953502/pexels-photo-5953502.jpeg?auto=compress&cs=tinysrgb&w=1600&q=80"
 source: "ilovehaccp"
 ---
 
