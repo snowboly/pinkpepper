@@ -84,12 +84,6 @@ export default async function FeaturesPage() {
             >
               See pricing
             </Link>
-            <Link
-              href="/use-cases"
-              className="pp-interactive rounded-full border border-[#E2E8F0] bg-white px-6 py-3 text-sm font-semibold text-[#0F172A] hover:bg-[#F8FAFC]"
-            >
-              Browse use cases
-            </Link>
           </div>
         </div>
       </section>
