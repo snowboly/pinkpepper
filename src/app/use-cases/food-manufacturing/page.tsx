@@ -28,8 +28,8 @@ export default function FoodManufacturingUseCasePage() {
           </div>
           <figure className="mt-10 overflow-hidden rounded-[30px] border border-[#E2E8F0] bg-white shadow-[0_24px_80px_rgba(15,23,42,0.08)]">
             <Image
-              src="https://images.unsplash.com/photo-1581093458791-9d42e3c2fd7a?w=1600&q=80"
-              alt="Food production line in a manufacturing facility"
+              src="https://images.unsplash.com/photo-r31KotyfuVY?w=1600&q=80"
+              alt="Food processing line in a manufacturing facility"
               width={1600}
               height={900}
               className="h-auto w-full object-cover"
