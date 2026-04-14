@@ -14,34 +14,32 @@ export default function FoodManufacturingUseCasePage() {
   return (
     <FeatureTemplate
       eyebrow="Manufacturing use case"
-      title="Food safety software for manufacturing teams that need stronger documentation systems"
-      description="PinkPepper helps food manufacturers draft HACCP plans, SOPs, traceability procedures, corrective action trackers, and internal audit workflows so compliance work can move faster without staying generic."
+      title="On-demand food safety expertise for teams that need stronger documentation systems"
+      description="You're a QA Manager with a HACCP question at 9:30 PM on a Tuesday. Your consultant isn't answering. The BRCGS audit is due Friday. PinkPepper combines an AI trained on EU retained law, UK Food Standards Agency guidance, Codex Alimentarius, and GFSI scheme requirements with certified human expert review — so you get instant, citation-backed answers and documented sign-off when the stakes are high."
       primaryCta="Start manufacturing workflows"
       painPoints={[
-        "Manufacturing sites need more structured documentation across process flow, traceability, and verification.",
-        "Teams often outgrow spreadsheet-based systems before they are ready for heavy enterprise tooling.",
-        "Audit and customer review pressure exposes gaps in version control, record structure, and document ownership.",
+        "CCPs placed incorrectly because the Codex decision tree was misunderstood or inconsistently applied.",
+        "Critical limits with no scientific justification — auditors ask for the validation reference and nothing is on file.",
+        "Corrective action logs that say 'fixed it' instead of documenting product disposition and root cause.",
+        "HACCP plans that look complete but fail under BRCGS Issue 9, IFS Version 8, or local authority scrutiny.",
       ]}
       outcomes={[
-        "Improve documentation structure before the next audit cycle.",
-        "Generate SOP and traceability drafts more efficiently.",
-        "Support internal review before external certification or customer scrutiny.",
+        "Instant AI answers backed by Codex, Regulation (EC) 852/2004, and GFSI scheme requirements — available 24/7, no callback required.",
+        "Human expert review for high-stakes decisions: new CCP determinations, major deviations, and pre-audit plan review.",
+        "Every interaction logged and exportable — a documented evidence trail you can place directly in your audit file.",
       ]}
       sections={[
         {
-          title: "Stronger than generic templates",
-          body:
-            "Manufacturing teams need documentation that reflects process steps, zoning, traceability, verification, and corrective action structure. PinkPepper is intended to give teams a better first version of that work.",
+          title: "AI consultant trained on food safety frameworks",
+          body: "Ask anything: whether a cooling step is a CCP, what the correct critical limit is for a new product, or how to write a corrective action for a specific deviation. The AI provides immediate, citation-backed responses referencing Regulation (EC) 852/2004, Codex Alimentarius, and GFSI scheme clauses. No waiting for a callback. No billing by the quarter-hour.",
         },
         {
-          title: "Supports continuous improvement",
-          body:
-            "The value is not just one document. It is the ability to produce, review, update, and export multiple connected records that support a more durable compliance system.",
+          title: "Human validation when it matters most",
+          body: "When the question involves a significant change — a new CCP determination, a major deviation requiring product disposition, or a pre-audit plan review — PinkPepper routes the query to a certified human expert. They validate the guidance against current EU retained law and UK expectations and provide a documented opinion you can place directly in your audit file.",
         },
         {
-          title: "Useful before enterprise complexity",
-          body:
-            "For smaller or growing manufacturers, there is often a gap between manual documents and larger compliance suites. PinkPepper fits that middle space well.",
+          title: "Designed for the whole manufacturing team",
+          body: "From Technical Managers who need a second set of eyes on significant food safety decisions, to Production Supervisors handling a CCP deviation on night shift — PinkPepper delivers the right level of response for every role, without relying on expensive retainer consultants for questions that come up every day.",
         },
       ]}
       heroImage={{
