@@ -4,6 +4,7 @@ import Link from "next/link";
 import { FormEvent, useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
+import { validatePassword } from "@/lib/password";
 
 export default function SignupPage() {
   const searchParams = useSearchParams();
@@ -32,8 +33,9 @@ export default function SignupPage() {
     setMessage(null);
 
     try {
-      if (password.length < 8) {
-        setError("Password must be at least 8 characters.");
+      const passwordError = validatePassword(password);
+      if (passwordError) {
+        setError(passwordError);
         return;
       }
       if (password !== confirmPassword) {

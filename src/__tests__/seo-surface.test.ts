@@ -203,9 +203,7 @@ describe("public SEO copy and linking", () => {
 
     expect(markup).toContain("resource hub");
     expect(markup).toContain("operational compliance");
-    expectLink(markup, "/resources/haccp-plan-template", "HACCP template");
     expectLink(markup, "/features/food-safety-audit-prep", "Audit prep");
-    expectLink(markup, "/features/haccp-plan-generator", "HACCP generator");
   });
 
   it("renders article cards with article links and fallback imagery", async () => {

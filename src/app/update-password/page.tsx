@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
+import { validatePassword } from "@/lib/password";
 
 export default function UpdatePasswordPage() {
   const [password, setPassword] = useState("");
@@ -17,8 +18,9 @@ export default function UpdatePasswordPage() {
     setMessage(null);
 
     try {
-      if (password.length < 8) {
-        setError("Password must be at least 8 characters.");
+      const passwordError = validatePassword(password);
+      if (passwordError) {
+        setError(passwordError);
         return;
       }
       if (password !== confirmPassword) {

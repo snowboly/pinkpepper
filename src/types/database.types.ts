@@ -54,22 +54,28 @@ export type Database = {
       }
       conversations: {
         Row: {
+          archived_at: string | null
           created_at: string
           id: string
+          project_id: string | null
           title: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
+          archived_at?: string | null
           created_at?: string
           id?: string
+          project_id?: string | null
           title?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
+          archived_at?: string | null
           created_at?: string
           id?: string
+          project_id?: string | null
           title?: string | null
           updated_at?: string
           user_id?: string
@@ -200,30 +206,36 @@ export type Database = {
       profiles: {
         Row: {
           business_type: string | null
+          chat_language: string | null
           created_at: string
           email: string | null
           id: string
           is_admin: boolean
+          locale: string | null
           onboarding_completed: boolean
           tier: Database["public"]["Enums"]["subscription_tier"]
           updated_at: string
         }
         Insert: {
           business_type?: string | null
+          chat_language?: string | null
           created_at?: string
           email?: string | null
           id: string
           is_admin?: boolean
+          locale?: string | null
           onboarding_completed?: boolean
           tier?: Database["public"]["Enums"]["subscription_tier"]
           updated_at?: string
         }
         Update: {
           business_type?: string | null
+          chat_language?: string | null
           created_at?: string
           email?: string | null
           id?: string
           is_admin?: boolean
+          locale?: string | null
           onboarding_completed?: boolean
           tier?: Database["public"]["Enums"]["subscription_tier"]
           updated_at?: string

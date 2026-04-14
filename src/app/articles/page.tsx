@@ -85,22 +85,10 @@ export default async function ArticlesPage() {
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
-              href="/resources/haccp-plan-template"
-              className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 text-sm font-semibold text-[#0F172A] transition-colors hover:border-[#FDA4AF] hover:text-[#BE123C]"
-            >
-              HACCP template
-            </Link>
-            <Link
               href="/features/food-safety-audit-prep"
               className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 text-sm font-semibold text-[#0F172A] transition-colors hover:border-[#FDA4AF] hover:text-[#BE123C]"
             >
               Audit prep
-            </Link>
-            <Link
-              href="/features/haccp-plan-generator"
-              className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 text-sm font-semibold text-[#0F172A] transition-colors hover:border-[#FDA4AF] hover:text-[#BE123C]"
-            >
-              HACCP generator
             </Link>
           </div>
         </div>
