@@ -196,7 +196,7 @@ export default function SettingsForm({
             const newLocale = e.target.value as Locale;
             document.cookie = `locale=${newLocale}; path=/; max-age=31536000`;
             try {
-              await supabase.from("profiles").update({ locale: newLocale } as Record<string, string>).eq("id", (await supabase.auth.getUser()).data.user?.id ?? "");
+              await supabase.from("profiles").update({ locale: newLocale }).eq("id", (await supabase.auth.getUser()).data.user?.id ?? "");
             } catch {
               // Non-blocking — cookie is the primary source
             }
@@ -236,7 +236,7 @@ export default function SettingsForm({
                 const { data: { user } } = await supabase.auth.getUser();
                 const { error } = await supabase
                   .from("profiles")
-                  .update({ chat_language: chatLanguage } as Record<string, string>)
+                  .update({ chat_language: chatLanguage })
                   .eq("id", user?.id ?? "");
                 if (error) throw error;
                 setChatLangMsg({ type: "success", text: t("chatbotLanguageSaved") });

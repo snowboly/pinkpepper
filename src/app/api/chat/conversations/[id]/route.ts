@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
+import type { Database } from "@/types/database.types";
 
 export const dynamic = "force-dynamic";
 
@@ -53,7 +54,7 @@ export async function PATCH(request: Request, context: { params: Promise<{ id: s
   }
 
   const body = (await request.json()) as { title?: string; project_id?: string | null; archived_at?: string | null };
-  const updates: Record<string, unknown> = {};
+  const updates: Database["public"]["Tables"]["conversations"]["Update"] = {};
 
   if (body.title !== undefined) {
     const title = body.title.trim();

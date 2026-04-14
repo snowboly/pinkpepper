@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
 import { createAdminClient } from "@/utils/supabase/admin";
+import type { Database } from "@/types/database.types";
 import { resolveUserAccess } from "@/lib/access";
 import { sendEmail } from "@/lib/email";
 import { uploadFile, BUCKETS } from "@/lib/storage";
@@ -149,22 +150,16 @@ export async function PATCH(
   }
 
   // Build update payload
-  const updatePayload: Record<string, unknown> = {
-    status: newStatus,
+  type ReviewUpdate = Database["public"]["Tables"]["review_requests"]["Update"];
+  const updatePayload: ReviewUpdate = {
+    status: newStatus as Database["public"]["Enums"]["review_status"],
     updated_at: new Date().toISOString(),
+    ...(reviewerNotes ? { reviewer_notes: reviewerNotes } : {}),
+    ...(newStatus === "completed" || newStatus === "rejected"
+      ? { completed_at: new Date().toISOString() }
+      : {}),
+    ...(reviewerFileId ? { reviewer_file_id: reviewerFileId } : {}),
   };
-
-  if (reviewerNotes) {
-    updatePayload.reviewer_notes = reviewerNotes;
-  }
-
-  if (newStatus === "completed" || newStatus === "rejected") {
-    updatePayload.completed_at = new Date().toISOString();
-  }
-
-  if (reviewerFileId) {
-    updatePayload.reviewer_file_id = reviewerFileId;
-  }
 
   const { data: updated, error: updateError } = await admin
     .from("review_requests")
