@@ -35,11 +35,6 @@ const relatedLinks = [
     description: "See the workflow behind hazard analysis, CCP structure, and corrective action drafting.",
   },
   {
-    href: "/features/food-safety-audit-prep",
-    title: "Audit prep",
-    description: "Move into the formal review path when the issue is evidence quality, gaps, or inspection pressure.",
-  },
-  {
     href: "/resources/haccp-plan-template",
     title: "HACCP plan template",
     description: "Start with the template if you need a cleaner structure before using the product workflow.",

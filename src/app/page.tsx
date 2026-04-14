@@ -358,7 +358,6 @@ export default async function HomePage() {
                 <h2 className="pp-display mt-2 text-2xl text-[#0F172A] md:text-3xl">Articles, guides &amp; templates</h2>
                 <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-[#94A3B8]">
                   <Link href="/features/haccp-plan-generator" className="hover:text-[#475569]">HACCP plan generator</Link>
-                  <Link href="/features/food-safety-audit-prep" className="hover:text-[#475569]">Audit prep</Link>
                 </div>
               </div>
               <Link href="/articles" className="text-sm font-semibold text-[#475569] hover:text-[#0F172A]">

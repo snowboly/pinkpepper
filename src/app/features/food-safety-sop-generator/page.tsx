@@ -57,9 +57,9 @@ export default function FoodSafetySopGeneratorPage() {
           description: "Use HACCP outputs to inform SOP structure, monitoring, and corrective actions.",
         },
         {
-          href: "/features/food-safety-audit-prep",
-          label: "Food safety audit prep",
-          description: "Turn SOPs and records into stronger audit evidence before inspection day.",
+          href: "/features/allergen-documentation",
+          label: "Allergen documentation",
+          description: "Pair SOPs with allergen controls and menu-change records.",
         },
         {
           href: "/pricing",

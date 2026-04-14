@@ -64,7 +64,7 @@ export default function FoodSafetyAuditChecklistPage() {
       ctaBody="PinkPepper helps teams draft audit checklists, evidence summaries, and corrective action tracking so internal review becomes more structured."
       templateSlug="food-safety-audit-checklist"
       relatedLinks={[
-        { href: "/features/food-safety-audit-prep", label: "Food safety audit prep" },
+        { href: "/features/haccp-plan-generator", label: "HACCP plan generator" },
         { href: "/pricing", label: "Pricing" },
         { href: "/resources/temperature-monitoring-log-template", label: "Temperature monitoring log template" },
       ]}

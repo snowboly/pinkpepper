@@ -47,7 +47,6 @@ const ARTICLE_POOL: ArticleLink[] = [
   { href: "/resources/corrective-action-log-template", category: "Template", title: "Corrective Action Log Template" },
   { href: "/features/haccp-plan-generator", category: "Feature", title: "AI HACCP Plan Generator" },
   { href: "/features/allergen-documentation", category: "Feature", title: "Allergen Documentation" },
-  { href: "/features/food-safety-audit-prep", category: "Feature", title: "Food Safety Audit Prep" },
   { href: "/features/food-safety-sop-generator", category: "Feature", title: "SOP Generator" },
 ];
 

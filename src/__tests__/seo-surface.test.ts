@@ -203,7 +203,6 @@ describe("public SEO copy and linking", () => {
 
     expect(markup).toContain("resource hub");
     expect(markup).toContain("operational compliance");
-    expectLink(markup, "/features/food-safety-audit-prep", "Audit prep");
   });
 
   it("renders article cards with article links and fallback imagery", async () => {
@@ -339,7 +338,6 @@ describe("premium quality regressions", () => {
 
     expect(homepage).toContain("Built for real world operators");
     expect(homepage).toContain("From raw notes to review-ready compliance work");
-    expect(homepage).toContain("/features/food-safety-audit-prep");
     expect(homepage).toContain("Switch from Consultant to Auditor when the job changes");
     expect(homepage).toContain("human consultancy");
   });
