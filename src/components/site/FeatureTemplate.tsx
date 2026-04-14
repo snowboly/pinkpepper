@@ -131,9 +131,6 @@ export async function FeatureTemplate({
               <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#E11D48]">Related pages</p>
               <h2 className="mt-3 text-3xl font-semibold text-[#0F172A]">Continue your evaluation</h2>
             </div>
-            <Link href="/features" className="hidden text-sm font-semibold text-[#E11D48] md:block">
-              Browse all features
-            </Link>
           </div>
           <div className="mt-8 grid gap-5 md:grid-cols-3">
             {relatedLinks.map((link) => (

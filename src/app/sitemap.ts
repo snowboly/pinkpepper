@@ -9,11 +9,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     { url: BASE_URL, lastModified: new Date("2026-03-18"), changeFrequency: "weekly", priority: 1 },
     { url: `${BASE_URL}/about`, lastModified: new Date("2026-03-18"), changeFrequency: "monthly", priority: 0.8 },
-    { url: `${BASE_URL}/features`, lastModified: new Date("2026-03-14"), changeFrequency: "monthly", priority: 0.9 },
     { url: `${BASE_URL}/features/haccp-plan-generator`, lastModified: new Date("2026-03-14"), changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE_URL}/features/allergen-documentation`, lastModified: new Date("2026-03-14"), changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE_URL}/features/food-safety-sop-generator`, lastModified: new Date("2026-03-14"), changeFrequency: "monthly", priority: 0.8 },
-    { url: `${BASE_URL}/features/food-safety-audit-prep`, lastModified: new Date("2026-03-14"), changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE_URL}/use-cases`, lastModified: new Date("2026-03-14"), changeFrequency: "monthly", priority: 0.9 },
     { url: `${BASE_URL}/use-cases/restaurants`, lastModified: new Date("2026-03-14"), changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE_URL}/use-cases/cafes`, lastModified: new Date("2026-03-14"), changeFrequency: "monthly", priority: 0.8 },

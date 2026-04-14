@@ -8,7 +8,6 @@ type NavItem =
   | { label: string; children: { href: string; label: string }[] };
 
 const nav: NavItem[] = [
-  { href: "/features", label: "Services" },
   {
     label: "Resources",
     children: [
@@ -235,7 +234,6 @@ export function SiteFooter() {
         <div>
           <h4 className="mb-4 text-sm font-semibold text-[#1A1A1A]">Product</h4>
           <ul className="space-y-3 text-sm text-[#6B6B6B]">
-            <li><Link href="/features" className="pp-shell-link">Services</Link></li>
             <li><Link href="/use-cases" className="pp-shell-link">Use Cases</Link></li>
             <li><Link href="/pricing" className="pp-shell-link">Pricing</Link></li>
             <li><Link href="/about" className="pp-shell-link">About</Link></li>
