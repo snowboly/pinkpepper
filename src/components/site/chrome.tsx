@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { createClient } from "@/utils/supabase/server";
+import { NavDropdown } from "@/components/site/NavDropdown";
 
 type NavItem =
   | { href: string; label: string }
@@ -71,30 +72,13 @@ export async function SiteHeader() {
                   {item.label}
                 </Link>
               ) : (
-                <div key={item.label} className="group/dropdown relative" style={{ animationDelay: `${i * 80}ms` }}>
-                  <button
-                    type="button"
-                    className="nav-link pp-shell-link flex items-center gap-1"
-                  >
-                    {item.label}
-                    <svg className="h-3.5 w-3.5 transition-transform duration-200 group-hover/dropdown:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path fillRule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" />
-                    </svg>
-                  </button>
-                  <div className="pointer-events-none absolute left-1/2 top-full z-50 -translate-x-1/2 pt-3 opacity-0 transition-all duration-200 group-hover/dropdown:pointer-events-auto group-hover/dropdown:opacity-100 group-focus-within/dropdown:pointer-events-auto group-focus-within/dropdown:opacity-100">
-                    <div className="pp-glass-card w-48 rounded-2xl p-1.5">
-                      {item.children.map((child) => (
-                        <Link
-                          key={child.href}
-                          href={child.href}
-                          className="block rounded-xl px-3 py-2.5 text-sm font-medium text-[#0F172A] hover:bg-[#F8FAFC]"
-                        >
-                          {child.label}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                </div>
+                <NavDropdown
+                  key={item.label}
+                  label={item.label}
+                  animationDelay={`${i * 80}ms`}
+                >
+                  {item.children}
+                </NavDropdown>
               ),
             )}
           </nav>
