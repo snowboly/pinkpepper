@@ -328,7 +328,7 @@
       },
       "expert_limit": {
         "heading": "You've reached your daily Auditor limit",
-        "body": "Auditor mode is available on Pro with 5 Auditor messages per day."
+        "body": "Auditor mode is available on Pro."
       },
       "image_limit": {
         "heading": "Unlock photo analysis",
