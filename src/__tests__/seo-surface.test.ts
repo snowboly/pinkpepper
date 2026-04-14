@@ -157,7 +157,6 @@ describe("SEO surface", () => {
       return Array.isArray(disallow) ? disallow : disallow ? [disallow] : [];
     });
 
-    expect(entries).toContain("https://www.pinkpepper.io/features");
     expect(entries).toContain("https://www.pinkpepper.io/use-cases");
     expect(entries).toContain("https://www.pinkpepper.io/resources");
     expect(entries).not.toContain("https://www.pinkpepper.io/login");
@@ -185,7 +184,6 @@ describe("public SEO copy and linking", () => {
     const about = readPage("src/app/about/page.tsx");
     const security = readPage("src/app/security/page.tsx");
     const contact = readPage("src/app/contact/page.tsx");
-    const features = readPage("src/app/features/page.tsx");
     const useCases = readPage("src/app/use-cases/page.tsx");
     const resources = readPage("src/app/resources/page.tsx");
 
@@ -193,7 +191,6 @@ describe("public SEO copy and linking", () => {
     expect(about).toContain("/pricing");
     expect(security).toContain("/pricing");
     expect(contact).toContain("/features/");
-    expect(features).toContain("/pricing");
     expect(useCases).toContain("/features/");
     expect(resources).toContain("/features/");
   });
@@ -257,11 +254,9 @@ describe("public SEO copy and linking", () => {
   });
 
   it("keeps hub-page copy user-facing instead of talking about SEO strategy", () => {
-    const features = readPage("src/app/features/page.tsx");
     const useCases = readPage("src/app/use-cases/page.tsx");
     const resources = readPage("src/app/resources/page.tsx");
 
-    expect(features).not.toContain("revenue-driving search intent");
     expect(useCases).not.toContain("prospects can see their own workflow");
     expect(resources).not.toContain("long-tail questions and template searches");
   });
@@ -306,14 +301,10 @@ describe("premium quality regressions", () => {
   it("uses compliance software wording consistently in shared brand surfaces", () => {
     const headerFooter = readPage("src/components/site/chrome.tsx");
     const pricing = readPage("src/app/pricing/page.tsx");
-    const features = readPage("src/app/features/page.tsx");
 
     expect(headerFooter).toContain("AI food safety compliance software");
     expect(headerFooter).not.toContain("AI Food Safety and Compliance Assistant");
     expect(pricing).not.toContain("AI food safety assistant");
-    expect(headerFooter).toContain("Services");
-    expect(headerFooter).not.toContain(">Features<");
-    expect(features).not.toContain("â€¢");
   });
 
   it("provides a dedicated mobile navigation trigger in the shared header", () => {

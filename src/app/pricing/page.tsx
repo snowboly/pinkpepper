@@ -145,9 +145,6 @@ export default async function PricingPage() {
             Start free. Upgrade when you need more daily capacity, downloadable templates, Auditor mode, or human food safety consultancy.
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3 text-sm font-medium text-[#475569]">
-            <Link href="/features" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
-              See services
-            </Link>
             <Link href="/features/haccp-plan-generator" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
               Review HACCP plan workflows
             </Link>

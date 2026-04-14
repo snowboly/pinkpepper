@@ -237,10 +237,10 @@ export default function ResourcesPage() {
           </p>
           <div className="mt-7">
             <Link
-              href="/features"
+              href="/pricing"
               className="pp-interactive inline-block rounded-full bg-[#E11D48] px-8 py-3.5 text-sm font-semibold text-white hover:bg-[#BE123C]"
             >
-              Explore features
+              Start free
             </Link>
           </div>
         </div>
