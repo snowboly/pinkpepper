@@ -15,6 +15,10 @@ import {
   getExportGuidance,
   filterAuthorityFallbackChunks,
   getUncertaintyHandlingInstructions,
+  UNTRUSTED_CONTENT_SYSTEM_NOTE,
+  buildUntrustedDocumentBlock,
+  userChunksToUntrusted,
+  type UserDocumentChunk,
 } from "@/lib/rag";
 import { getVerificationState } from "@/lib/rag/verification";
 import { inferQueryJurisdiction, type Jurisdiction } from "@/lib/rag/source-taxonomy";
@@ -41,7 +45,6 @@ function shouldPreferAuthoritativeSources(message: string, mode: "qa" | "documen
 
 const PRIMARY_CHAT_MODEL = "deepseek-chat";
 const FALLBACK_CHAT_MODEL = "llama-3.3-70b-versatile";
-const HIGH_RISK_OPENAI_MODEL = "gpt-4.1";
 const DEFAULT_STREAM_REQUEST_TIMEOUT_MS = 120_000;
 const MAX_STREAM_REQUEST_TIMEOUT_MS = 300_000;
 
@@ -51,67 +54,14 @@ type ChatRequestMessage = {
 };
 
 type ChatStreamAttempt = {
-  provider: "groq" | "openai";
+  provider: "groq" | "deepseek";
   model: string;
   response: Response;
 };
 
-export function shouldPreferOpenAIForQuery(
-  mode: "qa" | "document" | "audit",
-  message: string
-) {
-  if (mode === "audit") {
-    return true;
-  }
-
-  if (mode !== "qa") {
-    return false;
-  }
-
-  const intent = classifyQAIntent(message);
-  return (
-    intent === "legal_applicability" ||
-    intent === "label_requirements" ||
-    intent === "allergen_control" ||
-    intent === "inspection_readiness"
-  );
-}
-
-export function shouldUsePremiumExpertModel(input: {
-  preferOpenAI: boolean;
-  hasOpenAIKey: boolean;
-  isAdmin: boolean;
-  expertUsed: number;
-  dailyExpertAnswers: number;
-}) {
-  const { preferOpenAI, hasOpenAIKey, isAdmin, expertUsed, dailyExpertAnswers } = input;
-
-  if (!preferOpenAI || !hasOpenAIKey) {
-    return false;
-  }
-
-  if (isAdmin) {
-    return true;
-  }
-
-  return expertUsed < dailyExpertAnswers;
-}
-
-export function isPremiumExpertResponse(upstream: { provider: "groq" | "openai"; model: string }) {
-  return upstream.provider === "openai" && upstream.model === HIGH_RISK_OPENAI_MODEL;
-}
-
 export function resolveChatModels(
-  modelOverride?: string | null,
-  options?: { preferOpenAI?: boolean }
+  modelOverride?: string | null
 ) {
-  if (options?.preferOpenAI) {
-    return {
-      primary: HIGH_RISK_OPENAI_MODEL,
-      fallback: modelOverride?.trim() || PRIMARY_CHAT_MODEL,
-    };
-  }
-
   return {
     primary: modelOverride?.trim() || PRIMARY_CHAT_MODEL,
     fallback: FALLBACK_CHAT_MODEL,
@@ -245,7 +195,7 @@ export function getStreamingRequestTimeoutMs() {
 }
 
 async function requestStreamingCompletion(input: {
-  provider: "groq" | "openai";
+  provider: "groq" | "deepseek";
   apiKey: string;
   model: string;
   temperature: number;
@@ -253,9 +203,10 @@ async function requestStreamingCompletion(input: {
   messages: ChatRequestMessage[];
 }) {
   const { provider, apiKey, model, temperature, maxTokens, messages } = input;
-  const url = provider === "groq"
-    ? "https://api.groq.com/openai/v1/chat/completions"
-    : "https://api.openai.com/v1/chat/completions";
+  const url =
+    provider === "groq"
+      ? "https://api.groq.com/openai/v1/chat/completions"
+      : "https://api.deepseek.com/chat/completions";
   const maxRetries = provider === "groq" ? 3 : 2;
   const timeoutMs = getStreamingRequestTimeoutMs();
 
@@ -301,34 +252,36 @@ async function requestStreamingCompletion(input: {
 }
 
 async function requestChatStream(input: {
+  deepseekKey?: string;
   groqKey?: string;
-  openaiKey?: string;
   modelOverride?: string | null;
-  preferOpenAI?: boolean;
   temperature: number;
   maxTokens: number;
   messages: ChatRequestMessage[];
 }): Promise<ChatStreamAttempt | null> {
-  const { groqKey, openaiKey, modelOverride, preferOpenAI, temperature, maxTokens, messages } =
-    input;
-  const models = resolveChatModels(modelOverride, { preferOpenAI });
+  const { deepseekKey, groqKey, modelOverride, temperature, maxTokens, messages } = input;
+  const models = resolveChatModels(modelOverride);
 
-  if (preferOpenAI && openaiKey) {
-    const openaiResponse = await requestStreamingCompletion({
-      provider: "openai",
-      apiKey: openaiKey,
+  if (deepseekKey) {
+    const deepseekResponse = await requestStreamingCompletion({
+      provider: "deepseek",
+      apiKey: deepseekKey,
       model: models.primary,
       temperature,
       maxTokens,
       messages,
     });
 
-    if (openaiResponse?.ok) {
-      return { provider: "openai", model: models.primary, response: openaiResponse };
+    if (deepseekResponse?.ok) {
+      return {
+        provider: "deepseek",
+        model: models.primary,
+        response: deepseekResponse,
+      };
     }
 
-    if (openaiResponse) {
-      console.error("[chat/stream] openai upstream error:", await openaiResponse.text());
+    if (deepseekResponse) {
+      console.error("[chat/stream] deepseek upstream error:", await deepseekResponse.text());
     }
   }
 
@@ -336,7 +289,7 @@ async function requestChatStream(input: {
     const groqResponse = await requestStreamingCompletion({
       provider: "groq",
       apiKey: groqKey,
-      model: preferOpenAI ? models.fallback : models.primary,
+      model: models.fallback,
       temperature,
       maxTokens,
       messages,
@@ -345,7 +298,7 @@ async function requestChatStream(input: {
     if (groqResponse?.ok) {
       return {
         provider: "groq",
-        model: preferOpenAI ? models.fallback : models.primary,
+        model: models.fallback,
         response: groqResponse,
       };
     }
@@ -355,37 +308,14 @@ async function requestChatStream(input: {
     }
   }
 
-  if (openaiKey && !preferOpenAI) {
-    const openaiResponse = await requestStreamingCompletion({
-      provider: "openai",
-      apiKey: openaiKey,
-      model: preferOpenAI ? models.primary : models.fallback,
-      temperature,
-      maxTokens,
-      messages,
-    });
-
-    if (openaiResponse?.ok) {
-      return {
-        provider: "openai",
-        model: preferOpenAI ? models.primary : models.fallback,
-        response: openaiResponse,
-      };
-    }
-
-    if (openaiResponse) {
-      console.error("[chat/stream] openai upstream error:", await openaiResponse.text());
-    }
-  }
-
   return null;
 }
 
 export async function POST(request: Request) {
+  const deepseekKey = process.env.DEEPSEEK_API_KEY;
   const groqKey = process.env.GROQ_API_KEY;
-  const openaiKey = process.env.OPENAI_API_KEY;
-  if (!groqKey && !openaiKey) {
-    return Response.json({ error: "Neither GROQ_API_KEY nor OPENAI_API_KEY is configured." }, { status: 500 });
+  if (!deepseekKey && !groqKey) {
+    return Response.json({ error: "Neither DEEPSEEK_API_KEY nor GROQ_API_KEY is configured." }, { status: 500 });
   }
 
   const supabase = await createSupabaseServer();
@@ -446,26 +376,15 @@ export async function POST(request: Request) {
   }
 
   const mode = detectQueryMode(message);
-  const preferOpenAI = shouldPreferOpenAIForQuery(mode, message);
 
   let used = 0;
-  let expertUsed = 0;
   try {
-    const dayStart = utcDayStartIso();
-    [used, expertUsed] = await Promise.all([
-      countUsageSince({
-        supabase,
-        userId: user.id,
-        eventType: "chat_prompt",
-        sinceIso: dayStart,
-      }),
-      countUsageSince({
-        supabase,
-        userId: user.id,
-        eventType: "expert_answer",
-        sinceIso: dayStart,
-      }),
-    ]);
+    used = await countUsageSince({
+      supabase,
+      userId: user.id,
+      eventType: "chat_prompt",
+      sinceIso: utcDayStartIso(),
+    });
   } catch {
     return Response.json({ error: "Unable to read usage." }, { status: 500 });
   }
@@ -479,14 +398,6 @@ export async function POST(request: Request) {
       { status: 402 }
     );
   }
-
-  const usePremiumExpertModel = shouldUsePremiumExpertModel({
-    preferOpenAI,
-    hasOpenAIKey: Boolean(openaiKey),
-    isAdmin,
-    expertUsed,
-    dailyExpertAnswers: caps.dailyExpertAnswers,
-  });
 
   // Resolve or create conversation
   let conversationId = body.conversationId ?? null;
@@ -558,7 +469,7 @@ export async function POST(request: Request) {
 
   // RAG retrieval (knowledge base + user uploaded documents)
   let retrievedChunks: KnowledgeChunk[] = [];
-  let userDocContext = "";
+  let userDocChunks: UserDocumentChunk[] = [];
   let ragEnabled = false;
   const queryJurisdiction = inferQueryJurisdiction(message);
   const useAuthorityFilters = shouldPreferAuthoritativeSources(message, mode);
@@ -713,10 +624,10 @@ export async function POST(request: Request) {
 
     retrievedChunks = kChunks;
     ragEnabled = kChunks.length > 0;
-    if (uChunks.length > 0) {
-      userDocContext = "\n\nUSER UPLOADED DOCUMENTS:\n" +
-        uChunks.map((c) => `[${c.file_name}] ${c.content}`).join("\n---\n");
-    }
+    // User-uploaded chunks are UNTRUSTED. They are NOT concatenated into the
+    // system prompt. They are wrapped in <untrusted_document> tags and placed
+    // into a separate user-role turn below (see `untrustedUserMessage`).
+    userDocChunks = uChunks;
   } catch (ragError) {
     console.error("RAG retrieval error:", ragError);
   }
@@ -738,8 +649,9 @@ export async function POST(request: Request) {
   if (shouldUseRetrievedContextPrompt(ragEnabled, useAuthorityFilters)) {
     const ragPrompt = buildRAGPrompt(message, retrievedChunks, mode, preferredLanguage, currentDate, businessTypeLabel, tier);
     systemPrompt =
+      UNTRUSTED_CONTENT_SYSTEM_NOTE +
+      "\n\n" +
       ragPrompt.systemPrompt +
-      userDocContext +
       `\n\nINTRODUCTION RULE:\n${buildIntroductionInstruction(hasAssistantHistory)}` +
       `\n\nPERSONA:\n${persona.promptFragment}`;
     temperature = ragPrompt.temperature;
@@ -763,41 +675,26 @@ export async function POST(request: Request) {
           '- When a user says they want to "attach", "add", or "append" a document (e.g. a log, form, or checklist) to a previously generated document, interpret this as a request to CREATE that new document as a companion to the earlier one. Do not interpret "attach" as a file upload request.\n' +
           "- After generating a document, briefly remind the user of their available export options based on their plan."
         : "You are in Q&A MODE.\n" +
-          "- Lead with a direct, practical answer in the first sentence.\n" +
-          "- Follow with regulatory context: cite specific regulations and articles.\n" +
-          "- Where EU and UK rules differ post-Brexit, explicitly call out both.\n" +
-          "- Use bullet points or numbered lists to improve scannability.\n" +
-          "- Keep answers focused — do not pad with unnecessary caveats.";
+          "- Lead with the practical answer first and keep the tone operator-facing.\n" +
+          "- For everyday operational questions, answer like an experienced food safety consultant helping staff make the next good decision, not like a compliance report or enforcement notice.\n" +
+          "- Start with the minimum practical steps or checks needed. Only add legal context when it materially changes the advice, clarifies a claim, or reduces risk.\n" +
+          "- Do not default to demanding supplier declarations, version-controlled records, validation studies, written SOPs, or advanced verification unless the question genuinely requires that level of control.\n" +
+          "- Prefer natural, concise wording. Use bullets only when they improve clarity.\n" +
+          "- If the user asks for a simple checklist or staff procedure, give the checklist directly without adding document-control headers, version blocks, or export reminders unless they asked for a formal document.";
 
     const fallbackHeader = [
-      `Today's date is ${currentDate}. No context documents were retrieved for this query. Use your food safety expertise to answer the user's question, but stay grounded in EU and UK food safety law and best practice. If the answer depends on a recent legal change or you lack source support, advise the user to verify the latest official text with EUR-Lex, the FSA, EFSA, or the relevant authority.`,
+      `Today's date is ${currentDate}. No context documents were retrieved for this query. Answer from food safety expertise, but stay grounded in EU and UK food safety law and best practice. If the answer depends on a recent legal change or you lack source support, tell the user to verify the latest official text with EUR-Lex, the FSA, EFSA, or the relevant authority.`,
       businessTypeLabel
         ? `The user operates a ${businessTypeLabel}. Tailor your examples and advice to this business type where relevant.`
         : "",
-      `The user is on the ${tier.charAt(0).toUpperCase() + tier.slice(1)} plan.`,
     ].filter(Boolean).join("\n") + "\n\n";
 
     systemPrompt =
+      UNTRUSTED_CONTENT_SYSTEM_NOTE +
+      "\n\n" +
       fallbackHeader +
       "You are a food safety compliance expert working for PinkPepper. Your name and persona are defined in the PERSONA section below — always introduce yourself by that name, not as 'PinkPepper'. PinkPepper is the product/company you represent.\n\n" +
-      "ABOUT PINKPEPPER (answer when users ask about you, the product, or their plan):\n" +
-      "PinkPepper is a food safety compliance SaaS that helps food businesses with HACCP plans, SOPs, audit preparation, allergen law, and EU/UK food safety compliance.\n" +
-      "Subscription tiers:\n" +
-      `- Free: ${TIER_CAPABILITIES.free.dailyMessages} messages/day (${used} used today on the current ${tier} plan), ${TIER_CAPABILITIES.free.dailyImageUploads} image analysis/day, ${TIER_CAPABILITIES.free.maxSavedConversations} saved conversations with ${TIER_CAPABILITIES.free.conversationRetentionDays}-day retention, no conversation export, no template downloads, no virtual audit, no consultancy.\n` +
-      `- Plus: ${TIER_CAPABILITIES.plus.dailyMessages} messages/day, ${TIER_CAPABILITIES.plus.dailyImageUploads} image analyses/day, unlimited conversations, no conversation export, DOCX template downloads, no virtual audit.\n` +
-      `- Pro: ${TIER_CAPABILITIES.pro.dailyMessages} messages/day, ${TIER_CAPABILITIES.pro.dailyImageUploads} image analyses/day, unlimited conversations, DOCX conversation export, DOCX template downloads, Virtual Audit mode, 2 hours of food safety consultancy/month (${TIER_CAPABILITIES.pro.reviewTurnaround} response time).\n` +
-      "Features: AI chatbot (you), downloadable document templates, virtual audit mode, image analysis for food safety, DOCX conversation export, and food safety consultancy (Pro only).\n" +
-      "If asked about upgrading, direct users to the upgrade option in the sidebar or settings.\n\n" +
-      "Your expertise covers:\n" +
-      "- HACCP principles (Codex Alimentarius CAC/RCP 1-1969, Rev. 2003)\n" +
-      "- Food hygiene law: Regulation (EC) No 852/2004, 853/2004, and their retained UK equivalents\n" +
-      "- Allergen labelling: Regulation (EU) No 1169/2011 (Article 21, Annex II), UK Food Information Regulations 2014, Natasha's Law (PPDS foods, from Oct 2021)\n" +
-      "- Temperature control: chilled (≤8°C), frozen (≤-18°C), hot-holding (≥63°C), cook temperatures\n" +
-      "- Traceability: Regulation (EC) No 178/2002 (Articles 17–20)\n" +
-      "- Microbiological criteria: Regulation (EC) No 2073/2005\n" +
-      "- Private certification standards: BRCGS Food Safety Issue 9, SQF Edition 9, IFS Food Version 8, FSSC 22000 Version 6\n" +
-      "- Shelf life, date marking, and QUID requirements\n" +
-      "- Pest control, cleaning and disinfection, personal hygiene, waste management\n\n" +
+      `ABOUT PINKPEPPER (only when users ask about the product or their plan): PinkPepper helps food businesses with HACCP plans, SOPs, audit preparation, allergen law, and EU/UK food safety compliance. The user is on the ${tier} plan; if they ask about limits, answer from the configured plan capabilities and direct them to the sidebar or settings to upgrade.\n\n` +
       "STRICT RULES — follow these in every response:\n" +
       "1. Only answer questions about food safety, food hygiene, HACCP, food law, allergens, food business operations, or related compliance topics. " +
       "If a question is off-topic, politely say so and redirect the user.\n" +
@@ -805,9 +702,9 @@ export async function POST(request: Request) {
       "3. Where EU and UK law have diverged post-Brexit, call out both positions explicitly.\n" +
       "4. If a question requires site-specific detail you do not have (e.g. specific menu, layout, volume), ask for it rather than making assumptions.\n" +
       `5. ${languageInstruction} Keep legal references (regulation names, article numbers) in their original form.\n` +
-      `6. ${getExportGuidance(tier)}\n` +
+      `6. ${mode === "document" ? getExportGuidance(tier) : "Do not mention export options, plan perks, or paid services unless the user asks about them or you have just generated a document."}\n` +
       "7. NEVER answer a food safety question with a bare 'yes' or 'no' when the answer has health or legal implications. Always provide the critical safety context, temperature, or regulatory basis — even when the user explicitly asks for a one-word answer.\n" +
-      "8. If the user asks an audit-style question (e.g. 'audit my procedures', 'review our HACCP', 'assess our compliance') and the current mode is Q&A, suggest switching to Virtual Audit mode: 'For a formal audit with compliance ratings and corrective actions, try switching to **Virtual Audit** mode using the toggle above the chat.'\n" +
+      "8. If the user asks an audit-style question (e.g. 'audit my procedures', 'review our HACCP', 'assess our compliance') and the current mode is Q&A, suggest switching to Auditor mode: 'For a formal audit with compliance ratings and corrective actions, try switching to **Auditor** mode using the toggle above the chat.'\n" +
       `9. If the user is on the Pro plan and asks about requesting a consultancy review or speaking to a food safety consultant, direct them to use the **\"Send Document for Review\"** button in the sidebar. Do not just describe the service.\n` +
       "10. NEVER mention, reference, or hint at a model training cutoff date. Do NOT say phrases like 'my training data goes up to', 'my knowledge cutoff is', 'as of my last update', or similar. You are NOT a generic AI — you are a PinkPepper food safety specialist grounded in a curated, regularly updated library of EU and UK food safety regulations and official guidance. If asked how current your information is, explain this. For the very latest changes, recommend verifying with EUR-Lex, the FSA, FSS, or the relevant authority.\n" +
       "11. Only introduce yourself by name on the FIRST message of a conversation. If the conversation history already contains your introduction, do NOT repeat it. Jump straight into answering the question.\n" +
@@ -817,21 +714,31 @@ export async function POST(request: Request) {
       (uncertaintyHandlingInstructions ? uncertaintyHandlingInstructions + "\n\n" : "") +
       "INTRODUCTION RULE:\n" + buildIntroductionInstruction(hasAssistantHistory) + "\n\n" +
       "PERSONA:\n" + persona.promptFragment + "\n\n" +
-      modeInstruction + userDocContext;
+      modeInstruction;
     temperature = mode === "audit" ? 0.0 : mode === "document" ? 0.2 : 0.1;
   }
 
   const maxTokens = isAdmin ? 8192 : caps.maxResponseTokens;
+
+  // User-uploaded document content is UNTRUSTED. Wrap it in <untrusted_document>
+  // tags and forward it as a separate user-role turn so the model's instruction
+  // hierarchy treats it as data, not as system instructions. Sanitisation strips
+  // chat-template control tokens and caps length — see lib/rag/untrusted-content.ts.
+  const untrustedBlock = buildUntrustedDocumentBlock(userChunksToUntrusted(userDocChunks));
+  const untrustedTurn: ChatRequestMessage[] = untrustedBlock
+    ? [{ role: "user", content: untrustedBlock }]
+    : [];
+
   const upstream = await requestChatStream({
+    deepseekKey: deepseekKey ?? undefined,
     groqKey: groqKey ?? undefined,
-    openaiKey: openaiKey ?? undefined,
-    modelOverride: process.env.GROQ_MODEL,
-    preferOpenAI: usePremiumExpertModel,
+    modelOverride: process.env.DEEPSEEK_MODEL,
     temperature,
     maxTokens,
     messages: [
       { role: "system", content: systemPrompt },
       ...history,
+      ...untrustedTurn,
       { role: "user", content: message },
     ],
   });
@@ -948,7 +855,7 @@ export async function POST(request: Request) {
         // Record usage event
         const usageEvents: Array<{
           user_id: string;
-          event_type: "chat_prompt" | "expert_answer";
+          event_type: "chat_prompt";
           event_count: number;
           metadata: Record<string, string | boolean | null>;
         }> = [
@@ -965,20 +872,6 @@ export async function POST(request: Request) {
             },
           },
         ];
-
-        if (isPremiumExpertResponse(upstream)) {
-          usageEvents.push({
-            user_id: user.id,
-            event_type: "expert_answer",
-            event_count: 1,
-            metadata: {
-              conversation_id: conversationId,
-              model: upstream.model,
-              provider: upstream.provider,
-              mode,
-            },
-          });
-        }
 
         await supabase.from("usage_events").insert(usageEvents);
 
@@ -1026,7 +919,7 @@ export async function POST(request: Request) {
 
             const interruptedEvents: Array<{
               user_id: string;
-              event_type: "chat_prompt" | "expert_answer";
+              event_type: "chat_prompt";
               event_count: number;
               metadata: Record<string, string | boolean | null>;
             }> = [
@@ -1044,21 +937,6 @@ export async function POST(request: Request) {
                 },
               },
             ];
-
-            if (isPremiumExpertResponse(upstream)) {
-              interruptedEvents.push({
-                user_id: user.id,
-                event_type: "expert_answer",
-                event_count: 1,
-                metadata: {
-                  conversation_id: conversationId,
-                  model: upstream.model,
-                  provider: upstream.provider,
-                  mode,
-                  interrupted: true,
-                },
-              });
-            }
 
             await supabase.from("usage_events").insert(interruptedEvents);
           } catch (saveErr) {

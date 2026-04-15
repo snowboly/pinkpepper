@@ -4,6 +4,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import { CookieBanner } from "@/components/site/CookieBanner";
 import { SiteFooter, SiteHeader } from "@/components/site/chrome";
+import { getCspNonce } from "@/lib/security/csp";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -21,13 +22,13 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://www.pinkpepper.io",
   },
-  title: "PinkPepper | AI Food Safety Compliance Software for EU & UK Businesses",
+  title: "PinkPepper | AI HACCP & Food Safety Software for EU & UK Businesses",
   description:
-    "PinkPepper is AI food safety compliance software for EU and UK food businesses that need HACCP plans, allergen documentation, SOPs, audit prep, and food safety records.",
+    "Generate HACCP plans, allergen records, SOPs & audit-ready documents in minutes. AI food safety software grounded in 35+ EU & UK regulations. Start free.",
   openGraph: {
-    title: "PinkPepper | AI Food Safety Compliance Software for EU & UK Businesses",
+    title: "PinkPepper | AI HACCP & Food Safety Software for EU & UK Businesses",
     description:
-      "Generate HACCP plans, allergen documentation, SOPs, and audit-ready compliance records with AI food safety compliance software built for EU and UK businesses.",
+      "Generate HACCP plans, allergen records, SOPs & audit-ready documents in minutes. Save 10+ hours/week on compliance. Grounded in 35+ EU & UK regulations.",
     url: "https://www.pinkpepper.io",
     siteName: "PinkPepper",
     images: [
@@ -92,16 +93,19 @@ const websiteSchema = {
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const locale = await getLocale();
   const messages = await getMessages();
+  const nonce = await getCspNonce();
 
   return (
     <html lang={locale}>
       <head>
         <script
           type="application/ld+json"
+          nonce={nonce}
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
         />
         <script
           type="application/ld+json"
+          nonce={nonce}
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
         />
       </head>

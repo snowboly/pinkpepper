@@ -76,7 +76,7 @@ describe("countUsageSince", () => {
     expect(count).toBe(5);
   });
 
-  it("supports expert-answer usage events", async () => {
+  it("supports auditor-message usage events", async () => {
     const mockSupabase = {
       from: vi.fn().mockReturnValue({
         select: vi.fn().mockReturnValue({
@@ -92,7 +92,7 @@ describe("countUsageSince", () => {
     const count = await countUsageSince({
       supabase: mockSupabase,
       userId: "user-123",
-      eventType: "expert_answer",
+        eventType: "auditor_message",
       sinceIso: "2026-03-07T00:00:00.000Z",
     });
 

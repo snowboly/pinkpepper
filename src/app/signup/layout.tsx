@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   description:
     "Create a free PinkPepper account and start generating HACCP plans, allergen documents, and audit-ready compliance packs for your EU or UK food business.",
   alternates: {
-    canonical: "https://pinkpepper.io/signup",
+    canonical: "https://www.pinkpepper.io/signup",
   },
   robots: {
     index: false,

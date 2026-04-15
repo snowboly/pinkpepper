@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description:
     "Learn how to structure an allergen matrix template for menu items, ingredients, cross-contact controls, and updates.",
   alternates: {
-    canonical: "https://pinkpepper.io/resources/allergen-matrix-template",
+    canonical: "https://www.pinkpepper.io/resources/allergen-matrix-template",
   },
 };
 

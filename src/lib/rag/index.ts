@@ -43,3 +43,12 @@ export {
   deduplicateCitations,
   type Citation,
 } from "./citations";
+
+export {
+  sanitizeUntrustedText,
+  sanitizeUntrustedFilename,
+  buildUntrustedDocumentBlock,
+  userChunksToUntrusted,
+  knowledgeChunksToUntrusted,
+  UNTRUSTED_CONTENT_SYSTEM_NOTE,
+} from "./untrusted-content";

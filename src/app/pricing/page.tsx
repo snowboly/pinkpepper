@@ -4,13 +4,14 @@ import { CheckCircle2, Mail } from "lucide-react";
 import PricingActions from "@/components/pricing/PricingActions";
 import { faqs as sharedFaqs } from "@/data/faqs";
 import { createClient } from "@/utils/supabase/server";
+import { getCspNonce } from "@/lib/security/csp";
 
 export const metadata: Metadata = {
-  title: "Pricing | PinkPepper - Food Safety Compliance Software",
+  title: "Pricing — From €0/mo | PinkPepper Food Safety Software",
   description:
-    "Pricing for food safety teams that need clearer day-to-day support, stronger audit preparation, downloadable templates, and specialist backup when the risk is higher.",
+    "Start free. Plus at €19/mo for daily HACCP & SOP use. Pro at €99/mo adds Auditor mode + 2h human consultancy. Save €18,000+/year on compliance costs.",
   alternates: {
-    canonical: "https://pinkpepper.io/pricing",
+    canonical: "https://www.pinkpepper.io/pricing",
   },
 };
 
@@ -42,6 +43,7 @@ const pricingFaqs = [
 ];
 
 export default async function PricingPage() {
+  const nonce = await getCspNonce();
   let isLoggedIn = false;
   try {
     const supabase = await createClient();
@@ -108,25 +110,41 @@ export default async function PricingPage() {
     ],
   };
 
+  const pricingFaqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: pricingFaqs.map(({ q, a }) => ({
+      "@type": "Question",
+      name: q,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: a,
+      },
+    })),
+  };
+
   return (
     <main className="overflow-hidden">
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareApplicationSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        nonce={nonce}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(pricingFaqSchema) }}
       />
 
       <section className="py-16 md:py-20">
         <div className="pp-container max-w-4xl text-center">
           <h1 className="pp-display text-4xl font-black tracking-tight text-[#0F172A] md:text-5xl">
-            Simple pricing for food safety teams.
+            Save €18,000+/year on compliance costs.
           </h1>
           <p className="mt-5 text-lg leading-relaxed text-[#475569]">
-            Start free for live questions, move to Plus for heavier Consultant use, and choose Pro when you want Auditor mode and human specialist backup.
+            Start free. Upgrade when you need more daily capacity, downloadable templates, Auditor mode, or human food safety consultancy.
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3 text-sm font-medium text-[#475569]">
-            <Link href="/features" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
-              See services
-            </Link>
             <Link href="/features/haccp-plan-generator" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
               Review HACCP plan workflows
             </Link>
@@ -180,10 +198,11 @@ export default async function PricingPage() {
               </Link>
             </div>
 
-            <div className="flex flex-col rounded-3xl border border-[#E2E8F0] bg-white p-8">
+            <div className="relative flex flex-col rounded-3xl border-2 border-[#E11D48] bg-white p-8">
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-[#E11D48] px-4 py-1 text-xs font-bold text-white">Most Popular</div>
               <h2 className="text-xs font-semibold uppercase tracking-[0.18em] text-[#94A3B8]">Plus</h2>
               <p className="mt-4 min-h-[4.5rem] text-sm leading-relaxed text-[#64748B]">
-                For operators who need heavier day-to-day use, document uploads, and more Consultant capacity.
+                For teams that use PinkPepper daily for HACCP, SOPs, allergen records, and downloadable templates.
               </p>
               <div className="mt-6 flex items-baseline gap-1">
                 <span className="text-5xl font-bold tracking-tight text-[#0F172A]"><span className="text-2xl align-super">EUR </span>19</span>

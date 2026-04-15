@@ -1,14 +1,11 @@
 import { describe, expect, it } from "vitest";
 import {
-  isPremiumExpertResponse,
   buildAuthorityRetryQueries,
   buildKnowledgeRetryQueries,
   buildIntroductionInstruction,
-  getStreamingRequestTimeoutMs,
   getHistoryWindowLimit,
+  getStreamingRequestTimeoutMs,
   resolveChatModels,
-  shouldUsePremiumExpertModel,
-  shouldPreferOpenAIForQuery,
   shouldRunKnowledgeRetry,
   shouldUseRetrievedContextPrompt,
 } from "@/app/api/chat/stream/route";
@@ -33,11 +30,11 @@ describe("resolveChatModels", () => {
     expect(models.fallback).toBe("llama-3.3-70b-versatile");
   });
 
-  it("prefers gpt-4.1 first for high-risk compliance questions", () => {
-    const models = resolveChatModels("custom-deepseek-model", { preferOpenAI: true });
+  it("keeps the llama fallback even when a custom DeepSeek model is configured", () => {
+    const models = resolveChatModels("custom-deepseek-model");
 
-    expect(models.primary).toBe("gpt-4.1");
-    expect(models.fallback).toBe("custom-deepseek-model");
+    expect(models.primary).toBe("custom-deepseek-model");
+    expect(models.fallback).toBe("llama-3.3-70b-versatile");
   });
 });
 
@@ -70,87 +67,6 @@ describe("stream request timeout", () => {
     process.env.CHAT_STREAM_REQUEST_TIMEOUT_MS = "3000000000";
 
     expect(getStreamingRequestTimeoutMs()).toBe(120000);
-  });
-});
-
-describe("high-risk model routing", () => {
-  it("routes legal applicability questions to the stronger model", () => {
-    expect(
-      shouldPreferOpenAIForQuery(
-        "qa",
-        "I run a restaurant in London. What food safety regulations apply to me?"
-      )
-    ).toBe(true);
-  });
-
-  it("routes label questions to the stronger model", () => {
-    expect(
-      shouldPreferOpenAIForQuery(
-        "qa",
-        "What are the label requirements for a prepacked soup sold in Germany?"
-      )
-    ).toBe(true);
-  });
-
-  it("routes allergen-control questions to the stronger model", () => {
-    expect(
-      shouldPreferOpenAIForQuery(
-        "qa",
-        "A customer asks whether one of our sandwiches is gluten-free. What should staff do before answering?"
-      )
-    ).toBe(true);
-  });
-
-  it("keeps generic operational chat on the default model", () => {
-    expect(
-      shouldPreferOpenAIForQuery("qa", "Give me a simple cleaning checklist for closing time.")
-    ).toBe(false);
-  });
-
-  it("routes audit mode to the stronger model", () => {
-    expect(shouldPreferOpenAIForQuery("audit", "Audit my HACCP plan")).toBe(true);
-  });
-
-  it("uses the premium model only when OpenAI is available and quota remains", () => {
-    expect(
-      shouldUsePremiumExpertModel({
-        preferOpenAI: true,
-        hasOpenAIKey: true,
-        isAdmin: false,
-        expertUsed: 2,
-        dailyExpertAnswers: 3,
-      })
-    ).toBe(true);
-  });
-
-  it("falls back to the regular path when premium quota is exhausted", () => {
-    expect(
-      shouldUsePremiumExpertModel({
-        preferOpenAI: true,
-        hasOpenAIKey: true,
-        isAdmin: false,
-        expertUsed: 3,
-        dailyExpertAnswers: 3,
-      })
-    ).toBe(false);
-  });
-
-  it("falls back to the regular path when OpenAI is unavailable", () => {
-    expect(
-      shouldUsePremiumExpertModel({
-        preferOpenAI: true,
-        hasOpenAIKey: false,
-        isAdmin: false,
-        expertUsed: 0,
-        dailyExpertAnswers: 3,
-      })
-    ).toBe(false);
-  });
-
-  it("counts expert usage only for premium OpenAI responses", () => {
-    expect(isPremiumExpertResponse({ provider: "openai", model: "gpt-4.1" })).toBe(true);
-    expect(isPremiumExpertResponse({ provider: "groq", model: "llama-3.3-70b-versatile" })).toBe(false);
-    expect(isPremiumExpertResponse({ provider: "openai", model: "deepseek-chat" })).toBe(false);
   });
 });
 

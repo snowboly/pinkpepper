@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description:
     "Learn how to write a waste management SOP for food businesses, covering segregation, storage, collection, and compliance with EU and UK waste regulations.",
   alternates: {
-    canonical: "https://pinkpepper.io/resources/waste-management-sop-template",
+    canonical: "https://www.pinkpepper.io/resources/waste-management-sop-template",
   },
 };
 

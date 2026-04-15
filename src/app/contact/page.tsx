@@ -1,18 +1,47 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Mail } from "lucide-react";
+import { getCspNonce } from "@/lib/security/csp";
 
-export const metadata = {
-  title: "Contact & Support | PinkPepper Food Safety Compliance Software",
+const contactPageSchema = {
+  "@context": "https://schema.org",
+  "@type": "ContactPage",
+  name: "Contact PinkPepper",
+  url: "https://www.pinkpepper.io/contact",
   description:
-    "Get in touch with PinkPepper for food safety compliance questions, account support, and feedback across EU and UK food businesses.",
-  alternates: {
-    canonical: "https://pinkpepper.io/contact",
+    "Contact PinkPepper for questions about HACCP plans, food safety compliance, pricing, or enterprise plans.",
+  mainEntity: {
+    "@type": "Organization",
+    name: "PinkPepper",
+    url: "https://pinkpepper.io",
+    contactPoint: {
+      "@type": "ContactPoint",
+      email: "support@pinkpepper.io",
+      contactType: "customer support",
+      availableLanguage: ["English", "German", "French", "Spanish", "Portuguese", "Italian"],
+      responseTime: "P1D",
+    },
   },
 };
 
-export default function ContactPage() {
+export const metadata: Metadata = {
+  title: "Contact PinkPepper — Food Safety Compliance Support",
+  description:
+    "Questions about HACCP plans, pricing, or enterprise plans? Contact PinkPepper for food safety compliance support. We respond within 1 business day.",
+  alternates: {
+    canonical: "https://www.pinkpepper.io/contact",
+  },
+};
+
+export default async function ContactPage() {
+  const nonce = await getCspNonce();
   return (
     <main>
+      <script
+        type="application/ld+json"
+        nonce={nonce}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(contactPageSchema) }}
+      />
       <section className="py-16 text-center">
         <div className="pp-container max-w-3xl">
           <h1 className="text-4xl font-black tracking-tight text-[#2B2B2B] md:text-5xl">

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { createClient } from "@/utils/supabase/client";
+import { validatePassword } from "@/lib/password";
 import { locales, type Locale } from "@/i18n/config";
 
 const LOCALE_LABELS: Record<Locale, string> = {
@@ -21,8 +22,8 @@ type SettingsFormProps = {
   chatLanguage: string;
   usage: number;
   usageLimit: number | null;
-  expertUsage: number;
-  expertUsageLimit: number | null;
+  auditorUsage: number;
+  auditorUsageLimit: number | null;
   imageUsage: number;
   imageUsageLimit: number | null;
 };
@@ -34,8 +35,8 @@ export default function SettingsForm({
   chatLanguage: initialChatLanguage,
   usage,
   usageLimit,
-  expertUsage,
-  expertUsageLimit,
+  auditorUsage,
+  auditorUsageLimit,
   imageUsage,
   imageUsageLimit,
 }: SettingsFormProps) {
@@ -69,8 +70,9 @@ export default function SettingsForm({
     e.preventDefault();
     setPasswordMsg(null);
 
-    if (newPassword.length < 8) {
-      setPasswordMsg({ type: "error", text: t("passwordTooShort") });
+    const passwordError = validatePassword(newPassword);
+    if (passwordError) {
+      setPasswordMsg({ type: "error", text: passwordError });
       return;
     }
     if (newPassword !== confirmPassword) {
@@ -116,7 +118,14 @@ export default function SettingsForm({
     setDeleteLoading(true);
     setDeleteError(null);
     try {
-      const res = await fetch("/api/account/delete", { method: "DELETE" });
+      // The server requires both a typed confirmation phrase and the
+      // authenticated user's email address to destroy the account; this
+      // defeats one-click CSRF variants and accidental no-confirm wipes.
+      const res = await fetch("/api/account/delete", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ confirm: "DELETE MY ACCOUNT", email }),
+      });
       if (!res.ok) {
         const data = await res.json() as { error?: string };
         setDeleteError(data.error ?? t("unexpectedError"));
@@ -153,7 +162,7 @@ export default function SettingsForm({
       {!isAdmin && (
         <div className="rounded-2xl border border-[#E2E8F0] bg-white p-6">
           <h2 className="text-sm font-semibold text-[#0F172A] mb-1">{t("usage")}</h2>
-          <p className="text-xs text-[#94A3B8] mb-4">Resets daily · reviews reset monthly</p>
+          <p className="text-xs text-[#94A3B8] mb-4">Resets daily</p>
           <div className="space-y-4">
             <UsageBar
               label={t("dailyMessages")}
@@ -162,9 +171,9 @@ export default function SettingsForm({
               color="#E11D48"
             />
             <UsageBar
-              label={t("dailyExpertAnswers")}
-              used={expertUsage}
-              limit={expertUsageLimit}
+              label={t("dailyAuditorMessages")}
+              used={auditorUsage}
+              limit={auditorUsageLimit}
               color="#2563EB"
             />
             <UsageBar
@@ -187,7 +196,7 @@ export default function SettingsForm({
             const newLocale = e.target.value as Locale;
             document.cookie = `locale=${newLocale}; path=/; max-age=31536000`;
             try {
-              await supabase.from("profiles").update({ locale: newLocale } as Record<string, string>).eq("id", (await supabase.auth.getUser()).data.user?.id ?? "");
+              await supabase.from("profiles").update({ locale: newLocale }).eq("id", (await supabase.auth.getUser()).data.user?.id ?? "");
             } catch {
               // Non-blocking — cookie is the primary source
             }
@@ -227,7 +236,7 @@ export default function SettingsForm({
                 const { data: { user } } = await supabase.auth.getUser();
                 const { error } = await supabase
                   .from("profiles")
-                  .update({ chat_language: chatLanguage } as Record<string, string>)
+                  .update({ chat_language: chatLanguage })
                   .eq("id", user?.id ?? "");
                 if (error) throw error;
                 setChatLangMsg({ type: "success", text: t("chatbotLanguageSaved") });

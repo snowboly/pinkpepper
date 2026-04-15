@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
+import type { Database } from "@/types/database.types";
 
 export const dynamic = "force-dynamic";
 
@@ -18,7 +19,7 @@ export async function PATCH(request: Request) {
     onboarding_completed?: boolean;
   };
 
-  const update: Record<string, unknown> = {};
+  const update: Database["public"]["Tables"]["profiles"]["Update"] = {};
   if (body.business_type !== undefined) update.business_type = body.business_type;
   if (body.onboarding_completed !== undefined) update.onboarding_completed = body.onboarding_completed;
 

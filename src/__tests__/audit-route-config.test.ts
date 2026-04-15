@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { buildVirtualAuditSystemPrompt } from "@/app/api/audit/stream/route";
 import { getAuditPersona } from "@/lib/personas";
+import { readFileSync } from "node:fs";
+import path from "node:path";
 
 describe("buildVirtualAuditSystemPrompt", () => {
   it("uses a finding-first audit contract when the prompt already contains evidence", () => {
@@ -58,5 +60,27 @@ describe("audit persona", () => {
     expect(persona.name).toBe("Lead Auditor John");
     expect(persona.avatar).toBe("lead-auditor-john");
     expect(persona.promptFragment).toContain("Lead Auditor John");
+  });
+});
+
+describe("audit provider routing", () => {
+  it("uses gpt-4.1 as the default auditor model and keeps Groq llama as fallback", () => {
+    const routeSource = readFileSync(
+      path.join(process.cwd(), "src/app/api/audit/stream/route.ts"),
+      "utf8"
+    );
+
+    expect(routeSource).toContain('const primaryModel = "gpt-4.1"');
+    expect(routeSource).toContain('const fallbackModel = process.env.GROQ_MODEL ?? "llama-3.3-70b-versatile"');
+    expect(routeSource).toContain('const openaiKey = process.env.OPENAI_API_KEY;');
+  });
+});
+
+describe("audit source-tag hallucination guard", () => {
+  it("forbids [Source: ] tags for documents not in the retrieved context block", () => {
+    const prompt = buildVirtualAuditSystemPrompt("No regulation context found.", false);
+
+    expect(prompt).toContain("Do NOT use [Source: ] tags for documents that are not present in the RETRIEVED CONTEXT block");
+    expect(prompt).toContain("Never fabricate document names, template titles, or section numbers to attach a source tag to");
   });
 });

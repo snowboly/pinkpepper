@@ -2,17 +2,19 @@ import type { Metadata } from "next";
 import { FeatureTemplate } from "@/components/site/FeatureTemplate";
 
 export const metadata: Metadata = {
-  title: "Food Safety SOP Generator | PinkPepper",
+  title: "Food Safety SOP Generator — AI-Powered | PinkPepper",
   description:
-    "Create food safety SOPs, hygiene procedures, cleaning schedules, monitoring logs, and training records with PinkPepper.",
+    "Generate cleaning SOPs, hygiene procedures, temperature logs & training records in minutes. Grounded in EC 852/2004 & UK FSA guidance. Try free.",
   alternates: {
-    canonical: "https://pinkpepper.io/features/food-safety-sop-generator",
+    canonical: "https://www.pinkpepper.io/features/food-safety-sop-generator",
   },
 };
 
 export default function FoodSafetySopGeneratorPage() {
   return (
     <FeatureTemplate
+      breadcrumbName="Food Safety SOP Generator"
+      breadcrumbUrl="https://pinkpepper.io/features/food-safety-sop-generator"
       eyebrow="SOP generation"
       title="Generate food safety SOPs and records that match the way your site works"
       description="PinkPepper helps teams create standard operating procedures, monitoring logs, cleaning schedules, hygiene policies, and daily checklists without copying old templates from site to site."
@@ -45,7 +47,7 @@ export default function FoodSafetySopGeneratorPage() {
         },
       ]}
       heroImage={{
-        src: "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=1200&q=80",
+        src: "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=1200&q=60",
         alt: "Kitchen staff following hygiene procedures during food preparation",
       }}
       relatedLinks={[
@@ -55,9 +57,9 @@ export default function FoodSafetySopGeneratorPage() {
           description: "Use HACCP outputs to inform SOP structure, monitoring, and corrective actions.",
         },
         {
-          href: "/features/food-safety-audit-prep",
-          label: "Food safety audit prep",
-          description: "Turn SOPs and records into stronger audit evidence before inspection day.",
+          href: "/features/allergen-documentation",
+          label: "Allergen documentation",
+          description: "Pair SOPs with allergen controls and menu-change records.",
         },
         {
           href: "/pricing",

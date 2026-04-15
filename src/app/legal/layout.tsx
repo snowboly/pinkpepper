@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { getCspNonce } from "@/lib/security/csp";
 
 // Shared breadcrumb for all /legal/* pages.
 // Each page's own title/description metadata handles the leaf name;
@@ -22,11 +23,13 @@ const legalBreadcrumbSchema = {
   ],
 };
 
-export default function LegalLayout({ children }: { children: ReactNode }) {
+export default async function LegalLayout({ children }: { children: ReactNode }) {
+  const nonce = await getCspNonce();
   return (
     <>
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: JSON.stringify(legalBreadcrumbSchema) }}
       />
       {children}

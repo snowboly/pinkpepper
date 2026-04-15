@@ -47,8 +47,8 @@ export default function ChatWorkspace({
   initialTier,
   initialUsage,
   usageLimit,
-  initialExpertUsage,
-  expertUsageLimit,
+  initialAuditorUsage,
+  auditorUsageLimit,
   dailyImageUploads,
   canExportWord,
   canReview,
@@ -75,8 +75,8 @@ export default function ChatWorkspace({
   const [tier, setTier] = useState<SubscriptionTier>(initialTier);
   const [, setUsage] = useState(initialUsage);
   const [, setUsageLimit] = useState(usageLimit);
-  const [, setExpertUsage] = useState(initialExpertUsage);
-  const [, setExpertUsageLimit] = useState(expertUsageLimit);
+  const [, setAuditorUsage] = useState(initialAuditorUsage);
+  const [, setAuditorUsageLimit] = useState(auditorUsageLimit);
   const [isAdmin, setIsAdmin] = useState(initialIsAdmin);
 
   // ── Export state ──
@@ -314,8 +314,8 @@ export default function ChatWorkspace({
         isAdmin?: boolean;
         usage?: number;
         usageLimit?: number;
-        expertUsage?: number;
-        expertUsageLimit?: number;
+        auditorUsage?: number;
+        auditorUsageLimit?: number;
         error?: string;
       };
       if (!res.ok || !data.tier) {
@@ -326,8 +326,8 @@ export default function ChatWorkspace({
       setIsAdmin(Boolean(data.isAdmin));
       if (typeof data.usage === "number") setUsage(data.usage);
       if (typeof data.usageLimit === "number") setUsageLimit(data.usageLimit);
-      if (typeof data.expertUsage === "number") setExpertUsage(data.expertUsage);
-      if (typeof data.expertUsageLimit === "number") setExpertUsageLimit(data.expertUsageLimit);
+      if (typeof data.auditorUsage === "number") setAuditorUsage(data.auditorUsage);
+      if (typeof data.auditorUsageLimit === "number") setAuditorUsageLimit(data.auditorUsageLimit);
     } catch {
       setBillingError("Network error while refreshing billing status.");
     }

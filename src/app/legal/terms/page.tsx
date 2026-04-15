@@ -3,7 +3,7 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Terms of Service | PinkPepper",
   description: "Terms governing your use of the PinkPepper AI food safety compliance platform.",
-  alternates: { canonical: "https://pinkpepper.io/legal/terms" },
+  alternates: { canonical: "https://www.pinkpepper.io/legal/terms" },
 };
 
 export default function TermsPage() {
@@ -181,7 +181,17 @@ export default function TermsPage() {
         </section>
 
         <section>
-          <h2 className="mb-3 text-xl font-semibold text-[#0F172A]">13. Governing law and disputes</h2>
+          <h2 className="mb-3 text-xl font-semibold text-[#0F172A]">13. Force majeure</h2>
+          <p>
+            Neither party is liable for any failure or delay in performance arising from causes beyond its reasonable
+            control, including acts of God, natural disasters, war, terrorism, civil unrest, labour disputes,
+            governmental acts, epidemics, power or telecommunications failures, internet outages, or failures of
+            third-party service providers. Payment obligations are not excused by this clause.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="mb-3 text-xl font-semibold text-[#0F172A]">14. Governing law and disputes</h2>
           <p>
             These Terms are governed by the laws of the Republic of Ireland. Any disputes shall be subject to the
             exclusive jurisdiction of the courts of Ireland, without prejudice to any mandatory consumer protection
@@ -192,10 +202,64 @@ export default function TermsPage() {
             <a href="mailto:support@pinkpepper.io" className="text-[#E11D48] hover:underline">support@pinkpepper.io</a>{" "}
             to attempt to resolve the dispute informally.
           </p>
+          <p className="mt-3">
+            <strong>EU online dispute resolution:</strong> if you are a consumer resident in the European Union, the
+            European Commission provides an online dispute resolution (ODR) platform at{" "}
+            <a
+              href="https://ec.europa.eu/consumers/odr/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#E11D48] hover:underline"
+            >
+              https://ec.europa.eu/consumers/odr/
+            </a>
+            . We are not obliged to and do not currently participate in dispute resolution proceedings before an
+            alternative dispute resolution body, but the platform may still be used to contact us.
+          </p>
         </section>
 
         <section>
-          <h2 className="mb-3 text-xl font-semibold text-[#0F172A]">14. Contact</h2>
+          <h2 className="mb-3 text-xl font-semibold text-[#0F172A]">15. General provisions</h2>
+          <ul className="list-disc space-y-2 pl-6">
+            <li>
+              <strong>Entire agreement:</strong> these Terms, together with the Privacy Policy, Acceptable Use Policy,
+              Refund Policy, Cookie Policy, and (where applicable) Data Processing Agreement, constitute the entire
+              agreement between you and PinkPepper regarding the Service and supersede any prior agreements on the
+              same subject matter.
+            </li>
+            <li>
+              <strong>Severability:</strong> if any provision of these Terms is held to be invalid, illegal, or
+              unenforceable, the remaining provisions remain in full force and effect, and the invalid provision will
+              be replaced with an enforceable provision that most closely reflects the original intent.
+            </li>
+            <li>
+              <strong>No waiver:</strong> a failure or delay by PinkPepper in enforcing any right under these Terms is
+              not a waiver of that right, and no single or partial exercise of a right precludes any further exercise.
+            </li>
+            <li>
+              <strong>Assignment:</strong> you may not assign or transfer these Terms without our prior written
+              consent. PinkPepper may assign these Terms in connection with a merger, acquisition, reorganisation, or
+              sale of all or substantially all of its assets.
+            </li>
+            <li>
+              <strong>Notices:</strong> we will give you notices under these Terms by email to the address on your
+              account or by in-app notice. You will give us notices at{" "}
+              <a href="mailto:support@pinkpepper.io" className="text-[#E11D48] hover:underline">support@pinkpepper.io</a>.
+              Notices are deemed received on the next business day after sending.
+            </li>
+            <li>
+              <strong>No third-party beneficiaries:</strong> no person other than the parties has any right to enforce
+              these Terms under the Contracts (Rights of Third Parties) Act 1999 or any equivalent legislation.
+            </li>
+            <li>
+              <strong>Language:</strong> these Terms are concluded in English. Translations, where provided, are for
+              convenience only and the English version governs in case of any conflict.
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 className="mb-3 text-xl font-semibold text-[#0F172A]">16. Contact</h2>
           <p>
             For questions about these Terms, contact us at{" "}
             <a href="mailto:support@pinkpepper.io" className="text-[#E11D48] hover:underline">support@pinkpepper.io</a>.

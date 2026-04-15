@@ -1,9 +1,14 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
 import ChatWorkspace from "@/components/dashboard/ChatWorkspace";
 import { TIER_CAPABILITIES } from "@/lib/tier";
 import { resolveUserAccess } from "@/lib/access";
 import { countUsageSince, utcDayStartIso } from "@/lib/policy";
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
 
 export const dynamic = "force-dynamic";
 
@@ -39,10 +44,10 @@ export default async function DashboardPage() {
     : TIER_CAPABILITIES[tier];
 
   let count = 0;
-  let expertCount = 0;
+  let auditorCount = 0;
   try {
     const dayStart = utcDayStartIso();
-    [count, expertCount] = await Promise.all([
+    [count, auditorCount] = await Promise.all([
       countUsageSince({
         supabase,
         userId: user.id,
@@ -52,13 +57,13 @@ export default async function DashboardPage() {
       countUsageSince({
         supabase,
         userId: user.id,
-        eventType: "expert_answer",
+        eventType: "auditor_message",
         sinceIso: dayStart,
       }),
     ]);
   } catch {
     count = 0;
-    expertCount = 0;
+    auditorCount = 0;
   }
 
   return (
@@ -67,8 +72,8 @@ export default async function DashboardPage() {
       initialTier={tier}
       initialUsage={count}
       usageLimit={caps.dailyMessages}
-      initialExpertUsage={expertCount}
-      expertUsageLimit={isAdmin ? Number.MAX_SAFE_INTEGER : caps.dailyExpertAnswers}
+      initialAuditorUsage={auditorCount}
+      auditorUsageLimit={isAdmin ? Number.MAX_SAFE_INTEGER : caps.dailyAuditorMessages}
       dailyImageUploads={isAdmin ? Number.MAX_SAFE_INTEGER : caps.dailyImageUploads}
       canExportPdf={caps.allowPdfExport}
       canExportWord={caps.allowWordExport}
