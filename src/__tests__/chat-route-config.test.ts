@@ -59,6 +59,18 @@ describe("stream request timeout", () => {
 
     expect(getStreamingRequestTimeoutMs()).toBe(120000);
   });
+
+  it("ignores non-integer timeout overrides", () => {
+    process.env.CHAT_STREAM_REQUEST_TIMEOUT_MS = "180000.5";
+
+    expect(getStreamingRequestTimeoutMs()).toBe(120000);
+  });
+
+  it("ignores oversized timeout overrides", () => {
+    process.env.CHAT_STREAM_REQUEST_TIMEOUT_MS = "3000000000";
+
+    expect(getStreamingRequestTimeoutMs()).toBe(120000);
+  });
 });
 
 describe("high-risk model routing", () => {

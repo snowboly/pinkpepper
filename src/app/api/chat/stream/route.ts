@@ -43,6 +43,7 @@ const PRIMARY_CHAT_MODEL = "deepseek-chat";
 const FALLBACK_CHAT_MODEL = "llama-3.3-70b-versatile";
 const HIGH_RISK_OPENAI_MODEL = "gpt-4.1";
 const DEFAULT_STREAM_REQUEST_TIMEOUT_MS = 120_000;
+const MAX_STREAM_REQUEST_TIMEOUT_MS = 300_000;
 
 type ChatRequestMessage = {
   role: "system" | "user" | "assistant";
@@ -232,7 +233,11 @@ export function getStreamingRequestTimeoutMs() {
   const raw = process.env.CHAT_STREAM_REQUEST_TIMEOUT_MS?.trim();
   const parsed = raw ? Number(raw) : NaN;
 
-  if (Number.isFinite(parsed) && parsed >= 30_000) {
+  if (
+    Number.isInteger(parsed) &&
+    parsed >= 30_000 &&
+    parsed <= MAX_STREAM_REQUEST_TIMEOUT_MS
+  ) {
     return parsed;
   }
 
