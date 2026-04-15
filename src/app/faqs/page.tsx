@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { faqs } from "@/data/faqs";
+import { getCspNonce } from "@/lib/security/csp";
 
 const faqPageSchema = {
   "@context": "https://schema.org",
@@ -24,11 +25,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default function FaqsPage() {
+export default async function FaqsPage() {
+  const nonce = await getCspNonce();
   return (
     <main className="overflow-hidden">
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqPageSchema) }}
       />
       <section className="border-b border-[#F1F5F9] bg-white py-16 md:py-24">

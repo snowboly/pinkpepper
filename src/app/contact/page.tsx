@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Mail } from "lucide-react";
+import { getCspNonce } from "@/lib/security/csp";
 
 const contactPageSchema = {
   "@context": "https://schema.org",
@@ -32,11 +33,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const nonce = await getCspNonce();
   return (
     <main>
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: JSON.stringify(contactPageSchema) }}
       />
       <section className="py-16 text-center">
