@@ -177,16 +177,72 @@ export default function DpaPage() {
 
         <section>
           <h2 className="mb-3 text-xl font-semibold text-[#0F172A]">9. Security measures</h2>
-          <p>
-            PinkPepper implements technical and organisational measures including TLS 1.2+ encryption in
-            transit, AES-256 encryption at rest, row-level security for data isolation, and access controls.
-            Full details are available on our{" "}
-            <a href="/security" className="text-[#E11D48] hover:underline">Security page</a>.
+          <p className="mb-3">
+            In accordance with Article 32 GDPR, PinkPepper implements the following technical and
+            organisational measures to ensure a level of security appropriate to the risk:
+          </p>
+          <ul className="list-disc space-y-2 pl-6">
+            <li><strong>Encryption in transit:</strong> TLS 1.2 or higher for all connections to the Service.</li>
+            <li><strong>Encryption at rest:</strong> AES-256 for stored database records, file storage, and backups.</li>
+            <li><strong>Access controls:</strong> role-based access for PinkPepper personnel; principle of least privilege; MFA on all administrative accounts.</li>
+            <li><strong>Data isolation:</strong> row-level security policies in the database enforce per-account tenant isolation.</li>
+            <li><strong>Credential protection:</strong> passwords stored as one-way hashes; session tokens rotated; no plaintext credential storage.</li>
+            <li><strong>Logging and monitoring:</strong> security-relevant events logged; anomaly alerts on administrative access.</li>
+            <li><strong>Vulnerability management:</strong> dependency scanning and timely patching of security advisories.</li>
+            <li><strong>Personnel:</strong> confidentiality obligations and security training for staff with access to personal data.</li>
+            <li><strong>Backup and recovery:</strong> regular encrypted backups with documented restoration procedures.</li>
+            <li><strong>Subprocessor due diligence:</strong> executed DPAs and appropriate transfer mechanisms with every subprocessor listed in Section 7.</li>
+          </ul>
+          <p className="mt-3">
+            Further detail is available on our{" "}
+            <a href="/security" className="text-[#E11D48] hover:underline">Security page</a>. PinkPepper will
+            review these measures periodically and update them to reflect the evolving state of the art and
+            the risks posed to the rights and freedoms of data subjects.
           </p>
         </section>
 
         <section>
-          <h2 className="mb-3 text-xl font-semibold text-[#0F172A]">10. Governing law</h2>
+          <h2 className="mb-3 text-xl font-semibold text-[#0F172A]">10. Audits and information rights</h2>
+          <p>
+            In accordance with Article 28(3)(h) GDPR, PinkPepper will make available to the Controller all
+            information reasonably necessary to demonstrate compliance with the obligations set out in this
+            DPA and in Article 28 GDPR.
+          </p>
+          <ul className="mt-3 list-disc space-y-2 pl-6">
+            <li>
+              <strong>Standing documentation:</strong> PinkPepper satisfies its information duty by making
+              available the Privacy Policy, this DPA, the Security page, and current subprocessor list. The
+              Controller may request reasonable additional information by emailing{" "}
+              <a href="mailto:support@pinkpepper.io" className="text-[#E11D48] hover:underline">support@pinkpepper.io</a>.
+            </li>
+            <li>
+              <strong>Audit request:</strong> once per 12-month period, or more frequently if required by a
+              competent supervisory authority or following a personal data breach affecting the Controller,
+              the Controller (or an independent auditor bound by confidentiality and mandated by the
+              Controller) may audit PinkPepper&apos;s compliance with this DPA.
+            </li>
+            <li>
+              <strong>Procedure:</strong> audits shall be conducted on at least 30 days&apos; prior written
+              notice, during PinkPepper&apos;s normal business hours, in a manner that does not unreasonably
+              interfere with PinkPepper&apos;s operations, and subject to the auditor signing reasonable
+              confidentiality undertakings. PinkPepper may satisfy audit requests by providing a recent
+              third-party attestation report (for example, an ISO 27001 or SOC 2 report) covering the
+              requested scope, where available.
+            </li>
+            <li>
+              <strong>Costs:</strong> the Controller bears its own audit costs. PinkPepper may charge
+              reasonable fees for time spent supporting the audit in excess of what is required by applicable
+              law.
+            </li>
+            <li>
+              <strong>Regulator co-operation:</strong> PinkPepper will co-operate with requests from competent
+              supervisory authorities relating to the processing carried out under this DPA.
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 className="mb-3 text-xl font-semibold text-[#0F172A]">11. Governing law</h2>
           <p>
             This DPA is governed by the laws of the Republic of Ireland and the provisions of the GDPR as
             applicable. For UK customers, the UK GDPR and Data Protection Act 2018 apply in parallel.
@@ -194,7 +250,7 @@ export default function DpaPage() {
         </section>
 
         <section>
-          <h2 className="mb-3 text-xl font-semibold text-[#0F172A]">11. Contact</h2>
+          <h2 className="mb-3 text-xl font-semibold text-[#0F172A]">12. Contact</h2>
           <p>
             For DPA enquiries or to request a countersigned copy, contact{" "}
             <a href="mailto:support@pinkpepper.io" className="text-[#E11D48] hover:underline">support@pinkpepper.io</a>.

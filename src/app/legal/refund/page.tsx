@@ -47,10 +47,16 @@ export default function RefundPage() {
             </li>
             <li>
               <strong>14-day cooling-off period (EU/UK statutory right):</strong> if you are an EU or UK
-              consumer and have not used any paid features (exports, document review) since subscribing, you
-              may cancel and request a full refund within 14 days of your first payment under your statutory
-              right of withdrawal. By using paid features before the 14-day period ends, you acknowledge that
-              the service has been partially delivered and waive this right to the extent permitted by law.
+              consumer, you have a statutory right to withdraw from your subscription within 14 days of your
+              first payment. When you subscribe to a paid plan, PinkPepper asks you to (a) expressly request
+              that the Service be provided immediately, before the 14-day withdrawal period ends, and
+              (b) expressly acknowledge that, by doing so, you lose the right of withdrawal once the Service
+              has been fully performed. This reflects Article 16(m) of Directive 2011/83/EU (Consumer Rights
+              Directive) and Regulation 37 of the UK Consumer Contracts (Information, Cancellation and
+              Additional Charges) Regulations 2013. If you have not given that express consent, or if you
+              have not used any paid features (exports, document review, paid-tier chat) since subscribing,
+              you may cancel and request a full refund within the 14-day window by emailing{" "}
+              <a href="mailto:support@pinkpepper.io" className="text-[#E11D48] hover:underline">support@pinkpepper.io</a>.
             </li>
             <li>
               <strong>Service unavailability:</strong> if PinkPepper was materially unavailable for an

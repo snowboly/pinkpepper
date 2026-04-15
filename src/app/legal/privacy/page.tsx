@@ -150,9 +150,27 @@ export default function PrivacyPage() {
           <h2 className="mb-3 text-xl font-semibold text-[#0F172A]">6. International transfers</h2>
           <p>
             Some of our processors (Groq, OpenAI, Stripe, Resend) are based in the United States. Where personal data
-            is transferred outside the European Economic Area or the UK, we rely on Standard Contractual Clauses (SCCs)
-            approved by the European Commission and the UK International Data Transfer Agreement (IDTA) as the legal
-            mechanism for those transfers.
+            is transferred outside the European Economic Area or the UK, we rely on one or more of the following legal
+            mechanisms, whichever is appropriate for the receiving processor:
+          </p>
+          <ul className="mt-3 list-disc space-y-2 pl-6">
+            <li>
+              <strong>EU-US Data Privacy Framework (DPF)</strong> and the UK Extension to the DPF, where the receiving
+              processor is self-certified under the Framework (as recognised by Commission Implementing Decision (EU)
+              2023/1795 and the UK adequacy regulations of October 2023).
+            </li>
+            <li>
+              <strong>Standard Contractual Clauses (SCCs)</strong> approved by the European Commission under Commission
+              Implementing Decision (EU) 2021/914.
+            </li>
+            <li>
+              <strong>UK International Data Transfer Agreement (IDTA)</strong> or the UK Addendum to the EU SCCs, as
+              approved by the Information Commissioner&apos;s Office.
+            </li>
+          </ul>
+          <p className="mt-3">
+            Where required, we carry out a Transfer Impact Assessment (TIA) to evaluate the destination country&apos;s
+            legal regime and apply supplementary measures (e.g., encryption, access controls) if necessary.
           </p>
           <p className="mt-3">
             Groq and OpenAI process your prompts and outputs solely for the purpose of generating responses; neither
@@ -161,7 +179,23 @@ export default function PrivacyPage() {
         </section>
 
         <section>
-          <h2 className="mb-3 text-xl font-semibold text-[#0F172A]">7. Your rights</h2>
+          <h2 className="mb-3 text-xl font-semibold text-[#0F172A]">7. Automated decision-making and AI processing</h2>
+          <p>
+            PinkPepper uses AI language models (Groq, OpenAI) to generate drafts, answer questions, and analyse
+            uploaded images. This processing assists with the creation of food safety documentation but does{" "}
+            <strong>not</strong> constitute automated decision-making producing legal or similarly significant effects
+            within the meaning of Article 22 of the GDPR or UK GDPR.
+          </p>
+          <p className="mt-3">
+            All AI-generated outputs are drafts intended for human review. Decisions about the adoption,
+            implementation, or submission of any output remain with you and the competent personnel in your
+            organisation. PinkPepper does not use your personal data for profiling or to make automated decisions
+            about you (for example, eligibility, creditworthiness, or behavioural scoring).
+          </p>
+        </section>
+
+        <section>
+          <h2 className="mb-3 text-xl font-semibold text-[#0F172A]">8. Your rights</h2>
           <p className="mb-3">
             Under GDPR and UK GDPR you have the following rights regarding your personal data:
           </p>
@@ -182,7 +216,7 @@ export default function PrivacyPage() {
         </section>
 
         <section>
-          <h2 className="mb-3 text-xl font-semibold text-[#0F172A]">8. Children&apos;s data</h2>
+          <h2 className="mb-3 text-xl font-semibold text-[#0F172A]">9. Children&apos;s data</h2>
           <p>
             PinkPepper is not directed at children under the age of 16. We do not knowingly collect personal data from
             children. If you believe a child has provided us with personal data, contact us at{" "}
@@ -192,7 +226,7 @@ export default function PrivacyPage() {
         </section>
 
         <section>
-          <h2 className="mb-3 text-xl font-semibold text-[#0F172A]">9. Security</h2>
+          <h2 className="mb-3 text-xl font-semibold text-[#0F172A]">10. Security</h2>
           <p>
             We implement appropriate technical and organisational measures to protect your personal data including
             TLS encryption in transit, AES-256 encryption at rest, row-level security in our database, and restricted
@@ -202,7 +236,7 @@ export default function PrivacyPage() {
         </section>
 
         <section>
-          <h2 className="mb-3 text-xl font-semibold text-[#0F172A]">10. Cookies</h2>
+          <h2 className="mb-3 text-xl font-semibold text-[#0F172A]">11. Cookies</h2>
           <p>
             We use essential cookies for authentication and session management, and a preference cookie to store your
             cookie consent choice. See our{" "}
@@ -211,7 +245,7 @@ export default function PrivacyPage() {
         </section>
 
         <section>
-          <h2 className="mb-3 text-xl font-semibold text-[#0F172A]">11. Right to complain</h2>
+          <h2 className="mb-3 text-xl font-semibold text-[#0F172A]">12. Right to complain</h2>
           <p>
             If you are unhappy with how we handle your personal data, you have the right to lodge a complaint with a
             supervisory authority:
@@ -238,7 +272,7 @@ export default function PrivacyPage() {
         </section>
 
         <section>
-          <h2 className="mb-3 text-xl font-semibold text-[#0F172A]">12. Changes to this policy</h2>
+          <h2 className="mb-3 text-xl font-semibold text-[#0F172A]">13. Changes to this policy</h2>
           <p>
             We may update this Privacy Policy from time to time. We will notify you of material changes by email or via
             an in-app notice at least 14 days before they take effect. The &quot;Last updated&quot; date at the top of this page
