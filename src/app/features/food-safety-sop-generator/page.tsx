@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description:
     "Generate cleaning SOPs, hygiene procedures, temperature logs & training records in minutes. Grounded in EC 852/2004 & UK FSA guidance. Try free.",
   alternates: {
-    canonical: "https://pinkpepper.io/features/food-safety-sop-generator",
+    canonical: "https://www.pinkpepper.io/features/food-safety-sop-generator",
   },
 };
 

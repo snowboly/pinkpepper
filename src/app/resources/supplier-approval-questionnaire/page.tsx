@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description:
     "Learn what to include in a supplier approval questionnaire for food safety due diligence, specifications, traceability, and review.",
   alternates: {
-    canonical: "https://pinkpepper.io/resources/supplier-approval-questionnaire",
+    canonical: "https://www.pinkpepper.io/resources/supplier-approval-questionnaire",
   },
 };
 

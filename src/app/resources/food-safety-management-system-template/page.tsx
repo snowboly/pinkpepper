@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description:
     "Understand how to structure a food safety management system (FSMS) document that ties HACCP, SOPs, monitoring records, and audit procedures together for EU and UK compliance.",
   alternates: {
-    canonical: "https://pinkpepper.io/resources/food-safety-management-system-template",
+    canonical: "https://www.pinkpepper.io/resources/food-safety-management-system-template",
   },
 };
 
