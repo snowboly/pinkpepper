@@ -1,7 +1,29 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Mail } from "lucide-react";
 
-export const metadata = {
+const contactPageSchema = {
+  "@context": "https://schema.org",
+  "@type": "ContactPage",
+  name: "Contact PinkPepper",
+  url: "https://pinkpepper.io/contact",
+  description:
+    "Contact PinkPepper for questions about HACCP plans, food safety compliance, pricing, or enterprise plans.",
+  mainEntity: {
+    "@type": "Organization",
+    name: "PinkPepper",
+    url: "https://pinkpepper.io",
+    contactPoint: {
+      "@type": "ContactPoint",
+      email: "support@pinkpepper.io",
+      contactType: "customer support",
+      availableLanguage: ["English", "German", "French", "Spanish", "Portuguese", "Italian"],
+      responseTime: "P1D",
+    },
+  },
+};
+
+export const metadata: Metadata = {
   title: "Contact PinkPepper — Food Safety Compliance Support",
   description:
     "Questions about HACCP plans, pricing, or enterprise plans? Contact PinkPepper for food safety compliance support. We respond within 1 business day.",
@@ -13,6 +35,10 @@ export const metadata = {
 export default function ContactPage() {
   return (
     <main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(contactPageSchema) }}
+      />
       <section className="py-16 text-center">
         <div className="pp-container max-w-3xl">
           <h1 className="text-4xl font-black tracking-tight text-[#2B2B2B] md:text-5xl">

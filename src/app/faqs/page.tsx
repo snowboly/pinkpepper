@@ -2,6 +2,19 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { faqs } from "@/data/faqs";
 
+const faqPageSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((faq) => ({
+    "@type": "Question",
+    name: faq.question,
+    acceptedAnswer: {
+      "@type": "Answer",
+      text: typeof faq.answer === "string" ? faq.answer : faq.question,
+    },
+  })),
+};
+
 export const metadata: Metadata = {
   title: "FAQs — HACCP, Allergens, Regulations & More | PinkPepper",
   description:
@@ -14,6 +27,10 @@ export const metadata: Metadata = {
 export default function FaqsPage() {
   return (
     <main className="overflow-hidden">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqPageSchema) }}
+      />
       <section className="border-b border-[#F1F5F9] bg-white py-16 md:py-24">
         <div className="pp-container max-w-4xl">
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">FAQs</p>
