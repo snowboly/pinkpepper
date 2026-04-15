@@ -4,6 +4,7 @@ import {
   buildKnowledgeRetryQueries,
   buildIntroductionInstruction,
   getHistoryWindowLimit,
+  getStreamingRequestTimeoutMs,
   resolveChatModels,
   shouldRunKnowledgeRetry,
   shouldUseRetrievedContextPrompt,
@@ -34,6 +35,38 @@ describe("resolveChatModels", () => {
 
     expect(models.primary).toBe("custom-deepseek-model");
     expect(models.fallback).toBe("llama-3.3-70b-versatile");
+  });
+});
+
+describe("stream request timeout", () => {
+  it("defaults to a longer timeout for streamed replies", () => {
+    delete process.env.CHAT_STREAM_REQUEST_TIMEOUT_MS;
+
+    expect(getStreamingRequestTimeoutMs()).toBe(120000);
+  });
+
+  it("allows a valid env override for longer-running replies", () => {
+    process.env.CHAT_STREAM_REQUEST_TIMEOUT_MS = "180000";
+
+    expect(getStreamingRequestTimeoutMs()).toBe(180000);
+  });
+
+  it("ignores too-small timeout overrides", () => {
+    process.env.CHAT_STREAM_REQUEST_TIMEOUT_MS = "10000";
+
+    expect(getStreamingRequestTimeoutMs()).toBe(120000);
+  });
+
+  it("ignores non-integer timeout overrides", () => {
+    process.env.CHAT_STREAM_REQUEST_TIMEOUT_MS = "180000.5";
+
+    expect(getStreamingRequestTimeoutMs()).toBe(120000);
+  });
+
+  it("ignores oversized timeout overrides", () => {
+    process.env.CHAT_STREAM_REQUEST_TIMEOUT_MS = "3000000000";
+
+    expect(getStreamingRequestTimeoutMs()).toBe(120000);
   });
 });
 

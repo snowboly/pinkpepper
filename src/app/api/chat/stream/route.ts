@@ -45,6 +45,8 @@ function shouldPreferAuthoritativeSources(message: string, mode: "qa" | "documen
 
 const PRIMARY_CHAT_MODEL = "deepseek-chat";
 const FALLBACK_CHAT_MODEL = "llama-3.3-70b-versatile";
+const DEFAULT_STREAM_REQUEST_TIMEOUT_MS = 120_000;
+const MAX_STREAM_REQUEST_TIMEOUT_MS = 300_000;
 
 type ChatRequestMessage = {
   role: "system" | "user" | "assistant";
@@ -177,6 +179,21 @@ function shouldRetryStatus(status: number) {
   return status === 429 || status >= 500;
 }
 
+export function getStreamingRequestTimeoutMs() {
+  const raw = process.env.CHAT_STREAM_REQUEST_TIMEOUT_MS?.trim();
+  const parsed = raw ? Number(raw) : NaN;
+
+  if (
+    Number.isInteger(parsed) &&
+    parsed >= 30_000 &&
+    parsed <= MAX_STREAM_REQUEST_TIMEOUT_MS
+  ) {
+    return parsed;
+  }
+
+  return DEFAULT_STREAM_REQUEST_TIMEOUT_MS;
+}
+
 async function requestStreamingCompletion(input: {
   provider: "groq" | "deepseek";
   apiKey: string;
@@ -191,6 +208,7 @@ async function requestStreamingCompletion(input: {
       ? "https://api.groq.com/openai/v1/chat/completions"
       : "https://api.deepseek.com/chat/completions";
   const maxRetries = provider === "groq" ? 3 : 2;
+  const timeoutMs = getStreamingRequestTimeoutMs();
 
   let lastResponse: Response | null = null;
   for (let attempt = 0; attempt < maxRetries; attempt++) {
@@ -201,7 +219,7 @@ async function requestStreamingCompletion(input: {
           Authorization: `Bearer ${apiKey}`,
           "Content-Type": "application/json",
         },
-        signal: AbortSignal.timeout(30_000),
+        signal: AbortSignal.timeout(timeoutMs),
         body: JSON.stringify({
           model,
           temperature,

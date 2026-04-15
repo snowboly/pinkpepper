@@ -317,10 +317,10 @@ export async function POST(request: Request) {
 
   let upstreamProvider: "openai" | "groq" = "openai";
   let model = primaryModel;
-  let groqRes: Response | null = null;
+  let upstreamRes: Response | null = null;
 
   if (openaiKey) {
-    groqRes = await requestAuditStream({
+    upstreamRes = await requestAuditStream({
       provider: "openai",
       apiKey: openaiKey,
       model: primaryModel,
@@ -328,13 +328,13 @@ export async function POST(request: Request) {
     });
   }
 
-  if ((!groqRes || !groqRes.ok) && groqKey) {
-    if (groqRes) {
-      console.error("OpenAI API error (audit):", await groqRes.text());
+  if ((!upstreamRes || !upstreamRes.ok) && groqKey) {
+    if (upstreamRes) {
+      console.error("OpenAI API error (audit):", await upstreamRes.text());
     }
     upstreamProvider = "groq";
     model = fallbackModel;
-    groqRes = await requestAuditStream({
+    upstreamRes = await requestAuditStream({
       provider: "groq",
       apiKey: groqKey,
       model: fallbackModel,
@@ -342,8 +342,8 @@ export async function POST(request: Request) {
     });
   }
 
-  if (!groqRes || !groqRes.ok) {
-    const details = groqRes ? await groqRes.text() : "No response";
+  if (!upstreamRes || !upstreamRes.ok) {
+    const details = upstreamRes ? await upstreamRes.text() : "No response";
     console.error(`${upstreamProvider} API error after retries (audit):`, details);
     return Response.json({ error: "AI audit service temporarily unavailable." }, { status: 502 });
   }
@@ -370,7 +370,7 @@ export async function POST(request: Request) {
         )
       );
 
-      if (!groqRes.body) {
+      if (!upstreamRes.body) {
         controller.enqueue(
           encoder.encode(
             `data: ${JSON.stringify({ type: "error", message: "No response body from AI service" })}\n\n`
@@ -380,7 +380,7 @@ export async function POST(request: Request) {
         return;
       }
 
-      const reader = groqRes.body.getReader();
+      const reader = upstreamRes.body.getReader();
       const decoder = new TextDecoder();
       let fullContent = "";
       let buffer = "";

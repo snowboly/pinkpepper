@@ -88,7 +88,7 @@ async function handleImageAnalysis(
     user_id: userId,
     event_type: "image_upload",
     event_count: 1,
-    metadata: { conversation_id: conversationId, model: visionModel },
+    metadata: { conversation_id: conversationId, model: visionModel, provider: "openai" },
   });
 
   if (usageInsertError) {
