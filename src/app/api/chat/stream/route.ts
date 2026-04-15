@@ -39,8 +39,8 @@ function shouldPreferAuthoritativeSources(message: string, mode: "qa" | "documen
   );
 }
 
-const PRIMARY_CHAT_MODEL = "llama-3.3-70b-versatile";
-const FALLBACK_CHAT_MODEL = "gpt-4o-mini";
+const PRIMARY_CHAT_MODEL = "deepseek-chat";
+const FALLBACK_CHAT_MODEL = "llama-3.3-70b-versatile";
 const HIGH_RISK_OPENAI_MODEL = "gpt-4.1";
 const DEFAULT_STREAM_REQUEST_TIMEOUT_MS = 120_000;
 
