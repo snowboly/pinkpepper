@@ -6,7 +6,7 @@ const contactPageSchema = {
   "@context": "https://schema.org",
   "@type": "ContactPage",
   name: "Contact PinkPepper",
-  url: "https://pinkpepper.io/contact",
+  url: "https://www.pinkpepper.io/contact",
   description:
     "Contact PinkPepper for questions about HACCP plans, food safety compliance, pricing, or enterprise plans.",
   mainEntity: {
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   description:
     "Questions about HACCP plans, pricing, or enterprise plans? Contact PinkPepper for food safety compliance support. We respond within 1 business day.",
   alternates: {
-    canonical: "https://pinkpepper.io/contact",
+    canonical: "https://www.pinkpepper.io/contact",
   },
 };
 

@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description:
     "Learn what traceability records must capture for EU Regulation 178/2002 and UK food law compliance — including one-step-back and one-step-forward requirements.",
   alternates: {
-    canonical: "https://pinkpepper.io/resources/traceability-log-template",
+    canonical: "https://www.pinkpepper.io/resources/traceability-log-template",
   },
 };
 

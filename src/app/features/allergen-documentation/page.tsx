@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description:
     "Build the full allergen documentation pack your HACCP plan requires: supplier matrices, version-controlled recipes, PPDS labels, changeover logs, and enquiry records — aligned with EU 1169/2011 and Natasha's Law.",
   alternates: {
-    canonical: "https://pinkpepper.io/features/allergen-documentation",
+    canonical: "https://www.pinkpepper.io/features/allergen-documentation",
   },
 };
 

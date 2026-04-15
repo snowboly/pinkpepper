@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description:
     "Build a complete, audit-ready HACCP plan in hours. AI trained on Regulation (EC) 852/2004, Codex Alimentarius, and GFSI schemes — with optional human expert review.",
   alternates: {
-    canonical: "https://pinkpepper.io/features/haccp-plan-generator",
+    canonical: "https://www.pinkpepper.io/features/haccp-plan-generator",
   },
 };
 

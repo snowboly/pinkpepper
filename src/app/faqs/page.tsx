@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   description:
     "Answers to common questions about PinkPepper: HACCP plans, allergen compliance, EU & UK regulations covered, data security, Consultant vs Auditor mode, and pricing.",
   alternates: {
-    canonical: "https://pinkpepper.io/faqs",
+    canonical: "https://www.pinkpepper.io/faqs",
   },
 };
 

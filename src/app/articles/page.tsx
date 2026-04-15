@@ -59,7 +59,7 @@ export const metadata: Metadata = {
   description:
     "A curated library of practical guidance on HACCP, allergen management, food safety audits, and operational compliance for EU and UK food businesses.",
   alternates: {
-    canonical: "https://pinkpepper.io/articles",
+    canonical: "https://www.pinkpepper.io/articles",
   },
 };
 

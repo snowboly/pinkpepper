@@ -3,7 +3,7 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Acceptable Use Policy | PinkPepper",
   description: "Rules governing acceptable use of the PinkPepper platform.",
-  alternates: { canonical: "https://pinkpepper.io/legal/acceptable-use" },
+  alternates: { canonical: "https://www.pinkpepper.io/legal/acceptable-use" },
   robots: { index: false, follow: false },
 };
 

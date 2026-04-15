@@ -3,7 +3,7 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Refund Policy | PinkPepper",
   description: "PinkPepper's refund and cancellation policy for subscription plans.",
-  alternates: { canonical: "https://pinkpepper.io/legal/refund" },
+  alternates: { canonical: "https://www.pinkpepper.io/legal/refund" },
   robots: { index: false, follow: false },
 };
 

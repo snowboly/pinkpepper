@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description:
     "PinkPepper helps caterers document HACCP plans, transport controls, event prep SOPs, allergen workflows, and food safety records.",
   alternates: {
-    canonical: "https://pinkpepper.io/use-cases/catering",
+    canonical: "https://www.pinkpepper.io/use-cases/catering",
   },
 };
 

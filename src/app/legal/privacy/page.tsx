@@ -3,7 +3,7 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Privacy Policy | PinkPepper",
   description: "How PinkPepper collects, uses, and protects your personal data under GDPR and UK GDPR.",
-  alternates: { canonical: "https://pinkpepper.io/legal/privacy" },
+  alternates: { canonical: "https://www.pinkpepper.io/legal/privacy" },
 };
 
 export default function PrivacyPage() {

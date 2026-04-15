@@ -7,7 +7,7 @@ export const metadata = {
   description:
     "Built by a food scientist with hands-on compliance experience. PinkPepper combines AI grounded in 35+ EU & UK regulations with human food safety consultancy.",
   alternates: {
-    canonical: "https://pinkpepper.io/about",
+    canonical: "https://www.pinkpepper.io/about",
   },
 };
 

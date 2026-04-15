@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description:
     "Learn what to include in a food safety temperature monitoring log template for chilled, frozen, and hot-held foods.",
   alternates: {
-    canonical: "https://pinkpepper.io/resources/temperature-monitoring-log-template",
+    canonical: "https://www.pinkpepper.io/resources/temperature-monitoring-log-template",
   },
 };
 

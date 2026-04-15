@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   description:
     "Start free. Plus at €19/mo for daily HACCP & SOP use. Pro at €99/mo adds Auditor mode + 2h human consultancy. Save €18,000+/year on compliance costs.",
   alternates: {
-    canonical: "https://pinkpepper.io/pricing",
+    canonical: "https://www.pinkpepper.io/pricing",
   },
 };
 
