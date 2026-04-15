@@ -14,6 +14,7 @@ import {
 } from "@/lib/rag";
 import { chatLimiter, checkRateLimit } from "@/lib/ratelimit";
 import { getAuditPersona } from "@/lib/personas";
+import { getStreamingRequestTimeoutMs } from "@/app/api/chat/stream/route";
 
 export const dynamic = "force-dynamic";
 
@@ -39,7 +40,7 @@ async function requestAuditStream(input: {
           Authorization: `Bearer ${apiKey}`,
           "Content-Type": "application/json",
         },
-        signal: AbortSignal.timeout(30_000),
+        signal: AbortSignal.timeout(getStreamingRequestTimeoutMs()),
         body: JSON.stringify({
           model,
           temperature: 0.0,
