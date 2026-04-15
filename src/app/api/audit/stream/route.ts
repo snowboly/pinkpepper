@@ -8,6 +8,9 @@ import { getAuditPersona } from "@/lib/personas";
 
 export const dynamic = "force-dynamic";
 
+const PRIMARY_AUDIT_MODEL = "gpt-4.1";
+const FALLBACK_AUDIT_MODEL = "llama-3.3-70b-versatile";
+
 export function buildVirtualAuditSystemPrompt(contextBlock: string, hasUserDocuments: boolean) {
   const auditPersona = getAuditPersona();
   const documentEvidenceInstruction = hasUserDocuments
@@ -69,11 +72,19 @@ export function buildVirtualAuditSystemPrompt(contextBlock: string, hasUserDocum
   );
 }
 
+export function resolveAuditModels(modelOverride?: string | null) {
+  return {
+    primary: PRIMARY_AUDIT_MODEL,
+    fallback: modelOverride?.trim() || FALLBACK_AUDIT_MODEL,
+  };
+}
+
 export async function POST(request: Request) {
   const auditPersona = getAuditPersona();
   const groqKey = process.env.GROQ_API_KEY;
-  if (!groqKey) {
-    return Response.json({ error: "GROQ_API_KEY is not configured." }, { status: 500 });
+  const openaiKey = process.env.OPENAI_API_KEY;
+  if (!groqKey && !openaiKey) {
+    return Response.json({ error: "Neither GROQ_API_KEY nor OPENAI_API_KEY is configured." }, { status: 500 });
   }
 
   const supabase = await createSupabaseServer();
@@ -221,9 +232,9 @@ export async function POST(request: Request) {
 
   const systemPrompt = buildVirtualAuditSystemPrompt(contextBlock, userChunks.length > 0);
 
-  const model = process.env.GROQ_MODEL ?? "llama-3.3-70b-versatile";
+  const models = resolveAuditModels(process.env.GROQ_MODEL);
 
-  const groqPayload = {
+  const buildPayload = (model: string) => ({
     model,
     temperature: 0.0,
     stream: true,
@@ -232,44 +243,73 @@ export async function POST(request: Request) {
       ...history,
       { role: "user", content: message },
     ],
-  };
+  });
 
-  let groqRes: Response | null = null;
-  const maxRetries = 3;
-  for (let attempt = 0; attempt < maxRetries; attempt++) {
+  let upstream: { provider: "openai" | "groq"; model: string; response: Response } | null = null;
+
+  if (openaiKey) {
     try {
-      groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      const openaiRes = await fetch("https://api.openai.com/v1/chat/completions", {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${groqKey}`,
+          Authorization: `Bearer ${openaiKey}`,
           "Content-Type": "application/json",
         },
         signal: AbortSignal.timeout(30_000),
-        body: JSON.stringify(groqPayload),
+        body: JSON.stringify(buildPayload(models.primary)),
       });
 
-      if (groqRes.ok || (groqRes.status < 500 && groqRes.status !== 429)) {
-        break;
-      }
-
-      if (attempt < maxRetries - 1) {
-        const backoffMs = Math.pow(2, attempt) * 1000;
-        await new Promise((r) => setTimeout(r, backoffMs));
+      if (openaiRes.ok) {
+        upstream = { provider: "openai", model: models.primary, response: openaiRes };
+      } else {
+        console.error("OpenAI API error (audit):", await openaiRes.text());
       }
     } catch (fetchErr) {
-      if (attempt < maxRetries - 1) {
-        const backoffMs = Math.pow(2, attempt) * 1000;
-        await new Promise((r) => setTimeout(r, backoffMs));
-      } else {
-        console.error("Groq API fetch failed after retries (audit):", fetchErr);
-        return Response.json({ error: "AI audit service temporarily unavailable." }, { status: 502 });
-      }
+      console.error("OpenAI API fetch failed (audit):", fetchErr);
     }
   }
 
-  if (!groqRes || !groqRes.ok) {
-    const details = groqRes ? await groqRes.text() : "No response";
-    console.error("Groq API error after retries (audit):", details);
+  if (!upstream && groqKey) {
+    let groqRes: Response | null = null;
+    const maxRetries = 3;
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+      try {
+        groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${groqKey}`,
+            "Content-Type": "application/json",
+          },
+          signal: AbortSignal.timeout(30_000),
+          body: JSON.stringify(buildPayload(models.fallback)),
+        });
+
+        if (groqRes.ok || (groqRes.status < 500 && groqRes.status !== 429)) {
+          break;
+        }
+
+        if (attempt < maxRetries - 1) {
+          const backoffMs = Math.pow(2, attempt) * 1000;
+          await new Promise((r) => setTimeout(r, backoffMs));
+        }
+      } catch (fetchErr) {
+        if (attempt < maxRetries - 1) {
+          const backoffMs = Math.pow(2, attempt) * 1000;
+          await new Promise((r) => setTimeout(r, backoffMs));
+        } else {
+          console.error("Groq API fetch failed after retries (audit):", fetchErr);
+        }
+      }
+    }
+
+    if (groqRes?.ok) {
+      upstream = { provider: "groq", model: models.fallback, response: groqRes };
+    } else if (groqRes) {
+      console.error("Groq API error after retries (audit):", await groqRes.text());
+    }
+  }
+
+  if (!upstream) {
     return Response.json({ error: "AI audit service temporarily unavailable." }, { status: 502 });
   }
 
@@ -295,7 +335,7 @@ export async function POST(request: Request) {
         )
       );
 
-      if (!groqRes.body) {
+      if (!upstream.response.body) {
         controller.enqueue(
           encoder.encode(
             `data: ${JSON.stringify({ type: "error", message: "No response body from AI service" })}\n\n`
@@ -305,7 +345,7 @@ export async function POST(request: Request) {
         return;
       }
 
-      const reader = groqRes.body.getReader();
+      const reader = upstream.response.body.getReader();
       const decoder = new TextDecoder();
       let fullContent = "";
       let buffer = "";
@@ -357,7 +397,13 @@ export async function POST(request: Request) {
           user_id: user.id,
           event_type: "chat_prompt",
           event_count: 1,
-          metadata: { conversation_id: conversationId, model, rag_enabled: ragEnabled, mode: "virtual_audit" },
+          metadata: {
+            conversation_id: conversationId,
+            model: upstream.model,
+            provider: upstream.provider,
+            rag_enabled: ragEnabled,
+            mode: "virtual_audit",
+          },
         });
 
         // Mark as completed only after DB persistence succeeds
@@ -411,7 +457,8 @@ export async function POST(request: Request) {
               event_count: 1,
               metadata: {
                 conversation_id: conversationId,
-                model,
+                model: upstream.model,
+                provider: upstream.provider,
                 rag_enabled: ragEnabled,
                 mode: "virtual_audit",
                 interrupted: true,

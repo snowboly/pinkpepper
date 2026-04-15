@@ -26,7 +26,7 @@ async function handleImageAnalysis(
     return NextResponse.json({ error: "Image analysis is not configured." }, { status: 500 });
   }
 
-  const visionModel = process.env.OPENAI_VISION_MODEL ?? "gpt-4o-mini";
+  const visionModel = process.env.OPENAI_VISION_MODEL ?? "gpt-4.1";
   const dataUrl = `data:${imageMimeType};base64,${imageBase64}`;
   const userText = message.trim() || "Analyse this image for food safety concerns.";
 
@@ -85,7 +85,7 @@ async function handleImageAnalysis(
     user_id: userId,
     event_type: "image_upload",
     event_count: 1,
-    metadata: { conversation_id: conversationId, model: visionModel },
+    metadata: { conversation_id: conversationId, model: visionModel, provider: "openai" },
   });
 
   if (usageInsertError) {
