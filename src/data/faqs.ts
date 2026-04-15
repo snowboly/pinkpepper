@@ -69,7 +69,7 @@ export const faqs = [
     id: "allergen-labelling",
     question: "How does PinkPepper handle allergen documentation?",
     answer:
-      "PinkPepper helps you build allergen matrices, written menus, and ingredient declarations aligned with EU 1169/2011 and Natasha's Law (UK Food Information Amendment 2021). It flags the 14 major allergens, supports precautionary allergen labelling decisions, and generates staff training records and allergen management SOPs. All outputs reference the controlling regulation and can be updated as your menu changes.",
+      "PinkPepper helps you build allergen matrices, written menus, and ingredient declarations aligned with EU 1169/2011 and Natasha's Law (the Food Information (Amendment) (England) Regulations 2019, in force from October 2021, with equivalent instruments in Scotland, Wales, and Northern Ireland). It flags the 14 major allergens, supports precautionary allergen labelling decisions, and generates staff training records and allergen management SOPs. All outputs reference the controlling regulation and can be updated as your menu changes.",
   },
   {
     id: "multi-site",
