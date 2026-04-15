@@ -18,25 +18,25 @@ source: "ilovehaccp"
 
 <h3>The Legal Standard (UK and EU)</h3>
 
-<p>Under <strong>Regulation (EC) No 852/2004, Annex II, Chapter IX</strong>, and UK Food Safety legislation, the legal obligation is that food must be cooled <strong>as quickly as possible</strong>. UK FSA guidance operationalises this through a two-stage cooling target:</p>
+<p>Under <strong>Regulation (EC) No 852/2004, Annex II, Chapter IX</strong>, and UK Food Safety legislation, the legal obligation is that food must be cooled <strong>as quickly as possible</strong>. UK FSA guidance provides a two-stage cooling profile to help businesses operationalise this duty:</p>
 
 <ul>
   <li><strong>Stage 1:</strong> ≥63°C → ≤21°C within 2 hours</li>
   <li><strong>Stage 2:</strong> ≤21°C → ≤5°C within a further 4 hours</li>
-  <li><strong>Total maximum cooling time: 6 hours</strong> from hot to refrigerated storage temperature</li>
+  <li>Total time from hot to refrigerated storage: <strong>6 hours</strong> under this guidance profile</li>
 </ul>
 
-<p>There is no single universal legal requirement of 90 minutes. However, for blast chillers and high-risk operations, the FSA recommends <strong>≥63°C to ≤3°C within 90 minutes as best practice</strong>. This is the appropriate target for your HACCP plan if you operate blast chilling — it gives a meaningful safety margin and is the benchmark most EHOs and GFSI auditors use when assessing blast chill CCPs.</p>
+<p>This profile is <strong>FSA guidance</strong>, not a statutory number — the underlying legal duty remains "as quickly as possible." Local authorities may apply stricter expectations, and an enforcement decision will consider whether the actual cooling achieved was genuinely as fast as the operation allowed. For blast chillers and high-risk operations, the FSA recommends <strong>≥63°C to ≤3°C within 90 minutes as best practice</strong>. This is the appropriate CCP target if you operate blast chilling and is the benchmark most EHOs and GFSI auditors use when assessing blast chill CCPs.</p>
 
 <p><strong>Note on EU variance:</strong> Some EU Member States apply their own staged cooling requirements within the Regulation's "as quickly as possible" principle. Check your competent authority's published guidance for the applicable local standard.</p>
 
 <h3>HACCP Critical Limits for Cooling</h3>
 
-<blockquote><strong>Critical Limit (Blast Chiller — Best Practice):</strong> Product core temperature reduces from ≥63°C to ≤3°C in <strong>≤ 90 minutes</strong>.<br /><strong>Critical Limit (Other Methods — Legal Minimum):</strong> ≥63°C to ≤21°C within 2 hours, then ≤21°C to ≤5°C within a further 4 hours (6 hours total).<br />Choose the limit that reflects your actual equipment and document your justification in the HACCP plan.</blockquote>
+<blockquote><strong>Critical Limit (Blast Chiller — Best Practice):</strong> Product core temperature reduces from ≥63°C to ≤3°C in <strong>≤ 90 minutes</strong>.<br /><strong>Critical Limit (Other Methods — FSA Guidance Profile):</strong> ≥63°C to ≤21°C within 2 hours, then ≤21°C to ≤5°C within a further 4 hours.<br />Choose the limit that reflects your actual equipment, document your justification in the HACCP plan, and set your monitoring trigger accordingly.</blockquote>
 
 <h3>Corrective Action for Cooling Failure</h3>
 
-<p>This is the most common HACCP deviation. If the food is still at 20°C after 2 hours:</p>
+<p>This is the most common HACCP deviation. The trigger depends on which limit your HACCP plan documents. For blast chiller operations, the failure point is food still above 3°C after 90 minutes. For operations using the FSA two-stage guidance profile, stage-1 fails when food exceeds 21°C at the 2-hour mark — for example, a large pot of soup still at 35°C after 2 hours. When a limit is breached:</p>
 
 <ul>
   <li><strong>Option 1 — Reheat Immediately (The Only Safe Food Option):</strong> You may immediately reheat the food to a core temperature of <strong>&gt;75°C</strong> (or &gt;82°C in Scotland) and serve it hot <em>immediately</em>. You <strong>cannot</strong> attempt to cool it down again after this second cook.</li>
