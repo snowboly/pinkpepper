@@ -150,7 +150,7 @@ source: "ilovehaccp"
 <ul>
   <li><strong>Scenario — Temperature-abused delivery:</strong> Frozen chicken arrives at −8°C instead of −18°C. <strong>Immediate Correction:</strong> Reject the delivery and document.</li>
   <li><strong>Scenario — Undercooking:</strong> A probe test shows chicken breast cooked to 65°C instead of 75°C. <strong>Immediate Correction:</strong> Continue cooking immediately until 75°C is reached.</li>
-  <li><strong>Scenario — Cooling failure:</strong> Food is found in a large pot after 4 hours still at 25°C, placing it outside any defensible cooling limit. <strong>Corrective Action: Dispose.** Under Article 14 of Regulation (EC) 178/2002, food shall not be placed on the market if it is unsafe. Do not attempt to reheat and serve — the risk of heat-stable toxin from <em>C. perfringens</em> spores cannot be eliminated by subsequent cooking.</li>
+  <li><strong>Scenario — Cooling failure:</strong> Food is found in a large pot after 4 hours still at 25°C, placing it outside any defensible cooling limit. <strong>Corrective Action: Dispose.</strong> Under Article 14 of Regulation (EC) 178/2002, food shall not be placed on the market if it is unsafe. Do not attempt to reheat and serve — the risk of heat-stable toxin from <em>C. perfringens</em> spores cannot be eliminated by subsequent cooking.</li>
 </ul>
 
 <h2>Part 5: Verification — Proving Biological Control Works</h2>
