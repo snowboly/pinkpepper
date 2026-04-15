@@ -18,17 +18,21 @@ source: "ilovehaccp"
 
 <h3>The Legal Standard (UK and EU)</h3>
 
-<p>Under <strong>Regulation (EC) No 852/2004, Annex II, Chapter IX</strong>, and detailed in UK Food Standards Agency (FSA) Guidance:</p>
+<p>Under <strong>Regulation (EC) No 852/2004, Annex II, Chapter IX</strong>, and UK Food Safety legislation, the legal obligation is that food must be cooled <strong>as quickly as possible</strong>. UK FSA guidance operationalises this through a two-stage cooling target:</p>
 
 <ul>
-  <li>Food must be cooled <strong>as quickly as possible</strong>.</li>
-  <li><strong>Specific Benchmark:</strong> Food must be cooled from cooking temperature to <strong>+8°C (or below) within 90 to 120 minutes</strong> — this is the strict UK FSA recommendation for high-risk food.</li>
-  <li><strong>Note on EU Variance:</strong> Some EU Member States (e.g., Netherlands, Germany) use a two-stage method allowing cooling to below 20°C within 2 hours, then to below 4°C within a further 4 hours. However, the <strong>UK standard of sub-90 minutes</strong> is considered the gold standard for safety, especially in healthcare settings and for vulnerable groups.</li>
+  <li><strong>Stage 1:</strong> ≥63°C → ≤21°C within 2 hours</li>
+  <li><strong>Stage 2:</strong> ≤21°C → ≤5°C within a further 4 hours</li>
+  <li><strong>Total maximum cooling time: 6 hours</strong> from hot to refrigerated storage temperature</li>
 </ul>
+
+<p>There is no single universal legal requirement of 90 minutes. However, for blast chillers and high-risk operations, the FSA recommends <strong>≥63°C to ≤3°C within 90 minutes as best practice</strong>. This is the appropriate target for your HACCP plan if you operate blast chilling — it gives a meaningful safety margin and is the benchmark most EHOs and GFSI auditors use when assessing blast chill CCPs.</p>
+
+<p><strong>Note on EU variance:</strong> Some EU Member States apply their own staged cooling requirements within the Regulation's "as quickly as possible" principle. Check your competent authority's published guidance for the applicable local standard.</p>
 
 <h3>HACCP Critical Limits for Cooling</h3>
 
-<blockquote><strong>Critical Limit:</strong> Product core temperature must reduce from +75°C to below +8°C in <strong>≤ 90 minutes</strong>.<br /><strong>Target Limit:</strong> &lt;+5°C in ≤ 90 minutes (to allow for fridge defrost cycles).</blockquote>
+<blockquote><strong>Critical Limit (Blast Chiller — Best Practice):</strong> Product core temperature reduces from ≥63°C to ≤3°C in <strong>≤ 90 minutes</strong>.<br /><strong>Critical Limit (Other Methods — Legal Minimum):</strong> ≥63°C to ≤21°C within 2 hours, then ≤21°C to ≤5°C within a further 4 hours (6 hours total).<br />Choose the limit that reflects your actual equipment and document your justification in the HACCP plan.</blockquote>
 
 <h3>Corrective Action for Cooling Failure</h3>
 
@@ -130,7 +134,7 @@ source: "ilovehaccp"
 <p>In the UK, the <strong>Care Quality Commission (CQC)</strong> and FSA enforce stricter, non-negotiable standards for care homes serving the elderly (over-65s are the highest-risk group for <em>Listeria</em> and <em>C. perfringens</em>).</p>
 
 <ul>
-  <li><strong>Cooling:</strong> The 90-minute rule is mandatory. Leaving food on the side to cool overnight is a criminal offence in this context.</li>
+  <li><strong>Cooling:</strong> The two-stage FSA cooling standard applies in full. For blast chiller operations, the 90-minute best practice target should be treated as the effective CCP limit. Leaving food to cool overnight at ambient temperature is an uncontrolled process that will breach any defensible HACCP critical limit and constitutes a failure to comply with food safety law.</li>
   <li><strong>Reheating:</strong> A core temperature of +75°C is mandatory. "It was just warm" is not acceptable for vulnerable residents.</li>
   <li><strong>Consequence:</strong> A failure in cooling or reheating in a care setting often results in <strong>Safeguarding Alerts</strong> to the Local Authority in addition to Food Hygiene enforcement action.</li>
 </ul>
@@ -140,7 +144,7 @@ source: "ilovehaccp"
 <h2>Summary: What Your HACCP Plan Must Reflect</h2>
 
 <ol>
-  <li>Document the <strong>90-minute Critical Limit</strong> for cooling explicitly in your HACCP CCP summary.</li>
+  <li>Document the correct cooling critical limit for your equipment: 90-minute target if using a blast chiller; the two-stage FSA standard (63°C → 21°C in 2 hours, then 5°C in a further 4 hours) for other methods.</li>
   <li>Train staff to understand that the hot food danger zone is a race against the clock.</li>
   <li>Validate your cooling method and keep the data logger report on file.</li>
   <li>Calibrate probes at the start of every shift and record the result.</li>
