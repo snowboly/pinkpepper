@@ -1,13 +1,16 @@
 import { describe, expect, it } from "vitest";
 import { getStructuredGeneratedDocument } from "@/app/api/export/docx/route";
 
-import { Paragraph, Table, TextRun } from "docx";
+import { ExternalHyperlink, Paragraph, Table, TextRun } from "docx";
 import {
   isTableLine,
   isSeparatorLine,
   splitTableCells,
   parseInlineBold,
+  parseInline,
   parseContentToDocxElements,
+  parseHeadingLine,
+  isHorizontalRule,
 } from "@/app/api/export/docx/route";
 
 describe("getStructuredGeneratedDocument", () => {
@@ -164,5 +167,142 @@ describe("content to DOCX elements parser", () => {
     expect(elements[1]).toBeInstanceOf(Table);       // table
     expect(elements[2]).toBeInstanceOf(Paragraph);  // spacer
     expect(elements[3]).toBeInstanceOf(Paragraph);  // "Closing line."
+  });
+});
+
+describe("markdown heading detection", () => {
+  it("parses heading levels 1 through 4", () => {
+    expect(parseHeadingLine("# Title")).toEqual({ level: 1, text: "Title" });
+    expect(parseHeadingLine("## Subtitle")).toEqual({ level: 2, text: "Subtitle" });
+    expect(parseHeadingLine("### HACCP Team")).toEqual({ level: 3, text: "HACCP Team" });
+    expect(parseHeadingLine("#### Details")).toEqual({ level: 4, text: "Details" });
+  });
+
+  it("returns null for non-headings", () => {
+    expect(parseHeadingLine("Not a heading")).toBeNull();
+    expect(parseHeadingLine("#no-space")).toBeNull();
+  });
+
+  it("strips optional trailing closing hashes", () => {
+    expect(parseHeadingLine("## Heading ##")).toEqual({ level: 2, text: "Heading" });
+  });
+});
+
+describe("horizontal rule detection", () => {
+  it("recognises common horizontal rule styles", () => {
+    expect(isHorizontalRule("---")).toBe(true);
+    expect(isHorizontalRule("***")).toBe(true);
+    expect(isHorizontalRule("___")).toBe(true);
+    expect(isHorizontalRule("   ------   ")).toBe(true);
+  });
+
+  it("rejects things that look like rules but are not", () => {
+    expect(isHorizontalRule("--")).toBe(false);
+    expect(isHorizontalRule("-- separator")).toBe(false);
+  });
+});
+
+describe("rich inline parser (parseInline)", () => {
+  it("produces a plain TextRun for plain text", () => {
+    const runs = parseInline("plain text", 22, "0F172A");
+    expect(runs).toHaveLength(1);
+    expect(runs[0]).toBeInstanceOf(TextRun);
+  });
+
+  it("handles inline code (`code`)", () => {
+    const runs = parseInline("Use `core` temp probe", 22, "0F172A");
+    // "Use " + "core"(code) + " temp probe"
+    expect(runs).toHaveLength(3);
+    for (const run of runs) expect(run).toBeInstanceOf(TextRun);
+  });
+
+  it("handles strikethrough (~~text~~)", () => {
+    const runs = parseInline("old ~~deprecated~~ now", 22, "0F172A");
+    expect(runs).toHaveLength(3);
+    for (const run of runs) expect(run).toBeInstanceOf(TextRun);
+  });
+
+  it("emits an ExternalHyperlink for [text](url)", () => {
+    const runs = parseInline("See [the spec](https://example.com/spec) for details", 22, "0F172A");
+    // "See " + link + " for details"
+    expect(runs).toHaveLength(3);
+    expect(runs[0]).toBeInstanceOf(TextRun);
+    expect(runs[1]).toBeInstanceOf(ExternalHyperlink);
+    expect(runs[2]).toBeInstanceOf(TextRun);
+  });
+
+  it("keeps a bold segment working alongside other inline markers", () => {
+    const runs = parseInline("**bold** and `code`", 22, "0F172A");
+    // bold + " and " + code
+    expect(runs).toHaveLength(3);
+  });
+
+  it("is backward compatible for pure-bold input with parseInlineBold", () => {
+    const boldOnly = parseInline("This is **bold** text", 22, "0F172A");
+    const legacy = parseInlineBold("This is **bold** text", 22, "0F172A");
+    expect(boldOnly.length).toBe(legacy.length);
+  });
+});
+
+describe("block-level parsing extensions", () => {
+  it("renders headings as Paragraph nodes", () => {
+    const elements = parseContentToDocxElements("## HACCP Team\nSome intro.");
+    expect(elements).toHaveLength(2);
+    expect(elements[0]).toBeInstanceOf(Paragraph);
+    expect(elements[1]).toBeInstanceOf(Paragraph);
+  });
+
+  it("renders horizontal rules as Paragraph nodes", () => {
+    const elements = parseContentToDocxElements("Intro\n---\nAfter rule");
+    expect(elements).toHaveLength(3);
+    for (const el of elements) expect(el).toBeInstanceOf(Paragraph);
+  });
+
+  it("renders bulleted list items as separate Paragraph nodes", () => {
+    const content = "- first\n- second\n- third";
+    const elements = parseContentToDocxElements(content);
+    expect(elements).toHaveLength(3);
+    for (const el of elements) expect(el).toBeInstanceOf(Paragraph);
+  });
+
+  it("renders ordered list items as separate Paragraph nodes", () => {
+    const content = "1. first\n2. second\n3. third";
+    const elements = parseContentToDocxElements(content);
+    expect(elements).toHaveLength(3);
+    for (const el of elements) expect(el).toBeInstanceOf(Paragraph);
+  });
+
+  it("renders blockquotes as a single Paragraph per consecutive block", () => {
+    const content = "> quoted line one\n> quoted line two";
+    const elements = parseContentToDocxElements(content);
+    expect(elements).toHaveLength(1);
+    expect(elements[0]).toBeInstanceOf(Paragraph);
+  });
+
+  it("renders fenced code blocks as Paragraph nodes, one per line", () => {
+    const content = ["```", "line 1", "line 2", "```"].join("\n");
+    const elements = parseContentToDocxElements(content);
+    expect(elements).toHaveLength(2);
+    for (const el of elements) expect(el).toBeInstanceOf(Paragraph);
+  });
+
+  it("handles a realistic HACCP-style section", () => {
+    const content = [
+      "### 2. HACCP Team",
+      "",
+      "| Name | Role |",
+      "|---|---|",
+      "| Chef | Lead |",
+      "",
+      "- Item one",
+      "- Item two",
+    ].join("\n");
+    const elements = parseContentToDocxElements(content);
+    // heading + table + spacer + bullet + bullet
+    expect(elements[0]).toBeInstanceOf(Paragraph); // heading
+    expect(elements[1]).toBeInstanceOf(Table);
+    expect(elements[2]).toBeInstanceOf(Paragraph); // table spacer
+    expect(elements[3]).toBeInstanceOf(Paragraph); // bullet
+    expect(elements[4]).toBeInstanceOf(Paragraph); // bullet
   });
 });
