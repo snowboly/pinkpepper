@@ -4,6 +4,7 @@ import {
   buildAuthorityRetryQueries,
   buildKnowledgeRetryQueries,
   buildIntroductionInstruction,
+  getStreamingRequestTimeoutMs,
   getHistoryWindowLimit,
   resolveChatModels,
   shouldUsePremiumExpertModel,
@@ -37,6 +38,26 @@ describe("resolveChatModels", () => {
 
     expect(models.primary).toBe("gpt-4.1");
     expect(models.fallback).toBe("custom-groq-model");
+  });
+});
+
+describe("stream request timeout", () => {
+  it("defaults to a longer timeout for streamed replies", () => {
+    delete process.env.CHAT_STREAM_REQUEST_TIMEOUT_MS;
+
+    expect(getStreamingRequestTimeoutMs()).toBe(120000);
+  });
+
+  it("allows a valid env override for longer-running replies", () => {
+    process.env.CHAT_STREAM_REQUEST_TIMEOUT_MS = "180000";
+
+    expect(getStreamingRequestTimeoutMs()).toBe(180000);
+  });
+
+  it("ignores too-small timeout overrides", () => {
+    process.env.CHAT_STREAM_REQUEST_TIMEOUT_MS = "10000";
+
+    expect(getStreamingRequestTimeoutMs()).toBe(120000);
   });
 });
 
