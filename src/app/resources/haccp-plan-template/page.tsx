@@ -65,7 +65,7 @@ export default function HaccpPlanTemplatePage() {
       templateSlugs={["haccp-plan-template_hazzards", "haccp-plan-template_steps"]}
       relatedLinks={[
         { href: "/features/haccp-plan-generator", label: "HACCP plan generator" },
-        { href: "/use-cases/restaurants", label: "Restaurant use case" },
+        { href: "/articles", label: "Food safety articles" },
         { href: "/resources/food-safety-audit-checklist", label: "Food safety audit checklist" },
       ]}
     />

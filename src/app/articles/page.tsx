@@ -48,9 +48,9 @@ const workflowLinks = [
     description: "See how PinkPepper supports hazard analysis, CCP structure, and corrective action drafting.",
   },
   {
-    href: "/use-cases/food-manufacturing",
-    title: "See the manufacturing use case",
-    description: "Follow the food manufacturing path if your work is driven by records, traceability, and audit pressure.",
+    href: "/resources",
+    title: "Browse the template library",
+    description: "Use the free templates if you need structured documents before moving into a custom compliance workflow.",
   },
 ];
 

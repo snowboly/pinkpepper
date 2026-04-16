@@ -157,7 +157,6 @@ describe("SEO surface", () => {
       return Array.isArray(disallow) ? disallow : disallow ? [disallow] : [];
     });
 
-    expect(entries).toContain("https://www.pinkpepper.io/use-cases");
     expect(entries).toContain("https://www.pinkpepper.io/resources");
     expect(entries).not.toContain("https://www.pinkpepper.io/login");
     expect(entries).not.toContain("https://www.pinkpepper.io/dashboard");
@@ -184,14 +183,12 @@ describe("public SEO copy and linking", () => {
     const about = readPage("src/app/about/page.tsx");
     const security = readPage("src/app/security/page.tsx");
     const contact = readPage("src/app/contact/page.tsx");
-    const useCases = readPage("src/app/use-cases/page.tsx");
     const resources = readPage("src/app/resources/page.tsx");
 
     expect(pricing).toContain("/features/");
     expect(about).toContain("/pricing");
     expect(security).toContain("/pricing");
     expect(contact).toContain("/features/");
-    expect(useCases).toContain("/features/");
     expect(resources).toContain("/features/");
   });
 
@@ -254,10 +251,8 @@ describe("public SEO copy and linking", () => {
   });
 
   it("keeps hub-page copy user-facing instead of talking about SEO strategy", () => {
-    const useCases = readPage("src/app/use-cases/page.tsx");
     const resources = readPage("src/app/resources/page.tsx");
 
-    expect(useCases).not.toContain("prospects can see their own workflow");
     expect(resources).not.toContain("long-tail questions and template searches");
   });
 
