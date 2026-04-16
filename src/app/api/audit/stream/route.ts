@@ -428,7 +428,7 @@ export async function POST(request: Request) {
           user_id: user.id,
           role: "assistant",
           content: fullContent,
-          metadata: { persona: { id: auditPersona.id, name: auditPersona.name, avatar: auditPersona.avatar }, mode: "virtual_audit" },
+          metadata: { persona: { id: auditPersona.id, name: auditPersona.name, avatar: auditPersona.avatar }, mode: "virtual_audit", userDocumentNames },
         });
 
         await supabase.from("usage_events").insert([
@@ -492,6 +492,7 @@ export async function POST(request: Request) {
                 interrupted: true,
                 persona: { id: auditPersona.id, name: auditPersona.name, avatar: auditPersona.avatar },
                 mode: "virtual_audit",
+                userDocumentNames,
               },
             });
 

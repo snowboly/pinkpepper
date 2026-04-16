@@ -80,6 +80,20 @@ export function parseMessageVerificationState(value: unknown): VerificationState
   return null;
 }
 
+export function parseMessageUserDocumentNames(value: unknown): string[] | undefined {
+  if (!value || typeof value !== "object") {
+    return undefined;
+  }
+
+  const names = (value as { userDocumentNames?: unknown }).userDocumentNames;
+  if (!Array.isArray(names)) {
+    return undefined;
+  }
+
+  const strings = names.filter((n): n is string => typeof n === "string");
+  return strings.length > 0 ? strings : undefined;
+}
+
 export function parseMessagePersona(value: unknown): PersonaInfo | undefined {
   if (!value || typeof value !== "object") {
     return undefined;
