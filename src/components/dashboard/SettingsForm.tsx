@@ -406,9 +406,8 @@ function UsageBar({ label, used, limit, color }: { label: string; used: number; 
   const pct = limit ? Math.min(100, Math.round((used / limit) * 100)) : 0;
   return (
     <div className="space-y-1.5">
-      <div className="flex items-center justify-between text-xs text-[#64748B]">
+      <div className="flex items-center text-xs text-[#64748B]">
         <span>{label}</span>
-        <span className="font-medium text-[#0F172A]">{used} / {limit ?? "∞"}</span>
       </div>
       <div className="h-1.5 w-full overflow-hidden rounded-full bg-[#E2E8F0]">
         <div
