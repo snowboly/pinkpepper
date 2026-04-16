@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { CheckCircle2 } from "lucide-react";
 
 type DemoMode = "haccp" | "allergen" | "audit";
@@ -57,9 +57,100 @@ const demoMap: Record<
   },
 };
 
+const DEMO_ORDER: DemoMode[] = ["haccp", "allergen", "audit"];
+const TYPE_SPEED_MS = 22;
+const NOTES_DELAY_MS = 450;
+const OUTPUT_DELAY_MS = 550;
+const ITEM_STAGGER_MS = 380;
+const HOLD_BEFORE_NEXT_MS = 3200;
+
+function prefersReducedMotion() {
+  if (typeof window === "undefined") return false;
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+type AnimState = {
+  typedChars: number;
+  showNotes: boolean;
+  showOutput: boolean;
+  revealedItems: number;
+};
+
+type AnimAction =
+  | { type: "reset"; promptLen: number; itemCount: number; immediate: boolean }
+  | { type: "type_char" }
+  | { type: "show_notes" }
+  | { type: "show_output" }
+  | { type: "reveal_item" };
+
+function animReducer(state: AnimState, action: AnimAction): AnimState {
+  switch (action.type) {
+    case "reset":
+      return action.immediate
+        ? { typedChars: action.promptLen, showNotes: true, showOutput: true, revealedItems: action.itemCount }
+        : { typedChars: 0, showNotes: false, showOutput: false, revealedItems: 0 };
+    case "type_char":
+      return { ...state, typedChars: state.typedChars + 1 };
+    case "show_notes":
+      return { ...state, showNotes: true };
+    case "show_output":
+      return { ...state, showOutput: true };
+    case "reveal_item":
+      return { ...state, revealedItems: state.revealedItems + 1 };
+  }
+}
+
+const initAnim: AnimState = { typedChars: 0, showNotes: false, showOutput: false, revealedItems: 0 };
+
 export function DemoTabSwitcher() {
+  // Lazy init avoids a synchronous setState-in-effect for the media query check
+  const [reduceMotion] = useState(prefersReducedMotion);
   const [demoMode, setDemoMode] = useState<DemoMode>("haccp");
+  const [anim, dispatch] = useReducer(animReducer, initAnim);
+
   const demo = demoMap[demoMode];
+  const { typedChars, showNotes, showOutput, revealedItems } = anim;
+
+  useEffect(() => {
+    dispatch({
+      type: "reset",
+      promptLen: demo.prompt.length,
+      itemCount: demo.checklist.length,
+      immediate: reduceMotion,
+    });
+  }, [demoMode, reduceMotion, demo.prompt.length, demo.checklist.length]);
+
+  useEffect(() => {
+    if (reduceMotion) return;
+    if (typedChars >= demo.prompt.length) {
+      const id = setTimeout(() => dispatch({ type: "show_notes" }), NOTES_DELAY_MS);
+      return () => clearTimeout(id);
+    }
+    const id = setTimeout(() => dispatch({ type: "type_char" }), TYPE_SPEED_MS);
+    return () => clearTimeout(id);
+  }, [typedChars, demo.prompt.length, reduceMotion]);
+
+  useEffect(() => {
+    if (reduceMotion || !showNotes) return;
+    const id = setTimeout(() => dispatch({ type: "show_output" }), OUTPUT_DELAY_MS);
+    return () => clearTimeout(id);
+  }, [showNotes, reduceMotion]);
+
+  useEffect(() => {
+    if (reduceMotion || !showOutput) return;
+    if (revealedItems < demo.checklist.length) {
+      const id = setTimeout(() => dispatch({ type: "reveal_item" }), ITEM_STAGGER_MS);
+      return () => clearTimeout(id);
+    }
+    const id = setTimeout(() => {
+      const nextIndex = (DEMO_ORDER.indexOf(demoMode) + 1) % DEMO_ORDER.length;
+      setDemoMode(DEMO_ORDER[nextIndex]);
+    }, HOLD_BEFORE_NEXT_MS);
+    return () => clearTimeout(id);
+  }, [showOutput, revealedItems, demo.checklist.length, demoMode, reduceMotion]);
+
+  const typedPrompt = demo.prompt.slice(0, typedChars);
+  const isTyping = !reduceMotion && typedChars < demo.prompt.length;
 
   return (
     <div className="pp-glass-card rounded-3xl p-4 md:p-5">
@@ -76,7 +167,7 @@ export function DemoTabSwitcher() {
 
       <div className="mt-4 space-y-4">
         <div className="flex flex-wrap gap-2">
-          {(Object.keys(demoMap) as DemoMode[]).map((mode) => (
+          {DEMO_ORDER.map((mode) => (
             <button
               key={mode}
               type="button"
@@ -94,25 +185,50 @@ export function DemoTabSwitcher() {
 
         <div className="rounded-2xl bg-[#F8FAFC] p-4 text-sm text-[#334155]">
           <div className="mb-2 font-semibold text-[#0F172A]">User prompt</div>
-          {demo.prompt}
+          <span>{typedPrompt}</span>
+          {isTyping && (
+            <span
+              aria-hidden="true"
+              className="ml-0.5 inline-block h-4 w-[2px] -mb-0.5 bg-[#0F172A] animate-pulse"
+            />
+          )}
         </div>
 
-        <div className="rounded-2xl border border-[#FDE68A] bg-[#FFFBEB] p-4 text-sm text-[#78350F]">
+        <div
+          className={`rounded-2xl border border-[#FDE68A] bg-[#FFFBEB] p-4 text-sm text-[#78350F] transition-all duration-500 ${
+            showNotes ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
+          }`}
+          aria-hidden={!showNotes}
+        >
           <div className="mb-2 font-semibold text-[#92400E]">Raw notes (before)</div>
           {demo.rawNotes}
         </div>
 
-        <div className="rounded-2xl border border-[#E2E8F0] bg-white p-4 transition-all duration-500">
+        <div
+          className={`rounded-2xl border border-[#E2E8F0] bg-white p-4 transition-all duration-500 ${
+            showOutput ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
+          }`}
+          aria-hidden={!showOutput}
+        >
           <div className="mb-2 text-sm font-semibold text-[#0F172A]">{demo.title}</div>
           <ul className="space-y-2 text-sm leading-relaxed text-[#475569]">
-            {demo.checklist.map((item) => (
-              <li key={item} className="flex gap-2">
+            {demo.checklist.map((item, i) => (
+              <li
+                key={item}
+                className={`flex gap-2 transition-all duration-500 ${
+                  i < revealedItems ? "opacity-100 translate-y-0" : "opacity-0 translate-y-1"
+                }`}
+              >
                 <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-600" />
                 <span>{item}</span>
               </li>
             ))}
           </ul>
-          <div className="mt-3 flex flex-wrap gap-2">
+          <div
+            className={`mt-3 flex flex-wrap gap-2 transition-opacity duration-500 ${
+              revealedItems >= demo.checklist.length ? "opacity-100" : "opacity-0"
+            }`}
+          >
             {demo.tags.map((tag) => (
               <span
                 key={tag}
