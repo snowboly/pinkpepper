@@ -424,6 +424,42 @@ export default async function HomePage() {
         </div>
       </section>
 
+      <section className="border-b border-[#1E293B] bg-[#0F172A] py-20">
+        <div className="pp-container">
+          <div className="flex flex-col gap-14 lg:flex-row lg:items-center lg:gap-20">
+            <div className="flex justify-center lg:order-2">
+              <div className="flex flex-col items-center gap-3">
+                <div className="relative">
+                  <Image
+                    src="/lead-auditor-john.svg"
+                    alt="John"
+                    width={128}
+                    height={128}
+                    className="rounded-full ring-4 ring-[#1E293B] shadow-2xl"
+                  />
+                  <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-amber-500 px-3 py-0.5 text-xs font-bold text-white shadow">
+                    PRO
+                  </span>
+                </div>
+                <p className="mt-2 text-base font-bold text-white">John</p>
+                <p className="text-sm text-[#64748B]">Lead Auditor</p>
+              </div>
+            </div>
+
+            <div className="max-w-md lg:order-1">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-amber-400">Virtual Audit Mode</p>
+              <h2 className="pp-display mt-4 text-4xl text-white md:text-5xl">Meet your lead auditor.</h2>
+              <p className="mt-5 text-lg leading-relaxed text-[#94A3B8]">
+                John doesn&apos;t consult — he audits. Upload your documents, describe your setup, and he works through your operation systematically: identifying non-conformances, assigning severity, and citing every finding against real evidence. No vague reassurance. No overfindings.
+              </p>
+              <p className="mt-4 text-sm text-[#475569]">
+                Available exclusively on Pro. Findings include severity ratings (Minor NC / Major NC / Critical NC), objective evidence, and corrective actions.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="relative overflow-hidden border-b border-[#F1F5F9] bg-[#F8FAFC] py-24">
         <div className="pp-container">
           <div className="mx-auto max-w-3xl">
