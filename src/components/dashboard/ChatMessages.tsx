@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import type { Message, PersonaInfo } from "./types";
 import MessageItem from "./MessageItem";
+import { shouldShowGlobalThinkingRow } from "./chat-thinking-state";
 
 type ChatMessagesProps = {
   messages: Message[];
@@ -104,7 +105,7 @@ export default function ChatMessages({
         />
       ))}
 
-      {loading && (messages.length === 0 || !messages[messages.length - 1]?.isStreaming) && (
+      {shouldShowGlobalThinkingRow(messages, loading) && (
         <div className="py-5" style={{ animation: "thinking-fade-in 0.18s ease-out both" }}>
           <div className="mx-auto max-w-5xl px-4 md:px-6">
             <div className="mb-2 flex items-center gap-2">
