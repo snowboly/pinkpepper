@@ -26,12 +26,12 @@ function makeChunk(overrides: Partial<KnowledgeChunk> = {}): KnowledgeChunk {
 }
 
 describe("MODE_TEMPERATURES", () => {
-  it("qa temperature is 0.1", () => {
-    expect(MODE_TEMPERATURES.qa).toBe(0.1);
+  it("qa temperature is 1.0", () => {
+    expect(MODE_TEMPERATURES.qa).toBe(1.0);
   });
 
-  it("document temperature is 0.2", () => {
-    expect(MODE_TEMPERATURES.document).toBe(0.2);
+  it("document temperature is 1.0", () => {
+    expect(MODE_TEMPERATURES.document).toBe(1.0);
   });
 
   it("audit temperature is 0.0", () => {
@@ -126,7 +126,7 @@ describe("buildRAGSystemPrompt", () => {
 describe("buildRAGPrompt", () => {
   it("returns system prompt and qa temperature", () => {
     const result = buildRAGPrompt("question", [makeChunk()], "qa");
-    expect(result.temperature).toBe(0.1);
+    expect(result.temperature).toBe(1.0);
     expect(result.systemPrompt).toContain("PinkPepper");
   });
 
@@ -171,12 +171,12 @@ describe("buildRAGPrompt", () => {
 
   it("returns document temperature", () => {
     const result = buildRAGPrompt("create a plan", [makeChunk()], "document");
-    expect(result.temperature).toBe(0.2);
+    expect(result.temperature).toBe(1.0);
   });
 
   it("defaults to qa mode", () => {
     const result = buildRAGPrompt("question", [makeChunk()]);
-    expect(result.temperature).toBe(0.1);
+    expect(result.temperature).toBe(1.0);
   });
 
   it("adds a stricter structure for label-requirements questions", () => {
