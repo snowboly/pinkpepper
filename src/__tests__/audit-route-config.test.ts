@@ -26,8 +26,9 @@ describe("buildVirtualAuditSystemPrompt", () => {
   it("forbids claims about uploaded records when no user documents are present", () => {
     const prompt = buildVirtualAuditSystemPrompt("No regulation context found.", false);
 
-    expect(prompt).toContain("No user-uploaded documents are available for this turn");
-    expect(prompt).toContain("Do NOT say you reviewed uploaded records");
+    expect(prompt).toContain("NO DOCUMENTS UPLOADED");
+    expect(prompt).toContain("Do NOT reference, cite, quote, or invent any document name, filename, PDF, spreadsheet, or uploaded record");
+    expect(prompt).toContain("Inventing a document is a critical audit failure");
     expect(prompt).toContain("Do NOT invent extra facts, timestamps, records, units, or observations");
   });
 
