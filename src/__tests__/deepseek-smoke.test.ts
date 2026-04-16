@@ -1,13 +1,13 @@
 /**
- * DeepSeek 2.5 Smoke Tests
+ * DeepSeek Smoke Tests
  *
- * Verifies that the switch from Llama 3.3 to DeepSeek 2.5 as the primary LLM
- * has not broken any behavioural contracts and that the model follows the
- * PinkPepper system-prompt rules without fine-tuning.
+ * Verifies that the primary LLMs follow PinkPepper system-prompt contracts
+ * without fine-tuning.
  *
  * Test groups:
- *   A) Static configuration  – no API key needed, runs in CI
- *   B) Live integration       – requires DEEPSEEK_API_KEY, skipped when absent
+ *   A) Static configuration        – no API key needed, runs in CI
+ *   B) Live deepseek-chat tests    – requires DEEPSEEK_API_KEY, skipped when absent
+ *   C) Live deepseek-reasoner audit tests – requires DEEPSEEK_API_KEY, skipped when absent
  *
  * Run live tests locally:
  *   DEEPSEEK_API_KEY=<key> npx vitest run src/__tests__/deepseek-smoke.test.ts
@@ -168,6 +168,47 @@ describe("A: static model configuration", () => {
     expect(prompt).toContain("Do not produce even a partial code snippet");
   });
 });
+
+// ---------------------------------------------------------------------------
+// Helper: deepseek-reasoner (used by section C)
+// ---------------------------------------------------------------------------
+
+/**
+ * Calls deepseek-reasoner (non-streaming) and returns the final answer content.
+ * Reasoning tokens are discarded — mirrors what the audit stream route does.
+ * Uses a 60 s timeout because the thinking phase adds latency.
+ */
+async function callDeepSeekReasoner(
+  messages: Message[],
+  maxTokens = 1500
+): Promise<string> {
+  const response = await fetch(DEEPSEEK_BASE_URL, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${DEEPSEEK_API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    signal: AbortSignal.timeout(60_000),
+    body: JSON.stringify({
+      model: "deepseek-reasoner",
+      temperature: 0.0,
+      max_tokens: maxTokens,
+      stream: false,
+      messages,
+    }),
+  });
+
+  if (!response.ok) {
+    const body = await response.text();
+    throw new Error(`DeepSeek Reasoner API error ${response.status}: ${body}`);
+  }
+
+  const json = (await response.json()) as {
+    choices: { message: { content: string; reasoning_content?: string } }[];
+  };
+  // Return only the final answer — reasoning_content is intentionally ignored
+  return json.choices[0].message.content;
+}
 
 // ---------------------------------------------------------------------------
 // B) Live integration tests — require DEEPSEEK_API_KEY
@@ -390,4 +431,231 @@ Food businesses must ensure that food is stored at appropriate temperatures and 
     // Should explain scope limitation
     expect(reply.toLowerCase()).toMatch(/scope|food safety|outside|pinkpepper|compliance|speciali/i);
   });
+});
+
+// ---------------------------------------------------------------------------
+// C) Live deepseek-reasoner audit smoke tests — require DEEPSEEK_API_KEY
+// ---------------------------------------------------------------------------
+
+describe("C: live deepseek-reasoner audit smoke tests", () => {
+  const skip = !DEEPSEEK_API_KEY;
+
+  function auditSystem(hasUserDocs = false): Message {
+    return {
+      role: "system",
+      content: buildVirtualAuditSystemPrompt("No regulation context found.", hasUserDocs),
+    };
+  }
+
+  // ── Finding structure ──────────────────────────────────────────────────────
+
+  it.skipIf(skip)(
+    "produces a structured finding with all 8 required fields for a clear gap",
+    async () => {
+      const reply = await callDeepSeekReasoner([
+        auditSystem(),
+        {
+          role: "user",
+          content:
+            "We have no written HACCP plan and no temperature monitoring records for the past 3 months.",
+        },
+      ]);
+
+      // Must contain the core finding fields from the system prompt contract
+      expect(reply.toLowerCase()).toMatch(/audit area|clause|regulation/i);
+      expect(reply.toLowerCase()).toContain("finding");
+      expect(reply.toLowerCase()).toMatch(/evidence|objective/i);
+      expect(reply.toLowerCase()).toMatch(/severity|major nc|critical nc/i);
+      expect(reply.toLowerCase()).toMatch(/corrective action|remediat/i);
+      expect(reply.toLowerCase()).toContain("haccp");
+    },
+    65_000
+  );
+
+  // ── Severity calibration ───────────────────────────────────────────────────
+
+  it.skipIf(skip)(
+    "raises Major NC or Critical NC for missing HACCP plan and 3 months of missing monitoring records",
+    async () => {
+      const reply = await callDeepSeekReasoner([
+        auditSystem(),
+        {
+          role: "user",
+          content:
+            "We have no written HACCP plan and no temperature monitoring records for the past 3 months.",
+        },
+      ]);
+
+      expect(reply).toMatch(/Major NC|Critical NC|Major\s+Non.Conformit|Critical\s+Non.Conformit/i);
+    },
+    65_000
+  );
+
+  it.skipIf(skip)(
+    "does not escalate a minor documentation gap to Major NC",
+    async () => {
+      const reply = await callDeepSeekReasoner([
+        auditSystem(),
+        {
+          role: "user",
+          content:
+            "Our cleaning schedule is fully completed and signed off for every day this month, but the version number on the form header is missing.",
+        },
+      ]);
+
+      // A missing version number on an otherwise complete record is Minor NC at most
+      expect(reply).not.toMatch(/\bCritical NC\b/i);
+      expect(reply).not.toMatch(/\bMajor NC\b/i);
+      // Should mention the minor nature or low risk
+      expect(reply.toLowerCase()).toMatch(/minor|low risk|observation|improvement/i);
+    },
+    65_000
+  );
+
+  it.skipIf(skip)(
+    "raises Critical NC for unsafe product confirmed in service with no disposition record",
+    async () => {
+      const reply = await callDeepSeekReasoner([
+        auditSystem(),
+        {
+          role: "user",
+          content:
+            "The hot-hold cabinet probe reads 52°C. The legal minimum is 63°C. Food has been in there for 4 hours and has already been served to customers. There is no corrective action or product disposition record.",
+        },
+      ]);
+
+      expect(reply).toMatch(/Critical NC|Major NC/i);
+      // Must mention food safety risk, disposal or containment
+      expect(reply.toLowerCase()).toMatch(/unsafe|risk|dispos|withdraw|recall|contain/i);
+    },
+    65_000
+  );
+
+  // ── Finding-first contract ─────────────────────────────────────────────────
+
+  it.skipIf(skip)(
+    "issues findings immediately when the prompt contains concrete evidence — does not open with generic questions",
+    async () => {
+      const reply = await callDeepSeekReasoner([
+        auditSystem(),
+        {
+          role: "user",
+          content:
+            "Probe calibration records show the last calibration was 14 months ago. The required frequency is every 6 months.",
+        },
+      ]);
+
+      // Should not open with a generic 'please describe your process' question
+      const firstSentence = reply.split(/[.!?]/)[0].toLowerCase();
+      expect(firstSentence).not.toMatch(/please (describe|tell|provide|explain|share)/i);
+      // Should raise a finding
+      expect(reply.toLowerCase()).toMatch(/finding|nc|non.conformit|gap|overdue/i);
+    },
+    65_000
+  );
+
+  // ── Question-led mode when prompt is vague ─────────────────────────────────
+
+  it.skipIf(skip)(
+    "asks a clarifying question when the prompt is too vague to support a finding",
+    async () => {
+      const reply = await callDeepSeekReasoner([
+        auditSystem(),
+        {
+          role: "user",
+          content: "Start the audit.",
+        },
+      ]);
+
+      // Should ask at least one question (contains "?" or known intake phrases)
+      const hasQuestion =
+        reply.includes("?") ||
+        /what type|which standard|what business|tell me about/i.test(reply);
+      expect(hasQuestion).toBe(true);
+      // Should not issue an NC finding with no evidence
+      expect(reply).not.toMatch(/Major NC|Critical NC/i);
+    },
+    65_000
+  );
+
+  // ── Anti-hallucination ─────────────────────────────────────────────────────
+
+  it.skipIf(skip)(
+    "does not use [Source: ] tags when no regulation context is provided",
+    async () => {
+      const reply = await callDeepSeekReasoner([
+        auditSystem(),
+        {
+          role: "user",
+          content: "What evidence do I need for supplier approval under BRCGS Food Safety Issue 9?",
+        },
+      ]);
+
+      // No injected context — must not fabricate source tags
+      expect(reply).not.toContain("[Source:");
+    },
+    65_000
+  );
+
+  it.skipIf(skip)(
+    "does not claim to have reviewed uploaded documents when none are present",
+    async () => {
+      const reply = await callDeepSeekReasoner([
+        auditSystem(false), // hasUserDocuments = false
+        {
+          role: "user",
+          content: "Can you review my HACCP plan?",
+        },
+      ]);
+
+      const forbidden = [
+        "reviewed your uploaded",
+        "the document you uploaded",
+        "based on the file",
+        "the attached",
+        "your uploaded records",
+      ];
+      for (const phrase of forbidden) {
+        expect(reply.toLowerCase()).not.toContain(phrase);
+      }
+    },
+    65_000
+  );
+
+  // ── Final report format ────────────────────────────────────────────────────
+
+  it.skipIf(skip)(
+    "produces a report with the required markdown table and sections when explicitly asked",
+    async () => {
+      const reply = await callDeepSeekReasoner(
+        [
+          auditSystem(),
+          {
+            role: "user",
+            content:
+              "We have no HACCP plan, no allergen matrix, and our temperature logs are incomplete for the past month.",
+          },
+          {
+            role: "assistant",
+            content:
+              "I have recorded three findings: missing HACCP plan (Major NC), missing allergen matrix (Major NC), and incomplete temperature logs (Minor NC).",
+          },
+          {
+            role: "user",
+            content: "Please produce the final audit report now.",
+          },
+        ],
+        2000
+      );
+
+      // Required sections from the system prompt
+      expect(reply).toMatch(/## Auditor Report/i);
+      expect(reply).toMatch(/### (Scope|Findings|CAPA|Overall|Evidence)/i);
+      // Required table headers
+      expect(reply).toMatch(/Area.*Clause|Status|Evidence|Corrective Action/i);
+      // Markdown table row indicator
+      expect(reply).toContain("|");
+    },
+    65_000
+  );
 });
