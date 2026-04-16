@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/utils/supabase/server";
 import { resolveEffectiveTier } from "@/lib/access";
-import { TEMPLATES } from "@/lib/templates";
+import { TEMPLATES, type TemplateEntry } from "@/lib/templates";
 
 type Props = {
   slugs: string[];
@@ -40,11 +40,13 @@ export async function TemplateDownloadCard({ slugs, title: titleProp }: Props) {
         </p>
         <p className="mt-3 text-base font-semibold text-[#0F172A]">{title}</p>
         <p className="mt-2 text-sm leading-relaxed text-[#475569]">
-          Download the DOCX file and adapt it directly for your site.
+          Download the file and adapt it directly for your site.
         </p>
         <div className="mt-5 flex flex-col gap-3">
           {slugs.map((slug) => {
-            const templateTitle = TEMPLATES.find((t) => t.slug === slug)?.title ?? slug;
+            const template: TemplateEntry | undefined = TEMPLATES.find((t) => t.slug === slug);
+            const templateTitle = template?.title ?? slug;
+            const ext = (template?.fileType ?? "docx").toUpperCase();
             return (
               <a
                 key={slug}
@@ -53,13 +55,13 @@ export async function TemplateDownloadCard({ slugs, title: titleProp }: Props) {
                 className="inline-flex items-center gap-2 rounded-full bg-[#E11D48] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#BE123C] self-start"
               >
                 <DownloadIcon />
-                {slugs.length > 1 ? templateTitle : "Download DOCX"}
+                {slugs.length > 1 ? templateTitle : `Download ${ext}`}
               </a>
             );
           })}
         </div>
         <p className="mt-3 text-xs text-[#94A3B8]">
-          Editable Microsoft Word format
+          Editable Microsoft Office format
         </p>
       </div>
     );

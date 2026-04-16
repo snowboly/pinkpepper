@@ -9,6 +9,7 @@ export type TemplateEntry = {
   slug: string;
   title: string;
   category: string;
+  fileType?: "docx" | "xlsx";
 };
 
 export type TemplateGroup = {
@@ -45,9 +46,9 @@ export const TEMPLATES: TemplateEntry[] = [
   // Goods receiving
   { slug: "incoming-goods-template",              title: "Incoming goods inspection record",       category: "Traceability" },
   // Quality
-  { slug: "customer-complaint-log-template",      title: "Customer complaint log",                 category: "HACCP" },
+  { slug: "customer-complaint-log-template",      title: "Customer complaint log",                 category: "HACCP",        fileType: "xlsx" },
   // Calibration
-  { slug: "equipment-calibration-log-template",   title: "Equipment calibration log",              category: "Monitoring" },
+  { slug: "equipment-calibration-log-template",   title: "Equipment calibration log",              category: "Monitoring",   fileType: "xlsx" },
 ];
 
 export const TEMPLATE_SLUGS = new Set(TEMPLATES.map((t) => t.slug));

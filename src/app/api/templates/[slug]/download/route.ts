@@ -1,7 +1,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { createAdminClient } from "@/utils/supabase/admin";
 import { resolveEffectiveTier } from "@/lib/access";
-import { isValidTemplateSlug } from "@/lib/templates";
+import { TEMPLATES, isValidTemplateSlug } from "@/lib/templates";
 import { BUCKETS } from "@/lib/storage";
 
 export const dynamic = "force-dynamic";
@@ -46,9 +46,11 @@ export async function GET(
     );
   }
 
-  // Generate a short-lived signed URL for the DOCX in the templates bucket
+  // Generate a short-lived signed URL for the file in the templates bucket
   const admin = createAdminClient();
-  const storagePath = `${slug}.docx`;
+  const template = TEMPLATES.find((t) => t.slug === slug);
+  const ext = template?.fileType ?? "docx";
+  const storagePath = `${slug}.${ext}`;
 
   const { data, error: urlError } = await admin.storage
     .from(BUCKETS.templates)
