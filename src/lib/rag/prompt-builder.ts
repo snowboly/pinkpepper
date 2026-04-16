@@ -24,8 +24,8 @@ export function isExactReferenceQuestion(userMessage: string) {
 }
 
 const MODE_TEMPERATURES: Record<RAGMode, number> = {
-  qa: 0.1,      // Factual accuracy from retrieved docs
-  document: 0.2, // Slight creativity for natural language
+  qa: 1.0,      // Data analysis range — factual but naturally varied
+  document: 1.0, // Data analysis range — structured output without robotic repetition
   audit: 0.0,   // Maximum precision for compliance checks
 };
 
