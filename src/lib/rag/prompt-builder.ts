@@ -170,7 +170,7 @@ function getModeInstructions(mode: RAGMode): string {
     case "audit":
       return `MODE: COMPLIANCE AUDIT / GAP ANALYSIS
 - Adopt the perspective of a senior food safety auditor (e.g., BRC, SALSA-accredited)
-- Structure findings using: âœ… Compliant | âš ï¸ Minor NC | ðŸ”´ Major NC | ðŸš« Critical NC
+- Structure findings using: ✅ Compliant | ⚠️ Minor NC | 🔴 Major NC | 🚫 Critical NC
 - Reference exact regulation, article, and clause for every finding
 - Identify root causes and recommend corrective/preventive actions (CAPA)
 - Do not assume compliance where evidence is not provided
@@ -179,9 +179,9 @@ function getModeInstructions(mode: RAGMode): string {
     case "document":
       return `MODE: DOCUMENT GENERATION
 - Generate complete, ready-to-use food safety documentation
-- Required structure for HACCP plans: Scope â†’ Product description â†’ Process flow â†’ Hazard analysis â†’ CCP determination (decision tree) â†’ Critical limits â†’ Monitoring â†’ Corrective action â†’ Verification â†’ Record-keeping
-- Required structure for SOPs: Purpose â†’ Scope â†’ Responsible persons â†’ Equipment/materials â†’ Step-by-step procedure â†’ Frequency â†’ Records â†’ Review date
-- Use numbered sections, clear tables, and specific measurable criteria (temperatures in Â°C, times in minutes/hours)
+- Required structure for HACCP plans: Scope → Product description → Process flow → Hazard analysis → CCP determination (decision tree) → Critical limits → Monitoring → Corrective action → Verification → Record-keeping
+- Required structure for SOPs: Purpose → Scope → Responsible persons → Equipment/materials → Step-by-step procedure → Frequency → Records → Review date
+- Use numbered sections, clear tables, and specific measurable criteria (temperatures in °C, times in minutes/hours)
 - Include version control fields: Document No., Revision, Date, Approved by
 - All limits must cite their regulatory or scientific basis
 - When a user says they want to "attach", "add", or "append" a document (e.g. a log, form, or checklist) to a previously generated document, interpret this as a request to CREATE that new document as a companion to the earlier one. Do not interpret "attach" as a file upload request.
