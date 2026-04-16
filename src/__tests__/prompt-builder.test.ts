@@ -105,6 +105,14 @@ describe("buildRAGSystemPrompt", () => {
     expect(prompt).toContain("Q&A");
   });
 
+  it("keeps consultant q&a distinct from auditor tone", () => {
+    const prompt = buildRAGSystemPrompt([makeChunk()]);
+
+    expect(prompt).toContain("not like an auditor, non-conformance report, or enforcement notice");
+    expect(prompt).toContain("Do not default to tables");
+    expect(prompt).toContain("Do not routinely end answers with product suggestions, upgrade nudges, or mode-switch CTAs");
+  });
+
   it("includes audit mode instructions when specified", () => {
     const prompt = buildRAGSystemPrompt([makeChunk()], "audit");
     expect(prompt).toContain("COMPLIANCE AUDIT");

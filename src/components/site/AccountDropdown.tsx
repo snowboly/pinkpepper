@@ -11,13 +11,20 @@ export function AccountDropdown({
   initials: string;
   email: string | null;
 }) {
-  const [open, setOpen] = useState(false);
   const pathname = usePathname();
-  const ref = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
+  return <AccountDropdownMenu key={pathname} initials={initials} email={email} />;
+}
+
+function AccountDropdownMenu({
+  initials,
+  email,
+}: {
+  initials: string;
+  email: string | null;
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!open) return;

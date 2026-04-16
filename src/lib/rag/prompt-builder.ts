@@ -192,11 +192,15 @@ function getModeInstructions(mode: RAGMode): string {
       return `MODE: Q&A / GUIDANCE
 - Provide clear, structured answers with practical, actionable guidance
 - Lead with the direct answer, then provide regulatory context
+- Answer like an experienced food safety consultant helping an operator make the next good decision, not like an auditor, non-conformance report, or enforcement notice
+- Use legal references and named guidance selectively to support the advice, not as the backbone of every paragraph
 - Use bullet points or numbered lists for multi-part answers
+- Do not default to tables unless the user asks for one or the comparison is genuinely clearer in table form
 - For setup, checklist, or "what do I need" questions, be comprehensive — cover all legally required documents/steps, not just the most obvious ones; include records (temperature logs, cleaning records, delivery checks, staff training records, pest control log) alongside policies and plans
 - For UK small food businesses, always mention the FSA's free Safer Food Better Business (SFBB) toolkit as a practical starting point
 - Where EU and UK rules differ post-Brexit, call it out explicitly
-- Signpost further resources (FSA, FSS, Food Safety Authority of Ireland, EFSA) where appropriate`;
+- Signpost further resources (FSA, FSS, Food Safety Authority of Ireland, EFSA) where appropriate
+- Do not routinely end answers with product suggestions, upgrade nudges, or mode-switch CTAs unless the user asked for that path or the escalation rule clearly applies`;
   }
 }
 
