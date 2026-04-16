@@ -845,6 +845,7 @@ export default function ChatWorkspace({
             delta?: string;
             conversationId?: string;
             citations?: Citation[];
+            userDocumentNames?: string[];
             verificationState?: VerificationState;
             usage?: StreamUsage;
             persona?: PersonaInfo;
@@ -858,15 +859,19 @@ export default function ChatWorkspace({
 
           if (event.type === "metadata") {
             if (event.conversationId) updateActiveSession({ conversationId: event.conversationId });
-            if (event.persona) {
-              const p = event.persona as PersonaInfo;
-              updateActiveSession({ currentPersona: p });
-              // Stamp persona on the streaming assistant message
+            if (event.persona || event.userDocumentNames) {
+              const p = event.persona as PersonaInfo | undefined;
+              if (p) updateActiveSession({ currentPersona: p });
+              // Stamp persona and user document names on the streaming assistant message
               setModeSessions((prev) => {
                 const updated = [...prev[workspaceMode].messages];
                 const last = updated[updated.length - 1];
                 if (last?.isStreaming) {
-                  updated[updated.length - 1] = { ...last, persona: p };
+                  updated[updated.length - 1] = {
+                    ...last,
+                    ...(p ? { persona: p } : {}),
+                    ...(event.userDocumentNames ? { userDocumentNames: event.userDocumentNames } : {}),
+                  };
                 }
                 return {
                   ...prev,
