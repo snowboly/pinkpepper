@@ -64,15 +64,15 @@ describe("audit persona", () => {
 });
 
 describe("audit provider routing", () => {
-  it("uses gpt-4.1 as the default auditor model and keeps Groq llama as fallback", () => {
+  it("uses deepseek-reasoner as the default auditor model and keeps Groq llama as fallback", () => {
     const routeSource = readFileSync(
       path.join(process.cwd(), "src/app/api/audit/stream/route.ts"),
       "utf8"
     );
 
-    expect(routeSource).toContain('const primaryModel = "gpt-4.1"');
+    expect(routeSource).toContain('const primaryModel = "deepseek-reasoner"');
     expect(routeSource).toContain('const fallbackModel = process.env.GROQ_MODEL ?? "llama-3.3-70b-versatile"');
-    expect(routeSource).toContain('const openaiKey = process.env.OPENAI_API_KEY;');
+    expect(routeSource).toContain('const deepseekKey = process.env.DEEPSEEK_API_KEY;');
   });
 });
 

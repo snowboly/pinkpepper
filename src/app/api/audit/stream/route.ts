@@ -19,15 +19,15 @@ import { getStreamingRequestTimeoutMs } from "@/app/api/chat/stream/route";
 export const dynamic = "force-dynamic";
 
 async function requestAuditStream(input: {
-  provider: "openai" | "groq";
+  provider: "deepseek" | "groq";
   apiKey: string;
   model: string;
   messages: Array<{ role: "system" | "user" | "assistant"; content: string }>;
 }) {
   const { provider, apiKey, model, messages } = input;
   const url =
-    provider === "openai"
-      ? "https://api.openai.com/v1/chat/completions"
+    provider === "deepseek"
+      ? "https://api.deepseek.com/chat/completions"
       : "https://api.groq.com/openai/v1/chat/completions";
 
   let response: Response | null = null;
@@ -45,6 +45,7 @@ async function requestAuditStream(input: {
           model,
           temperature: 0.0,
           stream: true,
+          max_tokens: 8000,
           messages,
         }),
       });
@@ -135,10 +136,10 @@ export function buildVirtualAuditSystemPrompt(contextBlock: string, hasUserDocum
 
 export async function POST(request: Request) {
   const auditPersona = getAuditPersona();
-  const openaiKey = process.env.OPENAI_API_KEY;
+  const deepseekKey = process.env.DEEPSEEK_API_KEY;
   const groqKey = process.env.GROQ_API_KEY;
-  if (!openaiKey && !groqKey) {
-    return Response.json({ error: "Neither OPENAI_API_KEY nor GROQ_API_KEY is configured." }, { status: 500 });
+  if (!deepseekKey && !groqKey) {
+    return Response.json({ error: "Neither DEEPSEEK_API_KEY nor GROQ_API_KEY is configured." }, { status: 500 });
   }
 
   const supabase = await createSupabaseServer();
@@ -307,7 +308,7 @@ export async function POST(request: Request) {
     ? [{ role: "user" as const, content: untrustedBlock }]
     : [];
 
-  const primaryModel = "gpt-4.1";
+  const primaryModel = "deepseek-reasoner";
   const fallbackModel = process.env.GROQ_MODEL ?? "llama-3.3-70b-versatile";
   const messages = [
     { role: "system" as const, content: systemPrompt },
@@ -316,14 +317,14 @@ export async function POST(request: Request) {
     { role: "user" as const, content: message },
   ];
 
-  let upstreamProvider: "openai" | "groq" = "openai";
+  let upstreamProvider: "deepseek" | "groq" = "deepseek";
   let model = primaryModel;
   let upstreamRes: Response | null = null;
 
-  if (openaiKey) {
+  if (deepseekKey) {
     upstreamRes = await requestAuditStream({
-      provider: "openai",
-      apiKey: openaiKey,
+      provider: "deepseek",
+      apiKey: deepseekKey,
       model: primaryModel,
       messages,
     });
@@ -331,7 +332,7 @@ export async function POST(request: Request) {
 
   if ((!upstreamRes || !upstreamRes.ok) && groqKey) {
     if (upstreamRes) {
-      console.error("OpenAI API error (audit):", await upstreamRes.text());
+      console.error("DeepSeek API error (audit):", await upstreamRes.text());
     }
     upstreamProvider = "groq";
     model = fallbackModel;

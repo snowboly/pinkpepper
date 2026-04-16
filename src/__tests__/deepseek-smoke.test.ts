@@ -90,14 +90,14 @@ describe("A: static model configuration", () => {
     expect(fallback).toBe("llama-3.3-70b-versatile");
   });
 
-  it("audit stream source uses gpt-4.1 as default and llama as fallback", () => {
+  it("audit stream source uses deepseek-reasoner as default and llama as fallback", () => {
     const src = readFileSync(
       path.join(process.cwd(), "src/app/api/audit/stream/route.ts"),
       "utf8"
     );
-    expect(src).toContain('const primaryModel = "gpt-4.1"');
+    expect(src).toContain('const primaryModel = "deepseek-reasoner"');
     expect(src).toContain('const fallbackModel = process.env.GROQ_MODEL ?? "llama-3.3-70b-versatile"');
-    expect(src).toContain('const openaiKey = process.env.OPENAI_API_KEY;');
+    expect(src).toContain('const deepseekKey = process.env.DEEPSEEK_API_KEY;');
   });
 
   it("system prompt rule 15 forbids training-cutoff language", () => {
