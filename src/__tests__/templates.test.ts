@@ -18,6 +18,7 @@ describe("getGroupedTemplates", () => {
 
     expect(grouped.find((group) => group.category === "HACCP")?.templates.map((template) => template.title)).toEqual([
       "Corrective action log",
+      "Customer complaint log",
       "HACCP hazards register",
       "HACCP step descriptions",
       "Product recall procedure",
