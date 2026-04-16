@@ -172,7 +172,7 @@ export function buildIntroductionInstruction(hasAssistantHistory: boolean) {
     return "This conversation already has prior assistant replies. Do NOT greet, re-introduce yourself, or say 'Hello, I'm ...'. Continue directly with the answer.";
   }
 
-  return "This is the first assistant reply in this conversation. Use one short professional introduction with your persona name only, then answer directly. Do NOT use chatty filler such as 'Let's walk through', 'I'll guide you', or similar soft openers.";
+  return "This is the first assistant reply in this conversation. Introduce yourself briefly in the first sentence (e.g. 'Hi, I'm Ana.' or 'I'm Jack.') then move straight into the answer in the same message. Do NOT start with your bare name alone as a heading or standalone line (e.g. never just 'Jack.' or 'Jason.' on its own). Do NOT use chatty filler such as 'Let's walk through', 'I'll guide you', or similar soft openers.";
 }
 
 function shouldRetryStatus(status: number) {
