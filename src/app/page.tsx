@@ -374,9 +374,9 @@ export default async function HomePage() {
           <div className="flex flex-col gap-14 lg:flex-row lg:items-center lg:gap-16">
             <div className="max-w-sm shrink-0">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#E11D48]">Your specialists</p>
-              <h2 className="pp-display mt-4 text-4xl text-[#0F172A] md:text-5xl">Five specialists. One subscription.</h2>
+              <h2 className="pp-display mt-4 text-4xl text-[#0F172A] md:text-5xl">Six specialists. One subscription.</h2>
               <p className="mt-5 text-lg leading-relaxed text-[#475569]">
-                Every PinkPepper conversation is handled by one of five AI food safety specialists. Each has a distinct approach — from step-by-step checklists to direct executive summaries — so you get the right tone for every situation.
+                Every PinkPepper conversation is handled by one of six AI food safety specialists. Each has a distinct approach — from step-by-step checklists to direct executive summaries — so you get the right tone for every situation.
               </p>
               <p className="mt-4 text-sm text-[#94A3B8]">Assigned automatically. Same conversation, same specialist.</p>
             </div>
@@ -422,27 +422,29 @@ export default async function HomePage() {
             </div>
 
             {/* Divider */}
-            <div className="hidden lg:block h-40 w-px bg-[#E2E8F0] shrink-0" />
+            <div className="hidden lg:block h-48 w-px bg-[#E2E8F0] shrink-0" />
 
             {/* Lead Auditor John — Pro highlight */}
-            <div className="flex shrink-0 flex-col items-center gap-2 text-center">
+            <div className="flex shrink-0 flex-col items-center gap-3 text-center">
               <div className="relative">
                 <Image
                   src="/lead-auditor-john.svg"
                   alt="John"
-                  width={96}
-                  height={96}
-                  className="rounded-full ring-4 ring-amber-400 shadow-md transition-transform duration-200 hover:-translate-y-1"
+                  width={144}
+                  height={144}
+                  className="transition-transform duration-200 hover:-translate-y-1"
                 />
-                <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-amber-400 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white shadow">
+                <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-amber-400 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-white shadow-md ring-2 ring-white">
                   Pro
                 </span>
               </div>
-              <p className="mt-2 text-sm font-semibold text-[#0F172A]">John</p>
-              <p className="text-xs text-[#94A3B8]">Lead Auditor</p>
-              <p className="mt-1 max-w-[130px] text-xs leading-relaxed text-[#64748B]">
-                Audit mode only. Evidence-led findings, severity ratings, corrective actions.
-              </p>
+              <div className="mt-3 max-w-[180px]">
+                <p className="text-base font-bold text-[#0F172A]">John</p>
+                <p className="text-sm font-semibold uppercase tracking-wide text-amber-600">Lead Auditor</p>
+                <p className="mt-2 text-sm leading-relaxed text-[#475569]">
+                  Audit mode only. Evidence-led findings, severity ratings, and corrective actions.
+                </p>
+              </div>
             </div>
           </div>
         </div>
