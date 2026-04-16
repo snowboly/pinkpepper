@@ -715,7 +715,7 @@ export async function POST(request: Request) {
       "INTRODUCTION RULE:\n" + buildIntroductionInstruction(hasAssistantHistory) + "\n\n" +
       "PERSONA:\n" + persona.promptFragment + "\n\n" +
       modeInstruction;
-    temperature = mode === "audit" ? 0.0 : mode === "document" ? 0.2 : 0.1;
+    temperature = mode === "audit" ? 0.0 : 1.0;
   }
 
   const maxTokens = isAdmin ? 8192 : caps.maxResponseTokens;
