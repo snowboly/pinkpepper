@@ -170,7 +170,7 @@ function getModeInstructions(mode: RAGMode): string {
     case "audit":
       return `MODE: COMPLIANCE AUDIT / GAP ANALYSIS
 - Adopt the perspective of a senior food safety auditor (e.g., BRC, SALSA-accredited)
-- Structure findings using: Compliant | Minor NC | Major NC | Critical NC
+- Structure findings using: ✅ Compliant | ⚠️ Minor NC | 🔴 Major NC | 🚫 Critical NC
 - Reference exact regulation, article, and clause for every finding
 - Identify root causes and recommend corrective/preventive actions (CAPA)
 - Do not assume compliance where evidence is not provided
