@@ -87,7 +87,7 @@ export const faqs = [
     id: "consultant-access",
     question: "How do I access a specialist consultant through PinkPepper?",
     answer:
-      "Human food safety consultancy is available on the Pro plan. This is separate from the in-app Consultant and Auditor modes. Once active, you can request a review of a document or higher-risk compliance question directly within the platform. A qualified food safety professional will review your submission and return feedback, typically within one to two business days.",
+      "Human food safety consultancy is available on the Pro plan. This is separate from the in-app Consultant and Auditor modes. Once active, you can request a review of a document or higher-risk compliance question directly within the platform. A qualified food safety professional will review your submission and return feedback, typically within one to two business days. Consultancy is currently available in English, Portuguese, and Lithuanian.",
   },
 ];
 
