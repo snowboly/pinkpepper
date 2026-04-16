@@ -111,6 +111,16 @@ describe("article content processing", () => {
     expect(result.processedContent).toContain("pp-article-figure");
   });
 
+  it("removes legacy doctor attributions from leadership insight callouts", () => {
+    const result = processArticleContent(
+      "<blockquote><strong>Leadership Insight:</strong> \"Keep standards practical.\" - Dr. Margarida, Lead Auditor</blockquote>",
+    );
+
+    expect(result.processedContent).toContain("Leadership Insight:");
+    expect(result.processedContent).not.toContain("Dr. Margarida");
+    expect(result.processedContent).not.toContain("Lead Auditor");
+  });
+
   it("scrubs dangerous tags, event handlers, and javascript: urls from article bodies", () => {
     const raw = [
       "<h2>Intro</h2>",
