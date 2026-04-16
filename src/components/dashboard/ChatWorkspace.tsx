@@ -21,6 +21,7 @@ import {
   parseMessageArtifact,
   parseMessageCitations,
   parseMessagePersona,
+  parseMessageUserDocumentNames,
   parseMessageVerificationState,
 } from "./chat-message-metadata";
 import { applyStreamError } from "./chat-stream-state";
@@ -374,6 +375,7 @@ export default function ChatWorkspace({
           role: m.role,
           content: m.content,
           citations: parseMessageCitations(m.metadata),
+          userDocumentNames: parseMessageUserDocumentNames(m.metadata),
           verificationState: parseMessageVerificationState(m.metadata),
           artifact: parseMessageArtifact(m.metadata),
           ...(m.role === "assistant"
