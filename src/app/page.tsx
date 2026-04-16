@@ -371,8 +371,8 @@ export default async function HomePage() {
 
       <section className="border-b border-[#F1F5F9] bg-[#FFF8FB] py-20">
         <div className="pp-container">
-          <div className="flex flex-col gap-14 lg:flex-row lg:items-center lg:gap-20">
-            <div className="max-w-md">
+          <div className="flex flex-col gap-14 lg:flex-row lg:items-center lg:gap-16">
+            <div className="max-w-sm shrink-0">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#E11D48]">Your specialists</p>
               <h2 className="pp-display mt-4 text-4xl text-[#0F172A] md:text-5xl">Five specialists. One subscription.</h2>
               <p className="mt-5 text-lg leading-relaxed text-[#475569]">
@@ -420,40 +420,28 @@ export default async function HomePage() {
                 ))}
               </div>
             </div>
-          </div>
-        </div>
-      </section>
 
-      <section className="border-b border-[#1E293B] bg-[#0F172A] py-20">
-        <div className="pp-container">
-          <div className="flex flex-col gap-14 lg:flex-row lg:items-center lg:gap-20">
-            <div className="flex justify-center lg:order-2">
-              <div className="flex flex-col items-center gap-3">
-                <div className="relative">
-                  <Image
-                    src="/lead-auditor-john.svg"
-                    alt="John"
-                    width={128}
-                    height={128}
-                    className="rounded-full ring-4 ring-[#1E293B] shadow-2xl"
-                  />
-                  <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-amber-500 px-3 py-0.5 text-xs font-bold text-white shadow">
-                    PRO
-                  </span>
-                </div>
-                <p className="mt-2 text-base font-bold text-white">John</p>
-                <p className="text-sm text-[#64748B]">Lead Auditor</p>
+            {/* Divider */}
+            <div className="hidden lg:block h-40 w-px bg-[#E2E8F0] shrink-0" />
+
+            {/* Lead Auditor John — Pro highlight */}
+            <div className="flex shrink-0 flex-col items-center gap-2 text-center">
+              <div className="relative">
+                <Image
+                  src="/lead-auditor-john.svg"
+                  alt="John"
+                  width={96}
+                  height={96}
+                  className="rounded-full ring-4 ring-amber-400 shadow-md transition-transform duration-200 hover:-translate-y-1"
+                />
+                <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-amber-400 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white shadow">
+                  Pro
+                </span>
               </div>
-            </div>
-
-            <div className="max-w-md lg:order-1">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-amber-400">Virtual Audit Mode</p>
-              <h2 className="pp-display mt-4 text-4xl text-white md:text-5xl">Meet your lead auditor.</h2>
-              <p className="mt-5 text-lg leading-relaxed text-[#94A3B8]">
-                John doesn&apos;t consult — he audits. Upload your documents, describe your setup, and he works through your operation systematically: identifying non-conformances, assigning severity, and citing every finding against real evidence. No vague reassurance. No overfindings.
-              </p>
-              <p className="mt-4 text-sm text-[#475569]">
-                Available exclusively on Pro. Findings include severity ratings (Minor NC / Major NC / Critical NC), objective evidence, and corrective actions.
+              <p className="mt-2 text-sm font-semibold text-[#0F172A]">John</p>
+              <p className="text-xs text-[#94A3B8]">Lead Auditor</p>
+              <p className="mt-1 max-w-[130px] text-xs leading-relaxed text-[#64748B]">
+                Audit mode only. Evidence-led findings, severity ratings, corrective actions.
               </p>
             </div>
           </div>
