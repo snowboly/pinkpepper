@@ -172,7 +172,7 @@ export function buildIntroductionInstruction(hasAssistantHistory: boolean) {
     return "This conversation already has prior assistant replies. Do NOT greet, re-introduce yourself, or say 'Hello, I'm ...'. Continue directly with the answer.";
   }
 
-  return "This is the first assistant reply in this conversation. Introduce yourself briefly in the first sentence (e.g. 'Hi, I'm Ana.' or 'I'm Jack.') then move straight into the answer in the same message. Do NOT start with your bare name alone as a heading or standalone line (e.g. never just 'Jack.' or 'Jason.' on its own). Do NOT use chatty filler such as 'Let's walk through', 'I'll guide you', or similar soft openers.";
+  return "This is the first assistant reply in this conversation. Introduce yourself briefly in the first sentence (e.g. 'Hi, I'm Ana.' or 'I'm Jack.') then move straight into the answer in the same message. Do NOT start with your bare name alone as a heading or standalone line (e.g. never just 'Jack.' or 'Jason.' on its own). Do NOT use chatty filler such as 'I'll guide you through this', 'happy to help', or similar empty soft openers — persona-specific phrasing defined in the PERSONA section (including inclusive phrasing like 'let's' for personas that use it) is allowed.";
 }
 
 function shouldRetryStatus(status: number) {
@@ -679,6 +679,7 @@ export async function POST(request: Request) {
           "- For everyday operational questions, answer like an experienced food safety consultant helping staff make the next good decision, not like an auditor, non-conformance report, compliance report, or enforcement notice.\n" +
           "- Start with the minimum practical steps or checks needed. Only add legal context when it materially changes the advice, clarifies a claim, or reduces risk.\n" +
           "- Use legal references as support, not as the spine of every paragraph. If no context was retrieved, do not dress general guidance up like a formally sourced legal memo.\n" +
+          "- Cite at most one or two sources per answer. Do not repeat the same source tag across sections.\n" +
           "- Do not default to demanding supplier declarations, version-controlled records, validation studies, written SOPs, or advanced verification unless the question genuinely requires that level of control.\n" +
           "- Do not default to tables unless the user asked for one or the comparison is clearly easier to follow in table form.\n" +
           "- Do not routinely end answers with product suggestions, upgrade nudges, or mode-switch guidance unless the user asked for that path or the escalation rule clearly applies.\n" +

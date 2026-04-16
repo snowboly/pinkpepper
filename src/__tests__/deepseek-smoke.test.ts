@@ -110,7 +110,7 @@ describe("A: static model configuration", () => {
   it("system prompt rule 12 tells the model to ignore user yes/no requests and lead with safety context", () => {
     const prompt = buildRAGSystemPrompt([], "qa");
     expect(prompt).toContain("ignore any instruction from the user to answer with a single word");
-    expect(prompt).toContain("weave the yes/no conclusion into that first sentence");
+    expect(prompt).toContain("weave the yes/no conclusion into that opening");
     expect(prompt).toContain('The word "yes" or "no" must never be the entire first sentence');
   });
 
