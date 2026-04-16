@@ -5,6 +5,7 @@ import { useTranslations, useLocale } from "next-intl";
 import { createClient } from "@/utils/supabase/client";
 import { validatePassword } from "@/lib/password";
 import { locales, type Locale } from "@/i18n/config";
+import { formatDailyResetLabel } from "./reset-time";
 
 const LOCALE_LABELS: Record<Locale, string> = {
   en: "English",
@@ -56,6 +57,7 @@ export default function SettingsForm({
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
   const supabase = createClient();
+  const resetLabel = formatDailyResetLabel(new Date(), { locale: currentLocale });
 
   const tierColour =
     isAdmin
@@ -162,7 +164,7 @@ export default function SettingsForm({
       {!isAdmin && (
         <div className="rounded-2xl border border-[#E2E8F0] bg-white p-6">
           <h2 className="text-sm font-semibold text-[#0F172A] mb-1">{t("usage")}</h2>
-          <p className="text-xs text-[#94A3B8] mb-4">Resets daily</p>
+          <p className="text-xs text-[#94A3B8] mb-4">{resetLabel}</p>
           <div className="space-y-4">
             <UsageBar
               label={t("dailyMessages")}
