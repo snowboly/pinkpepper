@@ -158,9 +158,9 @@ const relatedWorkflows = [
     description: "Follow the allergen documentation path if your biggest gaps are matrix upkeep and change control.",
   },
   {
-    href: "/use-cases/food-manufacturing",
-    title: "See how manufacturers use these records",
-    description: "Move from generic templates into a manufacturing-specific compliance workflow.",
+    href: "/articles",
+    title: "Read the compliance articles",
+    description: "Go deeper on HACCP, allergen control, audits, and traceability with practical operational guidance.",
   },
 ];
 

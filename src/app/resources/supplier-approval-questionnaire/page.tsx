@@ -65,7 +65,7 @@ export default function SupplierApprovalQuestionnairePage() {
       templateSlug="supplier-approval-questionnaire"
       relatedLinks={[
         { href: "/features/food-safety-sop-generator", label: "Food safety SOP generator" },
-        { href: "/use-cases/catering", label: "Catering use case" },
+        { href: "/articles", label: "Food safety articles" },
         { href: "/resources/haccp-plan-template", label: "HACCP plan template" },
       ]}
     />

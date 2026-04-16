@@ -66,7 +66,7 @@ export default function TemperatureMonitoringLogTemplatePage() {
       relatedLinks={[
         { href: "/features/food-safety-sop-generator", label: "Food safety SOP generator" },
         { href: "/resources/food-safety-audit-checklist", label: "Food safety audit checklist" },
-        { href: "/use-cases/restaurants", label: "Restaurant use case" },
+        { href: "/articles", label: "Food safety articles" },
       ]}
     />
   );

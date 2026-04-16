@@ -66,7 +66,7 @@ export default function CleaningAndDisinfectionSopPage() {
       relatedLinks={[
         { href: "/features/food-safety-sop-generator", label: "Food safety SOP generator" },
         { href: "/resources/allergen-matrix-template", label: "Allergen matrix template" },
-        { href: "/use-cases/food-manufacturing", label: "Food manufacturing use case" },
+        { href: "/articles", label: "Food safety articles" },
       ]}
     />
   );

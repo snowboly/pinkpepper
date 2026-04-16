@@ -23,9 +23,9 @@ const corePages = [
     description: "Use the strongest templates first if you need structure before a custom draft.",
   },
   {
-    href: "/use-cases/food-manufacturing",
-    title: "Food manufacturing use case",
-    description: "Follow the manufacturing path if records, traceability, and audit pressure drive most of your work.",
+    href: "/articles",
+    title: "Food safety articles",
+    description: "Browse practical guidance on HACCP, allergen management, audits, and operational compliance.",
   },
 ];
 

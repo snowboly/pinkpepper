@@ -234,11 +234,6 @@ export function SiteFooter() {
         <div>
           <h4 className="mb-4 text-sm font-semibold text-[#1A1A1A]">Product</h4>
           <ul className="space-y-3 text-sm text-[#6B6B6B]">
-            <li><Link href="/use-cases" className="pp-shell-link">Use Cases</Link></li>
-            <li><Link href="/use-cases/restaurants" className="pp-shell-link">Restaurants</Link></li>
-            <li><Link href="/use-cases/cafes" className="pp-shell-link">Cafés</Link></li>
-            <li><Link href="/use-cases/catering" className="pp-shell-link">Catering</Link></li>
-            <li><Link href="/use-cases/food-manufacturing" className="pp-shell-link">Food Manufacturing</Link></li>
             <li><Link href="/pricing" className="pp-shell-link">Pricing</Link></li>
             <li><Link href="/about" className="pp-shell-link">About</Link></li>
             <li><Link href="/login" className="pp-shell-link">Log In</Link></li>
