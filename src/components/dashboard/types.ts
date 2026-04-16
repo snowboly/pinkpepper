@@ -24,6 +24,7 @@ export type Message = {
   imagePreview?: string;
   documentName?: string;
   citations?: Citation[];
+  userDocumentNames?: string[];
   verificationState?: VerificationState | null;
   isStreaming?: boolean;
   persona?: PersonaInfo;

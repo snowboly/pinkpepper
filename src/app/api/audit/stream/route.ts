@@ -366,9 +366,10 @@ export async function POST(request: Request) {
   const encoder = new TextEncoder();
   const stream = new ReadableStream({
     async start(controller) {
+      const userDocumentNames = [...new Set(userChunks.map((c) => c.file_name))];
       controller.enqueue(
         encoder.encode(
-          `data: ${JSON.stringify({ type: "metadata", conversationId, ragEnabled, persona: { id: auditPersona.id, name: auditPersona.name, avatar: auditPersona.avatar } })}\n\n`
+          `data: ${JSON.stringify({ type: "metadata", conversationId, ragEnabled, persona: { id: auditPersona.id, name: auditPersona.name, avatar: auditPersona.avatar }, userDocumentNames })}\n\n`
         )
       );
 
