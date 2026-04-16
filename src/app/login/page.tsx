@@ -3,6 +3,11 @@
 import Link from "next/link";
 import { FormEvent, useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
+import {
+  getLoginFlashErrorMessage,
+  getSafeNextPath,
+  LoginEmailCodePanel,
+} from "./login-flow";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -10,8 +15,11 @@ export default function LoginPage() {
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [magicLoading, setMagicLoading] = useState(false);
-  const [magicSent, setMagicSent] = useState(false);
+  const [code, setCode] = useState("");
+  const [codeLoading, setCodeLoading] = useState(false);
+  const [codeSent, setCodeSent] = useState(false);
+  const [verifyLoading, setVerifyLoading] = useState(false);
+  const [resendLoading, setResendLoading] = useState(false);
   const [nextPath, setNextPath] = useState("/dashboard");
   const [flashError, setFlashError] = useState<string | null>(null);
 
@@ -24,12 +32,7 @@ export default function LoginPage() {
       setFlashError(err);
     }
 
-    if (!next || !next.startsWith("/") || next.startsWith("//")) {
-      setNextPath("/dashboard");
-      return;
-    }
-
-    setNextPath(next);
+    setNextPath(getSafeNextPath(next));
   }, []);
 
   async function onSubmit(event: FormEvent) {
@@ -51,31 +54,91 @@ export default function LoginPage() {
     }
   }
 
-  async function onMagicLink() {
+  function resetEmailCodeState() {
+    setCode("");
+    setCodeSent(false);
+    setMessage(null);
+    setError(null);
+    setFlashError(null);
+  }
+
+  function handleEmailChange(value: string) {
+    setEmail(value);
+    if (codeSent) {
+      resetEmailCodeState();
+      setEmail(value);
+      return;
+    }
+    setError(null);
+    setMessage(null);
+  }
+
+  async function sendEmailCode(isResend = false) {
     if (!email) {
       setError("Enter your email address above first.");
       return;
     }
-    setMagicLoading(true);
+    if (isResend) {
+      setResendLoading(true);
+    } else {
+      setCodeLoading(true);
+    }
     setError(null);
     setMessage(null);
+    setFlashError(null);
 
     try {
       const supabase = createClient();
-      const origin = process.env.NEXT_PUBLIC_SITE_URL ?? window.location.origin;
       const { error: otpError } = await supabase.auth.signInWithOtp({
         email,
-        options: { emailRedirectTo: `${origin}/auth/callback?next=${nextPath}&flow=login` },
       });
       if (otpError) {
         setError(otpError.message);
         return;
       }
-      setMagicSent(true);
+      setCodeSent(true);
+      setCode("");
+      setMessage(isResend ? "A new email code has been sent." : "Email code sent. Check your inbox.");
     } finally {
-      setMagicLoading(false);
+      if (isResend) {
+        setResendLoading(false);
+      } else {
+        setCodeLoading(false);
+      }
     }
   }
+
+  async function verifyCode() {
+    if (!code.trim()) {
+      setError("Enter the email code first.");
+      return;
+    }
+
+    setVerifyLoading(true);
+    setError(null);
+    setMessage(null);
+    setFlashError(null);
+
+    try {
+      const supabase = createClient();
+      const { error: verifyError } = await supabase.auth.verifyOtp({
+        email,
+        token: code.trim(),
+        type: "email",
+      });
+
+      if (verifyError) {
+        setError(verifyError.message);
+        return;
+      }
+
+      window.location.href = nextPath;
+    } finally {
+      setVerifyLoading(false);
+    }
+  }
+
+  const flashMessage = getLoginFlashErrorMessage(flashError);
 
   return (
     <main className="relative overflow-hidden py-16 md:py-24">
@@ -92,14 +155,9 @@ export default function LoginPage() {
           <h1 className="mt-4 text-3xl font-black tracking-tight text-[#2B2B2B]">Log In</h1>
           <p className="mt-2 text-sm text-[#6B6B6B]">Access your PinkPepper dashboard.</p>
 
-          {(flashError || error) && (
+          {(flashMessage || error) && (
             <p className="mt-4 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
-              {error ??
-                (flashError === "cross_device_link"
-                  ? "Please open the confirmation link on the same device and browser where you signed up."
-                  : flashError === "invalid_or_expired_link"
-                    ? "Your login link has expired or already been used. Request a new one below."
-                    : flashError)}
+              {error ?? flashMessage}
             </p>
           )}
           {message && <p className="mt-4 rounded-xl border border-[#E8DADA] bg-[#FAF6F5] px-3 py-2 text-sm">{message}</p>}
@@ -111,7 +169,7 @@ export default function LoginPage() {
                 type="email"
                 required
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => handleEmailChange(e.target.value)}
                 className="w-full rounded-xl border border-[#E8DADA] bg-white px-3 py-2.5 outline-none ring-[#D96C6C]/20 focus:ring-4"
                 placeholder="you@company.com"
               />
@@ -138,20 +196,30 @@ export default function LoginPage() {
             <div className="h-px flex-1 bg-[#E8DADA]" />
           </div>
 
-          {magicSent ? (
-            <p className="rounded-xl border border-[#E8DADA] bg-[#FAF6F5] px-3 py-2.5 text-center text-sm text-[#2B2B2B]">
-              Magic link sent — check your inbox.
-            </p>
-          ) : (
-            <button
-              type="button"
-              disabled={magicLoading}
-              onClick={onMagicLink}
-              className="w-full rounded-xl border border-[#E8DADA] bg-[#FAF6F5] py-3 text-sm font-semibold text-[#2B2B2B] transition-colors hover:bg-[#F2E8E8] disabled:opacity-70"
-            >
-              {magicLoading ? "Sending link..." : "Send magic link"}
-            </button>
-          )}
+          <LoginEmailCodePanel
+            email={email}
+            code={code}
+            codeSent={codeSent}
+            codeLoading={codeLoading}
+            verifyLoading={verifyLoading}
+            resendLoading={resendLoading}
+            onCodeChange={(e) => {
+              setCode(e.target.value);
+              setError(null);
+            }}
+            onSendCode={() => {
+              void sendEmailCode(false);
+            }}
+            onVerifyCode={() => {
+              void verifyCode();
+            }}
+            onResendCode={() => {
+              void sendEmailCode(true);
+            }}
+            onUseDifferentEmail={() => {
+              resetEmailCodeState();
+            }}
+          />
 
           <div className="mt-4 flex items-center justify-between text-sm text-[#6B6B6B]">
             <Link href="/forgot-password" className="underline">Forgot password?</Link>
