@@ -115,6 +115,27 @@ const resources: ResourceEntry[] = [
     category: "training",
     categoryLabel: "Training",
   },
+  {
+    href: "/resources/incoming-goods-template",
+    title: "Incoming goods inspection template",
+    description: "What to record when goods arrive — supplier, product, quantity, condition, and temperature — to maintain traceability from the point of receipt.",
+    category: "traceability",
+    categoryLabel: "Traceability",
+  },
+  {
+    href: "/resources/customer-complaint-log-template",
+    title: "Customer complaint log template",
+    description: "How to record, investigate, and close customer complaints in a way that feeds back into your HACCP and corrective action process.",
+    category: "haccp",
+    categoryLabel: "HACCP",
+  },
+  {
+    href: "/resources/equipment-calibration-log-template",
+    title: "Equipment calibration log template",
+    description: "What calibration records should capture for probes, scales, and other critical measuring equipment used in food safety monitoring.",
+    category: "monitoring",
+    categoryLabel: "Monitoring",
+  },
 ];
 
 const featuredResources = [

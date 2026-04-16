@@ -42,6 +42,12 @@ export const TEMPLATES: TemplateEntry[] = [
   // Training
   { slug: "employee-food-safety-training-record", title: "Employee training record",               category: "Training" },
   { slug: "personal-hygiene-policy-template",     title: "Personal hygiene policy",                category: "Training" },
+  // Goods receiving
+  { slug: "incoming-goods-template",              title: "Incoming goods inspection record",       category: "Traceability" },
+  // Quality
+  { slug: "customer-complaint-log-template",      title: "Customer complaint log",                 category: "HACCP" },
+  // Calibration
+  { slug: "equipment-calibration-log-template",   title: "Equipment calibration log",              category: "Monitoring" },
 ];
 
 export const TEMPLATE_SLUGS = new Set(TEMPLATES.map((t) => t.slug));
