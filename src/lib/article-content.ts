@@ -12,6 +12,13 @@ export type ProcessedArticleContent = {
   normalizedContent: string;
 };
 
+function stripLegacyInsightAttribution(html: string) {
+  // Legacy iLoveHACCP article bodies often end leadership-insight callouts
+  // with attributions like "- Dr. Margarida". Remove those tail attributions
+  // so callouts stay editorially neutral.
+  return html.replace(/\s[-–—]\s*Dr\.?\s+[A-Za-z][^<\n\r]*/gi, "");
+}
+
 function mergeClassAttribute(attrs: string, className: string) {
   if (/class="/.test(attrs)) {
     return attrs.replace(/class="([^"]*)"/, (_match, existing: string) => {
@@ -63,7 +70,7 @@ export function processArticleContent(rawContent: string): ProcessedArticleConte
   // this sanitiser closes the remaining non-script vectors and keeps the
   // article body to an editorial tag vocabulary.
   const sanitizedRaw = sanitizeArticleHtml(rawContent);
-  const normalizedContent = normalizeArticleContent(sanitizedRaw);
+  const normalizedContent = stripLegacyInsightAttribution(normalizeArticleContent(sanitizedRaw));
   const headings = getArticleHeadings(normalizedContent);
 
   let processedContent = normalizedContent.replace(
