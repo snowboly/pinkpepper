@@ -28,9 +28,32 @@ export default function ChatMessages({
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const shouldStickToBottomRef = useRef(true);
+  const isProgrammaticScrollRef = useRef(false);
+  const programmaticScrollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [showJumpToLatest, setShowJumpToLatest] = useState(false);
 
+  function releaseProgrammaticScrollLock() {
+    if (!isProgrammaticScrollRef.current && !programmaticScrollTimerRef.current) return;
+    isProgrammaticScrollRef.current = false;
+    if (programmaticScrollTimerRef.current) {
+      clearTimeout(programmaticScrollTimerRef.current);
+      programmaticScrollTimerRef.current = null;
+    }
+  }
+
+  function handleUserScrollIntent() {
+    releaseProgrammaticScrollLock();
+  }
+
+  function handleUserKeyScroll(event: React.KeyboardEvent<HTMLDivElement>) {
+    const keys = ["ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End", " ", "Spacebar"];
+    if (keys.includes(event.key)) {
+      releaseProgrammaticScrollLock();
+    }
+  }
+
   function syncScrollState() {
+    if (isProgrammaticScrollRef.current) return;
     const container = scrollContainerRef.current;
     if (!container) return;
     const distanceFromBottom = container.scrollHeight - container.scrollTop - container.clientHeight;
@@ -39,21 +62,54 @@ export default function ChatMessages({
     setShowJumpToLatest(!nearBottom && messages.length > 0);
   }
 
+  function scrollToBottom(behavior: ScrollBehavior) {
+    isProgrammaticScrollRef.current = true;
+    if (programmaticScrollTimerRef.current) {
+      clearTimeout(programmaticScrollTimerRef.current);
+    }
+    messagesEndRef.current?.scrollIntoView({ behavior });
+    programmaticScrollTimerRef.current = setTimeout(() => {
+      isProgrammaticScrollRef.current = false;
+      programmaticScrollTimerRef.current = null;
+      syncScrollState();
+    }, behavior === "smooth" ? 450 : 50);
+  }
+
   function jumpToLatest() {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     shouldStickToBottomRef.current = true;
     setShowJumpToLatest(false);
+    scrollToBottom("smooth");
   }
 
   useEffect(() => {
-    if (!shouldStickToBottomRef.current) return;
-    messagesEndRef.current?.scrollIntoView({ behavior: messages.length > 1 ? "smooth" : "auto" });
+    if (shouldStickToBottomRef.current) {
+      scrollToBottom(messages.length > 1 ? "smooth" : "auto");
+    } else {
+      syncScrollState();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messages, loading]);
+
+  useEffect(() => {
+    return () => {
+      if (programmaticScrollTimerRef.current) {
+        clearTimeout(programmaticScrollTimerRef.current);
+      }
+    };
+  }, []);
 
   const modeKey = workspaceMode === "virtual_audit" ? "auditor" : "consultant";
 
   return (
-    <div ref={scrollContainerRef} onScroll={syncScrollState} className="relative flex-1 overflow-y-auto">
+    <div
+      ref={scrollContainerRef}
+      onScroll={syncScrollState}
+      onWheel={handleUserScrollIntent}
+      onTouchMove={handleUserScrollIntent}
+      onMouseDown={handleUserScrollIntent}
+      onKeyDown={handleUserKeyScroll}
+      className="relative flex-1 overflow-y-auto"
+    >
       {messages.length === 0 && !loadingMessages && (
         <div className="flex flex-col items-center justify-center py-16 text-center px-4">
           <div className="mb-6">

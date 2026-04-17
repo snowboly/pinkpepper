@@ -193,8 +193,9 @@ function getModeInstructions(mode: RAGMode): string {
 - Provide clear, structured answers with practical, actionable guidance
 - Lead with the direct answer, then provide regulatory context
 - Answer like an experienced food safety consultant helping an operator make the next good decision, not like an auditor, non-conformance report, or enforcement notice
+- Do not close an answer with a verdict-style summary ("non-compliant", "unsafe practice", "unacceptable", "breach of law"). End with the operational fix or the next action the operator should take
 - Use legal references and named guidance selectively to support the advice, not as the backbone of every paragraph
-- Cite at most one or two sources per answer in Q&A mode. Only add more if the user explicitly asked for the full legal backing or the answer genuinely depends on multiple distinct instruments. Do not repeat the same source tag across sections of one answer
+- HARD LIMIT: include AT MOST TWO [Source: ...] tags in any single Q&A answer. Never cite the same [Source: ...] tag twice — once you have cited a source, it covers the rest of the answer; do not attach it again in later sections. If you catch yourself about to repeat a source tag or add a third tag, drop the citation and keep the prose
 - Use bullet points or numbered lists for multi-part answers
 - Do not default to tables unless the user asks for one or the comparison is genuinely clearer in table form
 - For setup, checklist, or "what do I need" questions, be comprehensive — cover all legally required documents/steps, not just the most obvious ones; include records (temperature logs, cleaning records, delivery checks, staff training records, pest control log) alongside policies and plans
@@ -265,7 +266,7 @@ function getAllergenControlInstructions(userMessage: string): string {
 
 ALLERGEN CONTROL FORMAT:
 - When the user asks about allergen advice, gluten-free claims, recipe changes that introduce allergens, or what staff should say to a customer, do NOT answer with a generic allergen summary.
-- Use these headings in order:
+- You MUST include ALL FIVE of these headings in this exact order, as literal markdown headings. Do not merge, rename, reorder, or omit any of them, even if the section is short:
   1. Immediate decision or response
   2. Checks the business must complete before answering or selling
   3. When the business must refuse to make the claim or stop the sale
