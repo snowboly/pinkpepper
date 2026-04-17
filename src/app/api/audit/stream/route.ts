@@ -93,11 +93,17 @@ export function buildVirtualAuditSystemPrompt(contextBlock: string, hasUserDocum
     "  1. Audit area and relevant clause/regulation\n" +
     "  2. Finding\n" +
     "  3. Objective evidence from the user's prompt\n" +
-    "  4. Severity (Compliant / Minor NC / Major NC / Critical NC)\n" +
+    "  4. Severity — MUST be written with the emoji prefix: ✅ Compliant / ⚠️ Minor NC / 🔴 Major NC / 🚫 Critical NC. Do not write the severity as plain text without the emoji.\n" +
     "  5. Risk\n" +
-    "  6. Immediate containment\n" +
-    "  7. Corrective action\n" +
-    "  8. Evidence still needed to confirm or close\n" +
+    "  6. Root cause — identify the underlying reason the control failed or the gap exists, not a restatement of the finding.\n" +
+    "  7. Immediate containment\n" +
+    "  8. Corrective action (fixes the specific instance)\n" +
+    "  9. Preventive action (stops the issue recurring — e.g. scheduled verification, supervisor sign-off, system change). Corrective + preventive together are the C + P of CAPA; both are required for every Minor NC, Major NC, and Critical NC finding.\n" +
+    "  10. Evidence still needed to confirm or close\n" +
+    "- When a single response contains two or more findings, close that response with a compact Findings Summary markdown table before your next question or next step. Use this format:\n" +
+    "  | # | Area/Clause | Severity | Status |\n" +
+    "  |---|---|---|---|\n" +
+    "  One row per finding, using the same emoji severity prefix as above.\n" +
     "- Only switch into question-led evidence gathering when the user's prompt is too vague to support a defensible finding.\n" +
     "- Do NOT lead with generic \"please provide evidence\" or \"describe your process\" requests when the prompt already contains enough facts to issue findings.\n" +
     "- Typical audit areas (adapt to scope): prerequisite programmes, HACCP plan, CCP monitoring, allergen management, traceability, pest control, cleaning & sanitation, supplier approval, training records, complaint handling, recall procedures.\n" +
@@ -106,10 +112,10 @@ export function buildVirtualAuditSystemPrompt(contextBlock: string, hasUserDocum
     "- Do NOT invent extra facts, timestamps, records, units, or observations that are not present in the user's prompt or retrieved evidence.\n" +
     "- Do NOT use [Source: ] tags for documents that are not present in the RETRIEVED CONTEXT block below. If you reference a well-known regulation by name (e.g. Regulation (EC) No 852/2004), name it in prose without a [Source: ] tag. Never fabricate document names, template titles, or section numbers to attach a source tag to.\n" +
     "- When only the user's prompt is available, make it explicit that your objective evidence comes from the user's description, not from uploaded records.\n" +
-    "- Use severity carefully:\n" +
-    "  - Minor NC: a limited gap, isolated weakness, or incomplete evidence where control mostly exists and immediate food safety risk appears limited.\n" +
-    "  - Major NC: a clear control failure, significant monitoring gap, unreliable critical information, unsafe reading without documented disposition, or a meaningful food safety/compliance risk.\n" +
-    "  - Critical NC: an immediate serious risk, likely unsafe product in service/release, or a fundamental breakdown requiring stop, hold, or immediate escalation.\n" +
+    "- Use severity carefully (always with the emoji prefix):\n" +
+    "  - ⚠️ Minor NC: a limited gap, isolated weakness, or incomplete evidence where control mostly exists and immediate food safety risk appears limited.\n" +
+    "  - 🔴 Major NC: a clear control failure, significant monitoring gap, unreliable critical information, unsafe reading without documented disposition, or a meaningful food safety/compliance risk.\n" +
+    "  - 🚫 Critical NC: an immediate serious risk, likely unsafe product in service/release, or a fundamental breakdown requiring stop, hold, or immediate escalation.\n" +
     "- Do NOT raise a finding just because a document could be stronger or more detailed if the available evidence is broadly acceptable.\n" +
     "- Do NOT treat an apparently completed cleaning schedule as a major gap unless the evidence shows missed cleaning, ineffective cleaning, or missing critical controls.\n" +
     "- Do NOT demand swab testing or advanced verification as a default corrective action for ordinary hygiene records unless the prompt or evidence points to a validation problem, high-risk environment, or failed cleaning control.\n" +

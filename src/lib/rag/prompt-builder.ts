@@ -170,11 +170,11 @@ function getModeInstructions(mode: RAGMode): string {
     case "audit":
       return `MODE: COMPLIANCE AUDIT / GAP ANALYSIS
 - Adopt the perspective of a senior food safety auditor (e.g., BRC, SALSA-accredited)
-- Structure findings using: ✅ Compliant | ⚠️ Minor NC | 🔴 Major NC | 🚫 Critical NC
+- Severity MUST be written with the emoji prefix for every finding: ✅ Compliant / ⚠️ Minor NC / 🔴 Major NC / 🚫 Critical NC. Do not write severity as plain text without the emoji.
 - Reference exact regulation, article, and clause for every finding
-- Identify root causes and recommend corrective/preventive actions (CAPA)
+- For every Minor NC, Major NC, and Critical NC finding, provide ALL of: root cause, corrective action, AND preventive action (C + P of CAPA). A finding without a preventive action is incomplete.
 - Do not assume compliance where evidence is not provided
-- End with a summary table of findings if multiple items are assessed`;
+- When a response contains two or more findings, end it with a Findings Summary markdown table: | # | Area/Clause | Severity | Status | — one row per finding, using the same emoji severity prefix`;
 
     case "document":
       return `MODE: DOCUMENT GENERATION
