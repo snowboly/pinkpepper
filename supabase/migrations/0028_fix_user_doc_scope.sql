@@ -1,14 +1,26 @@
 -- Fix: user-uploaded document retrieval was leaking legacy chunks (rows with
--- conversation_id IS NULL, uploaded before 0017 added the column) into every
--- new conversation. The RPC in 0017_user_document_chunks_conversation_scope.sql
--- included `OR c.conversation_id IS NULL`, which matched orphan rows against
--- any caller's p_conversation_id.
+-- conversation_id IS NULL, uploaded before this column existed) into every
+-- new conversation. The original RPC in 0017 included `OR c.conversation_id IS NULL`
+-- which matched orphan rows against any caller's p_conversation_id.
 --
--- Migration 0026 already defined the correct RPC, but if 0017's version is the
--- one currently live (e.g. 0026 not yet applied, or the buggy version was
--- re-installed), this migration re-asserts the correct definition. It is
--- idempotent and safe to run repeatedly.
+-- This migration is self-contained: it ensures the column and index exist
+-- before re-asserting the correct RPC, regardless of whether 0017 or 0026
+-- ran in this environment.
 
+ALTER TABLE public.user_document_chunks
+  ADD COLUMN IF NOT EXISTS conversation_id uuid NULL
+  REFERENCES public.conversations(id) ON DELETE CASCADE;
+
+CREATE INDEX IF NOT EXISTS user_document_chunks_conversation_id_idx
+  ON public.user_document_chunks (conversation_id)
+  WHERE conversation_id IS NOT NULL;
+
+CREATE INDEX IF NOT EXISTS user_document_chunks_user_conversation_idx
+  ON public.user_document_chunks (user_id, conversation_id);
+
+-- Correct RPC: when p_conversation_id is supplied, restrict to that
+-- conversation's chunks only. NULL conversation_id rows (legacy orphans)
+-- are never returned when a real conversation ID is passed.
 CREATE OR REPLACE FUNCTION public.search_user_document_chunks(
   p_user_id          uuid,
   query_embedding    vector(1536),
@@ -41,8 +53,7 @@ AS $$
 $$;
 
 -- Legacy orphan cleanup (OPTIONAL — destructive, review before running).
--- Rows uploaded before 0017 have conversation_id = NULL and are not reachable
--- under the corrected scoping. Uncomment the DELETE below to evict them, or
--- run it manually once verified.
+-- Rows with conversation_id = NULL are not reachable under the corrected
+-- scoping. Uncomment to evict them, or run manually once verified.
 --
 -- DELETE FROM public.user_document_chunks WHERE conversation_id IS NULL;
