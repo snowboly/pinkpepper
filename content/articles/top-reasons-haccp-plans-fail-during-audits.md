@@ -1,7 +1,7 @@
 ---
-title: "Top Reasons HACCP Plans Fail During Audits: A Scientific Analysis"
+title: "Why HACCP Plans Fail Audits and What to Fix First"
 slug: "top-reasons-haccp-plans-fail-during-audits"
-excerpt: "HACCP plans often fail audits due to common pitfalls, highlighting the need for food businesses to enhance compliance with regulatory standards."
+excerpt: "The most common reasons HACCP plans fail audits, from copied flow diagrams to weak monitoring records, and the first fixes worth making."
 category: "Compliance"
 publishedAt: "2025-12-09"
 image: "https://images.pexels.com/photos/5953751/pexels-photo-5953751.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"

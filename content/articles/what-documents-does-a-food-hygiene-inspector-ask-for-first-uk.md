@@ -101,3 +101,10 @@ source: "pinkpepper"
 
 <h2>Final takeaway</h2>
 <p>If you are asking <strong>what documents does a food hygiene inspector ask for first in the UK</strong>, focus on the documents that prove your food safety system is active, current, and used in real life: your main food safety system, temperature checks, routine monitoring records, and allergen information. If those are organised and up to date, the inspection usually starts from a much stronger position.</p>
+
+<h2>Next step</h2>
+<ul>
+  <li><strong>Read next:</strong> <a href="/articles/what-regulators-really-expect-from-small-food-businesses">What UK food inspectors actually expect from a small food business</a></li>
+  <li><strong>Use this template:</strong> <a href="/resources/food-safety-document-checklist">Food safety document checklist</a></li>
+  <li><strong>Create a free account:</strong> Keep your key food safety records, checks, and answers in one place before inspection day.</li>
+</ul>

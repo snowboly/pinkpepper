@@ -1,7 +1,7 @@
 ---
-title: "Allergen Management Within HACCP Plans: A Practical Guide for EU/UK Food Businesses"
+title: "How to Build Allergen Control Into Your HACCP Plan"
 slug: "allergen-management-within-haccp-plans"
-excerpt: "Allergen mismanagement is the leading cause of food recalls worldwide. Learn how to correctly integrate allergen management into your HACCP plan—distinguishing PRPs from CCPs—and meet EU and UK regulatory expectations."
+excerpt: "Learn how to build allergen control into HACCP without treating everything as a CCP, and what records and site controls matter most in practice."
 category: "Compliance"
 publishedAt: "2025-09-30"
 image: "https://images.pexels.com/photos/5953835/pexels-photo-5953835.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
@@ -284,6 +284,13 @@ source: "ilovehaccp"
     </tr>
   </tbody>
 </table>
+
+<h2>Next step</h2>
+<ul>
+  <li><strong>Read next:</strong> <a href="/articles/what-regulators-really-expect-from-small-food-businesses">What UK food inspectors actually expect from a small food business</a></li>
+  <li><strong>Use this template:</strong> <a href="/resources/allergen-matrix-template">Allergen matrix template</a></li>
+  <li><strong>Create a free account:</strong> Organise allergen information, updates, and supporting records more clearly.</li>
+</ul>
 
 <h2>Key Takeaways for Your HACCP Plan</h2>
 

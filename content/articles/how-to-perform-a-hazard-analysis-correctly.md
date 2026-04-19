@@ -1,7 +1,7 @@
 ---
-title: "Mastering Hazard Analysis: A Complete Guide for Food Safety Success"
+title: "How to Perform a HACCP Hazard Analysis That Actually Holds Up"
 slug: "how-to-perform-a-hazard-analysis-correctly"
-excerpt: "Mastering Hazard Analysis: A Complete Guide for Food Safety Success: practical HACCP controls, records, and audit-focused actions for food businesses unde."
+excerpt: "A practical guide to hazard analysis that helps you identify real hazards, justify your decisions, and avoid the weak logic auditors challenge first."
 category: "Fundamentals"
 publishedAt: "2025-12-01"
 image: "https://images.pexels.com/photos/35492405/pexels-photo-35492405.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"

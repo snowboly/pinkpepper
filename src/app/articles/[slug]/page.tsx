@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
     title: `${article.title} | PinkPepper`,
     description: article.excerpt,
     alternates: {
-      canonical: `https://pinkpepper.io/articles/${article.slug}`,
+      canonical: `https://www.pinkpepper.io/articles/${article.slug}`,
     },
   };
 }
@@ -70,7 +70,7 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
     },
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `https://pinkpepper.io/articles/${article.slug}`,
+      "@id": `https://www.pinkpepper.io/articles/${article.slug}`,
     },
     ...(article.image ? { image: article.image } : {}),
   };
