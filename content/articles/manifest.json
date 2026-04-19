@@ -1,5 +1,13 @@
 [
   {
+    "title": "What Documents Does a Food Hygiene Inspector Ask for First in the UK?",
+    "slug": "what-documents-does-a-food-hygiene-inspector-ask-for-first-uk",
+    "excerpt": "A practical guide to the records and checks UK food hygiene inspectors usually ask for first, from your food safety system and temperature logs to allergen and cleaning records.",
+    "category": "Compliance",
+    "publishedAt": "2026-04-19",
+    "source": "pinkpepper"
+  },
+  {
     "title": "HACCP for Indian Restaurants and Curry Houses: A Complete EU Compliance Guide",
     "slug": "haccp-for-indian-restaurants-and-curry-houses-eu",
     "excerpt": "Practitioner-level HACCP guide for Indian Restaurants and Curry Houses in the EU/UK. Covers Bacillus cereus, specific CCPs, audit tips, and a daily checklist for EC 852/2004 compliance.",
@@ -279,9 +287,9 @@
     "source": "ilovehaccp"
   },
   {
-    "title": "Beyond the Score: The Real Consequences of a Failed HACCP Inspection in the UK and EU",
+    "title": "What Happens If You Fail a HACCP Inspection in the UK?",
     "slug": "failed-haccp-inspection-consequences-uk",
-    "excerpt": "A failed HACCP inspection triggers far more than a poor hygiene rating. From emergency prohibition notices to criminal prosecution and retailer delisting, here is a comprehensive breakdown of what happens when food safety compliance breaks down.",
+    "excerpt": "What a failed HACCP inspection can lead to in the UK, from improvement action and lost confidence to serious enforcement where food safety control breaks down.",
     "category": "Compliance",
     "publishedAt": "2026-01-13",
     "image": "https://images.pexels.com/photos/8853502/pexels-photo-8853502.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
@@ -369,18 +377,18 @@
     "source": "ilovehaccp"
   },
   {
-    "title": "Temperature Control in HACCP: Limits, Monitoring, and Corrective Action",
+    "title": "Temperature Control in HACCP: Safe Limits, Monitoring, and What to Record",
     "slug": "temperature-control-in-haccp-limits-and-monitoring",
-    "excerpt": "Temperature Control in HACCP: Limits, Monitoring, and Corrective Action: practical HACCP controls, records, and audit-focused actions for food businesses.",
+    "excerpt": "A practical guide to HACCP temperature control, including safe limits, monitoring routines, corrective actions, and the records teams actually need.",
     "category": "Compliance",
     "publishedAt": "2025-12-27",
     "image": "https://images.pexels.com/photos/6004155/pexels-photo-6004155.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
     "source": "ilovehaccp"
   },
   {
-    "title": "The Danger Zone Sprint: Mastering Cooling and Reheating as HACCP High-Risk Steps",
+    "title": "Cooling and Reheating Food Safely: The HACCP Checks That Matter Most",
     "slug": "cooling-and-reheating-haccp-high-risk-steps",
-    "excerpt": "Cooling and reheating are the moments where food safety either succeeds or fails catastrophically. This guide covers the 90-minute critical limit, the one-reheat rule, high-risk food scenarios, and the validation evidence UK and EU auditors now expect.",
+    "excerpt": "A practical guide to cooling and reheating high-risk foods, including the checks, records, and common failures that matter most in real HACCP plans.",
     "category": "Operations",
     "publishedAt": "2025-12-25",
     "image": "https://images.pexels.com/photos/35535653/pexels-photo-35535653.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
@@ -405,27 +413,27 @@
     "source": "ilovehaccp"
   },
   {
-    "title": "Top Reasons HACCP Plans Fail During Audits: A Scientific Analysis",
+    "title": "Why HACCP Plans Fail Audits and What to Fix First",
     "slug": "top-reasons-haccp-plans-fail-during-audits",
-    "excerpt": "HACCP plans often fail audits due to common pitfalls, highlighting the need for food businesses to enhance compliance with regulatory standards.",
+    "excerpt": "The most common reasons HACCP plans fail audits, from copied flow diagrams to weak monitoring records, and the first fixes worth making.",
     "category": "Compliance",
     "publishedAt": "2025-12-09",
     "image": "https://images.pexels.com/photos/5953751/pexels-photo-5953751.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
     "source": "ilovehaccp"
   },
   {
-    "title": "Mastering Critical Control Points (CCPs) in Food Safety Management: A Comprehensive Guide",
+    "title": "How to Identify Critical Control Points Without Overcomplicating HACCP",
     "slug": "identifying-critical-control-points-in-food-safety",
-    "excerpt": "Understand the importance of Critical Control Points (CCPs) in food safety to prevent foodborne illnesses within the HACCP framework.",
+    "excerpt": "Learn how to identify genuine CCPs, avoid turning routine controls into CCPs, and keep your HACCP plan practical enough to use on site.",
     "category": "Fundamentals",
     "publishedAt": "2025-12-03",
     "image": "https://images.pexels.com/photos/5953502/pexels-photo-5953502.jpeg?auto=compress&cs=tinysrgb&w=1600&q=80",
     "source": "ilovehaccp"
   },
   {
-    "title": "Mastering Hazard Analysis: A Complete Guide for Food Safety Success",
+    "title": "How to Perform a HACCP Hazard Analysis That Actually Holds Up",
     "slug": "how-to-perform-a-hazard-analysis-correctly",
-    "excerpt": "Mastering Hazard Analysis: A Complete Guide for Food Safety Success: practical HACCP controls, records, and audit-focused actions for food businesses unde.",
+    "excerpt": "A practical guide to hazard analysis that helps you identify real hazards, justify your decisions, and avoid the weak logic auditors challenge first.",
     "category": "Fundamentals",
     "publishedAt": "2025-12-01",
     "image": "https://images.pexels.com/photos/35492405/pexels-photo-35492405.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
@@ -441,9 +449,9 @@
     "source": "ilovehaccp"
   },
   {
-    "title": "How to Create a HACCP Plan Step by Step (UK and EU Practical Guide)",
+    "title": "How to Create a HACCP Plan Step by Step for a Small Food Business",
     "slug": "how-to-create-a-haccp-plan-step-by-step",
-    "excerpt": "A step-by-step HACCP guide for small food businesses in the UK and EU, detailing necessary records and audit-ready documentation.",
+    "excerpt": "A practical step-by-step HACCP guide for small food businesses that need a plan matching real operations, records, and day-to-day controls.",
     "category": "Compliance",
     "publishedAt": "2025-11-26",
     "image": "https://images.pexels.com/photos/6004239/pexels-photo-6004239.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
@@ -477,9 +485,9 @@
     "source": "ilovehaccp"
   },
   {
-    "title": "HACCP for Small Food Businesses UK: What Inspectors Actually Expect",
+    "title": "What UK Food Inspectors Actually Expect From a Small Food Business",
     "slug": "what-regulators-really-expect-from-small-food-businesses",
-    "excerpt": "This guide helps small food business owners understand HACCP requirements and what Environmental Health Officers expect during inspections.",
+    "excerpt": "A realistic guide to what Environmental Health Officers expect from small food businesses, including records, staff answers, and practical proof of control.",
     "category": "Compliance",
     "publishedAt": "2025-10-15",
     "image": "https://images.pexels.com/photos/8477052/pexels-photo-8477052.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
@@ -513,9 +521,9 @@
     "source": "ilovehaccp"
   },
   {
-    "title": "Allergen Management Within HACCP Plans: A Practical Guide for EU/UK Food Businesses",
+    "title": "How to Build Allergen Control Into Your HACCP Plan",
     "slug": "allergen-management-within-haccp-plans",
-    "excerpt": "Allergen mismanagement is the leading cause of food recalls worldwide. Learn how to correctly integrate allergen management into your HACCP plan—distinguishing PRPs from CCPs—and meet EU and UK regulatory expectations.",
+    "excerpt": "Learn how to build allergen control into HACCP without treating everything as a CCP, and what records and site controls matter most in practice.",
     "category": "Compliance",
     "publishedAt": "2025-09-30",
     "image": "https://images.pexels.com/photos/5953835/pexels-photo-5953835.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
