@@ -1,7 +1,7 @@
 ---
-title: "HACCP for Small Food Businesses UK: What Inspectors Actually Expect"
+title: "What UK Food Inspectors Actually Expect From a Small Food Business"
 slug: "what-regulators-really-expect-from-small-food-businesses"
-excerpt: "This guide helps small food business owners understand HACCP requirements and what Environmental Health Officers expect during inspections."
+excerpt: "A realistic guide to what Environmental Health Officers expect from small food businesses, including records, staff answers, and practical proof of control."
 category: "Compliance"
 publishedAt: "2025-10-15"
 image: "https://images.pexels.com/photos/8477052/pexels-photo-8477052.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
@@ -108,6 +108,13 @@ source: "ilovehaccp"
     </tr>
   </tbody>
 </table>
+
+<h2>Next step</h2>
+<ul>
+  <li><strong>Read next:</strong> <a href="/articles/what-documents-does-a-food-hygiene-inspector-ask-for-first-uk">What documents a food hygiene inspector asks for first in the UK</a></li>
+  <li><strong>Use this template:</strong> <a href="/resources/food-safety-audit-checklist">Food safety audit checklist</a></li>
+  <li><strong>Create a free account:</strong> Organise your compliance checks and tighten the gaps inspectors notice first.</li>
+</ul>
 
 <h2>The bottom line</h2>
 

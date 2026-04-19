@@ -1,7 +1,7 @@
 ---
-title: "How to Create a HACCP Plan Step by Step (UK and EU Practical Guide)"
+title: "How to Create a HACCP Plan Step by Step for a Small Food Business"
 slug: "how-to-create-a-haccp-plan-step-by-step"
-excerpt: "A step-by-step HACCP guide for small food businesses in the UK and EU, detailing necessary records and audit-ready documentation."
+excerpt: "A practical step-by-step HACCP guide for small food businesses that need a plan matching real operations, records, and day-to-day controls."
 category: "Compliance"
 publishedAt: "2025-11-26"
 image: "https://images.pexels.com/photos/6004239/pexels-photo-6004239.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"

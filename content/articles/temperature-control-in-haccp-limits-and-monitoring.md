@@ -1,7 +1,7 @@
 ---
-title: "Temperature Control in HACCP: Limits, Monitoring, and Corrective Action"
+title: "Temperature Control in HACCP: Safe Limits, Monitoring, and What to Record"
 slug: "temperature-control-in-haccp-limits-and-monitoring"
-excerpt: "Temperature Control in HACCP: Limits, Monitoring, and Corrective Action: practical HACCP controls, records, and audit-focused actions for food businesses."
+excerpt: "A practical guide to HACCP temperature control, including safe limits, monitoring routines, corrective actions, and the records teams actually need."
 category: "Compliance"
 publishedAt: "2025-12-27"
 image: "https://images.pexels.com/photos/6004155/pexels-photo-6004155.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
@@ -46,5 +46,12 @@ source: "ilovehaccp"
 <h3>Related resources</h3>
 <ul><li><a href="/resources/cooling-and-reheating-haccp-high-risk-steps">Cooling and reheating high-risk steps</a></li><li><a href="/resources/haccp-monitoring-record-templates">HACCP monitoring record templates</a></li></ul>
 <p>Temperature control works when it is simple and repeatable. Keep limits visible at stations and make corrective actions non-negotiable.</p>
+
+<h2>Next step</h2>
+<ul>
+  <li><strong>Read next:</strong> <a href="/articles/cooling-and-reheating-haccp-high-risk-steps">Cooling and reheating food safely: the HACCP checks that matter most</a></li>
+  <li><strong>Use this template:</strong> <a href="/resources/temperature-monitoring-log-template">Temperature monitoring log</a></li>
+  <li><strong>Create a free account:</strong> Track temperature checks, corrective actions, and daily records in one workflow.</li>
+</ul>
 
 

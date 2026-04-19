@@ -1,7 +1,7 @@
 ---
-title: "Beyond the Score: The Real Consequences of a Failed HACCP Inspection in the UK and EU"
+title: "What Happens If You Fail a HACCP Inspection in the UK?"
 slug: "failed-haccp-inspection-consequences-uk"
-excerpt: "A failed HACCP inspection triggers far more than a poor hygiene rating. From emergency prohibition notices to criminal prosecution and retailer delisting, here is a comprehensive breakdown of what happens when food safety compliance breaks down."
+excerpt: "What a failed HACCP inspection can lead to in the UK, from improvement action and lost confidence to serious enforcement where food safety control breaks down."
 category: "Compliance"
 publishedAt: "2026-01-13"
 image: "https://images.pexels.com/photos/8853502/pexels-photo-8853502.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"

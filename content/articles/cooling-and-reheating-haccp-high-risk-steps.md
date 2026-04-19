@@ -1,7 +1,7 @@
 ---
-title: "The Danger Zone Sprint: Mastering Cooling and Reheating as HACCP High-Risk Steps"
+title: "Cooling and Reheating Food Safely: The HACCP Checks That Matter Most"
 slug: "cooling-and-reheating-haccp-high-risk-steps"
-excerpt: "Cooling and reheating are the moments where food safety either succeeds or fails catastrophically. This guide covers the 90-minute critical limit, the one-reheat rule, high-risk food scenarios, and the validation evidence UK and EU auditors now expect."
+excerpt: "A practical guide to cooling and reheating high-risk foods, including the checks, records, and common failures that matter most in real HACCP plans."
 category: "Operations"
 publishedAt: "2025-12-25"
 image: "https://images.pexels.com/photos/35535653/pexels-photo-35535653.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
@@ -140,6 +140,13 @@ source: "ilovehaccp"
 </ul>
 
 <blockquote><strong>Key Principle:</strong> The regulatory expectation in the UK and EU has shifted from "Did you cook it?" to "Can you prove how quickly you cooled it?" The only acceptable defence is a stopwatch and a calibrated probe.</blockquote>
+
+<h2>Next step</h2>
+<ul>
+  <li><strong>Read next:</strong> <a href="/articles/temperature-control-in-haccp-limits-and-monitoring">Temperature control in HACCP: safe limits, monitoring, and what to record</a></li>
+  <li><strong>Use this template:</strong> <a href="/resources/temperature-monitoring-log-template">Temperature monitoring log</a></li>
+  <li><strong>Create a free account:</strong> Keep cooling, reheating, and temperature checks consistent across every shift.</li>
+</ul>
 
 <h2>Summary: What Your HACCP Plan Must Reflect</h2>
 
