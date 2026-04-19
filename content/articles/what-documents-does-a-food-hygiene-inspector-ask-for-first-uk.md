@@ -4,6 +4,7 @@ slug: "what-documents-does-a-food-hygiene-inspector-ask-for-first-uk"
 excerpt: "A practical guide to the records and checks UK food hygiene inspectors usually ask for first, from your food safety system and temperature logs to allergen and cleaning records."
 category: "Compliance"
 publishedAt: "2026-04-19"
+image: "https://images.pexels.com/photos/8477052/pexels-photo-8477052.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
 source: "pinkpepper"
 ---
 
@@ -32,7 +33,7 @@ source: "pinkpepper"
 
 <p>Good records do more than show numbers. They show that staff noticed issues and responded properly. For example, a note explaining that a fridge was running warm, stock was checked, the door was adjusted, and the unit was rechecked later is far more credible than a page of identical figures with no variation at all.</p>
 
-<p>For chilled storage, the legal maximum is commonly discussed as <strong>8C</strong>, but many businesses aim to operate closer to <strong>5C</strong> in normal conditions. The important point is not just the number itself. It is whether you know your limits, monitor them consistently, and act when something goes wrong. If you need a cleaner format, a <a href="/resources/temperature-monitoring-log-template">temperature monitoring log template</a> is a practical starting point.</p>
+<p>For chilled storage, the legal maximum is commonly discussed as <strong>8°C</strong>, but many businesses aim to operate closer to <strong>5°C</strong> in normal conditions. The important point is not just the number itself. It is whether you know your limits, monitor them consistently, and act when something goes wrong. If you need a cleaner format, a <a href="/resources/temperature-monitoring-log-template">temperature monitoring log template</a> is a practical starting point.</p>
 
 <h3>Hot holding, cooling, and reheating records</h3>
 <p>If your business hot holds food, cools cooked food for later use, or reheats prepared items, inspectors are likely to ask how you control those steps and what evidence you keep. These are high-risk areas because poor time and temperature control can allow harmful bacteria to grow.</p>
