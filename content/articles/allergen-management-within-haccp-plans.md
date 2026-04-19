@@ -289,7 +289,7 @@ source: "ilovehaccp"
 <ul>
   <li><strong>Read next:</strong> <a href="/articles/what-regulators-really-expect-from-small-food-businesses">What UK food inspectors actually expect from a small food business</a></li>
   <li><strong>Use this template:</strong> <a href="/resources/allergen-matrix-template">Allergen matrix template</a></li>
-  <li><strong>Create a free account:</strong> Organise allergen information, updates, and supporting records more clearly.</li>
+  <li><strong>Create a free account:</strong> <a href="/signup">Organise allergen information, updates, and supporting records more clearly.</a></li>
 </ul>
 
 <h2>Key Takeaways for Your HACCP Plan</h2>

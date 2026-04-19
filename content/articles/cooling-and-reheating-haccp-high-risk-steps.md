@@ -145,7 +145,7 @@ source: "ilovehaccp"
 <ul>
   <li><strong>Read next:</strong> <a href="/articles/temperature-control-in-haccp-limits-and-monitoring">Temperature control in HACCP: safe limits, monitoring, and what to record</a></li>
   <li><strong>Use this template:</strong> <a href="/resources/temperature-monitoring-log-template">Temperature monitoring log</a></li>
-  <li><strong>Create a free account:</strong> Keep cooling, reheating, and temperature checks consistent across every shift.</li>
+  <li><strong>Create a free account:</strong> <a href="/signup">Keep cooling, reheating, and temperature checks consistent across every shift.</a></li>
 </ul>
 
 <h2>Summary: What Your HACCP Plan Must Reflect</h2>

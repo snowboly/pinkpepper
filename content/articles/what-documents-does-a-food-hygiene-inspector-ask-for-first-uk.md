@@ -106,5 +106,5 @@ source: "pinkpepper"
 <ul>
   <li><strong>Read next:</strong> <a href="/articles/what-regulators-really-expect-from-small-food-businesses">What UK food inspectors actually expect from a small food business</a></li>
   <li><strong>Use this template:</strong> <a href="/resources/food-safety-document-checklist">Food safety document checklist</a></li>
-  <li><strong>Create a free account:</strong> Keep your key food safety records, checks, and answers in one place before inspection day.</li>
+  <li><strong>Create a free account:</strong> <a href="/signup">Keep your key food safety records, checks, and answers in one place before inspection day.</a></li>
 </ul>
