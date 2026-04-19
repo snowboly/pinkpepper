@@ -377,5 +377,21 @@ describe("premium quality regressions", () => {
     expect(upgradeModal).toContain("checkoutInFlight.current = true;");
     expect(upgradeModal).toContain("checkoutInFlight.current = false;");
   });
+
+  it("makes article next-step account CTAs clickable signup links", () => {
+    const articlePaths = [
+      "content/articles/what-documents-does-a-food-hygiene-inspector-ask-for-first-uk.md",
+      "content/articles/what-regulators-really-expect-from-small-food-businesses.md",
+      "content/articles/cooling-and-reheating-haccp-high-risk-steps.md",
+      "content/articles/temperature-control-in-haccp-limits-and-monitoring.md",
+      "content/articles/allergen-management-within-haccp-plans.md",
+    ];
+
+    for (const articlePath of articlePaths) {
+      const article = readPage(articlePath);
+
+      expect(article).toContain('href="/signup"');
+    }
+  });
 });
 

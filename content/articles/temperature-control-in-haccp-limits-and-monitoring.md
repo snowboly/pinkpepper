@@ -51,7 +51,7 @@ source: "ilovehaccp"
 <ul>
   <li><strong>Read next:</strong> <a href="/articles/cooling-and-reheating-haccp-high-risk-steps">Cooling and reheating food safely: the HACCP checks that matter most</a></li>
   <li><strong>Use this template:</strong> <a href="/resources/temperature-monitoring-log-template">Temperature monitoring log</a></li>
-  <li><strong>Create a free account:</strong> Track temperature checks, corrective actions, and daily records in one workflow.</li>
+  <li><strong>Create a free account:</strong> <a href="/signup">Track temperature checks, corrective actions, and daily records in one workflow.</a></li>
 </ul>
 
 

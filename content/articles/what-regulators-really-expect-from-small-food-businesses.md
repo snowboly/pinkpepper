@@ -113,7 +113,7 @@ source: "ilovehaccp"
 <ul>
   <li><strong>Read next:</strong> <a href="/articles/what-documents-does-a-food-hygiene-inspector-ask-for-first-uk">What documents a food hygiene inspector asks for first in the UK</a></li>
   <li><strong>Use this template:</strong> <a href="/resources/food-safety-audit-checklist">Food safety audit checklist</a></li>
-  <li><strong>Create a free account:</strong> Organise your compliance checks and tighten the gaps inspectors notice first.</li>
+  <li><strong>Create a free account:</strong> <a href="/signup">Organise your compliance checks and tighten the gaps inspectors notice first.</a></li>
 </ul>
 
 <h2>The bottom line</h2>
