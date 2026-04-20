@@ -1,13 +1,13 @@
 import { MetadataRoute } from "next";
 import { getArticleManifest } from "@/lib/articles";
-import { publicLaunchLocales, publicRoutePaths } from "@/i18n/public";
+import { publicContentRoutePaths, publicLaunchLocales } from "@/i18n/public";
 import { localizePublicPath } from "@/lib/public-routes";
 
 const BASE_URL = "https://www.pinkpepper.io";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const articles = await getArticleManifest().catch(() => []);
-  const localizedPublicEntries = publicRoutePaths.flatMap((path) =>
+  const localizedPublicEntries = publicContentRoutePaths.flatMap((path) =>
     publicLaunchLocales.map((locale) => ({
       url: `${BASE_URL}${localizePublicPath(locale, path)}`,
       lastModified: new Date("2026-04-20"),

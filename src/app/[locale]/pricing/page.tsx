@@ -18,4 +18,15 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return buildPublicMetadata(locale, "/pricing", pricingMetadata);
 }
 
-export default PricingPage;
+export default async function LocalizedPricingPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  if (!isPublicLocale(locale)) {
+    notFound();
+  }
+
+  return <PricingPage locale={locale} />;
+}
