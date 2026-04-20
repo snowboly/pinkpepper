@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Terms of Service | PinkPepper",
@@ -61,7 +62,7 @@ export default function TermsPage() {
           <h2 className="mb-3 text-xl font-semibold text-[#0F172A]">4. Acceptable use</h2>
           <p>
             Your use of the Service is subject to our{" "}
-            <a href="/legal/acceptable-use" className="text-[#E11D48] hover:underline">Acceptable Use Policy</a>,
+            <Link href="/legal/acceptable-use" className="text-[#E11D48] hover:underline">Acceptable Use Policy</Link>,
             which is incorporated into these Terms by reference. In summary, you may not use the Service for
             illegal, abusive, or harmful purposes, or attempt to bypass usage limits or disrupt the Service.
           </p>
@@ -71,7 +72,7 @@ export default function TermsPage() {
           <h2 className="mb-3 text-xl font-semibold text-[#0F172A]">5. Subscriptions, fees, and billing</h2>
           <ul className="list-disc space-y-2 pl-6">
             <li>PinkPepper offers a free tier and paid subscription plans (&quot;Plus&quot; and &quot;Pro&quot;). Pricing is displayed on the{" "}
-              <a href="/pricing" className="text-[#E11D48] hover:underline">Pricing page</a>.
+              <Link href="/pricing" className="text-[#E11D48] hover:underline">Pricing page</Link>.
             </li>
             <li>Prices are stated exclusive of VAT. VAT is applied at checkout based on your location.</li>
             <li>Subscriptions are billed monthly in advance via Stripe. Your subscription renews automatically at the end of each billing period.</li>
@@ -85,7 +86,7 @@ export default function TermsPage() {
           <p>
             You may cancel your subscription at any time from the billing portal in your dashboard. Cancellation
             takes effect at the end of the current billing period. Your refund rights are set out in our{" "}
-            <a href="/legal/refund" className="text-[#E11D48] hover:underline">Refund Policy</a>.
+            <Link href="/legal/refund" className="text-[#E11D48] hover:underline">Refund Policy</Link>.
           </p>
         </section>
 
@@ -163,7 +164,7 @@ export default function TermsPage() {
           </p>
           <p className="mt-3">
             Upon termination, your access to the Service ceases. Data deletion follows the schedule in our{" "}
-            <a href="/legal/privacy" className="text-[#E11D48] hover:underline">Privacy Policy</a>.
+            <Link href="/legal/privacy" className="text-[#E11D48] hover:underline">Privacy Policy</Link>.
           </p>
         </section>
 

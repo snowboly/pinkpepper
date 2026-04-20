@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Data Processing Agreement | PinkPepper",
@@ -44,7 +45,7 @@ export default function DpaPage() {
           <p>
             PinkPepper processes personal data on behalf of the Controller solely to provide the PinkPepper
             service as described in the{" "}
-            <a href="/legal/terms" className="text-[#E11D48] hover:underline">Terms of Service</a>. Processing
+            <Link href="/legal/terms" className="text-[#E11D48] hover:underline">Terms of Service</Link>. Processing
             continues for the duration of the Controller&apos;s subscription and ceases when the account is closed
             or this DPA is terminated.
           </p>
@@ -91,14 +92,14 @@ export default function DpaPage() {
             <li>Process personal data only on documented instructions from the Controller (i.e., use of the Service), unless required by law.</li>
             <li>Ensure that persons authorised to process personal data are bound by confidentiality obligations.</li>
             <li>Implement appropriate technical and organisational security measures as described in our{" "}
-              <a href="/security" className="text-[#E11D48] hover:underline">Security page</a>.
+              <Link href="/security" className="text-[#E11D48] hover:underline">Security page</Link>.
             </li>
             <li>Not engage new subprocessors without giving the Controller prior notice (at least 14 days) and an opportunity to object.</li>
             <li>Assist the Controller in responding to data subject rights requests to the extent technically feasible.</li>
             <li>Notify the Controller without undue delay (within 72 hours of becoming aware) of a personal data breach affecting Controller data.</li>
             <li>Provide reasonable assistance with the Controller&apos;s GDPR obligations including DPIAs where applicable.</li>
             <li>Upon termination, delete or return all personal data in accordance with our{" "}
-              <a href="/legal/privacy" className="text-[#E11D48] hover:underline">Privacy Policy</a> retention schedules.
+              <Link href="/legal/privacy" className="text-[#E11D48] hover:underline">Privacy Policy</Link> retention schedules.
             </li>
           </ul>
         </section>
@@ -195,7 +196,7 @@ export default function DpaPage() {
           </ul>
           <p className="mt-3">
             Further detail is available on our{" "}
-            <a href="/security" className="text-[#E11D48] hover:underline">Security page</a>. PinkPepper will
+            <Link href="/security" className="text-[#E11D48] hover:underline">Security page</Link>. PinkPepper will
             review these measures periodically and update them to reflect the evolving state of the art and
             the risks posed to the rights and freedoms of data subjects.
           </p>

@@ -3,11 +3,15 @@
 import Link from "next/link";
 import { FormEvent, useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import { createClient } from "@/utils/supabase/client";
+import { usePathname } from "next/navigation";
+import { type PublicLocale } from "@/i18n/public";
+import { getPublicPageHref, isPublicLocale } from "@/lib/public-routes";
 import { validatePassword } from "@/lib/password";
+import { createClient } from "@/utils/supabase/client";
 
 export default function SignupPage() {
   const searchParams = useSearchParams();
+  const pathname = usePathname();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -19,6 +23,11 @@ export default function SignupPage() {
   const [signupDone, setSignupDone] = useState(false);
   const [resendLoading, setResendLoading] = useState(false);
   const [resendMessage, setResendMessage] = useState<string | null>(null);
+  const currentLocale = (() => {
+    const maybeLocale = pathname.split("/").filter(Boolean)[0];
+    return isPublicLocale(maybeLocale ?? "") ? (maybeLocale as PublicLocale) : "en";
+  })();
+  const loginHref = getPublicPageHref(currentLocale, "/login");
 
   useEffect(() => {
     if (searchParams.get("error") === "confirm_email") {
@@ -217,7 +226,7 @@ export default function SignupPage() {
               )}
 
               <p className="mt-4 text-sm text-[#6B6B6B]">
-                Already have an account? <Link href="/login" className="underline">Log in</Link>
+                Already have an account? <Link href={loginHref} className="underline">Log in</Link>
               </p>
             </>
           )}

@@ -162,7 +162,7 @@ export default function AllergenDocumentationPage() {
 
             <p>If it isn&rsquo;t written down, it didn&rsquo;t happen. And in the case of allergens, if it didn&rsquo;t happen on paper, the law presumes it didn&rsquo;t happen in the kitchen.</p>
 
-            <p><a href="/signup">Start building your allergen documentation pack today.</a></p>
+            <p><Link href="/signup">Start building your allergen documentation pack today.</Link></p>
 
           </div>
         </div>

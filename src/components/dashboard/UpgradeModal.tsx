@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { track } from "@vercel/analytics";
@@ -146,9 +147,9 @@ export default function UpgradeModal({ trigger, currentTier, onClose }: UpgradeM
         {error && <p className="px-6 pb-4 text-xs text-[#E11D48]">{error}</p>}
 
         <div className="border-t border-[#E2E8F0] px-6 py-3 flex items-center justify-between">
-          <a href="/pricing" className="text-xs text-[#64748B] hover:text-[#0F172A] underline">
+          <Link href="/pricing" className="text-xs text-[#64748B] hover:text-[#0F172A] underline">
             {t("compareAllPlans")}
-          </a>
+          </Link>
           <button onClick={onClose} className="text-xs text-[#94A3B8] hover:text-[#64748B]">
             {t("maybeLater")}
           </button>

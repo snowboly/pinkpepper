@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { createClient } from "@/utils/supabase/client";
@@ -335,12 +336,12 @@ export default function SettingsForm({
             {t("billingDescription")}
           </p>
           <div className="flex gap-2">
-            <a
+            <Link
               href="/pricing"
               className="rounded-xl border border-[#E2E8F0] px-4 py-2 text-sm text-[#64748B] hover:bg-[#F8F9FB] transition-colors"
             >
               {t("viewPlans")}
-            </a>
+            </Link>
             {tier !== "free" && (
               <ManageBillingButton />
             )}

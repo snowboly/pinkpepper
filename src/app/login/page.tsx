@@ -2,14 +2,18 @@
 
 import Link from "next/link";
 import { FormEvent, useEffect, useState } from "react";
-import { createClient } from "@/utils/supabase/client";
+import { usePathname } from "next/navigation";
+import { type PublicLocale } from "@/i18n/public";
+import { getPublicPageHref, isPublicLocale } from "@/lib/public-routes";
 import {
   getLoginFlashErrorMessage,
   getSafeNextPath,
   LoginEmailCodePanel,
 } from "./login-flow";
+import { createClient } from "@/utils/supabase/client";
 
 export default function LoginPage() {
+  const pathname = usePathname();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState<string | null>(null);
@@ -22,6 +26,11 @@ export default function LoginPage() {
   const [resendLoading, setResendLoading] = useState(false);
   const [nextPath, setNextPath] = useState("/dashboard");
   const [flashError, setFlashError] = useState<string | null>(null);
+  const currentLocale = (() => {
+    const maybeLocale = pathname.split("/").filter(Boolean)[0];
+    return isPublicLocale(maybeLocale ?? "") ? (maybeLocale as PublicLocale) : "en";
+  })();
+  const signupHref = getPublicPageHref(currentLocale, "/signup");
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -223,7 +232,7 @@ export default function LoginPage() {
 
           <div className="mt-4 flex items-center justify-between text-sm text-[#6B6B6B]">
             <Link href="/forgot-password" className="underline">Forgot password?</Link>
-            <Link href="/signup" className="underline">Create account</Link>
+            <Link href={signupHref} className="underline">Create account</Link>
           </div>
         </div>
       </div>

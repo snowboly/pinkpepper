@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useTranslations } from "next-intl";
 
 type ReviewModalProps = {
@@ -46,12 +47,12 @@ export default function ReviewModal({
           <h3 className="mb-2 text-lg font-semibold text-[#0F172A]">{t("submitted")}</h3>
           <p className="mb-4 text-sm text-[#64748B]">{t("submittedBody")}</p>
           <div className="flex flex-col gap-2">
-            <a
+            <Link
               href="/dashboard/reviews"
               className="inline-block rounded-full bg-[#E11D48] px-4 py-2 text-sm font-semibold text-white hover:bg-[#BE123C]"
             >
               {t("trackReviews")}
-            </a>
+            </Link>
             <button
               onClick={onClose}
               className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 text-sm text-[#64748B] hover:bg-[#F8F9FB]"

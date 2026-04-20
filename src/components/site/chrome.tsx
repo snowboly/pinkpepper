@@ -1,26 +1,18 @@
 import Image from "next/image";
 import Link from "next/link";
-import { createClient } from "@/utils/supabase/server";
-import { NavDropdown } from "@/components/site/NavDropdown";
+import { getLocale } from "next-intl/server";
 import { AccountDropdown } from "@/components/site/AccountDropdown";
+import { LocaleSwitcher } from "@/components/site/LocaleSwitcher";
+import { NavDropdown } from "@/components/site/NavDropdown";
+import { type PublicLocale } from "@/i18n/public";
+import { getPublicMessages, getPublicPageHref, isPublicLocale } from "@/lib/public-routes";
+import { createClient } from "@/utils/supabase/server";
 
 type NavItem =
   | { href: string; label: string }
   | { label: string; children: { href: string; label: string }[] };
 
-const nav: NavItem[] = [
-  {
-    label: "Resources",
-    children: [
-      { href: "/resources", label: "Free Templates" },
-      { href: "/articles", label: "Articles" },
-      { href: "/faqs", label: "FAQs" },
-    ],
-  },
-  { href: "/pricing", label: "Pricing" },
-  { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
-];
+const DEFAULT_BRAND_BLURB = "AI food safety compliance software for EU and UK food businesses.";
 
 function getUserInitials(email: string | null | undefined, fullName: string | null | undefined) {
   if (fullName) {
@@ -32,6 +24,28 @@ function getUserInitials(email: string | null | undefined, fullName: string | nu
   return "U";
 }
 
+async function getChromeContext() {
+  const locale = await getLocale();
+  const publicLocale: PublicLocale = isPublicLocale(locale) ? locale : "en";
+  const messages = await getPublicMessages(publicLocale);
+
+  const nav: NavItem[] = [
+    {
+      label: messages.chrome.nav.resources,
+      children: [
+        { href: getPublicPageHref(publicLocale, "/resources"), label: messages.chrome.nav.freeTemplates },
+        { href: getPublicPageHref(publicLocale, "/articles"), label: messages.chrome.nav.articles },
+        { href: getPublicPageHref(publicLocale, "/faqs"), label: messages.chrome.nav.faqs },
+      ],
+    },
+    { href: getPublicPageHref(publicLocale, "/pricing"), label: messages.chrome.nav.pricing },
+    { href: getPublicPageHref(publicLocale, "/about"), label: messages.chrome.nav.about },
+    { href: getPublicPageHref(publicLocale, "/contact"), label: messages.chrome.nav.contact },
+  ];
+
+  return { messages, nav, publicLocale };
+}
+
 export async function SiteHeader() {
   let user = null;
   try {
@@ -41,16 +55,21 @@ export async function SiteHeader() {
   } catch {
     // Supabase env vars unavailable during build-time prerendering; show logged-out state.
   }
+
+  const { messages, nav, publicLocale } = await getChromeContext();
   const fullName =
     (typeof user?.user_metadata?.full_name === "string" ? user.user_metadata.full_name : null) ??
     (typeof user?.user_metadata?.name === "string" ? user.user_metadata.name : null);
   const initials = getUserInitials(user?.email, fullName);
+  const homeHref = getPublicPageHref(publicLocale, "/");
+  const loginHref = getPublicPageHref(publicLocale, "/login");
+  const signupHref = getPublicPageHref(publicLocale, "/signup");
 
   return (
     <header className="site-header sticky top-0 z-50 border-b border-[#E2E8F0]/80 bg-white/75 backdrop-blur-xl">
       <div className="pp-container flex h-14 items-center justify-between md:h-16">
         <div className="flex items-center gap-8 lg:gap-12">
-          <Link href="/" className="flex items-center leading-none">
+          <Link href={homeHref} className="flex items-center leading-none">
             <Image
               src="/logo/LogoV3.png"
               alt="PinkPepper"
@@ -84,6 +103,11 @@ export async function SiteHeader() {
           </nav>
         </div>
         <div className="flex items-center gap-3 md:gap-4">
+          <LocaleSwitcher
+            currentLocale={publicLocale}
+            label={messages.chrome.localeSwitcher.label}
+            currentLabel={messages.chrome.localeSwitcher.current}
+          />
           <details className="relative lg:hidden">
             <summary
               aria-label="Open navigation menu"
@@ -131,16 +155,16 @@ export async function SiteHeader() {
                 {!user && (
                   <>
                     <Link
-                      href="/login"
+                      href={loginHref}
                       className="rounded-2xl px-3 py-3 text-sm font-medium text-[#0F172A] hover:bg-[#F8FAFC]"
                     >
-                      Log in
+                      {messages.chrome.nav.login}
                     </Link>
                     <Link
-                      href="/signup"
+                      href={signupHref}
                       className="pp-interactive mt-2 rounded-2xl bg-[#E11D48] px-3 py-3 text-center text-sm font-semibold text-white hover:bg-[#BE123C]"
                     >
-                      Get started
+                      {messages.chrome.nav.getStarted}
                     </Link>
                   </>
                 )}
@@ -152,16 +176,16 @@ export async function SiteHeader() {
           ) : (
             <>
               <Link
-                href="/login"
+                href={loginHref}
                 className="hidden text-sm font-semibold text-[#64748B] transition-all duration-200 hover:text-[#0F172A] sm:block"
               >
-                Log in
+                {messages.chrome.nav.login}
               </Link>
               <Link
-                href="/signup"
+                href={signupHref}
                 className="pp-interactive rounded-full bg-[#E11D48] px-4 py-2 text-sm font-semibold text-white hover:bg-[#BE123C] hover:shadow-lg hover:shadow-[#E11D48]/30 active:scale-[0.97] md:px-5 md:py-2.5"
               >
-                Get started
+                {messages.chrome.nav.getStarted}
               </Link>
             </>
           )}
@@ -171,12 +195,15 @@ export async function SiteHeader() {
   );
 }
 
-export function SiteFooter() {
+export async function SiteFooter() {
+  const { messages, publicLocale } = await getChromeContext();
+  const homeHref = getPublicPageHref(publicLocale, "/");
+
   return (
     <footer className="site-footer border-t border-[#F1F5F9] bg-[linear-gradient(180deg,#fff_0%,#fff7f8_100%)] py-16">
       <div className="pp-container mb-12 grid gap-12 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1.5fr]">
         <div>
-          <Link href="/" className="inline-flex items-center leading-none">
+          <Link href={homeHref} className="inline-flex items-center leading-none">
             <Image
               src="/logo/LogoV3.png"
               alt="PinkPepper"
@@ -186,7 +213,7 @@ export function SiteFooter() {
             />
           </Link>
           <p className="mt-4 text-sm leading-relaxed text-[#6B6B6B]">
-            AI food safety compliance software for EU and UK food businesses.
+            {messages.chrome.footer.brandBlurb || DEFAULT_BRAND_BLURB}
           </p>
           <div className="mt-5 flex items-center gap-3">
             <a
@@ -203,39 +230,39 @@ export function SiteFooter() {
           </div>
         </div>
         <div>
-          <h4 className="mb-4 text-sm font-semibold text-[#1A1A1A]">Product</h4>
+          <h4 className="mb-4 text-sm font-semibold text-[#1A1A1A]">{messages.chrome.footer.productHeading}</h4>
           <ul className="space-y-3 text-sm text-[#6B6B6B]">
-            <li><Link href="/pricing" className="pp-shell-link">Pricing</Link></li>
-            <li><Link href="/about" className="pp-shell-link">About</Link></li>
-            <li><Link href="/login" className="pp-shell-link">Log In</Link></li>
-            <li><Link href="/signup" className="pp-shell-link">Create Account</Link></li>
+            <li><Link href={getPublicPageHref(publicLocale, "/pricing")} className="pp-shell-link">{messages.chrome.nav.pricing}</Link></li>
+            <li><Link href={getPublicPageHref(publicLocale, "/about")} className="pp-shell-link">{messages.chrome.nav.about}</Link></li>
+            <li><Link href={getPublicPageHref(publicLocale, "/login")} className="pp-shell-link">{messages.chrome.nav.login}</Link></li>
+            <li><Link href={getPublicPageHref(publicLocale, "/signup")} className="pp-shell-link">{messages.chrome.footer.createAccount}</Link></li>
           </ul>
         </div>
         <div>
-          <h4 className="mb-4 text-sm font-semibold text-[#1A1A1A]">Resources</h4>
+          <h4 className="mb-4 text-sm font-semibold text-[#1A1A1A]">{messages.chrome.footer.resourcesHeading}</h4>
           <ul className="space-y-3 text-sm text-[#6B6B6B]">
-            <li><Link href="/resources" className="pp-shell-link">Free Templates</Link></li>
-            <li><Link href="/articles" className="pp-shell-link">Articles</Link></li>
-            <li><Link href="/faqs" className="pp-shell-link">FAQs</Link></li>
-            <li><Link href="/contact" className="pp-shell-link">Contact & Support</Link></li>
+            <li><Link href={getPublicPageHref(publicLocale, "/resources")} className="pp-shell-link">{messages.chrome.nav.freeTemplates}</Link></li>
+            <li><Link href={getPublicPageHref(publicLocale, "/articles")} className="pp-shell-link">{messages.chrome.nav.articles}</Link></li>
+            <li><Link href={getPublicPageHref(publicLocale, "/faqs")} className="pp-shell-link">{messages.chrome.nav.faqs}</Link></li>
+            <li><Link href={getPublicPageHref(publicLocale, "/contact")} className="pp-shell-link">{messages.chrome.footer.contactSupport}</Link></li>
           </ul>
         </div>
         <div>
-          <h4 className="mb-4 text-sm font-semibold text-[#1A1A1A]">Security & Legal</h4>
+          <h4 className="mb-4 text-sm font-semibold text-[#1A1A1A]">{messages.chrome.footer.legalHeading}</h4>
           <ul className="space-y-3 text-sm text-[#6B6B6B]">
-            <li><Link href="/security" className="pp-shell-link">Security</Link></li>
-            <li><Link href="/legal/terms" className="pp-shell-link">Terms of Service</Link></li>
-            <li><Link href="/legal/privacy" className="pp-shell-link">Privacy Policy</Link></li>
-            <li><Link href="/legal/cookies" className="pp-shell-link">Cookie Policy</Link></li>
-            <li><Link href="/legal/dpa" className="pp-shell-link">DPA</Link></li>
-            <li><Link href="/legal/acceptable-use" className="pp-shell-link">Acceptable Use</Link></li>
-            <li><Link href="/legal/refund" className="pp-shell-link">Refund Policy</Link></li>
+            <li><Link href={getPublicPageHref(publicLocale, "/security")} className="pp-shell-link">{messages.chrome.footer.security}</Link></li>
+            <li><Link href={getPublicPageHref(publicLocale, "/legal/terms")} className="pp-shell-link">{messages.chrome.footer.terms}</Link></li>
+            <li><Link href={getPublicPageHref(publicLocale, "/legal/privacy")} className="pp-shell-link">{messages.chrome.footer.privacy}</Link></li>
+            <li><Link href={getPublicPageHref(publicLocale, "/legal/cookies")} className="pp-shell-link">{messages.chrome.footer.cookies}</Link></li>
+            <li><Link href={getPublicPageHref(publicLocale, "/legal/dpa")} className="pp-shell-link">{messages.chrome.footer.dpa}</Link></li>
+            <li><Link href={getPublicPageHref(publicLocale, "/legal/acceptable-use")} className="pp-shell-link">{messages.chrome.footer.acceptableUse}</Link></li>
+            <li><Link href={getPublicPageHref(publicLocale, "/legal/refund")} className="pp-shell-link">{messages.chrome.footer.refund}</Link></li>
           </ul>
         </div>
       </div>
       <div className="pp-container border-t border-[#F1F5F9] pt-8">
         <div className="flex flex-col items-center justify-between gap-4 text-center text-sm text-[#9B9B9B] md:flex-row md:text-left">
-          <p>&copy; {new Date().getFullYear()} PinkPepper.io. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} PinkPepper.io. {messages.chrome.footer.rightsReserved}</p>
         </div>
       </div>
     </footer>

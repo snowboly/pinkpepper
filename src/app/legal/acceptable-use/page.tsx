@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Acceptable Use Policy | PinkPepper",
@@ -22,7 +23,7 @@ export default function AcceptableUsePage() {
           <p>
             This Acceptable Use Policy (&quot;AUP&quot;) sets out the rules for using PinkPepper. It applies to all users
             and is incorporated into our{" "}
-            <a href="/legal/terms" className="text-[#E11D48] hover:underline">Terms of Service</a>. Using PinkPepper
+            <Link href="/legal/terms" className="text-[#E11D48] hover:underline">Terms of Service</Link>. Using PinkPepper
             means you agree to this AUP.
           </p>
         </section>
@@ -62,7 +63,7 @@ export default function AcceptableUsePage() {
             Each account is for a single named user. You must not share your account credentials with others
             or allow others to access the Service through your account. Team access plans may be offered in
             future; check the{" "}
-            <a href="/pricing" className="text-[#E11D48] hover:underline">Pricing page</a> for current options.
+            <Link href="/pricing" className="text-[#E11D48] hover:underline">Pricing page</Link> for current options.
           </p>
         </section>
 

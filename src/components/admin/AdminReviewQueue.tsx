@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState, useEffect, useCallback } from "react";
 
 type ReviewRequest = {
@@ -145,7 +146,7 @@ export default function AdminReviewQueue() {
       <header className="sticky top-0 z-10 border-b border-[#E2E8F0] bg-white px-6 py-4">
         <div className="mx-auto flex max-w-4xl items-center justify-between">
           <div className="flex items-center gap-3">
-            <a href="/admin" className="text-[#64748B] hover:text-[#0F172A] text-sm">&larr; Dashboard</a>
+            <Link href="/admin" className="text-[#64748B] hover:text-[#0F172A] text-sm">&larr; Dashboard</Link>
             <h1 className="text-xl font-semibold text-[#0F172A]">Review Queue</h1>
             <span className="rounded-full bg-[#F1F5F9] px-2 py-0.5 text-xs text-[#64748B]">{total} total</span>
           </div>
