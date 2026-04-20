@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { publicLaunchLocales, publicRoutePaths } from "@/i18n/public";
+import { resolveRequestLocale } from "@/i18n/request";
 import { isPublicLocale, localizePublicPath } from "@/lib/public-routes";
 
 describe("public locale config", () => {
@@ -15,5 +16,11 @@ describe("public locale config", () => {
     expect(isPublicLocale("es")).toBe(false);
     expect(localizePublicPath("fr", "/")).toBe("/fr");
     expect(localizePublicPath("pt", "/pricing")).toBe("/pt/pricing");
+  });
+
+  it("prefers a valid route locale over the cookie locale", () => {
+    expect(resolveRequestLocale({ routeLocale: "fr", cookieLocale: "de" })).toBe("fr");
+    expect(resolveRequestLocale({ routeLocale: null, cookieLocale: "pt" })).toBe("pt");
+    expect(resolveRequestLocale({ routeLocale: null, cookieLocale: "bad" })).toBe("en");
   });
 });
