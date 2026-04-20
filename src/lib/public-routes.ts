@@ -1,11 +1,38 @@
-import { publicLaunchLocales, type PublicLocale } from "@/i18n/public";
+import { publicLaunchLocales, publicRoutePaths, type PublicLocale } from "@/i18n/public";
 
 type PublicMessages = Record<string, unknown>;
 export type PublicMessagesDictionary = {
   chrome: {
     nav: {
+      resources: string;
+      freeTemplates: string;
+      articles: string;
+      faqs: string;
       pricing: string;
       about: string;
+      contact: string;
+      login: string;
+      getStarted: string;
+    };
+    footer: {
+      brandBlurb: string;
+      productHeading: string;
+      resourcesHeading: string;
+      legalHeading: string;
+      createAccount: string;
+      contactSupport: string;
+      security: string;
+      terms: string;
+      privacy: string;
+      cookies: string;
+      dpa: string;
+      acceptableUse: string;
+      refund: string;
+      rightsReserved: string;
+    };
+    localeSwitcher: {
+      label: string;
+      current: string;
     };
   };
 };
@@ -16,6 +43,22 @@ export function isPublicLocale(value: string): value is PublicLocale {
 
 export function localizePublicPath(locale: PublicLocale, path: string) {
   return path === "/" ? `/${locale}` : `/${locale}${path}`;
+}
+
+export function getPublicPageHref(locale: PublicLocale, path: string) {
+  return publicRoutePaths.includes(path as (typeof publicRoutePaths)[number])
+    ? localizePublicPath(locale, path)
+    : path;
+}
+
+export function switchPublicLocale(currentPath: string, locale: PublicLocale) {
+  const segments = currentPath.split("/").filter(Boolean);
+  const hasLocalePrefix = segments.length > 0 && isPublicLocale(segments[0] ?? "");
+  const pathWithoutLocale = hasLocalePrefix
+    ? `/${segments.slice(1).join("/")}` || "/"
+    : currentPath || "/";
+
+  return getPublicPageHref(locale, pathWithoutLocale);
 }
 
 function mergeMessages(base: PublicMessages, override: PublicMessages): PublicMessages {

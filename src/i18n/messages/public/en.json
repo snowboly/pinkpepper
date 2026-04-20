@@ -1,8 +1,35 @@
 {
   "chrome": {
     "nav": {
+      "resources": "Resources",
+      "freeTemplates": "Free Templates",
+      "articles": "Articles",
+      "faqs": "FAQs",
       "pricing": "Pricing",
-      "about": "About"
+      "about": "About",
+      "contact": "Contact",
+      "login": "Log in",
+      "getStarted": "Get started"
+    },
+    "footer": {
+      "brandBlurb": "AI food safety compliance software for EU and UK food businesses.",
+      "productHeading": "Product",
+      "resourcesHeading": "Resources",
+      "legalHeading": "Security & Legal",
+      "createAccount": "Create Account",
+      "contactSupport": "Contact & Support",
+      "security": "Security",
+      "terms": "Terms of Service",
+      "privacy": "Privacy Policy",
+      "cookies": "Cookie Policy",
+      "dpa": "DPA",
+      "acceptableUse": "Acceptable Use",
+      "refund": "Refund Policy",
+      "rightsReserved": "All rights reserved."
+    },
+    "localeSwitcher": {
+      "label": "Language",
+      "current": "Current"
     }
   }
 }

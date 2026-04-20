@@ -1,8 +1,35 @@
 {
   "chrome": {
     "nav": {
+      "resources": "Recursos",
+      "freeTemplates": "Modelos gratuitos",
+      "articles": "Artigos",
+      "faqs": "FAQs",
       "pricing": "Preços",
-      "about": "Sobre"
+      "about": "Sobre",
+      "contact": "Contacto",
+      "login": "Entrar",
+      "getStarted": "Começar"
+    },
+    "footer": {
+      "brandBlurb": "Software de conformidade em segurança alimentar para empresas alimentares da UE e do Reino Unido.",
+      "productHeading": "Produto",
+      "resourcesHeading": "Recursos",
+      "legalHeading": "Segurança e legal",
+      "createAccount": "Criar conta",
+      "contactSupport": "Contacto e suporte",
+      "security": "Segurança",
+      "terms": "Termos de serviço",
+      "privacy": "Política de privacidade",
+      "cookies": "Política de cookies",
+      "dpa": "DPA",
+      "acceptableUse": "Utilização aceitável",
+      "refund": "Política de reembolso",
+      "rightsReserved": "Todos os direitos reservados."
+    },
+    "localeSwitcher": {
+      "label": "Idioma",
+      "current": "Atual"
     }
   }
 }

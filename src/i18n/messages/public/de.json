@@ -1,8 +1,35 @@
 {
   "chrome": {
     "nav": {
+      "resources": "Ressourcen",
+      "freeTemplates": "Kostenlose Vorlagen",
+      "articles": "Artikel",
+      "faqs": "FAQs",
       "pricing": "Preise",
-      "about": "Über uns"
+      "about": "Über uns",
+      "contact": "Kontakt",
+      "login": "Anmelden",
+      "getStarted": "Loslegen"
+    },
+    "footer": {
+      "brandBlurb": "Software für Lebensmittelkonformität für Lebensmittelbetriebe in der EU und im Vereinigten Königreich.",
+      "productHeading": "Produkt",
+      "resourcesHeading": "Ressourcen",
+      "legalHeading": "Sicherheit und Recht",
+      "createAccount": "Konto erstellen",
+      "contactSupport": "Kontakt und Support",
+      "security": "Sicherheit",
+      "terms": "Nutzungsbedingungen",
+      "privacy": "Datenschutz",
+      "cookies": "Cookie-Richtlinie",
+      "dpa": "DPA",
+      "acceptableUse": "Akzeptable Nutzung",
+      "refund": "Rückerstattungsrichtlinie",
+      "rightsReserved": "Alle Rechte vorbehalten."
+    },
+    "localeSwitcher": {
+      "label": "Sprache",
+      "current": "Aktuell"
     }
   }
 }

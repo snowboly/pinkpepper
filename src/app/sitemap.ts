@@ -1,13 +1,24 @@
 import { MetadataRoute } from "next";
 import { getArticleManifest } from "@/lib/articles";
+import { publicLaunchLocales, publicRoutePaths } from "@/i18n/public";
+import { localizePublicPath } from "@/lib/public-routes";
 
 const BASE_URL = "https://www.pinkpepper.io";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const articles = await getArticleManifest().catch(() => []);
+  const localizedPublicEntries = publicRoutePaths.flatMap((path) =>
+    publicLaunchLocales.map((locale) => ({
+      url: `${BASE_URL}${localizePublicPath(locale, path)}`,
+      lastModified: new Date("2026-04-20"),
+      changeFrequency: path === "/" ? ("weekly" as const) : ("monthly" as const),
+      priority: path === "/" ? 0.9 : 0.7,
+    })),
+  );
 
   return [
     { url: BASE_URL, lastModified: new Date("2026-03-18"), changeFrequency: "weekly", priority: 1 },
+    ...localizedPublicEntries,
     { url: `${BASE_URL}/about`, lastModified: new Date("2026-03-18"), changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE_URL}/features/haccp-plan-generator`, lastModified: new Date("2026-03-14"), changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE_URL}/features/allergen-documentation`, lastModified: new Date("2026-03-14"), changeFrequency: "monthly", priority: 0.8 },

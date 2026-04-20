@@ -174,6 +174,9 @@ describe("SEO surface", () => {
     });
 
     expect(entries).toContain("https://www.pinkpepper.io/resources");
+    expect(entries).toContain("https://www.pinkpepper.io/fr");
+    expect(entries).toContain("https://www.pinkpepper.io/pt/pricing");
+    expect(entries).toContain("https://www.pinkpepper.io/de/features/haccp-plan-generator");
     expect(entries).not.toContain("https://www.pinkpepper.io/login");
     expect(entries).not.toContain("https://www.pinkpepper.io/dashboard");
     expect(disallowLists).toEqual(

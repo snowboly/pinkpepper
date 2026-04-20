@@ -17,10 +17,11 @@ export function resolveRequestLocale(input: {
   return defaultLocale;
 }
 
-export default getRequestConfig(async () => {
+export default getRequestConfig(async ({ requestLocale }) => {
   const cookieStore = await cookies();
   const raw = cookieStore.get("locale")?.value;
-  const locale = resolveRequestLocale({ cookieLocale: raw });
+  const routeLocale = await requestLocale;
+  const locale = resolveRequestLocale({ routeLocale, cookieLocale: raw });
   const messages = (await import(`./messages/${locale}.json`)).default;
   return { locale, messages };
 });
