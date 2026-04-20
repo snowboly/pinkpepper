@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { Analytics } from "@vercel/analytics/next";
 
@@ -46,12 +47,12 @@ export function CookieBanner() {
               We use essential cookies to keep PinkPepper running, and optional
               analytics cookies (Vercel Analytics) to understand how you use the
               product - no personal data is collected.{" "}
-              <a
+              <Link
                 href="/legal/cookies"
                 className="font-medium text-[#E11D48] underline underline-offset-2 hover:no-underline"
               >
                 Cookie Policy
-              </a>
+              </Link>
             </p>
             <div className="grid flex-shrink-0 grid-cols-2 gap-2 sm:flex sm:items-center sm:justify-end sm:gap-3">
               <button

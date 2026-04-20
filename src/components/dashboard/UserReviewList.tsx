@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState, useEffect, useCallback } from "react";
 
 type ReviewRequest = {
@@ -98,7 +99,7 @@ export default function UserReviewList() {
       <header className="sticky top-0 z-10 border-b border-[#E2E8F0] bg-white px-6 py-4">
         <div className="mx-auto flex max-w-3xl items-center justify-between">
           <div className="flex items-center gap-3">
-            <a href="/dashboard" className="text-[#64748B] hover:text-[#0F172A] text-sm">&larr; Dashboard</a>
+            <Link href="/dashboard" className="text-[#64748B] hover:text-[#0F172A] text-sm">&larr; Dashboard</Link>
             <h1 className="text-xl font-semibold text-[#0F172A]">My Reviews</h1>
           </div>
         </div>

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
 import SettingsForm from "@/components/dashboard/SettingsForm";
@@ -57,7 +58,7 @@ export default async function SettingsPage() {
     <div className="min-h-screen bg-[#F8F9FB] py-10 px-4">
       <div className="mx-auto max-w-xl">
         <div className="mb-6">
-          <a
+          <Link
             href="/dashboard"
             className="inline-flex items-center gap-1.5 text-sm text-[#64748B] hover:text-[#0F172A] transition-colors"
           >
@@ -65,7 +66,7 @@ export default async function SettingsPage() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
             Back to chat
-          </a>
+          </Link>
         </div>
 
         <h1 className="text-xl font-semibold text-[#0F172A] mb-6">Account Settings</h1>

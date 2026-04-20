@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Privacy Policy | PinkPepper",
@@ -36,7 +37,7 @@ export default function PrivacyPage() {
             <li><strong>Account data:</strong> email address, name, and password (hashed) when you register.</li>
             <li><strong>Billing data:</strong> payment method details and billing address, processed by Stripe. We do not store card numbers.</li>
             <li><strong>Usage data:</strong> chat messages, uploaded images, generated documents, conversation history, and usage counters (message counts, export counts).</li>
-            <li><strong>Technical data:</strong> IP address, browser type, device identifiers, log data, and cookies. See our <a href="/legal/cookies" className="text-[#E11D48] hover:underline">Cookie Policy</a>.</li>
+            <li><strong>Technical data:</strong> IP address, browser type, device identifiers, log data, and cookies. See our <Link href="/legal/cookies" className="text-[#E11D48] hover:underline">Cookie Policy</Link>.</li>
             <li><strong>Communications:</strong> messages you send to us via the contact form or email.</li>
           </ul>
         </section>
@@ -230,7 +231,7 @@ export default function PrivacyPage() {
           <p>
             We implement appropriate technical and organisational measures to protect your personal data including
             TLS encryption in transit, AES-256 encryption at rest, row-level security in our database, and restricted
-            access controls. See our <a href="/security" className="text-[#E11D48] hover:underline">Security page</a> for
+            access controls. See our <Link href="/security" className="text-[#E11D48] hover:underline">Security page</Link> for
             full details.
           </p>
         </section>
@@ -240,7 +241,7 @@ export default function PrivacyPage() {
           <p>
             We use essential cookies for authentication and session management, and a preference cookie to store your
             cookie consent choice. See our{" "}
-            <a href="/legal/cookies" className="text-[#E11D48] hover:underline">Cookie Policy</a> for the full inventory.
+            <Link href="/legal/cookies" className="text-[#E11D48] hover:underline">Cookie Policy</Link> for the full inventory.
           </p>
         </section>
 

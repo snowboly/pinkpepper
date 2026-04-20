@@ -231,7 +231,7 @@ export default function HaccpPlanGeneratorPage() {
 
             <p>You don&rsquo;t have to face the HACCP plan alone. Whether you&rsquo;re a startup seeking EHO approval or an established manufacturer preparing for BRCGS, PinkPepper gives you the structure, speed, and expert backup to build a plan you can defend with confidence.</p>
 
-            <p><a href="/signup">Start building your HACCP plan today.</a></p>
+            <p><Link href="/signup">Start building your HACCP plan today.</Link></p>
 
           </div>
         </div>

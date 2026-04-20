@@ -172,7 +172,7 @@ export default function FoodManufacturingUseCasePage() {
 
             <p>Your team has food safety questions every day. PinkPepper ensures they get the <strong>right</strong> answers — fast, documented, and defensible.</p>
 
-            <p><a href="/signup">Start your free trial</a> or <a href="/pricing">compare plans</a> to see which tier fits your team&rsquo;s volume and review needs.</p>
+            <p><Link href="/signup">Start your free trial</Link> or <Link href="/pricing">compare plans</Link> to see which tier fits your team&rsquo;s volume and review needs.</p>
 
           </div>
         </div>
