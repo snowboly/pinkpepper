@@ -5,6 +5,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 import sitemap from "@/app/sitemap";
 import robots from "@/app/robots";
+import { buildPublicMetadata } from "@/lib/seo/public-metadata";
 
 const readPage = (relativePath: string) => readFileSync(join(process.cwd(), relativePath), "utf8");
 
@@ -118,6 +119,21 @@ function expectLink(markup: string, href: string, label?: string) {
 }
 
 describe("SEO surface", () => {
+  it("builds locale alternates for phase-1 public pages", () => {
+    const metadata = buildPublicMetadata("fr", "/pricing", {
+      title: "Tarifs",
+      description: "Description",
+    });
+
+    expect(metadata.alternates?.canonical).toBe("https://www.pinkpepper.io/fr/pricing");
+    expect(metadata.alternates?.languages).toEqual({
+      en: "https://www.pinkpepper.io/en/pricing",
+      fr: "https://www.pinkpepper.io/fr/pricing",
+      de: "https://www.pinkpepper.io/de/pricing",
+      pt: "https://www.pinkpepper.io/pt/pricing",
+    });
+  });
+
   it("uses the Phase 1 compliance software positioning in shared metadata", () => {
     const layout = readPage("src/app/layout.tsx");
 

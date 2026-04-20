@@ -1,6 +1,14 @@
 import { publicLaunchLocales, type PublicLocale } from "@/i18n/public";
 
 type PublicMessages = Record<string, unknown>;
+export type PublicMessagesDictionary = {
+  chrome: {
+    nav: {
+      pricing: string;
+      about: string;
+    };
+  };
+};
 
 export function isPublicLocale(value: string): value is PublicLocale {
   return publicLaunchLocales.includes(value as PublicLocale);
@@ -33,12 +41,12 @@ function mergeMessages(base: PublicMessages, override: PublicMessages): PublicMe
   return merged;
 }
 
-export async function getPublicMessages(locale: PublicLocale) {
-  const english = (await import("@/i18n/messages/public/en.json")).default as PublicMessages;
+export async function getPublicMessages(locale: PublicLocale): Promise<PublicMessagesDictionary> {
+  const english = (await import("@/i18n/messages/public/en.json")).default as PublicMessagesDictionary;
   if (locale === "en") {
     return english;
   }
 
   const localized = (await import(`@/i18n/messages/public/${locale}.json`)).default as PublicMessages;
-  return mergeMessages(english, localized);
+  return mergeMessages(english as PublicMessages, localized) as PublicMessagesDictionary;
 }
