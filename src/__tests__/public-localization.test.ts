@@ -1,7 +1,12 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { publicLaunchLocales, publicRoutePaths } from "@/i18n/public";
+import {
+  publicAuthRoutePaths,
+  publicContentRoutePaths,
+  publicLaunchLocales,
+  publicRoutePaths,
+} from "@/i18n/public";
 import { resolveRequestLocale } from "@/i18n/request";
 import {
   getPublicMessages,
@@ -19,6 +24,14 @@ describe("public locale config", () => {
     expect(publicRoutePaths).toContain("/");
     expect(publicRoutePaths).toContain("/pricing");
     expect(publicRoutePaths).not.toContain("/articles");
+  });
+
+  it("keeps noindex auth routes out of the indexable sitemap route list", () => {
+    expect(publicAuthRoutePaths).toEqual(["/signup", "/login"]);
+    for (const authPath of publicAuthRoutePaths) {
+      expect(publicContentRoutePaths).not.toContain(authPath);
+      expect(publicRoutePaths).toContain(authPath);
+    }
   });
 
   it("identifies public locales and localizes public paths", () => {
