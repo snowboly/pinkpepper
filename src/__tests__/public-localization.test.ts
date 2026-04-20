@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { publicLaunchLocales, publicRoutePaths } from "@/i18n/public";
 import { resolveRequestLocale } from "@/i18n/request";
-import { isPublicLocale, localizePublicPath } from "@/lib/public-routes";
+import { getPublicMessages, isPublicLocale, localizePublicPath } from "@/lib/public-routes";
 
 describe("public locale config", () => {
   it("limits phase 1 public routing to en, fr, de, and pt", () => {
@@ -22,5 +22,12 @@ describe("public locale config", () => {
     expect(resolveRequestLocale({ routeLocale: "fr", cookieLocale: "de" })).toBe("fr");
     expect(resolveRequestLocale({ routeLocale: null, cookieLocale: "pt" })).toBe("pt");
     expect(resolveRequestLocale({ routeLocale: null, cookieLocale: "bad" })).toBe("en");
+  });
+
+  it("falls back to English when a public message key is missing", async () => {
+    const messages = await getPublicMessages("fr");
+
+    expect(messages.chrome.nav.pricing).toBe("Tarifs");
+    expect(messages.chrome.nav.about).toBe("About");
   });
 });
