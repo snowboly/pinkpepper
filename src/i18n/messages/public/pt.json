@@ -32,6 +32,134 @@
       "current": "Atual"
     }
   },
+  "home": {
+    "heroBadge": "Criado para a regulamentação alimentar da UE e do Reino Unido",
+    "heroTitle": "Planos HACCP, SOPs e preparação para auditorias em minutos - não em semanas.",
+    "heroDescription": "O PinkPepper é software de conformidade em segurança alimentar com IA e poupa à sua equipa mais de 10 horas por semana em documentação. Obtenha respostas ancoradas na regulamentação, gere registos prontos para auditoria e escale para consultores humanos quando o risco aumenta.",
+    "eurLexLabel": "Dados regulamentares fornecidos por",
+    "trustCards": {
+      "groundedTitle": "Assente em mais de 35 regulamentos da UE e do Reino Unido",
+      "groundedBody": "Cada resposta referencia o CE 852/2004, orientações da FSA do Reino Unido, Codex HACCP e muito mais - não texto genérico de IA retirado da web.",
+      "timeSavedTitle": "Poupe mais de 10 horas todas as semanas",
+      "timeSavedBody": "Gere planos HACCP, SOPs, matrizes de alergénios e registos prontos para auditoria em minutos, em vez de começar de páginas em branco.",
+      "humanTitle": "Consultores humanos quando realmente importa",
+      "humanBody": "Trate a conformidade rotineira com IA e escale para profissionais qualificados de segurança alimentar nas revisões e validações de maior risco."
+    },
+    "workflows": {
+      "eyebrow": "Feito para operadores no terreno",
+      "title": "O que o PinkPepper ajuda a sua equipa a fazer",
+      "body": "De notas em bruto a trabalho de conformidade pronto para revisão, o PinkPepper foi concebido para encurtar o tempo entre um problema de segurança alimentar e algo que a sua equipa pode realmente usar.",
+      "answerTitle": "Responder mais depressa a questões de conformidade",
+      "answerBody": "Obtenha respostas ancoradas na regulamentação, sustentadas pelo CE 852/2004, orientações da FSA do Reino Unido e referências do Codex HACCP.",
+      "buildTitle": "Criar HACCP e preparação de auditoria mais depressa",
+      "buildBody": "Passe da análise de perigos e lógica CCP para preparação de inspeções e ações corretivas sem começar do zero.",
+      "reuseTitle": "Reutilizar modelos e exportar com clareza",
+      "reuseBody": "Descarregue modelos estruturados e exporte o trabalho das conversas num formato mais fácil de rever e entregar.",
+      "switchTitle": "Mudar de Consultor para Auditor quando o trabalho muda",
+      "switchBody": "Comece com orientação prática no modo Consultor, passe para conclusões baseadas em evidência no modo Auditor e escale para consultoria humana apenas quando a revisão especializada for mesmo necessária."
+    },
+    "value": {
+      "eyebrow": "Valor acrescentado",
+      "title": "Conformidade com IA, com especialistas quando é preciso",
+      "body": "O PinkPepper dá à sua equipa duas formas de trabalhar: Consultor para respostas e decisões, Auditor para conclusões formais e CAPA. A consultoria humana continua disponível para o trabalho que realmente precisa de revisão especializada.",
+      "consultantTitle": "Consultor + Auditor",
+      "consultantSubtitle": "Dois modos, um só workflow",
+      "consultantBody": "O Consultor trata de questões práticas e próximos passos. O Auditor trata de conclusões estruturadas, lacunas de evidência e CAPA. Consultores humanos entram apenas quando é necessária uma verdadeira revisão especializada.",
+      "timeSavedTitle": "+2h por dia",
+      "timeSavedSubtitle": "Mais de 10 horas poupadas por semana",
+      "timeSavedBody": "Os responsáveis de segurança alimentar passam normalmente 30-40% do dia em documentação e administração de conformidade. O PinkPepper reduz essa carga para que a sua equipa se foque na operação, não na papelada.",
+      "savingsTitle": "18 000 EUR+",
+      "savingsSubtitle": "Poupados por ano em custos de conformidade",
+      "savingsBody": "Reduza despesa reativa com consultores substituindo avenças horárias ad hoc por escalas dirigidas para especialistas. A 150 EUR/hora, evitar 120 horas de consultoria desnecessária cobre esta poupança."
+    },
+    "pricing": {
+      "title": "Preços que acompanham o trabalho de conformidade",
+      "body": "Comece grátis para questões em direto, passe para Plus para uso Consultor mais intensivo e escolha Pro quando quiser modo Auditor e consultoria humana.",
+      "fullPricingLabel": "Ver preços completos",
+      "freeDescription": "Ideal para testar a adequação com questões reais e verificações do dia a dia antes de se comprometer.",
+      "plusDescription": "Para equipas que usam o PinkPepper diariamente para HACCP, SOPs, registos de alergénios e modelos descarregáveis.",
+      "proDescription": "Para equipas que querem ambos os modos de IA, workflows de auditoria mais fortes e consultoria humana para trabalho de maior risco.",
+      "monthLabel": "/mês",
+      "monthVatLabel": "/mês + IVA",
+      "freeFeatures": [
+        "Chat na web e no telemóvel (app em breve)",
+        "Escrever, editar e criar conteúdo de segurança alimentar",
+        "Analisar texto e imagens",
+        "Acesso a base de conhecimento curada",
+        "Orientação diária de conformidade"
+      ],
+      "plusFeatures": [
+        "Tudo o que está no Free",
+        "Uso Consultor mais intenso no dia a dia",
+        "Limites diários de utilização mais altos",
+        "Conversas e projetos guardados ilimitados",
+        "Acesso a modelos descarregáveis"
+      ],
+      "proFeatures": [
+        "Tudo o que está no Plus",
+        "Mais capacidade para trabalho de maior risco",
+        "Limites diários máximos",
+        "Acesso ao modo Auditor",
+        "2h/mês de consultoria humana em segurança alimentar",
+        "Suporte prioritário"
+      ],
+      "freeCta": "Começar grátis",
+      "plusCta": "Escolher Plus",
+      "proCta": "Escolher Pro",
+      "mostPopular": "Mais popular"
+    },
+    "library": {
+      "eyebrow": "Da biblioteca",
+      "title": "Artigos, guias e modelos",
+      "haccpLinkLabel": "Gerador de plano HACCP",
+      "browseAllLabel": "Ver tudo"
+    },
+    "specialists": {
+      "eyebrow": "Os seus especialistas",
+      "title": "Seis especialistas. Uma subscrição.",
+      "body": "Cada conversa no PinkPepper é tratada por um dos nossos seis especialistas de IA em segurança alimentar. Cada um tem uma abordagem distinta - desde checklists passo a passo até resumos executivos diretos - para lhe dar o tom certo em cada situação.",
+      "subBody": "Atribuição automática. Mesma conversa, mesmo especialista.",
+      "supportive": "Apoiadora",
+      "direct": "Direto",
+      "methodical": "Metódica",
+      "mentor": "Mentor",
+      "reassuring": "Tranquilizadora",
+      "proBadge": "Pro",
+      "leadAuditor": "Auditor principal",
+      "leadAuditorBody": "Apenas no modo Auditor. Conclusões baseadas em evidência, níveis de gravidade e ações corretivas."
+    },
+    "faq": {
+      "title": "Perguntas frequentes",
+      "body": "Respostas claras sobre produto, conformidade e responsabilidades antes de integrar o PinkPepper no seu workflow.",
+      "items": [
+        {
+          "question": "O PinkPepper é apenas mais um wrapper do ChatGPT?",
+          "answer": "Não. O PinkPepper usa um sistema RAG criado especificamente para conformidade em segurança alimentar. Cada resposta é ancorada numa base de conhecimento curada que cobre mais de 35 regulamentos alimentares da UE e do Reino Unido, orientações oficiais da FSA/FSS, SOPs de boas práticas e normas de certificação como BRCGS, ISO 22000, SALSA e SQF. Não é um chatbot de uso geral e não responde a perguntas fora do seu âmbito de segurança alimentar."
+        },
+        {
+          "question": "Que regulamentos o PinkPepper cobre?",
+          "answer": "A base de conhecimento do PinkPepper cobre mais de 35 regulamentos da UE e do Reino Unido, incluindo: CE 178/2002 (General Food Law), CE 852/2004 e CE 853/2004 (higiene alimentar), UE 1169/2011 (rotulagem de alergénios, incluindo Natasha's Law), CE 2073/2005 (critérios microbiológicos), UE 2023/915 (limites de contaminantes para metais pesados, micotoxinas e contaminantes de processo), CE 1935/2004 e UE 2025/351 (materiais em contacto com alimentos), UE 2015/2283 (novel foods), CE 1829/2003 (OGM), UE 2018/848 (produção biológica) e os equivalentes mantidos no Reino Unido após o Brexit. A cobertura inclui HACCP, gestão de alergénios, rastreabilidade, controlo de temperatura, controlo de pragas, testes microbiológicos e muito mais."
+        },
+        {
+          "question": "De onde vêm os dados regulamentares do PinkPepper e quão atuais são?",
+          "answer": "A legislação principal é obtida diretamente do EUR-Lex CELLAR, o repositório oficial de dados abertos do Serviço das Publicações da União Europeia. O PinkPepper sincroniza automaticamente com o EUR-Lex numa base mensal e usa hashing de conteúdo para detetar alterações assim que são publicadas, garantindo que a base de conhecimento reflete sempre as versões consolidadas mais recentes. Os equivalentes do retained law britânico e as orientações oficiais da FSA/FSS são mantidos separadamente. A deteção de alterações corre independentemente dos timestamps de metadados do EUR-Lex, garantindo precisão mesmo quando o EUR-Lex não atualiza datas de modificação de textos consolidados."
+        },
+        {
+          "question": "Posso confiar nos resultados do PinkPepper para conformidade legal?",
+          "answer": "Os resultados do PinkPepper são fundamentados em texto regulamentar autoritativo e orientações oficiais, mas não constituem aconselhamento jurídico. Os requisitos regulamentares variam consoante o tipo de negócio, a jurisdição, as instalações e a prática local de fiscalização. Deve rever todos os resultados face ao seu contexto operacional específico e às suas obrigações legais locais. Quando for necessária certeza jurídica, consulte um profissional qualificado de segurança alimentar ou um assessor jurídico. O PinkPepper é uma ferramenta documental, não uma garantia de conformidade."
+        },
+        {
+          "question": "Quem é responsável pelos documentos e decisões finais?",
+          "answer": "A sua empresa mantém total responsabilidade legal por toda a documentação de segurança alimentar, decisões e controlos operacionais. O PinkPepper acelera a fase de rascunho, mas a revisão final, aprovação, verificação e implementação de todos os documentos de conformidade devem ser asseguradas por pessoal competente e responsável dentro da sua organização. Gerar um documento no PinkPepper não cumpre uma obrigação legal - agir sobre ele é que cumpre."
+        }
+      ]
+    },
+    "cta": {
+      "title": "Deixe de gastar horas em papelada de conformidade.",
+      "body": "Experimente o PinkPepper gratuitamente com uma questão real de conformidade. Não é necessário cartão.",
+      "button": "Começar grátis - sem cartão"
+    }
+  },
   "pages": {
     "home": {
       "title": "PinkPepper | Software HACCP & Segurança Alimentar IA para Empresas UE & UK",
