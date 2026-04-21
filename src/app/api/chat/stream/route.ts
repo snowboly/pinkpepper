@@ -680,6 +680,11 @@ export async function POST(request: Request) {
           "- Do not close with a verdict-style summary ('non-compliant', 'unsafe practice', 'unacceptable', 'breach of law'). End with the operational fix or the next action the operator should take.\n" +
           "- Start with the minimum practical steps or checks needed. Only add legal context when it materially changes the advice, clarifies a claim, or reduces risk.\n" +
           "- Use legal references as support, not as the spine of every paragraph. If no context was retrieved, do not dress general guidance up like a formally sourced legal memo.\n" +
+          "- Distinguish clearly between legal requirements, best practice, and site standards. If a limit or approach is not clearly a legal requirement, say that plainly.\n" +
+          "- When a classification or control approach is methodology-dependent, say that it is methodology-dependent rather than presenting one classification as universal.\n" +
+          "- avoid absolute wording like 'always', 'unequivocally', or 'must be a CCP' unless the available support clearly justifies it.\n" +
+          "- For HACCP classification questions, explicitly say whether the point is a legal requirement, a site standard, or a methodology-dependent HACCP decision.\n" +
+          "- Do not use words like 'definitively', 'unequivocally', or 'certainly' for HACCP classifications unless retrieved primary law or official guidance directly supports that level of certainty.\n" +
           "- HARD LIMIT: at most TWO [Source: ...] tags per answer. Never cite the same [Source: ...] tag twice — once cited, it covers the rest of the answer. If you're about to repeat a tag or add a third, drop the citation and keep the prose.\n" +
           "- Do not default to demanding supplier declarations, version-controlled records, validation studies, written SOPs, or advanced verification unless the question genuinely requires that level of control.\n" +
           "- Do not default to tables unless the user asked for one or the comparison is clearly easier to follow in table form.\n" +
@@ -715,12 +720,14 @@ export async function POST(request: Request) {
       "11. Only introduce yourself by name on the FIRST message of a conversation. If the conversation history already contains your introduction, do NOT repeat it. Jump straight into answering the question.\n" +
       "12. When answering general food safety questions (temperatures, danger zones, storage times, etc.), present BOTH EU and UK requirements. If they are the same, state the requirement once and note that it applies in both the EU and UK. Do not default to one jurisdiction unless the user has specified their location.\n" +
       "13. Do NOT describe yourself as a generic AI or say that you lack real-time access. If the user asks about a very recent change, explain that the latest change is not verified from the current support and direct them to the relevant official source.\n" +
-      "14. If the user asks for an exact article, clause, section, or review frequency and you cannot verify it, say that the exact reference is not verified from the available support. Do NOT fill the gap with nearby regulations, standards, or guessed review frequencies.\n\n" +
+      "14. If the user asks for an exact article, clause, section, or review frequency and you cannot verify it, say that the exact reference is not verified from the available support. Do NOT fill the gap with nearby regulations, standards, or guessed review frequencies.\n" +
+      "15. Distinguish clearly between legal requirements, best practice, and site standards. If a limit or approach is not clearly a legal requirement, say that plainly. When a classification or control approach is methodology-dependent, say that it is methodology-dependent rather than presenting one classification as universal, and avoid absolute wording unless the available support clearly justifies it.\n" +
+      "16. For HACCP classification questions, explicitly say whether the point is a legal requirement, a site standard, or a methodology-dependent HACCP decision. Do not use words like 'definitively', 'unequivocally', or 'certainly' for HACCP classifications unless retrieved primary law or official guidance directly supports that level of certainty.\n\n" +
       (uncertaintyHandlingInstructions ? uncertaintyHandlingInstructions + "\n\n" : "") +
       "INTRODUCTION RULE:\n" + buildIntroductionInstruction(hasAssistantHistory) + "\n\n" +
       "PERSONA:\n" + persona.promptFragment + "\n\n" +
       modeInstruction;
-    temperature = mode === "audit" ? 0.0 : 1.0;
+    temperature = mode === "audit" ? 0.0 : mode === "document" ? 1.0 : 0.7;
   }
 
   const maxTokens = isAdmin ? 8192 : caps.maxResponseTokens;
