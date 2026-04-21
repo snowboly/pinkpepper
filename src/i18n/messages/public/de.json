@@ -31,5 +31,45 @@
       "label": "Sprache",
       "current": "Aktuell"
     }
+  },
+  "pages": {
+    "home": {
+      "title": "PinkPepper | KI HACCP & Lebensmittelsicherheitssoftware für EU & UK Unternehmen",
+      "description": "Erstellen Sie HACCP-Pläne, Allergendokumentationen, SOPs & auditreife Dokumente in Minuten. KI-Software für Lebensmittelsicherheit auf Basis von 35+ EU & UK Vorschriften. Kostenlos starten."
+    },
+    "pricing": {
+      "title": "Preise - Ab 0 €/Monat | PinkPepper Lebensmittelsicherheitssoftware",
+      "description": "Kostenlos starten. Plus ab 19 €/Monat für tägliche HACCP & SOP-Nutzung. Pro ab 99 €/Monat mit Auditormodus + 2h Expertenberatung. Sparen Sie 18.000 €+/Jahr an Compliance-Kosten."
+    },
+    "about": {
+      "title": "Über PinkPepper | KI-Lebensmittelsicherheitssoftware von einem Lebensmittelwissenschaftler",
+      "description": "Entwickelt von einem Lebensmittelwissenschaftler mit praktischer Compliance-Erfahrung. PinkPepper verbindet KI auf Basis von 35+ EU & UK Vorschriften mit menschlicher Fachberatung."
+    },
+    "articles": {
+      "title": "Artikel & Einblicke zur Lebensmittelsicherheit | PinkPepper",
+      "description": "Eine kuratierte Bibliothek mit praktischen Ratschlägen zu HACCP, Allergenverwaltung, Lebensmittelaudits und operativer Compliance für Lebensmittelbetriebe in der EU & UK."
+    },
+    "faqs": {
+      "title": "FAQ — HACCP, Allergene, Vorschriften & mehr | PinkPepper",
+      "description": "Antworten auf häufige Fragen zu PinkPepper: HACCP-Pläne, Allergen-Compliance, abgedeckte EU & UK Vorschriften, Datensicherheit, Berater- und Auditormodus sowie Preise."
+    },
+    "contact": {
+      "title": "PinkPepper kontaktieren — Support für Lebensmittel-Compliance",
+      "description": "Fragen zu HACCP-Plänen, Preisen oder Unternehmensplänen? Kontaktieren Sie PinkPepper für Lebensmittelkonformitätssupport. Antwort innerhalb von 1 Werktag."
+    },
+    "features": {
+      "haccpPlanGenerator": {
+        "title": "HACCP-Plan-Generator - Erstellen Sie einen Codex-konformen Plan | PinkPepper",
+        "description": "Erstellen Sie einen vollständigen, auditreifen HACCP-Plan in Stunden. KI trainiert auf Verordnung (EG) 852/2004, Codex Alimentarius und GFSI-Systemen - mit optionaler Expertenprüfung."
+      },
+      "allergenDocumentation": {
+        "title": "Allergen-Dokumentationssoftware | PinkPepper",
+        "description": "Erstellen Sie Allergenmatrizen, Menüänderungsaufzeichnungen und Allergenkommunikationsdokumente für EU & UK Lebensmittelbetriebe mit PinkPepper."
+      },
+      "foodSafetySopGenerator": {
+        "title": "Lebensmittelsicherheit-SOP-Generator | PinkPepper",
+        "description": "Erstellen Sie praktische Lebensmittelsicherheits-SOPs, Hygieneverfahren und operative Compliance-Dokumente für EU & UK Teams."
+      }
+    }
   }
 }

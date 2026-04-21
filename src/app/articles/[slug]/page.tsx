@@ -87,9 +87,20 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
     ...(article.image ? { image: article.image } : {}),
   };
 
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://www.pinkpepper.io" },
+      { "@type": "ListItem", position: 2, name: "Articles", item: "https://www.pinkpepper.io/articles" },
+      { "@type": "ListItem", position: 3, name: article.title, item: `https://www.pinkpepper.io/articles/${article.slug}` },
+    ],
+  };
+
   return (
     <main className="overflow-hidden">
       <script type="application/ld+json" nonce={nonce} dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
+      <script type="application/ld+json" nonce={nonce} dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <section className="border-b border-[#F1F5F9] bg-[#F8FAFC] py-16 md:py-24">
         <div className="pp-container max-w-5xl">
           <div className="pp-article-hero-meta max-w-4xl">

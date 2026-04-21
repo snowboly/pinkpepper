@@ -29,5 +29,45 @@
       "label": "Langue",
       "current": "Actuel"
     }
+  },
+  "pages": {
+    "home": {
+      "title": "PinkPepper | Logiciel HACCP & Sécurité Alimentaire IA pour Entreprises UE & UK",
+      "description": "Générez des plans HACCP, fiches allergènes, PMS et documents d'audit en quelques minutes. Logiciel de sécurité alimentaire IA ancré dans 35+ règlements UE & UK. Commencez gratuitement."
+    },
+    "pricing": {
+      "title": "Tarifs - Dès 0 €/mois | PinkPepper Sécurité Alimentaire",
+      "description": "Commencez gratuitement. Plus à 19 €/mois pour l'utilisation HACCP & PMS quotidienne. Pro à 99 €/mois avec mode Auditeur + 2h de consultation. Économisez 18 000 €+/an en coûts de conformité."
+    },
+    "about": {
+      "title": "À propos de PinkPepper | Logiciel IA par un expert en sécurité alimentaire",
+      "description": "Créé par un expert en sécurité alimentaire avec une expérience concrète en conformité. PinkPepper combine l'IA avec 35+ règlements UE & UK et une consultance humaine."
+    },
+    "articles": {
+      "title": "Articles & Guides Sécurité Alimentaire | PinkPepper",
+      "description": "Bibliothèque de conseils pratiques sur le HACCP, la gestion des allergènes, les audits alimentaires et la conformité opérationnelle pour les entreprises agroalimentaires UE & UK."
+    },
+    "faqs": {
+      "title": "FAQ — HACCP, Allergènes, Réglementations & Plus | PinkPepper",
+      "description": "Réponses aux questions fréquentes sur PinkPepper : plans HACCP, conformité allergènes, règlements UE & UK couverts, sécurité des données, modes Consultant et Auditeur, et tarifs."
+    },
+    "contact": {
+      "title": "Contacter PinkPepper — Support Conformité Sécurité Alimentaire",
+      "description": "Des questions sur les plans HACCP, les tarifs ou les plans entreprise ? Contactez PinkPepper pour votre conformité sécurité alimentaire. Réponse sous 1 jour ouvrable."
+    },
+    "features": {
+      "haccpPlanGenerator": {
+        "title": "Générateur de Plan HACCP - Créez un Plan Conforme Codex | PinkPepper",
+        "description": "Construisez un plan HACCP complet et prêt pour l'audit en quelques heures. IA formée sur le Règlement (CE) 852/2004, le Codex Alimentarius et les schémas GFSI."
+      },
+      "allergenDocumentation": {
+        "title": "Logiciel de Documentation Allergènes | PinkPepper",
+        "description": "Créez des matrices allergènes, documents de modification de menus et communications allergènes pour entreprises alimentaires UE & UK avec PinkPepper."
+      },
+      "foodSafetySopGenerator": {
+        "title": "Générateur de PMS Sécurité Alimentaire | PinkPepper",
+        "description": "Générez des PMS pratiques, procédures d'hygiène et documents de conformité opérationnelle pour les équipes agroalimentaires UE & UK."
+      }
+    }
   }
 }
