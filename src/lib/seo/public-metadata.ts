@@ -4,6 +4,13 @@ import { localizePublicPath } from "@/lib/public-routes";
 
 const BASE_URL = "https://www.pinkpepper.io";
 
+const ogLocaleMap: Record<PublicLocale, string> = {
+  en: "en_GB",
+  fr: "fr_FR",
+  de: "de_DE",
+  pt: "pt_PT",
+};
+
 type PublicMetadataInput = {
   title: string;
   description: string;
@@ -15,15 +22,43 @@ export function buildPublicMetadata(
   copy: PublicMetadataInput,
 ): Metadata {
   const canonicalPath = localizePublicPath(locale, path);
+  const enPath = `${BASE_URL}${localizePublicPath("en", path)}`;
 
   return {
     title: copy.title,
     description: copy.description,
     alternates: {
       canonical: `${BASE_URL}${canonicalPath}`,
-      languages: Object.fromEntries(
-        publicLaunchLocales.map((lang) => [lang, `${BASE_URL}${localizePublicPath(lang, path)}`]),
-      ),
+      languages: {
+        "x-default": enPath,
+        ...Object.fromEntries(
+          publicLaunchLocales.map((lang) => [lang, `${BASE_URL}${localizePublicPath(lang, path)}`]),
+        ),
+      },
+    },
+    openGraph: {
+      title: copy.title,
+      description: copy.description,
+      locale: ogLocaleMap[locale],
+      alternateLocale: publicLaunchLocales.filter((l) => l !== locale).map((l) => ogLocaleMap[l]),
+    },
+  };
+}
+
+/** For pages that are English-only (no [locale] route yet). */
+export function buildEnOnlyMetadata(path: string, copy: PublicMetadataInput): Metadata {
+  const url = `${BASE_URL}${path}`;
+  return {
+    title: copy.title,
+    description: copy.description,
+    alternates: {
+      canonical: url,
+      languages: { "x-default": url, en: url },
+    },
+    openGraph: {
+      title: copy.title,
+      description: copy.description,
+      locale: "en_GB",
     },
   };
 }

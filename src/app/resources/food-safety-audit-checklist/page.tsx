@@ -7,6 +7,7 @@ export const metadata: Metadata = {
     "Use this guide to structure a food safety audit checklist covering documents, records, corrective actions, and verification.",
   alternates: {
     canonical: "https://www.pinkpepper.io/resources/food-safety-audit-checklist",
+    languages: { "x-default": "https://www.pinkpepper.io/resources/food-safety-audit-checklist", en: "https://www.pinkpepper.io/resources/food-safety-audit-checklist" },
   },
 };
 

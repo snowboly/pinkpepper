@@ -7,6 +7,7 @@ export const metadata: Metadata = {
     "Learn what a food waste management log should capture for EU and UK food safety compliance, including condemned stock, disposal routes, and contractor records.",
   alternates: {
     canonical: "https://www.pinkpepper.io/resources/waste-management-log-template",
+    languages: { "x-default": "https://www.pinkpepper.io/resources/waste-management-log-template", en: "https://www.pinkpepper.io/resources/waste-management-log-template" },
   },
 };
 

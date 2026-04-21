@@ -7,6 +7,7 @@ export const metadata: Metadata = {
     "Understand what a food product recall or withdrawal procedure must contain for EU and UK compliance, including traceability, communication, and effectiveness testing.",
   alternates: {
     canonical: "https://www.pinkpepper.io/resources/product-recall-procedure-template",
+    languages: { "x-default": "https://www.pinkpepper.io/resources/product-recall-procedure-template", en: "https://www.pinkpepper.io/resources/product-recall-procedure-template" },
   },
 };
 

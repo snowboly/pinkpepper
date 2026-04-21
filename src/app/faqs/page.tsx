@@ -22,6 +22,7 @@ export const metadata: Metadata = {
     "Answers to common questions about PinkPepper: HACCP plans, allergen compliance, EU & UK regulations covered, data security, Consultant vs Auditor mode, and pricing.",
   alternates: {
     canonical: "https://www.pinkpepper.io/faqs",
+    languages: { "x-default": "https://www.pinkpepper.io/faqs", en: "https://www.pinkpepper.io/faqs" },
   },
 };
 

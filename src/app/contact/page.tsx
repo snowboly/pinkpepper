@@ -30,6 +30,7 @@ export const metadata: Metadata = {
     "Questions about HACCP plans, pricing, or enterprise plans? Contact PinkPepper for food safety compliance support. We respond within 1 business day.",
   alternates: {
     canonical: "https://www.pinkpepper.io/contact",
+    languages: { "x-default": "https://www.pinkpepper.io/contact", en: "https://www.pinkpepper.io/contact" },
   },
 };
 

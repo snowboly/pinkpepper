@@ -7,6 +7,7 @@ export const metadata: Metadata = {
     "Learn what staff food safety training records must capture to demonstrate competence during inspections under EU and UK food hygiene regulations.",
   alternates: {
     canonical: "https://www.pinkpepper.io/resources/employee-food-safety-training-record",
+    languages: { "x-default": "https://www.pinkpepper.io/resources/employee-food-safety-training-record", en: "https://www.pinkpepper.io/resources/employee-food-safety-training-record" },
   },
 };
 
