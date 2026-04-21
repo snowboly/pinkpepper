@@ -31,5 +31,45 @@
       "label": "Language",
       "current": "Current"
     }
+  },
+  "pages": {
+    "home": {
+      "title": "PinkPepper | AI HACCP & Food Safety Software for EU & UK Businesses",
+      "description": "Generate HACCP plans, allergen records, SOPs & audit-ready documents in minutes. AI food safety software grounded in 35+ EU & UK regulations. Start free."
+    },
+    "pricing": {
+      "title": "Pricing - From EUR0/mo | PinkPepper Food Safety Software",
+      "description": "Start free. Plus at EUR19/mo for daily HACCP & SOP use. Pro at EUR99/mo adds Auditor mode + 2h human consultancy. Save EUR18,000+/year on compliance costs."
+    },
+    "about": {
+      "title": "About PinkPepper | AI Food Safety Software by a Food Scientist",
+      "description": "Built by a food scientist with hands-on compliance experience. PinkPepper combines AI grounded in 35+ EU & UK regulations with human food safety consultancy."
+    },
+    "articles": {
+      "title": "Food Safety Articles & Insights | PinkPepper",
+      "description": "A curated library of practical guidance on HACCP, allergen management, food safety audits, and operational compliance for EU and UK food businesses."
+    },
+    "faqs": {
+      "title": "FAQs — HACCP, Allergens, Regulations & More | PinkPepper",
+      "description": "Answers to common questions about PinkPepper: HACCP plans, allergen compliance, EU & UK regulations covered, data security, Consultant vs Auditor mode, and pricing."
+    },
+    "contact": {
+      "title": "Contact PinkPepper — Food Safety Compliance Support",
+      "description": "Questions about HACCP plans, pricing, or enterprise plans? Contact PinkPepper for food safety compliance support. We respond within 1 business day."
+    },
+    "features": {
+      "haccpPlanGenerator": {
+        "title": "HACCP Plan Generator - Build a Codex-Compliant Plan | PinkPepper",
+        "description": "Build a complete, audit-ready HACCP plan in hours. AI trained on Regulation (EC) 852/2004, Codex Alimentarius, and GFSI schemes - with optional human expert review."
+      },
+      "allergenDocumentation": {
+        "title": "Allergen Documentation Software | PinkPepper",
+        "description": "Create allergen matrices, menu-change records, and allergen communication documents for EU and UK food businesses with PinkPepper."
+      },
+      "foodSafetySopGenerator": {
+        "title": "Food Safety SOP Generator | PinkPepper",
+        "description": "Generate practical food safety SOPs, hygiene procedures, and operational compliance documents for EU and UK teams."
+      }
+    }
   }
 }

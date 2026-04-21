@@ -6,6 +6,14 @@ import {
   buildContentSecurityPolicy,
   generateCspNonce,
 } from "@/lib/security/csp";
+import { publicLaunchLocales } from "@/i18n/public";
+
+function parseAcceptLanguage(header: string): string[] {
+  return header
+    .split(",")
+    .map((entry) => entry.trim().split(";")[0]?.trim().split("-")[0]?.toLowerCase() ?? "")
+    .filter(Boolean);
+}
 
 /**
  * Middleware is responsible for two things:
@@ -42,6 +50,18 @@ export async function middleware(request: NextRequest) {
   const isProtected = pathname.startsWith("/dashboard");
   const isAdminPage = pathname.startsWith("/admin");
   const needsSession = isAuthPage || isProtected || isAdminPage;
+
+  // Redirect root visitors to their preferred locale when no locale cookie
+  // is set yet. Only applies to the root path — deep links are unaffected.
+  if (pathname === "/" && !request.cookies.get("locale")?.value) {
+    const preferred = parseAcceptLanguage(request.headers.get("accept-language") ?? "");
+    const matched = publicLaunchLocales.find((l) => preferred.includes(l));
+    if (matched && matched !== "en") {
+      const redirectUrl = request.nextUrl.clone();
+      redirectUrl.pathname = `/${matched}`;
+      return finalize(NextResponse.redirect(redirectUrl, 302));
+    }
+  }
 
   // Fast path: pages that do not touch auth skip the Supabase round-trip
   // entirely. CSP headers still get applied.

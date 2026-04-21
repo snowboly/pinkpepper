@@ -31,5 +31,45 @@
       "label": "Idioma",
       "current": "Atual"
     }
+  },
+  "pages": {
+    "home": {
+      "title": "PinkPepper | Software HACCP & Segurança Alimentar IA para Empresas UE & UK",
+      "description": "Gere planos HACCP, registos de alergénios, SOPs e documentos prontos para auditoria em minutos. Software de segurança alimentar IA baseado em 35+ regulamentos UE & UK. Comece gratuitamente."
+    },
+    "pricing": {
+      "title": "Preços - A partir de 0 €/mês | PinkPepper Software de Segurança Alimentar",
+      "description": "Comece gratuitamente. Plus a 19 €/mês para uso diário de HACCP & SOP. Pro a 99 €/mês adiciona modo Auditor + 2h de consultoria humana. Poupe 18.000 €+/ano em custos de conformidade."
+    },
+    "about": {
+      "title": "Sobre a PinkPepper | Software IA de Segurança Alimentar por um Cientista Alimentar",
+      "description": "Desenvolvido por um cientista alimentar com experiência prática em conformidade. A PinkPepper combina IA com 35+ regulamentos UE & UK com consultoria humana especializada."
+    },
+    "articles": {
+      "title": "Artigos & Perspetivas de Segurança Alimentar | PinkPepper",
+      "description": "Uma biblioteca curada de orientação prática sobre HACCP, gestão de alergénios, auditorias alimentares e conformidade operacional para empresas alimentares UE & UK."
+    },
+    "faqs": {
+      "title": "FAQs — HACCP, Alergénios, Regulamentos & Mais | PinkPepper",
+      "description": "Respostas a perguntas frequentes sobre a PinkPepper: planos HACCP, conformidade de alergénios, regulamentos UE & UK cobertos, segurança de dados, modo Consultor e Auditor, e preços."
+    },
+    "contact": {
+      "title": "Contactar a PinkPepper — Suporte de Conformidade de Segurança Alimentar",
+      "description": "Questões sobre planos HACCP, preços ou planos empresariais? Contacte a PinkPepper para suporte de conformidade de segurança alimentar. Respondemos em 1 dia útil."
+    },
+    "features": {
+      "haccpPlanGenerator": {
+        "title": "Gerador de Plano HACCP - Crie um Plano Conforme ao Codex | PinkPepper",
+        "description": "Construa um plano HACCP completo e pronto para auditoria em horas. IA treinada no Regulamento (CE) 852/2004, Codex Alimentarius e esquemas GFSI - com revisão humana opcional."
+      },
+      "allergenDocumentation": {
+        "title": "Software de Documentação de Alergénios | PinkPepper",
+        "description": "Crie matrizes de alergénios, registos de alteração de menus e documentos de comunicação de alergénios para empresas alimentares UE & UK com a PinkPepper."
+      },
+      "foodSafetySopGenerator": {
+        "title": "Gerador de SOP de Segurança Alimentar | PinkPepper",
+        "description": "Gere SOPs práticos de segurança alimentar, procedimentos de higiene e documentos de conformidade operacional para equipas UE & UK."
+      }
+    }
   }
 }

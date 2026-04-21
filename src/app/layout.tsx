@@ -17,6 +17,12 @@ const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
 });
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#E11D48",
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.pinkpepper.io"),
   alternates: {
@@ -89,6 +95,14 @@ const websiteSchema = {
   description:
     "AI food safety compliance software for HACCP plans, allergen management, SOP generation, and EU/UK compliance documentation.",
   inLanguage: ["en", "de", "fr", "es", "pt", "it"],
+  potentialAction: {
+    "@type": "SearchAction",
+    target: {
+      "@type": "EntryPoint",
+      urlTemplate: "https://www.pinkpepper.io/articles?q={search_term_string}",
+    },
+    "query-input": "required name=search_term_string",
+  },
 };
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

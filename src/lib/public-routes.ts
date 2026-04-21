@@ -1,6 +1,8 @@
 import { publicLaunchLocales, publicRoutePaths, type PublicLocale } from "@/i18n/public";
 
 type PublicMessages = Record<string, unknown>;
+type PageMeta = { title: string; description: string };
+
 export type PublicMessagesDictionary = {
   chrome: {
     nav: {
@@ -33,6 +35,19 @@ export type PublicMessagesDictionary = {
     localeSwitcher: {
       label: string;
       current: string;
+    };
+  };
+  pages: {
+    home: PageMeta;
+    pricing: PageMeta;
+    about: PageMeta;
+    articles: PageMeta;
+    faqs: PageMeta;
+    contact: PageMeta;
+    features: {
+      haccpPlanGenerator: PageMeta;
+      allergenDocumentation: PageMeta;
+      foodSafetySopGenerator: PageMeta;
     };
   };
 };
