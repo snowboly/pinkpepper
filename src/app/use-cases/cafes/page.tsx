@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description:
     "PinkPepper helps cafes create HACCP plans, hygiene SOPs, allergen records, and audit documentation for smaller food operations.",
   alternates: {
-    canonical: "https://www.pinkpepper.io/use-cases/cafes",
+    canonical: "https://pinkpepper.io/use-cases/cafes",
   },
 };
 

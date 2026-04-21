@@ -5,8 +5,8 @@ const resourcesBreadcrumbSchema = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: "https://www.pinkpepper.io" },
-    { "@type": "ListItem", position: 2, name: "Resources", item: "https://www.pinkpepper.io/resources" },
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://pinkpepper.io" },
+    { "@type": "ListItem", position: 2, name: "Resources", item: "https://pinkpepper.io/resources" },
   ],
 };
 

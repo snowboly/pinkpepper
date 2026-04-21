@@ -21,15 +21,15 @@ export const metadata: Metadata = {
   description:
     "Answers to common questions about PinkPepper: HACCP plans, allergen compliance, EU & UK regulations covered, data security, Consultant vs Auditor mode, and pricing.",
   alternates: {
-    canonical: "https://www.pinkpepper.io/faqs",
-    languages: { "x-default": "https://www.pinkpepper.io/faqs", en: "https://www.pinkpepper.io/faqs" },
+    canonical: "https://pinkpepper.io/faqs",
+    languages: { "x-default": "https://pinkpepper.io/faqs", en: "https://pinkpepper.io/faqs" },
   },
   openGraph: {
     title: "FAQs — HACCP, Allergens, Regulations & More | PinkPepper",
     description:
       "Answers to common questions about PinkPepper: HACCP plans, allergen compliance, EU & UK regulations covered, data security, Consultant vs Auditor mode, and pricing.",
     locale: "en_GB",
-    images: [{ url: "https://www.pinkpepper.io/social-card.png", width: 1200, height: 630, alt: "PinkPepper - AI Food Safety Compliance Software" }],
+    images: [{ url: "https://pinkpepper.io/social-card.png", width: 1200, height: 630, alt: "PinkPepper - AI Food Safety Compliance Software" }],
   },
 };
 

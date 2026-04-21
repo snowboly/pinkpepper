@@ -125,13 +125,13 @@ describe("SEO surface", () => {
       description: "Description",
     });
 
-    expect(metadata.alternates?.canonical).toBe("https://www.pinkpepper.io/fr/pricing");
+    expect(metadata.alternates?.canonical).toBe("https://pinkpepper.io/fr/pricing");
     expect(metadata.alternates?.languages).toEqual({
-      "x-default": "https://www.pinkpepper.io/en/pricing",
-      en: "https://www.pinkpepper.io/en/pricing",
-      fr: "https://www.pinkpepper.io/fr/pricing",
-      de: "https://www.pinkpepper.io/de/pricing",
-      pt: "https://www.pinkpepper.io/pt/pricing",
+      "x-default": "https://pinkpepper.io/en/pricing",
+      en: "https://pinkpepper.io/en/pricing",
+      fr: "https://pinkpepper.io/fr/pricing",
+      de: "https://pinkpepper.io/de/pricing",
+      pt: "https://pinkpepper.io/pt/pricing",
     });
   });
 
@@ -145,10 +145,10 @@ describe("SEO surface", () => {
   it("points social metadata at a dedicated static social card", () => {
     const layout = readPage("src/app/layout.tsx");
 
-    expect(layout).toContain('url: "https://www.pinkpepper.io/social-card.png"');
+    expect(layout).toContain('url: "https://pinkpepper.io/social-card.png"');
     expect(layout).toContain("width: 1200");
     expect(layout).toContain("height: 630");
-    expect(layout).toContain('images: ["https://www.pinkpepper.io/social-card.png"]');
+    expect(layout).toContain('images: ["https://pinkpepper.io/social-card.png"]');
     expect(layout).toContain('title: "PinkPepper | AI HACCP & Food Safety Software — EU & UK"');
     expect(layout).toContain("grounded in 35+ EU & UK regulations. Try free.");
   });
@@ -236,8 +236,8 @@ describe("public SEO copy and linking", () => {
     expect(articleDetail).toContain("pp-article-hero-meta");
     expect(articleDetail).toContain("text-4xl font-bold leading-[1.05]");
     expect(articleDetail).toContain("text-lg leading-8");
-    expect(articleDetail).toContain("https://www.pinkpepper.io/articles/${article.slug}");
-    expect(articleDetail).not.toContain("https://pinkpepper.io/articles/${article.slug}");
+    expect(articleDetail).toContain("https://pinkpepper.io/articles/${article.slug}");
+    expect(articleDetail).not.toContain("https://www.pinkpepper.io/articles/${article.slug}");
   });
 
   it("renders related reading links on article detail pages", async () => {

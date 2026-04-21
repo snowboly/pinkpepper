@@ -6,8 +6,8 @@ export const metadata: Metadata = {
   description:
     "Learn what a staff personal hygiene policy should cover to meet EU and UK food hygiene regulations and to be enforceable in practice.",
   alternates: {
-    canonical: "https://www.pinkpepper.io/resources/personal-hygiene-policy-template",
-    languages: { "x-default": "https://www.pinkpepper.io/resources/personal-hygiene-policy-template", en: "https://www.pinkpepper.io/resources/personal-hygiene-policy-template" },
+    canonical: "https://pinkpepper.io/resources/personal-hygiene-policy-template",
+    languages: { "x-default": "https://pinkpepper.io/resources/personal-hygiene-policy-template", en: "https://pinkpepper.io/resources/personal-hygiene-policy-template" },
   },
 };
 

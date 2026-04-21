@@ -6,8 +6,8 @@ export const metadata: Metadata = {
   description:
     "Learn what an incoming goods inspection record should capture to maintain traceability, reject non-conforming deliveries, and satisfy EU and UK food safety requirements.",
   alternates: {
-    canonical: "https://www.pinkpepper.io/resources/incoming-goods-template",
-    languages: { "x-default": "https://www.pinkpepper.io/resources/incoming-goods-template", en: "https://www.pinkpepper.io/resources/incoming-goods-template" },
+    canonical: "https://pinkpepper.io/resources/incoming-goods-template",
+    languages: { "x-default": "https://pinkpepper.io/resources/incoming-goods-template", en: "https://pinkpepper.io/resources/incoming-goods-template" },
   },
 };
 

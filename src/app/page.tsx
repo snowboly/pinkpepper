@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   description:
     "Generate HACCP plans, allergen records, SOPs & audit-ready documents in minutes. AI food safety software grounded in 35+ EU & UK regulations. Start free.",
   alternates: {
-    canonical: "https://www.pinkpepper.io",
+    canonical: "https://pinkpepper.io",
   },
 };
 

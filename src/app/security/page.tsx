@@ -6,8 +6,8 @@ export const metadata: Metadata = {
   description:
     "How PinkPepper protects food safety compliance data for EU and UK businesses across infrastructure, encryption, AI data handling, subprocessors, and GDPR alignment.",
   alternates: {
-    canonical: "https://www.pinkpepper.io/security",
-    languages: { "x-default": "https://www.pinkpepper.io/security", en: "https://www.pinkpepper.io/security" },
+    canonical: "https://pinkpepper.io/security",
+    languages: { "x-default": "https://pinkpepper.io/security", en: "https://pinkpepper.io/security" },
   },
 };
 

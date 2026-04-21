@@ -46,7 +46,7 @@ export const metadata: Metadata = {
   description:
     "AI food safety software built for your operation. HACCP plans, SOPs, allergen records & audit prep for restaurants, cafes, caterers & manufacturers.",
   alternates: {
-    canonical: "https://www.pinkpepper.io/use-cases",
+    canonical: "https://pinkpepper.io/use-cases",
   },
 };
 

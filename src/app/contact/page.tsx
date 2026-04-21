@@ -7,13 +7,13 @@ const contactPageSchema = {
   "@context": "https://schema.org",
   "@type": "ContactPage",
   name: "Contact PinkPepper",
-  url: "https://www.pinkpepper.io/contact",
+  url: "https://pinkpepper.io/contact",
   description:
     "Contact PinkPepper for questions about HACCP plans, food safety compliance, pricing, or enterprise plans.",
   mainEntity: {
     "@type": "Organization",
     name: "PinkPepper",
-    url: "https://www.pinkpepper.io",
+    url: "https://pinkpepper.io",
     contactPoint: {
       "@type": "ContactPoint",
       email: "support@pinkpepper.io",
@@ -29,15 +29,15 @@ export const metadata: Metadata = {
   description:
     "Questions about HACCP plans, pricing, or enterprise plans? Contact PinkPepper for food safety compliance support. We respond within 1 business day.",
   alternates: {
-    canonical: "https://www.pinkpepper.io/contact",
-    languages: { "x-default": "https://www.pinkpepper.io/contact", en: "https://www.pinkpepper.io/contact" },
+    canonical: "https://pinkpepper.io/contact",
+    languages: { "x-default": "https://pinkpepper.io/contact", en: "https://pinkpepper.io/contact" },
   },
   openGraph: {
     title: "Contact PinkPepper — Food Safety Compliance Support",
     description:
       "Questions about HACCP plans, pricing, or enterprise plans? Contact PinkPepper for food safety compliance support. We respond within 1 business day.",
     locale: "en_GB",
-    images: [{ url: "https://www.pinkpepper.io/social-card.png", width: 1200, height: 630, alt: "PinkPepper - AI Food Safety Compliance Software" }],
+    images: [{ url: "https://pinkpepper.io/social-card.png", width: 1200, height: 630, alt: "PinkPepper - AI Food Safety Compliance Software" }],
   },
 };
 
