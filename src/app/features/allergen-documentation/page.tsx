@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Allergen Documentation — HACCP Records for UK & EU Compliance | PinkPepper",
+  title: "Allergen Documentation — UK & EU HACCP Records | PinkPepper",
   description:
     "Build the full allergen documentation pack your HACCP plan requires: supplier matrices, version-controlled recipes, PPDS labels, changeover logs, and enquiry records — aligned with EU 1169/2011 and Natasha's Law.",
   alternates: {
