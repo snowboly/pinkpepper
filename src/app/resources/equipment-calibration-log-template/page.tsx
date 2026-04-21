@@ -6,8 +6,8 @@ export const metadata: Metadata = {
   description:
     "Learn what an equipment calibration log should record for probes, scales, and measuring instruments used in food safety monitoring to satisfy EU and UK inspection requirements.",
   alternates: {
-    canonical: "https://www.pinkpepper.io/resources/equipment-calibration-log-template",
-    languages: { "x-default": "https://www.pinkpepper.io/resources/equipment-calibration-log-template", en: "https://www.pinkpepper.io/resources/equipment-calibration-log-template" },
+    canonical: "https://pinkpepper.io/resources/equipment-calibration-log-template",
+    languages: { "x-default": "https://pinkpepper.io/resources/equipment-calibration-log-template", en: "https://pinkpepper.io/resources/equipment-calibration-log-template" },
   },
 };
 

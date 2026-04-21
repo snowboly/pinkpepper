@@ -6,8 +6,8 @@ export const metadata: Metadata = {
   description:
     "Learn how to structure a cleaning and disinfection SOP for food businesses, including responsibilities, chemicals, verification, and records.",
   alternates: {
-    canonical: "https://www.pinkpepper.io/resources/cleaning-and-disinfection-sop",
-    languages: { "x-default": "https://www.pinkpepper.io/resources/cleaning-and-disinfection-sop", en: "https://www.pinkpepper.io/resources/cleaning-and-disinfection-sop" },
+    canonical: "https://pinkpepper.io/resources/cleaning-and-disinfection-sop",
+    languages: { "x-default": "https://pinkpepper.io/resources/cleaning-and-disinfection-sop", en: "https://pinkpepper.io/resources/cleaning-and-disinfection-sop" },
   },
 };
 

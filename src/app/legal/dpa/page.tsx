@@ -4,7 +4,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Data Processing Agreement | PinkPepper",
   description: "PinkPepper's Data Processing Agreement for customers acting as data controllers under GDPR.",
-  alternates: { canonical: "https://www.pinkpepper.io/legal/dpa" },
+  alternates: { canonical: "https://pinkpepper.io/legal/dpa" },
   robots: { index: false, follow: false },
 };
 
