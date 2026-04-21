@@ -20,11 +20,6 @@ export function LocaleSwitcher({
   const ref = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
 
-  // Close when the route changes (after a locale link is clicked)
-  useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
-
   // Close on outside click/touch
   useEffect(() => {
     if (!open) return;
