@@ -165,7 +165,7 @@ const relatedWorkflows = [
 ];
 
 export const metadata: Metadata = {
-  title: "Free Food Safety Templates & Guides | HACCP, Allergen, SOP, Audit | PinkPepper",
+  title: "Free Food Safety Templates & Guides | PinkPepper",
   description:
     "15 free food safety templates and guides for HACCP plans, allergen matrices, audit checklists, SOPs, temperature logs, traceability, and supplier approval for EU and UK food businesses.",
   alternates: {
@@ -173,7 +173,7 @@ export const metadata: Metadata = {
     languages: { "x-default": "https://www.pinkpepper.io/resources", en: "https://www.pinkpepper.io/resources" },
   },
   openGraph: {
-    title: "Free Food Safety Templates & Guides | HACCP, Allergen, SOP, Audit | PinkPepper",
+    title: "Free Food Safety Templates & Guides | PinkPepper",
     description:
       "15 free food safety templates and guides for HACCP plans, allergen matrices, audit checklists, SOPs, temperature logs, traceability, and supplier approval for EU and UK food businesses.",
     locale: "en_GB",

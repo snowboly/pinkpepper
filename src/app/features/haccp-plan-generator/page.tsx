@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "HACCP Plan Generator — Build a Codex-Compliant Plan | PinkPepper",
+  title: "HACCP Plan Generator — Codex-Compliant | PinkPepper",
   description:
     "Build a complete, audit-ready HACCP plan in hours. AI trained on Regulation (EC) 852/2004, Codex Alimentarius, and GFSI schemes — with optional human expert review.",
   alternates: {

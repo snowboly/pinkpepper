@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowRight, BookOpen, Brain, FileCheck, ShieldCheck, Users } from "lucide-react";
 
 export const metadata = {
-  title: "About PinkPepper | AI Food Safety Software by a Food Scientist",
+  title: "About PinkPepper | AI Food Safety Software",
   description:
     "Built by a food scientist with hands-on compliance experience. PinkPepper combines AI grounded in 35+ EU & UK regulations with human food safety consultancy.",
   alternates: {

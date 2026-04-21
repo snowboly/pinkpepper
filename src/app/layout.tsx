@@ -28,11 +28,11 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://www.pinkpepper.io",
   },
-  title: "PinkPepper | AI HACCP & Food Safety Software for EU & UK Businesses",
+  title: "PinkPepper | AI HACCP & Food Safety Software — EU & UK",
   description:
     "Generate HACCP plans, allergen records, SOPs & audit-ready documents in minutes. AI food safety software grounded in 35+ EU & UK regulations. Start free.",
   openGraph: {
-    title: "PinkPepper | AI HACCP & Food Safety Software for EU & UK Businesses",
+    title: "PinkPepper | AI HACCP & Food Safety Software — EU & UK",
     description:
       "Generate HACCP plans, allergen records, SOPs & audit-ready documents in minutes. Save 10+ hours/week on compliance. Grounded in 35+ EU & UK regulations.",
     url: "https://www.pinkpepper.io",
