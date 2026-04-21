@@ -41,6 +41,7 @@ export function buildPublicMetadata(
       description: copy.description,
       locale: ogLocaleMap[locale],
       alternateLocale: publicLaunchLocales.filter((l) => l !== locale).map((l) => ogLocaleMap[l]),
+      images: [DEFAULT_OG_IMAGE],
     },
   };
 }
@@ -59,6 +60,14 @@ export function buildEnOnlyMetadata(path: string, copy: PublicMetadataInput): Me
       title: copy.title,
       description: copy.description,
       locale: "en_GB",
+      images: [DEFAULT_OG_IMAGE],
     },
   };
 }
+
+const DEFAULT_OG_IMAGE = {
+  url: `${BASE_URL}/social-card.png`,
+  width: 1200,
+  height: 630,
+  alt: "PinkPepper - AI Food Safety Compliance Software for EU and UK Businesses",
+};

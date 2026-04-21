@@ -35,7 +35,11 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
       title: `${article.title} | PinkPepper`,
       description: article.excerpt,
       locale: "en_GB",
-      ...(article.image ? { images: [{ url: article.image, width: 1200, height: 630, alt: article.title }] } : {}),
+      images: [
+        article.image
+          ? { url: article.image, width: 1200, height: 630, alt: article.title }
+          : { url: "https://www.pinkpepper.io/social-card.png", width: 1200, height: 630, alt: "PinkPepper - AI Food Safety Compliance Software" },
+      ],
     },
   };
 }
