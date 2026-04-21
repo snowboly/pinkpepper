@@ -162,7 +162,7 @@ source: "pinkpepper"
     </tr>
     <tr>
       <td>Sesame</td>
-      <td>Sesame oil, sesame seeds, perilla seeds</td>
+      <td>Sesame oil, sesame seeds</td>
     </tr>
     <tr>
       <td>Egg</td>

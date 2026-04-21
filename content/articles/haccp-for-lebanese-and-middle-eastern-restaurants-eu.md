@@ -150,7 +150,7 @@ source: "pinkpepper"
   </tbody>
 </table>
 
-<p>Sesame is the ninth most prevalent allergen in the EU. Tahini is ubiquitous in Middle Eastern cooking—present in hummus, baba ghanoush, tarator sauce, and halva desserts. Cross-contact prevention and accurate communication are critical. EU Regulation 1169/2011 requires allergen information for non-prepacked foods.</p>
+<p>Sesame is listed as a declarable allergen under Annex II of EU Regulation 1169/2011. Tahini is ubiquitous in Middle Eastern cooking—present in hummus, baba ghanoush, tarator sauce, and halva desserts. Cross-contact prevention and accurate communication are critical legal requirements.</p>
 
 <h2>3. Critical Control Points and Operational PRPs</h2>
 
