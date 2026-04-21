@@ -111,7 +111,7 @@ source: "pinkpepper"
     </tr>
     <tr>
       <td>Tree Nuts</td>
-      <td>Cashew nuts, coconut</td>
+      <td>Cashew nuts</td>
     </tr>
     <tr>
       <td>Soy</td>

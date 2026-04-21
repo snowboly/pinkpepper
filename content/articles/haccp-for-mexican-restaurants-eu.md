@@ -287,7 +287,7 @@ source: "pinkpepper"
     </tr>
     <tr>
       <td>UK</td>
-      <td>≥57°C (with 63°C recommended for initial holding)</td>
+      <td>≥63°C</td>
     </tr>
   </tbody>
 </table>
