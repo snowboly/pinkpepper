@@ -32,6 +32,134 @@
       "current": "Aktuell"
     }
   },
+  "home": {
+    "heroBadge": "Entwickelt für EU- und UK-Lebensmittelrecht",
+    "heroTitle": "HACCP-Pläne, SOPs und Audit-Vorbereitung in Minuten - nicht in Wochen.",
+    "heroDescription": "PinkPepper ist KI-Software für Lebensmittelkonformität und spart Ihrem Team mehr als 10 Stunden pro Woche bei der Dokumentation. Erhalten Sie regulatorisch fundierte Antworten, erstellen Sie auditfähige Nachweise und eskalieren Sie bei höherem Risiko an menschliche Berater.",
+    "eurLexLabel": "Regelungsdaten bereitgestellt von",
+    "trustCards": {
+      "groundedTitle": "Verankert in mehr als 35 EU- und UK-Regelwerken",
+      "groundedBody": "Jede Antwort verweist auf EG 852/2004, Leitlinien der UK FSA, Codex HACCP und mehr - nicht auf generischen KI-Text aus dem Web.",
+      "timeSavedTitle": "Sparen Sie mehr als 10 Stunden pro Woche",
+      "timeSavedBody": "Erstellen Sie HACCP-Pläne, SOPs, Allergenmatrizen und auditfähige Unterlagen in Minuten statt von leeren Vorlagen aus zu starten.",
+      "humanTitle": "Menschliche Berater, wenn es darauf ankommt",
+      "humanBody": "Bearbeiten Sie Routine-Compliance mit KI und eskalieren Sie bei höherem Risiko an qualifizierte Fachleute für Lebensmittelsicherheit."
+    },
+    "workflows": {
+      "eyebrow": "Für den echten Betriebsalltag gebaut",
+      "title": "Wobei PinkPepper Ihnen hilft",
+      "body": "Von Rohnotizen bis zu prüffähiger Compliance-Arbeit verkürzt PinkPepper die Zeit zwischen einem Lebensmittelsicherheitsproblem und etwas, das Ihr Team tatsächlich nutzen kann.",
+      "answerTitle": "Compliance-Fragen schneller beantworten",
+      "answerBody": "Erhalten Sie regulatorisch fundierte Antworten auf Basis von EG 852/2004, UK-FSA-Leitlinien und Codex-HACCP-Referenzen.",
+      "buildTitle": "HACCP und Audit-Vorbereitung schneller aufbauen",
+      "buildBody": "Gehen Sie von Gefahrenanalyse und CCP-Logik zu Inspektionsvorbereitung und Korrekturmaßnahmen über - ohne bei null anzufangen.",
+      "reuseTitle": "Vorlagen wiederverwenden und sauber exportieren",
+      "reuseBody": "Laden Sie strukturierte Vorlagen herunter und exportieren Sie Gesprächsergebnisse in einem Format, das sich leichter prüfen und weitergeben lässt.",
+      "switchTitle": "Zwischen Consultant und Auditor wechseln",
+      "switchBody": "Starten Sie mit praktischer Anleitung im Consultant-Modus, wechseln Sie für evidenzbasierte Feststellungen in den Auditor-Modus und eskalieren Sie nur dann an menschliche Beratung, wenn wirklich Spezialprüfung nötig ist."
+    },
+    "value": {
+      "eyebrow": "Mehrwert",
+      "title": "KI-gestützte Compliance mit Spezialisten, wenn es wichtig wird",
+      "body": "PinkPepper gibt Ihrem Team zwei Arbeitsweisen: Consultant für Antworten und Entscheidungen, Auditor für formale Feststellungen und CAPA. Menschliche Beratung bleibt für die Arbeit verfügbar, die tatsächlich Spezialprüfung braucht.",
+      "consultantTitle": "Consultant + Auditor",
+      "consultantSubtitle": "Zwei Modi, ein Workflow",
+      "consultantBody": "Consultant bearbeitet praktische Fragen und nächste Schritte. Auditor bearbeitet strukturierte Feststellungen, Evidenzlücken und CAPA. Menschliche Berater greifen nur ein, wenn echte Fachprüfung nötig ist.",
+      "timeSavedTitle": "+2 Std. täglich",
+      "timeSavedSubtitle": "10+ Stunden pro Woche eingespart",
+      "timeSavedBody": "Lebensmittelsicherheitsmanager verbringen typischerweise 30 bis 40 % ihres Tages mit Dokumentation und Compliance-Verwaltung. PinkPepper reduziert diesen Aufwand, damit sich Ihr Team auf den Betrieb statt auf Papierarbeit konzentriert.",
+      "savingsTitle": "18.000 EUR+",
+      "savingsSubtitle": "Jährlich bei Compliance-Kosten eingespart",
+      "savingsBody": "Senken Sie reaktive Beratungskosten, indem Sie spontane Stundenhonorare durch gezielte Eskalationen an Experten ersetzen. Bei 150 EUR/Stunde deckt das Vermeiden von 120 unnötigen Beratungsstunden diese Einsparung."
+    },
+    "pricing": {
+      "title": "Preise, die der Compliance-Arbeit folgen",
+      "body": "Starten Sie kostenlos für Live-Fragen, wechseln Sie zu Plus für intensivere Consultant-Nutzung und wählen Sie Pro, wenn Sie den Auditor-Modus und menschliche Beratung möchten.",
+      "fullPricingLabel": "Vollständige Preise ansehen",
+      "freeDescription": "Am besten geeignet, um die Passung mit echten Fragen und täglichen Prüfungen zu testen, bevor Sie sich festlegen.",
+      "plusDescription": "Für Teams, die PinkPepper täglich für HACCP, SOPs, Allergenunterlagen und herunterladbare Vorlagen einsetzen.",
+      "proDescription": "Für Teams, die beide KI-Modi, stärkere Audit-Workflows und menschliche Beratung für Arbeiten mit höherem Risiko wollen.",
+      "monthLabel": "/Monat",
+      "monthVatLabel": "/Monat + MwSt.",
+      "freeFeatures": [
+        "Chat im Web und mobil (App bald verfügbar)",
+        "Lebensmittelsicherheitsinhalte schreiben, bearbeiten und erstellen",
+        "Text und Bilder analysieren",
+        "Zugang zu kuratierter Wissensdatenbank",
+        "Tägliche Compliance-Unterstützung"
+      ],
+      "plusFeatures": [
+        "Alles aus Free",
+        "Intensivere tägliche Consultant-Nutzung",
+        "Höhere tägliche Nutzungslimits",
+        "Unbegrenzte gespeicherte Gespräche und Projekte",
+        "Zugang zu herunterladbaren Vorlagen"
+      ],
+      "proFeatures": [
+        "Alles aus Plus",
+        "Mehr Kapazität für Arbeiten mit höherem Risiko",
+        "Höchste tägliche Nutzungslimits",
+        "Zugang zum Auditor-Modus",
+        "2 Std./Monat menschliche Beratung zur Lebensmittelsicherheit",
+        "Priorisierter Support"
+      ],
+      "freeCta": "Kostenlos starten",
+      "plusCta": "Plus wählen",
+      "proCta": "Pro wählen",
+      "mostPopular": "Am beliebtesten"
+    },
+    "library": {
+      "eyebrow": "Aus der Bibliothek",
+      "title": "Artikel, Leitfäden und Vorlagen",
+      "haccpLinkLabel": "HACCP-Plan-Generator",
+      "browseAllLabel": "Alle ansehen"
+    },
+    "specialists": {
+      "eyebrow": "Ihre Spezialisten",
+      "title": "Sechs Spezialisten. Ein Abo.",
+      "body": "Jede PinkPepper-Unterhaltung wird von einem unserer sechs KI-Spezialisten für Lebensmittelsicherheit bearbeitet. Jeder hat einen eigenen Ansatz - von Schritt-für-Schritt-Checklisten bis zu direkten Executive Summaries - damit Sie für jede Situation den richtigen Ton erhalten.",
+      "subBody": "Automatisch zugewiesen. Gleiches Gespräch, gleicher Spezialist.",
+      "supportive": "Unterstützend",
+      "direct": "Direkt",
+      "methodical": "Methodisch",
+      "mentor": "Mentor",
+      "reassuring": "Beruhigend",
+      "proBadge": "Pro",
+      "leadAuditor": "Lead Auditor",
+      "leadAuditorBody": "Nur im Audit-Modus. Evidenzbasierte Feststellungen, Schweregrade und Korrekturmaßnahmen."
+    },
+    "faq": {
+      "title": "Häufig gestellte Fragen",
+      "body": "Klare Antworten zu Produkt, Compliance und Verantwortlichkeiten, bevor Sie PinkPepper in Ihren Workflow übernehmen.",
+      "items": [
+        {
+          "question": "Ist PinkPepper nur ein weiterer ChatGPT-Wrapper?",
+          "answer": "Nein. PinkPepper nutzt ein speziell für Lebensmittel-Compliance entwickeltes Retrieval-Augmented-Generation-System. Jede Antwort ist in einer kuratierten Wissensbasis verankert, die mehr als 35 EU- und UK-Vorschriften zur Lebensmittelsicherheit, offizielle FSA/FSS-Leitlinien, bewährte SOPs und Zertifizierungsstandards wie BRCGS, ISO 22000, SALSA und SQF abdeckt. Es ist kein allgemeiner Chatbot und beantwortet keine Fragen außerhalb seines Lebensmittel-Sicherheitsbereichs."
+        },
+        {
+          "question": "Welche Vorschriften deckt PinkPepper ab?",
+          "answer": "Die Wissensbasis von PinkPepper deckt mehr als 35 EU- und UK-Vorschriften ab, darunter: EG 178/2002 (Allgemeines Lebensmittelrecht), EG 852/2004 und EG 853/2004 (Lebensmittelhygiene), EU 1169/2011 (Allergenkennzeichnung einschließlich Natasha's Law), EG 2073/2005 (mikrobiologische Kriterien), EU 2023/915 (Grenzwerte für Kontaminanten wie Schwermetalle, Mykotoxine und Prozesskontaminanten), EG 1935/2004 und EU 2025/351 (Materialien mit Lebensmittelkontakt), EU 2015/2283 (Novel Foods), EG 1829/2003 (GVO), EU 2018/848 (ökologische Produktion) sowie deren nach dem Brexit beibehaltene UK-Äquivalente. Die Abdeckung umfasst HACCP, Allergenmanagement, Rückverfolgbarkeit, Temperaturkontrolle, Schädlingsbekämpfung, mikrobiologische Tests und mehr."
+        },
+        {
+          "question": "Woher stammen die Regulierungsdaten von PinkPepper und wie aktuell sind sie?",
+          "answer": "Die Primärgesetzgebung wird direkt aus EUR-Lex CELLAR bezogen, dem offiziellen Open-Data-Repository des Amts für Veröffentlichungen der Europäischen Union. PinkPepper synchronisiert sich monatlich automatisch mit EUR-Lex und nutzt Content-Hashing, um Änderungen sofort nach Veröffentlichung zu erkennen, sodass die Wissensbasis stets die neuesten konsolidierten Fassungen widerspiegelt. Die UK-Äquivalente des retained law sowie offizielle FSA/FSS-Leitlinien werden separat gepflegt. Die Änderungserkennung läuft unabhängig von EUR-Lex-Metadaten-Zeitstempeln und bleibt deshalb auch dann präzise, wenn EUR-Lex die Änderungsdaten konsolidierter Texte nicht aktualisiert."
+        },
+        {
+          "question": "Kann ich mich für die rechtliche Compliance auf PinkPepper-Ausgaben verlassen?",
+          "answer": "Die Ausgaben von PinkPepper basieren auf maßgeblichen Vorschriftentexten und offiziellen Leitlinien, stellen jedoch keine Rechtsberatung dar. Regulatorische Anforderungen variieren je nach Betriebsart, Rechtsraum, Standort und lokaler Durchsetzungspraxis. Sie müssen alle Ausgaben vor dem Einsatz gegen Ihren konkreten Betriebskontext und Ihre lokalen rechtlichen Pflichten prüfen. Wenn rechtliche Sicherheit erforderlich ist, sollten Sie einen qualifizierten Fachberater für Lebensmittelsicherheit oder einen Rechtsberater konsultieren. PinkPepper ist ein Dokumentationswerkzeug und keine Compliance-Garantie."
+        },
+        {
+          "question": "Wer ist für endgültige Dokumente und Entscheidungen verantwortlich?",
+          "answer": "Ihr Unternehmen trägt weiterhin die volle rechtliche Verantwortung für sämtliche Unterlagen zur Lebensmittelsicherheit, Entscheidungen und operativen Kontrollen. PinkPepper beschleunigt den Entwurfsprozess, doch die abschließende Prüfung, Freigabe, Verifizierung und Umsetzung aller Compliance-Dokumente muss durch verantwortliche und kompetente Personen in Ihrer Organisation erfolgen. Ein in PinkPepper erzeugtes Dokument erfüllt noch keine rechtliche Pflicht - erst das Handeln danach tut es."
+        }
+      ]
+    },
+    "cta": {
+      "title": "Verschwenden Sie keine Stunden mehr mit Compliance-Papierarbeit.",
+      "body": "Testen Sie PinkPepper kostenlos mit einer echten Compliance-Frage. Keine Kreditkarte erforderlich.",
+      "button": "Kostenlos starten - keine Karte nötig"
+    }
+  },
   "pages": {
     "home": {
       "title": "PinkPepper | KI HACCP & Lebensmittelsicherheitssoftware für EU & UK Unternehmen",
