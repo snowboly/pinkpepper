@@ -23,11 +23,23 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
     return {};
   }
 
+  const url = `https://www.pinkpepper.io/articles/${article.slug}`;
   return {
     title: `${article.title} | PinkPepper`,
     description: article.excerpt,
     alternates: {
-      canonical: `https://www.pinkpepper.io/articles/${article.slug}`,
+      canonical: url,
+      languages: { "x-default": url, en: url },
+    },
+    openGraph: {
+      title: `${article.title} | PinkPepper`,
+      description: article.excerpt,
+      locale: "en_GB",
+      images: [
+        article.image
+          ? { url: article.image, width: 1200, height: 630, alt: article.title }
+          : { url: "https://www.pinkpepper.io/social-card.png", width: 1200, height: 630, alt: "PinkPepper - AI Food Safety Compliance Software" },
+      ],
     },
   };
 }

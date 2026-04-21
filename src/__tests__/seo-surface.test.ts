@@ -127,6 +127,7 @@ describe("SEO surface", () => {
 
     expect(metadata.alternates?.canonical).toBe("https://www.pinkpepper.io/fr/pricing");
     expect(metadata.alternates?.languages).toEqual({
+      "x-default": "https://www.pinkpepper.io/en/pricing",
       en: "https://www.pinkpepper.io/en/pricing",
       fr: "https://www.pinkpepper.io/fr/pricing",
       de: "https://www.pinkpepper.io/de/pricing",

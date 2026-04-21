@@ -7,6 +7,7 @@ export const metadata: Metadata = {
     "Learn what a pest control log should record to meet EU and UK food safety requirements, including contractor visits, findings, and follow-up actions.",
   alternates: {
     canonical: "https://www.pinkpepper.io/resources/pest-control-log-template",
+    languages: { "x-default": "https://www.pinkpepper.io/resources/pest-control-log-template", en: "https://www.pinkpepper.io/resources/pest-control-log-template" },
   },
 };
 

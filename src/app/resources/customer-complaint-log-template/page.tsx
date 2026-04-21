@@ -7,6 +7,7 @@ export const metadata: Metadata = {
     "Learn what a customer complaint log should capture to investigate food safety issues, identify trends, and feed findings back into your HACCP corrective action process.",
   alternates: {
     canonical: "https://www.pinkpepper.io/resources/customer-complaint-log-template",
+    languages: { "x-default": "https://www.pinkpepper.io/resources/customer-complaint-log-template", en: "https://www.pinkpepper.io/resources/customer-complaint-log-template" },
   },
 };
 

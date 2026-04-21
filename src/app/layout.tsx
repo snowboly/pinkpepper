@@ -31,6 +31,7 @@ export const metadata: Metadata = {
       "Generate HACCP plans, allergen records, SOPs & audit-ready documents in minutes. Save 10+ hours/week on compliance. Grounded in 35+ EU & UK regulations.",
     url: "https://www.pinkpepper.io",
     siteName: "PinkPepper",
+    locale: "en_GB",
     images: [
       {
         url: "https://www.pinkpepper.io/social-card.png",

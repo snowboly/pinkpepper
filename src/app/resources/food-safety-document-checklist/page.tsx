@@ -43,6 +43,7 @@ export const metadata: Metadata = {
     "Use this EU and UK food safety document checklist to review HACCP, SOPs, allergen records, traceability, monitoring logs, and audit-readiness documents.",
   alternates: {
     canonical: "https://www.pinkpepper.io/resources/food-safety-document-checklist",
+    languages: { "x-default": "https://www.pinkpepper.io/resources/food-safety-document-checklist", en: "https://www.pinkpepper.io/resources/food-safety-document-checklist" },
   },
 };
 

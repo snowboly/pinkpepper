@@ -7,6 +7,7 @@ export const metadata: Metadata = {
     "Learn what a corrective action log should capture for HACCP deviations, root cause analysis, and audit evidence in EU and UK food businesses.",
   alternates: {
     canonical: "https://www.pinkpepper.io/resources/corrective-action-log-template",
+    languages: { "x-default": "https://www.pinkpepper.io/resources/corrective-action-log-template", en: "https://www.pinkpepper.io/resources/corrective-action-log-template" },
   },
 };
 

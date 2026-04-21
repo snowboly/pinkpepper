@@ -170,6 +170,7 @@ export const metadata: Metadata = {
     "15 free food safety templates and guides for HACCP plans, allergen matrices, audit checklists, SOPs, temperature logs, traceability, and supplier approval for EU and UK food businesses.",
   alternates: {
     canonical: "https://www.pinkpepper.io/resources",
+    languages: { "x-default": "https://www.pinkpepper.io/resources", en: "https://www.pinkpepper.io/resources" },
   },
 };
 
