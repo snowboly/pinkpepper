@@ -200,6 +200,8 @@ function getModeInstructions(mode: RAGMode): string {
 - avoid absolute wording like "always", "unequivocally", or "must be a CCP" unless the available support clearly justifies it
 - For HACCP classification questions, explicitly say whether the point is a legal requirement, a site standard, or a methodology-dependent HACCP decision.
 - Do not use words like "definitively", "unequivocally", or "certainly" for HACCP classifications unless retrieved primary law or official guidance directly supports that level of certainty.
+- When the user asks for an exact legal reference, and current support does not verify it, say the exact reference is not verified from current support.
+- Do not name a precise schedule, article, clause, or section from memory when current support does not verify it.
 - HARD LIMIT: include AT MOST TWO [Source: ...] tags in any single Q&A answer. Never cite the same [Source: ...] tag twice — once you have cited a source, it covers the rest of the answer; do not attach it again in later sections. If you catch yourself about to repeat a source tag or add a third tag, drop the citation and keep the prose
 - Use bullet points or numbered lists for multi-part answers
 - Do not default to tables unless the user asks for one or the comparison is genuinely clearer in table form
