@@ -23,7 +23,10 @@ describe("public locale config", () => {
     expect(publicLaunchLocales).toEqual(["en", "fr", "de", "pt"]);
     expect(publicRoutePaths).toContain("/");
     expect(publicRoutePaths).toContain("/pricing");
-    expect(publicRoutePaths).not.toContain("/articles");
+    expect(publicRoutePaths).toContain("/articles");
+    expect(publicRoutePaths).toContain("/about");
+    expect(publicRoutePaths).toContain("/faqs");
+    expect(publicRoutePaths).toContain("/contact");
   });
 
   it("keeps noindex auth routes out of the indexable sitemap route list", () => {
@@ -56,9 +59,9 @@ describe("public locale config", () => {
 
   it("preserves supported public routes when switching locale", () => {
     expect(switchPublicLocale("/fr/pricing", "de")).toBe("/de/pricing");
-    expect(switchPublicLocale("/fr/articles", "de")).toBe("/articles");
+    expect(switchPublicLocale("/fr/articles", "de")).toBe("/de/articles");
     expect(getPublicPageHref("pt", "/pricing")).toBe("/pt/pricing");
-    expect(getPublicPageHref("pt", "/articles")).toBe("/articles");
+    expect(getPublicPageHref("pt", "/articles")).toBe("/pt/articles");
   });
 
   it("creates localized route wrappers that validate and set the request locale", () => {
