@@ -9,6 +9,10 @@ export const publicContentRoutePaths = [
   "/features/haccp-plan-generator",
   "/features/allergen-documentation",
   "/features/food-safety-sop-generator",
+  "/about",
+  "/articles",
+  "/faqs",
+  "/contact",
 ] as const;
 
 export const publicAuthRoutePaths = ["/signup", "/login"] as const;

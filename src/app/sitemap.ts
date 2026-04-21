@@ -37,6 +37,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/resources/waste-management-sop-template`, lastModified: new Date("2026-03-14"), changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE_URL}/resources/traceability-log-template`, lastModified: new Date("2026-03-14"), changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE_URL}/resources/food-safety-management-system-template`, lastModified: new Date("2026-03-14"), changeFrequency: "monthly", priority: 0.7 },
+    { url: `${BASE_URL}/pricing`, lastModified: new Date("2026-03-18"), changeFrequency: "monthly", priority: 0.9 },
     { url: `${BASE_URL}/articles`, lastModified: new Date("2026-03-20"), changeFrequency: "weekly", priority: 0.7 },
     ...articles.map((article) => ({
       url: `${BASE_URL}/articles/${article.slug}`,
