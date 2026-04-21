@@ -172,6 +172,13 @@ export const metadata: Metadata = {
     canonical: "https://www.pinkpepper.io/resources",
     languages: { "x-default": "https://www.pinkpepper.io/resources", en: "https://www.pinkpepper.io/resources" },
   },
+  openGraph: {
+    title: "Free Food Safety Templates & Guides | HACCP, Allergen, SOP, Audit | PinkPepper",
+    description:
+      "15 free food safety templates and guides for HACCP plans, allergen matrices, audit checklists, SOPs, temperature logs, traceability, and supplier approval for EU and UK food businesses.",
+    locale: "en_GB",
+    images: [{ url: "https://www.pinkpepper.io/social-card.png", width: 1200, height: 630, alt: "PinkPepper - AI Food Safety Compliance Software" }],
+  },
 };
 
 export default function ResourcesPage() {

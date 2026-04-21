@@ -19,7 +19,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     { url: BASE_URL, lastModified: new Date("2026-03-18"), changeFrequency: "weekly", priority: 1 },
     ...localizedPublicEntries,
-    { url: `${BASE_URL}/about`, lastModified: new Date("2026-03-18"), changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE_URL}/resources`, lastModified: new Date("2026-03-14"), changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE_URL}/resources/haccp-plan-template`, lastModified: new Date("2026-03-14"), changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE_URL}/resources/allergen-matrix-template`, lastModified: new Date("2026-03-14"), changeFrequency: "monthly", priority: 0.7 },
@@ -50,5 +49,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/security`, lastModified: new Date("2026-03-18"), changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE_URL}/legal/terms`, lastModified: new Date("2026-04-15"), changeFrequency: "yearly", priority: 0.3 },
     { url: `${BASE_URL}/legal/privacy`, lastModified: new Date("2026-04-15"), changeFrequency: "yearly", priority: 0.3 },
+    { url: `${BASE_URL}/legal/cookies`, lastModified: new Date("2026-04-15"), changeFrequency: "yearly", priority: 0.3 },
+    { url: `${BASE_URL}/legal/dpa`, lastModified: new Date("2026-04-15"), changeFrequency: "yearly", priority: 0.3 },
+    { url: `${BASE_URL}/legal/acceptable-use`, lastModified: new Date("2026-04-15"), changeFrequency: "yearly", priority: 0.3 },
+    { url: `${BASE_URL}/legal/refund`, lastModified: new Date("2026-04-15"), changeFrequency: "yearly", priority: 0.3 },
   ];
 }

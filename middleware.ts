@@ -55,7 +55,7 @@ export async function middleware(request: NextRequest) {
   // is set yet. Only applies to the root path — deep links are unaffected.
   if (pathname === "/" && !request.cookies.get("locale")?.value) {
     const preferred = parseAcceptLanguage(request.headers.get("accept-language") ?? "");
-    const matched = publicLaunchLocales.find((l) => preferred.includes(l));
+    const matched = preferred.find((l) => (publicLaunchLocales as readonly string[]).includes(l));
     if (matched && matched !== "en") {
       const redirectUrl = request.nextUrl.clone();
       redirectUrl.pathname = `/${matched}`;

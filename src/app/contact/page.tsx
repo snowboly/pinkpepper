@@ -13,7 +13,7 @@ const contactPageSchema = {
   mainEntity: {
     "@type": "Organization",
     name: "PinkPepper",
-    url: "https://pinkpepper.io",
+    url: "https://www.pinkpepper.io",
     contactPoint: {
       "@type": "ContactPoint",
       email: "support@pinkpepper.io",
@@ -31,6 +31,13 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://www.pinkpepper.io/contact",
     languages: { "x-default": "https://www.pinkpepper.io/contact", en: "https://www.pinkpepper.io/contact" },
+  },
+  openGraph: {
+    title: "Contact PinkPepper — Food Safety Compliance Support",
+    description:
+      "Questions about HACCP plans, pricing, or enterprise plans? Contact PinkPepper for food safety compliance support. We respond within 1 business day.",
+    locale: "en_GB",
+    images: [{ url: "https://www.pinkpepper.io/social-card.png", width: 1200, height: 630, alt: "PinkPepper - AI Food Safety Compliance Software" }],
   },
 };
 
