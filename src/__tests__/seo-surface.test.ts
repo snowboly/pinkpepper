@@ -174,12 +174,13 @@ describe("SEO surface", () => {
       return Array.isArray(disallow) ? disallow : disallow ? [disallow] : [];
     });
 
-    expect(entries).toContain("https://www.pinkpepper.io/resources");
-    expect(entries).toContain("https://www.pinkpepper.io/fr");
-    expect(entries).toContain("https://www.pinkpepper.io/pt/pricing");
-    expect(entries).toContain("https://www.pinkpepper.io/de/features/haccp-plan-generator");
-    expect(entries).not.toContain("https://www.pinkpepper.io/login");
-    expect(entries).not.toContain("https://www.pinkpepper.io/dashboard");
+    expect(entries).toContain("https://pinkpepper.io/resources");
+    expect(entries).toContain("https://pinkpepper.io/fr");
+    expect(entries).toContain("https://pinkpepper.io/pt/pricing");
+    expect(entries).toContain("https://pinkpepper.io/de/features/haccp-plan-generator");
+    expect(entries).not.toContain("https://pinkpepper.io/login");
+    expect(entries).not.toContain("https://pinkpepper.io/dashboard");
+    expect(robots().sitemap).toBe("https://pinkpepper.io/sitemap.xml");
     expect(disallowLists).toEqual(
       expect.arrayContaining(["/dashboard/", "/admin/", "/api/", "/auth/"]),
     );
@@ -291,11 +292,11 @@ describe("public SEO copy and linking", () => {
   it("keeps current public marketing pages fresh in the sitemap", async () => {
     const entries = await sitemap();
     const currentPages = [
-      "https://www.pinkpepper.io",
-      "https://www.pinkpepper.io/about",
-      "https://www.pinkpepper.io/pricing",
-      "https://www.pinkpepper.io/contact",
-      "https://www.pinkpepper.io/security",
+      "https://pinkpepper.io",
+      "https://pinkpepper.io/about",
+      "https://pinkpepper.io/pricing",
+      "https://pinkpepper.io/contact",
+      "https://pinkpepper.io/security",
     ];
 
     for (const url of currentPages) {

@@ -3,7 +3,7 @@ import { getArticleManifest } from "@/lib/articles";
 import { publicContentRoutePaths, publicLaunchLocales } from "@/i18n/public";
 import { localizePublicPath } from "@/lib/public-routes";
 
-const BASE_URL = "https://www.pinkpepper.io";
+const BASE_URL = "https://pinkpepper.io";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const articles = await getArticleManifest().catch(() => []);
