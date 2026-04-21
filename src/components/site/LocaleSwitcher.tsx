@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { localeNames } from "@/i18n/config";
 import { publicLaunchLocales, type PublicLocale } from "@/i18n/public";
 import { switchPublicLocale } from "@/lib/public-routes";
+import { setLocaleCookie } from "@/lib/actions/locale";
 
 export function LocaleSwitcher({
   currentLocale,
@@ -72,7 +73,7 @@ export function LocaleSwitcher({
                 href={switchPublicLocale(pathname, locale)}
                 role="option"
                 aria-selected={locale === currentLocale}
-                onClick={() => setOpen(false)}
+                onClick={() => { void setLocaleCookie(locale); setOpen(false); }}
                 className={`rounded-xl px-3 py-2 text-sm ${
                   locale === currentLocale
                     ? "bg-[#FFF1F2] font-semibold text-[#BE123C]"
