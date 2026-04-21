@@ -54,7 +54,7 @@ describe("public locale config", () => {
     const messages = await getPublicMessages("fr");
 
     expect(messages.chrome.nav.pricing).toBe("Tarifs");
-    expect(messages.chrome.nav.about).toBe("About");
+    expect(messages.chrome.nav.about).toBe("À propos");
   });
 
   it("preserves supported public routes when switching locale", () => {

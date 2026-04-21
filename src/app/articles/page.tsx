@@ -62,6 +62,13 @@ export const metadata: Metadata = {
     canonical: "https://www.pinkpepper.io/articles",
     languages: { "x-default": "https://www.pinkpepper.io/articles", en: "https://www.pinkpepper.io/articles" },
   },
+  openGraph: {
+    title: "Food Safety Articles & Insights | PinkPepper",
+    description:
+      "A curated library of practical guidance on HACCP, allergen management, food safety audits, and operational compliance for EU and UK food businesses.",
+    locale: "en_GB",
+    images: [{ url: "https://www.pinkpepper.io/social-card.png", width: 1200, height: 630, alt: "PinkPepper - AI Food Safety Compliance Software" }],
+  },
 };
 
 export default async function ArticlesPage() {

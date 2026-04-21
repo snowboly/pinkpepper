@@ -69,15 +69,15 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
     author: {
       "@type": "Organization",
       name: "PinkPepper",
-      url: "https://pinkpepper.io",
+      url: "https://www.pinkpepper.io",
     },
     publisher: {
       "@type": "Organization",
       name: "PinkPepper",
-      url: "https://pinkpepper.io",
+      url: "https://www.pinkpepper.io",
       logo: {
         "@type": "ImageObject",
-        url: "https://pinkpepper.io/logo/android-chrome-512x512.png",
+        url: "https://www.pinkpepper.io/logo/android-chrome-512x512.png",
       },
     },
     mainEntityOfPage: {

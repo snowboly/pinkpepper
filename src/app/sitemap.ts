@@ -8,7 +8,7 @@ const BASE_URL = "https://www.pinkpepper.io";
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const articles = await getArticleManifest().catch(() => []);
   const localizedPublicEntries = publicContentRoutePaths.flatMap((path) =>
-    publicLaunchLocales.map((locale) => ({
+    publicLaunchLocales.filter((l) => l !== "en").map((locale) => ({
       url: `${BASE_URL}${localizePublicPath(locale, path)}`,
       lastModified: new Date("2026-04-20"),
       changeFrequency: path === "/" ? ("weekly" as const) : ("monthly" as const),
@@ -50,5 +50,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/security`, lastModified: new Date("2026-03-18"), changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE_URL}/legal/terms`, lastModified: new Date("2026-04-15"), changeFrequency: "yearly", priority: 0.3 },
     { url: `${BASE_URL}/legal/privacy`, lastModified: new Date("2026-04-15"), changeFrequency: "yearly", priority: 0.3 },
+    { url: `${BASE_URL}/legal/cookies`, lastModified: new Date("2026-04-15"), changeFrequency: "yearly", priority: 0.3 },
+    { url: `${BASE_URL}/legal/dpa`, lastModified: new Date("2026-04-15"), changeFrequency: "yearly", priority: 0.3 },
+    { url: `${BASE_URL}/legal/acceptable-use`, lastModified: new Date("2026-04-15"), changeFrequency: "yearly", priority: 0.3 },
+    { url: `${BASE_URL}/legal/refund`, lastModified: new Date("2026-04-15"), changeFrequency: "yearly", priority: 0.3 },
   ];
 }

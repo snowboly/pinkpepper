@@ -11,8 +11,16 @@ import { publicLaunchLocales } from "@/i18n/public";
 function parseAcceptLanguage(header: string): string[] {
   return header
     .split(",")
-    .map((entry) => entry.trim().split(";")[0]?.trim().split("-")[0]?.toLowerCase() ?? "")
-    .filter(Boolean);
+    .map((entry) => {
+      const parts = entry.trim().split(";");
+      const lang = parts[0]?.trim().split("-")[0]?.toLowerCase() ?? "";
+      const qParam = parts.find((p) => p.trim().startsWith("q="));
+      const q = qParam ? parseFloat(qParam.trim().slice(2)) : 1.0;
+      return { lang, q: Number.isFinite(q) ? q : 1.0 };
+    })
+    .filter(({ lang }) => lang.length > 0)
+    .sort((a, b) => b.q - a.q)
+    .map(({ lang }) => lang);
 }
 
 /**
@@ -55,7 +63,7 @@ export async function middleware(request: NextRequest) {
   // is set yet. Only applies to the root path — deep links are unaffected.
   if (pathname === "/" && !request.cookies.get("locale")?.value) {
     const preferred = parseAcceptLanguage(request.headers.get("accept-language") ?? "");
-    const matched = publicLaunchLocales.find((l) => preferred.includes(l));
+    const matched = preferred.find((l) => (publicLaunchLocales as readonly string[]).includes(l));
     if (matched && matched !== "en") {
       const redirectUrl = request.nextUrl.clone();
       redirectUrl.pathname = `/${matched}`;
