@@ -24,7 +24,7 @@ export function isExactReferenceQuestion(userMessage: string) {
 }
 
 const MODE_TEMPERATURES: Record<RAGMode, number> = {
-  qa: 1.0,      // Data analysis range — factual but naturally varied
+  qa: 0.7,      // More consistent consultant answers with less speculative flourish
   document: 1.0, // Data analysis range — structured output without robotic repetition
   audit: 0.0,   // Maximum precision for compliance checks
 };
@@ -195,6 +195,11 @@ function getModeInstructions(mode: RAGMode): string {
 - Answer like an experienced food safety consultant helping an operator make the next good decision, not like an auditor, non-conformance report, or enforcement notice
 - Do not close an answer with a verdict-style summary ("non-compliant", "unsafe practice", "unacceptable", "breach of law"). End with the operational fix or the next action the operator should take
 - Use legal references and named guidance selectively to support the advice, not as the backbone of every paragraph
+- Distinguish clearly between legal requirements, best practice, and site standards. If a limit or approach is not clearly a legal requirement, say that plainly.
+- When a classification or control approach is methodology-dependent, say that it is methodology-dependent rather than presenting one classification as universal.
+- avoid absolute wording like "always", "unequivocally", or "must be a CCP" unless the available support clearly justifies it
+- For HACCP classification questions, explicitly say whether the point is a legal requirement, a site standard, or a methodology-dependent HACCP decision.
+- Do not use words like "definitively", "unequivocally", or "certainly" for HACCP classifications unless retrieved primary law or official guidance directly supports that level of certainty.
 - HARD LIMIT: include AT MOST TWO [Source: ...] tags in any single Q&A answer. Never cite the same [Source: ...] tag twice — once you have cited a source, it covers the rest of the answer; do not attach it again in later sections. If you catch yourself about to repeat a source tag or add a third tag, drop the citation and keep the prose
 - Use bullet points or numbered lists for multi-part answers
 - Do not default to tables unless the user asks for one or the comparison is genuinely clearer in table form

@@ -17,7 +17,7 @@ import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { resolveChatModels } from "@/app/api/chat/stream/route";
-import { buildRAGSystemPrompt, getExportGuidance } from "@/lib/rag/prompt-builder";
+import { buildRAGPrompt, buildRAGSystemPrompt, getExportGuidance } from "@/lib/rag/prompt-builder";
 import { buildVirtualAuditSystemPrompt } from "@/app/api/audit/stream/route";
 
 // ---------------------------------------------------------------------------
@@ -166,6 +166,30 @@ describe("A: static model configuration", () => {
     expect(prompt).toContain("Never write, generate, or complete source code in any programming language");
     expect(prompt).toContain('"for a food safety app"');
     expect(prompt).toContain("Do not produce even a partial code snippet");
+  });
+
+  it("qa prompt distinguishes legal requirements from best practice and site standards", () => {
+    const prompt = buildRAGSystemPrompt([], "qa");
+    expect(prompt).toContain("Distinguish clearly between legal requirements, best practice, and site standards");
+    expect(prompt).toContain("avoid absolute wording");
+    expect(prompt).toContain("methodology-dependent");
+  });
+
+  it("qa prompt requires explicit classification framing for HACCP decisions and bans unsupported certainty words", () => {
+    const prompt = buildRAGSystemPrompt([], "qa");
+    expect(prompt).toContain("For HACCP classification questions");
+    expect(prompt).toContain("legal requirement, a site standard, or a methodology-dependent HACCP decision");
+    expect(prompt).toContain('Do not use words like "definitively", "unequivocally", or "certainly"');
+  });
+
+  it("consultant mode uses a lower temperature than 1.0", () => {
+    const src = readFileSync(
+      path.join(process.cwd(), "src/app/api/chat/stream/route.ts"),
+      "utf8"
+    );
+    const { temperature } = buildRAGPrompt("How should I store chilled food?", [], "qa");
+    expect(temperature).toBe(0.7);
+    expect(src).toContain('temperature = mode === "audit" ? 0.0 : mode === "document" ? 1.0 : 0.7;');
   });
 });
 
