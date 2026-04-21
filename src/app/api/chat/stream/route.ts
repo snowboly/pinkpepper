@@ -685,6 +685,8 @@ export async function POST(request: Request) {
           "- avoid absolute wording like 'always', 'unequivocally', or 'must be a CCP' unless the available support clearly justifies it.\n" +
           "- For HACCP classification questions, explicitly say whether the point is a legal requirement, a site standard, or a methodology-dependent HACCP decision.\n" +
           "- Do not use words like 'definitively', 'unequivocally', or 'certainly' for HACCP classifications unless retrieved primary law or official guidance directly supports that level of certainty.\n" +
+          "- When the user asks for an exact legal reference, and current support does not verify it, say the exact reference is not verified from current support.\n" +
+          "- Do not name a precise schedule, article, clause, or section from memory when current support does not verify it.\n" +
           "- HARD LIMIT: at most TWO [Source: ...] tags per answer. Never cite the same [Source: ...] tag twice — once cited, it covers the rest of the answer. If you're about to repeat a tag or add a third, drop the citation and keep the prose.\n" +
           "- Do not default to demanding supplier declarations, version-controlled records, validation studies, written SOPs, or advanced verification unless the question genuinely requires that level of control.\n" +
           "- Do not default to tables unless the user asked for one or the comparison is clearly easier to follow in table form.\n" +
@@ -722,7 +724,8 @@ export async function POST(request: Request) {
       "13. Do NOT describe yourself as a generic AI or say that you lack real-time access. If the user asks about a very recent change, explain that the latest change is not verified from the current support and direct them to the relevant official source.\n" +
       "14. If the user asks for an exact article, clause, section, or review frequency and you cannot verify it, say that the exact reference is not verified from the available support. Do NOT fill the gap with nearby regulations, standards, or guessed review frequencies.\n" +
       "15. Distinguish clearly between legal requirements, best practice, and site standards. If a limit or approach is not clearly a legal requirement, say that plainly. When a classification or control approach is methodology-dependent, say that it is methodology-dependent rather than presenting one classification as universal, and avoid absolute wording unless the available support clearly justifies it.\n" +
-      "16. For HACCP classification questions, explicitly say whether the point is a legal requirement, a site standard, or a methodology-dependent HACCP decision. Do not use words like 'definitively', 'unequivocally', or 'certainly' for HACCP classifications unless retrieved primary law or official guidance directly supports that level of certainty.\n\n" +
+      "16. For HACCP classification questions, explicitly say whether the point is a legal requirement, a site standard, or a methodology-dependent HACCP decision. Do not use words like 'definitively', 'unequivocally', or 'certainly' for HACCP classifications unless retrieved primary law or official guidance directly supports that level of certainty.\n" +
+      "17. When the user asks for an exact legal reference, and current support does not verify it, say the exact reference is not verified from current support. Do not name a precise schedule, article, clause, or section from memory when current support does not verify it.\n\n" +
       (uncertaintyHandlingInstructions ? uncertaintyHandlingInstructions + "\n\n" : "") +
       "INTRODUCTION RULE:\n" + buildIntroductionInstruction(hasAssistantHistory) + "\n\n" +
       "PERSONA:\n" + persona.promptFragment + "\n\n" +

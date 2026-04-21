@@ -182,6 +182,13 @@ describe("A: static model configuration", () => {
     expect(prompt).toContain('Do not use words like "definitively", "unequivocally", or "certainly"');
   });
 
+  it("qa prompt forbids exact legal references from memory when support is not verified", () => {
+    const prompt = buildRAGSystemPrompt([], "qa");
+    expect(prompt).toContain("When the user asks for an exact legal reference");
+    expect(prompt).toContain("the exact reference is not verified from current support");
+    expect(prompt).toContain("Do not name a precise schedule, article, clause, or section from memory");
+  });
+
   it("consultant mode uses a lower temperature than 1.0", () => {
     const src = readFileSync(
       path.join(process.cwd(), "src/app/api/chat/stream/route.ts"),
