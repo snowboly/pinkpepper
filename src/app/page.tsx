@@ -308,7 +308,7 @@ export default async function HomePage() {
               </div>
               <div className="my-6 border-t border-[#FCE7F3]" />
               <ul className="flex-1 space-y-3.5 text-sm text-[#475569]">
-                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />Everything in Free, plus</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />Everything in Free</li>
                 <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />Heavier day-to-day Consultant use</li>
                 <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />Higher daily usage limits</li>
                 <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />Unlimited saved conversations and projects</li>
@@ -331,7 +331,7 @@ export default async function HomePage() {
               </div>
               <div className="my-6 border-t border-[#F1F5F9]" />
               <ul className="flex-1 space-y-3.5 text-sm text-[#475569]">
-                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />Everything in Plus, plus</li>
+                <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />Everything in Plus</li>
                 <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />More capacity for higher-risk work</li>
                 <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />Highest daily usage limits</li>
                 <li className="flex items-start gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />Access to Auditor mode</li>
