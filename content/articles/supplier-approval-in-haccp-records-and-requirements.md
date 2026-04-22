@@ -154,9 +154,9 @@ source: "pinkpepper"
 
 <p>Supplier approval and traceability are linked obligations. Regulation (EC) 178/2002 Article 18 requires operators to have systems in place to identify suppliers. The approved supplier list is the index for that system. Delivery records provide the transaction-level traceability.</p>
 
-<p>Traceability information required at receipt includes: supplier name and address, product description and lot or batch code, quantity, and date of receipt. This information must be retained and linked to finished product batches. The retention period is five years for records relating to traceability.</p>
+<p>Traceability information required at receipt includes: supplier name and address, product description and lot or batch code, quantity, and date of receipt. This information must be retained and linked to finished product batches. Regulation (EC) 178/2002 does not prescribe a fixed retention period; retention should be proportionate to the shelf-life of the product and the reasonable foreseeable period during which a recall or investigation could arise.</p>
 
-<p>Traceability testing under Article 18 requires demonstration that the system can identify suppliers within a reasonable time. Most UK enforcement authorities expect identification within four hours. The test should include a forward trace from raw material to finished product and backward trace from finished product to all raw materials and suppliers.</p>
+<p>Traceability testing under Article 18 requires demonstration that the system can make information available to competent authorities without undue delay. The test should include a forward trace from raw material to finished product and backward trace from finished product to all raw materials and suppliers. Many third-party certification schemes such as BRCGS set their own benchmark timeframes for traceability exercises, but these are scheme requirements, not statutory obligations.</p>
 
 <p>Supplier approval records are examined during traceability tests. The auditor will select a finished product batch, trace to raw material lots, then verify that each supplier appears on the approved list at the date of supply. A supplier not on the list at the date of supply is a finding regardless of current approval status.</p>
 
@@ -176,7 +176,7 @@ source: "pinkpepper"
 
 <p>Required records include: approved supplier list current and historical versions, supplier questionnaires with supporting evidence, certificates of analysis for received batches, third-party certificates with verification of currency, performance review records, emergency use concessions with risk assessments, and records of any supplier audits conducted.</p>
 
-<p>Retention periods: approved supplier list versions and changes — permanent or duration of supply relationship plus five years; supplier questionnaires and certificates — duration of approval plus five years; CoA and delivery records — five years under traceability obligations; emergency use concessions — five years; audit reports — duration of approval plus three years.</p>
+<p>Retention periods should be proportionate to the nature of the material and the foreseeable period during which a recall or enforcement investigation could arise. As a practical guide: approved supplier list versions — permanent or duration of supply relationship plus a risk-proportionate period; supplier questionnaires and certificates — duration of approval plus a suitable period to evidence historic status; CoA and delivery records — retained to cover the shelf-life of products produced plus a reasonable further period; emergency use concessions — retained for the foreseeable investigation horizon; audit reports — duration of approval plus three years. Third-party certification schemes such as BRCGS and IFS prescribe their own minimum retention periods, which operators subject to those schemes must also meet.</p>
 
 <p>Electronic systems are acceptable provided they maintain version control and prevent unauthorised amendment. An uncontrolled spreadsheet is not a compliant system. Audit trails showing who approved supplier additions or changes are required.</p>
 
@@ -271,6 +271,6 @@ source: "pinkpepper"
 <li>Basis of approval must be appropriate to material risk. GFSI certification provides assurance but does not eliminate need for CoA review and ongoing performance monitoring.</li>
 <li>Certificate of analysis review is required for materials where specification limits relate to food safety. Review must occur before use — positive release for high-risk materials.</li>
 <li>Emergency use of unapproved suppliers requires documented risk assessment approved by technical management <em>before</em> material use, not retrospective justification.</li>
-<li>Supplier approval records are traceability records under Regulation (EC) 178/2002. Retention period is five years minimum.</li>
+<li>Supplier approval records are traceability records under Regulation (EC) 178/2002. Retention period is not prescribed by Article 18; it should be proportionate to product shelf-life and the foreseeable investigation horizon.</li>
 <li>Auditors cross-reference delivery records against the approved supplier list. Any unapproved supply is a finding regardless of material quality.</li>
 </ol>
