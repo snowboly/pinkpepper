@@ -5,7 +5,18 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/dashboard/", "/admin/", "/api/", "/auth/"],
+      disallow: [
+        "/dashboard/",
+        "/admin/",
+        "/api/",
+        "/auth/",
+        "/login",
+        "/signup",
+        "/forgot-password",
+        "/update-password",
+        "/*/login",
+        "/*/signup",
+      ],
     },
     sitemap: "https://pinkpepper.io/sitemap.xml",
   };

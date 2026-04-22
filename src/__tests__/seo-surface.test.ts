@@ -182,7 +182,18 @@ describe("SEO surface", () => {
     expect(entries).not.toContain("https://pinkpepper.io/dashboard");
     expect(robots().sitemap).toBe("https://pinkpepper.io/sitemap.xml");
     expect(disallowLists).toEqual(
-      expect.arrayContaining(["/dashboard/", "/admin/", "/api/", "/auth/"]),
+      expect.arrayContaining([
+        "/dashboard/",
+        "/admin/",
+        "/api/",
+        "/auth/",
+        "/login",
+        "/signup",
+        "/forgot-password",
+        "/update-password",
+        "/*/login",
+        "/*/signup",
+      ]),
     );
   });
 });
