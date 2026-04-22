@@ -78,7 +78,7 @@ source: "pinkpepper"
 <ul>
     <li>
         <strong>Rice Cooling</strong>
-        <p>Cooked rice must cool from ≥93°C to ≤20°C within 90 minutes, and from ≤20°C to ≤5°C within a further 90 minutes (4 hours total maximum from cooking to refrigerator).</p>
+        <p>Cooked rice must cool from ≥93°C to ≤20°C within 90 minutes, and from ≤20°C to ≤5°C within a further 90 minutes (3 hours total maximum from cooking to refrigerator).</p>
         <p>Monitor by decanting immediately into shallow containers (depth ≤9 cm), then recording start time, container depth, and temperature at 90-minute and 3-hour marks on the rice cooling log. Alternatively, adopt small-batch cooking throughout service to eliminate the cooling step entirely.</p>
         <p>If rice has not reached ≤5°C within the 4-hour window, discard immediately. Do not attempt to use improperly cooled rice for fried rice the following day. Document the disposal and the corrective action taken to prevent recurrence.</p>
     </li>
