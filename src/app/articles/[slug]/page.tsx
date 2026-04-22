@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
     return {};
   }
 
-  const url = `https://www.pinkpepper.io/articles/${article.slug}`;
+  const url = `https://pinkpepper.io/articles/${article.slug}`;
   return {
     title: `${article.title} | PinkPepper`,
     description: article.excerpt,
@@ -38,7 +38,7 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
       images: [
         article.image
           ? { url: article.image, width: 1200, height: 630, alt: article.title }
-          : { url: "https://www.pinkpepper.io/social-card.png", width: 1200, height: 630, alt: "PinkPepper - AI Food Safety Compliance Software" },
+          : { url: "https://pinkpepper.io/social-card.png", width: 1200, height: 630, alt: "PinkPepper - AI Food Safety Compliance Software" },
       ],
     },
   };
@@ -69,20 +69,20 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
     author: {
       "@type": "Organization",
       name: "PinkPepper",
-      url: "https://www.pinkpepper.io",
+      url: "https://pinkpepper.io",
     },
     publisher: {
       "@type": "Organization",
       name: "PinkPepper",
-      url: "https://www.pinkpepper.io",
+      url: "https://pinkpepper.io",
       logo: {
         "@type": "ImageObject",
-        url: "https://www.pinkpepper.io/logo/android-chrome-512x512.png",
+        url: "https://pinkpepper.io/logo/android-chrome-512x512.png",
       },
     },
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `https://www.pinkpepper.io/articles/${article.slug}`,
+      "@id": `https://pinkpepper.io/articles/${article.slug}`,
     },
     ...(article.image ? { image: article.image } : {}),
   };
@@ -91,9 +91,9 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: "https://www.pinkpepper.io" },
-      { "@type": "ListItem", position: 2, name: "Articles", item: "https://www.pinkpepper.io/articles" },
-      { "@type": "ListItem", position: 3, name: article.title, item: `https://www.pinkpepper.io/articles/${article.slug}` },
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://pinkpepper.io" },
+      { "@type": "ListItem", position: 2, name: "Articles", item: "https://pinkpepper.io/articles" },
+      { "@type": "ListItem", position: 3, name: article.title, item: `https://pinkpepper.io/articles/${article.slug}` },
     ],
   };
 

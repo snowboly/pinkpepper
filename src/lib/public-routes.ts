@@ -37,6 +37,97 @@ export type PublicMessagesDictionary = {
       current: string;
     };
   };
+  home: {
+    heroBadge: string;
+    heroTitle: string;
+    heroDescription: string;
+    eurLexLabel: string;
+    trustCards: {
+      groundedTitle: string;
+      groundedBody: string;
+      timeSavedTitle: string;
+      timeSavedBody: string;
+      humanTitle: string;
+      humanBody: string;
+    };
+    workflows: {
+      eyebrow: string;
+      title: string;
+      body: string;
+      answerTitle: string;
+      answerBody: string;
+      buildTitle: string;
+      buildBody: string;
+      reuseTitle: string;
+      reuseBody: string;
+      switchTitle: string;
+      switchBody: string;
+    };
+    value: {
+      eyebrow: string;
+      title: string;
+      body: string;
+      consultantTitle: string;
+      consultantSubtitle: string;
+      consultantBody: string;
+      timeSavedTitle: string;
+      timeSavedSubtitle: string;
+      timeSavedBody: string;
+      savingsTitle: string;
+      savingsSubtitle: string;
+      savingsBody: string;
+    };
+    pricing: {
+      title: string;
+      body: string;
+      fullPricingLabel: string;
+      freeDescription: string;
+      plusDescription: string;
+      proDescription: string;
+      monthLabel: string;
+      monthVatLabel: string;
+      freeFeatures: string[];
+      plusFeatures: string[];
+      proFeatures: string[];
+      freeCta: string;
+      plusCta: string;
+      proCta: string;
+      mostPopular: string;
+    };
+    library: {
+      eyebrow: string;
+      title: string;
+      haccpLinkLabel: string;
+      browseAllLabel: string;
+    };
+    specialists: {
+      eyebrow: string;
+      title: string;
+      body: string;
+      subBody: string;
+      supportive: string;
+      direct: string;
+      methodical: string;
+      mentor: string;
+      reassuring: string;
+      proBadge: string;
+      leadAuditor: string;
+      leadAuditorBody: string;
+    };
+    faq: {
+      title: string;
+      body: string;
+      items: Array<{
+        question: string;
+        answer: string;
+      }>;
+    };
+    cta: {
+      title: string;
+      body: string;
+      button: string;
+    };
+  };
   pages: {
     home: PageMeta;
     pricing: PageMeta;

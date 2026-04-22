@@ -10,4 +10,15 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return buildPublicMetadata(locale, "/", messages.pages.home);
 }
 
-export default HomePage;
+export default async function LocalizedHomeRoute({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  if (!isPublicLocale(locale)) {
+    notFound();
+  }
+
+  return <HomePage locale={locale} />;
+}

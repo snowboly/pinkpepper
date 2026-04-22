@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { publicLaunchLocales, type PublicLocale } from "@/i18n/public";
 import { localizePublicPath } from "@/lib/public-routes";
 
-const BASE_URL = "https://www.pinkpepper.io";
+const BASE_URL = "https://pinkpepper.io";
 
 const ogLocaleMap: Record<PublicLocale, string> = {
   en: "en_GB",

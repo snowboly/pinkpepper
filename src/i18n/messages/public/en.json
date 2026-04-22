@@ -32,6 +32,134 @@
       "current": "Current"
     }
   },
+  "home": {
+    "heroBadge": "Built for EU & UK food safety regulations",
+    "heroTitle": "HACCP plans, SOPs & audit prep in minutes - not weeks.",
+    "heroDescription": "PinkPepper is AI food safety compliance software that saves your team 10+ hours a week on documentation. Get regulation-grounded answers, generate audit-ready records, and escalate to human consultants when the risk is higher.",
+    "eurLexLabel": "Regulation data powered by",
+    "trustCards": {
+      "groundedTitle": "Grounded in 35+ EU & UK regulations",
+      "groundedBody": "Every answer references EC 852/2004, UK FSA guidance, Codex HACCP, and more - not generic AI copy scraped from the web.",
+      "timeSavedTitle": "Save 10+ hours every week",
+      "timeSavedBody": "Generate HACCP plans, SOPs, allergen matrices, and audit-ready records in minutes instead of starting from blank pages.",
+      "humanTitle": "Human consultants when it matters",
+      "humanBody": "Handle routine compliance with AI, then escalate to qualified food safety professionals for higher-risk reviews and sign-off."
+    },
+    "workflows": {
+      "eyebrow": "Built for real world operators",
+      "title": "What PinkPepper helps you do",
+      "body": "From raw notes to review-ready compliance work, PinkPepper is designed to shorten the time between a food safety problem and something your team can actually use.",
+      "answerTitle": "Answer compliance questions faster",
+      "answerBody": "Get regulation-grounded answers anchored in EC 852/2004, UK FSA guidance, and Codex HACCP references.",
+      "buildTitle": "Build HACCP and audit prep faster",
+      "buildBody": "Move from hazard analysis and CCP logic to inspection prep and corrective actions without starting from blank pages.",
+      "reuseTitle": "Reuse templates and export cleanly",
+      "reuseBody": "Download structured templates and export conversation work in a format that is easier to review and hand over.",
+      "switchTitle": "Switch from Consultant to Auditor when the job changes",
+      "switchBody": "Start with practical guidance in Consultant mode, move into evidence-led findings in Auditor mode, and only escalate to human consultancy when specialist review is needed."
+    },
+    "value": {
+      "eyebrow": "Added Value",
+      "title": "AI-powered compliance, with specialists when it matters",
+      "body": "PinkPepper gives your team two ways to work: Consultant for answers and decisions, Auditor for formal findings and CAPA. Human consultancy stays available for the work that genuinely needs specialist review.",
+      "consultantTitle": "Consultant + Auditor",
+      "consultantSubtitle": "Two modes, one workflow",
+      "consultantBody": "Consultant handles practical questions and next steps. Auditor handles structured findings, evidence gaps, and CAPA. Human consultants step in only when you need a real specialist review.",
+      "timeSavedTitle": "+2h daily",
+      "timeSavedSubtitle": "10+ hours saved every week",
+      "timeSavedBody": "Food safety managers typically spend 30-40% of their day on documentation and compliance admin. PinkPepper cuts that overhead so your team focuses on operations, not paperwork.",
+      "savingsTitle": "EUR18,000+",
+      "savingsSubtitle": "Saved in compliance costs per year",
+      "savingsBody": "Reduce reactive consultant spend by replacing ad-hoc hourly retainers with targeted expert escalations. At EUR150/hr, avoiding 120 unnecessary consultant hours covers the saving."
+    },
+    "pricing": {
+      "title": "Pricing that follows the compliance job",
+      "body": "Start free for live questions, move to Plus for heavier Consultant use, and choose Pro when you want Auditor mode and human consultancy.",
+      "fullPricingLabel": "See full pricing",
+      "freeDescription": "Best for testing fit on live questions and everyday checks before you commit.",
+      "plusDescription": "For teams that use PinkPepper daily for HACCP, SOPs, allergen records, and downloadable templates.",
+      "proDescription": "For teams that want both AI modes, stronger audit workflows, and human food safety consultancy for higher-risk work.",
+      "monthLabel": "/month",
+      "monthVatLabel": "/month + VAT",
+      "freeFeatures": [
+        "Chat on web and mobile (app coming soon)",
+        "Write, edit, and create food safety content",
+        "Analyze text and images",
+        "Access to curated knowledge base",
+        "Everyday compliance guidance"
+      ],
+      "plusFeatures": [
+        "Everything in Free",
+        "Heavier day-to-day Consultant use",
+        "Higher daily usage limits",
+        "Unlimited saved conversations and projects",
+        "Access to downloadable templates"
+      ],
+      "proFeatures": [
+        "Everything in Plus",
+        "More capacity for higher-risk work",
+        "Highest daily usage limits",
+        "Access to Auditor mode",
+        "2h/month of human food safety consultancy",
+        "Priority support"
+      ],
+      "freeCta": "Get started free",
+      "plusCta": "Choose Plus",
+      "proCta": "Choose Pro",
+      "mostPopular": "Most Popular"
+    },
+    "library": {
+      "eyebrow": "From the library",
+      "title": "Articles, guides & templates",
+      "haccpLinkLabel": "HACCP plan generator",
+      "browseAllLabel": "Browse all"
+    },
+    "specialists": {
+      "eyebrow": "Your specialists",
+      "title": "Six specialists. One subscription.",
+      "body": "Every PinkPepper conversation is handled by one of six AI food safety specialists. Each has a distinct approach - from step-by-step checklists to direct executive summaries - so you get the right tone for every situation.",
+      "subBody": "Assigned automatically. Same conversation, same specialist.",
+      "supportive": "Supportive",
+      "direct": "Direct",
+      "methodical": "Methodical",
+      "mentor": "Mentor",
+      "reassuring": "Reassuring",
+      "proBadge": "Pro",
+      "leadAuditor": "Lead Auditor",
+      "leadAuditorBody": "Audit mode only. Evidence-led findings, severity ratings, and corrective actions."
+    },
+    "faq": {
+      "title": "Frequently asked questions",
+      "body": "Clear product, compliance, and responsibility answers before you deploy PinkPepper in your workflow.",
+      "items": [
+        {
+          "question": "Is PinkPepper just another ChatGPT wrapper?",
+          "answer": "No. PinkPepper uses a retrieval-augmented generation (RAG) system purpose-built for food safety compliance. Every response is grounded in a curated knowledge base covering 35+ EU and UK food safety regulations, FSA/FSS official guidance, best-practice SOPs, and certification standards including BRCGS, ISO 22000, SALSA, and SQF. It is not a general-purpose chatbot - it will not respond to questions outside its food safety scope."
+        },
+        {
+          "question": "What regulations does PinkPepper cover?",
+          "answer": "PinkPepper's knowledge base covers 35+ EU and UK regulations, including: EC 178/2002 (General Food Law), EC 852/2004 and EC 853/2004 (food hygiene), EU 1169/2011 (allergen labelling, including Natasha's Law), EC 2073/2005 (microbiological criteria), EU 2023/915 (contaminant limits for heavy metals, mycotoxins, and process contaminants), EC 1935/2004 and EU 2025/351 (food contact materials), EU 2015/2283 (novel foods), EC 1829/2003 (GMOs), EU 2018/848 (organic production), and UK-retained equivalents post-Brexit. Coverage spans HACCP, allergen management, traceability, temperature control, pest control, microbiological testing, and more."
+        },
+        {
+          "question": "Where does PinkPepper's regulation data come from, and how current is it?",
+          "answer": "Primary legislation is sourced directly from EUR-Lex CELLAR - the official open-data repository of the Publications Office of the European Union. PinkPepper automatically syncs with EUR-Lex on a monthly basis, using content hashing to detect amendments as soon as they are published, so the knowledge base always reflects the most recent consolidated versions. UK retained law equivalents and FSA/FSS official guidance documents are maintained separately. Amendment detection runs independently of EUR-Lex metadata timestamps, ensuring accuracy even when EUR-Lex does not update modification dates for consolidated texts."
+        },
+        {
+          "question": "Can I rely on PinkPepper output for legal compliance?",
+          "answer": "PinkPepper outputs are grounded in authoritative regulation text and official guidance, but they do not constitute legal advice. Regulatory requirements vary by business type, jurisdiction, premises, and local enforcement practice. You must review all outputs against your specific operational context and local legal obligations. Where legal certainty is required, consult a qualified food safety professional or legal adviser. PinkPepper is a documentation tool - not a compliance guarantee."
+        },
+        {
+          "question": "Who is responsible for final documents and decisions?",
+          "answer": "Your business retains full legal responsibility for all food safety documentation, decisions, and operational controls. PinkPepper accelerates the drafting process, but the final review, sign-off, verification, and implementation of all compliance documents must be carried out by accountable, competent personnel within your organisation. Generating a document in PinkPepper does not fulfil a legal obligation - acting on it does."
+        }
+      ]
+    },
+    "cta": {
+      "title": "Stop spending hours on compliance paperwork.",
+      "body": "Try PinkPepper free on a real compliance question. No credit card required.",
+      "button": "Start free - no card needed"
+    }
+  },
   "pages": {
     "home": {
       "title": "PinkPepper | AI HACCP & Food Safety Software for EU & UK Businesses",

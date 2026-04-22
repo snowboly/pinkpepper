@@ -55,6 +55,7 @@ describe("public locale config", () => {
 
     expect(messages.chrome.nav.pricing).toBe("Tarifs");
     expect(messages.chrome.nav.about).toBe("À propos");
+    expect(messages.home.faq.items).toHaveLength(5);
   });
 
   it("preserves supported public routes when switching locale", () => {
@@ -67,19 +68,27 @@ describe("public locale config", () => {
   it("creates localized route wrappers that validate and set the request locale", () => {
     const localizedLayout = readPage("src/app/[locale]/layout.tsx");
     const localizedPricingPage = readPage("src/app/[locale]/pricing/page.tsx");
+    const localizedHomePage = readPage("src/app/[locale]/page.tsx");
+    const homePage = readPage("src/app/page.tsx");
 
     expect(localizedLayout).toContain("setRequestLocale");
     expect(localizedLayout).toContain("isPublicLocale");
     expect(localizedPricingPage).toContain("buildPublicMetadata");
     expect(localizedPricingPage).toContain('"/pricing"');
+    expect(localizedHomePage).toContain("<HomePage locale={locale} />");
+    expect(homePage).toContain("getPublicMessages");
+    expect(homePage).toContain("locale?: PublicLocale");
   });
 
   it("routes shared chrome links through locale-aware helpers", () => {
     const chrome = readPage("src/components/site/chrome.tsx");
+    const localizedHomePage = readPage("src/components/homepage/LocalizedHomePage.tsx");
 
     expect(chrome).toContain("LocaleSwitcher");
     expect(chrome).toContain("getPublicPageHref");
     expect(chrome).toContain("getPublicMessages");
+    expect(localizedHomePage).toContain("copy.faq.items");
+    expect(localizedHomePage).not.toContain("homepageFaqs.map");
   });
 
   it("keeps auth entry cross-links locale-aware", () => {

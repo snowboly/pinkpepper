@@ -13,13 +13,13 @@ export const metadata: Metadata = {
   description:
     "Start free. Plus at €19/mo for daily HACCP & SOP use. Pro at €99/mo adds Auditor mode + 2h human consultancy. Save €18,000+/year on compliance costs.",
   alternates: {
-    canonical: "https://www.pinkpepper.io/pricing",
+    canonical: "https://pinkpepper.io/pricing",
     languages: {
-      "x-default": "https://www.pinkpepper.io/pricing",
-      en: "https://www.pinkpepper.io/pricing",
-      fr: "https://www.pinkpepper.io/fr/pricing",
-      de: "https://www.pinkpepper.io/de/pricing",
-      pt: "https://www.pinkpepper.io/pt/pricing",
+      "x-default": "https://pinkpepper.io/pricing",
+      en: "https://pinkpepper.io/pricing",
+      fr: "https://pinkpepper.io/fr/pricing",
+      de: "https://pinkpepper.io/de/pricing",
+      pt: "https://pinkpepper.io/pt/pricing",
     },
   },
 };
@@ -227,7 +227,7 @@ export default async function PricingPage({ locale }: PricingPageProps = {}) {
               <ul className="flex-1 space-y-3.5 text-sm text-[#475569]">
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  Everything in Free, plus
+                  Everything in Free
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
@@ -267,7 +267,7 @@ export default async function PricingPage({ locale }: PricingPageProps = {}) {
               <ul className="flex-1 space-y-3.5 text-sm text-[#475569]">
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  Everything in Plus, plus
+                  Everything in Plus
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />

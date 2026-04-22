@@ -6,8 +6,8 @@ export const metadata: Metadata = {
   description:
     "Learn what to include in a HACCP plan template for restaurants, cafes, caterers, and food manufacturers.",
   alternates: {
-    canonical: "https://www.pinkpepper.io/resources/haccp-plan-template",
-    languages: { "x-default": "https://www.pinkpepper.io/resources/haccp-plan-template", en: "https://www.pinkpepper.io/resources/haccp-plan-template" },
+    canonical: "https://pinkpepper.io/resources/haccp-plan-template",
+    languages: { "x-default": "https://pinkpepper.io/resources/haccp-plan-template", en: "https://pinkpepper.io/resources/haccp-plan-template" },
   },
 };
 

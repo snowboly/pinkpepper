@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description:
     "On-demand food safety expertise for manufacturing teams. AI trained on EC 852/2004, Codex, and GFSI schemes — with certified human expert review when the stakes are high.",
   alternates: {
-    canonical: "https://www.pinkpepper.io/use-cases/food-manufacturing",
+    canonical: "https://pinkpepper.io/use-cases/food-manufacturing",
   },
 };
 

@@ -1,20 +1,38 @@
 [
   {
-    "title": "Shelf-Life Validation in HACCP: How to Set and Justify Use-By Dates",
-    "slug": "shelf-life-validation-in-haccp",
-    "excerpt": "Regulation (EC) 2073/2005 requires scientific validation of shelf-life. How to use challenge testing, predictive modelling, and intrinsic controls to justify use-by dates and satisfy auditor scrutiny.",
-    "category": "Compliance",
-    "publishedAt": "2026-04-22",
-    "image": "https://images.pexels.com/photos/416533/pexels-photo-416533.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "title": "HACCP for Mexican Restaurants: A Complete EU Compliance Guide",
+    "slug": "haccp-for-mexican-restaurants-eu",
+    "excerpt": "Practitioner-level HACCP guide for Mexican restaurants in the EU/UK. Covers bean and rice cooling hazards, queso temperature control, produce safety for salsas and guacamole, allergen management, and a full compliance checklist for Regulation (EC) No 852/2004.",
+    "category": "Industry Guides",
+    "publishedAt": "2026-04-21",
+    "image": "https://images.pexels.com/photos/2092897/pexels-photo-2092897.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
     "source": "pinkpepper"
   },
   {
-    "title": "Food Safety Culture: Meeting Regulation (EU) 2021/382 Requirements",
-    "slug": "food-safety-culture-regulation-eu-2021-382",
-    "excerpt": "Mandatory culture requirements under Regulation (EU) 2021/382 demand evidence beyond paperwork. How to demonstrate management commitment, employee engagement, and open communication during audit.",
-    "category": "Compliance",
-    "publishedAt": "2026-04-22",
-    "image": "https://images.pexels.com/photos/3184183/pexels-photo-3184183.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "title": "HACCP for Korean Restaurants: A Complete EU Compliance Guide",
+    "slug": "haccp-for-korean-restaurants-eu",
+    "excerpt": "Practitioner-level HACCP guide for Korean restaurants in the EU/UK. Covers marinated meat refrigeration, banchan ambient holding, kimchi fermentation safety, tabletop barbecue cross-contamination, and a full compliance checklist for Regulation (EC) No 852/2004.",
+    "category": "Industry Guides",
+    "publishedAt": "2026-04-21",
+    "image": "https://images.pexels.com/photos/2338407/pexels-photo-2338407.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "source": "pinkpepper"
+  },
+  {
+    "title": "HACCP for Lebanese and Middle Eastern Restaurants: A Complete EU Compliance Guide",
+    "slug": "haccp-for-lebanese-and-middle-eastern-restaurants-eu",
+    "excerpt": "Practitioner-level HACCP guide for Lebanese and Middle Eastern restaurants in the EU/UK. Covers legume cooling, raw meat preparations, toum botulism risk, sesame allergen management, and a full compliance checklist for Regulation (EC) No 852/2004.",
+    "category": "Industry Guides",
+    "publishedAt": "2026-04-21",
+    "image": "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "source": "pinkpepper"
+  },
+  {
+    "title": "HACCP for Italian Restaurants and Pizzerias: A Complete EU Compliance Guide",
+    "slug": "haccp-for-italian-restaurants-and-pizzerias-eu",
+    "excerpt": "Practitioner-level HACCP guide for Italian restaurants and pizzerias in the EU/UK. Covers pizza production CCPs, sauce cooling, cured meat and cheese handling, fresh pasta risks, allergen management, and a full compliance checklist for Regulation (EC) No 852/2004.",
+    "category": "Industry Guides",
+    "publishedAt": "2026-04-21",
+    "image": "https://images.pexels.com/photos/1146760/pexels-photo-1146760.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
     "source": "pinkpepper"
   },
   {

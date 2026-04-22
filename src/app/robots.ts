@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: ["/dashboard/", "/admin/", "/api/", "/auth/"],
     },
-    sitemap: "https://www.pinkpepper.io/sitemap.xml",
+    sitemap: "https://pinkpepper.io/sitemap.xml",
   };
 }

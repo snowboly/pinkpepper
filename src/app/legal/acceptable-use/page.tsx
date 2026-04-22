@@ -4,7 +4,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Acceptable Use Policy | PinkPepper",
   description: "Rules governing acceptable use of the PinkPepper platform.",
-  alternates: { canonical: "https://www.pinkpepper.io/legal/acceptable-use" },
+  alternates: { canonical: "https://pinkpepper.io/legal/acceptable-use" },
   robots: { index: false, follow: false },
 };
 
