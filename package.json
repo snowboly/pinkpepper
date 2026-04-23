@@ -51,5 +51,11 @@
   "overrides": {
     "picomatch": "4.0.4",
     "flatted": "3.4.2"
+  },
+  "pnpm": {
+    "overrides": {
+      "mammoth>@xmldom/xmldom": "0.9.10",
+      "svix>uuid": "^14.0.0"
+    }
   }
 }
