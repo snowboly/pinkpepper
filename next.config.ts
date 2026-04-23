@@ -22,6 +22,13 @@ const nextConfig: NextConfig = {
 
   async redirects() {
     return [
+      // Canonicalise www → bare domain so Google sees one authoritative origin.
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.pinkpepper.io" }],
+        destination: "https://pinkpepper.io/:path*",
+        permanent: true,
+      },
       { source: "/use-cases", destination: "/articles", permanent: true },
       { source: "/use-cases/:path*", destination: "/articles", permanent: true },
     ];
