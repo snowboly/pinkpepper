@@ -327,9 +327,11 @@ describe("premium quality regressions", () => {
 
   it("provides a dedicated mobile navigation trigger in the shared header", () => {
     const chrome = readPage("src/components/site/chrome.tsx");
+    const mobileNav = readPage("src/components/site/MobileNavMenu.tsx");
 
-    expect(chrome).toContain('aria-label="Open navigation menu"');
-    expect(chrome).toContain("lg:hidden");
+    expect(chrome).toContain("MobileNavMenu");
+    expect(mobileNav).toContain('aria-label="Open navigation menu"');
+    expect(mobileNav).toContain("lg:hidden");
   });
 
   it("keeps the premium shared chrome and avoids blanket hover lift motion", () => {
