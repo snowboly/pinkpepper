@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getLocale } from "next-intl/server";
 import { AccountDropdown } from "@/components/site/AccountDropdown";
 import { LocaleSwitcher } from "@/components/site/LocaleSwitcher";
+import { MobileNavMenu } from "@/components/site/MobileNavMenu";
 import { NavDropdown } from "@/components/site/NavDropdown";
 import { type PublicLocale } from "@/i18n/public";
 import { getPublicMessages, getPublicPageHref, isPublicLocale } from "@/lib/public-routes";
@@ -108,69 +109,14 @@ export async function SiteHeader() {
             label={messages.chrome.localeSwitcher.label}
             currentLabel={messages.chrome.localeSwitcher.current}
           />
-          <details className="relative lg:hidden">
-            <summary
-              aria-label="Open navigation menu"
-              className="pp-interactive flex h-9 w-9 list-none items-center justify-center rounded-full border border-[#E2E8F0] bg-white text-[#0F172A] hover:border-[#CBD5E1] hover:bg-[#F8FAFC] md:h-10 md:w-10"
-            >
-              <span className="flex flex-col gap-1">
-                <span className="block h-0.5 w-4 rounded-full bg-current" />
-                <span className="block h-0.5 w-4 rounded-full bg-current" />
-                <span className="block h-0.5 w-4 rounded-full bg-current" />
-              </span>
-            </summary>
-            <div className="pp-glass-card absolute right-0 top-[calc(100%+10px)] z-50 w-[min(18rem,calc(100vw-1.5rem))] rounded-3xl p-3">
-              <nav className="flex flex-col">
-                {nav.map((item) =>
-                  "href" in item ? (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className="rounded-2xl px-3 py-3 text-sm font-medium text-[#0F172A] hover:bg-[#F8FAFC]"
-                    >
-                      {item.label}
-                    </Link>
-                  ) : (
-                    <details key={item.label} className="group/mobile-res">
-                      <summary className="flex cursor-pointer list-none items-center justify-between rounded-2xl px-3 py-3 text-sm font-medium text-[#0F172A] hover:bg-[#F8FAFC]">
-                        {item.label}
-                        <svg className="h-3.5 w-3.5 text-[#94A3B8] transition-transform duration-200 group-open/mobile-res:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                          <path fillRule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" />
-                        </svg>
-                      </summary>
-                      <div className="ml-3 border-l border-[#E2E8F0] pl-3">
-                        {item.children.map((child) => (
-                          <Link
-                            key={child.href}
-                            href={child.href}
-                            className="block rounded-xl px-3 py-2.5 text-sm font-medium text-[#475569] hover:bg-[#F8FAFC] hover:text-[#0F172A]"
-                          >
-                            {child.label}
-                          </Link>
-                        ))}
-                      </div>
-                    </details>
-                  ),
-                )}
-                {!user && (
-                  <>
-                    <Link
-                      href={loginHref}
-                      className="rounded-2xl px-3 py-3 text-sm font-medium text-[#0F172A] hover:bg-[#F8FAFC]"
-                    >
-                      {messages.chrome.nav.login}
-                    </Link>
-                    <Link
-                      href={signupHref}
-                      className="pp-interactive mt-2 rounded-2xl bg-[#E11D48] px-3 py-3 text-center text-sm font-semibold text-white hover:bg-[#BE123C]"
-                    >
-                      {messages.chrome.nav.getStarted}
-                    </Link>
-                  </>
-                )}
-              </nav>
-            </div>
-          </details>
+          <MobileNavMenu
+            items={nav}
+            loginHref={loginHref}
+            signupHref={signupHref}
+            loginLabel={messages.chrome.nav.login}
+            signupLabel={messages.chrome.nav.getStarted}
+            showAuthLinks={!user}
+          />
           {user ? (
             <AccountDropdown initials={initials} email={user.email ?? null} />
           ) : (
