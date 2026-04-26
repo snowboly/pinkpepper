@@ -31,6 +31,8 @@ describe("mobile surface regressions", () => {
     expect(messages).toContain("opacity-100 sm:opacity-0");
     expect(messages).toContain("sm:group-hover:opacity-100");
     expect(chatInput).toContain("max-w-[calc(100vw-2rem)]");
+    expect(chatInput).toContain('document.addEventListener("pointerdown"');
+    expect(chatInput).not.toContain('document.addEventListener("mousedown"');
     expect(sidebar).toContain("max-w-[calc(100vw-1.5rem)]");
     expect(chrome).toContain("lg:grid-cols-[2fr_1fr_1fr_1.5fr]");
   });
