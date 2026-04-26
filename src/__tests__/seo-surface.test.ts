@@ -236,8 +236,9 @@ describe("public SEO copy and linking", () => {
     expect(articleDetail).toContain("pp-article-hero-meta");
     expect(articleDetail).toContain("text-4xl font-bold leading-[1.05]");
     expect(articleDetail).toContain("text-lg leading-8");
-    expect(articleDetail).toContain("https://pinkpepper.io/articles/${article.slug}");
-    expect(articleDetail).not.toContain("https://www.pinkpepper.io/articles/${article.slug}");
+    expect(articleDetail).toContain("https://pinkpepper.io/articles/${slug}");
+    expect(articleDetail).toContain("https://pinkpepper.io/${locale}/articles/${slug}");
+    expect(articleDetail).not.toContain("https://www.pinkpepper.io/articles");
   });
 
   it("renders related reading links on article detail pages", async () => {

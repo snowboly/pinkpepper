@@ -2,12 +2,14 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getArticleBySlug, getArticleManifest } from "@/lib/articles";
+import { getArticleBySlug, getArticleManifest, getAvailableArticleLocales } from "@/lib/articles";
 import { getCspNonce } from "@/lib/security/csp";
 import { processArticleContent } from "@/lib/article-content";
+import { type PublicLocale } from "@/i18n/public";
 
 type ArticlePageProps = {
   params: Promise<{ slug: string }>;
+  locale?: PublicLocale;
 };
 
 export async function generateStaticParams() {
@@ -15,26 +17,41 @@ export async function generateStaticParams() {
   return articles.map((article) => ({ slug: article.slug }));
 }
 
-export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
-  const { slug } = await params;
-  const article = await getArticleBySlug(slug);
+function getArticleUrl(slug: string, locale: PublicLocale) {
+  return locale === "en"
+    ? `https://pinkpepper.io/articles/${slug}`
+    : `https://pinkpepper.io/${locale}/articles/${slug}`;
+}
+
+export async function buildArticleLanguageAlternates(slug: string) {
+  const locales = await getAvailableArticleLocales(slug);
+  const languages = Object.fromEntries(
+    locales.map((locale) => [locale, getArticleUrl(slug, locale)]),
+  );
+  const englishUrl = getArticleUrl(slug, "en");
+
+  return { "x-default": englishUrl, ...languages };
+}
+
+export async function generateArticleMetadata(slug: string, locale: PublicLocale = "en"): Promise<Metadata> {
+  const article = await getArticleBySlug(slug, { locale });
 
   if (!article) {
     return {};
   }
 
-  const url = `https://pinkpepper.io/articles/${article.slug}`;
+  const url = getArticleUrl(article.slug, locale);
   return {
     title: `${article.title} | PinkPepper`,
     description: article.excerpt,
     alternates: {
       canonical: url,
-      languages: { "x-default": url, en: url },
+      languages: await buildArticleLanguageAlternates(article.slug),
     },
     openGraph: {
       title: `${article.title} | PinkPepper`,
       description: article.excerpt,
-      locale: "en_GB",
+      locale: locale === "fr" ? "fr_FR" : locale === "de" ? "de_DE" : locale === "pt" ? "pt_PT" : "en_GB",
       images: [
         article.image
           ? { url: article.image, width: 1200, height: 630, alt: article.title }
@@ -44,10 +61,15 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
   };
 }
 
-export default async function ArticleDetailPage({ params }: ArticlePageProps) {
+export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
   const { slug } = await params;
-  const article = await getArticleBySlug(slug);
-  const articleManifest = await getArticleManifest();
+  return generateArticleMetadata(slug, "en");
+}
+
+export default async function ArticleDetailPage({ params, locale = "en" }: ArticlePageProps) {
+  const { slug } = await params;
+  const article = await getArticleBySlug(slug, { locale });
+  const articleManifest = await getArticleManifest({ locale });
   const nonce = await getCspNonce();
 
   if (!article) {
@@ -82,7 +104,7 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
     },
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `https://pinkpepper.io/articles/${article.slug}`,
+      "@id": getArticleUrl(article.slug, locale),
     },
     ...(article.image ? { image: article.image } : {}),
   };
@@ -92,8 +114,8 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
     "@type": "BreadcrumbList",
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "Home", item: "https://pinkpepper.io" },
-      { "@type": "ListItem", position: 2, name: "Articles", item: "https://pinkpepper.io/articles" },
-      { "@type": "ListItem", position: 3, name: article.title, item: `https://pinkpepper.io/articles/${article.slug}` },
+      { "@type": "ListItem", position: 2, name: "Articles", item: locale === "en" ? "https://pinkpepper.io/articles" : `https://pinkpepper.io/${locale}/articles` },
+      { "@type": "ListItem", position: 3, name: article.title, item: getArticleUrl(article.slug, locale) },
     ],
   };
 
@@ -150,14 +172,14 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
                 >
                   <p className="text-[11px] font-black uppercase tracking-[0.22em] text-[#E11D48]">{candidate.category}</p>
                   <h3 className="mt-3 text-xl font-bold leading-tight text-[#0F172A]">
-                    <Link href={`/articles/${candidate.slug}`} className="transition-colors hover:text-[#BE123C]">
+                    <Link href={locale === "en" ? `/articles/${candidate.slug}` : `/${locale}/articles/${candidate.slug}`} className="transition-colors hover:text-[#BE123C]">
                       {candidate.title}
                     </Link>
                   </h3>
                   <p className="mt-3 text-sm leading-7 text-[#475569]">{candidate.excerpt}</p>
                   <div className="mt-5 border-t border-[#F1F5F9] pt-4">
                     <Link
-                      href={`/articles/${candidate.slug}`}
+                      href={locale === "en" ? `/articles/${candidate.slug}` : `/${locale}/articles/${candidate.slug}`}
                       className="inline-flex items-center gap-2 rounded-full border border-[#E2E8F0] px-4 py-2 text-sm font-semibold text-[#0F172A] transition-colors hover:border-[#FDA4AF] hover:text-[#BE123C]"
                     >
                       <span>Read next</span>
@@ -168,7 +190,7 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
               ))}
             </div>
             <div className="mt-8">
-              <Link href="/articles" className="text-sm font-semibold text-[#BE123C] hover:text-[#9F1239]">
+              <Link href={locale === "en" ? "/articles" : `/${locale}/articles`} className="text-sm font-semibold text-[#BE123C] hover:text-[#9F1239]">
                 Back to the full article hub
               </Link>
             </div>

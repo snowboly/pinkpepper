@@ -1,5 +1,5 @@
 import { MetadataRoute } from "next";
-import { getArticleManifest } from "@/lib/articles";
+import { getArticleManifest, getLocalizedArticleManifest } from "@/lib/articles";
 import { publicContentRoutePaths, publicLaunchLocales } from "@/i18n/public";
 import { localizePublicPath } from "@/lib/public-routes";
 
@@ -7,6 +7,14 @@ const BASE_URL = "https://pinkpepper.io";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const articles = await getArticleManifest().catch(() => []);
+  const localizedArticles = await Promise.all(
+    publicLaunchLocales
+      .filter((locale) => locale !== "en")
+      .map(async (locale) => ({
+        locale,
+        articles: await getLocalizedArticleManifest(locale).catch(() => []),
+      })),
+  );
   const localizedPublicEntries = publicContentRoutePaths.flatMap((path) =>
     publicLaunchLocales.filter((l) => l !== "en").map((locale) => ({
       url: `${BASE_URL}${localizePublicPath(locale, path)}`,
@@ -45,6 +53,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "monthly" as const,
       priority: 0.6,
     })),
+    ...localizedArticles.flatMap(({ locale, articles }) =>
+      articles.map((article) => ({
+        url: `${BASE_URL}/${locale}/articles/${article.slug}`,
+        lastModified: new Date(article.publishedAt),
+        changeFrequency: "monthly" as const,
+        priority: 0.6,
+      })),
+    ),
     { url: `${BASE_URL}/faqs`, lastModified: new Date("2026-03-20"), changeFrequency: "monthly", priority: 0.6 },
     { url: `${BASE_URL}/contact`, lastModified: new Date("2026-03-18"), changeFrequency: "monthly", priority: 0.6 },
     { url: `${BASE_URL}/security`, lastModified: new Date("2026-03-18"), changeFrequency: "monthly", priority: 0.7 },
