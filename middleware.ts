@@ -7,6 +7,9 @@ import {
   generateCspNonce,
 } from "@/lib/security/csp";
 
+const CANONICAL_HOST = "pinkpepper.io";
+const LEGACY_WWW_HOST = "www.pinkpepper.io";
+
 /**
  * Middleware is responsible for two things:
  *
@@ -36,6 +39,14 @@ export async function middleware(request: NextRequest) {
     response.headers.set(NONCE_HEADER, nonce);
     return response;
   };
+
+  if (request.nextUrl.hostname === LEGACY_WWW_HOST) {
+    const redirectUrl = request.nextUrl.clone();
+    redirectUrl.hostname = CANONICAL_HOST;
+    redirectUrl.protocol = "https:";
+    redirectUrl.port = "";
+    return finalize(NextResponse.redirect(redirectUrl, 308));
+  }
 
   const pathname = request.nextUrl.pathname;
   const isAuthPage = pathname === "/login" || pathname === "/signup";
