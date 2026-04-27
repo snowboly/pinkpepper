@@ -72,7 +72,7 @@ export default function ChatInput({
   useEffect(() => {
     if (!actionMenuOpen) return;
 
-    const handlePointerDown = (event: MouseEvent) => {
+    const handlePointerDown = (event: PointerEvent) => {
       if (!actionMenuRef.current?.contains(event.target as Node)) {
         setActionMenuOpen(false);
       }
@@ -84,11 +84,11 @@ export default function ChatInput({
       }
     };
 
-    document.addEventListener("mousedown", handlePointerDown);
+    document.addEventListener("pointerdown", handlePointerDown);
     document.addEventListener("keydown", handleEscape);
 
     return () => {
-      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("pointerdown", handlePointerDown);
       document.removeEventListener("keydown", handleEscape);
     };
   }, [actionMenuOpen]);
