@@ -290,6 +290,20 @@ describe("public SEO copy and linking", () => {
     expect(randomLinks).not.toContain("/articles/correcting-non-conformities-in-haccp");
   });
 
+  it("surfaces priority under-indexed URLs from the homepage and article hub", () => {
+    const homepage = readPage("src/app/page.tsx");
+    const articlesHub = readPage("src/app/articles/page.tsx");
+
+    expect(homepage).toContain("/about");
+    expect(homepage).toContain("/articles/building-a-haccp-process-flow-diagram");
+    expect(homepage).toContain("/articles/haccp-ccp-examples-uk-eu");
+
+    expect(articlesHub).toContain("/articles/building-a-haccp-process-flow-diagram");
+    expect(articlesHub).toContain("/articles/chemical-hazards-in-haccp-controls-limits-and-what-to-record");
+    expect(articlesHub).toContain("/articles/cooling-and-reheating-haccp-high-risk-steps");
+    expect(articlesHub).toContain("/articles/haccp-for-artisanal-bakeries-eu");
+  });
+
   it("keeps current public marketing pages fresh in the sitemap", async () => {
     const entries = await sitemap();
     const currentPages = [
