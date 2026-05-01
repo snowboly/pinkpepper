@@ -376,6 +376,34 @@ export default async function HomePage({ locale }: HomePageProps = {}) {
                 Browse all →
               </Link>
             </div>
+            <div className="mb-8 grid gap-4 md:grid-cols-3">
+              {[
+                {
+                  href: "/about",
+                  label: "About PinkPepper",
+                  description: "Understand how PinkPepper approaches practical compliance work for small food businesses.",
+                },
+                {
+                  href: "/articles/building-a-haccp-process-flow-diagram",
+                  label: "Build a stronger HACCP process flow diagram",
+                  description: "One of the clearest starting points for teams turning process steps into usable HACCP structure.",
+                },
+                {
+                  href: "/articles/haccp-ccp-examples-uk-eu",
+                  label: "See real HACCP CCP examples",
+                  description: "Review practical CCP examples before you map limits, monitoring, and corrective actions.",
+                },
+              ].map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="rounded-2xl border border-[#E2E8F0] bg-[#F8FAFC] p-5 transition-all hover:-translate-y-0.5 hover:border-[#CBD5E1] hover:shadow-lg hover:shadow-black/[0.04]"
+                >
+                  <p className="text-base font-semibold text-[#0F172A]">{item.label}</p>
+                  <p className="mt-2 text-sm leading-relaxed text-[#64748B]">{item.description}</p>
+                </Link>
+              ))}
+            </div>
             <RandomArticleLinks />
           </div>
         </div>

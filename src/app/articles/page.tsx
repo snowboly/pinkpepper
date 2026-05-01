@@ -5,6 +5,11 @@ import { getArticleManifest } from "@/lib/articles";
 
 const featuredGuides = [
   {
+    href: "/articles/building-a-haccp-process-flow-diagram",
+    title: "How to build a HACCP process flow diagram",
+    description: "Use a clearer process map before you assess hazards, CCP logic, and monitoring responsibilities.",
+  },
+  {
     href: "/articles/how-to-create-a-haccp-plan-step-by-step",
     title: "How to create a HACCP plan step by step",
     description: "A practical starting point for building a HACCP plan that stays usable after the first draft.",
@@ -33,6 +38,21 @@ const featuredGuides = [
     href: "/articles/haccp-vs-brcgs-vs-ifs",
     title: "HACCP vs BRCGS vs IFS",
     description: "Where HACCP fits, what certification schemes add, and why teams get tripped up moving between them.",
+  },
+  {
+    href: "/articles/chemical-hazards-in-haccp-controls-limits-and-what-to-record",
+    title: "Chemical hazards in HACCP: controls, limits, and what to record",
+    description: "A practical guide to spotting chemical risks and documenting controls without turning the plan generic.",
+  },
+  {
+    href: "/articles/cooling-and-reheating-haccp-high-risk-steps",
+    title: "Cooling and reheating HACCP high-risk steps",
+    description: "The operational controls and record points that matter most when teams cool, reheat, and hold food.",
+  },
+  {
+    href: "/articles/haccp-for-artisanal-bakeries-eu",
+    title: "HACCP for artisanal bakeries",
+    description: "A sector-specific guide for bakery operators who need a more usable process and hazard structure.",
   },
 ];
 
