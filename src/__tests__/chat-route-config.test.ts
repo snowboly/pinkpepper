@@ -61,6 +61,17 @@ describe("consultant prompt guardrails", () => {
     expect(src).toContain("Do NOT invent source-like labels, bracketed citations, or document titles");
     expect(src).toContain('Do NOT mention DOCX, exports, downloads, generated documents, or PinkPepper product actions unless the user explicitly asked for them');
   });
+
+  it("keeps export guidance available in fallback document mode", () => {
+    const src = readFileSync(
+      path.join(process.cwd(), "src/app/api/chat/stream/route.ts"),
+      "utf8"
+    );
+
+    expect(src).toContain('mode === "document"');
+    expect(src).toContain('After generating a document, briefly remind the user of their available export options based on their plan.');
+    expect(src).toContain('mode === "document" ? "" : "21. Do NOT mention DOCX, exports, downloads, generated documents, or PinkPepper product actions unless the user explicitly asked for them.');
+  });
 });
 
 describe("stream request timeout", () => {
