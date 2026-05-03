@@ -9,6 +9,8 @@ import {
   shouldRunKnowledgeRetry,
   shouldUseRetrievedContextPrompt,
 } from "@/app/api/chat/stream/route";
+import { readFileSync } from "node:fs";
+import path from "node:path";
 
 describe("resolveChatModels", () => {
   it("uses deepseek-v4-flash as the primary chat model", () => {
@@ -35,6 +37,29 @@ describe("resolveChatModels", () => {
 
     expect(models.primary).toBe("custom-deepseek-model");
     expect(models.fallback).toBe("llama-3.3-70b-versatile");
+  });
+});
+
+describe("consultant prompt guardrails", () => {
+  it("forbids invented user specifics and unsourced hard legal minima in the fallback consultant prompt", () => {
+    const src = readFileSync(
+      path.join(process.cwd(), "src/app/api/chat/stream/route.ts"),
+      "utf8"
+    );
+
+    expect(src).toContain("Do NOT invent a location, city, business type, process, batch, or product detail");
+    expect(src).toContain("Do NOT state an exact retention period, cooling window, disposal rule, review frequency, or legal minimum");
+    expect(src).toContain("exact figure or rule is not verified from current support");
+  });
+
+  it("forbids fake source-like titles and unsolicited export nudges in consultant mode", () => {
+    const src = readFileSync(
+      path.join(process.cwd(), "src/app/api/chat/stream/route.ts"),
+      "utf8"
+    );
+
+    expect(src).toContain("Do NOT invent source-like labels, bracketed citations, or document titles");
+    expect(src).toContain('Do NOT mention DOCX, exports, downloads, generated documents, or PinkPepper product actions unless the user explicitly asked for them');
   });
 });
 

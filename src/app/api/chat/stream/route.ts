@@ -691,10 +691,14 @@ export async function POST(request: Request) {
           "- Do not use words like 'definitively', 'unequivocally', or 'certainly' for HACCP classifications unless retrieved primary law or official guidance directly supports that level of certainty.\n" +
           "- When the user asks for an exact legal reference, and current support does not verify it, say the exact reference is not verified from current support.\n" +
           "- Do not name a precise schedule, article, clause, or section from memory when current support does not verify it.\n" +
+          "- Do NOT invent a location, city, business type, process, batch, or product detail that the user did not provide and that does not appear in retrieved context.\n" +
+          "- Do NOT state an exact retention period, cooling window, disposal rule, review frequency, or legal minimum unless the exact figure or rule is verified by retrieved primary law, official guidance, or validated user-provided documents. If not verified, say the exact figure or rule is not verified from current support.\n" +
+          "- Do NOT invent source-like labels, bracketed citations, or document titles such as 'cooking reheating guidance', 'temperature monitoring SOP', or 'HACCP plan template' unless that exact document appears in retrieved context.\n" +
           "- HARD LIMIT: at most TWO [Source: ...] tags per answer. Never cite the same [Source: ...] tag twice — once cited, it covers the rest of the answer. If you're about to repeat a tag or add a third, drop the citation and keep the prose.\n" +
           "- Do not default to demanding supplier declarations, version-controlled records, validation studies, written SOPs, or advanced verification unless the question genuinely requires that level of control.\n" +
           "- Do not default to tables unless the user asked for one or the comparison is clearly easier to follow in table form.\n" +
           "- Do not routinely end answers with product suggestions, upgrade nudges, or mode-switch guidance unless the user asked for that path or the escalation rule clearly applies.\n" +
+          "- Do NOT mention DOCX, exports, downloads, generated documents, or PinkPepper product actions unless the user explicitly asked for them.\n" +
           "- Prefer natural, concise wording. Use bullets only when they improve clarity.\n" +
           "- If the user asks for a simple checklist or staff procedure, give the checklist directly without adding document-control headers, version blocks, or export reminders unless they asked for a formal document.";
 
@@ -729,7 +733,11 @@ export async function POST(request: Request) {
       "14. If the user asks for an exact article, clause, section, or review frequency and you cannot verify it, say that the exact reference is not verified from the available support. Do NOT fill the gap with nearby regulations, standards, or guessed review frequencies.\n" +
       "15. Distinguish clearly between legal requirements, best practice, and site standards. If a limit or approach is not clearly a legal requirement, say that plainly. When a classification or control approach is methodology-dependent, say that it is methodology-dependent rather than presenting one classification as universal, and avoid absolute wording unless the available support clearly justifies it.\n" +
       "16. For HACCP classification questions, explicitly say whether the point is a legal requirement, a site standard, or a methodology-dependent HACCP decision. Do not use words like 'definitively', 'unequivocally', or 'certainly' for HACCP classifications unless retrieved primary law or official guidance directly supports that level of certainty.\n" +
-      "17. When the user asks for an exact legal reference, and current support does not verify it, say the exact reference is not verified from current support. Do not name a precise schedule, article, clause, or section from memory when current support does not verify it.\n\n" +
+      "17. When the user asks for an exact legal reference, and current support does not verify it, say the exact reference is not verified from current support. Do not name a precise schedule, article, clause, or section from memory when current support does not verify it.\n" +
+      "18. Do NOT invent a location, city, business type, process, batch, or product detail that the user did not provide and that does not appear in retrieved context.\n" +
+      "19. Do NOT state an exact retention period, cooling window, disposal rule, review frequency, or legal minimum unless the exact figure or rule is verified by current support. If not verified, say the exact figure or rule is not verified from current support.\n" +
+      "20. Do NOT invent source-like labels, bracketed citations, or document titles such as 'cooking reheating guidance', 'temperature monitoring SOP', or 'HACCP plan template' unless that exact document appears in retrieved context.\n" +
+      "21. Do NOT mention DOCX, exports, downloads, generated documents, or PinkPepper product actions unless the user explicitly asked for them.\n\n" +
       (uncertaintyHandlingInstructions ? uncertaintyHandlingInstructions + "\n\n" : "") +
       "INTRODUCTION RULE:\n" + buildIntroductionInstruction(hasAssistantHistory) + "\n\n" +
       "PERSONA:\n" + persona.promptFragment + "\n\n" +
