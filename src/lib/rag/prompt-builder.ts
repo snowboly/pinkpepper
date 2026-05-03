@@ -196,6 +196,7 @@ function getModeInstructions(mode: RAGMode): string {
 - Do not close an answer with a verdict-style summary ("non-compliant", "unsafe practice", "unacceptable", "breach of law"). End with the operational fix or the next action the operator should take
 - Use legal references and named guidance selectively to support the advice, not as the backbone of every paragraph
 - Distinguish clearly between legal requirements, best practice, and site standards. If a limit or approach is not clearly a legal requirement, say that plainly.
+- Where the law requires control but does not clearly prescribe a specific written log, schedule, checklist, or file, describe that record as commonly expected evidence or the standard way to demonstrate control rather than as a hard legal requirement.
 - When a classification or control approach is methodology-dependent, say that it is methodology-dependent rather than presenting one classification as universal.
 - avoid absolute wording like "always", "unequivocally", or "must be a CCP" unless the available support clearly justifies it
 - For HACCP classification questions, explicitly say whether the point is a legal requirement, a site standard, or a methodology-dependent HACCP decision.
@@ -208,7 +209,7 @@ function getModeInstructions(mode: RAGMode): string {
 - HARD LIMIT: include AT MOST TWO [Source: ...] tags in any single Q&A answer. Never cite the same [Source: ...] tag twice — once you have cited a source, it covers the rest of the answer; do not attach it again in later sections. If you catch yourself about to repeat a source tag or add a third tag, drop the citation and keep the prose
 - Use bullet points or numbered lists for multi-part answers
 - Do not default to tables unless the user asks for one or the comparison is genuinely clearer in table form
-- For setup, checklist, or "what do I need" questions, be comprehensive — cover all legally required documents/steps, not just the most obvious ones; include records (temperature logs, cleaning records, delivery checks, staff training records, pest control log) alongside policies and plans
+- For setup, checklist, or "what do I need" questions, be comprehensive — cover the materially relevant legal duties, controls, and the records commonly used to demonstrate them, not just the most obvious items; include records (temperature logs, cleaning records, delivery checks, staff training records, pest control log) alongside policies and plans
 - For UK small food businesses, always mention the FSA's free Safer Food Better Business (SFBB) toolkit as a practical starting point
 - Where EU and UK rules differ post-Brexit, call it out explicitly
 - Signpost further resources (FSA, FSS, Food Safety Authority of Ireland, EFSA) where appropriate
@@ -306,6 +307,7 @@ RECORDKEEPING REQUIREMENTS FORMAT:
   3. Which records matter most in inspection or incident situations
   4. Immediate actions to tighten record keeping
 - Under "Core records the business should keep", group the records into practical categories such as monitoring, cleaning, training, allergens, supplier/traceability, maintenance, pest control, and corrective actions where relevant.
+- Do NOT present a written log, checklist, schedule, or file as legally mandatory unless retrieved primary law or official guidance actually supports that exact record. If the law requires control but not that exact document, use phrases such as "commonly expected evidence", "standard way to demonstrate control", or "strong good practice".
 - Under "Why each record matters operationally", explain what control each record proves.
 - Under "Which records matter most in inspection or incident situations", identify the records an inspector, auditor, or investigator will most often rely on first.
 - Keep the answer practical and prioritised rather than exhaustive for its own sake.`;

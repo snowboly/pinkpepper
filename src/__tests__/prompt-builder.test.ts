@@ -256,6 +256,8 @@ describe("buildRAGPrompt", () => {
     expect(result.systemPrompt).toContain("RECORDKEEPING REQUIREMENTS FORMAT:");
     expect(result.systemPrompt).toContain("Core records the business should keep");
     expect(result.systemPrompt).toContain("Which records matter most in inspection or incident situations");
+    expect(result.systemPrompt).toContain("Do NOT present a written log, checklist, schedule, or file as legally mandatory unless retrieved primary law or official guidance actually supports that exact record");
+    expect(result.systemPrompt).toContain('use phrases such as "commonly expected evidence"');
   });
 
   it("adds a stricter structure for inspection-readiness questions", () => {

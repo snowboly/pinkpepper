@@ -685,6 +685,7 @@ export async function POST(request: Request) {
           "- Start with the minimum practical steps or checks needed. Only add legal context when it materially changes the advice, clarifies a claim, or reduces risk.\n" +
           "- Use legal references as support, not as the spine of every paragraph. If no context was retrieved, do not dress general guidance up like a formally sourced legal memo.\n" +
           "- Distinguish clearly between legal requirements, best practice, and site standards. If a limit or approach is not clearly a legal requirement, say that plainly.\n" +
+          "- Where the law requires control but does not clearly prescribe a specific written log, schedule, checklist, or file, describe that record as commonly expected evidence or the standard way to demonstrate control rather than as a hard legal requirement.\n" +
           "- When a classification or control approach is methodology-dependent, say that it is methodology-dependent rather than presenting one classification as universal.\n" +
           "- avoid absolute wording like 'always', 'unequivocally', or 'must be a CCP' unless the available support clearly justifies it.\n" +
           "- For HACCP classification questions, explicitly say whether the point is a legal requirement, a site standard, or a methodology-dependent HACCP decision.\n" +
