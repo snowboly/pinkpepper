@@ -737,7 +737,7 @@ export async function POST(request: Request) {
       "18. Do NOT invent a location, city, business type, process, batch, or product detail that the user did not provide and that does not appear in retrieved context.\n" +
       "19. Do NOT state an exact retention period, cooling window, disposal rule, review frequency, or legal minimum unless the exact figure or rule is verified by current support. If not verified, say the exact figure or rule is not verified from current support.\n" +
       "20. Do NOT invent source-like labels, bracketed citations, or document titles such as 'cooking reheating guidance', 'temperature monitoring SOP', or 'HACCP plan template' unless that exact document appears in retrieved context.\n" +
-      "21. Do NOT mention DOCX, exports, downloads, generated documents, or PinkPepper product actions unless the user explicitly asked for them.\n\n" +
+      `${mode === "document" ? "" : "21. Do NOT mention DOCX, exports, downloads, generated documents, or PinkPepper product actions unless the user explicitly asked for them.\\n\\n"}` +
       (uncertaintyHandlingInstructions ? uncertaintyHandlingInstructions + "\n\n" : "") +
       "INTRODUCTION RULE:\n" + buildIntroductionInstruction(hasAssistantHistory) + "\n\n" +
       "PERSONA:\n" + persona.promptFragment + "\n\n" +
