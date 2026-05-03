@@ -23,8 +23,9 @@ async function requestAuditStream(input: {
   apiKey: string;
   model: string;
   messages: Array<{ role: "system" | "user" | "assistant"; content: string }>;
+  thinking?: { type: "disabled" | "enabled" };
 }) {
-  const { provider, apiKey, model, messages } = input;
+  const { provider, apiKey, model, messages, thinking } = input;
   const url =
     provider === "deepseek"
       ? "https://api.deepseek.com/chat/completions"
@@ -43,6 +44,7 @@ async function requestAuditStream(input: {
         signal: AbortSignal.timeout(getStreamingRequestTimeoutMs()),
         body: JSON.stringify({
           model,
+          ...(provider === "deepseek" && thinking ? { thinking } : {}),
           temperature: 0.0,
           stream: true,
           max_tokens: 8000,
@@ -315,7 +317,8 @@ export async function POST(request: Request) {
     ? [{ role: "user" as const, content: untrustedBlock }]
     : [];
 
-  const primaryModel = "deepseek-reasoner";
+  const primaryModel = "deepseek-v4-pro";
+  const primaryThinking = { type: "enabled" } as const;
   const fallbackModel = process.env.GROQ_MODEL ?? "llama-3.3-70b-versatile";
   const messages = [
     { role: "system" as const, content: systemPrompt },
@@ -333,6 +336,7 @@ export async function POST(request: Request) {
       provider: "deepseek",
       apiKey: deepseekKey,
       model: primaryModel,
+      thinking: primaryThinking,
       messages,
     });
   }
