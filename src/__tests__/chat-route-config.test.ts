@@ -72,6 +72,16 @@ describe("consultant prompt guardrails", () => {
     expect(src).toContain('After generating a document, briefly remind the user of their available export options based on their plan.');
     expect(src).toContain('mode === "document" ? "" : "21. Do NOT mention DOCX, exports, downloads, generated documents, or PinkPepper product actions unless the user explicitly asked for them.');
   });
+
+  it("uses real newline escapes for the conditional qa-only export rule", () => {
+    const src = readFileSync(
+      path.join(process.cwd(), "src/app/api/chat/stream/route.ts"),
+      "utf8"
+    );
+
+    expect(src).toContain('them.\\n\\n"}` +');
+    expect(src).not.toContain('them.\\\\n\\\\n"}` +');
+  });
 });
 
 describe("stream request timeout", () => {

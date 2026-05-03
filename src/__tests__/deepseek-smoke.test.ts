@@ -183,6 +183,7 @@ describe("A: static model configuration", () => {
   it("qa prompt distinguishes legal requirements from best practice and site standards", () => {
     const prompt = buildRAGSystemPrompt([], "qa");
     expect(prompt).toContain("Distinguish clearly between legal requirements, best practice, and site standards");
+    expect(prompt).toContain("commonly expected evidence");
     expect(prompt).toContain("avoid absolute wording");
     expect(prompt).toContain("methodology-dependent");
   });

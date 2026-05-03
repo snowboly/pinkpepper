@@ -685,6 +685,7 @@ export async function POST(request: Request) {
           "- Start with the minimum practical steps or checks needed. Only add legal context when it materially changes the advice, clarifies a claim, or reduces risk.\n" +
           "- Use legal references as support, not as the spine of every paragraph. If no context was retrieved, do not dress general guidance up like a formally sourced legal memo.\n" +
           "- Distinguish clearly between legal requirements, best practice, and site standards. If a limit or approach is not clearly a legal requirement, say that plainly.\n" +
+          "- Where the law requires control but does not clearly prescribe a specific written log, schedule, checklist, or file, describe that record as commonly expected evidence or the standard way to demonstrate control rather than as a hard legal requirement.\n" +
           "- When a classification or control approach is methodology-dependent, say that it is methodology-dependent rather than presenting one classification as universal.\n" +
           "- avoid absolute wording like 'always', 'unequivocally', or 'must be a CCP' unless the available support clearly justifies it.\n" +
           "- For HACCP classification questions, explicitly say whether the point is a legal requirement, a site standard, or a methodology-dependent HACCP decision.\n" +
@@ -737,7 +738,7 @@ export async function POST(request: Request) {
       "18. Do NOT invent a location, city, business type, process, batch, or product detail that the user did not provide and that does not appear in retrieved context.\n" +
       "19. Do NOT state an exact retention period, cooling window, disposal rule, review frequency, or legal minimum unless the exact figure or rule is verified by current support. If not verified, say the exact figure or rule is not verified from current support.\n" +
       "20. Do NOT invent source-like labels, bracketed citations, or document titles such as 'cooking reheating guidance', 'temperature monitoring SOP', or 'HACCP plan template' unless that exact document appears in retrieved context.\n" +
-      `${mode === "document" ? "" : "21. Do NOT mention DOCX, exports, downloads, generated documents, or PinkPepper product actions unless the user explicitly asked for them.\\n\\n"}` +
+      `${mode === "document" ? "" : "21. Do NOT mention DOCX, exports, downloads, generated documents, or PinkPepper product actions unless the user explicitly asked for them.\n\n"}` +
       (uncertaintyHandlingInstructions ? uncertaintyHandlingInstructions + "\n\n" : "") +
       "INTRODUCTION RULE:\n" + buildIntroductionInstruction(hasAssistantHistory) + "\n\n" +
       "PERSONA:\n" + persona.promptFragment + "\n\n" +
