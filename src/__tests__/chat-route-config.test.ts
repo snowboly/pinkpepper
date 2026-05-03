@@ -11,10 +11,10 @@ import {
 } from "@/app/api/chat/stream/route";
 
 describe("resolveChatModels", () => {
-  it("uses deepseek-chat as the primary chat model", () => {
+  it("uses deepseek-v4-flash as the primary chat model", () => {
     const models = resolveChatModels();
 
-    expect(models.primary).toBe("deepseek-chat");
+    expect(models.primary).toBe("deepseek-v4-flash");
   });
 
   it("uses llama 3.3 as the fallback chat model", () => {

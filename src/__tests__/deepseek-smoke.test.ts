@@ -6,8 +6,8 @@
  *
  * Test groups:
  *   A) Static configuration        – no API key needed, runs in CI
- *   B) Live deepseek-chat tests    – requires DEEPSEEK_API_KEY, skipped when absent
- *   C) Live deepseek-reasoner audit tests – requires DEEPSEEK_API_KEY, skipped when absent
+ *   B) Live deepseek-v4-flash tests    – requires DEEPSEEK_API_KEY, skipped when absent
+ *   C) Live deepseek-v4-pro audit tests – requires DEEPSEEK_API_KEY, skipped when absent
  *
  * Run live tests locally:
  *   DEEPSEEK_API_KEY=<key> npx vitest run src/__tests__/deepseek-smoke.test.ts
@@ -26,7 +26,7 @@ import { buildVirtualAuditSystemPrompt } from "@/app/api/audit/stream/route";
 
 const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY;
 const DEEPSEEK_BASE_URL = "https://api.deepseek.com/chat/completions";
-const MODEL = "deepseek-chat";
+const MODEL = "deepseek-v4-flash";
 
 type Message = { role: "system" | "user" | "assistant"; content: string };
 
@@ -48,6 +48,7 @@ async function callDeepSeek(
     signal: AbortSignal.timeout(30_000),
     body: JSON.stringify({
       model: MODEL,
+      thinking: { type: "disabled" },
       temperature,
       max_tokens: maxTokens,
       stream: false,
@@ -80,9 +81,9 @@ function baseSystemPrompt(extra = ""): Message {
 // ---------------------------------------------------------------------------
 
 describe("A: static model configuration", () => {
-  it("deepseek-chat is the primary chat model", () => {
+  it("deepseek-v4-flash is the primary chat model", () => {
     const { primary } = resolveChatModels();
-    expect(primary).toBe("deepseek-chat");
+    expect(primary).toBe("deepseek-v4-flash");
   });
 
   it("llama-3.3-70b-versatile is the fallback model", () => {
@@ -90,14 +91,25 @@ describe("A: static model configuration", () => {
     expect(fallback).toBe("llama-3.3-70b-versatile");
   });
 
-  it("audit stream source uses deepseek-reasoner as default and llama as fallback", () => {
+  it("audit stream source uses deepseek-v4-pro as default and llama as fallback", () => {
     const src = readFileSync(
       path.join(process.cwd(), "src/app/api/audit/stream/route.ts"),
       "utf8"
     );
-    expect(src).toContain('const primaryModel = "deepseek-reasoner"');
+    expect(src).toContain('const primaryModel = "deepseek-v4-pro"');
+    expect(src).toContain('type: "enabled"');
     expect(src).toContain('const fallbackModel = process.env.GROQ_MODEL ?? "llama-3.3-70b-versatile"');
     expect(src).toContain('const deepseekKey = process.env.DEEPSEEK_API_KEY;');
+  });
+
+  it("chat stream source disables thinking for the consultant default path", () => {
+    const src = readFileSync(
+      path.join(process.cwd(), "src/app/api/chat/stream/route.ts"),
+      "utf8"
+    );
+
+    expect(src).toContain('const PRIMARY_CHAT_MODEL = "deepseek-v4-flash"');
+    expect(src).toContain('type: "disabled"');
   });
 
   it("system prompt rule 15 forbids training-cutoff language", () => {
@@ -201,11 +213,11 @@ describe("A: static model configuration", () => {
 });
 
 // ---------------------------------------------------------------------------
-// Helper: deepseek-reasoner (used by section C)
+// Helper: deepseek-v4-pro (used by section C)
 // ---------------------------------------------------------------------------
 
 /**
- * Calls deepseek-reasoner (non-streaming) and returns the final answer content.
+ * Calls deepseek-v4-pro (non-streaming) and returns the final answer content.
  * Reasoning tokens are discarded — mirrors what the audit stream route does.
  * Uses a 60 s timeout because the thinking phase adds latency.
  */
@@ -221,7 +233,8 @@ async function callDeepSeekReasoner(
     },
     signal: AbortSignal.timeout(60_000),
     body: JSON.stringify({
-      model: "deepseek-reasoner",
+      model: "deepseek-v4-pro",
+      thinking: { type: "enabled" },
       temperature: 0.0,
       max_tokens: maxTokens,
       stream: false,
@@ -231,7 +244,7 @@ async function callDeepSeekReasoner(
 
   if (!response.ok) {
     const body = await response.text();
-    throw new Error(`DeepSeek Reasoner API error ${response.status}: ${body}`);
+    throw new Error(`DeepSeek V4 Pro API error ${response.status}: ${body}`);
   }
 
   const json = (await response.json()) as {
@@ -245,7 +258,7 @@ async function callDeepSeekReasoner(
 // B) Live integration tests — require DEEPSEEK_API_KEY
 // ---------------------------------------------------------------------------
 
-describe("B: live DeepSeek 2.5 integration smoke tests", () => {
+describe("B: live DeepSeek V4 Flash integration smoke tests", () => {
   const skip = !DEEPSEEK_API_KEY;
 
   it.skipIf(skip)("responds to a basic food safety question without refusing", async () => {
@@ -465,10 +478,10 @@ Food businesses must ensure that food is stored at appropriate temperatures and 
 });
 
 // ---------------------------------------------------------------------------
-// C) Live deepseek-reasoner audit smoke tests — require DEEPSEEK_API_KEY
+// C) Live deepseek-v4-pro audit smoke tests — require DEEPSEEK_API_KEY
 // ---------------------------------------------------------------------------
 
-describe("C: live deepseek-reasoner audit smoke tests", () => {
+describe("C: live deepseek-v4-pro audit smoke tests", () => {
   const skip = !DEEPSEEK_API_KEY;
 
   function auditSystem(hasUserDocs = false): Message {

@@ -43,10 +43,11 @@ function shouldPreferAuthoritativeSources(message: string, mode: "qa" | "documen
   );
 }
 
-const PRIMARY_CHAT_MODEL = "deepseek-chat";
+const PRIMARY_CHAT_MODEL = "deepseek-v4-flash";
 const FALLBACK_CHAT_MODEL = "llama-3.3-70b-versatile";
 const DEFAULT_STREAM_REQUEST_TIMEOUT_MS = 120_000;
 const MAX_STREAM_REQUEST_TIMEOUT_MS = 300_000;
+const DEEPSEEK_CHAT_THINKING = { type: "disabled" } as const;
 
 type ChatRequestMessage = {
   role: "system" | "user" | "assistant";
@@ -201,8 +202,9 @@ async function requestStreamingCompletion(input: {
   temperature: number;
   maxTokens: number;
   messages: ChatRequestMessage[];
+  thinking?: { type: "disabled" | "enabled" };
 }) {
-  const { provider, apiKey, model, temperature, maxTokens, messages } = input;
+  const { provider, apiKey, model, temperature, maxTokens, messages, thinking } = input;
   const url =
     provider === "groq"
       ? "https://api.groq.com/openai/v1/chat/completions"
@@ -222,6 +224,7 @@ async function requestStreamingCompletion(input: {
         signal: AbortSignal.timeout(timeoutMs),
         body: JSON.stringify({
           model,
+          ...(provider === "deepseek" && thinking ? { thinking } : {}),
           temperature,
           max_tokens: maxTokens,
           stream: true,
@@ -267,6 +270,7 @@ async function requestChatStream(input: {
       provider: "deepseek",
       apiKey: deepseekKey,
       model: models.primary,
+      thinking: DEEPSEEK_CHAT_THINKING,
       temperature,
       maxTokens,
       messages,
