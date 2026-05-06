@@ -5,8 +5,10 @@ import { AccountDropdown } from "@/components/site/AccountDropdown";
 import { LocaleSwitcher } from "@/components/site/LocaleSwitcher";
 import { MobileNavMenu } from "@/components/site/MobileNavMenu";
 import { NavDropdown } from "@/components/site/NavDropdown";
+import { localeNames } from "@/i18n/config";
 import { type PublicLocale } from "@/i18n/public";
 import { getPublicMessages, getPublicPageHref, isPublicLocale } from "@/lib/public-routes";
+import { publicLaunchLocales } from "@/i18n/public";
 import { createClient } from "@/utils/supabase/server";
 
 type NavItem =
@@ -44,7 +46,13 @@ async function getChromeContext() {
     { href: getPublicPageHref(publicLocale, "/contact"), label: messages.chrome.nav.contact },
   ];
 
-  return { messages, nav, publicLocale };
+  const localeItems = publicLaunchLocales.map((localeOption) => ({
+    href: getPublicPageHref(localeOption, "/"),
+    label: localeNames[localeOption],
+    current: localeOption === publicLocale,
+  }));
+
+  return { messages, nav, publicLocale, localeItems };
 }
 
 export async function SiteHeader() {
@@ -57,7 +65,7 @@ export async function SiteHeader() {
     // Supabase env vars unavailable during build-time prerendering; show logged-out state.
   }
 
-  const { messages, nav, publicLocale } = await getChromeContext();
+  const { messages, nav, publicLocale, localeItems } = await getChromeContext();
   const fullName =
     (typeof user?.user_metadata?.full_name === "string" ? user.user_metadata.full_name : null) ??
     (typeof user?.user_metadata?.name === "string" ? user.user_metadata.name : null);
@@ -104,13 +112,17 @@ export async function SiteHeader() {
           </nav>
         </div>
         <div className="flex items-center gap-3 md:gap-4">
-          <LocaleSwitcher
-            currentLocale={publicLocale}
-            label={messages.chrome.localeSwitcher.label}
-            currentLabel={messages.chrome.localeSwitcher.current}
-          />
+          <div className="hidden sm:block">
+            <LocaleSwitcher
+              currentLocale={publicLocale}
+              label={messages.chrome.localeSwitcher.label}
+              currentLabel={messages.chrome.localeSwitcher.current}
+            />
+          </div>
           <MobileNavMenu
             items={nav}
+            localeItems={localeItems}
+            localeLabel={messages.chrome.localeSwitcher.label}
             loginHref={loginHref}
             signupHref={signupHref}
             loginLabel={messages.chrome.nav.login}
@@ -129,7 +141,7 @@ export async function SiteHeader() {
               </Link>
               <Link
                 href={signupHref}
-                className="pp-interactive rounded-full bg-[#E11D48] px-4 py-2 text-sm font-semibold text-white hover:bg-[#BE123C] hover:shadow-lg hover:shadow-[#E11D48]/30 active:scale-[0.97] md:px-5 md:py-2.5"
+                className="pp-interactive rounded-full bg-[#E11D48] px-3.5 py-2 text-sm font-semibold text-white hover:bg-[#BE123C] hover:shadow-lg hover:shadow-[#E11D48]/30 active:scale-[0.97] md:px-5 md:py-2.5"
               >
                 {messages.chrome.nav.getStarted}
               </Link>
