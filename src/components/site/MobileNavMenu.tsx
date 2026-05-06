@@ -3,6 +3,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { localeNames } from "@/i18n/config";
+import { type PublicLocale } from "@/i18n/public";
+import { switchPublicLocale } from "@/lib/public-routes";
 
 export type MobileNavItem =
   | { href: string; label: string }
@@ -10,7 +13,8 @@ export type MobileNavItem =
 
 type MobileNavMenuProps = {
   items: MobileNavItem[];
-  localeItems: { href: string; label: string; current: boolean }[];
+  currentLocale: PublicLocale;
+  localeOptions: readonly PublicLocale[];
   localeLabel: string;
   loginHref: string;
   signupHref: string;
@@ -27,7 +31,8 @@ export function MobileNavMenu(props: MobileNavMenuProps) {
 
 function MobileNavMenuPanel({
   items,
-  localeItems,
+  currentLocale,
+  localeOptions,
   localeLabel,
   loginHref,
   signupHref,
@@ -35,6 +40,7 @@ function MobileNavMenuPanel({
   signupLabel,
   showAuthLinks,
 }: MobileNavMenuProps) {
+  const pathname = usePathname();
   const menuRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
   const [expandedGroup, setExpandedGroup] = useState<string | null>(null);
@@ -165,18 +171,18 @@ function MobileNavMenuPanel({
                 {localeLabel}
               </p>
               <div className="grid grid-cols-2 gap-2 px-1">
-                {localeItems.map((locale) => (
+                {localeOptions.map((locale) => (
                   <Link
-                    key={locale.href}
-                    href={locale.href}
+                    key={locale}
+                    href={switchPublicLocale(pathname, locale)}
                     onClick={closeMenu}
                     className={`rounded-xl px-3 py-2.5 text-center text-sm font-medium ${
-                      locale.current
+                      locale === currentLocale
                         ? "bg-[#FFF1F2] text-[#BE123C]"
                         : "bg-[#F8FAFC] text-[#475569] hover:bg-[#F1F5F9] hover:text-[#0F172A]"
                     }`}
                   >
-                    {locale.label}
+                    {localeNames[locale]}
                   </Link>
                 ))}
               </div>

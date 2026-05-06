@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Manrope, Space_Grotesk } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
@@ -133,6 +134,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
           {children}
           <SiteFooter />
           <CookieBanner />
+          <SpeedInsights />
         </NextIntlClientProvider>
       </body>
     </html>
