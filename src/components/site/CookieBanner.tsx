@@ -44,9 +44,14 @@ export function CookieBanner() {
         >
           <div className="pp-container flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
             <p className="max-w-3xl text-sm leading-relaxed text-[#475569]">
-              We use essential cookies to keep PinkPepper running, and optional
-              analytics cookies (Vercel Analytics) to understand how you use the
-              product - no personal data is collected.{" "}
+              <span className="md:hidden">
+                We use essential cookies to run PinkPepper and optional analytics to understand usage.{" "}
+              </span>
+              <span className="hidden md:inline">
+                We use essential cookies to keep PinkPepper running, and optional
+                analytics cookies (Vercel Analytics) to understand how you use the
+                product - no personal data is collected.{" "}
+              </span>
               <Link
                 href="/legal/cookies"
                 className="font-medium text-[#E11D48] underline underline-offset-2 hover:no-underline"

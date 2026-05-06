@@ -10,6 +10,8 @@ export type MobileNavItem =
 
 type MobileNavMenuProps = {
   items: MobileNavItem[];
+  localeItems: { href: string; label: string; current: boolean }[];
+  localeLabel: string;
   loginHref: string;
   signupHref: string;
   loginLabel: string;
@@ -25,6 +27,8 @@ export function MobileNavMenu(props: MobileNavMenuProps) {
 
 function MobileNavMenuPanel({
   items,
+  localeItems,
+  localeLabel,
   loginHref,
   signupHref,
   loginLabel,
@@ -156,6 +160,27 @@ function MobileNavMenuPanel({
                 </Link>
               </>
             )}
+            <div className="mt-3 border-t border-[#E2E8F0] pt-3">
+              <p className="px-3 pb-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#94A3B8]">
+                {localeLabel}
+              </p>
+              <div className="grid grid-cols-2 gap-2 px-1">
+                {localeItems.map((locale) => (
+                  <Link
+                    key={locale.href}
+                    href={locale.href}
+                    onClick={closeMenu}
+                    className={`rounded-xl px-3 py-2.5 text-center text-sm font-medium ${
+                      locale.current
+                        ? "bg-[#FFF1F2] text-[#BE123C]"
+                        : "bg-[#F8FAFC] text-[#475569] hover:bg-[#F1F5F9] hover:text-[#0F172A]"
+                    }`}
+                  >
+                    {locale.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
           </nav>
         </div>
       )}

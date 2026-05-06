@@ -62,8 +62,15 @@ export function HeroChatForm() {
   const [inputValue, setInputValue] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [exampleIndex, setExampleIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
+    const media = window.matchMedia("(max-width: 767px)");
+    const updateIsMobile = () => setIsMobile(media.matches);
+
+    updateIsMobile();
+    media.addEventListener("change", updateIsMobile);
+
     const pickNext = (current: number) => {
       if (HOMEPAGE_CHAT_EXAMPLES.length <= 1) return 0;
       let next = current;
@@ -82,6 +89,7 @@ export function HeroChatForm() {
     }, 3200);
 
     return () => {
+      media.removeEventListener("change", updateIsMobile);
       window.clearTimeout(kickoffId);
       window.clearInterval(id);
     };
@@ -100,24 +108,26 @@ export function HeroChatForm() {
           isFocused ? "border-[#E11D48]/40 shadow-[0_20px_70px_rgba(225,29,72,0.18)]" : "border-[#E2E8F0] hover:border-[#CBD5E1]"
         }`}
       >
-        <div className="flex items-center gap-3 p-3 md:gap-4 md:p-4">
-          <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-[#F8FAFC]">
-            <MessageSquare className="h-5 w-5 text-[#94A3B8]" />
+        <div className="flex flex-col gap-3 p-3 md:gap-4 md:p-4">
+          <div className="flex items-center gap-3 md:gap-4">
+            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-[#F8FAFC]">
+              <MessageSquare className="h-5 w-5 text-[#94A3B8]" />
+            </div>
+            <input
+              type="text"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
+              placeholder={isMobile ? "Ask a HACCP or food safety question..." : HOMEPAGE_CHAT_EXAMPLES[exampleIndex]}
+              className="min-w-0 flex-1 bg-transparent text-base text-[#0F172A] placeholder-[#94A3B8] outline-none md:text-lg"
+            />
           </div>
-          <input
-            type="text"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            onFocus={() => setIsFocused(true)}
-            onBlur={() => setIsFocused(false)}
-            placeholder={HOMEPAGE_CHAT_EXAMPLES[exampleIndex]}
-            className="flex-1 bg-transparent text-base text-[#0F172A] placeholder-[#94A3B8] outline-none md:text-lg"
-          />
           <button
             type="submit"
-            className="pp-interactive inline-flex items-center gap-2 rounded-xl bg-[#E11D48] px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-[#E11D48]/20 transition-all duration-200 hover:bg-[#BE123C] hover:shadow-xl hover:shadow-[#E11D48]/30 active:scale-[0.97] md:px-5 md:py-3 md:text-base"
+            className="pp-interactive inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#E11D48] px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-[#E11D48]/20 transition-all duration-200 hover:bg-[#BE123C] hover:shadow-xl hover:shadow-[#E11D48]/30 active:scale-[0.97] md:ml-auto md:w-auto md:px-5 md:py-3 md:text-base"
           >
-            <span className="hidden sm:inline">Start free</span>
+            <span>Start free</span>
             <ArrowRight className="h-5 w-5" />
           </button>
         </div>
