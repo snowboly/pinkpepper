@@ -108,8 +108,8 @@ export function HeroChatForm() {
           isFocused ? "border-[#E11D48]/40 shadow-[0_20px_70px_rgba(225,29,72,0.18)]" : "border-[#E2E8F0] hover:border-[#CBD5E1]"
         }`}
       >
-        <div className="flex flex-col gap-3 p-3 md:gap-4 md:p-4">
-          <div className="flex items-center gap-3 md:gap-4">
+        <div className="flex flex-col gap-3 p-3 md:flex-row md:items-center md:gap-4 md:p-4">
+          <div className="flex min-w-0 flex-1 items-center gap-3 md:gap-4">
             <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-[#F8FAFC]">
               <MessageSquare className="h-5 w-5 text-[#94A3B8]" />
             </div>
@@ -125,7 +125,7 @@ export function HeroChatForm() {
           </div>
           <button
             type="submit"
-            className="pp-interactive inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#E11D48] px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-[#E11D48]/20 transition-all duration-200 hover:bg-[#BE123C] hover:shadow-xl hover:shadow-[#E11D48]/30 active:scale-[0.97] md:ml-auto md:w-auto md:px-5 md:py-3 md:text-base"
+            className="pp-interactive inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#E11D48] px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-[#E11D48]/20 transition-all duration-200 hover:bg-[#BE123C] hover:shadow-xl hover:shadow-[#E11D48]/30 active:scale-[0.97] md:w-auto md:flex-shrink-0 md:px-5 md:py-3 md:text-base"
           >
             <span>Start free</span>
             <ArrowRight className="h-5 w-5" />
