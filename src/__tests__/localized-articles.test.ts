@@ -44,12 +44,17 @@ describe("localized SEO priority articles", () => {
 
   it("adds localized article detail routes and SEO discovery", () => {
     const localizedArticlePage = readPage("src/app/[locale]/articles/[slug]/page.tsx");
+    const localizedArticlesHub = readPage("src/app/[locale]/articles/page.tsx");
+    const articlesHub = readPage("src/app/articles/page.tsx");
     const articlePage = readPage("src/app/articles/[slug]/page.tsx");
     const sitemap = readPage("src/app/sitemap.ts");
 
     expect(localizedArticlePage).toContain("generateStaticParams");
     expect(localizedArticlePage).toContain("generateArticleMetadata");
     expect(localizedArticlePage).toContain("<ArticleDetailPage");
+    expect(localizedArticlesHub).toContain("<ArticlesPage locale={locale} />");
+    expect(articlesHub).toContain("function getArticleHref");
+    expect(articlesHub).toContain('locale === "en" ? `/articles/${slug}` : `/${locale}/articles/${slug}`');
     expect(articlePage).toContain("buildArticleLanguageAlternates");
     expect(sitemap).toContain("getLocalizedArticleManifest");
     expect(sitemap).toContain("${BASE_URL}/${locale}/articles/${article.slug}");

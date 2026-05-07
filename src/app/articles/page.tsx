@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { getArticleManifest } from "@/lib/articles";
+import { type PublicLocale } from "@/i18n/public";
+import { getPublicPageHref } from "@/lib/public-routes";
 
 const featuredGuides = [
   {
@@ -91,8 +93,16 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function ArticlesPage() {
-  const articles = await getArticleManifest();
+function getArticleHref(slug: string, locale: PublicLocale = "en") {
+  return locale === "en" ? `/articles/${slug}` : `/${locale}/articles/${slug}`;
+}
+
+type ArticlesPageProps = {
+  locale?: PublicLocale;
+};
+
+export default async function ArticlesPage({ locale = "en" }: ArticlesPageProps = {}) {
+  const articles = await getArticleManifest({ locale });
 
   return (
     <main className="overflow-hidden">
@@ -127,7 +137,11 @@ export default async function ArticlesPage() {
             {featuredGuides.map((guide) => (
               <Link
                 key={guide.href}
-                href={guide.href}
+                href={
+                  guide.href.startsWith("/articles/")
+                    ? getArticleHref(guide.href.replace("/articles/", ""), locale)
+                    : getPublicPageHref(locale, guide.href)
+                }
                 className="rounded-3xl border border-[#E2E8F0] bg-[#F8FAFC] p-7 transition-all hover:-translate-y-0.5 hover:border-[#CBD5E1] hover:shadow-xl hover:shadow-black/[0.04]"
               >
                 <p className="text-xl font-semibold leading-tight text-[#0F172A]">{guide.title}</p>
@@ -143,7 +157,7 @@ export default async function ArticlesPage() {
           {workflowLinks.map((item) => (
             <Link
               key={item.href}
-              href={item.href}
+              href={getPublicPageHref(locale, item.href)}
               className="rounded-3xl border border-[#FED7AA] bg-white p-7 transition-all hover:-translate-y-0.5 hover:border-[#FDBA74] hover:shadow-xl hover:shadow-black/[0.04]"
             >
               <p className="text-lg font-semibold text-[#0F172A]">{item.title}</p>
@@ -185,7 +199,7 @@ export default async function ArticlesPage() {
                     {article.category}
                   </p>
                   <h2 className="mt-3 text-[1.75rem] font-bold leading-tight tracking-tight text-[#0F172A] md:text-[2rem]">
-                    <Link href={`/articles/${article.slug}`} className="transition-colors hover:text-[#BE123C]">
+                    <Link href={getArticleHref(article.slug, locale)} className="transition-colors hover:text-[#BE123C]">
                       {article.title}
                     </Link>
                   </h2>
@@ -193,7 +207,7 @@ export default async function ArticlesPage() {
                   <p className="mt-4 flex-1 text-[15px] leading-7 text-[#475569]">{article.excerpt}</p>
                   <div className="mt-6 border-t border-[#F1F5F9] pt-4">
                     <Link
-                      href={`/articles/${article.slug}`}
+                      href={getArticleHref(article.slug, locale)}
                       className="inline-flex items-center gap-2 rounded-full border border-[#E2E8F0] px-4 py-2 text-sm font-semibold text-[#0F172A] transition-colors hover:border-[#FDA4AF] hover:text-[#BE123C]"
                     >
                       <span>Read article</span>
