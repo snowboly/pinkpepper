@@ -93,8 +93,16 @@ export const metadata: Metadata = {
   },
 };
 
-function getArticleHref(slug: string, locale: PublicLocale = "en") {
-  return locale === "en" ? `/articles/${slug}` : `/${locale}/articles/${slug}`;
+function getArticleHref(
+  slug: string,
+  locale: PublicLocale = "en",
+  localizedSlugs: ReadonlySet<string> = new Set(),
+) {
+  if (locale === "en" || !localizedSlugs.has(slug)) {
+    return `/articles/${slug}`;
+  }
+
+  return `/${locale}/articles/${slug}`;
 }
 
 type ArticlesPageProps = {
@@ -103,6 +111,7 @@ type ArticlesPageProps = {
 
 export default async function ArticlesPage({ locale = "en" }: ArticlesPageProps = {}) {
   const articles = await getArticleManifest({ locale });
+  const localizedArticleSlugs = new Set(articles.map((article) => article.slug));
 
   return (
     <main className="overflow-hidden">
@@ -139,7 +148,11 @@ export default async function ArticlesPage({ locale = "en" }: ArticlesPageProps 
                 key={guide.href}
                 href={
                   guide.href.startsWith("/articles/")
-                    ? getArticleHref(guide.href.replace("/articles/", ""), locale)
+                    ? getArticleHref(
+                        guide.href.replace("/articles/", ""),
+                        locale,
+                        localizedArticleSlugs,
+                      )
                     : getPublicPageHref(locale, guide.href)
                 }
                 className="rounded-3xl border border-[#E2E8F0] bg-[#F8FAFC] p-7 transition-all hover:-translate-y-0.5 hover:border-[#CBD5E1] hover:shadow-xl hover:shadow-black/[0.04]"
@@ -199,7 +212,10 @@ export default async function ArticlesPage({ locale = "en" }: ArticlesPageProps 
                     {article.category}
                   </p>
                   <h2 className="mt-3 text-[1.75rem] font-bold leading-tight tracking-tight text-[#0F172A] md:text-[2rem]">
-                    <Link href={getArticleHref(article.slug, locale)} className="transition-colors hover:text-[#BE123C]">
+                    <Link
+                      href={getArticleHref(article.slug, locale, localizedArticleSlugs)}
+                      className="transition-colors hover:text-[#BE123C]"
+                    >
                       {article.title}
                     </Link>
                   </h2>
@@ -207,7 +223,7 @@ export default async function ArticlesPage({ locale = "en" }: ArticlesPageProps 
                   <p className="mt-4 flex-1 text-[15px] leading-7 text-[#475569]">{article.excerpt}</p>
                   <div className="mt-6 border-t border-[#F1F5F9] pt-4">
                     <Link
-                      href={getArticleHref(article.slug, locale)}
+                      href={getArticleHref(article.slug, locale, localizedArticleSlugs)}
                       className="inline-flex items-center gap-2 rounded-full border border-[#E2E8F0] px-4 py-2 text-sm font-semibold text-[#0F172A] transition-colors hover:border-[#FDA4AF] hover:text-[#BE123C]"
                     >
                       <span>Read article</span>
