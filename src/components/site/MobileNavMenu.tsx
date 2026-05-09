@@ -92,7 +92,7 @@ function MobileNavMenuPanel({
       {open && (
         <div
           id="mobile-site-navigation"
-          className="pp-glass-card absolute right-0 top-[calc(100%+10px)] z-50 w-[min(18rem,calc(100vw-1.5rem))] rounded-3xl p-3"
+          className="pp-glass-card fixed inset-x-3 top-[calc(env(safe-area-inset-top)+4rem)] z-50 max-h-[calc(100vh-5rem)] overflow-y-auto rounded-3xl p-3 sm:absolute sm:inset-x-auto sm:right-0 sm:top-[calc(100%+10px)] sm:max-h-none sm:w-[min(18rem,calc(100vw-2.5rem))] sm:overflow-visible"
         >
           <nav className="flex flex-col">
             {items.map((item) =>
