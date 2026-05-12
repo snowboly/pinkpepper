@@ -277,9 +277,13 @@ describe("fetchRegulationText", () => {
       vi.fn().mockResolvedValue({ ok: true, text: () => Promise.resolve(shortHtml) })
     );
 
-    await expect(fetchRegulationText("32002R0178")).rejects.toThrow(
-      "Failed to fetch adequate regulation text for 32002R0178"
-    );
+    const error: unknown = await fetchRegulationText("32002R0178").catch((err: unknown) => err);
+    expect(error).toBeInstanceOf(Error);
+    if (!(error instanceof Error)) {
+      throw new Error("Expected fetchRegulationText to reject with an Error");
+    }
+    expect(error.message).toContain("cookie/consent page");
+    expect(error.message).toContain('snippet: "Cookie consent required."');
 
     vi.unstubAllGlobals();
   });
@@ -292,6 +296,21 @@ describe("fetchRegulationText", () => {
 
     await expect(fetchRegulationText("32002R0178")).rejects.toThrow(
       "Failed to fetch adequate regulation text for 32002R0178"
+    );
+
+    vi.unstubAllGlobals();
+  });
+
+  it("classifies document-selection placeholder pages explicitly", async () => {
+    const shortHtml = "<html><body><p>Select a version to view.</p></body></html>";
+
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({ ok: true, status: 200, headers: new Headers(), text: () => Promise.resolve(shortHtml) })
+    );
+
+    await expect(fetchRegulationText("32002R0178")).rejects.toThrow(
+      "document-selection/navigation page"
     );
 
     vi.unstubAllGlobals();
