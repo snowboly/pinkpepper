@@ -28,6 +28,27 @@ const EURLEX_HEADERS = {
  */
 export const MIN_REGULATION_TEXT_CHARS = 5_000;
 
+const KNOWN_PLACEHOLDER_PAGE_PATTERNS = [
+  {
+    label: "cookie/consent page",
+    patterns: [
+      /cookie/i,
+      /consent/i,
+      /accept cookies/i,
+    ],
+  },
+  {
+    label: "document-selection/navigation page",
+    patterns: [
+      /select a version/i,
+      /document information/i,
+      /available languages/i,
+      /choose (a )?language/i,
+      /display all language versions/i,
+    ],
+  },
+] as const;
+
 export type CellarRegulation = {
   celex: string;
   baseCelex: string;
@@ -475,12 +496,41 @@ export async function fetchRegulationText(celexNumber: string): Promise<string> 
       return text;
     }
 
-    attempts.push(`${url} → text too short (${text.length} chars — likely a navigation or consent page)`);
+    const finalUrl = response.url || url;
+    const contentType = response.headers?.get?.("content-type") ?? "unknown";
+    const failureDescription = describeBadRegulationPage(html, text);
+    attempts.push(
+      `${url} → ${failureDescription.reason} (${text.length} chars; status ${response.status}; content-type ${contentType}; final URL ${finalUrl}; snippet: "${failureDescription.snippet}")`
+    );
   }
 
   throw new Error(
     `Failed to fetch adequate regulation text for ${celexNumber}.\n${attempts.join("\n")}`
   );
+}
+
+function describeBadRegulationPage(html: string, text: string): { reason: string; snippet: string } {
+  const compactText = text.replace(/\s+/g, " ").trim();
+  const compactHtml = html.replace(/\s+/g, " ").trim();
+  const inspectionText = `${compactText}\n${compactHtml}`;
+
+  for (const matcher of KNOWN_PLACEHOLDER_PAGE_PATTERNS) {
+    if (matcher.patterns.some((pattern) => pattern.test(inspectionText))) {
+      return {
+        reason: matcher.label,
+        snippet: buildFailureSnippet(compactText || compactHtml),
+      };
+    }
+  }
+
+  return {
+    reason: "text too short",
+    snippet: buildFailureSnippet(compactText || compactHtml),
+  };
+}
+
+function buildFailureSnippet(input: string): string {
+  return input.slice(0, 180).replace(/\s+/g, " ").trim();
 }
 
 /**
