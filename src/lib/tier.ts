@@ -18,7 +18,7 @@ export type TierCapabilities = {
 
 export const TIER_CAPABILITIES: Record<SubscriptionTier, TierCapabilities> = {
   free: {
-    dailyMessages: 5,
+    dailyMessages: 2,
     dailyAuditorMessages: 0,
     dailyImageUploads: 1,
     maxSavedConversations: 10,
