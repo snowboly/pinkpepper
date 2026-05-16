@@ -13,5 +13,5 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 export default async function LocalizedArticlesPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   if (!isPublicLocale(locale)) notFound();
-  return <ArticlesPage />;
+  return <ArticlesPage locale={locale} />;
 }

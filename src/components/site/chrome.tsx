@@ -5,7 +5,6 @@ import { AccountDropdown } from "@/components/site/AccountDropdown";
 import { LocaleSwitcher } from "@/components/site/LocaleSwitcher";
 import { MobileNavMenu } from "@/components/site/MobileNavMenu";
 import { NavDropdown } from "@/components/site/NavDropdown";
-import { localeNames } from "@/i18n/config";
 import { type PublicLocale, publicLaunchLocales } from "@/i18n/public";
 import { getPublicMessages, getPublicPageHref, isPublicLocale } from "@/lib/public-routes";
 import { createClient } from "@/utils/supabase/server";
@@ -46,13 +45,7 @@ async function getChromeContext() {
     { href: getPublicPageHref(publicLocale, "/contact"), label: messages.chrome.nav.contact },
   ];
 
-  const localeItems = publicLaunchLocales.map((localeOption) => ({
-    href: getPublicPageHref(localeOption, "/"),
-    label: localeNames[localeOption],
-    current: localeOption === publicLocale,
-  }));
-
-  return { messages, nav, publicLocale, localeItems };
+  return { messages, nav, publicLocale };
 }
 
 export async function SiteHeader() {
@@ -65,7 +58,7 @@ export async function SiteHeader() {
     // Supabase env vars unavailable during build-time prerendering; show logged-out state.
   }
 
-  const { messages, nav, publicLocale, localeItems } = await getChromeContext();
+  const { messages, nav, publicLocale } = await getChromeContext();
   const fullName =
     (typeof user?.user_metadata?.full_name === "string" ? user.user_metadata.full_name : null) ??
     (typeof user?.user_metadata?.name === "string" ? user.user_metadata.name : null);
@@ -121,7 +114,8 @@ export async function SiteHeader() {
           </div>
           <MobileNavMenu
             items={nav}
-            localeItems={localeItems}
+            currentLocale={publicLocale}
+            localeOptions={publicLaunchLocales}
             localeLabel={messages.chrome.localeSwitcher.label}
             loginHref={loginHref}
             signupHref={signupHref}
