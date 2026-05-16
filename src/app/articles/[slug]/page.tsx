@@ -7,15 +7,160 @@ import {
   getArticleManifest,
   getAvailableArticleLocales,
   isArticlePreferredForIndexing,
+  type ArticleRecord,
 } from "@/lib/articles";
 import { getCspNonce } from "@/lib/security/csp";
 import { processArticleContent } from "@/lib/article-content";
 import { type PublicLocale } from "@/i18n/public";
+import { getPublicPageHref } from "@/lib/public-routes";
 
 type ArticlePageProps = {
   params: Promise<{ slug: string }>;
   locale?: PublicLocale;
 };
+
+type BridgeLink = {
+  href: string;
+  title: string;
+  description: string;
+};
+
+const defaultArticleBridgeLinks: Record<string, BridgeLink[]> = {
+  guide: [
+    {
+      href: "/resources/haccp-plan-template",
+      title: "Use the HACCP plan template",
+      description: "Move from general guidance into a cleaner working structure you can adapt to your own process.",
+    },
+    {
+      href: "/features/haccp-plan-generator",
+      title: "Build the workflow inside PinkPepper",
+      description: "Turn the same hazard and CCP logic into a draft plan, supporting SOPs, and corrective actions.",
+    },
+    {
+      href: "/use-cases/restaurants",
+      title: "See the restaurant workflow",
+      description: "Compare the generic guidance against a more concrete operational model for service kitchens.",
+    },
+  ],
+  operations: [
+    {
+      href: "/resources/temperature-monitoring-log-template",
+      title: "Download the temperature monitoring log",
+      description: "Use a record layout that separates product-safety checks from routine ambient monitoring.",
+    },
+    {
+      href: "/features/haccp-plan-generator",
+      title: "Tie monitoring into the HACCP workflow",
+      description: "Build CCP limits, records, and corrective actions into the same compliance flow instead of scattering them across files.",
+    },
+    {
+      href: "/use-cases/catering",
+      title: "See the catering workflow",
+      description: "Apply the same control logic in a mobile or event-led operation where setup and service windows create extra risk.",
+    },
+  ],
+  compliance: [
+    {
+      href: "/resources/haccp-plan-template",
+      title: "Start with the HACCP plan template",
+      description: "Use a cleaner structure if you need to convert guidance into a site-specific plan quickly.",
+    },
+    {
+      href: "/features/haccp-plan-generator",
+      title: "Move into the full compliance workflow",
+      description: "Build the actual HACCP record set instead of leaving the article insight disconnected from implementation.",
+    },
+    {
+      href: "/use-cases/food-manufacturing",
+      title: "See the manufacturing workflow",
+      description: "Use the manufacturing path if the control point needs to work across higher-volume production and records.",
+    },
+  ],
+  allergens: [
+    {
+      href: "/resources/allergen-matrix-template",
+      title: "Download the allergen matrix template",
+      description: "Translate allergen guidance into a usable reference for menu changes, supplier checks, and service teams.",
+    },
+    {
+      href: "/features/allergen-documentation",
+      title: "Centralize allergen documentation",
+      description: "Keep declarations, matrix updates, and supporting records aligned in one workflow.",
+    },
+    {
+      href: "/use-cases/restaurants",
+      title: "See the restaurant workflow",
+      description: "Use the restaurant path when allergen risk depends on substitutions, prep overlap, and service communication.",
+    },
+  ],
+  audit: [
+    {
+      href: "/resources/food-safety-audit-checklist",
+      title: "Use the audit checklist",
+      description: "Turn the weak points from the article into a practical pre-inspection review before your next visit or certification check.",
+    },
+    {
+      href: "/features/haccp-plan-generator",
+      title: "Fix the underlying HACCP workflow",
+      description: "Use the product workflow when the audit issue points to deeper gaps in hazard analysis, records, or corrective actions.",
+    },
+    {
+      href: "/use-cases/food-manufacturing",
+      title: "See the manufacturing workflow",
+      description: "Use the manufacturing path if audit pressure is coming from higher-volume controls, traceability, or more formal records.",
+    },
+  ],
+  checklist: [
+    {
+      href: "/resources/haccp-plan-template",
+      title: "Start with the HACCP plan template",
+      description: "Use a cleaner document structure if the checklist has exposed gaps in the actual plan.",
+    },
+    {
+      href: "/resources/corrective-action-log-template",
+      title: "Add a corrective action log",
+      description: "Keep findings, fixes, and verification in one place instead of losing them across ad hoc notes.",
+    },
+    {
+      href: "/use-cases/restaurants",
+      title: "See the restaurant workflow",
+      description: "Follow a concrete operating model if you want the checklist to map onto day-to-day kitchen controls.",
+    },
+  ],
+};
+
+const articleBridgeOverrides: Record<string, BridgeLink[]> = {
+  "cooling-and-reheating-haccp-high-risk-steps": defaultArticleBridgeLinks.operations,
+  "temperature-control-in-haccp-limits-and-monitoring": [
+    defaultArticleBridgeLinks.operations[0],
+    {
+      href: "/resources/corrective-action-log-template",
+      title: "Add a corrective action log",
+      description: "Capture the product decision and process fix when a temperature deviation pushes you beyond the critical limit.",
+    },
+    defaultArticleBridgeLinks.operations[2],
+  ],
+  "identifying-critical-control-points-in-food-safety": [
+    defaultArticleBridgeLinks.guide[0],
+    defaultArticleBridgeLinks.guide[1],
+    {
+      href: "/use-cases/restaurants",
+      title: "See the restaurant workflow",
+      description: "Compare CCP decisions against a real service operation instead of leaving them as abstract flow-chart logic.",
+    },
+  ],
+  "haccp-for-event-catering-eu": defaultArticleBridgeLinks.operations,
+};
+
+function resolveArticleBridgeLinks(article: ArticleRecord) {
+  const override = articleBridgeOverrides[article.slug];
+  if (override) {
+    return override;
+  }
+
+  return defaultArticleBridgeLinks[article.category.toLowerCase()] ?? defaultArticleBridgeLinks.guide;
+}
 
 export async function generateStaticParams() {
   const articles = await getArticleManifest();
@@ -83,6 +228,7 @@ export default async function ArticleDetailPage({ params, locale = "en" }: Artic
   }
 
   const { processedContent } = processArticleContent(article.body);
+  const bridgeLinks = resolveArticleBridgeLinks(article);
   const relatedArticles = [
     ...articleManifest.filter((candidate) => candidate.slug !== article.slug && candidate.category === article.category),
     ...articleManifest.filter((candidate) => candidate.slug !== article.slug && candidate.category !== article.category),
@@ -160,6 +306,32 @@ export default async function ArticleDetailPage({ params, locale = "en" }: Artic
           <div className="pp-article-body max-w-none" dangerouslySetInnerHTML={{ __html: processedContent }} />
         </div>
       </section>
+
+      {bridgeLinks.length > 0 ? (
+        <section className="border-t border-[#F1F5F9] bg-[#FFF7ED] py-16">
+          <div className="pp-container max-w-5xl">
+            <div className="max-w-2xl">
+              <p className="text-[11px] font-black uppercase tracking-[0.22em] text-[#E11D48]">Next move</p>
+              <h2 className="mt-3 text-3xl font-bold tracking-tight text-[#0F172A]">Put this into practice</h2>
+              <p className="mt-4 text-base leading-7 text-[#475569]">
+                Keep the article useful by moving straight into the template, workflow, or operating model that matches the control problem you are working on.
+              </p>
+            </div>
+            <div className="mt-10 grid gap-6 md:grid-cols-3">
+              {bridgeLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={getPublicPageHref(locale, link.href)}
+                  className="rounded-[1.75rem] border border-[#FED7AA] bg-white p-6 shadow-[0_18px_50px_rgba(15,23,42,0.05)] transition-all hover:-translate-y-0.5 hover:border-[#FDBA74] hover:shadow-[0_24px_70px_rgba(15,23,42,0.08)]"
+                >
+                  <p className="text-lg font-semibold leading-tight text-[#0F172A]">{link.title}</p>
+                  <p className="mt-3 text-sm leading-7 text-[#475569]">{link.description}</p>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       {relatedArticles.length > 0 ? (
         <section className="border-t border-[#F1F5F9] bg-[#F8FAFC] py-16">

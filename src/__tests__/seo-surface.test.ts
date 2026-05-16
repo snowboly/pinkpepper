@@ -265,6 +265,15 @@ describe("public SEO copy and linking", () => {
     expect(markup).toContain('href="/articles"');
   });
 
+  it("bridges article detail pages into relevant templates, workflows, and use cases", async () => {
+    const markup = await renderArticleDetailPageForTest();
+
+    expect(markup).toContain("Put this into practice");
+    expect(markup).toContain('href="/resources/temperature-monitoring-log-template"');
+    expect(markup).toContain('href="/features/haccp-plan-generator"');
+    expect(markup).toContain('href="/use-cases/catering"');
+  });
+
   it("expands scoped article-body typography without touching dashboard markdown", () => {
     const articleDetail = readPage("src/app/articles/[slug]/page.tsx");
     const globals = readPage("src/app/globals.css");
