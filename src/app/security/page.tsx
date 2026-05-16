@@ -157,7 +157,7 @@ export default function SecurityPage() {
                 <li className="flex gap-3">
                   <span className="mt-1 h-2 w-2 flex-shrink-0 rounded-full bg-[#E11D48]" />
                   <span>
-                    <strong className="text-[#0F172A]">Groq</strong> (text chat responses) â€” accessed
+                    <strong className="text-[#0F172A]">Groq</strong> (text chat responses) - accessed
                     via API. Per Groq&apos;s API terms,{" "}
                     <strong className="text-[#0F172A]">
                       your prompts and outputs are not used to train AI models
@@ -169,7 +169,7 @@ export default function SecurityPage() {
                   <span className="mt-1 h-2 w-2 flex-shrink-0 rounded-full bg-[#E11D48]" />
                   <span>
                     <strong className="text-[#0F172A]">OpenAI</strong> (image analysis and semantic
-                    search embeddings) â€” accessed via API. Per OpenAI&apos;s API data usage policy,{" "}
+                    search embeddings) - accessed via API. Per OpenAI&apos;s API data usage policy,{" "}
                     <strong className="text-[#0F172A]">
                       API inputs and outputs are not used to train OpenAI models
                     </strong>{" "}

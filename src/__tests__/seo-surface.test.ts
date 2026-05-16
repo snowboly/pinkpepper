@@ -353,9 +353,11 @@ describe("premium quality regressions", () => {
   it("does not ship mojibake on core marketing pages", () => {
     const about = readPage("src/app/about/page.tsx");
     const pricing = readPage("src/app/pricing/page.tsx");
+    const security = readPage("src/app/security/page.tsx");
 
     expect(about).not.toContain("ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢");
     expect(pricing).not.toContain("ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢");
+    expect(security).not.toContain("â€”");
   });
 
   it("uses compliance software wording consistently in shared brand surfaces", () => {
