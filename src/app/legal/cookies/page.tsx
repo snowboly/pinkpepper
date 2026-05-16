@@ -88,7 +88,7 @@ export default function CookiesPage() {
             </table>
           </div>
           <p className="mt-3 text-sm text-[#64748B]">
-            PinkPepper currently uses optional Vercel Web Analytics after consent. According to Vercel's
+            PinkPepper currently uses optional Vercel Web Analytics after consent. According to Vercel&apos;s
             documentation, this analytics product does not rely on cookies and stores anonymized data. We do
             not use advertising cookies.
           </p>
