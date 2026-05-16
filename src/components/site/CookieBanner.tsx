@@ -49,8 +49,8 @@ export function CookieBanner() {
               </span>
               <span className="hidden md:inline">
                 We use essential cookies to keep PinkPepper running, and optional
-                analytics cookies (Vercel Analytics) to understand how you use the
-                product - no personal data is collected.{" "}
+                Vercel Analytics to understand how you use the product. Vercel
+                describes this analytics product as anonymized and cookieless.{" "}
               </span>
               <Link
                 href="/legal/cookies"
