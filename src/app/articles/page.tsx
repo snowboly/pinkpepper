@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { getArticleManifest } from "@/lib/articles";
+import { type PublicLocale } from "@/i18n/public";
+import { getPublicPageHref } from "@/lib/public-routes";
 
 const featuredGuides = [
   {
@@ -72,6 +74,41 @@ const workflowLinks = [
     title: "Browse the template library",
     description: "Use the free templates if you need structured documents before moving into a custom compliance workflow.",
   },
+  {
+    href: "/use-cases",
+    title: "Find the right operating model",
+    description: "Jump into restaurant, cafe, catering, and manufacturing workflows instead of treating every business like the same HACCP problem.",
+  },
+];
+
+const clusterLinks = [
+  {
+    title: "HACCP fundamentals",
+    description: "Start with the core guides that explain process flow, hazard analysis, CCP logic, and what belongs in the actual plan.",
+    links: [
+      { href: "/articles/building-a-haccp-process-flow-diagram", label: "Process flow diagrams" },
+      { href: "/articles/how-to-perform-a-hazard-analysis-correctly", label: "Hazard analysis" },
+      { href: "/articles/identifying-critical-control-points-in-food-safety", label: "CCP decisions" },
+    ],
+  },
+  {
+    title: "Monitoring and records",
+    description: "Use the articles and templates that help teams record controls cleanly enough to survive audits and daily operational change.",
+    links: [
+      { href: "/articles/cooling-and-reheating-haccp-high-risk-steps", label: "Cooling and reheating" },
+      { href: "/resources/temperature-monitoring-log-template", label: "Temperature logs" },
+      { href: "/resources/corrective-action-log-template", label: "Corrective actions" },
+    ],
+  },
+  {
+    title: "Industry-specific workflows",
+    description: "When the operating model matters more than the generic principle, move into the use-case pages first.",
+    links: [
+      { href: "/use-cases/restaurants", label: "Restaurants" },
+      { href: "/use-cases/catering", label: "Catering" },
+      { href: "/use-cases/food-manufacturing", label: "Food manufacturing" },
+    ],
+  },
 ];
 
 export const metadata: Metadata = {
@@ -91,8 +128,25 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function ArticlesPage() {
-  const articles = await getArticleManifest();
+function getArticleHref(
+  slug: string,
+  locale: PublicLocale = "en",
+  localizedSlugs: ReadonlySet<string> = new Set(),
+) {
+  if (locale === "en" || !localizedSlugs.has(slug)) {
+    return `/articles/${slug}`;
+  }
+
+  return `/${locale}/articles/${slug}`;
+}
+
+type ArticlesPageProps = {
+  locale?: PublicLocale;
+};
+
+export default async function ArticlesPage({ locale = "en" }: ArticlesPageProps = {}) {
+  const articles = await getArticleManifest({ locale });
+  const localizedArticleSlugs = new Set(articles.map((article) => article.slug));
 
   return (
     <main className="overflow-hidden">
@@ -127,7 +181,15 @@ export default async function ArticlesPage() {
             {featuredGuides.map((guide) => (
               <Link
                 key={guide.href}
-                href={guide.href}
+                href={
+                  guide.href.startsWith("/articles/")
+                    ? getArticleHref(
+                        guide.href.replace("/articles/", ""),
+                        locale,
+                        localizedArticleSlugs,
+                      )
+                    : getPublicPageHref(locale, guide.href)
+                }
                 className="rounded-3xl border border-[#E2E8F0] bg-[#F8FAFC] p-7 transition-all hover:-translate-y-0.5 hover:border-[#CBD5E1] hover:shadow-xl hover:shadow-black/[0.04]"
               >
                 <p className="text-xl font-semibold leading-tight text-[#0F172A]">{guide.title}</p>
@@ -139,17 +201,53 @@ export default async function ArticlesPage() {
       </section>
 
       <section className="border-b border-[#F1F5F9] bg-[#FFF7ED] py-14">
-        <div className="pp-container grid gap-5 md:grid-cols-3">
+        <div className="pp-container grid gap-5 md:grid-cols-2 xl:grid-cols-4">
           {workflowLinks.map((item) => (
             <Link
               key={item.href}
-              href={item.href}
+              href={getPublicPageHref(locale, item.href)}
               className="rounded-3xl border border-[#FED7AA] bg-white p-7 transition-all hover:-translate-y-0.5 hover:border-[#FDBA74] hover:shadow-xl hover:shadow-black/[0.04]"
             >
               <p className="text-lg font-semibold text-[#0F172A]">{item.title}</p>
               <p className="mt-3 text-sm leading-relaxed text-[#475569]">{item.description}</p>
             </Link>
           ))}
+        </div>
+      </section>
+
+      <section className="border-b border-[#F1F5F9] bg-white py-14">
+        <div className="pp-container">
+          <div className="max-w-3xl">
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">Browse by cluster</p>
+            <h2 className="pp-display mt-4 text-3xl text-[#0F172A] md:text-4xl">
+              Follow the topic path that matches the work in front of you
+            </h2>
+            <p className="mt-4 text-base leading-relaxed text-[#475569]">
+              Use these cluster paths when you want a tighter route through the library instead of scanning every article card.
+            </p>
+          </div>
+          <div className="mt-8 grid gap-6 lg:grid-cols-3">
+            {clusterLinks.map((cluster) => (
+              <div
+                key={cluster.title}
+                className="rounded-3xl border border-[#E2E8F0] bg-[#F8FAFC] p-7"
+              >
+                <p className="text-xl font-semibold text-[#0F172A]">{cluster.title}</p>
+                <p className="mt-3 text-sm leading-relaxed text-[#475569]">{cluster.description}</p>
+                <div className="mt-5 flex flex-col gap-3">
+                  {cluster.links.map((link) => (
+                    <Link
+                      key={link.href}
+                      href={getPublicPageHref(locale, link.href)}
+                      className="text-sm font-semibold text-[#BE123C] transition-colors hover:text-[#9F1239]"
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -185,7 +283,10 @@ export default async function ArticlesPage() {
                     {article.category}
                   </p>
                   <h2 className="mt-3 text-[1.75rem] font-bold leading-tight tracking-tight text-[#0F172A] md:text-[2rem]">
-                    <Link href={`/articles/${article.slug}`} className="transition-colors hover:text-[#BE123C]">
+                    <Link
+                      href={getArticleHref(article.slug, locale, localizedArticleSlugs)}
+                      className="transition-colors hover:text-[#BE123C]"
+                    >
                       {article.title}
                     </Link>
                   </h2>
@@ -193,7 +294,7 @@ export default async function ArticlesPage() {
                   <p className="mt-4 flex-1 text-[15px] leading-7 text-[#475569]">{article.excerpt}</p>
                   <div className="mt-6 border-t border-[#F1F5F9] pt-4">
                     <Link
-                      href={`/articles/${article.slug}`}
+                      href={getArticleHref(article.slug, locale, localizedArticleSlugs)}
                       className="inline-flex items-center gap-2 rounded-full border border-[#E2E8F0] px-4 py-2 text-sm font-semibold text-[#0F172A] transition-colors hover:border-[#FDA4AF] hover:text-[#BE123C]"
                     >
                       <span>Read article</span>

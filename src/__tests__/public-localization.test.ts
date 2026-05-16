@@ -40,6 +40,8 @@ describe("public locale config", () => {
   it("identifies public locales and localizes public paths", () => {
     expect(isPublicLocale("fr")).toBe(true);
     expect(isPublicLocale("es")).toBe(false);
+    expect(localizePublicPath("en", "/")).toBe("/");
+    expect(localizePublicPath("en", "/pricing")).toBe("/pricing");
     expect(localizePublicPath("fr", "/")).toBe("/fr");
     expect(localizePublicPath("pt", "/pricing")).toBe("/pt/pricing");
   });
@@ -60,7 +62,9 @@ describe("public locale config", () => {
 
   it("preserves supported public routes when switching locale", () => {
     expect(switchPublicLocale("/fr/pricing", "de")).toBe("/de/pricing");
+    expect(switchPublicLocale("/fr/pricing", "en")).toBe("/pricing");
     expect(switchPublicLocale("/fr/articles", "de")).toBe("/de/articles");
+    expect(getPublicPageHref("en", "/pricing")).toBe("/pricing");
     expect(getPublicPageHref("pt", "/pricing")).toBe("/pt/pricing");
     expect(getPublicPageHref("pt", "/articles")).toBe("/pt/articles");
   });

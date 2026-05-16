@@ -21,7 +21,7 @@ import { HeroChatForm } from "@/components/homepage/HeroChatForm";
 import { homepageFaqs } from "@/data/faqs";
 
 export const metadata: Metadata = {
-  title: "PinkPepper | AI HACCP & Food Safety Software — EU & UK",
+  title: "PinkPepper | AI HACCP & Food Safety Software - EU & UK",
   description:
     "Generate HACCP plans, allergen records, SOPs & audit-ready documents in minutes. AI food safety software grounded in 35+ EU & UK regulations. Start free.",
   alternates: {
@@ -79,7 +79,7 @@ export default async function HomePage({ locale }: HomePageProps = {}) {
             </div>
 
             <h1 className="pp-display mx-auto mb-8 max-w-4xl text-2xl leading-[1.15] tracking-[-0.02em] text-white sm:text-3xl md:text-4xl lg:text-5xl">
-              HACCP plans, SOPs &amp; audit&nbsp;prep in minutes — not&nbsp;weeks.
+              HACCP plans, SOPs &amp; audit&nbsp;prep in minutes - not&nbsp;weeks.
             </h1>
 
             <p className="mx-auto mb-8 max-w-3xl text-base leading-relaxed text-white/80 sm:text-lg">
@@ -133,7 +133,7 @@ export default async function HomePage({ locale }: HomePageProps = {}) {
             {[
               {
                 title: "Grounded in 35+ EU & UK regulations",
-                body: "Every answer references EC 852/2004, UK FSA guidance, Codex HACCP, and more — not generic AI copy scraped from the web.",
+                body: "Every answer references EC 852/2004, UK FSA guidance, Codex HACCP, and more - not generic AI copy scraped from the web.",
               },
               {
                 title: "Save 10+ hours every week",
@@ -256,7 +256,7 @@ export default async function HomePage({ locale }: HomePageProps = {}) {
                 <p className="text-3xl font-extrabold text-white">+2h daily</p>
                 <p className="mt-1 text-sm font-semibold text-slate-400">10+ hours saved every week</p>
                 <p className="mt-4 text-sm leading-relaxed text-slate-300">
-                  Food safety managers typically spend 30–40% of their day on documentation and compliance admin. PinkPepper cuts that overhead so your team focuses on operations, not paperwork.
+                  Food safety managers typically spend 30-40% of their day on documentation and compliance admin. PinkPepper cuts that overhead so your team focuses on operations, not paperwork.
                 </p>
               </div>
 
@@ -267,10 +267,10 @@ export default async function HomePage({ locale }: HomePageProps = {}) {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" />
                   </svg>
                 </div>
-                <p className="text-3xl font-extrabold text-white">€18,000+</p>
+                <p className="text-3xl font-extrabold text-white">EUR 18,000+</p>
                 <p className="mt-1 text-sm font-semibold text-slate-400">Saved in compliance costs per year</p>
                 <p className="mt-4 text-sm leading-relaxed text-slate-300">
-                  Reduce reactive consultant spend by replacing ad-hoc hourly retainers with targeted expert escalations. At €150/hr, avoiding 120 unnecessary consultant hours covers the saving.
+                  Reduce reactive consultant spend by replacing ad-hoc hourly retainers with targeted expert escalations. At EUR 150/hr, avoiding 120 unnecessary consultant hours covers the saving.
                 </p>
               </div>
             </div>
@@ -294,7 +294,7 @@ export default async function HomePage({ locale }: HomePageProps = {}) {
               <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-[#94A3B8]">Free</h3>
               <p className="mt-4 min-h-[4.5rem] text-sm leading-relaxed text-[#64748B]">Best for testing fit on live questions and everyday checks before you commit.</p>
               <div className="mt-6 flex items-baseline gap-1">
-                <span className="text-5xl font-bold tracking-tight text-[#0F172A]"><span className="text-2xl align-super">€</span>0</span>
+                <span className="text-5xl font-bold tracking-tight text-[#0F172A]">EUR 0</span>
                 <span className="text-base text-[#94A3B8]">/month</span>
               </div>
               <div className="my-6 border-t border-[#F1F5F9]" />
@@ -315,7 +315,7 @@ export default async function HomePage({ locale }: HomePageProps = {}) {
               <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-[#94A3B8]">Plus</h3>
               <p className="mt-4 min-h-[4.5rem] text-sm leading-relaxed text-[#64748B]">For teams that use PinkPepper daily for HACCP, SOPs, allergen records, and downloadable templates.</p>
               <div className="mt-6 flex items-baseline gap-1">
-                <span className="text-5xl font-bold tracking-tight text-[#0F172A]"><span className="text-2xl align-super">€</span>19</span>
+                <span className="text-5xl font-bold tracking-tight text-[#0F172A]">EUR 19</span>
                 <span className="text-base text-[#94A3B8]">/month + VAT</span>
               </div>
               <div className="my-6 border-t border-[#FCE7F3]" />
@@ -338,7 +338,7 @@ export default async function HomePage({ locale }: HomePageProps = {}) {
               <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-[#BE123C]">Pro</h3>
               <p className="mt-4 min-h-[4.5rem] text-sm leading-relaxed text-[#64748B]">For teams that want both AI modes, stronger audit workflows, and human food safety consultancy for higher-risk work.</p>
               <div className="mt-6 flex items-baseline gap-1">
-                <span className="text-5xl font-bold tracking-tight text-[#0F172A]"><span className="text-2xl align-super">€</span>99</span>
+                <span className="text-5xl font-bold tracking-tight text-[#0F172A]">EUR 99</span>
                 <span className="text-base text-[#94A3B8]">/month + VAT</span>
               </div>
               <div className="my-6 border-t border-[#F1F5F9]" />
@@ -373,10 +373,10 @@ export default async function HomePage({ locale }: HomePageProps = {}) {
                 </div>
               </div>
               <Link href="/articles" className="text-sm font-semibold text-[#475569] hover:text-[#0F172A]">
-                Browse all →
+                Browse all {"->"}
               </Link>
             </div>
-            <div className="mb-8 grid gap-4 md:grid-cols-3">
+            <div className="mb-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
               {[
                 {
                   href: "/about",
@@ -392,6 +392,11 @@ export default async function HomePage({ locale }: HomePageProps = {}) {
                   href: "/articles/haccp-ccp-examples-uk-eu",
                   label: "See real HACCP CCP examples",
                   description: "Review practical CCP examples before you map limits, monitoring, and corrective actions.",
+                },
+                {
+                  href: "/use-cases",
+                  label: "Find the workflow that fits your operation",
+                  description: "Start with the use-case hub if you need restaurant, catering, cafe, or manufacturing guidance before choosing a template or feature flow.",
                 },
               ].map((item) => (
                 <Link
@@ -416,7 +421,7 @@ export default async function HomePage({ locale }: HomePageProps = {}) {
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#E11D48]">Your specialists</p>
               <h2 className="pp-display mt-4 text-4xl text-[#0F172A] md:text-5xl">Six specialists. One subscription.</h2>
               <p className="mt-5 text-lg leading-relaxed text-[#475569]">
-                Every PinkPepper conversation is handled by one of six AI food safety specialists. Each has a distinct approach — from step-by-step checklists to direct executive summaries — so you get the right tone for every situation.
+                Every PinkPepper conversation is handled by one of six AI food safety specialists. Each has a distinct approach - from step-by-step checklists to direct executive summaries - so you get the right tone for every situation.
               </p>
               <p className="mt-4 text-sm text-[#94A3B8]">Assigned automatically. Same conversation, same specialist.</p>
             </div>
@@ -464,7 +469,7 @@ export default async function HomePage({ locale }: HomePageProps = {}) {
             {/* Divider */}
             <div className="hidden lg:block h-48 w-px bg-[#E2E8F0] shrink-0" />
 
-            {/* Lead Auditor John — Pro highlight */}
+            {/* Lead Auditor John - Pro highlight */}
             <div className="flex shrink-0 flex-col items-center gap-3 text-center">
               <div className="relative">
                 <Image
@@ -527,7 +532,7 @@ export default async function HomePage({ locale }: HomePageProps = {}) {
             href="/signup"
             className="pp-interactive inline-flex items-center gap-3 rounded-full bg-[#E11D48] px-10 py-4 text-lg font-semibold text-white shadow-xl shadow-[#E11D48]/20 transition-all duration-200 hover:bg-[#BE123C] hover:shadow-2xl hover:shadow-[#E11D48]/30 active:scale-[0.97]"
           >
-            Start free — no card needed
+            Start free - no card needed
             <ArrowRight className="h-5 w-5" />
           </Link>
         </div>

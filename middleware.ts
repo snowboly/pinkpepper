@@ -9,6 +9,7 @@ import {
 
 const CANONICAL_HOST = "pinkpepper.io";
 const LEGACY_WWW_HOST = "www.pinkpepper.io";
+const LEGACY_EN_PREFIX = "/en";
 
 /**
  * Middleware is responsible for two things:
@@ -49,6 +50,14 @@ export async function middleware(request: NextRequest) {
   }
 
   const pathname = request.nextUrl.pathname;
+  if (pathname === LEGACY_EN_PREFIX || pathname.startsWith(`${LEGACY_EN_PREFIX}/`)) {
+    const redirectUrl = request.nextUrl.clone();
+    redirectUrl.pathname = pathname === LEGACY_EN_PREFIX ? "/" : pathname.slice(LEGACY_EN_PREFIX.length);
+    redirectUrl.protocol = "https:";
+    redirectUrl.port = "";
+    return finalize(NextResponse.redirect(redirectUrl, 308));
+  }
+
   const isAuthPage = pathname === "/login" || pathname === "/signup";
   const isProtected = pathname.startsWith("/dashboard");
   const isAdminPage = pathname.startsWith("/admin");
