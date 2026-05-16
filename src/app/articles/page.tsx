@@ -74,6 +74,41 @@ const workflowLinks = [
     title: "Browse the template library",
     description: "Use the free templates if you need structured documents before moving into a custom compliance workflow.",
   },
+  {
+    href: "/use-cases",
+    title: "Find the right operating model",
+    description: "Jump into restaurant, cafe, catering, and manufacturing workflows instead of treating every business like the same HACCP problem.",
+  },
+];
+
+const clusterLinks = [
+  {
+    title: "HACCP fundamentals",
+    description: "Start with the core guides that explain process flow, hazard analysis, CCP logic, and what belongs in the actual plan.",
+    links: [
+      { href: "/articles/building-a-haccp-process-flow-diagram", label: "Process flow diagrams" },
+      { href: "/articles/how-to-perform-a-hazard-analysis-correctly", label: "Hazard analysis" },
+      { href: "/articles/identifying-critical-control-points-in-food-safety", label: "CCP decisions" },
+    ],
+  },
+  {
+    title: "Monitoring and records",
+    description: "Use the articles and templates that help teams record controls cleanly enough to survive audits and daily operational change.",
+    links: [
+      { href: "/articles/cooling-and-reheating-haccp-high-risk-steps", label: "Cooling and reheating" },
+      { href: "/resources/temperature-monitoring-log-template", label: "Temperature logs" },
+      { href: "/resources/corrective-action-log-template", label: "Corrective actions" },
+    ],
+  },
+  {
+    title: "Industry-specific workflows",
+    description: "When the operating model matters more than the generic principle, move into the use-case pages first.",
+    links: [
+      { href: "/use-cases/restaurants", label: "Restaurants" },
+      { href: "/use-cases/catering", label: "Catering" },
+      { href: "/use-cases/food-manufacturing", label: "Food manufacturing" },
+    ],
+  },
 ];
 
 export const metadata: Metadata = {
@@ -166,7 +201,7 @@ export default async function ArticlesPage({ locale = "en" }: ArticlesPageProps 
       </section>
 
       <section className="border-b border-[#F1F5F9] bg-[#FFF7ED] py-14">
-        <div className="pp-container grid gap-5 md:grid-cols-3">
+        <div className="pp-container grid gap-5 md:grid-cols-2 xl:grid-cols-4">
           {workflowLinks.map((item) => (
             <Link
               key={item.href}
@@ -177,6 +212,42 @@ export default async function ArticlesPage({ locale = "en" }: ArticlesPageProps 
               <p className="mt-3 text-sm leading-relaxed text-[#475569]">{item.description}</p>
             </Link>
           ))}
+        </div>
+      </section>
+
+      <section className="border-b border-[#F1F5F9] bg-white py-14">
+        <div className="pp-container">
+          <div className="max-w-3xl">
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">Browse by cluster</p>
+            <h2 className="pp-display mt-4 text-3xl text-[#0F172A] md:text-4xl">
+              Follow the topic path that matches the work in front of you
+            </h2>
+            <p className="mt-4 text-base leading-relaxed text-[#475569]">
+              Use these cluster paths when you want a tighter route through the library instead of scanning every article card.
+            </p>
+          </div>
+          <div className="mt-8 grid gap-6 lg:grid-cols-3">
+            {clusterLinks.map((cluster) => (
+              <div
+                key={cluster.title}
+                className="rounded-3xl border border-[#E2E8F0] bg-[#F8FAFC] p-7"
+              >
+                <p className="text-xl font-semibold text-[#0F172A]">{cluster.title}</p>
+                <p className="mt-3 text-sm leading-relaxed text-[#475569]">{cluster.description}</p>
+                <div className="mt-5 flex flex-col gap-3">
+                  {cluster.links.map((link) => (
+                    <Link
+                      key={link.href}
+                      href={getPublicPageHref(locale, link.href)}
+                      className="text-sm font-semibold text-[#BE123C] transition-colors hover:text-[#9F1239]"
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 

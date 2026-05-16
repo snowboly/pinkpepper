@@ -162,6 +162,11 @@ const relatedWorkflows = [
     title: "Read the compliance articles",
     description: "Go deeper on HACCP, allergen control, audits, and traceability with practical operational guidance.",
   },
+  {
+    href: "/use-cases",
+    title: "Match the templates to your operation",
+    description: "Use the restaurants, catering, cafes, and manufacturing pages when you need templates in a more business-specific workflow.",
+  },
 ];
 
 export const metadata: Metadata = {
@@ -234,7 +239,7 @@ export default function ResourcesPage() {
       </section>
 
       <section className="border-b border-[#F1F5F9] bg-[#FFF7ED] py-14">
-        <div className="pp-container grid gap-5 md:grid-cols-3">
+        <div className="pp-container grid gap-5 md:grid-cols-2 xl:grid-cols-4">
           {relatedWorkflows.map((item) => (
             <Link
               key={item.href}

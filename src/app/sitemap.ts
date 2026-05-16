@@ -1,5 +1,9 @@
 import { MetadataRoute } from "next";
-import { getArticleManifest, getLocalizedArticleManifest } from "@/lib/articles";
+import {
+  getArticleManifest,
+  getLocalizedArticleManifest,
+  isArticlePreferredForIndexing,
+} from "@/lib/articles";
 import { publicContentRoutePaths, publicLaunchLocales } from "@/i18n/public";
 import { localizePublicPath } from "@/lib/public-routes";
 
@@ -23,11 +27,28 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: path === "/" ? 0.9 : 0.7,
     })),
   );
+  const englishPublicEntries = publicContentRoutePaths
+    .filter((path) => path !== "/")
+    .map((path) => ({
+      url: `${BASE_URL}${path}`,
+      lastModified: new Date(
+        ["/about", "/pricing", "/contact", "/security"].includes(path)
+          ? "2026-03-18"
+          : "2026-04-20",
+      ),
+      changeFrequency: path === "/articles" ? ("weekly" as const) : ("monthly" as const),
+      priority:
+        path === "/pricing"
+          ? 0.9
+          : path === "/about" || path === "/features/haccp-plan-generator"
+            ? 0.8
+            : 0.7,
+    }));
 
   return [
     { url: BASE_URL, lastModified: new Date("2026-03-18"), changeFrequency: "weekly", priority: 1 },
+    ...englishPublicEntries,
     ...localizedPublicEntries,
-    { url: `${BASE_URL}/about`, lastModified: new Date("2026-03-18"), changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE_URL}/resources`, lastModified: new Date("2026-03-14"), changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE_URL}/resources/haccp-plan-template`, lastModified: new Date("2026-03-14"), changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE_URL}/resources/allergen-matrix-template`, lastModified: new Date("2026-03-14"), changeFrequency: "monthly", priority: 0.7 },
@@ -45,9 +66,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/resources/waste-management-sop-template`, lastModified: new Date("2026-03-14"), changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE_URL}/resources/traceability-log-template`, lastModified: new Date("2026-03-14"), changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE_URL}/resources/food-safety-management-system-template`, lastModified: new Date("2026-03-14"), changeFrequency: "monthly", priority: 0.7 },
-    { url: `${BASE_URL}/pricing`, lastModified: new Date("2026-03-18"), changeFrequency: "monthly", priority: 0.9 },
-    { url: `${BASE_URL}/articles`, lastModified: new Date("2026-03-20"), changeFrequency: "weekly", priority: 0.7 },
-    ...articles.map((article) => ({
+    { url: `${BASE_URL}/use-cases`, lastModified: new Date("2026-05-16"), changeFrequency: "monthly", priority: 0.8 },
+    { url: `${BASE_URL}/use-cases/restaurants`, lastModified: new Date("2026-05-16"), changeFrequency: "monthly", priority: 0.7 },
+    { url: `${BASE_URL}/use-cases/cafes`, lastModified: new Date("2026-05-16"), changeFrequency: "monthly", priority: 0.7 },
+    { url: `${BASE_URL}/use-cases/catering`, lastModified: new Date("2026-05-16"), changeFrequency: "monthly", priority: 0.7 },
+    { url: `${BASE_URL}/use-cases/food-manufacturing`, lastModified: new Date("2026-05-16"), changeFrequency: "monthly", priority: 0.7 },
+    ...articles.filter(isArticlePreferredForIndexing).map((article) => ({
       url: `${BASE_URL}/articles/${article.slug}`,
       lastModified: new Date(article.publishedAt),
       changeFrequency: "monthly" as const,
@@ -61,14 +85,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.6,
       })),
     ),
-    { url: `${BASE_URL}/faqs`, lastModified: new Date("2026-03-20"), changeFrequency: "monthly", priority: 0.6 },
-    { url: `${BASE_URL}/contact`, lastModified: new Date("2026-03-18"), changeFrequency: "monthly", priority: 0.6 },
     { url: `${BASE_URL}/security`, lastModified: new Date("2026-03-18"), changeFrequency: "monthly", priority: 0.7 },
-    { url: `${BASE_URL}/legal/terms`, lastModified: new Date("2026-04-15"), changeFrequency: "yearly", priority: 0.3 },
-    { url: `${BASE_URL}/legal/privacy`, lastModified: new Date("2026-04-15"), changeFrequency: "yearly", priority: 0.3 },
-    { url: `${BASE_URL}/legal/cookies`, lastModified: new Date("2026-04-15"), changeFrequency: "yearly", priority: 0.3 },
-    { url: `${BASE_URL}/legal/dpa`, lastModified: new Date("2026-04-15"), changeFrequency: "yearly", priority: 0.3 },
-    { url: `${BASE_URL}/legal/acceptable-use`, lastModified: new Date("2026-04-15"), changeFrequency: "yearly", priority: 0.3 },
-    { url: `${BASE_URL}/legal/refund`, lastModified: new Date("2026-04-15"), changeFrequency: "yearly", priority: 0.3 },
+    { url: `${BASE_URL}/legal/terms`, lastModified: new Date("2026-04-15"), changeFrequency: "yearly", priority: 0.2 },
+    { url: `${BASE_URL}/legal/privacy`, lastModified: new Date("2026-04-15"), changeFrequency: "yearly", priority: 0.2 },
   ];
 }

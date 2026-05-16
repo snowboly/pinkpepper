@@ -1,4 +1,4 @@
-import { getArticleManifest } from "@/lib/articles";
+import { getArticleManifest, isArticlePreferredForIndexing } from "@/lib/articles";
 import { publicContentRoutePaths, publicLaunchLocales } from "@/i18n/public";
 import { localizePublicPath } from "@/lib/public-routes";
 
@@ -55,7 +55,9 @@ export async function GET(request: Request) {
       .filter((l) => l !== "en")
       .map((locale) => `${BASE_URL}${localizePublicPath(locale, path)}`),
   );
-  const articleUrls = articles.map((a) => `${BASE_URL}/articles/${a.slug}`);
+  const articleUrls = articles
+    .filter(isArticlePreferredForIndexing)
+    .map((a) => `${BASE_URL}/articles/${a.slug}`);
   const staticUrls = STATIC_PATHS.map((p) => `${BASE_URL}${p}`);
 
   const urlList = [...englishRoutes, ...localizedRoutes, ...articleUrls, ...staticUrls];

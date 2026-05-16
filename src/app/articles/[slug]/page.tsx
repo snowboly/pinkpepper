@@ -2,7 +2,12 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getArticleBySlug, getArticleManifest, getAvailableArticleLocales } from "@/lib/articles";
+import {
+  getArticleBySlug,
+  getArticleManifest,
+  getAvailableArticleLocales,
+  isArticlePreferredForIndexing,
+} from "@/lib/articles";
 import { getCspNonce } from "@/lib/security/csp";
 import { processArticleContent } from "@/lib/article-content";
 import { type PublicLocale } from "@/i18n/public";
@@ -44,6 +49,7 @@ export async function generateArticleMetadata(slug: string, locale: PublicLocale
   return {
     title: `${article.title} | PinkPepper`,
     description: article.excerpt,
+    robots: isArticlePreferredForIndexing(article) ? undefined : { index: false, follow: true },
     alternates: {
       canonical: url,
       languages: await buildArticleLanguageAlternates(article.slug),
@@ -80,7 +86,9 @@ export default async function ArticleDetailPage({ params, locale = "en" }: Artic
   const relatedArticles = [
     ...articleManifest.filter((candidate) => candidate.slug !== article.slug && candidate.category === article.category),
     ...articleManifest.filter((candidate) => candidate.slug !== article.slug && candidate.category !== article.category),
-  ].slice(0, 3);
+  ]
+    .filter(isArticlePreferredForIndexing)
+    .slice(0, 3);
 
   const articleSchema = {
     "@context": "https://schema.org",
