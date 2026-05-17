@@ -10,6 +10,7 @@ const { billingState, createCheckoutSessionMock, createCustomerMock, createPorta
       user: { id: "user_123", email: "owner@example.com" } as { id: string; email: string } | null,
       subscriptionRow: null as { stripe_customer_id?: string | null } | null,
       upserts: [] as Array<Record<string, unknown>>,
+      adminUpsertError: null as { message: string } | null,
     },
     createCheckoutSessionMock: vi.fn(),
     createCustomerMock: vi.fn(),
@@ -36,6 +37,23 @@ vi.mock("@/utils/supabase/server", () => ({
         upsert: async (payload: Record<string, unknown>) => {
           billingState.upserts.push(payload);
           return { error: null };
+        },
+      };
+    },
+  }),
+}));
+
+vi.mock("@/utils/supabase/admin", () => ({
+  createAdminClient: () => ({
+    from: (table: string) => {
+      if (table !== "subscriptions") {
+        throw new Error(`Unexpected admin table ${table}`);
+      }
+
+      return {
+        upsert: async (payload: Record<string, unknown>) => {
+          billingState.upserts.push(payload);
+          return { error: billingState.adminUpsertError };
         },
       };
     },
@@ -73,6 +91,7 @@ describe("billing route origin validation", () => {
     billingState.user = { id: "user_123", email: "owner@example.com" };
     billingState.subscriptionRow = null;
     billingState.upserts = [];
+    billingState.adminUpsertError = null;
     createCheckoutSessionMock.mockReset();
     createCustomerMock.mockReset();
     createPortalSessionMock.mockReset();
@@ -271,6 +290,27 @@ describe("billing route origin validation", () => {
 
   it("returns structured json when Stripe checkout creation throws", async () => {
     createCheckoutSessionMock.mockRejectedValueOnce(new Error("Stripe API down"));
+
+    const response = await checkoutPost(
+      new Request("https://pinkpepper.io/api/billing/checkout", {
+        method: "POST",
+        headers: {
+          host: "pinkpepper.io",
+          origin: "https://pinkpepper.io",
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({ plan: "plus" }),
+      }),
+    );
+
+    expect(response.status).toBe(500);
+    await expect(response.json()).resolves.toEqual({
+      error: "Unable to start checkout right now. Please try again in a moment.",
+    });
+  });
+
+  it("fails checkout when persisting the Stripe customer breadcrumb fails", async () => {
+    billingState.adminUpsertError = { message: "rls denied" };
 
     const response = await checkoutPost(
       new Request("https://pinkpepper.io/api/billing/checkout", {
