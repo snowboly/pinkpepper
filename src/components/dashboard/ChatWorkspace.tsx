@@ -334,6 +334,23 @@ export default function ChatWorkspace({
     }
   }
 
+  async function reconcileBillingSuccess(sessionId: string) {
+    setBillingError(null);
+    try {
+      const res = await fetch("/api/billing/reconcile", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionId }),
+      });
+      const data = (await res.json().catch(() => ({}))) as { error?: string };
+      if (!res.ok) {
+        setBillingError(data.error ?? "Failed to reconcile billing status.");
+      }
+    } catch {
+      setBillingError("Network error while reconciling billing status.");
+    }
+  }
+
   // ── Conversations ──
   const loadConversations = useCallback(async (silent = false) => {
     if (!silent) setLoadingConversations(true);
@@ -1009,7 +1026,20 @@ export default function ChatWorkspace({
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    if (params.get("billing") === "success") void refreshBillingStatus();
+    if (params.get("billing") === "success") {
+      const sessionId = params.get("session_id");
+      void (async () => {
+        if (sessionId) {
+          await reconcileBillingSuccess(sessionId);
+        }
+        await refreshBillingStatus();
+        params.delete("billing");
+        params.delete("session_id");
+        const nextSearch = params.toString();
+        const nextUrl = `${window.location.pathname}${nextSearch ? `?${nextSearch}` : ""}`;
+        window.history.replaceState(null, "", nextUrl);
+      })();
+    }
     const cId = params.get("c");
     if (cId) selectConversation(cId);
   }, [selectConversation]);
