@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
+import { createAdminClient } from "@/utils/supabase/admin";
 import { getStripe } from "@/lib/billing/stripe";
 import { isAllowedBillingRequest, getTrustedSiteOrigin } from "@/lib/billing/request-origin";
 import { billingLimiter, checkRateLimit } from "@/lib/ratelimit";
@@ -50,6 +51,7 @@ export async function POST(request: Request) {
       );
     }
     const stripe = getStripe();
+    const admin = createAdminClient();
 
     const { data: subRow } = await supabase
       .from("subscriptions")
@@ -68,20 +70,24 @@ export async function POST(request: Request) {
       });
       customerId = customer.id;
 
-      await supabase.from("subscriptions").upsert(
+      const { error: breadcrumbErr } = await admin.from("subscriptions").upsert(
         {
           user_id: user.id,
           stripe_customer_id: customerId,
         },
         { onConflict: "user_id" }
       );
+
+      if (breadcrumbErr) {
+        throw breadcrumbErr;
+      }
     }
 
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
       customer: customerId,
       line_items: [{ price: priceId, quantity: 1 }],
-      success_url: `${appUrl}/dashboard?billing=success`,
+      success_url: `${appUrl}/dashboard?billing=success&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${appUrl}/pricing?billing=cancelled`,
       allow_promotion_codes: true,
       metadata: {
