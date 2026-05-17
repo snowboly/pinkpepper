@@ -4,18 +4,18 @@ import Link from "next/link";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "HACCP Plan Generator - For Small Food Businesses | PinkPepper",
+  title: "HACCP Plan Template for Small Food Businesses | PinkPepper",
   description:
-    "Create a practical HACCP plan faster. Built for small UK food businesses that need hazard analysis, controls, and audit-ready draft structure without starting from scratch.",
+    "Use a practical HACCP plan template for small food businesses, then turn it into a tailored draft with PinkPepper. Built for UK and EU food safety workflows.",
   alternates: {
     canonical: "https://pinkpepper.io/features/haccp-plan-generator",
   },
 };
 
 const quickWins = [
-  "Create a practical HACCP draft faster",
-  "Structure hazard analysis and control points clearly",
-  "Prepare cleaner documentation for audit review",
+  "Start with a practical HACCP plan template",
+  "Tailor hazards, controls, and monitoring to your operation",
+  "Prepare a cleaner draft for audit review",
 ];
 
 const bestFor = [
@@ -50,11 +50,11 @@ export default function HaccpPlanGeneratorPage() {
               HACCP software for small food businesses
             </p>
             <h1 className="pp-display mt-4 text-4xl font-bold leading-[1.05] tracking-tight text-[#0F172A] md:text-6xl">
-              Create a practical HACCP plan faster
+              HACCP Plan Template for Small Food Businesses
             </h1>
             <p className="mt-6 max-w-3xl text-lg leading-8 text-[#475569]">
-              Built for small UK food businesses that need hazard analysis, controls, and draft structure without
-              starting from a blank page.
+              Start with a practical HACCP plan template, then tailor it to your products, process steps, hazards, and
+              controls without building everything from scratch.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
               <Link
@@ -73,10 +73,10 @@ export default function HaccpPlanGeneratorPage() {
             </div>
             <div className="mt-8 flex flex-wrap gap-3 text-sm font-medium text-[#475569]">
               <span className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2">
-                Hazard analysis support
+                HACCP template structure
               </span>
               <span className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2">
-                Audit prep structure
+                Hazard analysis support
               </span>
               <span className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2">
                 Grounded in UK and EU food safety rules
@@ -153,15 +153,16 @@ export default function HaccpPlanGeneratorPage() {
         <div className="pp-container max-w-4xl">
           <div className="pp-article-body max-w-none">
             <p>
-              Writing a HACCP plan from scratch is one of the most daunting tasks for any food business. The blank page
-              stares back at you. The Codex decision tree feels ambiguous. You wonder: <em>Have I identified all the
-              hazards? Are my critical limits defensible? Will this pass a BRCGS or local authority audit?</em>
+              A HACCP plan template gives food businesses a starting structure, but most generic downloads still leave
+              the hardest work unresolved. You still need to decide which hazards matter, how process steps should be
+              mapped, what counts as a CCP, and whether your monitoring and corrective actions are defensible.
             </p>
 
             <p>
-              PinkPepper&apos;s HACCP Plan Generator removes the guesswork. Answer a structured series of questions about
-              your product and process, and our AI chatbot, trained on Regulation (EC) 852/2004, Codex Alimentarius,
-              and GFSI scheme requirements, generates a comprehensive draft HACCP plan tailored to your operation.
+              PinkPepper is built for businesses that want more than a blank HACCP plan template. You answer a
+              structured series of questions about your product and process, and the software turns that template logic
+              into a practical draft tailored to your operation, grounded in Regulation (EC) 852/2004, Codex
+              Alimentarius, and GFSI scheme requirements.
             </p>
 
             <p>
@@ -169,9 +170,11 @@ export default function HaccpPlanGeneratorPage() {
               sign it off.
             </p>
 
-            <h2>What the HACCP Plan Generator Delivers</h2>
+            <h2>What This HACCP Plan Template Includes</h2>
 
-            <p>A complete, audit-ready HACCP plan structured according to Codex Alimentarius principles, including:</p>
+            <p>
+              The output is a complete HACCP plan structure aligned with Codex Alimentarius principles, including:
+            </p>
 
             <ul>
               <li>
@@ -198,7 +201,7 @@ export default function HaccpPlanGeneratorPage() {
               </li>
             </ul>
 
-            <h2>How It Works</h2>
+            <h2>How to Create a HACCP Plan from This Template</h2>
 
             <h3>Step 1: Tell Us About Your Operation</h3>
 
@@ -217,9 +220,10 @@ export default function HaccpPlanGeneratorPage() {
             <h3>Step 2: AI Generates Your Draft Plan</h3>
 
             <p>
-              Based on your responses, PinkPepper&apos;s AI constructs a complete draft HACCP plan. It identifies likely
-              hazards, proposes appropriate critical limits drawn from Codex and EFSA guidance, and maps your process
-              flow. The draft is yours immediately, no waiting for a consultant to clear their schedule.
+              Based on your responses, PinkPepper&apos;s AI constructs a complete draft HACCP plan from the template
+              structure. It identifies likely hazards, proposes appropriate critical limits drawn from Codex and EFSA
+              guidance, and maps your process flow. The draft is yours immediately, no waiting for a consultant to
+              clear their schedule.
             </p>
 
             <h3>Step 3: Review and Refine</h3>
@@ -251,7 +255,7 @@ export default function HaccpPlanGeneratorPage() {
               your food safety binder, and have it ready for your next audit or EHO inspection.
             </p>
 
-            <h2>Who Uses the HACCP Plan Generator</h2>
+            <h2>Who This HACCP Template Is For</h2>
 
             <table>
               <thead>
@@ -299,7 +303,7 @@ export default function HaccpPlanGeneratorPage() {
               </tbody>
             </table>
 
-            <h2>Why AI-Generated HACCP Beats the Alternatives</h2>
+            <h2>Why a Tailored Template Beats a Generic Download</h2>
 
             <table>
               <thead>
@@ -316,10 +320,7 @@ export default function HaccpPlanGeneratorPage() {
                     Generic; doesn&apos;t reflect your specific process or hazards. Often lacks scientific justification
                     for critical limits.
                   </td>
-                  <td>
-                    Tailored to your product and process inputs. Includes referenced critical limits based on Codex and
-                    EU guidance.
-                  </td>
+                  <td>Tailored to your product and process inputs, with referenced critical limits based on Codex and EU guidance.</td>
                 </tr>
                 <tr>
                   <td><strong>Generic AI</strong></td>
@@ -369,7 +370,7 @@ export default function HaccpPlanGeneratorPage() {
               </li>
             </ul>
 
-            <h2>From Blank Page to Audit-Ready Plan</h2>
+            <h2>Start with the Template, Then Refine the Draft</h2>
 
             <p>
               You don&apos;t have to face the HACCP plan alone. Whether you&apos;re a startup seeking EHO approval or an
@@ -392,11 +393,11 @@ export default function HaccpPlanGeneratorPage() {
                 Ready to start
               </p>
               <h2 className="mt-3 text-3xl font-bold tracking-tight text-[#0F172A]">
-                Move from HACCP blank page to workable draft
+                Move from HACCP template to workable draft
               </h2>
               <p className="mt-4 text-base leading-7 text-[#475569]">
-                Start free, work through your process step by step, and turn scattered compliance notes into a clearer
-                HACCP draft.
+                Start free, work through your process step by step, and turn a generic HACCP template into a clearer,
+                more tailored draft.
               </p>
             </div>
             <div className="mt-6 flex flex-wrap gap-4">
