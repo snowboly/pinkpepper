@@ -1,0 +1,45 @@
+COMMISSION IMPLEMENTING REGULATION (EU) No 931/2011
+of 19 September 2011
+on the traceability requirements set by Regulation (EC) No 178/2002 for food of animal origin
+
+OFFICIAL SOURCE
+- EUR-Lex: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32011R0931
+- CELEX: 32011R0931
+- OJ L 242, 20.9.2011, pp. 2-3
+- Applies from 1 July 2012
+
+LEGAL PURPOSE
+- Implements Article 18 of Regulation (EC) No 178/2002 for food of animal origin
+- Makes traceability requirements more specific for higher-risk animal-origin foods
+
+OFFICIAL CONTEXT FROM THE REGULATION
+- Article 18 of Regulation (EC) No 178/2002 requires traceability at all stages of production, processing and distribution
+- Operators must be able to identify from whom they received food and to whom they supplied it
+- The regulation states that this information must be made available to competent authorities upon demand
+
+SCOPE
+- Applies to food defined as unprocessed and processed products under the hygiene framework
+- Does not operate as a generic traceability law for all foods
+- Particularly relevant for meat, fish, dairy, eggs, and similar animal-origin categories
+
+TRACEABILITY INFORMATION EXPECTED
+- accurate description of the food
+- volume or quantity
+- name and address of the supplier / dispatcher
+- name and address of the consignee
+- reference identifying the lot, batch or consignment, as appropriate
+- date of dispatch
+
+AVAILABILITY OF RECORDS
+- The information must be provided to the competent authority without undue delay when requested
+- Operators may choose the practical format, provided the information is clear and retrievable
+
+WHY THIS MATTERS FOR RETRIEVAL
+- Useful for questions about animal-origin traceability fields
+- Useful for recall and withdrawal scope questions
+- Useful where general Article 18 advice needs a more specific sector rule
+
+USE WITH
+- Regulation (EC) No 178/2002, Article 18
+- Regulation (EC) No 852/2004
+- Regulation (EC) No 853/2004
