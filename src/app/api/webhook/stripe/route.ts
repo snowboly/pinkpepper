@@ -86,9 +86,11 @@ async function resolveUserIdForCustomer(customerId: string) {
 
 export async function syncSubscriptionFromStripe(
   subscription: Stripe.Subscription,
-  eventType: string
+  eventType: string,
+  options?: { sendEmail?: boolean }
 ) {
   const admin = createAdminClient();
+  const sendEmail = options?.sendEmail ?? true;
 
   const customerId =
     typeof subscription.customer === "string" ? subscription.customer : subscription.customer.id;
@@ -142,6 +144,10 @@ export async function syncSubscriptionFromStripe(
     .eq("id", userId);
 
   if (profileErr) throw profileErr;
+
+  if (!sendEmail) {
+    return;
+  }
 
   const { data: userData } = await admin.auth.admin.getUserById(userId);
   const email = userData?.user?.email;
