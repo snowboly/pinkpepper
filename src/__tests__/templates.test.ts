@@ -7,7 +7,6 @@ describe("getGroupedTemplates", () => {
 
     expect(grouped.map((group) => group.category)).toEqual([
       "Allergen",
-      "Audit",
       "Cleaning",
       "HACCP",
       "Monitoring",
