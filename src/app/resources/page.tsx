@@ -81,27 +81,6 @@ const resources: ResourceEntry[] = [
     categoryLabel: "Supplier",
   },
   {
-    href: "/resources/food-safety-audit-checklist",
-    title: "Food safety audit checklist",
-    description: "A practical structure for monthly internal review and inspection preparation.",
-    category: "audit",
-    categoryLabel: "Audit",
-  },
-  {
-    href: "/resources/food-safety-document-checklist",
-    title: "EU and UK food safety document checklist",
-    description: "A broader authority asset covering HACCP, SOPs, allergen, traceability, monitoring, and audit-readiness documents.",
-    category: "audit",
-    categoryLabel: "Audit",
-  },
-  {
-    href: "/resources/food-safety-management-system-template",
-    title: "Food safety management system template",
-    description: "How to structure the overarching FSMS document that ties your HACCP plan, SOPs, and records together.",
-    category: "audit",
-    categoryLabel: "Audit",
-  },
-  {
     href: "/resources/employee-food-safety-training-record",
     title: "Employee food safety training record",
     description: "What training records should capture to demonstrate staff competence during inspections.",
@@ -142,8 +121,8 @@ const featuredResources = [
   "/resources/haccp-plan-template",
   "/resources/allergen-matrix-template",
   "/resources/temperature-monitoring-log-template",
-  "/resources/food-safety-audit-checklist",
   "/resources/corrective-action-log-template",
+  "/resources/supplier-approval-questionnaire",
 ];
 
 const relatedWorkflows = [
