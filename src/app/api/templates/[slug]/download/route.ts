@@ -6,6 +6,34 @@ import { BUCKETS } from "@/lib/storage";
 
 export const dynamic = "force-dynamic";
 
+function splitStoragePath(storagePath: string): { folder: string; fileName: string } {
+  const lastSlash = storagePath.lastIndexOf("/");
+  if (lastSlash === -1) {
+    return { folder: "", fileName: storagePath };
+  }
+
+  return {
+    folder: storagePath.slice(0, lastSlash),
+    fileName: storagePath.slice(lastSlash + 1),
+  };
+}
+
+async function objectExistsInTemplatesBucket(
+  admin: ReturnType<typeof createAdminClient>,
+  storagePath: string
+): Promise<boolean> {
+  const { folder, fileName } = splitStoragePath(storagePath);
+  const { data, error } = await admin.storage
+    .from(BUCKETS.templates)
+    .list(folder, { search: fileName, limit: 100 });
+
+  if (error || !data) {
+    return false;
+  }
+
+  return data.some((entry) => entry.name === fileName);
+}
+
 export async function GET(
   _req: Request,
   { params }: { params: Promise<{ slug: string }> }
@@ -55,6 +83,11 @@ export async function GET(
 
   let signedUrl: string | null = null;
   for (const storagePath of storagePaths) {
+    const objectExists = await objectExistsInTemplatesBucket(admin, storagePath);
+    if (!objectExists) {
+      continue;
+    }
+
     const { data } = await admin.storage
       .from(BUCKETS.templates)
       .createSignedUrl(storagePath, 60); // 60-second expiry
