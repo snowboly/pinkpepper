@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getGroupedTemplates } from "@/lib/templates";
+import { getGroupedTemplates, TEMPLATES } from "@/lib/templates";
 
 describe("getGroupedTemplates", () => {
   it("sorts categories and template titles alphabetically", () => {
@@ -22,5 +22,11 @@ describe("getGroupedTemplates", () => {
       "HACCP Step Descriptions Template",
       "Product Recall Procedure Template",
     ]);
+  });
+
+  it("supports alternate storage names for templates whose object key differs from the slug", () => {
+    expect(TEMPLATES.find((template) => template.slug === "haccp-plan-template_hazzards")).toMatchObject({
+      storageName: "haccp-plan-template_hazards",
+    });
   });
 });
