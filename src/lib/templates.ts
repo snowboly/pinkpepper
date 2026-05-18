@@ -10,6 +10,7 @@ export type TemplateEntry = {
   title: string;
   category: string;
   fileType?: "docx" | "xlsx";
+  storageName?: string;
 };
 
 export type TemplateGroup = {
@@ -19,7 +20,7 @@ export type TemplateGroup = {
 
 export const TEMPLATES: TemplateEntry[] = [
   // HACCP
-  { slug: "haccp-plan-template_hazzards",         title: "HACCP hazards register",                 category: "HACCP" },
+  { slug: "haccp-plan-template_hazzards",         title: "HACCP hazards register",                 category: "HACCP",        storageName: "haccp-plan-template_hazards" },
   { slug: "haccp-plan-template_steps",            title: "HACCP step descriptions",                category: "HACCP" },
   { slug: "corrective-action-log-template",       title: "Corrective action log",                  category: "HACCP" },
   { slug: "product-recall-procedure-template",    title: "Product recall procedure",               category: "HACCP" },
