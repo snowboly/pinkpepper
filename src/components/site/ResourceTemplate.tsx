@@ -28,6 +28,7 @@ type ResourceTemplateProps = {
   templateSlug?: string;
   /** Multiple downloadable files — shows thumbnail from first slug + stacked download cards */
   templateSlugs?: string[];
+  showBottomCta?: boolean;
 };
 
 export function ResourceTemplate({
@@ -40,6 +41,7 @@ export function ResourceTemplate({
   relatedLinks,
   templateSlug,
   templateSlugs,
+  showBottomCta = true,
 }: ResourceTemplateProps) {
   // Normalise to an array; templateSlugs takes precedence
   const slugs = templateSlugs ?? (templateSlug ? [templateSlug] : []);
@@ -137,25 +139,27 @@ export function ResourceTemplate({
       </section>
 
       {/* CTA */}
-      <section className="bg-[#F8FAFC] py-16">
-        <div className="pp-container text-center">
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">Ready to start?</p>
-          <h2 className="pp-display mx-auto mt-3 max-w-xl text-3xl text-[#0F172A] md:text-4xl">
-            Start free. No card required.
-          </h2>
-          <p className="mx-auto mt-3 max-w-md text-base text-[#64748B]">
-            Try PinkPepper on a real compliance question today.
-          </p>
-          <div className="mt-7">
-            <Link
-              href="/signup"
-              className="pp-interactive inline-block rounded-full bg-[#E11D48] px-8 py-3.5 text-sm font-semibold text-white hover:bg-[#BE123C]"
-            >
-              Get Started
-            </Link>
+      {showBottomCta && (
+        <section className="bg-[#F8FAFC] py-16">
+          <div className="pp-container text-center">
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">Ready to start?</p>
+            <h2 className="pp-display mx-auto mt-3 max-w-xl text-3xl text-[#0F172A] md:text-4xl">
+              Start free. No card required.
+            </h2>
+            <p className="mx-auto mt-3 max-w-md text-base text-[#64748B]">
+              Try PinkPepper on a real compliance question today.
+            </p>
+            <div className="mt-7">
+              <Link
+                href="/signup"
+                className="pp-interactive inline-block rounded-full bg-[#E11D48] px-8 py-3.5 text-sm font-semibold text-white hover:bg-[#BE123C]"
+              >
+                Get Started
+              </Link>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Related resources */}
       <section className="bg-white py-16">
