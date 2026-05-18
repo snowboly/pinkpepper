@@ -7,7 +7,6 @@ describe("getGroupedTemplates", () => {
 
     expect(grouped.map((group) => group.category)).toEqual([
       "Allergen",
-      "Audit",
       "Cleaning",
       "HACCP",
       "Monitoring",
@@ -17,11 +16,11 @@ describe("getGroupedTemplates", () => {
     ]);
 
     expect(grouped.find((group) => group.category === "HACCP")?.templates.map((template) => template.title)).toEqual([
-      "Corrective action log",
-      "Customer complaint log",
-      "HACCP hazards register",
-      "HACCP step descriptions",
-      "Product recall procedure",
+      "Corrective Action Log Template",
+      "Customer Complaint Log Template",
+      "HACCP Hazards Register Template",
+      "HACCP Step Descriptions Template",
+      "Product Recall Procedure Template",
     ]);
   });
 });

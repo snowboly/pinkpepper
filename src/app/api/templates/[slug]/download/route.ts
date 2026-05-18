@@ -50,18 +50,27 @@ export async function GET(
   const admin = createAdminClient();
   const template = TEMPLATES.find((t) => t.slug === slug);
   const ext = template?.fileType ?? "docx";
-  const storagePath = `${slug}.${ext}`;
+  const baseName = template?.storageName ?? slug;
+  const storagePaths = [`${baseName}.${ext}`, `Templates/${baseName}.${ext}`];
 
-  const { data, error: urlError } = await admin.storage
-    .from(BUCKETS.templates)
-    .createSignedUrl(storagePath, 60); // 60-second expiry
+  let signedUrl: string | null = null;
+  for (const storagePath of storagePaths) {
+    const { data } = await admin.storage
+      .from(BUCKETS.templates)
+      .createSignedUrl(storagePath, 60); // 60-second expiry
 
-  if (urlError || !data?.signedUrl) {
+    if (data?.signedUrl) {
+      signedUrl = data.signedUrl;
+      break;
+    }
+  }
+
+  if (!signedUrl) {
     return Response.json(
       { error: "Template file not available yet." },
       { status: 404 }
     );
   }
 
-  return Response.redirect(data.signedUrl, 302);
+  return Response.redirect(signedUrl, 302);
 }
