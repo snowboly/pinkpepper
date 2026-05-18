@@ -10,6 +10,7 @@ export type TemplateEntry = {
   title: string;
   category: string;
   fileType?: "docx" | "xlsx";
+  storageName?: string;
 };
 
 export type TemplateGroup = {
@@ -19,36 +20,36 @@ export type TemplateGroup = {
 
 export const TEMPLATES: TemplateEntry[] = [
   // HACCP
-  { slug: "haccp-plan-template_hazzards",         title: "HACCP hazards register",                 category: "HACCP" },
-  { slug: "haccp-plan-template_steps",            title: "HACCP step descriptions",                category: "HACCP" },
-  { slug: "corrective-action-log-template",       title: "Corrective action log",                  category: "HACCP" },
-  { slug: "product-recall-procedure-template",    title: "Product recall procedure",               category: "HACCP" },
+  { slug: "haccp-plan-template_hazzards",         title: "HACCP Hazards Register Template",                 category: "HACCP",        storageName: "haccp-plan-template_hazards" },
+  { slug: "haccp-plan-template_steps",            title: "HACCP Step Descriptions Template",                category: "HACCP" },
+  { slug: "corrective-action-log-template",       title: "Corrective Action Log Template",                  category: "HACCP" },
+  { slug: "product-recall-procedure-template",    title: "Product Recall Procedure Template",               category: "HACCP" },
   // Allergen
-  { slug: "allergen-matrix-template",             title: "Allergen matrix template",               category: "Allergen" },
+  { slug: "allergen-matrix-template",             title: "Allergen Matrix Template",               category: "Allergen" },
   // Cleaning
-  { slug: "cleaning-and-disinfection-sop",        title: "Cleaning and disinfection SOP",          category: "Cleaning" },
+  { slug: "cleaning-and-disinfection-sop",        title: "Cleaning and Disinfection SOP Template",          category: "Cleaning" },
   // Monitoring
-  { slug: "temperature-monitoring-log-template",  title: "Temperature monitoring log",             category: "Monitoring" },
-  { slug: "pest-control-log-template",            title: "Pest control log",                       category: "Monitoring" },
-  { slug: "waste-management-log-template",        title: "Waste management log",                   category: "Monitoring" },
-  { slug: "waste-management-sop-template",        title: "Waste management SOP",                   category: "Monitoring" },
+  { slug: "temperature-monitoring-log-template",  title: "Temperature Monitoring Log Template",             category: "Monitoring" },
+  { slug: "pest-control-log-template",            title: "Pest Control Log Template",                       category: "Monitoring" },
+  { slug: "waste-management-log-template",        title: "Waste Management Log Template",                   category: "Monitoring" },
+  { slug: "waste-management-sop-template",        title: "Waste Management SOP Template",                   category: "Monitoring" },
   // Traceability
-  { slug: "traceability-log-template",            title: "Traceability log",                       category: "Traceability" },
+  { slug: "traceability-log-template",            title: "Traceability Log Template",                       category: "Traceability" },
   // Supplier
-  { slug: "supplier-approval-questionnaire",      title: "Supplier approval questionnaire",        category: "Supplier" },
+  { slug: "supplier-approval-questionnaire",      title: "Supplier Approval Questionnaire Template",        category: "Supplier" },
   // Audit
-  { slug: "food-safety-audit-checklist",          title: "Food safety audit checklist",            category: "Audit" },
-  { slug: "food-safety-document-checklist",       title: "EU and UK document checklist",           category: "Audit" },
-  { slug: "food-safety-management-system-template", title: "Food safety management system",        category: "Audit" },
+  { slug: "food-safety-audit-checklist",          title: "Food Safety Audit Checklist Template",            category: "Audit" },
+  { slug: "food-safety-document-checklist",       title: "EU and UK Document Checklist Template",           category: "Audit" },
+  { slug: "food-safety-management-system-template", title: "Food Safety Management System Template",        category: "Audit" },
   // Training
-  { slug: "employee-food-safety-training-record", title: "Employee training record",               category: "Training" },
-  { slug: "personal-hygiene-policy-template",     title: "Personal hygiene policy",                category: "Training" },
+  { slug: "employee-food-safety-training-record", title: "Employee Training Record Template",               category: "Training" },
+  { slug: "personal-hygiene-policy-template",     title: "Personal Hygiene Policy Template",                category: "Training" },
   // Goods receiving
-  { slug: "incoming-goods-template",              title: "Incoming goods inspection record",       category: "Traceability" },
+  { slug: "incoming-goods-template",              title: "Incoming Goods Inspection Record Template",       category: "Traceability" },
   // Quality
-  { slug: "customer-complaint-log-template",      title: "Customer complaint log",                 category: "HACCP",        fileType: "xlsx" },
+  { slug: "customer-complaint-log-template",      title: "Customer Complaint Log Template",                 category: "HACCP",        fileType: "xlsx" },
   // Calibration
-  { slug: "equipment-calibration-log-template",   title: "Equipment calibration log",              category: "Monitoring",   fileType: "xlsx" },
+  { slug: "equipment-calibration-log-template",   title: "Equipment Calibration Log Template",              category: "Monitoring",   fileType: "xlsx" },
 ];
 
 export const TEMPLATE_SLUGS = new Set(TEMPLATES.map((t) => t.slug));
