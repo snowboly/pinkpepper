@@ -46,6 +46,13 @@ const resources: ResourceEntry[] = [
     categoryLabel: "Monitoring",
   },
   {
+    href: "/resources/food-safety-opening-and-closing-checklist",
+    title: "Food safety opening and closing checklist",
+    description: "A practical daily checklist structure for opening checks, closing checks, corrective actions, and shift sign-off.",
+    category: "monitoring",
+    categoryLabel: "Monitoring",
+  },
+  {
     href: "/resources/pest-control-log-template",
     title: "Pest control log template",
     description: "How to record pest activity findings, contractor visits, and remedial actions.",
@@ -120,9 +127,9 @@ const resources: ResourceEntry[] = [
 const featuredResources = [
   "/resources/haccp-plan-template",
   "/resources/allergen-matrix-template",
+  "/resources/food-safety-opening-and-closing-checklist",
   "/resources/temperature-monitoring-log-template",
   "/resources/corrective-action-log-template",
-  "/resources/supplier-approval-questionnaire",
 ];
 
 const relatedWorkflows = [
@@ -151,7 +158,7 @@ const relatedWorkflows = [
 export const metadata: Metadata = {
   title: "Free Food Safety Templates & Guides | PinkPepper",
   description:
-    "15 free food safety templates and guides for HACCP plans, allergen matrices, audit checklists, SOPs, temperature logs, traceability, and supplier approval for EU and UK food businesses.",
+    "17 free food safety templates and guides for HACCP plans, allergen matrices, opening and closing checklists, SOPs, temperature logs, traceability, and supplier approval for EU and UK food businesses.",
   alternates: {
     canonical: "https://pinkpepper.io/resources",
     languages: { "x-default": "https://pinkpepper.io/resources", en: "https://pinkpepper.io/resources" },
@@ -159,7 +166,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Free Food Safety Templates & Guides | PinkPepper",
     description:
-      "15 free food safety templates and guides for HACCP plans, allergen matrices, audit checklists, SOPs, temperature logs, traceability, and supplier approval for EU and UK food businesses.",
+      "17 free food safety templates and guides for HACCP plans, allergen matrices, opening and closing checklists, SOPs, temperature logs, traceability, and supplier approval for EU and UK food businesses.",
     locale: "en_GB",
     images: [{ url: "https://pinkpepper.io/social-card.png", width: 1200, height: 630, alt: "PinkPepper - AI Food Safety Compliance Software" }],
   },

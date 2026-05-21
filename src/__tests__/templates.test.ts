@@ -16,17 +16,31 @@ describe("getGroupedTemplates", () => {
     ]);
 
     expect(grouped.find((group) => group.category === "HACCP")?.templates.map((template) => template.title)).toEqual([
-      "Corrective Action Log Template",
-      "Customer Complaint Log Template",
-      "HACCP Hazards Register Template",
-      "HACCP Step Descriptions Template",
-      "Product Recall Procedure Template",
+      "Corrective action log",
+      "Customer complaint log",
+      "HACCP hazards register",
+      "HACCP step descriptions",
+      "Product recall procedure",
+    ]);
+
+    expect(grouped.find((group) => group.category === "Monitoring")?.templates.map((template) => template.title)).toEqual([
+      "Equipment calibration log",
+      "Food safety opening and closing checklist",
+      "Pest control log",
+      "Temperature monitoring log",
+      "Waste management log",
+      "Waste management SOP",
     ]);
   });
 
   it("supports alternate storage names for templates whose object key differs from the slug", () => {
     expect(TEMPLATES.find((template) => template.slug === "haccp-plan-template_hazzards")).toMatchObject({
       storageName: "haccp-plan-template_hazards",
+    });
+
+    expect(TEMPLATES.find((template) => template.slug === "food-safety-opening-and-closing-checklist")).toMatchObject({
+      storageName: "Food Safety Opening and Closing Checklist",
+      fileType: "xlsx",
     });
   });
 });
