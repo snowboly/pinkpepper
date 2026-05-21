@@ -51,18 +51,20 @@ export async function GET(
   const template = TEMPLATES.find((t) => t.slug === slug);
   const ext = template?.fileType ?? "docx";
   const storageBaseName = template?.storageName ?? slug;
-  const storagePath = `${storageBaseName}.${ext}`;
+  const storagePaths = [`${storageBaseName}.${ext}`, `Templates/${storageBaseName}.${ext}`];
 
-  const { data, error: urlError } = await admin.storage
-    .from(BUCKETS.templates)
-    .createSignedUrl(storagePath, 60); // 60-second expiry
+  for (const storagePath of storagePaths) {
+    const { data, error: urlError } = await admin.storage
+      .from(BUCKETS.templates)
+      .createSignedUrl(storagePath, 60); // 60-second expiry
 
-  if (urlError || !data?.signedUrl) {
-    return Response.json(
-      { error: "Template file not available yet." },
-      { status: 404 }
-    );
+    if (!urlError && data?.signedUrl) {
+      return Response.redirect(data.signedUrl, 302);
+    }
   }
 
-  return Response.redirect(data.signedUrl, 302);
+  return Response.json(
+    { error: "Template file not available yet." },
+    { status: 404 }
+  );
 }
