@@ -6,34 +6,6 @@ import { BUCKETS } from "@/lib/storage";
 
 export const dynamic = "force-dynamic";
 
-function splitStoragePath(storagePath: string): { folder: string; fileName: string } {
-  const lastSlash = storagePath.lastIndexOf("/");
-  if (lastSlash === -1) {
-    return { folder: "", fileName: storagePath };
-  }
-
-  return {
-    folder: storagePath.slice(0, lastSlash),
-    fileName: storagePath.slice(lastSlash + 1),
-  };
-}
-
-async function objectExistsInTemplatesBucket(
-  admin: ReturnType<typeof createAdminClient>,
-  storagePath: string
-): Promise<boolean> {
-  const { folder, fileName } = splitStoragePath(storagePath);
-  const { data, error } = await admin.storage
-    .from(BUCKETS.templates)
-    .list(folder, { search: fileName, limit: 100 });
-
-  if (error || !data) {
-    return false;
-  }
-
-  return data.some((entry) => entry.name === fileName);
-}
-
 export async function GET(
   _req: Request,
   { params }: { params: Promise<{ slug: string }> }
@@ -78,32 +50,19 @@ export async function GET(
   const admin = createAdminClient();
   const template = TEMPLATES.find((t) => t.slug === slug);
   const ext = template?.fileType ?? "docx";
-  const baseName = template?.storageName ?? slug;
-  const storagePaths = [`${baseName}.${ext}`, `Templates/${baseName}.${ext}`];
+  const storageBaseName = template?.storageName ?? slug;
+  const storagePath = `${storageBaseName}.${ext}`;
 
-  let signedUrl: string | null = null;
-  for (const storagePath of storagePaths) {
-    const objectExists = await objectExistsInTemplatesBucket(admin, storagePath);
-    if (!objectExists) {
-      continue;
-    }
+  const { data, error: urlError } = await admin.storage
+    .from(BUCKETS.templates)
+    .createSignedUrl(storagePath, 60); // 60-second expiry
 
-    const { data } = await admin.storage
-      .from(BUCKETS.templates)
-      .createSignedUrl(storagePath, 60); // 60-second expiry
-
-    if (data?.signedUrl) {
-      signedUrl = data.signedUrl;
-      break;
-    }
-  }
-
-  if (!signedUrl) {
+  if (urlError || !data?.signedUrl) {
     return Response.json(
       { error: "Template file not available yet." },
       { status: 404 }
     );
   }
 
-  return Response.redirect(signedUrl, 302);
+  return Response.redirect(data.signedUrl, 302);
 }
