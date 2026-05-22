@@ -406,6 +406,11 @@ export default async function HomePage({ locale }: HomePageProps = {}) {
                   description: "Understand how PinkPepper approaches practical compliance work for small food businesses.",
                 },
                 {
+                  href: "/features/food-safety-sop-generator",
+                  label: "Build usable SOPs and daily records",
+                  description: "Go straight into the SOP workflow if you need opening checks, cleaning procedures, and routine records that fit the way your site operates.",
+                },
+                {
                   href: "/articles/building-a-haccp-process-flow-diagram",
                   label: "Build a stronger HACCP process flow diagram",
                   description: "One of the clearest starting points for teams turning process steps into usable HACCP structure.",
@@ -419,6 +424,11 @@ export default async function HomePage({ locale }: HomePageProps = {}) {
                   href: "/use-cases",
                   label: "Find the workflow that fits your operation",
                   description: "Start with the use-case hub if you need restaurant, catering, cafe, or manufacturing guidance before choosing a template or feature flow.",
+                },
+                {
+                  href: "/faqs",
+                  label: "Read the product FAQs",
+                  description: "Use the FAQ hub for direct answers on pricing, compliance scope, data handling, and how PinkPepper fits into a real food safety workflow.",
                 },
               ].map((item) => (
                 <Link
