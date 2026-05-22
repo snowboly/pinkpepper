@@ -251,8 +251,6 @@ export async function LocalizedHomePage({ locale, copy }: LocalizedHomePageProps
         </div>
       </section>
 
-      <HomepageTestimonial {...homepageTestimonial} />
-
       <section id="pricing" className="relative overflow-hidden border-y border-[#F1F5F9] bg-white py-24">
         <div className="absolute inset-0 -z-10">
           <div className="absolute inset-0 bg-white" />
@@ -434,6 +432,8 @@ export async function LocalizedHomePage({ locale, copy }: LocalizedHomePageProps
           </div>
         </div>
       </section>
+
+      <HomepageTestimonial {...homepageTestimonial} />
 
       <section className="relative overflow-hidden border-b border-[#F1F5F9] bg-[#F8FAFC] py-24">
         <div className="pp-container">
