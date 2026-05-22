@@ -28,14 +28,23 @@ const RandomArticleLinks = dynamic(() => import("@/components/homepage/RandomArt
   loading: () => <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4" aria-hidden="true" />,
 });
 
-const homepageTestimonial = {
-  quote: "The app is working great and has been a massive help",
-  companyName: "McDermott's Foods Ltd",
-  companyUrl: "https://mcdermottsfoods.co.uk/",
-  logoSrc: "/testimonials/mcdermotts-foods.png",
-  logoAlt: "McDermott's Foods Ltd logo",
-  supportingLine: "Used by food businesses managing HACCP and food safety documentation.",
-} as const;
+const homepageTestimonials = [
+  {
+    quote: "The app is working great and has been a massive help",
+    companyName: "McDermott's Foods Ltd",
+    companyUrl: "https://mcdermottsfoods.co.uk/",
+    logoSrc: "/testimonials/mcdermotts-foods.png",
+    logoAlt: "McDermott's Foods Ltd logo",
+    supportingLine: "Used by food businesses managing HACCP and food safety documentation.",
+  },
+] as const;
+
+const testimonialEyebrowByLocale: Record<PublicLocale, string> = {
+  en: "Customer feedback",
+  fr: "Avis client",
+  de: "Kundenfeedback",
+  pt: "Feedback de clientes",
+};
 
 type LocalizedHomePageProps = {
   locale: PublicLocale;
@@ -251,8 +260,6 @@ export async function LocalizedHomePage({ locale, copy }: LocalizedHomePageProps
         </div>
       </section>
 
-      <HomepageTestimonial {...homepageTestimonial} />
-
       <section id="pricing" className="relative overflow-hidden border-y border-[#F1F5F9] bg-white py-24">
         <div className="absolute inset-0 -z-10">
           <div className="absolute inset-0 bg-white" />
@@ -434,6 +441,11 @@ export async function LocalizedHomePage({ locale, copy }: LocalizedHomePageProps
           </div>
         </div>
       </section>
+
+      <HomepageTestimonial
+        testimonials={[...homepageTestimonials]}
+        eyebrow={testimonialEyebrowByLocale[locale]}
+      />
 
       <section className="relative overflow-hidden border-b border-[#F1F5F9] bg-[#F8FAFC] py-24">
         <div className="pp-container">
