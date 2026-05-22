@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
+import { HomepageTestimonial } from "@/components/homepage/HomepageTestimonial";
 import { LocalizedHomePage } from "@/components/homepage/LocalizedHomePage";
 import PricingActions from "@/components/pricing/PricingActions";
 import { type PublicLocale } from "@/i18n/public";
@@ -29,6 +30,15 @@ const DemoTabSwitcher = dynamic(
 const RandomArticleLinks = dynamic(() => import("@/components/homepage/RandomArticleLinks"), {
   loading: () => <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4" aria-hidden="true" />,
 });
+
+const homepageTestimonial = {
+  quote: "The app is working great and has been a massive help",
+  companyName: "McDermott's Foods Ltd",
+  companyUrl: "https://mcdermottsfoods.co.uk/",
+  logoSrc: "/testimonials/mcdermotts-foods.png",
+  logoAlt: "McDermott's Foods Ltd logo",
+  supportingLine: "Used by food businesses managing HACCP and food safety documentation.",
+} as const;
 
 export const metadata: Metadata = {
   title: "PinkPepper | AI HACCP & Food Safety Software - EU & UK",
@@ -287,6 +297,8 @@ export default async function HomePage({ locale }: HomePageProps = {}) {
           </div>
         </div>
       </section>
+
+      <HomepageTestimonial {...homepageTestimonial} />
 
       <section id="pricing" className="relative overflow-hidden border-y border-[#F1F5F9] bg-white py-24">
         <div className="absolute inset-0 -z-10">
