@@ -348,15 +348,25 @@ describe("public SEO copy and linking", () => {
     expect(homepage).toContain("/articles/building-a-haccp-process-flow-diagram");
     expect(homepage).toContain("/articles/haccp-ccp-examples-uk-eu");
     expect(homepage).toContain("/use-cases");
+    expect(homepage).toContain("/features/food-safety-sop-generator");
+    expect(homepage).toContain("/faqs");
 
     expect(articlesHub).toContain("/articles/building-a-haccp-process-flow-diagram");
     expect(articlesHub).toContain("/articles/chemical-hazards-in-haccp-controls-limits-and-what-to-record");
     expect(articlesHub).toContain("/articles/cooling-and-reheating-haccp-high-risk-steps");
     expect(articlesHub).toContain("/articles/haccp-for-artisanal-bakeries-eu");
+    expect(articlesHub).toContain("/features/food-safety-sop-generator");
+    expect(articlesHub).toContain("/faqs");
+    expect(articlesHub).toContain("/use-cases/cafes");
     expect(articlesHub).toContain("/use-cases/restaurants");
     expect(articlesHub).toContain("/use-cases/food-manufacturing");
 
     expect(resources).toContain("/use-cases");
+    expect(resources).toContain("/features/food-safety-sop-generator");
+    expect(resources).toContain("/faqs");
+    expect(resources).toContain("/use-cases/cafes");
+    expect(resources).toContain("/use-cases/catering");
+    expect(resources).toContain("/use-cases/food-manufacturing");
   });
 
   it("keeps current public marketing pages fresh in the sitemap", async () => {
