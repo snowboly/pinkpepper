@@ -77,7 +77,7 @@ describe("public locale config", () => {
 
     expect(localizedLayout).toContain("setRequestLocale");
     expect(localizedLayout).toContain("isPublicLocale");
-    expect(localizedPricingPage).toContain("buildPublicMetadata");
+    expect(localizedPricingPage).toContain("buildLocalizedWrapperMetadata");
     expect(localizedPricingPage).toContain('"/pricing"');
     expect(localizedHomePage).toContain("<HomePage locale={locale} />");
     expect(homePage).toContain("getPublicMessages");
