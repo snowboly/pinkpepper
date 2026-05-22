@@ -1,6 +1,6 @@
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
-import RandomArticleLinks from "@/components/homepage/RandomArticleLinks";
 import PricingActions from "@/components/pricing/PricingActions";
 import { type PublicLocale } from "@/i18n/public";
 import { type PublicMessagesDictionary, getPublicPageHref } from "@/lib/public-routes";
@@ -14,8 +14,18 @@ import {
   Sparkles,
   Users,
 } from "lucide-react";
-import { DemoTabSwitcher } from "@/components/homepage/DemoTabSwitcher";
 import { HeroChatForm } from "@/components/homepage/HeroChatForm";
+
+const DemoTabSwitcher = dynamic(
+  () => import("@/components/homepage/DemoTabSwitcher").then((mod) => mod.DemoTabSwitcher),
+  {
+    loading: () => <div className="min-h-[28rem] rounded-[2rem] border border-[#E2E8F0] bg-white/60" aria-hidden="true" />,
+  },
+);
+
+const RandomArticleLinks = dynamic(() => import("@/components/homepage/RandomArticleLinks"), {
+  loading: () => <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4" aria-hidden="true" />,
+});
 
 type LocalizedHomePageProps = {
   locale: PublicLocale;
