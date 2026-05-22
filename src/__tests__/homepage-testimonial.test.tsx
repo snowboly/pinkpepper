@@ -33,6 +33,7 @@ describe("homepage testimonial section", () => {
 
     const markup = renderToStaticMarkup(
       createElement(componentModule.HomepageTestimonial, {
+        eyebrow: "Avis client",
         testimonials: [
           {
             quote: "The app is working great and has been a massive help",
@@ -54,6 +55,7 @@ describe("homepage testimonial section", () => {
     );
 
     expect(markup).toContain("The app is working great and has been a massive help");
+    expect(markup).toContain("Avis client");
     expect(markup).toContain("McDermott&#x27;s Foods Ltd");
     expect(markup).toContain('href="https://mcdermottsfoods.co.uk/"');
     expect(markup).toContain('target="_blank"');
@@ -74,5 +76,6 @@ describe("homepage testimonial section", () => {
     expect(localizedHomepage).toContain("mcdermottsfoods.co.uk/");
     expect(homepage).toContain("testimonials={[");
     expect(localizedHomepage).toContain("testimonials={[");
+    expect(localizedHomepage).toContain("testimonialEyebrowByLocale");
   });
 });

@@ -39,6 +39,13 @@ const homepageTestimonials = [
   },
 ] as const;
 
+const testimonialEyebrowByLocale: Record<PublicLocale, string> = {
+  en: "Customer feedback",
+  fr: "Avis client",
+  de: "Kundenfeedback",
+  pt: "Feedback de clientes",
+};
+
 type LocalizedHomePageProps = {
   locale: PublicLocale;
   copy: PublicMessagesDictionary["home"];
@@ -435,7 +442,10 @@ export async function LocalizedHomePage({ locale, copy }: LocalizedHomePageProps
         </div>
       </section>
 
-      <HomepageTestimonial testimonials={[...homepageTestimonials]} />
+      <HomepageTestimonial
+        testimonials={[...homepageTestimonials]}
+        eyebrow={testimonialEyebrowByLocale[locale]}
+      />
 
       <section className="relative overflow-hidden border-b border-[#F1F5F9] bg-[#F8FAFC] py-24">
         <div className="pp-container">

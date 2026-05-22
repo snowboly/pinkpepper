@@ -14,9 +14,13 @@ export type HomepageTestimonialItem = {
 
 export type HomepageTestimonialProps = {
   testimonials: HomepageTestimonialItem[];
+  eyebrow?: string;
 };
 
-export function HomepageTestimonial({ testimonials }: HomepageTestimonialProps) {
+export function HomepageTestimonial({
+  testimonials,
+  eyebrow = "Customer feedback",
+}: HomepageTestimonialProps) {
   const [activeIndex, setActiveIndex] = useState(0);
 
   if (testimonials.length === 0) return null;
@@ -34,7 +38,7 @@ export function HomepageTestimonial({ testimonials }: HomepageTestimonialProps) 
       <div className="pp-container">
         <div className="mx-auto max-w-4xl rounded-[1.75rem] border border-[#E2E8F0] bg-[#F8FAFC] px-8 py-10 md:px-12 md:py-12">
           <p className="text-center text-xs font-semibold uppercase tracking-[0.18em] text-[#E11D48]">
-            Customer feedback
+            {eyebrow}
           </p>
 
           <blockquote className="mt-6 text-center">
