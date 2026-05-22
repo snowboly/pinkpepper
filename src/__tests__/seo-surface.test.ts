@@ -6,7 +6,7 @@ import { describe, expect, it, vi } from "vitest";
 import sitemap from "@/app/sitemap";
 import robots from "@/app/robots";
 import { generateArticleMetadata } from "@/app/articles/[slug]/page";
-import { buildPublicMetadata } from "@/lib/seo/public-metadata";
+import { buildLocalizedWrapperMetadata, buildPublicMetadata } from "@/lib/seo/public-metadata";
 
 const readPage = (relativePath: string) => readFileSync(join(process.cwd(), relativePath), "utf8");
 
@@ -137,6 +137,16 @@ describe("SEO surface", () => {
     });
   });
 
+  it("marks locale wrapper pages as noindex while keeping locale canonicals intact", () => {
+    const metadata = buildLocalizedWrapperMetadata("fr", "/pricing", {
+      title: "Tarifs",
+      description: "Description",
+    });
+
+    expect(metadata.alternates?.canonical).toBe("https://pinkpepper.io/fr/pricing");
+    expect(metadata.robots).toEqual({ index: false, follow: true });
+  });
+
   it("uses the Phase 1 compliance software positioning in shared metadata", () => {
     const layout = readPage("src/app/layout.tsx");
 
@@ -178,11 +188,14 @@ describe("SEO surface", () => {
 
     expect(entries).toContain("https://pinkpepper.io/resources");
     expect(entries).toContain("https://pinkpepper.io/fr");
-    expect(entries).toContain("https://pinkpepper.io/pt/pricing");
-    expect(entries).toContain("https://pinkpepper.io/de/features/haccp-plan-generator");
+    expect(entries).not.toContain("https://pinkpepper.io/pt/pricing");
+    expect(entries).not.toContain("https://pinkpepper.io/de/features/haccp-plan-generator");
+    expect(entries).not.toContain("https://pinkpepper.io/fr/about");
+    expect(entries).not.toContain("https://pinkpepper.io/de/contact");
     expect(entries).toContain("https://pinkpepper.io/features/haccp-plan-generator");
     expect(entries).toContain("https://pinkpepper.io/use-cases/restaurants");
     expect(entries).toContain("https://pinkpepper.io/articles/identifying-critical-control-points-in-food-safety");
+    expect(entries).toContain("https://pinkpepper.io/fr/articles/how-to-create-a-haccp-plan-step-by-step");
     expect(entries).not.toContain("https://pinkpepper.io/login");
     expect(entries).not.toContain("https://pinkpepper.io/dashboard");
     expect(entries).not.toContain("https://pinkpepper.io/legal/cookies");
@@ -222,6 +235,20 @@ describe("public SEO copy and linking", () => {
     expect(contact).toContain("/features/");
     expect(resources).toContain("/features/");
     expect(chrome).toContain('href: "/use-cases"');
+  });
+
+  it("keeps locale wrapper routes out of indexation until their bodies are truly localized", () => {
+    const localizedAbout = readPage("src/app/[locale]/about/page.tsx");
+    const localizedContact = readPage("src/app/[locale]/contact/page.tsx");
+    const localizedPricing = readPage("src/app/[locale]/pricing/page.tsx");
+    const localizedFaqs = readPage("src/app/[locale]/faqs/page.tsx");
+    const localizedArticles = readPage("src/app/[locale]/articles/page.tsx");
+
+    expect(localizedAbout).toContain("buildLocalizedWrapperMetadata");
+    expect(localizedContact).toContain("buildLocalizedWrapperMetadata");
+    expect(localizedPricing).toContain("buildLocalizedWrapperMetadata");
+    expect(localizedFaqs).toContain("buildLocalizedWrapperMetadata");
+    expect(localizedArticles).toContain("buildLocalizedWrapperMetadata");
   });
 
   it("renders the articles hub as a curated resource page with key route links", async () => {

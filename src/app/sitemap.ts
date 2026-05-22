@@ -19,14 +19,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         articles: await getLocalizedArticleManifest(locale).catch(() => []),
       })),
   );
-  const localizedPublicEntries = publicContentRoutePaths.flatMap((path) =>
-    publicLaunchLocales.filter((l) => l !== "en").map((locale) => ({
-      url: `${BASE_URL}${localizePublicPath(locale, path)}`,
+  const localizedHomepageEntries = publicLaunchLocales
+    .filter((locale) => locale !== "en")
+    .map((locale) => ({
+      url: `${BASE_URL}${localizePublicPath(locale, "/")}`,
       lastModified: new Date("2026-04-20"),
-      changeFrequency: path === "/" ? ("weekly" as const) : ("monthly" as const),
-      priority: path === "/" ? 0.9 : 0.7,
-    })),
-  );
+      changeFrequency: "weekly" as const,
+      priority: 0.9,
+    }));
   const englishPublicEntries = publicContentRoutePaths
     .filter((path) => path !== "/")
     .map((path) => ({
@@ -48,7 +48,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     { url: BASE_URL, lastModified: new Date("2026-03-18"), changeFrequency: "weekly", priority: 1 },
     ...englishPublicEntries,
-    ...localizedPublicEntries,
+    ...localizedHomepageEntries,
     { url: `${BASE_URL}/resources`, lastModified: new Date("2026-03-14"), changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE_URL}/resources/haccp-plan-template`, lastModified: new Date("2026-03-14"), changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE_URL}/resources/allergen-matrix-template`, lastModified: new Date("2026-03-14"), changeFrequency: "monthly", priority: 0.7 },
