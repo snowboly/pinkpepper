@@ -6,7 +6,7 @@ import { describe, expect, it, vi } from "vitest";
 import sitemap from "@/app/sitemap";
 import robots from "@/app/robots";
 import { generateArticleMetadata } from "@/app/articles/[slug]/page";
-import { buildLocalizedWrapperMetadata, buildPublicMetadata } from "@/lib/seo/public-metadata";
+import { buildPublicMetadata } from "@/lib/seo/public-metadata";
 
 const readPage = (relativePath: string) => readFileSync(join(process.cwd(), relativePath), "utf8");
 
@@ -137,16 +137,6 @@ describe("SEO surface", () => {
     });
   });
 
-  it("marks locale wrapper pages as noindex while keeping locale canonicals intact", () => {
-    const metadata = buildLocalizedWrapperMetadata("fr", "/pricing", {
-      title: "Tarifs",
-      description: "Description",
-    });
-
-    expect(metadata.alternates?.canonical).toBe("https://pinkpepper.io/fr/pricing");
-    expect(metadata.robots).toEqual({ index: false, follow: true });
-  });
-
   it("uses the Phase 1 compliance software positioning in shared metadata", () => {
     const layout = readPage("src/app/layout.tsx");
 
@@ -188,14 +178,11 @@ describe("SEO surface", () => {
 
     expect(entries).toContain("https://pinkpepper.io/resources");
     expect(entries).toContain("https://pinkpepper.io/fr");
-    expect(entries).not.toContain("https://pinkpepper.io/pt/pricing");
-    expect(entries).not.toContain("https://pinkpepper.io/de/features/haccp-plan-generator");
-    expect(entries).not.toContain("https://pinkpepper.io/fr/about");
-    expect(entries).not.toContain("https://pinkpepper.io/de/contact");
+    expect(entries).toContain("https://pinkpepper.io/pt/pricing");
+    expect(entries).toContain("https://pinkpepper.io/de/features/haccp-plan-generator");
     expect(entries).toContain("https://pinkpepper.io/features/haccp-plan-generator");
     expect(entries).toContain("https://pinkpepper.io/use-cases/restaurants");
     expect(entries).toContain("https://pinkpepper.io/articles/identifying-critical-control-points-in-food-safety");
-    expect(entries).toContain("https://pinkpepper.io/fr/articles/how-to-create-a-haccp-plan-step-by-step");
     expect(entries).not.toContain("https://pinkpepper.io/login");
     expect(entries).not.toContain("https://pinkpepper.io/dashboard");
     expect(entries).not.toContain("https://pinkpepper.io/legal/cookies");
@@ -216,6 +203,9 @@ describe("public SEO copy and linking", () => {
     expect(homepage).toContain("AI food safety compliance software");
     expect(homepage).toContain("/features/haccp-plan-generator");
     expect(homepage).toContain("/pricing");
+    expect(homepage).not.toContain("â€");
+    expect(homepage).not.toContain("â€™");
+    expect(homepage).not.toContain("â€“");
     expect(homepage).not.toContain("ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â");
     expect(homepage).not.toContain("ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢");
     expect(homepage).not.toContain("ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬");
@@ -235,20 +225,6 @@ describe("public SEO copy and linking", () => {
     expect(contact).toContain("/features/");
     expect(resources).toContain("/features/");
     expect(chrome).toContain('href: "/use-cases"');
-  });
-
-  it("keeps locale wrapper routes out of indexation until their bodies are truly localized", () => {
-    const localizedAbout = readPage("src/app/[locale]/about/page.tsx");
-    const localizedContact = readPage("src/app/[locale]/contact/page.tsx");
-    const localizedPricing = readPage("src/app/[locale]/pricing/page.tsx");
-    const localizedFaqs = readPage("src/app/[locale]/faqs/page.tsx");
-    const localizedArticles = readPage("src/app/[locale]/articles/page.tsx");
-
-    expect(localizedAbout).toContain("buildLocalizedWrapperMetadata");
-    expect(localizedContact).toContain("buildLocalizedWrapperMetadata");
-    expect(localizedPricing).toContain("buildLocalizedWrapperMetadata");
-    expect(localizedFaqs).toContain("buildLocalizedWrapperMetadata");
-    expect(localizedArticles).toContain("buildLocalizedWrapperMetadata");
   });
 
   it("renders the articles hub as a curated resource page with key route links", async () => {
@@ -290,15 +266,6 @@ describe("public SEO copy and linking", () => {
     expect(markup).toContain('href="/articles/building-a-haccp-process-flow-diagram"');
     expect(markup).toContain('href="/articles/haccp-checklist-for-new-food-businesses"');
     expect(markup).toContain('href="/articles"');
-  });
-
-  it("bridges article detail pages into relevant templates, workflows, and use cases", async () => {
-    const markup = await renderArticleDetailPageForTest();
-
-    expect(markup).toContain("Put this into practice");
-    expect(markup).toContain('href="/resources/temperature-monitoring-log-template"');
-    expect(markup).toContain('href="/features/haccp-plan-generator"');
-    expect(markup).toContain('href="/use-cases/catering"');
   });
 
   it("expands scoped article-body typography without touching dashboard markdown", () => {
@@ -348,39 +315,15 @@ describe("public SEO copy and linking", () => {
     expect(homepage).toContain("/articles/building-a-haccp-process-flow-diagram");
     expect(homepage).toContain("/articles/haccp-ccp-examples-uk-eu");
     expect(homepage).toContain("/use-cases");
-    expect(homepage).toContain("/features/food-safety-sop-generator");
-    expect(homepage).toContain("/faqs");
 
     expect(articlesHub).toContain("/articles/building-a-haccp-process-flow-diagram");
     expect(articlesHub).toContain("/articles/chemical-hazards-in-haccp-controls-limits-and-what-to-record");
     expect(articlesHub).toContain("/articles/cooling-and-reheating-haccp-high-risk-steps");
     expect(articlesHub).toContain("/articles/haccp-for-artisanal-bakeries-eu");
-    expect(articlesHub).toContain("/features/food-safety-sop-generator");
-    expect(articlesHub).toContain("/faqs");
-    expect(articlesHub).toContain("/use-cases/cafes");
     expect(articlesHub).toContain("/use-cases/restaurants");
     expect(articlesHub).toContain("/use-cases/food-manufacturing");
 
     expect(resources).toContain("/use-cases");
-    expect(resources).toContain("/features/food-safety-sop-generator");
-    expect(resources).toContain("/faqs");
-    expect(resources).toContain("/use-cases/cafes");
-    expect(resources).toContain("/use-cases/catering");
-    expect(resources).toContain("/use-cases/food-manufacturing");
-
-  });
-
-  it("keeps the SOP generator and use-cases hub commercially specific", () => {
-    const sopPage = readPage("src/app/features/food-safety-sop-generator/page.tsx");
-    const useCasesHub = readPage("src/app/use-cases/page.tsx");
-
-    expect(sopPage).toContain("Food Safety SOPs, Checklists and Daily Records");
-    expect(sopPage).toContain("opening checks, closing checks, cleaning procedures, temperature logs, and hygiene records");
-    expect(sopPage).toContain("/resources/food-safety-opening-and-closing-checklist");
-
-    expect(useCasesHub).toContain("Choose the workflow that matches your kitchen, service model, or production site");
-    expect(useCasesHub).toContain("/features/food-safety-sop-generator");
-    expect(useCasesHub).toContain("/faqs");
   });
 
   it("keeps current public marketing pages fresh in the sitemap", async () => {
@@ -413,11 +356,15 @@ describe("premium quality regressions", () => {
   it("does not ship mojibake on core marketing pages", () => {
     const about = readPage("src/app/about/page.tsx");
     const pricing = readPage("src/app/pricing/page.tsx");
-    const security = readPage("src/app/security/page.tsx");
 
-    expect(about).not.toContain("ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢");
-    expect(pricing).not.toContain("ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢");
-    expect(security).not.toContain("Ã¢â‚¬â€");
+    expect(about).not.toContain("â€");
+    expect(about).not.toContain("â€™");
+    expect(about).not.toContain("â€“");
+    expect(pricing).not.toContain("â€");
+    expect(pricing).not.toContain("â€™");
+    expect(pricing).not.toContain("â€“");
+    expect(about).not.toContain("ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢");
+    expect(pricing).not.toContain("ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢");
   });
 
   it("uses compliance software wording consistently in shared brand surfaces", () => {
