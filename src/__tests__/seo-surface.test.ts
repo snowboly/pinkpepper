@@ -367,6 +367,7 @@ describe("public SEO copy and linking", () => {
     expect(resources).toContain("/use-cases/cafes");
     expect(resources).toContain("/use-cases/catering");
     expect(resources).toContain("/use-cases/food-manufacturing");
+
   });
 
   it("keeps the SOP generator and use-cases hub commercially specific", () => {

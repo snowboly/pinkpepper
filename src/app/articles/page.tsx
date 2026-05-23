@@ -70,9 +70,14 @@ const workflowLinks = [
     description: "See how PinkPepper supports hazard analysis, CCP structure, and corrective action drafting.",
   },
   {
-    href: "/resources",
-    title: "Browse the template library",
-    description: "Use the free templates if you need structured documents before moving into a custom compliance workflow.",
+    href: "/features/food-safety-sop-generator",
+    title: "Build SOPs and records that fit the site",
+    description: "Use the SOP workflow when the next job is turning guidance into opening checks, cleaning procedures, and daily records.",
+  },
+  {
+    href: "/faqs",
+    title: "Check the product FAQs",
+    description: "Read direct answers on scope, pricing, accountability, and how PinkPepper fits into food safety work before you go deeper.",
   },
   {
     href: "/use-cases",
@@ -104,6 +109,7 @@ const clusterLinks = [
     title: "Industry-specific workflows",
     description: "When the operating model matters more than the generic principle, move into the use-case pages first.",
     links: [
+      { href: "/use-cases/cafes", label: "Cafes" },
       { href: "/use-cases/restaurants", label: "Restaurants" },
       { href: "/use-cases/catering", label: "Catering" },
       { href: "/use-cases/food-manufacturing", label: "Food manufacturing" },

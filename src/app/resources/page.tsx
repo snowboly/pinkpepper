@@ -139,14 +139,34 @@ const relatedWorkflows = [
     description: "See the product workflow behind hazard analysis, CCP structure, and corrective actions.",
   },
   {
+    href: "/features/food-safety-sop-generator",
+    title: "Build SOPs and daily records faster",
+    description: "Move from static templates into opening checks, cleaning procedures, monitoring logs, and repeatable site routines.",
+  },
+  {
     href: "/features/allergen-documentation",
     title: "Connect templates to allergen control",
     description: "Follow the allergen documentation path if your biggest gaps are matrix upkeep and change control.",
   },
   {
-    href: "/articles",
-    title: "Read the compliance articles",
-    description: "Go deeper on HACCP, allergen control, audits, and traceability with practical operational guidance.",
+    href: "/faqs",
+    title: "Check the product FAQs",
+    description: "Use the FAQ hub if you need direct answers on scope, pricing, accountability, and how PinkPepper fits into a compliance workflow.",
+  },
+  {
+    href: "/use-cases/cafes",
+    title: "See the cafe workflow",
+    description: "Match templates to smaller-team checks, display fridges, shared prep areas, and owner-operator routines.",
+  },
+  {
+    href: "/use-cases/catering",
+    title: "See the catering workflow",
+    description: "Follow the event-based path for transport checks, venue changes, and service handoffs across multiple locations.",
+  },
+  {
+    href: "/use-cases/food-manufacturing",
+    title: "See the manufacturing workflow",
+    description: "Move into process-flow, CCP, traceability, and audit-focused documentation for production environments.",
   },
   {
     href: "/use-cases",
