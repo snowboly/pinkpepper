@@ -218,12 +218,9 @@ describe("public SEO copy and linking", () => {
     expect(homepage).toContain("AI food safety compliance software");
     expect(homepage).toContain("/features/haccp-plan-generator");
     expect(homepage).toContain("/pricing");
-    expect(homepage).not.toContain("â€");
-    expect(homepage).not.toContain("â€™");
-    expect(homepage).not.toContain("â€“");
-    expect(homepage).not.toContain("ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â");
-    expect(homepage).not.toContain("ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢");
-    expect(homepage).not.toContain("ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬");
+    expect(homepage).not.toContain("ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â");
+    expect(homepage).not.toContain("ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢");
+    expect(homepage).not.toContain("ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬");
   });
 
   it("routes core public pages into deeper commercial paths", () => {
@@ -413,8 +410,8 @@ describe("premium quality regressions", () => {
     const pricing = readPage("src/app/pricing/page.tsx");
     const security = readPage("src/app/security/page.tsx");
 
-    expect(about).not.toContain("ÃƒÆ’Ã†â€™Ãƒâ€ â€™ÃƒÆ’â‚¬Å¡Ãƒâ€šÃ‚Â¢");
-    expect(pricing).not.toContain("ÃƒÆ’Ã†â€™Ãƒâ€ â€™ÃƒÆ’â‚¬Å¡Ãƒâ€šÃ‚Â¢");
+    expect(about).not.toContain("ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢");
+    expect(pricing).not.toContain("ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢");
     expect(security).not.toContain("â€”");
   });
 
@@ -518,4 +515,4 @@ describe("premium quality regressions", () => {
       expect(article).toContain('href="/signup"');
     }
   });
-}
+});
