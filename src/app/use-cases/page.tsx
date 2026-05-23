@@ -36,9 +36,15 @@ const relatedLinks = [
       "See how PinkPepper turns business-specific process information into practical HACCP plans and supporting records.",
   },
   {
-    href: "/resources/haccp-plan-template",
-    title: "HACCP plan template",
-    description: "Start with the template if you want a clearer structure before moving into a tailored workflow.",
+    href: "/features/food-safety-sop-generator",
+    title: "Food safety SOP generator",
+    description:
+      "Build opening checks, cleaning procedures, closing routines, and daily records that fit each operating environment.",
+  },
+  {
+    href: "/faqs",
+    title: "Food safety FAQs",
+    description: "Answer practical questions about HACCP, allergen controls, records, and how the workflow fits your business.",
   },
 ];
 
@@ -68,6 +74,10 @@ export default function UseCasesPage() {
             risks, and daily routines of different food businesses, so the documentation you produce actually reflects
             the operation you run.
           </p>
+          <p className="mt-5 max-w-3xl text-base leading-relaxed text-[#64748B]">
+            Choose the workflow that matches your kitchen, service model, or production site. Then go deeper into the
+            SOPs, HACCP structure, and supporting records that make sense for that environment.
+          </p>
         </div>
       </section>
 
@@ -93,6 +103,10 @@ export default function UseCasesPage() {
             <h2 className="pp-display mt-4 text-3xl text-[#0F172A] md:text-4xl">
               Go deeper once you know the operating context
             </h2>
+            <p className="mt-4 text-base leading-relaxed text-[#475569]">
+              Once the business type is clear, the next step is choosing the right documentation layer: HACCP plans,
+              daily SOPs, and the common questions teams need answered when they are setting the system up.
+            </p>
           </div>
           <div className="grid gap-6 md:grid-cols-3">
             {relatedLinks.map((item) => (
