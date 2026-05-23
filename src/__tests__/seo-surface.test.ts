@@ -10,26 +10,28 @@ import { buildLocalizedWrapperMetadata, buildPublicMetadata } from "@/lib/seo/pu
 
 const readPage = (relativePath: string) => readFileSync(join(process.cwd(), relativePath), "utf8");
 
-async function renderArticlesPageForTest() {
+async function renderArticlesPageForTest(
+  mockArticles = [
+    {
+      title: "Thermometer Checks for Small Kitchens",
+      slug: "thermometer-checks-small-kitchens",
+      excerpt: "Probe use, calibration, and daily checks for small teams.",
+      category: "Operations",
+      publishedAt: "2026-04-01",
+      image: "https://images.example.com/thermometer.jpg",
+    },
+    {
+      title: "Allergen Updates Before Service",
+      slug: "allergen-updates-before-service",
+      excerpt: "How to keep substitutions and allergen information current.",
+      category: "Allergens",
+      publishedAt: "2026-04-02",
+    },
+  ],
+) {
   vi.resetModules();
   vi.doMock("@/lib/articles", () => ({
-    getArticleManifest: vi.fn().mockResolvedValue([
-      {
-        title: "Thermometer Checks for Small Kitchens",
-        slug: "thermometer-checks-small-kitchens",
-        excerpt: "Probe use, calibration, and daily checks for small teams.",
-        category: "Operations",
-        publishedAt: "2026-04-01",
-        image: "https://images.example.com/thermometer.jpg",
-      },
-      {
-        title: "Allergen Updates Before Service",
-        slug: "allergen-updates-before-service",
-        excerpt: "How to keep substitutions and allergen information current.",
-        category: "Allergens",
-        publishedAt: "2026-04-02",
-      },
-    ]),
+    getArticleManifest: vi.fn().mockResolvedValue(mockArticles),
   }));
   vi.doMock("next/image", () => ({
     default: (props: Record<string, unknown>) => {
@@ -268,6 +270,23 @@ describe("public SEO copy and linking", () => {
     expect(markup).toContain('src="https://images.example.com/thermometer.jpg"');
     expect(markup).toContain('alt="Thermometer Checks for Small Kitchens"');
     expect(markup).toContain("Article image coming soon");
+  });
+
+  it("caps the initial library render and defers the remaining article cards", async () => {
+    const manyArticles = Array.from({ length: 30 }, (_, index) => ({
+      title: `Article ${index + 1}`,
+      slug: `article-${index + 1}`,
+      excerpt: `Excerpt ${index + 1}`,
+      category: "Operations",
+      publishedAt: `2026-04-${String(index + 1).padStart(2, "0")}`,
+    }));
+
+    const markup = await renderArticlesPageForTest(manyArticles);
+
+    expect(markup).toContain("Article 1");
+    expect(markup).toContain("Article 24");
+    expect(markup).not.toContain("Article 25");
+    expect(markup).toContain("Show the remaining 6 articles");
   });
 
   it("tightens the public article detail hero hierarchy", () => {
