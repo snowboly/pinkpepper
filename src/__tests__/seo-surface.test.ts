@@ -216,9 +216,9 @@ describe("public SEO copy and linking", () => {
     expect(homepage).toContain("AI food safety compliance software");
     expect(homepage).toContain("/features/haccp-plan-generator");
     expect(homepage).toContain("/pricing");
-    expect(homepage).not.toContain("ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â");
-    expect(homepage).not.toContain("ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢");
-    expect(homepage).not.toContain("ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬");
+    expect(homepage).not.toContain("ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â");
+    expect(homepage).not.toContain("ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢");
+    expect(homepage).not.toContain("ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬");
   });
 
   it("routes core public pages into deeper commercial paths", () => {
@@ -348,15 +348,38 @@ describe("public SEO copy and linking", () => {
     expect(homepage).toContain("/articles/building-a-haccp-process-flow-diagram");
     expect(homepage).toContain("/articles/haccp-ccp-examples-uk-eu");
     expect(homepage).toContain("/use-cases");
+    expect(homepage).toContain("/features/food-safety-sop-generator");
+    expect(homepage).toContain("/faqs");
 
     expect(articlesHub).toContain("/articles/building-a-haccp-process-flow-diagram");
     expect(articlesHub).toContain("/articles/chemical-hazards-in-haccp-controls-limits-and-what-to-record");
     expect(articlesHub).toContain("/articles/cooling-and-reheating-haccp-high-risk-steps");
     expect(articlesHub).toContain("/articles/haccp-for-artisanal-bakeries-eu");
+    expect(articlesHub).toContain("/features/food-safety-sop-generator");
+    expect(articlesHub).toContain("/faqs");
+    expect(articlesHub).toContain("/use-cases/cafes");
     expect(articlesHub).toContain("/use-cases/restaurants");
     expect(articlesHub).toContain("/use-cases/food-manufacturing");
 
     expect(resources).toContain("/use-cases");
+    expect(resources).toContain("/features/food-safety-sop-generator");
+    expect(resources).toContain("/faqs");
+    expect(resources).toContain("/use-cases/cafes");
+    expect(resources).toContain("/use-cases/catering");
+    expect(resources).toContain("/use-cases/food-manufacturing");
+  });
+
+  it("keeps the SOP generator and use-cases hub commercially specific", () => {
+    const sopPage = readPage("src/app/features/food-safety-sop-generator/page.tsx");
+    const useCasesHub = readPage("src/app/use-cases/page.tsx");
+
+    expect(sopPage).toContain("Food Safety SOPs, Checklists and Daily Records");
+    expect(sopPage).toContain("opening checks, closing checks, cleaning procedures, temperature logs, and hygiene records");
+    expect(sopPage).toContain("/resources/food-safety-opening-and-closing-checklist");
+
+    expect(useCasesHub).toContain("Choose the workflow that matches your kitchen, service model, or production site");
+    expect(useCasesHub).toContain("/features/food-safety-sop-generator");
+    expect(useCasesHub).toContain("/faqs");
   });
 
   it("keeps current public marketing pages fresh in the sitemap", async () => {
@@ -391,9 +414,9 @@ describe("premium quality regressions", () => {
     const pricing = readPage("src/app/pricing/page.tsx");
     const security = readPage("src/app/security/page.tsx");
 
-    expect(about).not.toContain("ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢");
-    expect(pricing).not.toContain("ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢");
-    expect(security).not.toContain("â€”");
+    expect(about).not.toContain("ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢");
+    expect(pricing).not.toContain("ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢");
+    expect(security).not.toContain("Ã¢â‚¬â€");
   });
 
   it("uses compliance software wording consistently in shared brand surfaces", () => {
@@ -497,4 +520,3 @@ describe("premium quality regressions", () => {
     }
   });
 });
-
