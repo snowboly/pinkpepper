@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
-import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
-import { HomepageTestimonial } from "@/components/homepage/HomepageTestimonial";
 import { LocalizedHomePage } from "@/components/homepage/LocalizedHomePage";
+import RandomArticleLinks from "@/components/homepage/RandomArticleLinks";
 import PricingActions from "@/components/pricing/PricingActions";
 import { type PublicLocale } from "@/i18n/public";
 import { getPublicMessages } from "@/lib/public-routes";
@@ -17,30 +16,9 @@ import {
   Sparkles,
   Users,
 } from "lucide-react";
+import { DemoTabSwitcher } from "@/components/homepage/DemoTabSwitcher";
 import { HeroChatForm } from "@/components/homepage/HeroChatForm";
 import { homepageFaqs } from "@/data/faqs";
-
-const DemoTabSwitcher = dynamic(
-  () => import("@/components/homepage/DemoTabSwitcher").then((mod) => mod.DemoTabSwitcher),
-  {
-    loading: () => <div className="min-h-[28rem] rounded-[2rem] border border-[#E2E8F0] bg-white/60" aria-hidden="true" />,
-  },
-);
-
-const RandomArticleLinks = dynamic(() => import("@/components/homepage/RandomArticleLinks"), {
-  loading: () => <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4" aria-hidden="true" />,
-});
-
-const homepageTestimonials = [
-  {
-    quote: "The app is working great and has been a massive help",
-    companyName: "McDermott's Foods Ltd",
-    companyUrl: "https://mcdermottsfoods.co.uk/",
-    logoSrc: "/testimonials/mcdermotts-foods.png",
-    logoAlt: "McDermott's Foods Ltd logo",
-    supportingLine: "Used by food businesses managing HACCP and food safety documentation.",
-  },
-] as const;
 
 export const metadata: Metadata = {
   title: "PinkPepper | AI HACCP & Food Safety Software - EU & UK",
@@ -237,69 +215,6 @@ export default async function HomePage({ locale }: HomePageProps = {}) {
         </div>
       </section>
 
-      <section className="border-b border-[#F1F5F9] bg-white py-24">
-        <div className="pp-container">
-          <div className="mx-auto max-w-6xl">
-            <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-              <div className="max-w-3xl">
-                <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">Added Value</p>
-                <h2 className="pp-display mt-4 text-4xl text-[#0F172A] md:text-5xl">
-                  AI-powered compliance, with specialists when it matters
-                </h2>
-                <p className="mt-5 text-lg leading-relaxed text-[#475569]">
-                  PinkPepper gives your team two ways to work: Consultant for answers and decisions, Auditor for formal findings and CAPA. Human consultancy stays available for the work that genuinely needs specialist review.
-                </p>
-              </div>
-            </div>
-
-            <div className="mt-10 grid gap-5 md:grid-cols-3">
-              {/* Card 1: AI + Specialist */}
-              <div className="flex flex-col rounded-3xl bg-[#0F172A] p-8 text-center">
-                <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-white/10">
-                  <svg className="h-7 w-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z" />
-                  </svg>
-                </div>
-                <p className="text-3xl font-extrabold text-white">Consultant + Auditor</p>
-                <p className="mt-1 text-sm font-semibold text-slate-400">Two modes, one workflow</p>
-                <p className="mt-4 text-sm leading-relaxed text-slate-300">
-                  Consultant handles practical questions and next steps. Auditor handles structured findings, evidence gaps, and CAPA. Human consultants step in only when you need a real specialist review.
-                </p>
-              </div>
-
-              {/* Card 2: Time saved */}
-              <div className="flex flex-col rounded-3xl bg-[#0F172A] p-8 text-center">
-                <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-white/10">
-                  <svg className="h-7 w-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <p className="text-3xl font-extrabold text-white">+2h daily</p>
-                <p className="mt-1 text-sm font-semibold text-slate-400">10+ hours saved every week</p>
-                <p className="mt-4 text-sm leading-relaxed text-slate-300">
-                  Food safety managers typically spend 30-40% of their day on documentation and compliance admin. PinkPepper cuts that overhead so your team focuses on operations, not paperwork.
-                </p>
-              </div>
-
-              {/* Card 3: Cost saving */}
-              <div className="flex flex-col rounded-3xl bg-[#0F172A] p-8 text-center">
-                <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-white/10">
-                  <svg className="h-7 w-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" />
-                  </svg>
-                </div>
-                <p className="text-3xl font-extrabold text-white">EUR 18,000+</p>
-                <p className="mt-1 text-sm font-semibold text-slate-400">Saved in compliance costs per year</p>
-                <p className="mt-4 text-sm leading-relaxed text-slate-300">
-                  Reduce reactive consultant spend by replacing ad-hoc hourly retainers with targeted expert escalations. At EUR 150/hr, avoiding 120 unnecessary consultant hours covers the saving.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       <section id="pricing" className="relative overflow-hidden border-y border-[#F1F5F9] bg-white py-24">
         <div className="absolute inset-0 -z-10">
           <div className="absolute inset-0 bg-white" />
@@ -406,11 +321,6 @@ export default async function HomePage({ locale }: HomePageProps = {}) {
                   description: "Understand how PinkPepper approaches practical compliance work for small food businesses.",
                 },
                 {
-                  href: "/features/food-safety-sop-generator",
-                  label: "Build usable SOPs and daily records",
-                  description: "Go straight into the SOP workflow if you need opening checks, cleaning procedures, and routine records that fit the way your site operates.",
-                },
-                {
                   href: "/articles/building-a-haccp-process-flow-diagram",
                   label: "Build a stronger HACCP process flow diagram",
                   description: "One of the clearest starting points for teams turning process steps into usable HACCP structure.",
@@ -424,11 +334,6 @@ export default async function HomePage({ locale }: HomePageProps = {}) {
                   href: "/use-cases",
                   label: "Find the workflow that fits your operation",
                   description: "Start with the use-case hub if you need restaurant, catering, cafe, or manufacturing guidance before choosing a template or feature flow.",
-                },
-                {
-                  href: "/faqs",
-                  label: "Read the product FAQs",
-                  description: "Use the FAQ hub for direct answers on pricing, compliance scope, data handling, and how PinkPepper fits into a real food safety workflow.",
                 },
               ].map((item) => (
                 <Link
@@ -526,8 +431,6 @@ export default async function HomePage({ locale }: HomePageProps = {}) {
           </div>
         </div>
       </section>
-
-      <HomepageTestimonial testimonials={[...homepageTestimonials]} />
 
       <section className="relative overflow-hidden border-b border-[#F1F5F9] bg-[#F8FAFC] py-24">
         <div className="pp-container">
