@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { FeatureTemplate } from "@/components/site/FeatureTemplate";
 
 export const metadata: Metadata = {
-  title: "Food Safety SOPs, Checklists and Daily Records | PinkPepper",
+  title: "Food Safety SOP Generator - AI-Powered | PinkPepper",
   description:
-    "Create food safety SOPs, opening checks, closing checks, cleaning procedures, temperature logs, and hygiene records that match how your site actually operates.",
+    "Generate cleaning SOPs, hygiene procedures, temperature logs and training records in minutes. Grounded in EC 852/2004 and UK FSA guidance. Try free.",
   alternates: {
     canonical: "https://pinkpepper.io/features/food-safety-sop-generator",
   },
@@ -16,34 +16,34 @@ export default function FoodSafetySopGeneratorPage() {
       breadcrumbName="Food Safety SOP Generator"
       breadcrumbUrl="https://pinkpepper.io/features/food-safety-sop-generator"
       eyebrow="SOP generation"
-      title="Food safety SOPs, checklists and daily records that match the way your site works"
-      description="PinkPepper helps teams build opening checks, closing checks, cleaning procedures, temperature logs, and hygiene records that reflect the actual shift pattern, layout, and responsibilities on site."
-      primaryCta="Build SOPs and checks"
+      title="Generate food safety SOPs and records that match the way your site works"
+      description="PinkPepper helps teams create standard operating procedures, monitoring logs, cleaning schedules, hygiene policies, and daily checklists without copying old templates from site to site."
+      primaryCta="Generate SOPs faster"
       painPoints={[
-        "Teams keep rewriting the same SOPs for cleaning, opening checks, closing checks, deliveries, and hygiene controls across different sites.",
-        "Static templates drift away from the real process when equipment, responsibilities, or shift routines change.",
-        "Managers still need records people can actually use during the day, not policy text that sits in a folder.",
+        "Teams waste time rewriting the same SOPs for opening checks, sanitation, deliveries, and hygiene controls.",
+        "Copied templates often survive long after the process on the ground has changed.",
+        "Operations need editable, reviewable records, not generic text blocks.",
       ]}
       outcomes={[
-        "Standardise daily documentation without forcing every site into the same generic template.",
-        "Give teams clearer SOPs, checklists, and logs they can follow during service and close-down.",
-        "Roll out new controls faster after audits, HACCP reviews, menu changes, or process updates.",
+        "Standardise recurring documentation work.",
+        "Give teams clearer operating documents and checklists.",
+        "Speed up implementation after HACCP or audit findings.",
       ]}
       sections={[
         {
-          title: "Built for the documents teams actually use every day",
+          title: "Practical documents, not abstract guidance",
           body:
-            "This is for the paperwork operators reach for every shift: opening checks, closing checks, cleaning procedures, handover sheets, temperature logs, hygiene records, and corrective action forms. PinkPepper helps you generate the draft, but the value is that the structure stays usable on the floor. People can follow it, sign it off, and review it without translating a generic consultant template into the reality of the site.",
+            "PinkPepper is suited to the documents teams actually use: cleaning SOPs, opening and closing checks, staff hygiene procedures, temperature logs, corrective action forms, and training records.",
         },
         {
-          title: "Site-specific SOPs instead of copied templates",
+          title: "Monitoring records sit inside the same workflow",
           body:
-            "A small cafe, a restaurant prep kitchen, and a production unit should not all be running the same opening routine or cleaning record. PinkPepper gives you a faster starting point, then lets you adapt wording, frequency, responsibilities, and verification checks to the site you are documenting. That keeps the SOP aligned with the real workflow instead of a version someone copied from another branch six months ago.",
+            "Temperature checks and daily monitoring logs work better when they are treated as part of the same SOP system rather than separate forms nobody owns. PinkPepper helps teams connect opening checks, close-down routines, and temperature records so the daily workflow is easier to follow and easier to review.",
         },
         {
-          title: "Connect SOPs to the rest of the compliance workflow",
+          title: "Supports local review and adaptation",
           body:
-            "SOPs are stronger when they sit next to HACCP plans, allergen controls, monitoring logs, and audit follow-up instead of living as isolated documents. PinkPepper is designed around that wider workflow, so a new cleaning control, opening check, or corrective action record can be tied back to the reason it exists. That makes review easier for managers and more defensible when an inspector asks why a procedure changed.",
+            "Generated drafts are a starting point for site-specific review. That makes it easier to adapt wording, assign accountability, and export the record into the formats your business already uses.",
         },
       ]}
       heroImage={{
@@ -52,19 +52,19 @@ export default function FoodSafetySopGeneratorPage() {
       }}
       relatedLinks={[
         {
-          href: "/features/haccp-plan-generator",
-          label: "HACCP plan generator",
-          description: "Use HACCP outputs to define the controls, checks, and corrective actions your SOPs need to support.",
-        },
-        {
           href: "/resources/food-safety-opening-and-closing-checklist",
           label: "Food safety opening and closing checklist",
-          description: "Start with a practical daily checklist structure for opening routines, close-down checks, and handover notes.",
+          description: "Start with a daily checklist structure for shift checks, sign-off, and corrective actions.",
         },
         {
-          href: "/use-cases/cafes",
-          label: "Food safety for cafes",
-          description: "See how SOPs, daily records, and small-team routines fit into a cafe workflow.",
+          href: "/resources/temperature-monitoring-log-template",
+          label: "Temperature monitoring log template",
+          description: "Use a clearer log structure for fridges, freezers, hot hold, and out-of-range actions.",
+        },
+        {
+          href: "/articles/temperature-control-in-haccp-limits-and-monitoring",
+          label: "Temperature control in HACCP",
+          description: "Read the practical guide behind the limits, monitoring routines, and records teams actually need.",
         },
       ]}
     />

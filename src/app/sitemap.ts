@@ -51,6 +51,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...localizedHomepageEntries,
     { url: `${BASE_URL}/resources`, lastModified: new Date("2026-03-14"), changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE_URL}/resources/haccp-plan-template`, lastModified: new Date("2026-03-14"), changeFrequency: "monthly", priority: 0.7 },
+    { url: `${BASE_URL}/resources/hazard-analysis-template`, lastModified: new Date("2026-05-24"), changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE_URL}/resources/allergen-matrix-template`, lastModified: new Date("2026-03-14"), changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE_URL}/resources/food-safety-audit-checklist`, lastModified: new Date("2026-03-14"), changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE_URL}/resources/cleaning-and-disinfection-sop`, lastModified: new Date("2026-03-14"), changeFrequency: "monthly", priority: 0.7 },

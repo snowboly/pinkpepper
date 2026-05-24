@@ -13,6 +13,7 @@ const STATIC_PATHS = [
   "/about",
   "/resources",
   "/resources/haccp-plan-template",
+  "/resources/hazard-analysis-template",
   "/resources/allergen-matrix-template",
   "/resources/food-safety-audit-checklist",
   "/resources/cleaning-and-disinfection-sop",
