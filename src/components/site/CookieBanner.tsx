@@ -22,7 +22,12 @@ export function readConsentCookie(cookieSource: string): Consent | null {
     .find((part) => part.startsWith(prefix));
 
   if (!entry) return null;
-  return parseConsent(decodeURIComponent(entry.slice(prefix.length)));
+
+  try {
+    return parseConsent(decodeURIComponent(entry.slice(prefix.length)));
+  } catch {
+    return null;
+  }
 }
 
 function readStoredConsent(): Consent | null {

@@ -10,6 +10,10 @@ describe("cookie banner persistence", () => {
     expect(readConsentCookie("theme=light")).toBeNull();
   });
 
+  it("treats malformed consent cookies as no consent", () => {
+    expect(readConsentCookie("pp-cookie-consent=%E0%A4%A")).toBeNull();
+  });
+
   it("builds a durable first-party preference cookie", () => {
     expect(buildConsentCookie("accepted")).toContain("pp-cookie-consent=accepted");
     expect(buildConsentCookie("accepted")).toContain("Max-Age=");
