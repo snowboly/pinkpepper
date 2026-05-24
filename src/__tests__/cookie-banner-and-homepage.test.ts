@@ -42,3 +42,18 @@ describe("homepage surface", () => {
     expect(localizedSource).not.toContain("copy.value.title");
   });
 });
+
+describe("cookie banner source wiring", () => {
+  it("includes non-react fallback hooks for dismissal", () => {
+    const bannerSource = readFileSync(
+      path.join(process.cwd(), "src/components/site/CookieBanner.tsx"),
+      "utf8",
+    );
+
+    expect(bannerSource).toContain("pp-cookie-banner-fallback");
+    expect(bannerSource).toContain('data-cookie-banner');
+    expect(bannerSource).toContain('data-cookie-action="accepted"');
+    expect(bannerSource).toContain('data-cookie-action="essential"');
+    expect(bannerSource).toContain('window.dispatchEvent(new Event(eventName))');
+  });
+});
