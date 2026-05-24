@@ -51,9 +51,17 @@ describe("cookie banner source wiring", () => {
     );
 
     expect(bannerSource).toContain("pp-cookie-banner-fallback");
+    expect(bannerSource).toContain("nonce={nonce}");
     expect(bannerSource).toContain('data-cookie-banner');
     expect(bannerSource).toContain('data-cookie-action="accepted"');
     expect(bannerSource).toContain('data-cookie-action="essential"');
     expect(bannerSource).toContain('window.dispatchEvent(new Event(eventName))');
+  });
+
+  it("threads the request CSP nonce from the root layout into the cookie banner", () => {
+    const layoutSource = readFileSync(path.join(process.cwd(), "src/app/layout.tsx"), "utf8");
+
+    expect(layoutSource).toContain("const nonce = await getCspNonce();");
+    expect(layoutSource).toContain("<CookieBanner nonce={nonce} />");
   });
 });

@@ -57,7 +57,11 @@ function persistConsent(value: Consent) {
   } catch {}
 }
 
-export function CookieBanner() {
+type CookieBannerProps = {
+  nonce?: string;
+};
+
+export function CookieBanner({ nonce }: CookieBannerProps) {
   const [consent, setConsent] = useState<Consent | null>(readStoredConsent);
   const [visible, setVisible] = useState(() => readStoredConsent() === null);
 
@@ -89,6 +93,7 @@ export function CookieBanner() {
     <>
       <Script
         id="pp-cookie-banner-fallback"
+        nonce={nonce}
         strategy="afterInteractive"
         dangerouslySetInnerHTML={{
           __html: `
