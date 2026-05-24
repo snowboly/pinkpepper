@@ -50,7 +50,9 @@ function persistConsent(value: Consent) {
     localStorage.setItem(STORAGE_KEY, value);
   } catch {}
 
-  document.cookie = buildConsentCookie(value);
+  try {
+    document.cookie = buildConsentCookie(value);
+  } catch {}
 }
 
 export function CookieBanner() {
@@ -58,15 +60,15 @@ export function CookieBanner() {
   const [visible, setVisible] = useState(() => readStoredConsent() === null);
 
   function accept() {
-    persistConsent("accepted");
     setConsent("accepted");
     setVisible(false);
+    persistConsent("accepted");
   }
 
   function decline() {
-    persistConsent("essential");
     setConsent("essential");
     setVisible(false);
+    persistConsent("essential");
   }
 
   return (
@@ -99,12 +101,14 @@ export function CookieBanner() {
             </p>
             <div className="grid flex-shrink-0 grid-cols-2 gap-2 sm:flex sm:items-center sm:justify-end sm:gap-3">
               <button
+                type="button"
                 onClick={decline}
                 className="rounded-full border border-[#E2E8F0] px-4 py-2 text-sm font-semibold text-[#475569] transition-colors hover:border-[#CBD5E1] hover:text-[#0F172A]"
               >
                 Essential only
               </button>
               <button
+                type="button"
                 onClick={accept}
                 className="rounded-full bg-[#E11D48] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#BE123C]"
               >

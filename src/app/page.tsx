@@ -329,6 +329,9 @@ export default async function HomePage({ locale }: HomePageProps = {}) {
                 <h2 className="pp-display mt-2 text-2xl text-[#0F172A] md:text-3xl">Articles, guides &amp; templates</h2>
                 <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-[#94A3B8]">
                   <Link href="/features/haccp-plan-generator" className="hover:text-[#475569]">HACCP plan generator</Link>
+                  <Link href="/features/food-safety-sop-generator" className="hover:text-[#475569]">Food safety SOP generator</Link>
+                  <Link href="/articles/haccp-ccp-examples-uk-eu" className="hover:text-[#475569]">HACCP CCP examples</Link>
+                  <Link href="/faqs" className="hover:text-[#475569]">FAQs</Link>
                 </div>
               </div>
               <Link href="/articles" className="text-sm font-semibold text-[#475569] hover:text-[#0F172A]">
@@ -353,19 +356,9 @@ export default async function HomePage({ locale }: HomePageProps = {}) {
                   description: "One of the clearest starting points for teams turning process steps into usable HACCP structure.",
                 },
                 {
-                  href: "/articles/haccp-ccp-examples-uk-eu",
-                  label: "See real HACCP CCP examples",
-                  description: "Review practical CCP examples before you map limits, monitoring, and corrective actions.",
-                },
-                {
                   href: "/use-cases",
                   label: "Find the workflow that fits your operation",
                   description: "Start with the use-case hub if you need restaurant, catering, cafe, or manufacturing guidance before choosing a template or feature flow.",
-                },
-                {
-                  href: "/faqs",
-                  label: "Read the product FAQs",
-                  description: "Use the FAQ hub for direct answers on pricing, compliance scope, data handling, and how PinkPepper fits into a real food safety workflow.",
                 },
               ].map((item) => (
                 <Link
