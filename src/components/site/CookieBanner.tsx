@@ -1,13 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import Script from "next/script";
+import { useEffect, useState } from "react";
 import { Analytics } from "@vercel/analytics/next";
 
 type Consent = "accepted" | "essential";
 
 const STORAGE_KEY = "pp-cookie-consent";
 const COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 365;
+const CONSENT_CHANGED_EVENT = "pp-cookie-consent-changed";
 
 export function parseConsent(raw: string | null): Consent | null {
   if (raw === "accepted" || raw === "essential") return raw;
@@ -59,6 +61,18 @@ export function CookieBanner() {
   const [consent, setConsent] = useState<Consent | null>(readStoredConsent);
   const [visible, setVisible] = useState(() => readStoredConsent() === null);
 
+  useEffect(() => {
+    const syncConsent = () => {
+      const nextConsent = readStoredConsent();
+      setConsent(nextConsent);
+      setVisible(nextConsent === null);
+    };
+
+    syncConsent();
+    window.addEventListener(CONSENT_CHANGED_EVENT, syncConsent);
+    return () => window.removeEventListener(CONSENT_CHANGED_EVENT, syncConsent);
+  }, []);
+
   function accept() {
     setConsent("accepted");
     setVisible(false);
@@ -73,10 +87,83 @@ export function CookieBanner() {
 
   return (
     <>
+      <Script
+        id="pp-cookie-banner-fallback"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `
+            (() => {
+              const storageKey = ${JSON.stringify(STORAGE_KEY)};
+              const eventName = ${JSON.stringify(CONSENT_CHANGED_EVENT)};
+              const cookieMaxAge = ${COOKIE_MAX_AGE_SECONDS};
+              const parseConsent = (value) => value === "accepted" || value === "essential" ? value : null;
+              const readCookie = () => {
+                const prefix = storageKey + "=";
+                const entry = document.cookie
+                  .split(";")
+                  .map((part) => part.trim())
+                  .find((part) => part.startsWith(prefix));
+
+                if (!entry) return null;
+
+                try {
+                  return parseConsent(decodeURIComponent(entry.slice(prefix.length)));
+                } catch {
+                  return null;
+                }
+              };
+
+              const readStored = () => {
+                try {
+                  const stored = parseConsent(window.localStorage.getItem(storageKey));
+                  if (stored) return stored;
+                } catch {}
+
+                return readCookie();
+              };
+
+              const persist = (value) => {
+                try {
+                  window.localStorage.setItem(storageKey, value);
+                } catch {}
+
+                try {
+                  document.cookie = storageKey + "=" + encodeURIComponent(value) + "; Max-Age=" + cookieMaxAge + "; Path=/; SameSite=Lax";
+                } catch {}
+              };
+
+              const hideBanner = () => {
+                const banner = document.querySelector("[data-cookie-banner]");
+                if (!(banner instanceof HTMLElement)) return;
+                banner.hidden = true;
+                banner.style.display = "none";
+              };
+
+              if (readStored()) hideBanner();
+
+              document.addEventListener("click", (event) => {
+                const target = event.target;
+                if (!(target instanceof Element)) return;
+
+                const trigger = target.closest("[data-cookie-action]");
+                if (!(trigger instanceof HTMLElement)) return;
+
+                const value = parseConsent(trigger.dataset.cookieAction ?? null);
+                if (!value) return;
+
+                persist(value);
+                hideBanner();
+                window.dispatchEvent(new Event(eventName));
+              });
+            })();
+          `,
+        }}
+      />
       {consent === "accepted" && <Analytics />}
 
       {visible && (
         <div
+          data-cookie-banner
           role="dialog"
           aria-modal="false"
           aria-label="Cookie consent"
@@ -101,6 +188,7 @@ export function CookieBanner() {
             </p>
             <div className="grid flex-shrink-0 grid-cols-2 gap-2 sm:flex sm:items-center sm:justify-end sm:gap-3">
               <button
+                data-cookie-action="essential"
                 type="button"
                 onClick={decline}
                 className="rounded-full border border-[#E2E8F0] px-4 py-2 text-sm font-semibold text-[#475569] transition-colors hover:border-[#CBD5E1] hover:text-[#0F172A]"
@@ -108,6 +196,7 @@ export function CookieBanner() {
                 Essential only
               </button>
               <button
+                data-cookie-action="accepted"
                 type="button"
                 onClick={accept}
                 className="rounded-full bg-[#E11D48] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#BE123C]"
