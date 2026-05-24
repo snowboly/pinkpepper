@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
+import { HomepageTestimonial } from "@/components/homepage/HomepageTestimonial";
 import { LocalizedHomePage } from "@/components/homepage/LocalizedHomePage";
-import RandomArticleLinks from "@/components/homepage/RandomArticleLinks";
 import PricingActions from "@/components/pricing/PricingActions";
 import { type PublicLocale } from "@/i18n/public";
 import { getPublicMessages } from "@/lib/public-routes";
@@ -16,9 +17,30 @@ import {
   Sparkles,
   Users,
 } from "lucide-react";
-import { DemoTabSwitcher } from "@/components/homepage/DemoTabSwitcher";
 import { HeroChatForm } from "@/components/homepage/HeroChatForm";
 import { homepageFaqs } from "@/data/faqs";
+
+const DemoTabSwitcher = dynamic(
+  () => import("@/components/homepage/DemoTabSwitcher").then((mod) => mod.DemoTabSwitcher),
+  {
+    loading: () => <div className="min-h-[28rem] rounded-[2rem] border border-[#E2E8F0] bg-white/60" aria-hidden="true" />,
+  },
+);
+
+const RandomArticleLinks = dynamic(() => import("@/components/homepage/RandomArticleLinks"), {
+  loading: () => <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4" aria-hidden="true" />,
+});
+
+const homepageTestimonials = [
+  {
+    quote: "The app is working great and has been a massive help",
+    companyName: "McDermott's Foods Ltd",
+    companyUrl: "https://mcdermottsfoods.co.uk/",
+    logoSrc: "/testimonials/mcdermotts-foods.png",
+    logoAlt: "McDermott's Foods Ltd logo",
+    supportingLine: "Used by food businesses managing HACCP and food safety documentation.",
+  },
+] as const;
 
 export const metadata: Metadata = {
   title: "PinkPepper | AI HACCP & Food Safety Software - EU & UK",
@@ -321,6 +343,11 @@ export default async function HomePage({ locale }: HomePageProps = {}) {
                   description: "Understand how PinkPepper approaches practical compliance work for small food businesses.",
                 },
                 {
+                  href: "/features/food-safety-sop-generator",
+                  label: "Build usable SOPs and daily records",
+                  description: "Go straight into the SOP workflow if you need opening checks, cleaning procedures, and routine records that fit the way your site operates.",
+                },
+                {
                   href: "/articles/building-a-haccp-process-flow-diagram",
                   label: "Build a stronger HACCP process flow diagram",
                   description: "One of the clearest starting points for teams turning process steps into usable HACCP structure.",
@@ -334,6 +361,11 @@ export default async function HomePage({ locale }: HomePageProps = {}) {
                   href: "/use-cases",
                   label: "Find the workflow that fits your operation",
                   description: "Start with the use-case hub if you need restaurant, catering, cafe, or manufacturing guidance before choosing a template or feature flow.",
+                },
+                {
+                  href: "/faqs",
+                  label: "Read the product FAQs",
+                  description: "Use the FAQ hub for direct answers on pricing, compliance scope, data handling, and how PinkPepper fits into a real food safety workflow.",
                 },
               ].map((item) => (
                 <Link
@@ -431,6 +463,8 @@ export default async function HomePage({ locale }: HomePageProps = {}) {
           </div>
         </div>
       </section>
+
+      <HomepageTestimonial testimonials={[...homepageTestimonials]} />
 
       <section className="relative overflow-hidden border-b border-[#F1F5F9] bg-[#F8FAFC] py-24">
         <div className="pp-container">
