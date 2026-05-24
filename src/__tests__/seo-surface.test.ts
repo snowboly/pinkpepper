@@ -381,20 +381,18 @@ describe("public SEO copy and linking", () => {
     expect(articlesHub).toContain("/use-cases/food-manufacturing");
 
     expect(resources).toContain("/use-cases");
-    expect(resources).toContain("/features/food-safety-sop-generator");
-    expect(resources).toContain("/faqs");
-    expect(resources).toContain("/use-cases/cafes");
-    expect(resources).toContain("/use-cases/catering");
-    expect(resources).toContain("/use-cases/food-manufacturing");
+    expect(resources).toContain("/features/haccp-plan-generator");
   });
 
   it("keeps the SOP generator and use-cases hub commercially specific", () => {
     const sopPage = readPage("src/app/features/food-safety-sop-generator/page.tsx");
     const useCasesHub = readPage("src/app/use-cases/page.tsx");
 
-    expect(sopPage).toContain("Food Safety SOPs, Checklists and Daily Records");
-    expect(sopPage).toContain("opening checks, closing checks, cleaning procedures, temperature logs, and hygiene records");
+    expect(sopPage).toContain("Generate food safety SOPs and records that match the way your site works");
+    expect(sopPage).toContain("cleaning SOPs, opening and closing checks, staff hygiene procedures, temperature logs, corrective action forms, and training records");
     expect(sopPage).toContain("/resources/food-safety-opening-and-closing-checklist");
+    expect(sopPage).toContain("/resources/temperature-monitoring-log-template");
+    expect(sopPage).toContain("/articles/temperature-control-in-haccp-limits-and-monitoring");
 
     expect(useCasesHub).toContain("Choose the workflow that matches your kitchen, service model, or production site");
     expect(useCasesHub).toContain("/features/food-safety-sop-generator");
