@@ -7,12 +7,50 @@ import { Analytics } from "@vercel/analytics/next";
 type Consent = "accepted" | "essential";
 
 const STORAGE_KEY = "pp-cookie-consent";
+const COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 365;
+
+export function parseConsent(raw: string | null): Consent | null {
+  if (raw === "accepted" || raw === "essential") return raw;
+  return null;
+}
+
+export function readConsentCookie(cookieSource: string): Consent | null {
+  const prefix = `${STORAGE_KEY}=`;
+  const entry = cookieSource
+    .split(";")
+    .map((part) => part.trim())
+    .find((part) => part.startsWith(prefix));
+
+  if (!entry) return null;
+
+  try {
+    return parseConsent(decodeURIComponent(entry.slice(prefix.length)));
+  } catch {
+    return null;
+  }
+}
 
 function readStoredConsent(): Consent | null {
   if (typeof window === "undefined") return null;
-  const stored = localStorage.getItem(STORAGE_KEY);
-  if (stored === "accepted" || stored === "essential") return stored;
-  return null;
+
+  try {
+    const stored = parseConsent(localStorage.getItem(STORAGE_KEY));
+    if (stored) return stored;
+  } catch {}
+
+  return readConsentCookie(document.cookie);
+}
+
+export function buildConsentCookie(value: Consent): string {
+  return `${STORAGE_KEY}=${encodeURIComponent(value)}; Max-Age=${COOKIE_MAX_AGE_SECONDS}; Path=/; SameSite=Lax`;
+}
+
+function persistConsent(value: Consent) {
+  try {
+    localStorage.setItem(STORAGE_KEY, value);
+  } catch {}
+
+  document.cookie = buildConsentCookie(value);
 }
 
 export function CookieBanner() {
@@ -20,13 +58,13 @@ export function CookieBanner() {
   const [visible, setVisible] = useState(() => readStoredConsent() === null);
 
   function accept() {
-    localStorage.setItem(STORAGE_KEY, "accepted");
+    persistConsent("accepted");
     setConsent("accepted");
     setVisible(false);
   }
 
   function decline() {
-    localStorage.setItem(STORAGE_KEY, "essential");
+    persistConsent("essential");
     setConsent("essential");
     setVisible(false);
   }
@@ -49,8 +87,8 @@ export function CookieBanner() {
               </span>
               <span className="hidden md:inline">
                 We use essential cookies to keep PinkPepper running, and optional
-                Vercel Analytics to understand how you use the product. Vercel
-                describes this analytics product as anonymized and cookieless.{" "}
+                analytics cookies (Vercel Analytics) to understand how you use the
+                product - no personal data is collected.{" "}
               </span>
               <Link
                 href="/legal/cookies"
