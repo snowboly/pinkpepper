@@ -213,7 +213,7 @@ describe("public SEO copy and linking", () => {
   it("aligns the homepage with the compliance software category narrative", () => {
     const homepage = readPage("src/app/page.tsx");
 
-    expect(homepage).toContain("AI food safety compliance software");
+    expect(homepage).toContain("Generate free HACCP plans, hazard analysis templates, SOPs, and food safety records");
     expect(homepage).toContain("/features/haccp-plan-generator");
     expect(homepage).toContain("/pricing");
     expect(homepage).not.toContain("â€");
@@ -475,7 +475,7 @@ describe("premium quality regressions", () => {
     const homepage = readPage("src/app/page.tsx");
 
     expect(homepage).toContain("Built for real world operators");
-    expect(homepage).toContain("From raw notes to review-ready compliance work");
+    expect(homepage).toContain("From free HACCP plan drafts and hazard analysis templates");
     expect(homepage).toContain("Switch from Consultant to Auditor when the job changes");
     expect(homepage).toContain("human consultancy");
   });
