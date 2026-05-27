@@ -304,6 +304,7 @@ export async function LocalizedHomePage({ locale, copy }: LocalizedHomePageProps
               <div>
                 <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">{copy.library.eyebrow}</p>
                 <h2 className="pp-display mt-2 text-2xl text-[#0F172A] md:text-3xl">{copy.library.title}</h2>
+                <p className="mt-2 text-sm text-[#64748B]">{copy.library.body}</p>
                 <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-[#94A3B8]">
                   <Link href={haccpHref} className="hover:text-[#475569]">{copy.library.haccpLinkLabel}</Link>
                 </div>

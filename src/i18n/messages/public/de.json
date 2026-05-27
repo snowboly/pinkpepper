@@ -34,8 +34,8 @@
   },
   "home": {
     "heroBadge": "Entwickelt für EU- und UK-Lebensmittelrecht",
-    "heroTitle": "HACCP-Pläne, SOPs und Audit-Vorbereitung in Minuten - nicht in Wochen.",
-    "heroDescription": "PinkPepper ist KI-Software für Lebensmittelkonformität und spart Ihrem Team mehr als 10 Stunden pro Woche bei der Dokumentation. Erhalten Sie regulatorisch fundierte Antworten, erstellen Sie auditfähige Nachweise und eskalieren Sie bei höherem Risiko an menschliche Berater.",
+    "heroTitle": "Erstellen Sie kostenlose HACCP-Pläne, SOPs und Lebensmittelsicherheitsnachweise in wenigen Minuten",
+    "heroDescription": "Erstellen Sie kostenlose HACCP-Pläne, Gefahrenanalyse-Vorlagen, SOPs und Lebensmittelsicherheitsnachweise für Lebensmittelbetriebe in der EU und im Vereinigten Königreich. PinkPepper hilft Teams, schneller von Fragen zu tatsächlich nutzbaren Compliance-Dokumenten zu kommen.",
     "eurLexLabel": "Regelungsdaten bereitgestellt von",
     "trustCards": {
       "groundedTitle": "Verankert in mehr als 35 EU- und UK-Regelwerken",
@@ -48,7 +48,7 @@
     "workflows": {
       "eyebrow": "Für den echten Betriebsalltag gebaut",
       "title": "Wobei PinkPepper Ihnen hilft",
-      "body": "Von Rohnotizen bis zu prüffähiger Compliance-Arbeit verkürzt PinkPepper die Zeit zwischen einem Lebensmittelsicherheitsproblem und etwas, das Ihr Team tatsächlich nutzen kann.",
+      "body": "Von kostenlosen HACCP-Entwürfen und Gefahrenanalyse-Vorlagen bis zu SOPs, Überwachungsprotokollen und Korrekturmaßnahmen-Aufzeichnungen hilft PinkPepper Lebensmittelbetrieben, Dokumente zu erstellen, die vor Ort wirklich nutzbar sind.",
       "answerTitle": "Compliance-Fragen schneller beantworten",
       "answerBody": "Erhalten Sie regulatorisch fundierte Antworten auf Basis von EG 852/2004, UK-FSA-Leitlinien und Codex-HACCP-Referenzen.",
       "buildTitle": "HACCP und Audit-Vorbereitung schneller aufbauen",
@@ -111,6 +111,7 @@
     "library": {
       "eyebrow": "Aus der Bibliothek",
       "title": "Artikel, Leitfäden und Vorlagen",
+      "body": "Starten Sie mit kostenlosen HACCP-Vorlagen, Gefahrenanalyse-Arbeitsblättern, Leitfäden und praktischen Lebensmittelsicherheitsnachweisen.",
       "haccpLinkLabel": "HACCP-Plan-Generator",
       "browseAllLabel": "Alle ansehen"
     },

@@ -98,6 +98,7 @@ export type PublicMessagesDictionary = {
     library: {
       eyebrow: string;
       title: string;
+      body: string;
       haccpLinkLabel: string;
       browseAllLabel: string;
     };

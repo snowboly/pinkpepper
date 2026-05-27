@@ -45,7 +45,7 @@ const homepageTestimonials = [
 export const metadata: Metadata = {
   title: "PinkPepper | AI HACCP & Food Safety Software - EU & UK",
   description:
-    "Generate HACCP plans, allergen records, SOPs & audit-ready documents in minutes. AI food safety software grounded in 35+ EU & UK regulations. Start free.",
+    "Generate free HACCP plans, hazard analysis templates, SOPs, and food safety records for EU and UK food businesses.",
   alternates: {
     canonical: "https://pinkpepper.io",
   },
@@ -101,12 +101,12 @@ export default async function HomePage({ locale }: HomePageProps = {}) {
             </div>
 
             <h1 className="pp-display mx-auto mb-8 max-w-4xl text-2xl leading-[1.15] tracking-[-0.02em] text-white sm:text-3xl md:text-4xl lg:text-5xl">
-              HACCP plans, SOPs &amp; audit&nbsp;prep in minutes - not&nbsp;weeks.
+              Generate free HACCP plans, SOPs and food safety records in minutes
             </h1>
 
             <p className="mx-auto mb-8 max-w-3xl text-base leading-relaxed text-white/80 sm:text-lg">
-              PinkPepper is AI food safety compliance software that saves your team 10+ hours a week on documentation.
-              Get regulation-grounded answers, generate audit-ready records, and escalate to human consultants when the risk is higher.
+              Generate free HACCP plans, hazard analysis templates, SOPs, and food safety records for EU and UK food
+              businesses. PinkPepper helps teams move faster from questions to usable compliance documents.
             </p>
 
             <div className="mb-8 flex justify-center">
@@ -184,8 +184,8 @@ export default async function HomePage({ locale }: HomePageProps = {}) {
               What PinkPepper helps you do
             </h2>
             <p className="mt-4 text-lg text-[#475569]">
-              From raw notes to review-ready compliance work, PinkPepper is designed to shorten the time between a food
-              safety problem and something your team can actually use.
+              From free HACCP plan drafts and hazard analysis templates to SOPs, monitoring logs, and corrective
+              action records, PinkPepper helps food businesses build documents they can actually use on site.
             </p>
           </div>
 
@@ -327,6 +327,10 @@ export default async function HomePage({ locale }: HomePageProps = {}) {
               <div>
                 <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">From the library</p>
                 <h2 className="pp-display mt-2 text-2xl text-[#0F172A] md:text-3xl">Articles, guides &amp; templates</h2>
+                <p className="mt-2 text-sm text-[#64748B]">
+                  Start with free HACCP templates, hazard analysis worksheets, guides, and practical food safety
+                  records.
+                </p>
                 <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-[#94A3B8]">
                   <Link href="/features/haccp-plan-generator" className="hover:text-[#475569]">HACCP plan generator</Link>
                   <Link href="/features/food-safety-sop-generator" className="hover:text-[#475569]">Food safety SOP generator</Link>
