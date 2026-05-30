@@ -95,6 +95,13 @@ const resources: ResourceEntry[] = [
     categoryLabel: "Supplier",
   },
   {
+    href: "/resources/supplier-registration-log",
+    title: "Supplier registration log",
+    description: "A supplier tracker for approval status, review dates, product scope, and due-diligence follow-up.",
+    category: "supplier",
+    categoryLabel: "Supplier",
+  },
+  {
     href: "/resources/employee-food-safety-training-record",
     title: "Employee food safety training record",
     description: "What training records should capture to demonstrate staff competence during inspections.",
