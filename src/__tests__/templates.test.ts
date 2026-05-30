@@ -60,6 +60,19 @@ describe("getGroupedTemplates", () => {
     expect(resourcesPage).toContain("What to include in a hazard analysis worksheet before you turn it into a business-specific HACCP document.");
   });
 
+  it("surfaces the supplier registration log in the registry and resources hub", () => {
+    expect(TEMPLATES.find((template) => template.slug === "supplier-registration-log")).toMatchObject({
+      title: "Supplier registration log",
+      category: "Supplier",
+      fileType: "xlsx",
+      storageName: "supplier-registration-template",
+    });
+
+    const resourcesPage = readPage("src/app/resources/page.tsx");
+    expect(resourcesPage).toContain('href: "/resources/supplier-registration-log"');
+    expect(resourcesPage).toContain("A supplier tracker for approval status, review dates, product scope, and due-diligence follow-up.");
+  });
+
   it("keeps the core HACCP cluster linked together", () => {
     const haccpTemplatePage = readPage("src/app/resources/haccp-plan-template/page.tsx");
     const haccpGeneratorPage = readPage("src/app/features/haccp-plan-generator/page.tsx");
