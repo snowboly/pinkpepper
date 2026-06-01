@@ -11,11 +11,14 @@ import { createHash } from "crypto";
 import { createAdminClient } from "@/utils/supabase/admin";
 import { generateEmbeddings } from "@/lib/rag/embeddings";
 import { buildChunkMetadata } from "@/lib/rag/source-taxonomy";
+import { activateVersionedKnowledgeChunks } from "@/lib/rag/knowledge-ingestion";
 import type { Json } from "@/types/database.types";
 import {
   searchFoodSafetyRegulations,
   discoverNewRegulations,
+  discoverUkRegulations,
   fetchRegulationText,
+  fetchUkLegislationText,
   celexToSourceName,
   MIN_REGULATION_TEXT_CHARS,
   type CellarRegulation,
@@ -72,7 +75,13 @@ type SyncHealthSummary = {
 type RegulationMetadataInput = Pick<
   CellarRegulation,
   "celex" | "baseCelex" | "title" | "dateDocument" | "dateLastModified"
->;
+> &
+  Partial<
+    Pick<
+      CellarRegulation,
+      "jurisdiction" | "sourceKey" | "versionKey" | "officialUrl" | "textUrl" | "actType"
+    >
+  >;
 
 function extractMetadataDate(metadata: Json | null): string | null {
   if (!metadata || typeof metadata !== "object" || Array.isArray(metadata)) return null;
@@ -131,8 +140,27 @@ export function buildRegulationChunkMetadata(
   sourceName: string,
   regulation: RegulationMetadataInput
 ): Json {
+  const sourceKey =
+    regulation.sourceKey ??
+    (regulation.jurisdiction === "gb"
+      ? `uk:${regulation.baseCelex.replace(/\//g, ":")}`
+      : `eu:celex:${regulation.baseCelex}`);
+  const versionKey =
+    regulation.versionKey ??
+    (regulation.jurisdiction === "gb"
+      ? `${sourceKey}:${regulation.dateLastModified}`
+      : `eu:celex:${regulation.celex}`);
+
   return {
     ...buildChunkMetadata(sourceName),
+    jurisdiction: regulation.jurisdiction ?? "eu",
+    source_class: "primary_law",
+    retrieval_status: "active",
+    source_key: sourceKey,
+    version_key: versionKey,
+    act_type: regulation.actType,
+    official_url: regulation.officialUrl,
+    text_url: regulation.textUrl,
     celexNumber: regulation.celex,
     baseCelexNumber: regulation.baseCelex,
     currentVersionDate: regulation.dateLastModified,
@@ -258,6 +286,24 @@ async function isAlreadySynced(
   return data.last_modified === lastModified;
 }
 
+function getRegulationSourceName(regulation: CellarRegulation): string {
+  return regulation.jurisdiction === "gb" ? regulation.title : celexToSourceName(regulation.celex);
+}
+
+function getRegulationSourceKey(regulation: CellarRegulation): string {
+  return regulation.sourceKey ??
+    (regulation.jurisdiction === "gb"
+      ? `uk:${regulation.baseCelex.replace(/\//g, ":")}`
+      : `eu:celex:${regulation.baseCelex}`);
+}
+
+function getRegulationVersionKey(regulation: CellarRegulation): string {
+  return regulation.versionKey ??
+    (regulation.jurisdiction === "gb"
+      ? `${getRegulationSourceKey(regulation)}:${regulation.dateLastModified}`
+      : `eu:celex:${regulation.celex}`);
+}
+
 /**
  * Process a single regulation: chunk, embed, and insert into DB.
  * Accepts pre-fetched text and its hash to avoid double-fetching.
@@ -268,20 +314,13 @@ async function processRegulation(
   contentHash: string
 ): Promise<{ chunksCreated: number; contentHash: string }> {
   const supabase = createAdminClient();
-  const sourceName = celexToSourceName(regulation.celex);
+  const sourceName = getRegulationSourceName(regulation);
 
   // Chunk the text
   const chunks = chunkText(text, CHUNK_SIZE, CHUNK_OVERLAP);
   if (chunks.length === 0) {
     throw new Error("No chunks produced from regulation text");
   }
-
-  // Delete existing chunks for this regulation (deduplication)
-  await supabase
-    .from("knowledge_chunks")
-    .delete()
-    .eq("source_type", "regulation")
-    .in("source_name", [sourceName, ...regulation.legacyAliases]);
 
   // Generate embeddings in batches
   const allRows: Array<{
@@ -290,7 +329,7 @@ async function processRegulation(
     source_type: string;
     source_name: string;
     section_ref: string | null;
-    metadata: Json;
+    metadata: Record<string, unknown>;
   }> = [];
 
   for (let i = 0; i < chunks.length; i += EMBEDDING_BATCH_SIZE) {
@@ -304,7 +343,7 @@ async function processRegulation(
         source_type: "regulation",
         source_name: sourceName,
         section_ref: extractSectionRef(batch[j]),
-        metadata: buildRegulationChunkMetadata(sourceName, regulation),
+        metadata: buildRegulationChunkMetadata(sourceName, regulation) as Record<string, unknown>,
       });
     }
 
@@ -314,16 +353,21 @@ async function processRegulation(
     }
   }
 
-  // Insert chunks in batches of 100
-  for (let i = 0; i < allRows.length; i += 100) {
-    const batch = allRows.slice(i, i + 100);
-    const { error } = await supabase.from("knowledge_chunks").insert(batch);
-    if (error) {
-      throw new Error(`DB insert failed: ${error.message}`);
-    }
-  }
+  await activateVersionedKnowledgeChunks(supabase as never, {
+    sourceKey: getRegulationSourceKey(regulation),
+    versionKey: getRegulationVersionKey(regulation),
+    rows: allRows,
+    legacySourceNames: [sourceName, ...regulation.legacyAliases],
+  });
 
   return { chunksCreated: allRows.length, contentHash };
+}
+
+async function fetchTextForRegulation(regulation: CellarRegulation): Promise<string> {
+  if (regulation.jurisdiction === "gb") {
+    return fetchUkLegislationText(regulation);
+  }
+  return fetchRegulationText(regulation.celex);
 }
 
 /**
@@ -359,22 +403,32 @@ export async function syncRegulations(): Promise<SyncResult> {
     return result;
   }
 
-  // Discover new regulations via EUR-Lex SPARQL (non-fatal)
+  // Discover new regulations via official EU and UK feeds (non-fatal).
   let discoveredRegulations: CellarRegulation[] = [];
   try {
     discoveredRegulations = await discoverNewRegulations(sinceDate);
-    console.log(`[regulation-sync] Discovered ${discoveredRegulations.length} new regulations via SPARQL`);
+    console.log(`[regulation-sync] Discovered ${discoveredRegulations.length} new EU regulations via Cellar SPARQL`);
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
-    console.error(`[regulation-sync] SPARQL discovery failed (non-fatal): ${message}`);
-    result.errors.push({ celex: "SPARQL_DISCOVERY", error: message });
+    console.error(`[regulation-sync] EU discovery failed (non-fatal): ${message}`);
+    result.errors.push({ celex: "EU_DISCOVERY", error: message });
   }
 
-  // Merge: seeds take priority over discovered
-  const seenCelex = new Set(seedRegulations.map((r) => r.baseCelex));
+  try {
+    const ukRegulations = await discoverUkRegulations(sinceDate);
+    discoveredRegulations.push(...ukRegulations);
+    console.log(`[regulation-sync] Discovered ${ukRegulations.length} new UK regulations`);
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.error(`[regulation-sync] UK discovery failed (non-fatal): ${message}`);
+    result.errors.push({ celex: "UK_DISCOVERY", error: message });
+  }
+
+  // Merge: seeds take priority over discovered candidates with the same source key.
+  const seenSourceKeys = new Set(seedRegulations.map(getRegulationSourceKey));
   const regulations = [
     ...seedRegulations,
-    ...discoveredRegulations.filter((r) => !seenCelex.has(r.baseCelex)),
+    ...discoveredRegulations.filter((r) => !seenSourceKeys.has(getRegulationSourceKey(r))),
   ];
   console.log(`[regulation-sync] Total: ${regulations.length} regulations to process`);
 
@@ -383,7 +437,7 @@ export async function syncRegulations(): Promise<SyncResult> {
     try {
       // Fetch text first so we can hash it for amendment detection.
       // fetchRegulationText already throws if text < MIN_REGULATION_TEXT_CHARS.
-      const text = await fetchRegulationText(regulation.celex);
+      const text = await fetchTextForRegulation(regulation);
       if (!text || text.length < MIN_REGULATION_TEXT_CHARS) {
         throw new Error(`Regulation text too short (${text.length} chars)`);
       }
@@ -413,7 +467,7 @@ export async function syncRegulations(): Promise<SyncResult> {
       const logged = await writeSyncLogEntry(supabase, {
         celex_number: regulation.celex,
         title: regulation.title.slice(0, 500),
-        source_name: celexToSourceName(regulation.celex),
+        source_name: getRegulationSourceName(regulation),
         last_modified: regulation.dateLastModified,
         content_hash: contentHash,
         chunks_ingested: chunksCreated,
@@ -422,7 +476,12 @@ export async function syncRegulations(): Promise<SyncResult> {
         metadata: {
           baseCelexNumber: regulation.baseCelex,
           legacyAliases: regulation.legacyAliases,
-          ...(regulation.discovered && { discoveredViaSparql: true }),
+          sourceKey: getRegulationSourceKey(regulation),
+          versionKey: getRegulationVersionKey(regulation),
+          jurisdiction: regulation.jurisdiction ?? "eu",
+          actType: regulation.actType,
+          officialUrl: regulation.officialUrl,
+          ...(regulation.discovered && { discovered: true }),
         },
       });
       if (!logged) result.loggingAvailable = false;
@@ -439,7 +498,7 @@ export async function syncRegulations(): Promise<SyncResult> {
       const logged = await writeSyncLogEntry(supabase, {
         celex_number: regulation.celex,
         title: regulation.title.slice(0, 500),
-        source_name: celexToSourceName(regulation.celex),
+        source_name: getRegulationSourceName(regulation),
         last_modified: regulation.dateLastModified,
         chunks_ingested: 0,
         synced_at: syncedAt,
@@ -448,7 +507,12 @@ export async function syncRegulations(): Promise<SyncResult> {
         metadata: {
           baseCelexNumber: regulation.baseCelex,
           legacyAliases: regulation.legacyAliases,
-          ...(regulation.discovered && { discoveredViaSparql: true }),
+          sourceKey: getRegulationSourceKey(regulation),
+          versionKey: getRegulationVersionKey(regulation),
+          jurisdiction: regulation.jurisdiction ?? "eu",
+          actType: regulation.actType,
+          officialUrl: regulation.officialUrl,
+          ...(regulation.discovered && { discovered: true }),
         },
       });
       if (!logged) result.loggingAvailable = false;

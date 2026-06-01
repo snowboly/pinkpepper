@@ -1,9 +1,17 @@
 import { describe, expect, it, vi } from "vitest";
+
+vi.mock("pdf-parse", () => ({
+  default: vi.fn(async () => ({
+    text: "Article 1 ".repeat(600),
+  })),
+}));
 import {
   celexToSourceName,
   extractCurrentVersionInfo,
   discoverNewRegulations,
+  discoverUkRegulations,
   fetchRegulationText,
+  fetchUkLegislationText,
   MIN_REGULATION_TEXT_CHARS,
   EUROVOC_FOOD_SAFETY_CONCEPTS,
 } from "@/lib/rag/cellar-client";
@@ -62,6 +70,33 @@ describe("buildRegulationChunkMetadata", () => {
       source_class: "primary_law",
       celexNumber: "02011R1169-20250401",
       baseCelexNumber: "32011R1169",
+      retrieval_status: "active",
+      source_key: "eu:celex:32011R1169",
+      version_key: "eu:celex:02011R1169-20250401",
+    });
+  });
+
+  it("adds authoritative metadata for UK regulation sync chunks", () => {
+    expect(
+      buildRegulationChunkMetadata("The Food Safety and Hygiene (England) Regulations 2013", {
+        celex: "uksi/2013/2996",
+        baseCelex: "uksi/2013/2996",
+        title: "The Food Safety and Hygiene (England) Regulations 2013",
+        dateDocument: "2013-12-11",
+        dateLastModified: "2026-05-20",
+        jurisdiction: "gb",
+        sourceKey: "uk:uksi:2013:2996",
+        versionKey: "uk:uksi:2013:2996:2026-05-20",
+        officialUrl: "https://www.legislation.gov.uk/uksi/2013/2996",
+        actType: "statutory_instrument",
+      })
+    ).toMatchObject({
+      jurisdiction: "gb",
+      source_class: "primary_law",
+      retrieval_status: "active",
+      source_key: "uk:uksi:2013:2996",
+      version_key: "uk:uksi:2013:2996:2026-05-20",
+      act_type: "statutory_instrument",
     });
   });
 });
@@ -190,9 +225,55 @@ describe("discoverNewRegulations", () => {
     await discoverNewRegulations("2024-01-01");
 
     const url = decodeURIComponent(mockFetch.mock.calls[0][0] as string);
+    expect(url).toContain("publications.europa.eu/webapi/rdf/sparql");
+    expect(url).toContain("PREFIX xsd:");
     for (const concept of EUROVOC_FOOD_SAFETY_CONCEPTS) {
       expect(url).toContain(`eurovoc.europa.eu/${concept}`);
     }
+
+    vi.unstubAllGlobals();
+  });
+});
+
+describe("discoverUkRegulations", () => {
+  it("discovers relevant UK food law and import control candidates from legislation feeds", async () => {
+    const feed = `<?xml version="1.0" encoding="UTF-8"?>
+      <feed xmlns="http://www.w3.org/2005/Atom">
+        <entry>
+          <title>The Food Safety and Hygiene (England) Regulations 2013</title>
+          <id>https://www.legislation.gov.uk/uksi/2013/2996</id>
+          <updated>2026-05-20T10:00:00Z</updated>
+          <published>2026-05-20T10:00:00Z</published>
+          <link rel="alternate" href="https://www.legislation.gov.uk/uksi/2013/2996" />
+        </entry>
+        <entry>
+          <title>The Road Traffic Regulations 2026</title>
+          <id>https://www.legislation.gov.uk/uksi/2026/101</id>
+          <updated>2026-05-20T10:00:00Z</updated>
+          <link rel="alternate" href="https://www.legislation.gov.uk/uksi/2026/101" />
+        </entry>
+      </feed>`;
+
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+        text: () => Promise.resolve(feed),
+      })
+    );
+
+    const results = await discoverUkRegulations("2026-05-01");
+
+    expect(results).toHaveLength(1);
+    expect(results[0]).toMatchObject({
+      jurisdiction: "gb",
+      celex: "uksi/2013/2996",
+      baseCelex: "uksi/2013/2996",
+      sourceKey: "uk:uksi:2013:2996",
+      versionKey: "uk:uksi:2013:2996:2026-05-20",
+      actType: "statutory_instrument",
+      discovered: true,
+    });
 
     vi.unstubAllGlobals();
   });
@@ -213,6 +294,9 @@ describe("fetchRegulationText", () => {
     const text = await fetchRegulationText("32002R0178");
     expect(text.length).toBeGreaterThanOrEqual(MIN_REGULATION_TEXT_CHARS);
     expect(text).toContain("Article 1");
+    expect(vi.mocked(fetch).mock.calls[0][0]).toBe(
+      "https://eur-lex.europa.eu/legal-content/EN/TXT/PDF/?uri=CELEX:32002R0178"
+    );
 
     vi.unstubAllGlobals();
   });
@@ -252,7 +336,7 @@ describe("fetchRegulationText", () => {
       "fetch",
       vi.fn().mockImplementation(() => {
         callCount++;
-        if (callCount < 3) {
+        if (callCount < 5) {
           return Promise.resolve({ ok: true, text: () => Promise.resolve(shortHtml) });
         }
         return Promise.resolve({
@@ -263,7 +347,7 @@ describe("fetchRegulationText", () => {
     );
 
     const text = await fetchRegulationText("32002R0178");
-    expect(callCount).toBe(3);
+    expect(callCount).toBe(5);
     expect(text.length).toBeGreaterThanOrEqual(MIN_REGULATION_TEXT_CHARS);
 
     vi.unstubAllGlobals();
@@ -329,6 +413,41 @@ describe("fetchRegulationText", () => {
     expect(headers["User-Agent"]).toContain("Mozilla");
     expect(headers["Accept"]).toContain("text/html");
     expect(headers["Accept-Language"]).toBeDefined();
+
+    vi.unstubAllGlobals();
+  });
+});
+
+describe("fetchUkLegislationText", () => {
+  it("fetches UK legislation XML through the legislation.gov.uk API", async () => {
+    const fullText = "The Food Safety and Hygiene Regulations ".repeat(200);
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+        text: () => Promise.resolve(`<Legislation><Body>${fullText}</Body></Legislation>`),
+      })
+    );
+
+    const text = await fetchUkLegislationText({
+      celex: "uksi/2013/2996",
+      baseCelex: "uksi/2013/2996",
+      title: "The Food Safety and Hygiene (England) Regulations 2013",
+      dateDocument: "2013-12-11",
+      dateLastModified: "2026-05-20",
+      legacyAliases: [],
+      jurisdiction: "gb",
+      sourceKey: "uk:uksi:2013:2996",
+      versionKey: "uk:uksi:2013:2996:2026-05-20",
+      officialUrl: "https://www.legislation.gov.uk/uksi/2013/2996",
+      textUrl: "https://www.legislation.gov.uk/uksi/2013/2996/data.xml",
+      actType: "statutory_instrument",
+    });
+
+    expect(text).toContain("Food Safety and Hygiene Regulations");
+    expect(vi.mocked(fetch).mock.calls[0][0]).toBe(
+      "https://www.legislation.gov.uk/uksi/2013/2996/data.xml"
+    );
 
     vi.unstubAllGlobals();
   });

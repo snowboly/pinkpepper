@@ -1,3 +1,5 @@
+import pdfParse from "pdf-parse";
+
 /**
  * EUR-Lex CELLAR API Client
  *
@@ -56,6 +58,18 @@ export type CellarRegulation = {
   dateDocument: string;
   dateLastModified: string;
   legacyAliases: string[];
+  jurisdiction?: "eu" | "gb";
+  sourceKey?: string;
+  versionKey?: string;
+  officialUrl?: string;
+  textUrl?: string;
+  actType?:
+    | "regulation"
+    | "implementing_regulation"
+    | "amending_act"
+    | "directive"
+    | "statutory_instrument"
+    | "import_export_control";
   /** True when auto-discovered via SPARQL rather than from the curated seed list. */
   discovered?: boolean;
 };
@@ -441,6 +455,11 @@ export async function searchFoodSafetyRegulations(
         dateDocument: seed.dateDocument,
         dateLastModified: current.currentVersionDate ?? sinceDate,
         legacyAliases: seed.legacyAliases,
+        jurisdiction: "eu" as const,
+        sourceKey: `eu:celex:${seed.baseCelex}`,
+        versionKey: `eu:celex:${current.celex}`,
+        officialUrl: seed.eliPath,
+        actType: detectEuActType(seed.title),
       };
     })
   );
@@ -464,15 +483,18 @@ export async function searchFoodSafetyRegulations(
  */
 export async function fetchRegulationText(celexNumber: string): Promise<string> {
   const encoded = encodeURIComponent(celexNumber);
-  const candidateUrls = [
-    `https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:${encoded}&from=EN`,
-    `https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:${encoded}`,
-    `https://eur-lex.europa.eu/LexUriServ/LexUriServ.do?uri=CELEX:${encoded}:EN:HTML`,
+  const candidateUrls: Array<{ url: string; kind: "pdf" | "text" }> = [
+    { url: `https://eur-lex.europa.eu/legal-content/EN/TXT/PDF/?uri=CELEX:${encoded}`, kind: "pdf" },
+    { url: `https://eur-lex.europa.eu/legal-content/EN/TXT/XML/?uri=CELEX:${encoded}`, kind: "text" },
+    { url: `https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:${encoded}&from=EN`, kind: "text" },
+    { url: `https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:${encoded}`, kind: "text" },
+    { url: `https://eur-lex.europa.eu/LexUriServ/LexUriServ.do?uri=CELEX:${encoded}:EN:HTML`, kind: "text" },
   ];
 
   const attempts: string[] = [];
 
-  for (const url of candidateUrls) {
+  for (const candidate of candidateUrls) {
+    const { url } = candidate;
     let response: Response;
     try {
       response = await fetch(url, {
@@ -489,7 +511,9 @@ export async function fetchRegulationText(celexNumber: string): Promise<string> 
       continue;
     }
 
-    const html = await response.text();
+    const html = candidate.kind === "pdf"
+      ? await extractPdfText(response)
+      : await response.text();
     const text = stripHtmlToText(html);
 
     if (text.length >= MIN_REGULATION_TEXT_CHARS) {
@@ -507,6 +531,15 @@ export async function fetchRegulationText(celexNumber: string): Promise<string> 
   throw new Error(
     `Failed to fetch adequate regulation text for ${celexNumber}.\n${attempts.join("\n")}`
   );
+}
+
+async function extractPdfText(response: Response): Promise<string> {
+  if (typeof response.arrayBuffer !== "function") {
+    return "";
+  }
+
+  const parsed = await pdfParse(Buffer.from(await response.arrayBuffer()));
+  return parsed.text;
 }
 
 function describeBadRegulationPage(html: string, text: string): { reason: string; snippet: string } {
@@ -574,7 +607,7 @@ export const EUROVOC_FOOD_SAFETY_CONCEPTS = [
   "3135",  // food inspection
 ] as const;
 
-const SPARQL_ENDPOINT = "https://eur-lex.europa.eu/EURLex-WS/sparql";
+const SPARQL_ENDPOINT = "https://publications.europa.eu/webapi/rdf/sparql";
 
 function buildDiscoverySparql(sinceDate: string): string {
   const values = EUROVOC_FOOD_SAFETY_CONCEPTS
@@ -583,6 +616,7 @@ function buildDiscoverySparql(sinceDate: string): string {
 
   return `
 PREFIX cdm: <http://publications.europa.eu/ontology/cdm#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
 SELECT DISTINCT ?celex ?title ?dateDocument WHERE {
   ?work cdm:resource_legal_id_celex ?celex .
@@ -644,8 +678,191 @@ export async function discoverNewRegulations(
       dateDocument: b.dateDocument.value,
       dateLastModified: b.dateDocument.value,
       legacyAliases: [],
+      jurisdiction: "eu" as const,
+      sourceKey: `eu:celex:${b.celex.value}`,
+      versionKey: `eu:celex:${b.celex.value}`,
+      officialUrl: `https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:${b.celex.value}`,
+      actType: detectEuActType(b.title.value),
       discovered: true,
     }));
+}
+
+const UK_RELEVANCE_TERMS = [
+  "food",
+  "feed",
+  "hygiene",
+  "safety",
+  "allergen",
+  "allergy",
+  "contaminant",
+  "pesticide",
+  "residue",
+  "import",
+  "export",
+  "official control",
+  "border control",
+  "animal origin",
+  "traceability",
+  "labelling",
+  "labeling",
+  "materials and articles",
+];
+
+const UK_DISCOVERY_FEEDS = UK_RELEVANCE_TERMS.map((term) =>
+  `https://www.legislation.gov.uk/ukpga+ukla+uksi+wsi+ssi+nisr/` +
+    `data.feed?text=${encodeURIComponent(term)}&results-count=100`
+);
+
+type AtomEntry = {
+  title: string;
+  id: string;
+  updated: string;
+  published: string | null;
+  href: string;
+};
+
+function parseAtomEntries(feedXml: string): AtomEntry[] {
+  const entries = [...feedXml.matchAll(/<entry\b[\s\S]*?<\/entry>/gi)].map((entryMatch) => {
+    const entry = entryMatch[0];
+    const title = extractXmlElementText(entry, "title");
+    const id = extractXmlElementText(entry, "id");
+    const updated = extractXmlElementText(entry, "updated");
+    const published = extractXmlElementText(entry, "published");
+    const linkMatch = entry.match(/<link\b[^>]*href="([^"]+)"/i);
+    const href = linkMatch?.[1] ?? id;
+
+    return { title, id, updated, published, href };
+  });
+
+  return entries.filter((entry) => entry.title && entry.href && entry.updated);
+}
+
+function extractXmlElementText(xml: string, element: string): string {
+  const match = xml.match(new RegExp(`<${element}\\b[^>]*>([\\s\\S]*?)<\\/${element}>`, "i"));
+  return decodeXmlEntities(match?.[1] ?? "").replace(/\s+/g, " ").trim();
+}
+
+function decodeXmlEntities(value: string): string {
+  return value
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'");
+}
+
+function isRelevantFoodLawTitle(title: string): boolean {
+  const normalized = title.toLowerCase();
+  return UK_RELEVANCE_TERMS.some((term) => normalized.includes(term));
+}
+
+function normalizeUkLegislationUrl(input: string): string {
+  return input.replace(/^http:\/\//i, "https://").replace(/\/data\.(xml|feed)$/i, "");
+}
+
+function parseUkIdentifier(url: string): { type: string; year: string; number: string } | null {
+  const match = normalizeUkLegislationUrl(url).match(/legislation\.gov\.uk\/([^/]+)\/(\d{4})\/(\d+)/i);
+  if (!match) return null;
+  return { type: match[1], year: match[2], number: match[3] };
+}
+
+function dateOnly(input: string): string {
+  return new Date(input).toISOString().slice(0, 10);
+}
+
+function isOnOrAfterDate(input: string, sinceDate: string): boolean {
+  return dateOnly(input) >= sinceDate;
+}
+
+function toUkRegulation(entry: AtomEntry): CellarRegulation | null {
+  if (!isRelevantFoodLawTitle(entry.title)) return null;
+  if (!entry.updated) return null;
+
+  const officialUrl = normalizeUkLegislationUrl(entry.href);
+  const parsed = parseUkIdentifier(officialUrl);
+  if (!parsed) return null;
+
+  const baseId = `${parsed.type}/${parsed.year}/${parsed.number}`;
+  const sourceKey = `uk:${parsed.type}:${parsed.year}:${parsed.number}`;
+  const updatedDate = dateOnly(entry.updated);
+
+  return {
+    celex: baseId,
+    baseCelex: baseId,
+    title: entry.title,
+    dateDocument: entry.published ? dateOnly(entry.published) : updatedDate,
+    dateLastModified: updatedDate,
+    legacyAliases: [],
+    jurisdiction: "gb",
+    sourceKey,
+    versionKey: `${sourceKey}:${updatedDate}`,
+    officialUrl,
+    textUrl: `${officialUrl}/data.xml`,
+    actType: "statutory_instrument",
+    discovered: true,
+  };
+}
+
+export async function discoverUkRegulations(sinceDate: string): Promise<CellarRegulation[]> {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(sinceDate)) {
+    throw new Error(`Invalid sinceDate format: ${sinceDate}`);
+  }
+
+  const discovered = new Map<string, CellarRegulation>();
+
+  for (const feedUrl of UK_DISCOVERY_FEEDS) {
+    const response = await fetch(feedUrl, {
+      headers: { Accept: "application/atom+xml,application/xml;q=0.9,*/*;q=0.8" },
+      signal: AbortSignal.timeout(60_000),
+    });
+
+    if (!response.ok) {
+      throw new Error(`UK legislation feed returned ${response.status}`);
+    }
+
+    const feedXml = await response.text();
+    for (const entry of parseAtomEntries(feedXml)) {
+      if (!isOnOrAfterDate(entry.updated, sinceDate)) continue;
+      const regulation = toUkRegulation(entry);
+      if (regulation) discovered.set(regulation.versionKey ?? regulation.celex, regulation);
+    }
+  }
+
+  return [...discovered.values()];
+}
+
+export async function fetchUkLegislationText(regulation: CellarRegulation): Promise<string> {
+  const url = regulation.textUrl ?? `${normalizeUkLegislationUrl(regulation.officialUrl ?? "")}/data.xml`;
+  if (!url || url === "/data.xml") {
+    throw new Error(`Missing UK text URL for ${regulation.celex}`);
+  }
+
+  const response = await fetch(url, {
+    headers: { Accept: "application/xml,text/xml;q=0.9,*/*;q=0.8" },
+    signal: AbortSignal.timeout(60_000),
+  });
+
+  if (!response.ok) {
+    throw new Error(`UK legislation text returned ${response.status} for ${regulation.celex}`);
+  }
+
+  const text = stripHtmlToText(await response.text());
+  if (text.length < MIN_REGULATION_TEXT_CHARS) {
+    throw new Error(`UK legislation text too short for ${regulation.celex} (${text.length} chars)`);
+  }
+
+  return text;
+}
+
+function detectEuActType(title: string): CellarRegulation["actType"] {
+  const normalized = title.toLowerCase();
+  if (normalized.includes("implementing regulation")) return "implementing_regulation";
+  if (normalized.includes("amending") || normalized.includes("correcting")) return "amending_act";
+  if (normalized.includes("directive")) return "directive";
+  if (normalized.includes("import") || normalized.includes("entry into the union") || normalized.includes("export")) {
+    return "import_export_control";
+  }
+  return "regulation";
 }
 
 /**
