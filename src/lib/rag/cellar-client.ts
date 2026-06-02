@@ -511,9 +511,17 @@ export async function fetchRegulationText(celexNumber: string): Promise<string> 
       continue;
     }
 
-    const html = candidate.kind === "pdf"
-      ? await extractPdfText(response)
-      : await response.text();
+    let html: string;
+    try {
+      html = candidate.kind === "pdf"
+        ? await extractPdfText(response)
+        : await response.text();
+    } catch (err) {
+      attempts.push(
+        `${url} â†’ body extraction error: ${err instanceof Error ? err.message : String(err)}`
+      );
+      continue;
+    }
     const text = stripHtmlToText(html);
 
     if (text.length >= MIN_REGULATION_TEXT_CHARS) {
@@ -538,7 +546,14 @@ async function extractPdfText(response: Response): Promise<string> {
     return "";
   }
 
-  const parsed = await pdfParse(Buffer.from(await response.arrayBuffer()));
+  const contentType = response.headers?.get?.("content-type")?.toLowerCase() ?? "";
+  const buffer = Buffer.from(await response.arrayBuffer());
+  const looksLikePdf = buffer.subarray(0, 5).toString("utf8") === "%PDF-";
+  if (!contentType.includes("pdf") && !looksLikePdf) {
+    throw new Error(`PDF endpoint returned non-PDF content-type: ${contentType || "unknown"}`);
+  }
+
+  const parsed = await pdfParse(buffer);
   return parsed.text;
 }
 

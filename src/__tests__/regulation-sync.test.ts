@@ -15,6 +15,7 @@ import {
   MIN_REGULATION_TEXT_CHARS,
   EUROVOC_FOOD_SAFETY_CONCEPTS,
 } from "@/lib/rag/cellar-client";
+import pdfParse from "pdf-parse";
 import {
   DEFAULT_SINCE_DATE,
   buildRegulationChunkMetadata,
@@ -324,6 +325,43 @@ describe("fetchRegulationText", () => {
     const text = await fetchRegulationText("32002R0178");
     expect(callCount).toBe(2);
     expect(text.length).toBeGreaterThanOrEqual(MIN_REGULATION_TEXT_CHARS);
+
+    vi.unstubAllGlobals();
+  });
+
+  it("falls back when the PDF endpoint returns HTML that cannot be parsed as PDF", async () => {
+    const htmlResponse = "<!DOCTYPE html><html><body><p>Select a version to view.</p></body></html>";
+    vi.mocked(pdfParse).mockRejectedValueOnce(new Error("Invalid PDF structure"));
+
+    let callCount = 0;
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockImplementation(() => {
+        callCount++;
+        if (callCount === 1) {
+          return Promise.resolve({
+            ok: true,
+            status: 200,
+            headers: new Headers({ "content-type": "text/html; charset=utf-8" }),
+            arrayBuffer: () => Promise.resolve(Buffer.from(htmlResponse).buffer),
+            text: () => Promise.resolve(htmlResponse),
+          });
+        }
+
+        return Promise.resolve({
+          ok: true,
+          status: 200,
+          headers: new Headers({ "content-type": "application/xml" }),
+          text: () => Promise.resolve(`<root><p>${FULL_TEXT}</p></root>`),
+        });
+      })
+    );
+
+    const text = await fetchRegulationText("32002R0178");
+
+    expect(text.length).toBeGreaterThanOrEqual(MIN_REGULATION_TEXT_CHARS);
+    expect(text).toContain("Article 1");
+    expect(callCount).toBe(2);
 
     vi.unstubAllGlobals();
   });
