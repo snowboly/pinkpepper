@@ -7,6 +7,7 @@ vi.mock("pdf-parse", () => ({
 }));
 import {
   celexToSourceName,
+  discoverEuOfficialJournalRegulations,
   extractCurrentVersionInfo,
   discoverNewRegulations,
   discoverUkRegulations,
@@ -19,6 +20,10 @@ import pdfParse from "pdf-parse";
 import {
   DEFAULT_SINCE_DATE,
   buildRegulationChunkMetadata,
+  getLastCompletedSyncDate,
+  isVersionAlreadyActive,
+  shouldAdvanceSyncCursor,
+  shouldStopForTimeBudget,
   summarizeRegulationSyncHealth,
   writeSyncLogEntry,
 } from "@/lib/rag/regulation-sync";
@@ -154,6 +159,73 @@ describe("writeSyncLogEntry", () => {
   });
 });
 
+describe("sync cursor and active version checks", () => {
+  it("reads the discovery cursor only from completed run markers", async () => {
+    const maybeSingle = vi.fn().mockResolvedValue({
+      data: { synced_at: "2026-06-01T08:00:00.000Z" },
+      error: null,
+    });
+    const limit = vi.fn().mockReturnValue({ maybeSingle });
+    const order = vi.fn().mockReturnValue({ limit });
+    const secondEq = vi.fn().mockReturnValue({ order });
+    const firstEq = vi.fn().mockReturnValue({ eq: secondEq });
+    const select = vi.fn().mockReturnValue({ eq: firstEq });
+    const from = vi.fn().mockReturnValue({ select });
+
+    await expect(getLastCompletedSyncDate({ from } as never)).resolves.toBe("2026-06-01");
+    expect(from).toHaveBeenCalledWith("regulation_sync_log");
+    expect(firstEq).toHaveBeenCalledWith("celex_number", "RUN_COMPLETE");
+    expect(secondEq).toHaveBeenCalledWith("status", "success");
+  });
+
+  it("detects an already-active source version without fetching its text", async () => {
+    const maybeSingle = vi.fn().mockResolvedValue({
+      data: { id: "chunk-1" },
+      error: null,
+    });
+    const limit = vi.fn().mockReturnValue({ maybeSingle });
+    const contains = vi.fn().mockReturnValue({ limit });
+    const eq = vi.fn().mockReturnValue({ contains });
+    const select = vi.fn().mockReturnValue({ eq });
+    const from = vi.fn().mockReturnValue({ select });
+
+    await expect(
+      isVersionAlreadyActive(
+        { from } as never,
+        "eu:celex:32004R0852",
+        "eu:celex:02004R0852-20210324"
+      )
+    ).resolves.toBe(true);
+    expect(eq).toHaveBeenCalledWith("source_type", "regulation");
+    expect(contains).toHaveBeenCalledWith("metadata", {
+      source_key: "eu:celex:32004R0852",
+      version_key: "eu:celex:02004R0852-20210324",
+      retrieval_status: "active",
+    });
+  });
+
+  it("stops starting new regulations when the processing budget is exhausted", () => {
+    expect(shouldStopForTimeBudget(1_000, 240_999, 240_000)).toBe(false);
+    expect(shouldStopForTimeBudget(1_000, 241_000, 240_000)).toBe(true);
+  });
+
+  it("advances the cursor only after a complete error-free run", () => {
+    expect(shouldAdvanceSyncCursor({ stoppedEarly: false, errors: [] })).toBe(true);
+    expect(
+      shouldAdvanceSyncCursor({
+        stoppedEarly: true,
+        errors: [],
+      })
+    ).toBe(false);
+    expect(
+      shouldAdvanceSyncCursor({
+        stoppedEarly: false,
+        errors: [{ celex: "UK_DISCOVERY_FEED", error: "timeout" }],
+      })
+    ).toBe(false);
+  });
+});
+
 describe("discoverNewRegulations", () => {
   const SPARQL_RESPONSE = {
     results: {
@@ -228,9 +300,56 @@ describe("discoverNewRegulations", () => {
     const url = decodeURIComponent(mockFetch.mock.calls[0][0] as string);
     expect(url).toContain("publications.europa.eu/webapi/rdf/sparql");
     expect(url).toContain("PREFIX xsd:");
+    expect(url).toContain("REGEX(STR(?title)");
+    expect(url).toContain("food|feed|hygiene");
     for (const concept of EUROVOC_FOOD_SAFETY_CONCEPTS) {
       expect(url).toContain(`eurovoc.europa.eu/${concept}`);
     }
+
+    vi.unstubAllGlobals();
+  });
+});
+
+describe("discoverEuOfficialJournalRegulations", () => {
+  it("discovers relevant regulations from the official L-series daily view", async () => {
+    const html = `
+      <div class="row daily-view-row-spacing">
+        <div class="section-level-3">2026/1189</div>
+        <a href="./../../../legal-content/EN/TXT/?uri=OJ:L_202601189">
+          Commission Implementing Regulation (EU) 2026/1189 of 4 June 2026
+          amending rules on antimicrobial medicinal products for animals and products of animal origin
+        </a>
+      </div>
+      <div class="row daily-view-row-spacing">
+        <div class="section-level-3">2026/1190</div>
+        <a href="./../../../legal-content/EN/TXT/?uri=OJ:L_202601190">
+          Commission Implementing Regulation (EU) 2026/1190 concerning railway interoperability
+        </a>
+      </div>`;
+
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+        text: () => Promise.resolve(html),
+      })
+    );
+
+    const result = await discoverEuOfficialJournalRegulations(
+      "2026-06-05",
+      new Date("2026-06-05T12:00:00.000Z")
+    );
+
+    expect(result.failures).toEqual([]);
+    expect(result.regulations).toHaveLength(1);
+    expect(result.regulations[0]).toMatchObject({
+      celex: "32026R1189",
+      sourceKey: "eu:celex:32026R1189",
+      versionKey: "eu:celex:32026R1189",
+      dateDocument: "2026-06-05",
+      actType: "implementing_regulation",
+      discovered: true,
+    });
 
     vi.unstubAllGlobals();
   });
@@ -265,8 +384,9 @@ describe("discoverUkRegulations", () => {
 
     const results = await discoverUkRegulations("2026-05-01");
 
-    expect(results).toHaveLength(1);
-    expect(results[0]).toMatchObject({
+    expect(results.failures).toEqual([]);
+    expect(results.regulations).toHaveLength(1);
+    expect(results.regulations[0]).toMatchObject({
       jurisdiction: "gb",
       celex: "uksi/2013/2996",
       baseCelex: "uksi/2013/2996",
@@ -275,6 +395,41 @@ describe("discoverUkRegulations", () => {
       actType: "statutory_instrument",
       discovered: true,
     });
+
+    vi.unstubAllGlobals();
+  });
+
+  it("keeps successful UK candidates when another feed times out", async () => {
+    const feed = `<?xml version="1.0" encoding="UTF-8"?>
+      <feed xmlns="http://www.w3.org/2005/Atom">
+        <entry>
+          <title>The Food Safety Regulations 2026</title>
+          <id>https://www.legislation.gov.uk/uksi/2026/500</id>
+          <updated>2026-06-05T10:00:00Z</updated>
+          <published>2026-06-05T10:00:00Z</published>
+          <link rel="alternate" href="https://www.legislation.gov.uk/uksi/2026/500" />
+        </entry>
+      </feed>`;
+
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockImplementation((url: string) => {
+        if (url.includes("text=food")) {
+          return Promise.resolve({
+            ok: true,
+            text: () => Promise.resolve(feed),
+          });
+        }
+        return Promise.reject(new DOMException("The operation was aborted due to timeout", "TimeoutError"));
+      })
+    );
+
+    const result = await discoverUkRegulations("2026-06-01");
+
+    expect(result.regulations).toHaveLength(1);
+    expect(result.regulations[0].sourceKey).toBe("uk:uksi:2026:500");
+    expect(result.failures).toHaveLength(17);
+    expect(result.failures[0].error).toContain("timeout");
 
     vi.unstubAllGlobals();
   });

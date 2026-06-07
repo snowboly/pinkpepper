@@ -16,6 +16,7 @@ import type { Json } from "@/types/database.types";
 import {
   searchFoodSafetyRegulations,
   discoverNewRegulations,
+  discoverEuOfficialJournalRegulations,
   discoverUkRegulations,
   fetchRegulationText,
   fetchUkLegislationText,
@@ -29,6 +30,7 @@ const CHUNK_SIZE = 500;
 const CHUNK_OVERLAP = 50;
 const EMBEDDING_BATCH_SIZE = 10;
 const EMBEDDING_BATCH_DELAY_MS = 200;
+const SYNC_PROCESSING_BUDGET_MS = 240_000;
 
 // Default backfill date if no previous sync exists
 const DEFAULT_SINCE_DATE = "2024-01-01";
@@ -41,6 +43,9 @@ export type SyncResult = {
   errors: Array<{ celex: string; error: string }>;
   syncedAt: string;
   loggingAvailable: boolean;
+  completed: boolean;
+  stoppedEarly: boolean;
+  remainingRegulations: number;
 };
 
 type SyncLogInsert = {
@@ -213,12 +218,13 @@ function extractSectionRef(content: string): string | null {
 /**
  * Get the most recent sync date from the log, or the default backfill date.
  */
-async function getLastSyncDate(): Promise<string> {
-  const supabase = createAdminClient();
-
+export async function getLastCompletedSyncDate(
+  supabase: ReturnType<typeof createAdminClient> = createAdminClient()
+): Promise<string> {
   const { data, error } = await supabase
     .from("regulation_sync_log")
     .select("synced_at")
+    .eq("celex_number", "RUN_COMPLETE")
     .eq("status", "success")
     .order("synced_at", { ascending: false })
     .limit(1)
@@ -233,6 +239,44 @@ async function getLastSyncDate(): Promise<string> {
   }
 
   return DEFAULT_SINCE_DATE;
+}
+
+export function shouldStopForTimeBudget(
+  startedAtMs: number,
+  nowMs: number = Date.now(),
+  budgetMs: number = SYNC_PROCESSING_BUDGET_MS
+): boolean {
+  return nowMs - startedAtMs >= budgetMs;
+}
+
+export function shouldAdvanceSyncCursor(
+  result: Pick<SyncResult, "stoppedEarly" | "errors">
+): boolean {
+  return !result.stoppedEarly && result.errors.length === 0;
+}
+
+export async function isVersionAlreadyActive(
+  supabase: ReturnType<typeof createAdminClient>,
+  sourceKey: string,
+  versionKey: string
+): Promise<boolean> {
+  const { data, error } = await supabase
+    .from("knowledge_chunks")
+    .select("id")
+    .eq("source_type", "regulation")
+    .contains("metadata", {
+      source_key: sourceKey,
+      version_key: versionKey,
+      retrieval_status: "active",
+    })
+    .limit(1)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(`Failed to inspect active regulation version: ${error.message}`);
+  }
+
+  return Boolean(data);
 }
 
 /**
@@ -376,6 +420,7 @@ async function fetchTextForRegulation(regulation: CellarRegulation): Promise<str
  */
 export async function syncRegulations(): Promise<SyncResult> {
   const supabase = createAdminClient();
+  const startedAtMs = Date.now();
   const syncedAt = new Date().toISOString();
 
   const result: SyncResult = {
@@ -385,11 +430,14 @@ export async function syncRegulations(): Promise<SyncResult> {
     errors: [],
     syncedAt,
     loggingAvailable: true,
+    completed: false,
+    stoppedEarly: false,
+    remainingRegulations: 0,
   };
 
   // Determine sync window
-  const sinceDate = await getLastSyncDate();
-  console.log(`[regulation-sync] Searching for regulations modified since ${sinceDate}`);
+  const sinceDate = await getLastCompletedSyncDate(supabase);
+  console.log(`[regulation-sync] Searching for regulations published or completed since ${sinceDate}`);
 
   // Search CELLAR for curated seed regulations
   let seedRegulations: CellarRegulation[];
@@ -415,9 +463,34 @@ export async function syncRegulations(): Promise<SyncResult> {
   }
 
   try {
-    const ukRegulations = await discoverUkRegulations(sinceDate);
-    discoveredRegulations.push(...ukRegulations);
-    console.log(`[regulation-sync] Discovered ${ukRegulations.length} new UK regulations`);
+    const officialJournalDiscovery = await discoverEuOfficialJournalRegulations(sinceDate);
+    discoveredRegulations.push(...officialJournalDiscovery.regulations);
+    console.log(
+      `[regulation-sync] Discovered ${officialJournalDiscovery.regulations.length} new EU regulations ` +
+        `via Official Journal (${officialJournalDiscovery.failures.length} daily-view failures)`
+    );
+    for (const failure of officialJournalDiscovery.failures) {
+      result.errors.push({
+        celex: "EU_OFFICIAL_JOURNAL",
+        error: `${failure.date}: ${failure.error}`,
+      });
+    }
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.error(`[regulation-sync] EU Official Journal discovery failed (non-fatal): ${message}`);
+    result.errors.push({ celex: "EU_OFFICIAL_JOURNAL", error: message });
+  }
+
+  try {
+    const ukDiscovery = await discoverUkRegulations(sinceDate);
+    discoveredRegulations.push(...ukDiscovery.regulations);
+    console.log(
+      `[regulation-sync] Discovered ${ukDiscovery.regulations.length} new UK regulations ` +
+        `(${ukDiscovery.failures.length} feed failures)`
+    );
+    for (const failure of ukDiscovery.failures) {
+      result.errors.push({ celex: "UK_DISCOVERY_FEED", error: `${failure.feedUrl}: ${failure.error}` });
+    }
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     console.error(`[regulation-sync] UK discovery failed (non-fatal): ${message}`);
@@ -426,15 +499,43 @@ export async function syncRegulations(): Promise<SyncResult> {
 
   // Merge: seeds take priority over discovered candidates with the same source key.
   const seenSourceKeys = new Set(seedRegulations.map(getRegulationSourceKey));
+  const uniqueDiscoveredRegulations = new Map<string, CellarRegulation>();
+  for (const regulation of discoveredRegulations) {
+    const sourceKey = getRegulationSourceKey(regulation);
+    if (!seenSourceKeys.has(sourceKey)) {
+      uniqueDiscoveredRegulations.set(sourceKey, regulation);
+    }
+  }
   const regulations = [
     ...seedRegulations,
-    ...discoveredRegulations.filter((r) => !seenSourceKeys.has(getRegulationSourceKey(r))),
+    ...uniqueDiscoveredRegulations.values(),
   ];
   console.log(`[regulation-sync] Total: ${regulations.length} regulations to process`);
 
   // Process each regulation
-  for (const regulation of regulations) {
+  for (let regulationIndex = 0; regulationIndex < regulations.length; regulationIndex++) {
+    if (shouldStopForTimeBudget(startedAtMs)) {
+      result.stoppedEarly = true;
+      result.remainingRegulations = regulations.length - regulationIndex;
+      console.warn(
+        `[regulation-sync] Stopping before Vercel deadline with ` +
+          `${result.remainingRegulations} regulations remaining`
+      );
+      break;
+    }
+
+    const regulation = regulations[regulationIndex];
     try {
+      const activeVersionExists = await isVersionAlreadyActive(
+        supabase,
+        getRegulationSourceKey(regulation),
+        getRegulationVersionKey(regulation)
+      );
+      if (activeVersionExists) {
+        result.regulationsSkipped++;
+        continue;
+      }
+
       // Fetch text first so we can hash it for amendment detection.
       // fetchRegulationText already throws if text < MIN_REGULATION_TEXT_CHARS.
       const text = await fetchTextForRegulation(regulation);
@@ -519,10 +620,32 @@ export async function syncRegulations(): Promise<SyncResult> {
     }
   }
 
+  result.completed = shouldAdvanceSyncCursor(result);
+
+  if (result.completed) {
+    const logged = await writeSyncLogEntry(supabase, {
+      celex_number: "RUN_COMPLETE",
+      title: "Regulation sync run completed",
+      source_name: "regulation-sync",
+      last_modified: syncedAt.slice(0, 10),
+      chunks_ingested: result.chunksCreated,
+      synced_at: syncedAt,
+      status: "success",
+      metadata: {
+        sinceDate,
+        regulationsProcessed: result.regulationsProcessed,
+        regulationsSkipped: result.regulationsSkipped,
+        remainingRegulations: result.remainingRegulations,
+      },
+    });
+    if (!logged) result.loggingAvailable = false;
+  }
+
   console.log(
     `[regulation-sync] Done: ${result.regulationsProcessed} processed, ` +
       `${result.regulationsSkipped} skipped, ${result.errors.length} errors, ` +
-      `${result.chunksCreated} total chunks`
+      `${result.chunksCreated} total chunks, completed=${result.completed}, ` +
+      `remaining=${result.remainingRegulations}`
   );
 
   return result;
