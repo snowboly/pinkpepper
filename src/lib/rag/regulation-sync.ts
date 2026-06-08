@@ -20,6 +20,7 @@ import {
   discoverUkRegulations,
   fetchRegulationText,
   fetchUkLegislationText,
+  getManualBackfillRegulations,
   celexToSourceName,
   MIN_REGULATION_TEXT_CHARS,
   type CellarRegulation,
@@ -443,7 +444,12 @@ export async function syncRegulations(): Promise<SyncResult> {
   let seedRegulations: CellarRegulation[];
   try {
     seedRegulations = await searchFoodSafetyRegulations(sinceDate);
-    console.log(`[regulation-sync] Found ${seedRegulations.length} seed regulations`);
+    const manualBackfillRegulations = getManualBackfillRegulations();
+    seedRegulations.push(...manualBackfillRegulations);
+    console.log(
+      `[regulation-sync] Found ${seedRegulations.length} seed regulations ` +
+        `(${manualBackfillRegulations.length} manual backfill entries)`
+    );
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     console.error(`[regulation-sync] Seed search failed: ${message}`);
