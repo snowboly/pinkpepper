@@ -82,6 +82,15 @@ type CoreRegulationSeed = {
   legacyAliases: string[];
 };
 
+type ManualBackfillSeed = {
+  identifier: string;
+  title: string;
+  publicationDate: string;
+  jurisdiction: "eu" | "gb";
+  officialUrl: string;
+  actType: CellarRegulation["actType"];
+};
+
 const CORE_REGULATION_SEEDS: CoreRegulationSeed[] = [
   // === General Food Law ===
   {
@@ -281,11 +290,14 @@ const CORE_REGULATION_SEEDS: CoreRegulationSeed[] = [
 
   // === Allergens & Specific Substances ===
   {
-    baseCelex: "32006R2065",
+    baseCelex: "32003R2065",
     title: "Regulation (EC) No 2065/2003 on smoke flavourings used or intended for use in or on foods",
     dateDocument: "2003-11-10",
     eliPath: "https://eur-lex.europa.eu/eli/reg/2003/2065/oj",
-    legacyAliases: ["EC 2065 2003 smoke flavourings"],
+    legacyAliases: [
+      "EC 2065 2003 smoke flavourings",
+      "Regulation (EC) No 2065/2006",
+    ],
   },
 
   // === Animal Feed ===
@@ -405,6 +417,233 @@ const CORE_REGULATION_SEEDS: CoreRegulationSeed[] = [
     legacyAliases: ["EC 1999 2 food irradiation"],
   },
 ];
+
+const MANUAL_BACKFILL_SEEDS: ManualBackfillSeed[] = [
+  {
+    identifier: "32026R0748",
+    title: "Commission Implementing Regulation (EU) 2026/748 concerning the coordinated pesticide residue control programme for 2027, 2028 and 2029",
+    publicationDate: "2026-04-01",
+    jurisdiction: "eu",
+    officialUrl: "https://eur-lex.europa.eu/eli/reg_impl/2026/748/oj",
+    actType: "implementing_regulation",
+  },
+  {
+    identifier: "32026R0751",
+    title: "Commission Regulation (EU) 2026/751 correcting maximum residue levels for flupyradifurone and potassium phosphonate",
+    publicationDate: "2026-04-01",
+    jurisdiction: "eu",
+    officialUrl: "https://eur-lex.europa.eu/eli/reg/2026/751/oj",
+    actType: "amending_act",
+  },
+  {
+    identifier: "32026R0752",
+    title: "Commission Regulation (EU) 2026/752 amending Annex IV to Regulation (EC) No 396/2005 on pesticide maximum residue levels",
+    publicationDate: "2026-04-01",
+    jurisdiction: "eu",
+    officialUrl: "https://eur-lex.europa.eu/eli/reg/2026/752/oj",
+    actType: "amending_act",
+  },
+  {
+    identifier: "32026R0765",
+    title: "Commission Implementing Regulation (EU) 2026/765 on sampling and analysis for official control of pesticide residues in food and feed",
+    publicationDate: "2026-04-07",
+    jurisdiction: "eu",
+    officialUrl: "https://eur-lex.europa.eu/eli/reg_impl/2026/765/oj",
+    actType: "implementing_regulation",
+  },
+  {
+    identifier: "32026R0273",
+    title: "Commission Delegated Regulation (EU) 2026/273 amending border-control exemptions for certain animals and goods",
+    publicationDate: "2026-04-13",
+    jurisdiction: "eu",
+    officialUrl: "https://eur-lex.europa.eu/eli/reg_del/2026/273/oj",
+    actType: "amending_act",
+  },
+  {
+    identifier: "32026R0824",
+    title: "Commission Implementing Regulation (EU) 2026/824 correcting the pesticide residue control programme",
+    publicationDate: "2026-04-15",
+    jurisdiction: "eu",
+    officialUrl: "https://eur-lex.europa.eu/eli/reg_impl/2026/824/oj",
+    actType: "amending_act",
+  },
+  {
+    identifier: "32026R0840",
+    title: "Commission Regulation (EU) 2026/840 amending maximum residue levels for copper compounds",
+    publicationDate: "2026-04-16",
+    jurisdiction: "eu",
+    officialUrl: "https://eur-lex.europa.eu/eli/reg/2026/840/oj",
+    actType: "amending_act",
+  },
+  {
+    identifier: "32026R0814",
+    title: "Commission Implementing Regulation (EU) 2026/814 amending import eligibility for poultry and fresh poultry meat",
+    publicationDate: "2026-04-07",
+    jurisdiction: "eu",
+    officialUrl: "https://eur-lex.europa.eu/eli/reg_impl/2026/814/oj",
+    actType: "import_export_control",
+  },
+  {
+    identifier: "32026R0853",
+    title: "Commission Implementing Regulation (EU) 2026/853 amending import eligibility for poultry and fresh poultry meat",
+    publicationDate: "2026-04-13",
+    jurisdiction: "eu",
+    officialUrl: "https://eur-lex.europa.eu/eli/reg_impl/2026/853/oj",
+    actType: "import_export_control",
+  },
+  {
+    identifier: "32026R0876",
+    title: "Commission Regulation (EU) 2026/876 amending maximum residue levels for five pesticide substances",
+    publicationDate: "2026-04-22",
+    jurisdiction: "eu",
+    officialUrl: "https://eur-lex.europa.eu/eli/reg/2026/876/oj",
+    actType: "amending_act",
+  },
+  {
+    identifier: "32026R0914",
+    title: "Commission Implementing Regulation (EU) 2026/914 amending import eligibility for animals and products of animal origin",
+    publicationDate: "2026-04-23",
+    jurisdiction: "eu",
+    officialUrl: "https://eur-lex.europa.eu/eli/reg_impl/2026/914/oj",
+    actType: "import_export_control",
+  },
+  {
+    identifier: "32026R0892",
+    title: "Commission Implementing Regulation (EU) 2026/892 setting the lidocaine maximum residue limit in foodstuffs of animal origin",
+    publicationDate: "2026-04-24",
+    jurisdiction: "eu",
+    officialUrl: "https://eur-lex.europa.eu/eli/reg_impl/2026/892/oj",
+    actType: "amending_act",
+  },
+  {
+    identifier: "32026R1011",
+    title: "Commission Implementing Regulation (EU) 2026/1011 correcting feed premixture labelling rules",
+    publicationDate: "2026-05-08",
+    jurisdiction: "eu",
+    officialUrl: "https://eur-lex.europa.eu/eli/reg_impl/2026/1011/oj",
+    actType: "amending_act",
+  },
+  {
+    identifier: "32026R1088",
+    title: "Commission Implementing Regulation (EU) 2026/1088 amending import eligibility for poultry and fresh poultry meat",
+    publicationDate: "2026-05-13",
+    jurisdiction: "eu",
+    officialUrl: "https://eur-lex.europa.eu/eli/reg_impl/2026/1088/oj",
+    actType: "import_export_control",
+  },
+  {
+    identifier: "32026R1115",
+    title: "Commission Implementing Regulation (EU) 2026/1115 amending feed additive authorisation application requirements",
+    publicationDate: "2026-05-27",
+    jurisdiction: "eu",
+    officialUrl: "https://eur-lex.europa.eu/eli/reg_impl/2026/1115/oj",
+    actType: "amending_act",
+  },
+  {
+    identifier: "32026R1118",
+    title: "Commission Regulation (EU) 2026/1118 refusing a health claim for creatine and cognitive function",
+    publicationDate: "2026-05-27",
+    jurisdiction: "eu",
+    officialUrl: "https://eur-lex.europa.eu/eli/reg/2026/1118/oj",
+    actType: "regulation",
+  },
+  {
+    identifier: "32026R1123",
+    title: "Commission Regulation (EU) 2026/1123 laying down labelling requirements for plant protection products",
+    publicationDate: "2026-05-27",
+    jurisdiction: "eu",
+    officialUrl: "https://eur-lex.europa.eu/eli/reg/2026/1123/oj",
+    actType: "regulation",
+  },
+  {
+    identifier: "32026R1207",
+    title: "Commission Implementing Regulation (EU) 2026/1207 amending import eligibility for poultry and fresh poultry meat",
+    publicationDate: "2026-06-03",
+    jurisdiction: "eu",
+    officialUrl: "https://eur-lex.europa.eu/eli/reg_impl/2026/1207/oj",
+    actType: "import_export_control",
+  },
+  {
+    identifier: "32026R1189",
+    title: "Commission Implementing Regulation (EU) 2026/1189 on restrictions for antimicrobial medicinal products in imported animals and products of animal origin",
+    publicationDate: "2026-06-05",
+    jurisdiction: "eu",
+    officialUrl: "https://eur-lex.europa.eu/eli/reg_impl/2026/1189/oj",
+    actType: "implementing_regulation",
+  },
+  {
+    identifier: "uksi/2026/412",
+    title: "The Nutrition (Amendment etc.) (EU Exit) (Amendment) Regulations 2026",
+    publicationDate: "2026-04-21",
+    jurisdiction: "gb",
+    officialUrl: "https://www.legislation.gov.uk/uksi/2026/412/made",
+    actType: "statutory_instrument",
+  },
+  {
+    identifier: "uksi/2026/440",
+    title: "The Avian Influenza and Influenza of Avian Origin in Mammals (England) (Amendment) Order 2026",
+    publicationDate: "2026-04-21",
+    jurisdiction: "gb",
+    officialUrl: "https://www.legislation.gov.uk/uksi/2026/440/made",
+    actType: "statutory_instrument",
+  },
+  {
+    identifier: "uksi/2026/493",
+    title: "The Charges for Residues Surveillance (Amendment) (England) Regulations 2026",
+    publicationDate: "2026-05-06",
+    jurisdiction: "gb",
+    officialUrl: "https://www.legislation.gov.uk/uksi/2026/493/made",
+    actType: "statutory_instrument",
+  },
+  {
+    identifier: "nisr/2026/103",
+    title: "The Jam and Similar Products (Amendment) Regulations (Northern Ireland) 2026",
+    publicationDate: "2026-06-05",
+    jurisdiction: "gb",
+    officialUrl: "https://www.legislation.gov.uk/nisr/2026/103/made",
+    actType: "statutory_instrument",
+  },
+];
+
+export function getManualBackfillRegulations(): CellarRegulation[] {
+  return MANUAL_BACKFILL_SEEDS.map((seed) => {
+    if (seed.jurisdiction === "eu") {
+      const sourceKey = `eu:celex:${seed.identifier}`;
+      return {
+        celex: seed.identifier,
+        baseCelex: seed.identifier,
+        title: seed.title,
+        dateDocument: seed.publicationDate,
+        dateLastModified: seed.publicationDate,
+        legacyAliases: [],
+        jurisdiction: "eu",
+        sourceKey,
+        versionKey: sourceKey,
+        officialUrl: seed.officialUrl,
+        actType: seed.actType,
+        discovered: true,
+      };
+    }
+
+    const [type, year, number] = seed.identifier.split("/");
+    const sourceKey = `uk:${type}:${year}:${number}`;
+    return {
+      celex: seed.identifier,
+      baseCelex: seed.identifier,
+      title: seed.title,
+      dateDocument: seed.publicationDate,
+      dateLastModified: seed.publicationDate,
+      legacyAliases: [],
+      jurisdiction: "gb",
+      sourceKey,
+      versionKey: `${sourceKey}:${seed.publicationDate}`,
+      officialUrl: seed.officialUrl,
+      textUrl: `${seed.officialUrl}/data.xml`,
+      actType: seed.actType,
+      discovered: true,
+    };
+  });
+}
 
 function toIsoDateFromDisplay(input: string): string | null {
   const match = input.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
@@ -851,6 +1090,11 @@ export async function discoverEuOfficialJournalRegulations(
 const UK_RELEVANCE_TERMS = [
   "food",
   "feed",
+  "nutrition",
+  "supplement",
+  "jam",
+  "honey",
+  "juice",
   "hygiene",
   "safety",
   "allergen",
@@ -886,6 +1130,7 @@ type AtomEntry = {
   updated: string;
   published: string | null;
   href: string;
+  textHref: string | null;
 };
 
 function parseAtomEntries(feedXml: string): AtomEntry[] {
@@ -895,10 +1140,20 @@ function parseAtomEntries(feedXml: string): AtomEntry[] {
     const id = extractXmlElementText(entry, "id");
     const updated = extractXmlElementText(entry, "updated");
     const published = extractXmlElementText(entry, "published");
-    const linkMatch = entry.match(/<link\b[^>]*href="([^"]+)"/i);
-    const href = linkMatch?.[1] ?? id;
+    const links = [...entry.matchAll(/<link\b([^>]*)href="([^"]+)"[^>]*>/gi)].map(
+      (match) => ({ attributes: match[1], href: match[2] })
+    );
+    const textHref =
+      links.find((link) => /type="application\/xml"/i.test(link.attributes))?.href ?? null;
+    const href =
+      links.find(
+        (link) =>
+          !/\/id\//i.test(link.href) &&
+          !/\/data\.(xml|rdf|akn|xht|html?|csv|pdf)$/i.test(link.href)
+      )?.href ??
+      id;
 
-    return { title, id, updated, published, href };
+    return { title, id, updated, published, href, textHref };
   });
 
   return entries.filter((entry) => entry.title && entry.href && entry.updated);
@@ -924,7 +1179,10 @@ function isRelevantFoodLawTitle(title: string): boolean {
 }
 
 function normalizeUkLegislationUrl(input: string): string {
-  return input.replace(/^http:\/\//i, "https://").replace(/\/data\.(xml|feed)$/i, "");
+  return input
+    .replace(/^http:\/\//i, "https://")
+    .replace(/legislation\.gov\.uk\/id\//i, "legislation.gov.uk/")
+    .replace(/\/data\.(xml|feed)$/i, "");
 }
 
 function parseUkIdentifier(url: string): { type: string; year: string; number: string } | null {
@@ -964,7 +1222,9 @@ function toUkRegulation(entry: AtomEntry): CellarRegulation | null {
     sourceKey,
     versionKey: `${sourceKey}:${updatedDate}`,
     officialUrl,
-    textUrl: `${officialUrl}/data.xml`,
+    textUrl: entry.textHref
+      ? entry.textHref.replace(/^http:\/\//i, "https://")
+      : `${officialUrl}/data.xml`,
     actType: "statutory_instrument",
     discovered: true,
   };

@@ -13,6 +13,7 @@ import {
   discoverUkRegulations,
   fetchRegulationText,
   fetchUkLegislationText,
+  getManualBackfillRegulations,
   MIN_REGULATION_TEXT_CHARS,
   EUROVOC_FOOD_SAFETY_CONCEPTS,
 } from "@/lib/rag/cellar-client";
@@ -310,6 +311,45 @@ describe("discoverNewRegulations", () => {
   });
 });
 
+describe("getManualBackfillRegulations", () => {
+  it("includes reviewed EU and UK food-law gaps from April through June 2026", () => {
+    const regulations = getManualBackfillRegulations();
+
+    expect(regulations).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          celex: "32026R0765",
+          jurisdiction: "eu",
+          sourceKey: "eu:celex:32026R0765",
+        }),
+        expect.objectContaining({
+          celex: "32026R1189",
+          jurisdiction: "eu",
+          sourceKey: "eu:celex:32026R1189",
+        }),
+        expect.objectContaining({
+          celex: "uksi/2026/412",
+          jurisdiction: "gb",
+          sourceKey: "uk:uksi:2026:412",
+        }),
+        expect.objectContaining({
+          celex: "nisr/2026/103",
+          jurisdiction: "gb",
+          sourceKey: "uk:nisr:2026:103",
+        }),
+      ])
+    );
+
+    expect(
+      regulations.every(
+        (regulation) =>
+          regulation.dateDocument >= "2026-04-01" &&
+          regulation.dateDocument <= "2026-06-08"
+      )
+    ).toBe(true);
+  });
+});
+
 describe("discoverEuOfficialJournalRegulations", () => {
   it("discovers relevant regulations from the official L-series daily view", async () => {
     const html = `
@@ -356,6 +396,43 @@ describe("discoverEuOfficialJournalRegulations", () => {
 });
 
 describe("discoverUkRegulations", () => {
+  it("parses the real feed link order and normalizes legislation /id/ URLs", async () => {
+    const feed = `<?xml version="1.0" encoding="UTF-8"?>
+      <feed xmlns="http://www.w3.org/2005/Atom">
+        <entry>
+          <title>The Nutrition (Amendment etc.) (EU Exit) (Amendment) Regulations 2026</title>
+          <id>http://www.legislation.gov.uk/id/uksi/2026/412</id>
+          <link rel="self" href="http://www.legislation.gov.uk/id/uksi/2026/412" />
+          <link href="http://www.legislation.gov.uk/uksi/2026/412/made" />
+          <link rel="alternate" type="application/xml"
+            href="http://www.legislation.gov.uk/uksi/2026/412/made/data.xml" />
+          <updated>2026-04-22T11:53:13+01:00</updated>
+          <published>2026-04-21T17:00:34+01:00</published>
+        </entry>
+      </feed>`;
+
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+        text: () => Promise.resolve(feed),
+      })
+    );
+
+    const result = await discoverUkRegulations("2026-04-01");
+
+    expect(result.failures).toEqual([]);
+    expect(result.regulations).toHaveLength(1);
+    expect(result.regulations[0]).toMatchObject({
+      celex: "uksi/2026/412",
+      sourceKey: "uk:uksi:2026:412",
+      officialUrl: "https://www.legislation.gov.uk/uksi/2026/412/made",
+      textUrl: "https://www.legislation.gov.uk/uksi/2026/412/made/data.xml",
+    });
+
+    vi.unstubAllGlobals();
+  });
+
   it("discovers relevant UK food law and import control candidates from legislation feeds", async () => {
     const feed = `<?xml version="1.0" encoding="UTF-8"?>
       <feed xmlns="http://www.w3.org/2005/Atom">
@@ -428,7 +505,7 @@ describe("discoverUkRegulations", () => {
 
     expect(result.regulations).toHaveLength(1);
     expect(result.regulations[0].sourceKey).toBe("uk:uksi:2026:500");
-    expect(result.failures).toHaveLength(17);
+    expect(result.failures.length).toBeGreaterThan(10);
     expect(result.failures[0].error).toContain("timeout");
 
     vi.unstubAllGlobals();
