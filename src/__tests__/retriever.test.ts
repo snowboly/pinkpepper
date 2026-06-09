@@ -88,7 +88,7 @@ describe("retrieval ranking", () => {
     });
   });
 
-  it("recovers authoritative EU regulation chunks even when sync metadata is missing", () => {
+  it("does not recover regulation chunks as authoritative when provenance is missing", () => {
     const filtered = filterAuthorityFallbackChunks(
       [
         {
@@ -116,7 +116,7 @@ describe("retrieval ranking", () => {
       }
     );
 
-    expect(filtered.map((chunk) => chunk.id)).toEqual(["1"]);
+    expect(filtered).toEqual([]);
   });
 
   it("builds conversation-scoped user document rpc args when a conversation id is provided", () => {

@@ -857,6 +857,18 @@ export async function POST(request: Request) {
                 : undefined,
             source_type: chunk.source_type,
             source_name: chunk.source_name,
+            source_key:
+              typeof chunk.metadata?.source_key === "string"
+                ? chunk.metadata.source_key
+                : undefined,
+            version_key:
+              typeof chunk.metadata?.version_key === "string"
+                ? chunk.metadata.version_key
+                : undefined,
+            official_url:
+              typeof chunk.metadata?.official_url === "string"
+                ? chunk.metadata.official_url
+                : undefined,
           })),
           {
             mode,

@@ -940,6 +940,7 @@ export async function discoverNewRegulations(
   const seedCelexSet = new Set(CORE_REGULATION_SEEDS.map((s) => s.baseCelex));
 
   return json.results.bindings
+    .filter((b) => isLegislativeCelex(b.celex.value))
     .filter((b) => !seedCelexSet.has(b.celex.value))
     .map((b) => ({
       celex: b.celex.value,
@@ -955,6 +956,10 @@ export async function discoverNewRegulations(
       actType: detectEuActType(b.title.value),
       discovered: true,
     }));
+}
+
+function isLegislativeCelex(celex: string): boolean {
+  return /^[03]\d{4}[RLD]\d{4}(?:-\d{8})?$/i.test(celex);
 }
 
 function isoDate(date: Date): string {
@@ -1161,7 +1166,7 @@ function parseAtomEntries(feedXml: string): AtomEntry[] {
 
 function extractXmlElementText(xml: string, element: string): string {
   const match = xml.match(new RegExp(`<${element}\\b[^>]*>([\\s\\S]*?)<\\/${element}>`, "i"));
-  return decodeXmlEntities(match?.[1] ?? "").replace(/\s+/g, " ").trim();
+  return normalizeLegislationTitle(match?.[1] ?? "");
 }
 
 function decodeXmlEntities(value: string): string {
@@ -1171,6 +1176,17 @@ function decodeXmlEntities(value: string): string {
     .replace(/&gt;/g, ">")
     .replace(/&quot;/g, '"')
     .replace(/&#39;/g, "'");
+}
+
+export function normalizeLegislationTitle(value: string): string {
+  const englishTitle = value.match(
+    /<span\b[^>]*xml:lang=["']en["'][^>]*>([\s\S]*?)<\/span>/i
+  )?.[1];
+  const selected = englishTitle ?? value;
+
+  return decodeXmlEntities(selected.replace(/<[^>]+>/g, " "))
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 function isRelevantFoodLawTitle(title: string): boolean {
@@ -1201,6 +1217,7 @@ function isOnOrAfterDate(input: string, sinceDate: string): boolean {
 
 function toUkRegulation(entry: AtomEntry): CellarRegulation | null {
   if (!isRelevantFoodLawTitle(entry.title)) return null;
+  if (/\brevoked\b/i.test(entry.title)) return null;
   if (!entry.updated) return null;
 
   const officialUrl = normalizeUkLegislationUrl(entry.href);

@@ -9,6 +9,7 @@
     "lint": "eslint src scripts next.config.ts vitest.config.ts eslint.config.mjs",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "kb:cleanup": "node --use-system-ca scripts/cleanup-knowledge-integrity.mjs",
     "articles:migrate:ilovehaccp": "node scripts/migrate-ilovehaccp-articles.mjs",
     "supabase:types": "supabase gen types typescript --project-id klzvpixfslfsrjafbwkc > src/types/database.types.ts"
   },
