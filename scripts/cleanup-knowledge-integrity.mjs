@@ -2,6 +2,8 @@ import fs from "node:fs";
 import { createClient } from "@supabase/supabase-js";
 
 function loadEnv(file) {
+  if (!fs.existsSync(file)) return;
+
   const text = fs.readFileSync(file, "utf8");
   for (const line of text.split(/\r?\n/)) {
     const match = line.match(/^([A-Za-z_][A-Za-z0-9_]*)=(.*)$/);
