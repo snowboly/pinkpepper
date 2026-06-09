@@ -8,9 +8,14 @@ import {
 import { getVerificationState } from "@/lib/rag/verification";
 
 describe("source taxonomy", () => {
-  it("classifies UK food hygiene regulations as gb primary law", () => {
+  it("classifies local regulation documents as internal practice", () => {
     expect(inferJurisdiction("knowledge-docs/regulations/UK-food-hygiene-regulations-2006.md")).toBe("gb");
-    expect(inferSourceClass("knowledge-docs/regulations/UK-food-hygiene-regulations-2006.md")).toBe("primary_law");
+    expect(inferSourceClass("knowledge-docs/regulations/UK-food-hygiene-regulations-2006.md")).toBe(
+      "internal_practice"
+    );
+    expect(inferSourceClass("knowledge-sources/regulations/EC-852-2004-food-hygiene.txt")).toBe(
+      "internal_practice"
+    );
   });
 
   it("treats FSA guidance as official guidance", () => {
@@ -36,16 +41,34 @@ describe("source taxonomy", () => {
 });
 
 describe("verification state", () => {
-  it("returns verified when primary law is present", () => {
-    expect(getVerificationState([{ source_class: "primary_law", jurisdiction: "gb" }])).toBe("verified");
+  it("returns verified when primary law has official provenance", () => {
+    expect(
+      getVerificationState([
+        {
+          source_class: "primary_law",
+          jurisdiction: "gb",
+          source_key: "uk:uksi:2013:2996",
+          version_key: "uk:uksi:2013:2996:2026-05-20",
+          official_url: "https://www.legislation.gov.uk/uksi/2013/2996",
+        },
+      ])
+    ).toBe("verified");
   });
 
-  it("returns verified for regulation chunks even when source_class metadata is missing", () => {
-    expect(getVerificationState([{ source_type: "regulation", source_name: "UK food hygiene regulations 2006" }])).toBe("verified");
+  it("does not verify regulation chunks without official provenance", () => {
+    expect(
+      getVerificationState([
+        { source_type: "regulation", source_name: "UK food hygiene regulations 2006" },
+      ])
+    ).toBe("partial");
   });
 
-  it("returns verified for guidance chunks even when source_class metadata is missing", () => {
-    expect(getVerificationState([{ source_type: "guidance", source_name: "FSA temperature control guidance" }])).toBe("verified");
+  it("does not verify guidance chunks without an official URL", () => {
+    expect(
+      getVerificationState([
+        { source_type: "guidance", source_name: "FSA temperature control guidance" },
+      ])
+    ).toBe("partial");
   });
 
   it("returns partial when only internal practice is present", () => {

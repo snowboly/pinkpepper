@@ -22,6 +22,7 @@ import {
   fetchUkLegislationText,
   getManualBackfillRegulations,
   celexToSourceName,
+  normalizeLegislationTitle,
   MIN_REGULATION_TEXT_CHARS,
   type CellarRegulation,
 } from "@/lib/rag/cellar-client";
@@ -88,6 +89,42 @@ type RegulationMetadataInput = Pick<
       "jurisdiction" | "sourceKey" | "versionKey" | "officialUrl" | "textUrl" | "actType"
     >
   >;
+
+type KnowledgeCleanupRow = {
+  id: string;
+  source_type: string;
+  source_name: string;
+  metadata: Record<string, unknown> | null;
+};
+
+export function buildKnowledgeCleanupPlan(rows: KnowledgeCleanupRow[]): {
+  archiveIds: string[];
+  titleUpdates: Array<{ id: string; sourceName: string }>;
+} {
+  const archiveIds: string[] = [];
+  const titleUpdates: Array<{ id: string; sourceName: string }> = [];
+
+  for (const row of rows) {
+    if (row.source_type !== "regulation") continue;
+
+    const metadata = row.metadata ?? {};
+    if ((metadata.retrieval_status ?? "active") !== "active") continue;
+
+    if (!metadata.source_key || /\brevoked\b/i.test(row.source_name)) {
+      archiveIds.push(row.id);
+      continue;
+    }
+
+    if (/^\s*<div\b/i.test(row.source_name)) {
+      const sourceName = normalizeLegislationTitle(row.source_name);
+      if (sourceName && sourceName !== row.source_name) {
+        titleUpdates.push({ id: row.id, sourceName });
+      }
+    }
+  }
+
+  return { archiveIds, titleUpdates };
+}
 
 function extractMetadataDate(metadata: Json | null): string | null {
   if (!metadata || typeof metadata !== "object" || Array.isArray(metadata)) return null;

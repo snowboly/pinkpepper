@@ -20,6 +20,7 @@ import {
 import pdfParse from "pdf-parse";
 import {
   DEFAULT_SINCE_DATE,
+  buildKnowledgeCleanupPlan,
   buildRegulationChunkMetadata,
   getLastCompletedSyncDate,
   isVersionAlreadyActive,
@@ -270,6 +271,43 @@ describe("discoverNewRegulations", () => {
     vi.unstubAllGlobals();
   });
 
+  it("excludes non-legislative CELEX document classes", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            results: {
+              bindings: [
+                {
+                  celex: { value: "32026R0123" },
+                  title: { value: "Commission Regulation on food safety" },
+                  dateDocument: { value: "2026-02-01" },
+                },
+                {
+                  celex: { value: "52026XC00421" },
+                  title: { value: "Commission notice concerning food imports" },
+                  dateDocument: { value: "2026-02-01" },
+                },
+                {
+                  celex: { value: "62024CJ0621" },
+                  title: { value: "Judgment concerning food law" },
+                  dateDocument: { value: "2026-02-01" },
+                },
+              ],
+            },
+          }),
+      })
+    );
+
+    const results = await discoverNewRegulations("2024-01-01");
+
+    expect(results.map((result) => result.celex)).toEqual(["32026R0123"]);
+
+    vi.unstubAllGlobals();
+  });
+
   it("throws on non-200 SPARQL response", async () => {
     vi.stubGlobal(
       "fetch",
@@ -476,6 +514,48 @@ describe("discoverUkRegulations", () => {
     vi.unstubAllGlobals();
   });
 
+  it("rejects revoked instruments and extracts the English bilingual title", async () => {
+    const feed = `<?xml version="1.0" encoding="UTF-8"?>
+      <feed xmlns="http://www.w3.org/2005/Atom">
+        <entry>
+          <title type="xhtml">
+            <div xmlns="http://www.w3.org/1999/xhtml">
+              <span xml:lang="en">The Food Hygiene (Wales) Regulations 2006</span>
+              /
+              <span xml:lang="cy">Rheoliadau Hylendid Bwyd (Cymru) 2006</span>
+            </div>
+          </title>
+          <id>https://www.legislation.gov.uk/wsi/2006/31</id>
+          <updated>2026-03-13T10:00:00Z</updated>
+          <link rel="alternate" href="https://www.legislation.gov.uk/wsi/2006/31" />
+        </entry>
+        <entry>
+          <title>The Food and Feed Hygiene Regulations 2019 (revoked)</title>
+          <id>https://www.legislation.gov.uk/uksi/2019/1013</id>
+          <updated>2026-03-13T10:00:00Z</updated>
+          <link rel="alternate" href="https://www.legislation.gov.uk/uksi/2019/1013" />
+        </entry>
+      </feed>`;
+
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+        text: () => Promise.resolve(feed),
+      })
+    );
+
+    const result = await discoverUkRegulations("2026-03-01");
+
+    expect(result.failures).toEqual([]);
+    expect(result.regulations).toHaveLength(1);
+    expect(result.regulations[0]?.title).toBe(
+      "The Food Hygiene (Wales) Regulations 2006"
+    );
+
+    vi.unstubAllGlobals();
+  });
+
   it("keeps successful UK candidates when another feed times out", async () => {
     const feed = `<?xml version="1.0" encoding="UTF-8"?>
       <feed xmlns="http://www.w3.org/2005/Atom">
@@ -509,6 +589,61 @@ describe("discoverUkRegulations", () => {
     expect(result.failures[0].error).toContain("timeout");
 
     vi.unstubAllGlobals();
+  });
+});
+
+describe("knowledge cleanup planning", () => {
+  it("archives unversioned regulation chunks and explicitly revoked instruments", () => {
+    const plan = buildKnowledgeCleanupPlan([
+      {
+        id: "summary",
+        source_type: "regulation",
+        source_name: "EU 2026 194 high risk import controls",
+        metadata: { source_class: "primary_law" },
+      },
+      {
+        id: "revoked",
+        source_type: "regulation",
+        source_name: "The Food and Feed Hygiene Regulations 2019 (revoked)",
+        metadata: {
+          retrieval_status: "active",
+          source_key: "uk:uksi:2019:1013",
+          version_key: "uk:uksi:2019:1013:2024-05-04",
+        },
+      },
+      {
+        id: "welsh",
+        source_type: "regulation",
+        source_name:
+          '<div xmlns="http://www.w3.org/1999/xhtml"><span xml:lang="en">The Food Hygiene (Wales) Regulations 2006</span> / <span xml:lang="cy">Rheoliadau Hylendid Bwyd (Cymru) 2006</span></div>',
+        metadata: {
+          retrieval_status: "active",
+          source_key: "uk:wsi:2006:31",
+          version_key: "uk:wsi:2006:31:2026-03-13",
+        },
+      },
+      {
+        id: "official",
+        source_type: "regulation",
+        source_name: "Regulation (EC) No 852/2004",
+        metadata: {
+          retrieval_status: "active",
+          source_key: "eu:celex:32004R0852",
+          version_key: "eu:celex:02004R0852-20210324",
+          official_url: "https://eur-lex.europa.eu/eli/reg/2004/852/oj",
+        },
+      },
+    ]);
+
+    expect(plan).toEqual({
+      archiveIds: ["summary", "revoked"],
+      titleUpdates: [
+        {
+          id: "welsh",
+          sourceName: "The Food Hygiene (Wales) Regulations 2006",
+        },
+      ],
+    });
   });
 });
 

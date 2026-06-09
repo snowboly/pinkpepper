@@ -78,6 +78,22 @@ function normalizeChunkSourceClass(chunk: KnowledgeChunk): SourceClass {
   return inferSourceClass([chunk.source_type, chunk.source_name].filter(Boolean).join(" "));
 }
 
+function hasAuthorityProvenance(chunk: KnowledgeChunk, sourceClass: SourceClass): boolean {
+  if (sourceClass === "primary_law") {
+    return Boolean(
+      chunk.metadata?.source_key &&
+        chunk.metadata?.version_key &&
+        chunk.metadata?.official_url
+    );
+  }
+
+  if (sourceClass === "official_guidance") {
+    return Boolean(chunk.metadata?.official_url);
+  }
+
+  return true;
+}
+
 export function rankRetrievedChunks(chunks: KnowledgeChunk[]): KnowledgeChunk[] {
   return [...chunks].sort((a, b) => {
     const aSourceClass = normalizeChunkSourceClass(a);
@@ -110,7 +126,8 @@ export function filterAuthorityFallbackChunks(
       const matchesSourceClass =
         !sourceClasses ||
         sourceClasses.length === 0 ||
-        sourceClasses.includes(chunkSourceClass);
+        (sourceClasses.includes(chunkSourceClass) &&
+          hasAuthorityProvenance(chunk, chunkSourceClass));
 
       return matchesJurisdiction && matchesSourceClass;
     })
