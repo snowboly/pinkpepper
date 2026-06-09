@@ -7,7 +7,7 @@ import {
   publicLaunchLocales,
   publicRoutePaths,
 } from "@/i18n/public";
-import { resolveRequestLocale } from "@/i18n/request";
+import { getRouteLocaleFromPathname, resolveRequestLocale } from "@/i18n/request";
 import {
   getPublicMessages,
   getPublicPageHref,
@@ -50,6 +50,12 @@ describe("public locale config", () => {
     expect(resolveRequestLocale({ routeLocale: "fr", cookieLocale: "de" })).toBe("fr");
     expect(resolveRequestLocale({ routeLocale: null, cookieLocale: "pt" })).toBe("pt");
     expect(resolveRequestLocale({ routeLocale: null, cookieLocale: "bad" })).toBe("en");
+  });
+
+  it("derives the request locale from localized public paths", () => {
+    expect(getRouteLocaleFromPathname("/de/articles/haccp-plan")).toBe("de");
+    expect(getRouteLocaleFromPathname("/fr/pricing")).toBe("fr");
+    expect(getRouteLocaleFromPathname("/articles/haccp-plan")).toBeNull();
   });
 
   it("falls back to English when a public message key is missing", async () => {
