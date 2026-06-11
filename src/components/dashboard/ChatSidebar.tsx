@@ -3,10 +3,11 @@
 import Link from "next/link";
 import { House } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import type { SubscriptionTier } from "@/lib/tier";
 import type { Conversation, Project } from "./types";
 import { getGroupedTemplates } from "@/lib/templates";
+import { getPublicPageHref, isPublicLocale } from "@/lib/public-routes";
 
 // Preset emojis for projects
 const PRESET_EMOJIS = ["📁", "🍽️", "🧑‍🍳", "📋", "🔬", "🏭", "📊", "🌿"];
@@ -100,6 +101,8 @@ export default function ChatSidebar({
 }: ChatSidebarProps) {
   const t = useTranslations("sidebar");
   const tc = useTranslations("chat");
+  const locale = useLocale();
+  const homeHref = isPublicLocale(locale) ? getPublicPageHref(locale, "/") : "/";
   const templateGroups = getGroupedTemplates();
   const userInitials = (() => {
     const local = userEmail.split("@")[0] ?? "";
@@ -661,7 +664,7 @@ export default function ChatSidebar({
           </summary>
           <div className="absolute bottom-[calc(100%+6px)] left-0 right-0 z-50 rounded-2xl border border-[#E2E8F0] bg-white p-1.5 shadow-lg">
             <Link
-              href="/"
+              href={homeHref}
               onClick={() => onCloseSidebar?.()}
               className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-[#0F172A] hover:bg-[#F8FAFC] transition-colors"
             >
