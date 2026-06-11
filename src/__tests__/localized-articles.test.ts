@@ -26,7 +26,13 @@ describe("localized SEO priority articles", () => {
     for (const locale of publicLaunchLocales.filter((locale) => locale !== "en")) {
       const manifest = await getArticleManifest({ locale });
 
-      expect(manifest.map((article) => article.slug)).toEqual(localizedSeoPriorityArticleSlugs);
+      expect(
+        manifest
+          .map((article) => article.slug)
+          .filter((slug) => localizedSeoPriorityArticleSlugs.includes(
+            slug as (typeof localizedSeoPriorityArticleSlugs)[number],
+          )),
+      ).toEqual(localizedSeoPriorityArticleSlugs);
 
       for (const slug of localizedSeoPriorityArticleSlugs) {
         const article = await getArticleBySlug(slug, { locale });
@@ -66,6 +72,36 @@ describe("localized SEO priority articles", () => {
     expect(article?.body).toContain('href="/de/features/haccp-plan-generator"');
     expect(article?.body).not.toContain("<strong>Mindestens einmal jährlich</strong>");
     expect(article?.body).not.toContain("jede zweite Charge");
+  });
+
+  it("publishes the German HACCP process flow diagram guide", async () => {
+    const manifest = await getArticleManifest({ locale: "de" });
+    const article = await getArticleBySlug("building-a-haccp-process-flow-diagram", {
+      locale: "de",
+    });
+    const summary = manifest.find(
+      (candidate) => candidate.slug === "building-a-haccp-process-flow-diagram",
+    );
+
+    expect(article?.title).toBe("HACCP-Flussdiagramm erstellen: Prozessablauf für sichere Audits");
+    expect(summary?.title).toBe(article?.title);
+    expect(article?.publishedAt).toBe("2025-11-29");
+    expect(article?.image).toContain("images.pexels.com/photos/5953663/");
+    expect(article?.source).toBe("pinkpepper-localized");
+    expect(article?.excerpt.length).toBeGreaterThanOrEqual(145);
+    expect(article?.excerpt.length).toBeLessThanOrEqual(165);
+    expect(article?.body).toContain("<h2>Was ein HACCP-Flussdiagramm zeigen muss</h2>");
+    expect(article?.body).toContain("Nacharbeit");
+    expect(article?.body).toContain("vor Ort");
+    expect(article?.body).toContain('href="/resources/haccp-plan-template"');
+    expect(article?.body).toContain('href="/de/features/haccp-plan-generator"');
+    expect(article?.body).toContain(
+      'href="/articles/correcting-non-conformities-in-haccp"',
+    );
+    expect(article?.body).not.toContain("example.com");
+    expect(article?.body).not.toContain("EU-Verordnung 2021/382");
+    expect(article?.body).not.toContain("Automatische CCP-Erkennung");
+    expect(article?.body).not.toContain("```mermaid");
   });
 
   it("adds localized article detail routes and SEO discovery", () => {

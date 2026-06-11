@@ -88,5 +88,14 @@
     "publishedAt": "2026-04-13",
     "image": "https://images.pexels.com/photos/35479269/pexels-photo-35479269.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
     "source": "pinkpepper-localized"
+  },
+  {
+    "title": "HACCP-Flussdiagramm erstellen: Prozessablauf für sichere Audits",
+    "slug": "building-a-haccp-process-flow-diagram",
+    "excerpt": "Erfahren Sie, wie Sie einen HACCP-Prozessablauf vollständig abbilden, vor Ort validieren und als belastbares Flussdiagramm für Überwachung und Audits nutzen.",
+    "category": "Compliance",
+    "publishedAt": "2025-11-29",
+    "image": "https://images.pexels.com/photos/5953663/pexels-photo-5953663.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "source": "pinkpepper-localized"
   }
 ]
