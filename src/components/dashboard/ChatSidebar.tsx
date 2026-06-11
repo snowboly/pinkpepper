@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import Link from "next/link";
+import { House } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import type { SubscriptionTier } from "@/lib/tier";
@@ -659,6 +660,14 @@ export default function ChatSidebar({
             </svg>
           </summary>
           <div className="absolute bottom-[calc(100%+6px)] left-0 right-0 z-50 rounded-2xl border border-[#E2E8F0] bg-white p-1.5 shadow-lg">
+            <Link
+              href="/"
+              onClick={() => onCloseSidebar?.()}
+              className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-[#0F172A] hover:bg-[#F8FAFC] transition-colors"
+            >
+              <House className="h-4 w-4 text-[#64748B]" aria-hidden="true" />
+              {t("backToHome")}
+            </Link>
             <Link
               href="/dashboard/settings"
               className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-[#0F172A] hover:bg-[#F8FAFC] transition-colors"
