@@ -67,6 +67,22 @@ describe("chatbot metadata parsing", () => {
 });
 
 describe("chatbot source encoding", () => {
+  it("provides a localized homepage link in the dashboard account menu", () => {
+    const sidebar = readWorkspaceFile("src/components/dashboard/ChatSidebar.tsx");
+    const locales = ["en", "de", "es", "fr", "it", "pt"];
+
+    expect(sidebar).toContain('href="/"');
+    expect(sidebar).toContain('{t("backToHome")}');
+
+    for (const locale of locales) {
+      const messages = JSON.parse(
+        readWorkspaceFile(`src/i18n/messages/${locale}.json`)
+      ) as { sidebar?: { backToHome?: string } };
+
+      expect(messages.sidebar?.backToHome, `${locale} sidebar label`).toBeTruthy();
+    }
+  });
+
   it("does not ship known mojibake fragments in chatbot files", () => {
     const files = [
       "src/app/api/chat/stream/route.ts",
