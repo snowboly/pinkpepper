@@ -5,6 +5,7 @@ import {
   parseMessageArtifact,
   parseMessageCitations,
 } from "@/components/dashboard/chat-message-metadata";
+import { getPublicPageHref } from "@/lib/public-routes";
 
 const ROOT = process.cwd();
 
@@ -71,7 +72,14 @@ describe("chatbot source encoding", () => {
     const sidebar = readWorkspaceFile("src/components/dashboard/ChatSidebar.tsx");
     const locales = ["en", "de", "es", "fr", "it", "pt"];
 
-    expect(sidebar).toContain('href="/"');
+    expect(getPublicPageHref("en", "/")).toBe("/");
+    expect(getPublicPageHref("de", "/")).toBe("/de");
+    expect(getPublicPageHref("fr", "/")).toBe("/fr");
+    expect(getPublicPageHref("pt", "/")).toBe("/pt");
+    expect(sidebar).toContain("useLocale");
+    expect(sidebar).toContain("isPublicLocale");
+    expect(sidebar).toContain("getPublicPageHref");
+    expect(sidebar).toContain("href={homeHref}");
     expect(sidebar).toContain('{t("backToHome")}');
 
     for (const locale of locales) {
