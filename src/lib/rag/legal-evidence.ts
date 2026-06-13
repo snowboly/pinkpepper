@@ -26,6 +26,17 @@ function supportsDetail(
           typeof chunk.metadata?.dateDocument === "string" ||
           typeof chunk.metadata?.publicationDate === "string"
       );
+    case "effective_date":
+      return (
+        chunks.some(
+          (chunk) =>
+            typeof chunk.metadata?.effectiveDate === "string" ||
+            typeof chunk.metadata?.commencementDate === "string"
+        ) ||
+        /\b(entry into force|enter(?:s|ed|ing)? into force|come(?:s)? into force|commencement|shall apply from)\b/i.test(
+          evidence
+        )
+      );
     case "annex":
       return chunks.some((chunk) => /\bannex\b/i.test(chunk.section_ref ?? "")) ||
         /\bannex\s+[ivx0-9]/i.test(evidence);

@@ -150,6 +150,22 @@ export function rankLegalChunks(
   return [...chunks].sort((a, b) => {
     const relevanceDelta = relationshipScore(b, plan) - relationshipScore(a, plan);
     if (relevanceDelta !== 0) return relevanceDelta;
+    if (plan.recencyRequired) {
+      const aDate = String(
+        a.metadata?.dateDocument ??
+          a.metadata?.publicationDate ??
+          a.metadata?.currentVersionDate ??
+          ""
+      );
+      const bDate = String(
+        b.metadata?.dateDocument ??
+          b.metadata?.publicationDate ??
+          b.metadata?.currentVersionDate ??
+          ""
+      );
+      const dateDelta = bDate.localeCompare(aDate);
+      if (dateDelta !== 0) return dateDelta;
+    }
     return compareRetrievedChunks(a, b);
   });
 }
