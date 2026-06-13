@@ -27,4 +27,22 @@ describe("buildLegalQueryPlan", () => {
       expect.arrayContaining(["annex", "control_frequency", "certificate", "analysis_report"])
     );
   });
+
+  it("distinguishes operative dates from adoption and publication dates", () => {
+    const plan = buildLegalQueryPlan(
+      "When does Regulation 2026/459 enter into force and apply?"
+    );
+
+    expect(plan.requestedDetails).toContain("effective_date");
+  });
+
+  it("recognizes plural application-date requests", () => {
+    const plan = buildLegalQueryPlan(
+      "Give the adoption and application dates for Regulation 2026/459."
+    );
+
+    expect(plan.requestedDetails).toEqual(
+      expect.arrayContaining(["date", "effective_date"])
+    );
+  });
 });

@@ -10,6 +10,7 @@ export type LegalRequestedDetail =
   | "article"
   | "annex"
   | "date"
+  | "effective_date"
   | "control_frequency"
   | "certificate"
   | "analysis_report"
@@ -68,8 +69,15 @@ export function buildLegalQueryPlan(message: string): LegalQueryPlan {
   const requestedDetails: LegalRequestedDetail[] = [];
   if (/\barticle\b/i.test(message)) requestedDetails.push("article");
   if (/\bannex\b/i.test(message)) requestedDetails.push("annex");
-  if (/\b(date|adopted|publication|published|entry into force|applies from)\b/i.test(message)) {
+  if (/\b(dates?|adopted|publication|published|entry into force|applies from)\b/i.test(message)) {
     requestedDetails.push("date");
+  }
+  if (
+    /\b(entry into force|enter(?:s|ed|ing)? into force|come(?:s)? into force|commencement|application dates?|appl(?:y|ies) from)\b/i.test(
+      message
+    )
+  ) {
+    requestedDetails.push("effective_date");
   }
   if (/\b(control|check|sampling)\s+frequenc/i.test(message)) {
     requestedDetails.push("control_frequency");

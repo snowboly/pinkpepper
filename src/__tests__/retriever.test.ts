@@ -58,6 +58,42 @@ describe("retrieval ranking", () => {
     expect(ranked.map((chunk) => chunk.id)).toEqual(["194", "551"]);
   });
 
+  it("uses document recency after exact amendment relevance", () => {
+    const ranked = rankLegalChunks(
+      [
+        {
+          id: "194",
+          content: "Regulation (EU) 2026/194 amends Regulation (EU) 2019/1793.",
+          source_type: "regulation",
+          source_name: "Regulation (EU) 2026/194",
+          section_ref: null,
+          metadata: { source_class: "primary_law", dateDocument: "2026-01-28" },
+          similarity: 0.95,
+        },
+        {
+          id: "459",
+          content: "Regulation (EU) 2026/459 amends Regulation (EU) 2019/1793.",
+          source_type: "regulation",
+          source_name: "Regulation (EU) 2026/459",
+          section_ref: null,
+          metadata: { source_class: "primary_law", dateDocument: "2026-02-24" },
+          similarity: 0.75,
+        },
+      ],
+      {
+        precisionRequired: true,
+        recencyRequired: true,
+        exactReferences: ["2019/1793"],
+        celexReferences: [],
+        targetInstrumentReferences: ["2019/1793"],
+        relationship: "amends",
+        requestedDetails: [],
+      }
+    );
+
+    expect(ranked.map((chunk) => chunk.id)).toEqual(["459", "194"]);
+  });
+
   it("caps repeated chunks from one legal source", () => {
     const chunks = [1, 2, 3].map((index) => ({
       id: `a-${index}`,

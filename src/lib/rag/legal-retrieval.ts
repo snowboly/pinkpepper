@@ -1,6 +1,13 @@
 import { assessLegalEvidence, type LegalEvidenceAssessment } from "./legal-evidence";
+import {
+  resolveOfficialAuthority,
+  type OfficialLegalIdentifier,
+} from "./legal-authority";
 import { buildLegalQueryPlan, type LegalQueryPlan } from "./legal-query";
-import { verifyEuRegulation, type OfficialEvidence } from "./official-verifier";
+import {
+  verifyOfficialLegislation,
+  type OfficialEvidence,
+} from "./official-verifier";
 import {
   rankLegalChunks,
   selectDistinctSourceChunks,
@@ -9,7 +16,10 @@ import {
 
 type LegalRetrievalDependencies = {
   retrieveLexical: (plan: LegalQueryPlan) => Promise<KnowledgeChunk[]>;
-  verifyEu?: (celex: string) => Promise<OfficialEvidence>;
+  verifyOfficial?: (
+    identifier: OfficialLegalIdentifier,
+    requestedDetails: LegalQueryPlan["requestedDetails"]
+  ) => Promise<OfficialEvidence>;
 };
 
 export type LegalContextResult = {
@@ -29,20 +39,38 @@ function mergeChunks(...sets: KnowledgeChunk[][]): KnowledgeChunk[] {
   });
 }
 
-function officialEvidenceChunk(evidence: OfficialEvidence, celex: string): KnowledgeChunk {
+function identifierKey(identifier: OfficialLegalIdentifier): string {
+  return identifier.jurisdiction === "eu"
+    ? `eu:${identifier.celex}`
+    : `gb:${identifier.legislationType}:${identifier.year}:${identifier.number}`;
+}
+
+function officialEvidenceChunk(evidence: OfficialEvidence): KnowledgeChunk {
+  const key = identifierKey(evidence.identifier);
+  const jurisdiction = evidence.identifier.jurisdiction;
   return {
-    id: `official:${celex}:${evidence.retrievedAt}`,
+    id: `official:${key}:${evidence.retrievedAt}`,
     content: evidence.content,
     source_type: "official_verification",
     source_name: evidence.sourceName,
-    section_ref: null,
+    section_ref:
+      evidence.sections
+        .map((section) => section.reference)
+        .filter((value): value is string => Boolean(value))
+        .join("; ") || null,
     metadata: {
       source_class: "primary_law",
-      jurisdiction: "eu",
-      source_key: `official:eu:${celex}`,
-      version_key: `official:eu:${celex}:${evidence.retrievedAt}`,
-      celexNumber: celex,
-      official_url: evidence.url,
+      jurisdiction,
+      source_key: `official:${key}`,
+      version_key: `official:${key}:${evidence.retrievedAt}`,
+      ...(evidence.identifier.jurisdiction === "eu"
+        ? { celexNumber: evidence.identifier.celex }
+        : {
+            legislationType: evidence.identifier.legislationType,
+            legislationYear: evidence.identifier.year,
+            legislationNumber: evidence.identifier.number,
+          }),
+      official_url: evidence.officialUrl,
       retrievedAt: evidence.retrievedAt,
       retrieval_status: "active",
     },
@@ -76,16 +104,28 @@ export async function resolveLegalContext(
     rankLegalChunks(mergeChunks(semanticChunks, lexicalChunks), plan)
   );
   let evidence = assessLegalEvidence(plan, chunks);
-  const celex =
-    evidence.verificationCelex ??
-    plan.celexReferences[0] ??
-    null;
+  const resolution =
+    resolveOfficialAuthority(plan, chunks) ??
+    (plan.celexReferences[0]
+      ? {
+          identifier: {
+            jurisdiction: "eu" as const,
+            celex: plan.celexReferences[0],
+          },
+          reason: "explicit CELEX in user query",
+          sourceChunkIds: [],
+        }
+      : null);
 
-  if (!evidence.sufficient && celex) {
+  if (!evidence.sufficient && resolution) {
     try {
-      const official = await (dependencies.verifyEu ?? verifyEuRegulation)(celex);
+      const official = await (
+        dependencies.verifyOfficial ??
+        ((identifier, requestedDetails) =>
+          verifyOfficialLegislation(identifier, requestedDetails))
+      )(resolution.identifier, plan.requestedDetails);
       chunks = selectDistinctSourceChunks([
-        officialEvidenceChunk(official, celex),
+        officialEvidenceChunk(official),
         ...chunks,
       ]);
       evidence = assessLegalEvidence(plan, chunks);

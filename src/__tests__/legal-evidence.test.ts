@@ -74,4 +74,22 @@ describe("assessLegalEvidence", () => {
 
     expect(result.sufficient).toBe(false);
   });
+
+  it("does not treat an adoption date as evidence of entry into force", () => {
+    const result = assessLegalEvidence(
+      {
+        precisionRequired: true,
+        recencyRequired: false,
+        exactReferences: ["2026/459"],
+        celexReferences: ["32026R0459"],
+        targetInstrumentReferences: [],
+        relationship: null,
+        requestedDetails: ["effective_date"],
+      },
+      [summaryChunk]
+    );
+
+    expect(result.sufficient).toBe(false);
+    expect(result.missingDetails).toContain("effective_date");
+  });
 });
