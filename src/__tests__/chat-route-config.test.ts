@@ -142,6 +142,16 @@ describe("authority-query retrieval fallback", () => {
     expect(shouldRunKnowledgeRetry(false)).toBe(true);
   });
 
+  it("runs precision legal orchestration after knowledge retrieval", () => {
+    const src = readFileSync(
+      path.join(process.cwd(), "src/app/api/chat/stream/route.ts"),
+      "utf8"
+    );
+
+    expect(src).toContain("resolveLegalContext(message, kChunks");
+    expect(src).toContain("retrieveLegalLexicalContext(plan)");
+  });
+
   it("expands London legal queries with GB authority hints", () => {
     const queries = buildAuthorityRetryQueries(
       "I run a restaurant in London. What food safety regulations apply to me?",
