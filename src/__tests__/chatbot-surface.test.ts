@@ -127,6 +127,15 @@ describe("chatbot source encoding", () => {
 });
 
 describe("chat workspace chrome", () => {
+  it("lets users collapse and reopen the projects section", () => {
+    const sidebar = readWorkspaceFile("src/components/dashboard/ChatSidebar.tsx");
+
+    expect(sidebar).toContain("const [projectsOpen, setProjectsOpen] = useState(true);");
+    expect(sidebar).toContain('aria-expanded={projectsOpen}');
+    expect(sidebar).toContain('onClick={() => setProjectsOpen((open) => !open)}');
+    expect(sidebar).toContain("{projectsOpen && (");
+  });
+
   it("does not render the removed top mode banner block", () => {
     const content = readWorkspaceFile("src/components/dashboard/ChatWorkspace.tsx");
 

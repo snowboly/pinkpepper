@@ -129,6 +129,7 @@ export default function ChatSidebar({
   const [dragOverAllChats, setDragOverAllChats] = useState(false);
 
   // Project expand/collapse
+  const [projectsOpen, setProjectsOpen] = useState(true);
   const [expandedProjects, setExpandedProjects] = useState<Set<string>>(new Set());
 
   // Templates dropdown
@@ -426,11 +427,31 @@ export default function ChatSidebar({
         {/* ── Projects section ── */}
         <div className="px-3 pt-3 pb-1">
           <div className="flex items-center justify-between mb-1">
-            <span className="text-xs font-semibold uppercase tracking-wider text-[#6B7280]">
-              {t("projects")}
-            </span>
             <button
-              onClick={() => { setCreatingProject(true); setExpandedProjects((prev) => new Set(prev)); }}
+              type="button"
+              aria-expanded={projectsOpen}
+              onClick={() => setProjectsOpen((open) => !open)}
+              className="flex flex-1 items-center gap-1.5 rounded py-0.5 text-left text-xs font-semibold uppercase tracking-wider text-[#6B7280] hover:text-[#0F172A] transition-colors"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className={`h-3 w-3 transition-transform ${projectsOpen ? "rotate-90" : ""}`}
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2.5}
+                aria-hidden="true"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+              {t("projects")}
+            </button>
+            <button
+              onClick={() => {
+                setProjectsOpen(true);
+                setCreatingProject(true);
+                setExpandedProjects((prev) => new Set(prev));
+              }}
               className="rounded p-0.5 text-[#6B7280] hover:text-[#0F172A] hover:bg-[#F1F5F9] transition-colors"
               title={t("newProject")}
             >
@@ -440,6 +461,8 @@ export default function ChatSidebar({
             </button>
           </div>
 
+          {projectsOpen && (
+            <>
           {/* Inline new project form */}
           {creatingProject && (
             <div className="mb-2 rounded-xl border border-[#E11D48]/30 bg-[#FFF1F2] p-2.5 space-y-2">
@@ -596,6 +619,8 @@ export default function ChatSidebar({
               </div>
             );
           })}
+            </>
+          )}
         </div>
 
         {/* ── All chats (unassigned) ── */}
