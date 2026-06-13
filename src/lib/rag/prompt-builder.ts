@@ -1,5 +1,6 @@
 ﻿import type { KnowledgeChunk } from "./retriever";
 import type { SubscriptionTier } from "@/lib/tier";
+import { buildLegalQueryPlan } from "./legal-query";
 
 export type RAGMode = "qa" | "document" | "audit";
 export type QAIntent =
@@ -547,14 +548,29 @@ export function buildRAGPrompt(
   businessTypeLabel?: string | null,
   tier?: SubscriptionTier
 ): { systemPrompt: string; temperature: number } {
+  const legalPlan = buildLegalQueryPlan(userMessage);
   const qaIntentInstructions =
     mode === "qa" ? getQAIntentInstructions(userMessage) : "";
+  const precisionLegalInstructions =
+    mode === "qa" && legalPlan.precisionRequired
+      ? `
+
+PRECISION LEGAL QUERY:
+- Answer the exact instrument, amendment target, jurisdiction, and detail requested.
+- Do not substitute a newer but legally unrelated instrument for the requested relationship.
+- Treat recency as a tie-breaker only after confirming legal relevance to the requested target.
+- Cite regulation numbers, CELEX identifiers, dates, articles, annexes, frequencies, certificates, authorities, and amendment relationships only when the provided evidence supports them.
+- If the context identifies an instrument but does not contain the requested annex, article, frequency, certificate, or analysis-report detail, say that clearly and do not infer or invent the missing detail.
+- Distinguish permanent ingested sources from official evidence fetched for this answer.`
+      : "";
 
   return {
     systemPrompt:
       buildRAGSystemPrompt(chunks, mode, preferredLanguage, currentDate, businessTypeLabel, tier) +
-      qaIntentInstructions,
-    temperature: MODE_TEMPERATURES[mode],
+      qaIntentInstructions +
+      precisionLegalInstructions,
+    temperature:
+      mode === "qa" && legalPlan.precisionRequired ? 0.1 : MODE_TEMPERATURES[mode],
   };
 }
 

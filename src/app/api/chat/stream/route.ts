@@ -21,6 +21,8 @@ import {
   type UserDocumentChunk,
 } from "@/lib/rag";
 import { getVerificationState } from "@/lib/rag/verification";
+import { resolveLegalContext } from "@/lib/rag/legal-retrieval";
+import { retrieveLegalLexicalContext } from "@/lib/rag/retriever";
 import { inferQueryJurisdiction, type Jurisdiction } from "@/lib/rag/source-taxonomy";
 import { chatLimiter, chatBurstLimiter, checkRateLimit } from "@/lib/ratelimit";
 import { detectQueryMode } from "@/lib/query-mode";
@@ -624,6 +626,14 @@ export async function POST(request: Request) {
           break;
         }
       }
+    }
+
+    const legalContext = await resolveLegalContext(message, kChunks, {
+      retrieveLexical: (plan) => retrieveLegalLexicalContext(plan),
+    });
+    kChunks.splice(0, kChunks.length, ...legalContext.chunks);
+    if (legalContext.verificationError) {
+      console.warn("[chat/stream] Official legal verification unavailable:", legalContext.verificationError);
     }
 
     retrievedChunks = kChunks;
