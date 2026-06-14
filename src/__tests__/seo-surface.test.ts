@@ -178,6 +178,33 @@ describe("SEO surface", () => {
     expect(csp).toContain("img-src 'self' blob: data: https://*.supabase.co https://images.unsplash.com https://images.pexels.com");
   });
 
+  it("permanently redirects legacy SEO URLs to their current replacements", () => {
+    const nextConfig = readPage("next.config.ts");
+
+    expect(nextConfig).toContain(
+      '{ source: "/features", destination: "/", permanent: true }',
+    );
+    expect(nextConfig).toContain(
+      '{ source: "/compare", destination: "/pricing", permanent: true }',
+    );
+    expect(nextConfig).toContain(
+      '{ source: "/compare/pinkpepper-vs-consultant", destination: "/pricing", permanent: true }',
+    );
+    expect(nextConfig).toContain(
+      '{ source: "/compare/haccp-software-alternatives", destination: "/pricing", permanent: true }',
+    );
+    expect(nextConfig).toContain(
+      '{ source: "/og-image", destination: "/social-card.png", permanent: true }',
+    );
+  });
+
+  it("does not advertise the removed features hub in structured breadcrumbs", () => {
+    const featureTemplate = readPage("src/components/site/FeatureTemplate.tsx");
+
+    expect(featureTemplate).not.toContain('item: "https://pinkpepper.io/features"');
+    expect(featureTemplate).not.toContain('name: "Features"');
+  });
+
   it("includes public marketing pages and excludes auth/dashboard routes from sitemap and robots", async () => {
     const entries = (await sitemap()).map((entry) => entry.url);
     const robotRules = robots().rules;
@@ -355,8 +382,21 @@ describe("public SEO copy and linking", () => {
     const randomLinks = readPage("src/components/homepage/RandomArticleLinks.tsx");
 
     expect(randomLinks).toContain("/articles/building-a-haccp-process-flow-diagram");
-    expect(randomLinks).toContain("/articles/haccp-for-burger-vans-eu");
     expect(randomLinks).toContain("/articles/haccp-for-artisanal-bakeries-eu");
+    expect(randomLinks).not.toContain("/articles/haccp-for-burger-vans-eu");
+    expect(randomLinks).not.toContain("/articles/haccp-for-food-trucks");
+    expect(randomLinks).not.toContain("/articles/haccp-for-hotel-breakfast-buffets-eu");
+    expect(randomLinks).not.toContain("/articles/haccp-for-juice-and-smoothie-bars-eu");
+    expect(randomLinks).not.toContain("/articles/haccp-for-pizza-takeaways-eu");
+    expect(randomLinks).not.toContain("/articles/haccp-for-meal-prep-services-eu");
+    expect(randomLinks).not.toContain("/articles/haccp-for-brunch-and-breakfast-cafes-eu");
+    expect(randomLinks).not.toContain("/articles/haccp-for-community-kitchens-eu");
+    expect(randomLinks).not.toContain("/articles/haccp-for-fine-dining-restaurants-eu");
+    expect(randomLinks).not.toContain("/articles/haccp-for-school-canteens-eu");
+    expect(randomLinks).not.toContain("/articles/haccp-for-dark-kitchens-and-ghost-kitchens-eu");
+    expect(randomLinks).not.toContain("/articles/haccp-for-pop-up-restaurants-eu");
+    expect(randomLinks).not.toContain("/articles/haccp-for-care-home-kitchens-eu");
+    expect(randomLinks).not.toContain("/articles/failed-haccp-inspection-consequences-uk");
     expect(randomLinks).not.toContain("/articles/cooling-and-reheating-haccp-high-risk-steps");
     expect(randomLinks).not.toContain("/articles/correcting-non-conformities-in-haccp");
   });
@@ -429,6 +469,44 @@ describe("public SEO copy and linking", () => {
 });
 
 describe("premium quality regressions", () => {
+  it("supports priority compliance articles with accurate claims and primary sources", () => {
+    const physicalHazards = readPage(
+      "content/articles/physical-hazards-in-haccp-and-how-to-control-them.md",
+    );
+    const allergenManagement = readPage(
+      "content/articles/allergen-management-within-haccp-plans.md",
+    );
+    const supplierApproval = readPage(
+      "content/articles/supplier-approval-in-haccp-records-and-requirements.md",
+    );
+    const manifest = readPage("content/articles/manifest.json");
+
+    expect(supplierApproval).not.toContain(
+      "Regulation (EC) 852/2004 requires approved suppliers",
+    );
+    expect(manifest).not.toContain(
+      "Regulation (EC) 852/2004 requires approved suppliers",
+    );
+
+    expect(physicalHazards).toContain(
+      "https://www.fao.org/fao-who-codexalimentarius/",
+    );
+    expect(physicalHazards).toContain("/resources/haccp-plan-template");
+
+    expect(allergenManagement).toContain(
+      "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32021R0382",
+    );
+    expect(allergenManagement).toContain("/resources/allergen-matrix-template");
+
+    expect(supplierApproval).toContain(
+      "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02004R0852-20210324",
+    );
+    expect(supplierApproval).toContain(
+      "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02002R0178-20240701",
+    );
+    expect(supplierApproval).toContain("/resources/supplier-approval-questionnaire");
+  });
+
   it("does not ship mojibake on core marketing pages", () => {
     const about = readPage("src/app/about/page.tsx");
     const pricing = readPage("src/app/pricing/page.tsx");

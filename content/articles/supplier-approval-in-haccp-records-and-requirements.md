@@ -1,7 +1,7 @@
 ---
 title: "Supplier Approval in HACCP: What Records You Need and Why"
 slug: "supplier-approval-in-haccp-records-and-requirements"
-excerpt: "Regulation (EC) 852/2004 requires approved suppliers. What records auditors expect, how to assess GFSI certification equivalence, and managing emergency suppliers without compromising HACCP."
+excerpt: "Learn how supplier approval supports HACCP, incoming-material controls, and traceability under EU and UK food law, including practical records and emergency supplier checks."
 category: "Compliance"
 publishedAt: "2026-04-22"
 image: "https://images.pexels.com/photos/6169668/pexels-photo-6169668.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
@@ -10,24 +10,24 @@ source: "pinkpepper"
 
 <p>The delivery arrives at 06:15. Your usual dried herb supplier has substituted a different origin without notice. The driver waits. Production needs the material for today's batch. The incoming goods checklist asks: "Approved supplier?" You check the approved supplier list. The name isn't there. The driver says it's the same product from their other warehouse. You waive it through. Three months later, an EHO reviews your supplier approval records during a routine inspection. They trace that delivery to your approved list. Finding: "Raw material received from unapproved supplier. No documented justification. No risk assessment." Supplier approval is not a procurement function. It is a HACCP prerequisite programme. Getting it wrong undermines every CCP that follows.</p>
 
-<blockquote><strong>Audit Tip:</strong> Auditors will cross-reference delivery records against the approved supplier list. Any delivery from a supplier not on the list requires a documented concession with risk assessment completed <em>before</em> use, not retrospectively. A pattern of emergency purchases from unapproved sources indicates supplier approval is not functioning as a live prerequisite programme.</blockquote>
+<blockquote><strong>Audit Tip:</strong> Where your HACCP system or certification scheme uses an approved supplier list, auditors commonly cross-reference it against delivery records. A delivery outside the normal approval route should be handled under the site's documented exception procedure, with a proportionate risk assessment completed before use.</blockquote>
 
 <h2>What You'll Learn</h2>
 <ul>
-<li>Minimum documentation requirements for supplier approval under Regulation (EC) 852/2004 and traceability obligations under Regulation (EC) 178/2002</li>
+<li>How supplier approval records support HACCP-based controls under Regulation (EC) 852/2004 and traceability duties under Regulation (EC) 178/2002</li>
 <li>How to evaluate GFSI certification equivalence and when additional verification is required</li>
 <li>Emergency supplier procedure that satisfies auditor scrutiny without compromising food safety</li>
 </ul>
 
 <h2>Part 1: Regulatory Foundation</h2>
 
-<p>Regulation (EC) 852/2004 on hygiene of foodstuffs establishes the obligation for supplier control. Article 5 requires food business operators to put in place, implement, and maintain a permanent procedure based on HACCP principles. Supplier approval is a prerequisite programme supporting HACCP. Without effective supplier control, hazards introduced with raw materials may not be controlled by subsequent CCPs.</p>
+<p>Regulation (EC) 852/2004 does not expressly require a document called an "approved supplier list." Article 5 instead requires food business operators to put in place, implement, and maintain procedures based on HACCP principles, with documents and records proportionate to the business. A risk-based supplier approval system is a common way to support those procedures where incoming materials can introduce hazards that later controls may not remove.</p>
 
 <p>Chapter IX of Annex II to Regulation (EC) 852/2004 specifically addresses provisions applicable to foodstuffs. Paragraph 3 states: "A food business operator must not accept raw materials or ingredients, other than live animals, or any other material used in processing products, if they are known to be, or might reasonably be expected to be, contaminated with parasites, pathogenic microorganisms or toxic, decomposed or foreign substances to such an extent that, even after the food business operator had hygienically applied normal sorting and/or preparatory or processing procedures, the final product would be unfit for human consumption." This creates a positive obligation to assess incoming materials before acceptance.</p>
 
-<p>Regulation (EC) 178/2002 Article 18 requires traceability at all stages of production, processing, and distribution. Food business operators must be able to identify any person from whom they have been supplied with a food, feed, food-producing animal, or substance intended to be incorporated into a food. This is the "one step back" traceability obligation. Supplier approval records are the foundation of meeting this requirement.</p>
+<p>Regulation (EC) 178/2002 Article 18 requires traceability at all stages of production, processing, and distribution. Food business operators must be able to identify any person from whom they have been supplied with a food, feed, food-producing animal, or substance intended to be incorporated into a food. This is the "one step back" traceability obligation. Supplier approval records can support that system, while delivery and transaction records provide the evidence for specific consignments.</p>
 
-<p>For UK operators, these obligations are retained in domestic law. The Food Safety and Hygiene (England) Regulations 2013 maintain the requirement for HACCP-based procedures including supplier control. The FSA Food Law Code of Practice expects local authority officers to verify supplier approval during inspections.</p>
+<p>For UK operators, equivalent HACCP-based hygiene and traceability duties continue under the applicable domestic framework. Inspectors may examine how a business controls incoming materials and identifies its suppliers. An approved supplier list can provide useful evidence, but the legal focus is whether the operator's controls and records are effective and proportionate to the risks.</p>
 
 <h2>Part 2: Approved Supplier List — Minimum Requirements</h2>
 
@@ -64,7 +64,7 @@ source: "pinkpepper"
 </tbody>
 </table>
 
-<p>The list must include suppliers of food contact materials, cleaning chemicals, and outsourced services where these affect food safety. Pest control contractors, laundry services for workwear, and sanitation chemical suppliers all require approval and inclusion.</p>
+<p>As a practical control, businesses should consider including suppliers of food-contact materials, cleaning chemicals, and outsourced services where these can affect food safety. The scope should follow the site's hazard analysis and contractual controls rather than assuming every service requires the same approval method.</p>
 
 <h2>Part 3: Supplier Questionnaires</h2>
 
@@ -88,7 +88,7 @@ source: "pinkpepper"
 
 <h2>Part 5: Certificates of Analysis</h2>
 
-<p>Certificate of analysis (CoA) or certificate of conformance (CoC) provides batch-specific assurance. CoA contains actual test results. CoC states conformance to specification without providing data. The distinction matters. CoA is required where specification limits relate to food safety — microbiological criteria under Regulation (EC) 2073/2005, mycotoxin limits under Regulation (EU) 2023/915, or allergen declarations.</p>
+<p>A certificate of analysis (CoA) or certificate of conformance (CoC) can provide batch-specific assurance. A CoA contains actual test results, while a CoC states conformance to specification without providing the data. Whether a CoA is needed for every delivery is a risk-based decision informed by the material specification, supplier performance, applicable legal limits, and the operator's verification plan.</p>
 
 <p>CoA review must verify that the results meet specification and that the testing is appropriate to the material. A CoA for RTE cooked chicken showing <em>Listeria</em> spp. tested but not <em>Listeria monocytogenes</em> is inadequate. A CoA for ground paprika showing total aflatoxin but not ochratoxin A may be incomplete depending on origin risk.</p>
 
@@ -267,10 +267,23 @@ source: "pinkpepper"
 <h2>Key Takeaways</h2>
 
 <ol>
-<li>Supplier approval is a HACCP prerequisite programme required under Regulation (EC) 852/2004. The approved supplier list must be controlled, current, and accessible to receiving personnel.</li>
+<li>Regulation (EC) 852/2004 requires effective HACCP-based procedures and proportionate records; a controlled supplier approval system is a common way to manage risks introduced through incoming materials.</li>
 <li>Basis of approval must be appropriate to material risk. GFSI certification provides assurance but does not eliminate need for CoA review and ongoing performance monitoring.</li>
-<li>Certificate of analysis review is required for materials where specification limits relate to food safety. Review must occur before use — positive release for high-risk materials.</li>
+<li>CoA review and positive release should be defined according to material risk, supplier performance, legal limits, and the site's verification plan.</li>
 <li>Emergency use of unapproved suppliers requires documented risk assessment approved by technical management <em>before</em> material use, not retrospective justification.</li>
-<li>Supplier approval records are traceability records under Regulation (EC) 178/2002. Retention period is not prescribed by Article 18; it should be proportionate to product shelf-life and the foreseeable investigation horizon.</li>
-<li>Auditors cross-reference delivery records against the approved supplier list. Any unapproved supply is a finding regardless of material quality.</li>
+<li>Supplier approval records can support traceability under Regulation (EC) 178/2002, but delivery and transaction records are needed to identify the source of specific consignments. Article 18 does not prescribe a fixed retention period.</li>
+<li>Where an approved supplier list forms part of the site's documented system, deliveries outside that route should follow a defined, risk-based exception procedure.</li>
 </ol>
+
+<h2>Primary legal sources</h2>
+<ul>
+<li><a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02004R0852-20210324" rel="noopener noreferrer">Regulation (EC) No 852/2004</a> — see Article 5 and Annex II, Chapter IX.</li>
+<li><a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02002R0178-20240701" rel="noopener noreferrer">Regulation (EC) No 178/2002</a> — see Article 18 on traceability.</li>
+</ul>
+
+<h2>Put this into practice</h2>
+<ul>
+<li><a href="/resources/supplier-approval-questionnaire">Use the supplier approval questionnaire</a> to collect and review risk-relevant evidence.</li>
+<li><a href="/resources/supplier-registration-log">Maintain a supplier registration log</a> that receiving and technical teams can use consistently.</li>
+<li><a href="/resources/incoming-goods-template">Record incoming-goods checks</a> against the approved specification and acceptance criteria.</li>
+</ul>
