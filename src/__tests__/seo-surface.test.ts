@@ -178,6 +178,27 @@ describe("SEO surface", () => {
     expect(csp).toContain("img-src 'self' blob: data: https://*.supabase.co https://images.unsplash.com https://images.pexels.com");
   });
 
+  it("permanently redirects legacy SEO URLs to their current replacements", () => {
+    const nextConfig = readPage("next.config.ts");
+
+    expect(nextConfig).toContain(
+      '{ source: "/features", destination: "/", permanent: true }',
+    );
+    expect(nextConfig).toContain(
+      '{ source: "/compare", destination: "/pricing", permanent: true }',
+    );
+    expect(nextConfig).toContain(
+      '{ source: "/og-image", destination: "/social-card.png", permanent: true }',
+    );
+  });
+
+  it("does not advertise the removed features hub in structured breadcrumbs", () => {
+    const featureTemplate = readPage("src/components/site/FeatureTemplate.tsx");
+
+    expect(featureTemplate).not.toContain('item: "https://pinkpepper.io/features"');
+    expect(featureTemplate).not.toContain('name: "Features"');
+  });
+
   it("includes public marketing pages and excludes auth/dashboard routes from sitemap and robots", async () => {
     const entries = (await sitemap()).map((entry) => entry.url);
     const robotRules = robots().rules;

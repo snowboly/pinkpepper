@@ -22,6 +22,15 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   trailingSlash: false,
+
+  async redirects() {
+    return [
+      { source: "/features", destination: "/", permanent: true },
+      { source: "/compare", destination: "/pricing", permanent: true },
+      { source: "/og-image", destination: "/social-card.png", permanent: true },
+    ];
+  },
+
   turbopack: {
     root: projectRoot,
   },
