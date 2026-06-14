@@ -164,7 +164,9 @@ describe("SEO surface", () => {
     expect(layout).toContain("height: 630");
     expect(layout).toContain('images: ["https://pinkpepper.io/social-card.png"]');
     expect(layout).toContain('title: "PinkPepper | AI HACCP & Food Safety Software - EU & UK"');
-    expect(layout).toContain("grounded in 35+ EU & UK regulations. Try free.");
+    expect(layout).toContain(
+      "Get free AI food safety guidance, HACCP plans and SOPs, plus EU/UK food import and export compliance support for your business."
+    );
   });
 
   it("allows article imagery from the configured external sources", () => {
