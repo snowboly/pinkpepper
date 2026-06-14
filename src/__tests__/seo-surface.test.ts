@@ -450,6 +450,44 @@ describe("public SEO copy and linking", () => {
 });
 
 describe("premium quality regressions", () => {
+  it("supports priority compliance articles with accurate claims and primary sources", () => {
+    const physicalHazards = readPage(
+      "content/articles/physical-hazards-in-haccp-and-how-to-control-them.md",
+    );
+    const allergenManagement = readPage(
+      "content/articles/allergen-management-within-haccp-plans.md",
+    );
+    const supplierApproval = readPage(
+      "content/articles/supplier-approval-in-haccp-records-and-requirements.md",
+    );
+    const manifest = readPage("content/articles/manifest.json");
+
+    expect(supplierApproval).not.toContain(
+      "Regulation (EC) 852/2004 requires approved suppliers",
+    );
+    expect(manifest).not.toContain(
+      "Regulation (EC) 852/2004 requires approved suppliers",
+    );
+
+    expect(physicalHazards).toContain(
+      "https://www.fao.org/fao-who-codexalimentarius/",
+    );
+    expect(physicalHazards).toContain("/resources/haccp-plan-template");
+
+    expect(allergenManagement).toContain(
+      "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32021R0382",
+    );
+    expect(allergenManagement).toContain("/resources/allergen-matrix-template");
+
+    expect(supplierApproval).toContain(
+      "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02004R0852-20210324",
+    );
+    expect(supplierApproval).toContain(
+      "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02002R0178-20240701",
+    );
+    expect(supplierApproval).toContain("/resources/supplier-approval-questionnaire");
+  });
+
   it("does not ship mojibake on core marketing pages", () => {
     const about = readPage("src/app/about/page.tsx");
     const pricing = readPage("src/app/pricing/page.tsx");
