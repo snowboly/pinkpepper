@@ -188,6 +188,12 @@ describe("SEO surface", () => {
       '{ source: "/compare", destination: "/pricing", permanent: true }',
     );
     expect(nextConfig).toContain(
+      '{ source: "/compare/pinkpepper-vs-consultant", destination: "/pricing", permanent: true }',
+    );
+    expect(nextConfig).toContain(
+      '{ source: "/compare/haccp-software-alternatives", destination: "/pricing", permanent: true }',
+    );
+    expect(nextConfig).toContain(
       '{ source: "/og-image", destination: "/social-card.png", permanent: true }',
     );
   });
