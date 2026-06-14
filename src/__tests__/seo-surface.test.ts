@@ -376,8 +376,21 @@ describe("public SEO copy and linking", () => {
     const randomLinks = readPage("src/components/homepage/RandomArticleLinks.tsx");
 
     expect(randomLinks).toContain("/articles/building-a-haccp-process-flow-diagram");
-    expect(randomLinks).toContain("/articles/haccp-for-burger-vans-eu");
     expect(randomLinks).toContain("/articles/haccp-for-artisanal-bakeries-eu");
+    expect(randomLinks).not.toContain("/articles/haccp-for-burger-vans-eu");
+    expect(randomLinks).not.toContain("/articles/haccp-for-food-trucks");
+    expect(randomLinks).not.toContain("/articles/haccp-for-hotel-breakfast-buffets-eu");
+    expect(randomLinks).not.toContain("/articles/haccp-for-juice-and-smoothie-bars-eu");
+    expect(randomLinks).not.toContain("/articles/haccp-for-pizza-takeaways-eu");
+    expect(randomLinks).not.toContain("/articles/haccp-for-meal-prep-services-eu");
+    expect(randomLinks).not.toContain("/articles/haccp-for-brunch-and-breakfast-cafes-eu");
+    expect(randomLinks).not.toContain("/articles/haccp-for-community-kitchens-eu");
+    expect(randomLinks).not.toContain("/articles/haccp-for-fine-dining-restaurants-eu");
+    expect(randomLinks).not.toContain("/articles/haccp-for-school-canteens-eu");
+    expect(randomLinks).not.toContain("/articles/haccp-for-dark-kitchens-and-ghost-kitchens-eu");
+    expect(randomLinks).not.toContain("/articles/haccp-for-pop-up-restaurants-eu");
+    expect(randomLinks).not.toContain("/articles/haccp-for-care-home-kitchens-eu");
+    expect(randomLinks).not.toContain("/articles/failed-haccp-inspection-consequences-uk");
     expect(randomLinks).not.toContain("/articles/cooling-and-reheating-haccp-high-risk-steps");
     expect(randomLinks).not.toContain("/articles/correcting-non-conformities-in-haccp");
   });
