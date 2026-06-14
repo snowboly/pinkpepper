@@ -31,11 +31,11 @@ export const metadata: Metadata = {
   },
   title: "PinkPepper | AI HACCP & Food Safety Software - EU & UK",
   description:
-    "Get free food safety consultancy, HACCP plans and SOPs, plus expert EU/UK food import and export compliance support for your business.",
+    "Get free AI food safety guidance, HACCP plans and SOPs, plus EU/UK food import and export compliance support for your business.",
   openGraph: {
     title: "PinkPepper | AI HACCP & Food Safety Software - EU & UK",
     description:
-      "Generate HACCP plans, allergen records, SOPs & audit-ready documents in minutes. Save 10+ hours/week on compliance. Grounded in 35+ EU & UK regulations.",
+      "Get free AI food safety guidance, HACCP plans and SOPs, plus EU/UK food import and export compliance support for your business.",
     url: "https://pinkpepper.io",
     siteName: "PinkPepper",
     locale: "en_GB",
@@ -53,7 +53,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "PinkPepper | AI HACCP & Food Safety Software - EU & UK",
     description:
-      "HACCP plans, allergen records, SOPs & audit-ready documents in minutes. AI food safety software grounded in 35+ EU & UK regulations. Try free.",
+      "Get free AI food safety guidance, HACCP plans and SOPs, plus EU/UK food import and export compliance support for your business.",
     images: ["https://pinkpepper.io/social-card.png"],
   },
   manifest: "/logo/site.webmanifest",

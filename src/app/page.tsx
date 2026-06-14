@@ -45,7 +45,7 @@ const homepageTestimonials = [
 export const metadata: Metadata = {
   title: "PinkPepper | AI HACCP & Food Safety Software - EU & UK",
   description:
-    "Get free food safety consultancy, HACCP plans and SOPs, plus expert EU/UK food import and export compliance support for your business.",
+    "Get free AI food safety guidance, HACCP plans and SOPs, plus EU/UK food import and export compliance support for your business.",
   alternates: {
     canonical: "https://pinkpepper.io",
   },
