@@ -31,7 +31,7 @@ export const metadata: Metadata = {
   },
   title: "PinkPepper | AI HACCP & Food Safety Software - EU & UK",
   description:
-    "Generate free HACCP plans, hazard analysis templates, SOPs, and food safety records for EU and UK food businesses.",
+    "Get free food safety consultancy, HACCP plans and SOPs, plus expert EU/UK food import and export compliance support for your business.",
   openGraph: {
     title: "PinkPepper | AI HACCP & Food Safety Software - EU & UK",
     description:
