@@ -96,6 +96,27 @@ publishedAt: "2026-02-10"
   });
 });
 
+describe("Great Britain food import guide", () => {
+  it("publishes a scoped, illustrated guide without known route-classification errors", async () => {
+    const slug = "how-to-import-food-into-great-britain-from-non-eu-countries";
+    const manifest = await getArticleManifest();
+    const article = await getArticleBySlug(slug);
+
+    expect(manifest.some((item) => item.slug === slug)).toBe(true);
+    expect(article).not.toBeNull();
+    expect(article?.category).toBe("Import & Export");
+    expect(article?.publishedAt).toBe("2026-06-15");
+    expect(article?.image).toContain("images.pexels.com");
+    expect(article?.body).toContain("England, Scotland and Wales");
+    expect(article?.body).toContain("Northern Ireland");
+    expect(article?.body).toContain("/articles/gb-food-import-workflow.svg");
+    expect(article?.body).toContain("/articles/gb-food-import-decision-tree.svg");
+    expect(article?.body).toContain("Canned tuna is a processed fishery product and POAO, not a composite product");
+    expect(article?.body).not.toContain("canned tuna from Thailand is a shelf-stable composite product");
+    expect(article?.body).not.toContain("Low risk can enter through any point");
+  });
+});
+
 describe("article content processing", () => {
   it("normalizes rich article html for editorial rendering", () => {
     const result = processArticleContent(
