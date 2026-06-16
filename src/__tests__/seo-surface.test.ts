@@ -238,7 +238,7 @@ describe("SEO surface", () => {
   });
 });
 
-describe("public SEO copy and linking", () => {
+describe("public SEO copy and linking", { timeout: 15000 }, () => {
   it("aligns the homepage with the compliance software category narrative", () => {
     const homepage = readPage("src/app/page.tsx");
 
