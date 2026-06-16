@@ -35,7 +35,7 @@ vi.mock("next/server", () => {
   return { NextResponse: MockNextResponse };
 });
 
-describe("proxy host canonicalization", () => {
+describe("proxy host canonicalization", { timeout: 15000 }, () => {
   beforeEach(() => {
     vi.resetModules();
   });

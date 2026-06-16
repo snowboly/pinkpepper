@@ -114,6 +114,14 @@ describe("Great Britain food import guide", () => {
     expect(article?.body).toContain("Canned tuna is a processed fishery product and POAO, not a composite product");
     expect(article?.body).not.toContain("canned tuna from Thailand is a shelf-stable composite product");
     expect(article?.body).not.toContain("Low risk can enter through any point");
+    expect(article?.body).toContain("only apply to non-EU countries that Defra has risk assessed");
+    expect(article?.body).toContain(
+      "https://www.gov.uk/government/publications/risk-categories-for-animal-and-animal-product-imports-from-non-eu-countries-to-great-britain",
+    );
+    expect(article?.body).not.toContain(
+      "https://www.gov.uk/government/publications/risk-categories-for-animal-and-animal-product-imports-to-great-britain",
+    );
+    expect(article?.body.match(/https:\/\/www\.food\.gov\.uk\/business-guidance\/importing-high-risk-food-and-feed-of-non-animal-origin-hrfnao-into-great-britain/g)?.length).toBe(2);
   });
 });
 

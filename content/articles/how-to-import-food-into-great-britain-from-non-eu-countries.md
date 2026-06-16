@@ -48,14 +48,14 @@ source: "pinkpepper"
 
 <h3>Products of animal origin and animal by-products</h3>
 
-<p>Under the Border Target Operating Model, products of animal origin (POAO), animal by-products (ABP), germinal products and live animals from non-EU countries are categorised as low, medium or high risk. The category determines the core certification and inspection approach.</p>
+<p>For non-EU origins that Defra has risk assessed, products of animal origin (POAO), animal by-products (ABP), germinal products and live animals are categorised as low, medium or high risk under the Border Target Operating Model. These categories only apply to non-EU countries that Defra has risk assessed. If an exporting country has market access but is not on the assessed-country list, follow the existing import process and product-specific conditions instead of assigning a BTOM risk category.</p>
 
 <ul>
   <li><strong>Medium and high risk:</strong> normally require a health certificate, or an importer declaration where one is available, plus IPAFFS pre-notification and the applicable border controls.</li>
   <li><strong>Low risk POAO and ABP:</strong> normally travel with a supplier commercial document rather than a health certificate, but they must still meet the relevant import conditions. Official GOV.UK guidance states that low-risk consignments from non-EU countries must enter through a relevant Border Control Post, although they may not receive routine identity or physical checks.</li>
 </ul>
 
-<p>Use the current <a href="https://www.gov.uk/government/publications/risk-categories-for-animal-and-animal-product-imports-to-great-britain">non-EU animal-product risk categories</a>. Do not reuse a category from a similar product or an earlier shipment.</p>
+<p>Use the current <a href="https://www.gov.uk/government/publications/risk-categories-for-animal-and-animal-product-imports-from-non-eu-countries-to-great-britain">non-EU animal-product risk categories</a>. Do not reuse a category from a similar product or an earlier shipment.</p>
 
 <h3>Composite and compound products</h3>
 
@@ -67,7 +67,7 @@ source: "pinkpepper"
 
 <p>High-risk food and feed of non-animal origin (HRFNAO) is <strong>not</strong> part of the BTOM high, medium and low animal-product categorisation. It is controlled through product-and-origin listings and emergency measures. Requirements can include laboratory results, an official certificate, a commercial document, IPAFFS pre-notification using a CHED-D and entry through an appropriately designated BCP.</p>
 
-<p>Check the live <a href="https://www.food.gov.uk/business-guidance/high-risk-food-and-feed-of-non-animal-origin-hrfnao">FSA HRFNAO guidance</a> for the exact product-country combination. A spice from one origin may be listed while the same spice from another origin is not.</p>
+<p>Check the live <a href="https://www.food.gov.uk/business-guidance/importing-high-risk-food-and-feed-of-non-animal-origin-hrfnao-into-great-britain">FSA HRFNAO guidance</a> for the exact product-country combination. A spice from one origin may be listed while the same spice from another origin is not.</p>
 
 <h3>Plants and plant products</h3>
 
@@ -278,7 +278,7 @@ source: "pinkpepper"
   <li><a href="https://www.gov.uk/guidance/importing-or-moving-fish-to-the-uk">Fish and IUU import guidance</a></li>
   <li><a href="https://www.gov.uk/guidance/import-plants-and-plant-products-from-non-eu-countries-to-great-britain">Non-EU plant import guidance</a></li>
   <li><a href="https://www.gov.uk/guidance/importing-organic-food-to-the-uk">Organic import guidance</a></li>
-  <li><a href="https://www.food.gov.uk/business-guidance/importing-high-risk-food-and-feed-of-non-animal-origin-into-great-britain">FSA HRFNAO guidance</a></li>
+  <li><a href="https://www.food.gov.uk/business-guidance/importing-high-risk-food-and-feed-of-non-animal-origin-hrfnao-into-great-britain">FSA HRFNAO guidance</a></li>
   <li><a href="https://www.gov.uk/trade-tariff">UK Trade Tariff</a></li>
 </ul>
 
