@@ -33,8 +33,8 @@
   },
   "home": {
     "heroBadge": "Conçu pour la réglementation alimentaire UE et UK",
-    "heroTitle": "Plans HACCP, PMS et préparation d'audit en quelques minutes - pas en plusieurs semaines.",
-    "heroDescription": "PinkPepper est un logiciel IA de conformité en sécurité alimentaire qui fait gagner plus de 10 heures par semaine à votre équipe sur la documentation. Obtenez des réponses fondées sur la réglementation, générez des dossiers prêts pour l'audit et faites appel à des consultants humains lorsque le risque augmente.",
+    "heroTitle": "Générez gratuitement des plans HACCP, des SOP et des registres de sécurité alimentaire en quelques minutes",
+    "heroDescription": "Générez gratuitement des plans HACCP, des modèles d'analyse des dangers, des SOP et des registres de sécurité alimentaire pour les entreprises agroalimentaires de l'UE et du Royaume-Uni. PinkPepper aide les équipes à passer plus vite des questions aux documents de conformité réellement utilisables.",
     "eurLexLabel": "Données réglementaires fournies par",
     "trustCards": {
       "groundedTitle": "Ancré dans plus de 35 réglementations UE et UK",
@@ -47,7 +47,7 @@
     "workflows": {
       "eyebrow": "Pensé pour le terrain",
       "title": "Ce que PinkPepper vous aide à faire",
-      "body": "Des notes brutes à un travail de conformité prêt à être relu, PinkPepper est conçu pour réduire le temps entre un problème de sécurité alimentaire et quelque chose d'utilisable par votre équipe.",
+      "body": "Des brouillons gratuits de plans HACCP et modèles d'analyse des dangers jusqu'aux SOP, relevés de surveillance et enregistrements d'actions correctives, PinkPepper aide les entreprises alimentaires à produire des documents réellement utilisables sur site.",
       "answerTitle": "Répondre plus vite aux questions de conformité",
       "answerBody": "Obtenez des réponses ancrées dans la réglementation, basées sur le CE 852/2004, les guides de la FSA britannique et les références Codex HACCP.",
       "buildTitle": "Construire plus vite le HACCP et la préparation d'audit",
@@ -110,6 +110,7 @@
     "library": {
       "eyebrow": "Depuis la bibliothèque",
       "title": "Articles, guides et modèles",
+      "body": "Commencez par des modèles HACCP gratuits, des feuilles d'analyse des dangers, des guides et des registres pratiques de sécurité alimentaire.",
       "haccpLinkLabel": "Générateur de plan HACCP",
       "browseAllLabel": "Tout parcourir"
     },

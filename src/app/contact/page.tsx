@@ -25,7 +25,7 @@ const contactPageSchema = {
 };
 
 export const metadata: Metadata = {
-  title: "Contact PinkPepper — Food Safety Compliance Support",
+  title: "Contact PinkPepper - Food Safety Compliance Support",
   description:
     "Questions about HACCP plans, pricing, or enterprise plans? Contact PinkPepper for food safety compliance support. We respond within 1 business day.",
   alternates: {
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     languages: { "x-default": "https://pinkpepper.io/contact", en: "https://pinkpepper.io/contact" },
   },
   openGraph: {
-    title: "Contact PinkPepper — Food Safety Compliance Support",
+    title: "Contact PinkPepper - Food Safety Compliance Support",
     description:
       "Questions about HACCP plans, pricing, or enterprise plans? Contact PinkPepper for food safety compliance support. We respond within 1 business day.",
     locale: "en_GB",

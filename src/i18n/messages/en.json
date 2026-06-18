@@ -147,6 +147,7 @@
     "reviewQueue": "Review Queue",
     "myReviews": "My Reviews",
     "expertReviews": "Ask an expert",
+    "backToHome": "Back to homepage",
     "accountSettings": "Account settings",
     "viewPlans": "View plans",
     "today": "Today",
@@ -324,7 +325,7 @@
     "triggers": {
       "message_limit": {
         "heading": "You've reached your daily message limit",
-        "body": "Upgrade for 25 messages per day on Plus or 100 per day on Pro."
+        "body": "Upgrade for higher daily limits on Plus or Pro."
       },
       "expert_limit": {
         "heading": "You've reached your daily Auditor limit",
@@ -352,8 +353,8 @@
         "name": "Plus",
         "price": "€19/mo",
         "highlights": [
-          "25 messages per day",
-          "5 image analyses per day",
+          "Higher daily chat limits",
+          "More image analyses",
           "Unlimited saved conversations and projects",
           "Access to downloadable templates"
         ],

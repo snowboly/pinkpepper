@@ -18,7 +18,6 @@ const CATEGORY_COLORS: Record<string, { badge: string; dot: string }> = {
   monitoring:  { badge: "bg-[#EFF6FF] text-[#1D4ED8]",   dot: "bg-[#2563EB]" },
   traceability:{ badge: "bg-[#F5F3FF] text-[#6D28D9]",   dot: "bg-[#7C3AED]" },
   supplier:    { badge: "bg-[#ECFEFF] text-[#0E7490]",   dot: "bg-[#0891B2]" },
-  audit:       { badge: "bg-[#F8FAFC] text-[#475569]",   dot: "bg-[#64748B]" },
   training:    { badge: "bg-[#FEF9C3] text-[#A16207]",   dot: "bg-[#CA8A04]" },
 };
 
@@ -39,7 +38,6 @@ export function ResourcesGrid({ resources }: Props) {
     { key: "monitoring",   label: "Monitoring" },
     { key: "traceability", label: "Traceability" },
     { key: "supplier",     label: "Supplier" },
-    { key: "audit",        label: "Audit" },
     { key: "training",     label: "Training" },
   ];
 
@@ -82,7 +80,7 @@ export function ResourcesGrid({ resources }: Props) {
       {/* Template cards */}
       <div className="mt-4 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
         {visible.map((resource) => {
-          const colors = CATEGORY_COLORS[resource.category] ?? CATEGORY_COLORS.audit;
+          const colors = CATEGORY_COLORS[resource.category] ?? CATEGORY_COLORS.haccp;
           return (
             <Link
               key={resource.href}

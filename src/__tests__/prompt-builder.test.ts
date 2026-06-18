@@ -132,6 +132,19 @@ describe("buildRAGSystemPrompt", () => {
 });
 
 describe("buildRAGPrompt", () => {
+  it("uses low temperature and exact-target instructions for precision legal questions", () => {
+    const result = buildRAGPrompt(
+      "What is the latest regulation amending 2019/1793? List every annex entry.",
+      [makeChunk()],
+      "qa"
+    );
+
+    expect(result.temperature).toBe(0.1);
+    expect(result.systemPrompt).toContain("PRECISION LEGAL QUERY");
+    expect(result.systemPrompt).toContain("Do not substitute a newer but legally unrelated instrument");
+    expect(result.systemPrompt).toContain("do not infer or invent the missing detail");
+  });
+
   it("returns system prompt and qa temperature", () => {
     const result = buildRAGPrompt("question", [makeChunk()], "qa");
     expect(result.temperature).toBe(0.7);

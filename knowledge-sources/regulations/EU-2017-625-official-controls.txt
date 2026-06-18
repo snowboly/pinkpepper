@@ -1,0 +1,51 @@
+REGULATION (EU) 2017/625 OF THE EUROPEAN PARLIAMENT AND OF THE COUNCIL
+of 15 March 2017
+on official controls and other official activities performed to ensure the application of food and feed law, and related rules
+
+OFFICIAL SOURCE
+- EUR-Lex ELI: https://eur-lex.europa.eu/eli/reg/2017/625/oj/eng
+- CELEX: 32017R0625
+- OJ L 95, 7.4.2017, pp. 1-142
+- EUR-Lex consolidated versions include a current version dated 5 January 2025
+
+ROLE IN THE LEGAL STACK
+- This is the main EU official-controls framework
+- It is primarily about how competent authorities inspect, verify, sample, and enforce
+- It complements substantive obligations in laws such as:
+  - Regulation (EC) No 178/2002
+  - Regulation (EC) No 852/2004
+  - Regulation (EC) No 853/2004
+  - Regulation (EC) No 2073/2005
+
+PRACTICAL EFFECT
+
+1. RISK-BASED CONTROLS
+- Official controls are to be organised on a risk basis
+- Higher-risk businesses, foods, and supply chains can expect more frequent or more intensive controls
+
+2. COMPETENT AUTHORITY POWERS
+- Authorities may carry out inspections, audits, sampling, documentary checks, identity checks, and physical checks
+- Operators must cooperate and provide access to premises, records, and relevant information
+
+3. OFFICIAL METHODS AND LABORATORIES
+- Official controls rely on documented procedures, validated methods, and designated laboratory systems
+- Important for microbiology, contaminants, imports, and dispute situations
+
+4. NON-COMPLIANCE RESPONSE
+- Authorities may require operators to correct deficiencies
+- Measures can include:
+  - intensified controls
+  - restrictions on placing food on the market
+  - withdrawal or recall
+  - treatment or destruction
+  - other proportionate enforcement measures
+
+5. IMPORT AND BORDER CONTROLS
+- The regulation underpins the EU framework for official checks on certain imported foods
+- Relevant when discussing high-risk imports, documentary checks, identity checks, and physical checks
+
+WHY THIS MATTERS FOR RETRIEVAL
+- Useful for questions about inspections and what authorities can ask for
+- Useful for enforcement and corrective-action questions
+- Useful for import-control questions
+- Not the main source for hygiene rules themselves; use with EC 852/2004 and related substantive laws

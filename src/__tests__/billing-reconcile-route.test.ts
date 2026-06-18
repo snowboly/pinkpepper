@@ -1,10 +1,12 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
+
 const {
   billingState,
   retrieveCheckoutSessionMock,
   stripeRetrieveCustomerMock,
   stripeRetrieveSubscriptionMock,
   getUserByIdMock,
+  sendBillingEmailMock,
 } = vi.hoisted(() => ({
   billingState: {
     user: { id: "user_123", email: "owner@example.com" } as { id: string; email: string } | null,
@@ -16,6 +18,7 @@ const {
   stripeRetrieveCustomerMock: vi.fn(),
   stripeRetrieveSubscriptionMock: vi.fn(),
   getUserByIdMock: vi.fn(),
+  sendBillingEmailMock: vi.fn(),
 }));
 
 vi.mock("@/utils/supabase/server", () => ({
@@ -92,6 +95,10 @@ vi.mock("@/lib/billing/stripe", () => ({
   }),
 }));
 
+vi.mock("@/lib/billing/email", () => ({
+  sendBillingEmail: sendBillingEmailMock,
+}));
+
 import { POST as reconcilePost } from "@/app/api/billing/reconcile/route";
 
 describe("billing reconcile route", () => {
@@ -104,6 +111,7 @@ describe("billing reconcile route", () => {
     stripeRetrieveCustomerMock.mockReset();
     stripeRetrieveSubscriptionMock.mockReset();
     getUserByIdMock.mockReset();
+    sendBillingEmailMock.mockReset();
     process.env.STRIPE_PLUS_PRICE_ID = "price_plus";
     process.env.STRIPE_PRO_PRICE_ID = "price_pro";
     getUserByIdMock.mockResolvedValue({ data: { user: { email: "owner@example.com" } } });
@@ -166,6 +174,7 @@ describe("billing reconcile route", () => {
       status: "active",
     });
     expect(billingState.profileUpdates[0]).toMatchObject({ tier: "plus" });
+    expect(sendBillingEmailMock).not.toHaveBeenCalled();
   });
 
   it("rejects reconciling another user's checkout session", async () => {

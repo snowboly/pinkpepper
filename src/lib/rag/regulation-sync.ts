@@ -11,12 +11,18 @@ import { createHash } from "crypto";
 import { createAdminClient } from "@/utils/supabase/admin";
 import { generateEmbeddings } from "@/lib/rag/embeddings";
 import { buildChunkMetadata } from "@/lib/rag/source-taxonomy";
+import { activateVersionedKnowledgeChunks } from "@/lib/rag/knowledge-ingestion";
 import type { Json } from "@/types/database.types";
 import {
   searchFoodSafetyRegulations,
   discoverNewRegulations,
+  discoverEuOfficialJournalRegulations,
+  discoverUkRegulations,
   fetchRegulationText,
+  fetchUkLegislationText,
+  getManualBackfillRegulations,
   celexToSourceName,
+  normalizeLegislationTitle,
   MIN_REGULATION_TEXT_CHARS,
   type CellarRegulation,
 } from "@/lib/rag/cellar-client";
@@ -26,6 +32,7 @@ const CHUNK_SIZE = 500;
 const CHUNK_OVERLAP = 50;
 const EMBEDDING_BATCH_SIZE = 10;
 const EMBEDDING_BATCH_DELAY_MS = 200;
+const SYNC_PROCESSING_BUDGET_MS = 240_000;
 
 // Default backfill date if no previous sync exists
 const DEFAULT_SINCE_DATE = "2024-01-01";
@@ -38,6 +45,9 @@ export type SyncResult = {
   errors: Array<{ celex: string; error: string }>;
   syncedAt: string;
   loggingAvailable: boolean;
+  completed: boolean;
+  stoppedEarly: boolean;
+  remainingRegulations: number;
 };
 
 type SyncLogInsert = {
@@ -72,7 +82,49 @@ type SyncHealthSummary = {
 type RegulationMetadataInput = Pick<
   CellarRegulation,
   "celex" | "baseCelex" | "title" | "dateDocument" | "dateLastModified"
->;
+> &
+  Partial<
+    Pick<
+      CellarRegulation,
+      "jurisdiction" | "sourceKey" | "versionKey" | "officialUrl" | "textUrl" | "actType"
+    >
+  >;
+
+type KnowledgeCleanupRow = {
+  id: string;
+  source_type: string;
+  source_name: string;
+  metadata: Record<string, unknown> | null;
+};
+
+export function buildKnowledgeCleanupPlan(rows: KnowledgeCleanupRow[]): {
+  archiveIds: string[];
+  titleUpdates: Array<{ id: string; sourceName: string }>;
+} {
+  const archiveIds: string[] = [];
+  const titleUpdates: Array<{ id: string; sourceName: string }> = [];
+
+  for (const row of rows) {
+    if (row.source_type !== "regulation") continue;
+
+    const metadata = row.metadata ?? {};
+    if ((metadata.retrieval_status ?? "active") !== "active") continue;
+
+    if (!metadata.source_key || /\brevoked\b/i.test(row.source_name)) {
+      archiveIds.push(row.id);
+      continue;
+    }
+
+    if (/^\s*<div\b/i.test(row.source_name)) {
+      const sourceName = normalizeLegislationTitle(row.source_name);
+      if (sourceName && sourceName !== row.source_name) {
+        titleUpdates.push({ id: row.id, sourceName });
+      }
+    }
+  }
+
+  return { archiveIds, titleUpdates };
+}
 
 function extractMetadataDate(metadata: Json | null): string | null {
   if (!metadata || typeof metadata !== "object" || Array.isArray(metadata)) return null;
@@ -131,8 +183,27 @@ export function buildRegulationChunkMetadata(
   sourceName: string,
   regulation: RegulationMetadataInput
 ): Json {
+  const sourceKey =
+    regulation.sourceKey ??
+    (regulation.jurisdiction === "gb"
+      ? `uk:${regulation.baseCelex.replace(/\//g, ":")}`
+      : `eu:celex:${regulation.baseCelex}`);
+  const versionKey =
+    regulation.versionKey ??
+    (regulation.jurisdiction === "gb"
+      ? `${sourceKey}:${regulation.dateLastModified}`
+      : `eu:celex:${regulation.celex}`);
+
   return {
     ...buildChunkMetadata(sourceName),
+    jurisdiction: regulation.jurisdiction ?? "eu",
+    source_class: "primary_law",
+    retrieval_status: "active",
+    source_key: sourceKey,
+    version_key: versionKey,
+    act_type: regulation.actType,
+    official_url: regulation.officialUrl,
+    text_url: regulation.textUrl,
     celexNumber: regulation.celex,
     baseCelexNumber: regulation.baseCelex,
     currentVersionDate: regulation.dateLastModified,
@@ -185,12 +256,13 @@ function extractSectionRef(content: string): string | null {
 /**
  * Get the most recent sync date from the log, or the default backfill date.
  */
-async function getLastSyncDate(): Promise<string> {
-  const supabase = createAdminClient();
-
+export async function getLastCompletedSyncDate(
+  supabase: ReturnType<typeof createAdminClient> = createAdminClient()
+): Promise<string> {
   const { data, error } = await supabase
     .from("regulation_sync_log")
     .select("synced_at")
+    .eq("celex_number", "RUN_COMPLETE")
     .eq("status", "success")
     .order("synced_at", { ascending: false })
     .limit(1)
@@ -205,6 +277,44 @@ async function getLastSyncDate(): Promise<string> {
   }
 
   return DEFAULT_SINCE_DATE;
+}
+
+export function shouldStopForTimeBudget(
+  startedAtMs: number,
+  nowMs: number = Date.now(),
+  budgetMs: number = SYNC_PROCESSING_BUDGET_MS
+): boolean {
+  return nowMs - startedAtMs >= budgetMs;
+}
+
+export function shouldAdvanceSyncCursor(
+  result: Pick<SyncResult, "stoppedEarly" | "errors">
+): boolean {
+  return !result.stoppedEarly && result.errors.length === 0;
+}
+
+export async function isVersionAlreadyActive(
+  supabase: ReturnType<typeof createAdminClient>,
+  sourceKey: string,
+  versionKey: string
+): Promise<boolean> {
+  const { data, error } = await supabase
+    .from("knowledge_chunks")
+    .select("id")
+    .eq("source_type", "regulation")
+    .contains("metadata", {
+      source_key: sourceKey,
+      version_key: versionKey,
+      retrieval_status: "active",
+    })
+    .limit(1)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(`Failed to inspect active regulation version: ${error.message}`);
+  }
+
+  return Boolean(data);
 }
 
 /**
@@ -258,6 +368,24 @@ async function isAlreadySynced(
   return data.last_modified === lastModified;
 }
 
+function getRegulationSourceName(regulation: CellarRegulation): string {
+  return regulation.jurisdiction === "gb" ? regulation.title : celexToSourceName(regulation.celex);
+}
+
+function getRegulationSourceKey(regulation: CellarRegulation): string {
+  return regulation.sourceKey ??
+    (regulation.jurisdiction === "gb"
+      ? `uk:${regulation.baseCelex.replace(/\//g, ":")}`
+      : `eu:celex:${regulation.baseCelex}`);
+}
+
+function getRegulationVersionKey(regulation: CellarRegulation): string {
+  return regulation.versionKey ??
+    (regulation.jurisdiction === "gb"
+      ? `${getRegulationSourceKey(regulation)}:${regulation.dateLastModified}`
+      : `eu:celex:${regulation.celex}`);
+}
+
 /**
  * Process a single regulation: chunk, embed, and insert into DB.
  * Accepts pre-fetched text and its hash to avoid double-fetching.
@@ -268,20 +396,13 @@ async function processRegulation(
   contentHash: string
 ): Promise<{ chunksCreated: number; contentHash: string }> {
   const supabase = createAdminClient();
-  const sourceName = celexToSourceName(regulation.celex);
+  const sourceName = getRegulationSourceName(regulation);
 
   // Chunk the text
   const chunks = chunkText(text, CHUNK_SIZE, CHUNK_OVERLAP);
   if (chunks.length === 0) {
     throw new Error("No chunks produced from regulation text");
   }
-
-  // Delete existing chunks for this regulation (deduplication)
-  await supabase
-    .from("knowledge_chunks")
-    .delete()
-    .eq("source_type", "regulation")
-    .in("source_name", [sourceName, ...regulation.legacyAliases]);
 
   // Generate embeddings in batches
   const allRows: Array<{
@@ -290,7 +411,7 @@ async function processRegulation(
     source_type: string;
     source_name: string;
     section_ref: string | null;
-    metadata: Json;
+    metadata: Record<string, unknown>;
   }> = [];
 
   for (let i = 0; i < chunks.length; i += EMBEDDING_BATCH_SIZE) {
@@ -304,7 +425,7 @@ async function processRegulation(
         source_type: "regulation",
         source_name: sourceName,
         section_ref: extractSectionRef(batch[j]),
-        metadata: buildRegulationChunkMetadata(sourceName, regulation),
+        metadata: buildRegulationChunkMetadata(sourceName, regulation) as Record<string, unknown>,
       });
     }
 
@@ -314,16 +435,21 @@ async function processRegulation(
     }
   }
 
-  // Insert chunks in batches of 100
-  for (let i = 0; i < allRows.length; i += 100) {
-    const batch = allRows.slice(i, i + 100);
-    const { error } = await supabase.from("knowledge_chunks").insert(batch);
-    if (error) {
-      throw new Error(`DB insert failed: ${error.message}`);
-    }
-  }
+  await activateVersionedKnowledgeChunks(supabase as never, {
+    sourceKey: getRegulationSourceKey(regulation),
+    versionKey: getRegulationVersionKey(regulation),
+    rows: allRows,
+    legacySourceNames: [sourceName, ...regulation.legacyAliases],
+  });
 
   return { chunksCreated: allRows.length, contentHash };
+}
+
+async function fetchTextForRegulation(regulation: CellarRegulation): Promise<string> {
+  if (regulation.jurisdiction === "gb") {
+    return fetchUkLegislationText(regulation);
+  }
+  return fetchRegulationText(regulation.celex);
 }
 
 /**
@@ -332,6 +458,7 @@ async function processRegulation(
  */
 export async function syncRegulations(): Promise<SyncResult> {
   const supabase = createAdminClient();
+  const startedAtMs = Date.now();
   const syncedAt = new Date().toISOString();
 
   const result: SyncResult = {
@@ -341,17 +468,25 @@ export async function syncRegulations(): Promise<SyncResult> {
     errors: [],
     syncedAt,
     loggingAvailable: true,
+    completed: false,
+    stoppedEarly: false,
+    remainingRegulations: 0,
   };
 
   // Determine sync window
-  const sinceDate = await getLastSyncDate();
-  console.log(`[regulation-sync] Searching for regulations modified since ${sinceDate}`);
+  const sinceDate = await getLastCompletedSyncDate(supabase);
+  console.log(`[regulation-sync] Searching for regulations published or completed since ${sinceDate}`);
 
   // Search CELLAR for curated seed regulations
   let seedRegulations: CellarRegulation[];
   try {
     seedRegulations = await searchFoodSafetyRegulations(sinceDate);
-    console.log(`[regulation-sync] Found ${seedRegulations.length} seed regulations`);
+    const manualBackfillRegulations = getManualBackfillRegulations();
+    seedRegulations.push(...manualBackfillRegulations);
+    console.log(
+      `[regulation-sync] Found ${seedRegulations.length} seed regulations ` +
+        `(${manualBackfillRegulations.length} manual backfill entries)`
+    );
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     console.error(`[regulation-sync] Seed search failed: ${message}`);
@@ -359,31 +494,94 @@ export async function syncRegulations(): Promise<SyncResult> {
     return result;
   }
 
-  // Discover new regulations via EUR-Lex SPARQL (non-fatal)
+  // Discover new regulations via official EU and UK feeds (non-fatal).
   let discoveredRegulations: CellarRegulation[] = [];
   try {
     discoveredRegulations = await discoverNewRegulations(sinceDate);
-    console.log(`[regulation-sync] Discovered ${discoveredRegulations.length} new regulations via SPARQL`);
+    console.log(`[regulation-sync] Discovered ${discoveredRegulations.length} new EU regulations via Cellar SPARQL`);
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
-    console.error(`[regulation-sync] SPARQL discovery failed (non-fatal): ${message}`);
-    result.errors.push({ celex: "SPARQL_DISCOVERY", error: message });
+    console.error(`[regulation-sync] EU discovery failed (non-fatal): ${message}`);
+    result.errors.push({ celex: "EU_DISCOVERY", error: message });
   }
 
-  // Merge: seeds take priority over discovered
-  const seenCelex = new Set(seedRegulations.map((r) => r.baseCelex));
+  try {
+    const officialJournalDiscovery = await discoverEuOfficialJournalRegulations(sinceDate);
+    discoveredRegulations.push(...officialJournalDiscovery.regulations);
+    console.log(
+      `[regulation-sync] Discovered ${officialJournalDiscovery.regulations.length} new EU regulations ` +
+        `via Official Journal (${officialJournalDiscovery.failures.length} daily-view failures)`
+    );
+    for (const failure of officialJournalDiscovery.failures) {
+      result.errors.push({
+        celex: "EU_OFFICIAL_JOURNAL",
+        error: `${failure.date}: ${failure.error}`,
+      });
+    }
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.error(`[regulation-sync] EU Official Journal discovery failed (non-fatal): ${message}`);
+    result.errors.push({ celex: "EU_OFFICIAL_JOURNAL", error: message });
+  }
+
+  try {
+    const ukDiscovery = await discoverUkRegulations(sinceDate);
+    discoveredRegulations.push(...ukDiscovery.regulations);
+    console.log(
+      `[regulation-sync] Discovered ${ukDiscovery.regulations.length} new UK regulations ` +
+        `(${ukDiscovery.failures.length} feed failures)`
+    );
+    for (const failure of ukDiscovery.failures) {
+      result.errors.push({ celex: "UK_DISCOVERY_FEED", error: `${failure.feedUrl}: ${failure.error}` });
+    }
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.error(`[regulation-sync] UK discovery failed (non-fatal): ${message}`);
+    result.errors.push({ celex: "UK_DISCOVERY", error: message });
+  }
+
+  // Merge: seeds take priority over discovered candidates with the same source key.
+  const seenSourceKeys = new Set(seedRegulations.map(getRegulationSourceKey));
+  const uniqueDiscoveredRegulations = new Map<string, CellarRegulation>();
+  for (const regulation of discoveredRegulations) {
+    const sourceKey = getRegulationSourceKey(regulation);
+    if (!seenSourceKeys.has(sourceKey)) {
+      uniqueDiscoveredRegulations.set(sourceKey, regulation);
+    }
+  }
   const regulations = [
     ...seedRegulations,
-    ...discoveredRegulations.filter((r) => !seenCelex.has(r.baseCelex)),
+    ...uniqueDiscoveredRegulations.values(),
   ];
   console.log(`[regulation-sync] Total: ${regulations.length} regulations to process`);
 
   // Process each regulation
-  for (const regulation of regulations) {
+  for (let regulationIndex = 0; regulationIndex < regulations.length; regulationIndex++) {
+    if (shouldStopForTimeBudget(startedAtMs)) {
+      result.stoppedEarly = true;
+      result.remainingRegulations = regulations.length - regulationIndex;
+      console.warn(
+        `[regulation-sync] Stopping before Vercel deadline with ` +
+          `${result.remainingRegulations} regulations remaining`
+      );
+      break;
+    }
+
+    const regulation = regulations[regulationIndex];
     try {
+      const activeVersionExists = await isVersionAlreadyActive(
+        supabase,
+        getRegulationSourceKey(regulation),
+        getRegulationVersionKey(regulation)
+      );
+      if (activeVersionExists) {
+        result.regulationsSkipped++;
+        continue;
+      }
+
       // Fetch text first so we can hash it for amendment detection.
       // fetchRegulationText already throws if text < MIN_REGULATION_TEXT_CHARS.
-      const text = await fetchRegulationText(regulation.celex);
+      const text = await fetchTextForRegulation(regulation);
       if (!text || text.length < MIN_REGULATION_TEXT_CHARS) {
         throw new Error(`Regulation text too short (${text.length} chars)`);
       }
@@ -413,7 +611,7 @@ export async function syncRegulations(): Promise<SyncResult> {
       const logged = await writeSyncLogEntry(supabase, {
         celex_number: regulation.celex,
         title: regulation.title.slice(0, 500),
-        source_name: celexToSourceName(regulation.celex),
+        source_name: getRegulationSourceName(regulation),
         last_modified: regulation.dateLastModified,
         content_hash: contentHash,
         chunks_ingested: chunksCreated,
@@ -422,7 +620,12 @@ export async function syncRegulations(): Promise<SyncResult> {
         metadata: {
           baseCelexNumber: regulation.baseCelex,
           legacyAliases: regulation.legacyAliases,
-          ...(regulation.discovered && { discoveredViaSparql: true }),
+          sourceKey: getRegulationSourceKey(regulation),
+          versionKey: getRegulationVersionKey(regulation),
+          jurisdiction: regulation.jurisdiction ?? "eu",
+          actType: regulation.actType,
+          officialUrl: regulation.officialUrl,
+          ...(regulation.discovered && { discovered: true }),
         },
       });
       if (!logged) result.loggingAvailable = false;
@@ -439,7 +642,7 @@ export async function syncRegulations(): Promise<SyncResult> {
       const logged = await writeSyncLogEntry(supabase, {
         celex_number: regulation.celex,
         title: regulation.title.slice(0, 500),
-        source_name: celexToSourceName(regulation.celex),
+        source_name: getRegulationSourceName(regulation),
         last_modified: regulation.dateLastModified,
         chunks_ingested: 0,
         synced_at: syncedAt,
@@ -448,17 +651,44 @@ export async function syncRegulations(): Promise<SyncResult> {
         metadata: {
           baseCelexNumber: regulation.baseCelex,
           legacyAliases: regulation.legacyAliases,
-          ...(regulation.discovered && { discoveredViaSparql: true }),
+          sourceKey: getRegulationSourceKey(regulation),
+          versionKey: getRegulationVersionKey(regulation),
+          jurisdiction: regulation.jurisdiction ?? "eu",
+          actType: regulation.actType,
+          officialUrl: regulation.officialUrl,
+          ...(regulation.discovered && { discovered: true }),
         },
       });
       if (!logged) result.loggingAvailable = false;
     }
   }
 
+  result.completed = shouldAdvanceSyncCursor(result);
+
+  if (result.completed) {
+    const logged = await writeSyncLogEntry(supabase, {
+      celex_number: "RUN_COMPLETE",
+      title: "Regulation sync run completed",
+      source_name: "regulation-sync",
+      last_modified: syncedAt.slice(0, 10),
+      chunks_ingested: result.chunksCreated,
+      synced_at: syncedAt,
+      status: "success",
+      metadata: {
+        sinceDate,
+        regulationsProcessed: result.regulationsProcessed,
+        regulationsSkipped: result.regulationsSkipped,
+        remainingRegulations: result.remainingRegulations,
+      },
+    });
+    if (!logged) result.loggingAvailable = false;
+  }
+
   console.log(
     `[regulation-sync] Done: ${result.regulationsProcessed} processed, ` +
       `${result.regulationsSkipped} skipped, ${result.errors.length} errors, ` +
-      `${result.chunksCreated} total chunks`
+      `${result.chunksCreated} total chunks, completed=${result.completed}, ` +
+      `remaining=${result.remainingRegulations}`
   );
 
   return result;

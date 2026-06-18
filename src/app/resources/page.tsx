@@ -139,7 +139,7 @@ const resources: ResourceEntry[] = [
   {
     href: "/resources/incoming-goods-template",
     title: "Incoming goods inspection template",
-    description: "What to record when goods arrive — supplier, product, quantity, condition, and temperature — to maintain traceability from the point of receipt.",
+    description: "What to record when goods arrive - supplier, product, quantity, condition, and temperature - to maintain traceability from the point of receipt.",
     category: "traceability",
     categoryLabel: "Traceability",
   },

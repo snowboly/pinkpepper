@@ -12,6 +12,7 @@ vi.mock("next/server", () => {
   class MockNextResponse {
     status: number;
     headers: Headers;
+    forwardedRequestHeaders?: Headers;
     cookies: { set: () => void };
 
     constructor(status: number, headers?: HeadersInit) {
@@ -20,8 +21,10 @@ vi.mock("next/server", () => {
       this.cookies = { set: () => undefined };
     }
 
-    static next() {
-      return new MockNextResponse(200);
+    static next(input?: { request?: { headers?: Headers } }) {
+      const response = new MockNextResponse(200);
+      response.forwardedRequestHeaders = input?.request?.headers;
+      return response;
     }
 
     static redirect(input: string | URL, status = 307) {
@@ -32,7 +35,7 @@ vi.mock("next/server", () => {
   return { NextResponse: MockNextResponse };
 });
 
-describe("middleware host canonicalization", () => {
+describe("proxy host canonicalization", { timeout: 15000 }, () => {
   beforeEach(() => {
     vi.resetModules();
   });
@@ -54,9 +57,9 @@ describe("middleware host canonicalization", () => {
   }
 
   it("permanently redirects the www host to the apex on public pages", async () => {
-    const { middleware } = await import("../../middleware");
+    const { proxy } = await import("../proxy");
 
-    const response = await middleware(makeRequest("https://www.pinkpepper.io/pricing") as never);
+    const response = await proxy(makeRequest("https://www.pinkpepper.io/pricing") as never);
 
     expect(response.status).toBe(308);
     expect(response.headers.get("location")).toBe("https://pinkpepper.io/pricing");
@@ -65,11 +68,35 @@ describe("middleware host canonicalization", () => {
   });
 
   it("leaves the apex host untouched for public pages", async () => {
-    const { middleware } = await import("../../middleware");
+    const { proxy } = await import("../proxy");
 
-    const response = await middleware(makeRequest("https://pinkpepper.io/resources") as never);
+    const response = await proxy(makeRequest("https://pinkpepper.io/resources") as never);
 
     expect(response.status).toBe(200);
     expect(response.headers.get("location")).toBeNull();
+  });
+
+  it("forwards the German route locale to downstream layouts", async () => {
+    const { proxy } = await import("../proxy");
+
+    const response = await proxy(
+      makeRequest("https://pinkpepper.io/de/articles/haccp-plan") as never,
+    );
+
+    expect(
+      (response as unknown as { forwardedRequestHeaders?: Headers })
+        .forwardedRequestHeaders?.get("x-next-intl-locale"),
+    ).toBe("de");
+  });
+
+  it("permanently redirects legacy english-prefixed URLs to the root english routes", async () => {
+    const { proxy } = await import("../proxy");
+
+    const response = await proxy(makeRequest("https://pinkpepper.io/en/pricing") as never);
+
+    expect(response.status).toBe(308);
+    expect(response.headers.get("location")).toBe("https://pinkpepper.io/pricing");
+    expect(response.headers.get("Content-Security-Policy")).toBe(cspValue);
+    expect(response.headers.get("x-csp-nonce")).toBe("test-nonce");
   });
 });
