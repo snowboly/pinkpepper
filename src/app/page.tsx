@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
+import { HomepageTestimonial } from "@/components/homepage/HomepageTestimonial";
 import { LocalizedHomePage } from "@/components/homepage/LocalizedHomePage";
-import RandomArticleLinks from "@/components/homepage/RandomArticleLinks";
 import PricingActions from "@/components/pricing/PricingActions";
 import { type PublicLocale } from "@/i18n/public";
 import { getPublicMessages } from "@/lib/public-routes";
@@ -16,14 +17,37 @@ import {
   Sparkles,
   Users,
 } from "lucide-react";
-import { DemoTabSwitcher } from "@/components/homepage/DemoTabSwitcher";
 import { HeroChatForm } from "@/components/homepage/HeroChatForm";
 import { homepageFaqs } from "@/data/faqs";
+
+const DemoTabSwitcher = dynamic(
+  () => import("@/components/homepage/DemoTabSwitcher").then((mod) => mod.DemoTabSwitcher),
+  {
+    loading: () => (
+      <div className="min-h-[28rem] rounded-[2rem] border border-[#E2E8F0] bg-white/60" aria-hidden="true" />
+    ),
+  },
+);
+
+const RandomArticleLinks = dynamic(() => import("@/components/homepage/RandomArticleLinks"), {
+  loading: () => <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4" aria-hidden="true" />,
+});
+
+const homepageTestimonials = [
+  {
+    quote: "The app is working great and has been a massive help",
+    companyName: "McDermott's Foods Ltd",
+    companyUrl: "https://mcdermottsfoods.co.uk/",
+    logoSrc: "/testimonials/mcdermotts-foods.png",
+    logoAlt: "McDermott's Foods Ltd logo",
+    supportingLine: "Used by food businesses managing HACCP and food safety documentation.",
+  },
+] as const;
 
 export const metadata: Metadata = {
   title: "PinkPepper | AI HACCP & Food Safety Software - EU & UK",
   description:
-    "Get free food safety consultancy, HACCP plans and SOPs, plus expert EU/UK food import and export compliance support for your business.",
+    "Get free AI food safety guidance, HACCP plans and SOPs, plus EU/UK food import and export compliance support for your business.",
   alternates: {
     canonical: "https://pinkpepper.io",
   },
@@ -57,7 +81,6 @@ export default async function HomePage({ locale }: HomePageProps = {}) {
     <main className="overflow-hidden">
       <script type="application/ld+json" nonce={nonce} dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <section className="relative overflow-hidden pb-20 pt-16 md:pb-28 md:pt-28">
-        {/* Background image + dark overlay */}
         <div className="absolute inset-0 -z-10">
           <Image
             src="/hero-bg.jpg"
@@ -103,17 +126,18 @@ export default async function HomePage({ locale }: HomePageProps = {}) {
                   className="flex-shrink-0 rounded-sm"
                   xmlns="http://www.w3.org/2000/svg"
                 >
-                  <rect width="60" height="40" fill="#003399"/>
-                  {/* 12 stars at 30 degree intervals, r=13.333, center (30,20), outer r=2.2, inner r=0.9 */}
-                  {[0,30,60,90,120,150,180,210,240,270,300,330].map((deg) => {
+                  <rect width="60" height="40" fill="#003399" />
+                  {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map((deg) => {
                     const rad = (deg * Math.PI) / 180;
                     const cx = 30 + 13.333 * Math.sin(rad);
                     const cy = 20 - 13.333 * Math.cos(rad);
-                    const pts = [0,1,2,3,4,5,6,7,8,9].map((i) => {
-                      const a = (i * 36 * Math.PI) / 180;
-                      const r = i % 2 === 0 ? 2.2 : 0.9;
-                      return `${cx + r * Math.sin(a)},${cy - r * Math.cos(a)}`;
-                    }).join(" ");
+                    const pts = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+                      .map((i) => {
+                        const a = (i * 36 * Math.PI) / 180;
+                        const r = i % 2 === 0 ? 2.2 : 0.9;
+                        return `${cx + r * Math.sin(a)},${cy - r * Math.cos(a)}`;
+                      })
+                      .join(" ");
                     return <polygon key={deg} fill="#FFCC00" points={pts} />;
                   })}
                 </svg>
@@ -153,7 +177,6 @@ export default async function HomePage({ locale }: HomePageProps = {}) {
           </div>
         </div>
       </section>
-
 
       <section className="relative overflow-hidden border-b border-[#F1F5F9] bg-[#F8FAFC] py-24">
         <div className="pp-container">
@@ -224,7 +247,11 @@ export default async function HomePage({ locale }: HomePageProps = {}) {
         <div className="pp-container relative z-10">
           <div className="mx-auto mb-16 max-w-2xl text-center">
             <h2 className="pp-display mb-4 text-4xl text-[#0F172A] md:text-5xl">Pricing that follows the compliance job</h2>
-            <p className="text-lg text-[#64748B]">Start free for live questions, move to Plus for heavier Consultant use, and choose Pro when you want Auditor mode and human consultancy. <Link href="/pricing" className="underline hover:text-[#0F172A]">See full pricing</Link>.</p>
+            <p className="text-lg text-[#64748B]">
+              Start free for live questions, move to Plus for heavier Consultant use, and choose Pro when you want
+              Auditor mode and human consultancy.{" "}
+              <Link href="/pricing" className="underline hover:text-[#0F172A]">See full pricing</Link>.
+            </p>
           </div>
 
           <div className="mx-auto grid max-w-5xl gap-6 lg:grid-cols-3">
@@ -312,6 +339,9 @@ export default async function HomePage({ locale }: HomePageProps = {}) {
                 </p>
                 <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-[#94A3B8]">
                   <Link href="/features/haccp-plan-generator" className="hover:text-[#475569]">HACCP plan generator</Link>
+                  <Link href="/features/food-safety-sop-generator" className="hover:text-[#475569]">Food safety SOP generator</Link>
+                  <Link href="/articles/haccp-ccp-examples-uk-eu" className="hover:text-[#475569]">HACCP CCP examples</Link>
+                  <Link href="/faqs" className="hover:text-[#475569]">FAQs</Link>
                 </div>
               </div>
               <Link href="/articles" className="text-sm font-semibold text-[#475569] hover:text-[#0F172A]">
@@ -326,14 +356,14 @@ export default async function HomePage({ locale }: HomePageProps = {}) {
                   description: "Understand how PinkPepper approaches practical compliance work for small food businesses.",
                 },
                 {
+                  href: "/features/food-safety-sop-generator",
+                  label: "Build usable SOPs and daily records",
+                  description: "Go straight into the SOP workflow if you need opening checks, cleaning procedures, and routine records that fit the way your site operates.",
+                },
+                {
                   href: "/articles/building-a-haccp-process-flow-diagram",
                   label: "Build a stronger HACCP process flow diagram",
                   description: "One of the clearest starting points for teams turning process steps into usable HACCP structure.",
-                },
-                {
-                  href: "/articles/haccp-ccp-examples-uk-eu",
-                  label: "See real HACCP CCP examples",
-                  description: "Review practical CCP examples before you map limits, monitoring, and corrective actions.",
                 },
                 {
                   href: "/use-cases",
@@ -408,10 +438,8 @@ export default async function HomePage({ locale }: HomePageProps = {}) {
               </div>
             </div>
 
-            {/* Divider */}
-            <div className="hidden lg:block h-48 w-px bg-[#E2E8F0] shrink-0" />
+            <div className="hidden h-48 w-px shrink-0 bg-[#E2E8F0] lg:block" />
 
-            {/* Lead Auditor John - Pro highlight */}
             <div className="flex shrink-0 flex-col items-center gap-3 text-center">
               <div className="relative">
                 <Image
@@ -436,6 +464,8 @@ export default async function HomePage({ locale }: HomePageProps = {}) {
           </div>
         </div>
       </section>
+
+      <HomepageTestimonial testimonials={[...homepageTestimonials]} />
 
       <section className="relative overflow-hidden border-b border-[#F1F5F9] bg-[#F8FAFC] py-24">
         <div className="pp-container">
@@ -482,4 +512,3 @@ export default async function HomePage({ locale }: HomePageProps = {}) {
     </main>
   );
 }
-
