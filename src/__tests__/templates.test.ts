@@ -23,6 +23,9 @@ describe("getGroupedTemplates", () => {
     expect(grouped.find((group) => group.category === "HACCP")?.templates.map((template) => template.title)).toEqual([
       "Corrective action log",
       "Customer complaint log",
+      "EU and UK document checklist",
+      "Food safety audit checklist",
+      "Food safety management system",
       "HACCP hazards register",
       "HACCP step descriptions",
       "Hazard analysis template",
@@ -55,6 +58,23 @@ describe("getGroupedTemplates", () => {
     expect(TEMPLATES.find((template) => template.slug === "food-safety-opening-and-closing-checklist")).toMatchObject({
       storageName: "Food Safety Opening and Closing Checklist",
       fileType: "xlsx",
+    });
+  });
+
+  it("keeps existing audit download slugs registered for live resource pages", () => {
+    expect(TEMPLATES.find((template) => template.slug === "food-safety-audit-checklist")).toMatchObject({
+      title: "Food safety audit checklist",
+      category: "HACCP",
+    });
+
+    expect(TEMPLATES.find((template) => template.slug === "food-safety-document-checklist")).toMatchObject({
+      title: "EU and UK document checklist",
+      category: "HACCP",
+    });
+
+    expect(TEMPLATES.find((template) => template.slug === "food-safety-management-system-template")).toMatchObject({
+      title: "Food safety management system",
+      category: "HACCP",
     });
   });
 
