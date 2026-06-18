@@ -66,7 +66,9 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Checkout session is not ready to reconcile." }, { status: 409 });
     }
 
-    await syncSubscriptionFromStripe(session.subscription, "checkout.session.completed");
+    await syncSubscriptionFromStripe(session.subscription, "checkout.session.completed", {
+      sendEmail: false,
+    });
 
     const snapshot = parseStripeSubscription({
       status: session.subscription.status,

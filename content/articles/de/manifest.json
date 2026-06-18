@@ -1,10 +1,10 @@
 [
   {
-    "title": "HACCP-Plan Schritt für Schritt erstellen: Leitfaden für kleine Lebensmittelbetriebe",
+    "title": "HACCP-Plan erstellen: 12 Schritte + Beispiel (2026)",
     "slug": "how-to-create-a-haccp-plan-step-by-step",
-    "excerpt": "Praktischer Leitfaden für einen klaren HACCP-Plan mit realen Prozessschritten, Gefahrenanalyse, CCPs, Grenzwerten, Überwachung, Korrekturmaßnahmen und prüfbaren Nachweisen.",
+    "excerpt": "HACCP-Plan nach EU-Verordnung 852/2004 erstellen: 12 Schritte, 7 Grundsätze und ein Praxisbeispiel für kleine Lebensmittelbetriebe in Deutschland.",
     "category": "Compliance",
-    "publishedAt": "2026-04-22",
+    "publishedAt": "2026-06-08",
     "image": "https://images.pexels.com/photos/6004239/pexels-photo-6004239.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
     "source": "pinkpepper-localized"
   },
@@ -87,6 +87,15 @@
     "category": "Compliance",
     "publishedAt": "2026-04-13",
     "image": "https://images.pexels.com/photos/35479269/pexels-photo-35479269.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "source": "pinkpepper-localized"
+  },
+  {
+    "title": "HACCP-Flussdiagramm erstellen: Prozessablauf für sichere Audits",
+    "slug": "building-a-haccp-process-flow-diagram",
+    "excerpt": "Erfahren Sie, wie Sie einen HACCP-Prozessablauf vollständig abbilden, vor Ort validieren und als belastbares Flussdiagramm für Überwachung und Audits nutzen.",
+    "category": "Compliance",
+    "publishedAt": "2025-11-29",
+    "image": "https://images.pexels.com/photos/5953663/pexels-photo-5953663.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
     "source": "pinkpepper-localized"
   }
 ]

@@ -6,6 +6,7 @@ import {
   type Jurisdiction,
   type SourceClass,
 } from "./source-taxonomy";
+import type { LegalQueryPlan } from "./legal-query";
 
 let supabaseClient: SupabaseClient | null = null;
 
@@ -78,15 +79,152 @@ function normalizeChunkSourceClass(chunk: KnowledgeChunk): SourceClass {
   return inferSourceClass([chunk.source_type, chunk.source_name].filter(Boolean).join(" "));
 }
 
-export function rankRetrievedChunks(chunks: KnowledgeChunk[]): KnowledgeChunk[] {
-  return [...chunks].sort((a, b) => {
-    const aSourceClass = normalizeChunkSourceClass(a);
-    const bSourceClass = normalizeChunkSourceClass(b);
-    const aWeight = SOURCE_CLASS_WEIGHT[aSourceClass] ?? 0;
-    const bWeight = SOURCE_CLASS_WEIGHT[bSourceClass] ?? 0;
+function hasAuthorityProvenance(chunk: KnowledgeChunk, sourceClass: SourceClass): boolean {
+  if (sourceClass === "primary_law") {
+    return Boolean(
+      chunk.metadata?.source_key &&
+        chunk.metadata?.version_key &&
+        chunk.metadata?.official_url
+    );
+  }
 
-    return bWeight - aWeight || b.similarity - a.similarity;
+  if (sourceClass === "official_guidance") {
+    return Boolean(chunk.metadata?.official_url);
+  }
+
+  return true;
+}
+
+function compareRetrievedChunks(a: KnowledgeChunk, b: KnowledgeChunk): number {
+  const aSourceClass = normalizeChunkSourceClass(a);
+  const bSourceClass = normalizeChunkSourceClass(b);
+  const aWeight = SOURCE_CLASS_WEIGHT[aSourceClass] ?? 0;
+  const bWeight = SOURCE_CLASS_WEIGHT[bSourceClass] ?? 0;
+
+  return bWeight - aWeight || b.similarity - a.similarity;
+}
+
+export function rankRetrievedChunks(chunks: KnowledgeChunk[]): KnowledgeChunk[] {
+  return [...chunks].sort(compareRetrievedChunks);
+}
+
+function normalizedLegalText(chunk: KnowledgeChunk): string {
+  return [
+    chunk.source_name,
+    chunk.content,
+    chunk.metadata?.celexNumber,
+    chunk.metadata?.baseCelexNumber,
+    chunk.metadata?.originalTitle,
+  ]
+    .filter((value): value is string => typeof value === "string")
+    .join(" ")
+    .toLowerCase();
+}
+
+function relationshipScore(chunk: KnowledgeChunk, plan: LegalQueryPlan): number {
+  const text = normalizedLegalText(chunk);
+  const targetMatches = plan.targetInstrumentReferences.filter((reference) =>
+    text.includes(reference.toLowerCase())
+  ).length;
+  const celexMatches = plan.celexReferences.filter((reference) =>
+    text.includes(reference.toLowerCase())
+  ).length;
+  const exactMatches = plan.exactReferences.filter((reference) =>
+    text.includes(reference.toLowerCase())
+  ).length;
+  const relationshipPattern =
+    plan.relationship === "amended_by"
+      ? /\bamend(?:s|ing|ed|ment)\b/
+      : plan.relationship
+        ? new RegExp(`\\b${plan.relationship.replace(/s$/, "")}\\w*\\b`, "i")
+        : null;
+  const relationshipMatches = relationshipPattern?.test(text) ? 1 : 0;
+
+  return targetMatches * 100 + relationshipMatches * 30 + celexMatches * 80 + exactMatches * 20;
+}
+
+export function rankLegalChunks(
+  chunks: KnowledgeChunk[],
+  plan: LegalQueryPlan
+): KnowledgeChunk[] {
+  return [...chunks].sort((a, b) => {
+    const relevanceDelta = relationshipScore(b, plan) - relationshipScore(a, plan);
+    if (relevanceDelta !== 0) return relevanceDelta;
+    if (plan.recencyRequired) {
+      const aDate = String(
+        a.metadata?.dateDocument ??
+          a.metadata?.publicationDate ??
+          a.metadata?.currentVersionDate ??
+          ""
+      );
+      const bDate = String(
+        b.metadata?.dateDocument ??
+          b.metadata?.publicationDate ??
+          b.metadata?.currentVersionDate ??
+          ""
+      );
+      const dateDelta = bDate.localeCompare(aDate);
+      if (dateDelta !== 0) return dateDelta;
+    }
+    return compareRetrievedChunks(a, b);
   });
+}
+
+export function selectDistinctSourceChunks(
+  chunks: KnowledgeChunk[],
+  maxChunksPerSource = 2,
+  maxTotal = 12
+): KnowledgeChunk[] {
+  const sourceCounts = new Map<string, number>();
+  const selected: KnowledgeChunk[] = [];
+
+  for (const chunk of chunks) {
+    const sourceKey =
+      typeof chunk.metadata?.source_key === "string"
+        ? chunk.metadata.source_key
+        : chunk.source_name;
+    const count = sourceCounts.get(sourceKey) ?? 0;
+    if (count >= maxChunksPerSource) continue;
+    sourceCounts.set(sourceKey, count + 1);
+    selected.push(chunk);
+    if (selected.length >= maxTotal) break;
+  }
+
+  return selected;
+}
+
+export function buildLegalSearchTerms(plan: LegalQueryPlan): string[] {
+  const relationshipTerm =
+    plan.relationship === "amends" || plan.relationship === "amended_by"
+      ? "amend"
+      : plan.relationship
+        ? plan.relationship.replace(/s$/, "")
+        : null;
+
+  return [
+    ...plan.targetInstrumentReferences,
+    ...plan.celexReferences,
+    ...(relationshipTerm ? [relationshipTerm] : []),
+  ].filter((value, index, values) => value && values.indexOf(value) === index);
+}
+
+export async function retrieveLegalLexicalContext(
+  plan: LegalQueryPlan,
+  topK = 20
+): Promise<KnowledgeChunk[]> {
+  const searchTerms = buildLegalSearchTerms(plan);
+  if (searchTerms.length === 0) return [];
+
+  const { data, error } = await getSupabase().rpc("search_knowledge_chunks_legal", {
+    search_terms: searchTerms,
+    match_count: topK,
+  });
+
+  if (error) {
+    throw new Error(`Failed to retrieve exact legal matches: ${error.message}`);
+  }
+
+  return rankLegalChunks((data as KnowledgeChunk[]) || [], plan);
 }
 
 export function filterAuthorityFallbackChunks(
@@ -110,7 +248,8 @@ export function filterAuthorityFallbackChunks(
       const matchesSourceClass =
         !sourceClasses ||
         sourceClasses.length === 0 ||
-        sourceClasses.includes(chunkSourceClass);
+        (sourceClasses.includes(chunkSourceClass) &&
+          hasAuthorityProvenance(chunk, chunkSourceClass));
 
       return matchesJurisdiction && matchesSourceClass;
     })

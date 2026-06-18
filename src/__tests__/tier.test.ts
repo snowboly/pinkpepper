@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import path from "node:path";
 import { describe, it, expect } from "vitest";
 import {
   TIER_CAPABILITIES,
@@ -14,7 +16,7 @@ import { parseStripeSubscription } from "@/lib/billing/tier-mapping";
 describe("TIER_CAPABILITIES – free tier", () => {
   const free = TIER_CAPABILITIES.free;
 
-  it("dailyMessages is 5", () => expect(free.dailyMessages).toBe(5));
+  it("dailyMessages is 2", () => expect(free.dailyMessages).toBe(2));
   it("dailyAuditorMessages is 0", () => expect(free.dailyAuditorMessages).toBe(0));
   it("dailyImageUploads is 1", () => expect(free.dailyImageUploads).toBe(1));
   it("maxSavedConversations is 10", () => expect(free.maxSavedConversations).toBe(10));
@@ -250,5 +252,23 @@ describe("parseStripeSubscription", () => {
       stripePriceId: "price_plus",
       status: "active",
     });
+  });
+});
+
+describe("plan copy avoids hardcoded daily quota marketing numbers", () => {
+  const messages = readFileSync(path.join(process.cwd(), "src/i18n/messages/en.json"), "utf8");
+  const billingEmails = readFileSync(path.join(process.cwd(), "src/lib/billing/email-templates.ts"), "utf8");
+
+  it("does not mention explicit daily message counts in upgrade copy", () => {
+    expect(messages).not.toContain("25 messages per day");
+    expect(messages).not.toContain("100 per day");
+    expect(messages).not.toContain("5 image analyses per day");
+  });
+
+  it("does not mention explicit daily quota counts in billing emails", () => {
+    expect(billingEmails).not.toContain("25 messages per day");
+    expect(billingEmails).not.toContain("3 premium expert answers per day");
+    expect(billingEmails).not.toContain("5 image analyses per day");
+    expect(billingEmails).not.toContain("8 premium expert answers per day");
   });
 });

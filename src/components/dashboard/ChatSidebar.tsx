@@ -1,11 +1,13 @@
 ﻿"use client";
 
 import Link from "next/link";
+import { House } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import type { SubscriptionTier } from "@/lib/tier";
 import type { Conversation, Project } from "./types";
 import { getGroupedTemplates } from "@/lib/templates";
+import { getPublicPageHref, isPublicLocale } from "@/lib/public-routes";
 
 // Preset emojis for projects
 const PRESET_EMOJIS = ["📁", "🍽️", "🧑‍🍳", "📋", "🔬", "🏭", "📊", "🌿"];
@@ -99,6 +101,8 @@ export default function ChatSidebar({
 }: ChatSidebarProps) {
   const t = useTranslations("sidebar");
   const tc = useTranslations("chat");
+  const locale = useLocale();
+  const homeHref = isPublicLocale(locale) ? getPublicPageHref(locale, "/") : "/";
   const templateGroups = getGroupedTemplates();
   const userInitials = (() => {
     const local = userEmail.split("@")[0] ?? "";
@@ -125,6 +129,7 @@ export default function ChatSidebar({
   const [dragOverAllChats, setDragOverAllChats] = useState(false);
 
   // Project expand/collapse
+  const [projectsOpen, setProjectsOpen] = useState(true);
   const [expandedProjects, setExpandedProjects] = useState<Set<string>>(new Set());
 
   // Templates dropdown
@@ -422,11 +427,31 @@ export default function ChatSidebar({
         {/* ── Projects section ── */}
         <div className="px-3 pt-3 pb-1">
           <div className="flex items-center justify-between mb-1">
-            <span className="text-xs font-semibold uppercase tracking-wider text-[#6B7280]">
-              {t("projects")}
-            </span>
             <button
-              onClick={() => { setCreatingProject(true); setExpandedProjects((prev) => new Set(prev)); }}
+              type="button"
+              aria-expanded={projectsOpen}
+              onClick={() => setProjectsOpen((open) => !open)}
+              className="flex flex-1 items-center gap-1.5 rounded py-0.5 text-left text-xs font-semibold uppercase tracking-wider text-[#6B7280] hover:text-[#0F172A] transition-colors"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className={`h-3 w-3 transition-transform ${projectsOpen ? "rotate-90" : ""}`}
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2.5}
+                aria-hidden="true"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+              {t("projects")}
+            </button>
+            <button
+              onClick={() => {
+                setProjectsOpen(true);
+                setCreatingProject(true);
+                setExpandedProjects((prev) => new Set(prev));
+              }}
               className="rounded p-0.5 text-[#6B7280] hover:text-[#0F172A] hover:bg-[#F1F5F9] transition-colors"
               title={t("newProject")}
             >
@@ -436,6 +461,8 @@ export default function ChatSidebar({
             </button>
           </div>
 
+          {projectsOpen && (
+            <>
           {/* Inline new project form */}
           {creatingProject && (
             <div className="mb-2 rounded-xl border border-[#E11D48]/30 bg-[#FFF1F2] p-2.5 space-y-2">
@@ -592,6 +619,8 @@ export default function ChatSidebar({
               </div>
             );
           })}
+            </>
+          )}
         </div>
 
         {/* ── All chats (unassigned) ── */}
@@ -659,6 +688,14 @@ export default function ChatSidebar({
             </svg>
           </summary>
           <div className="absolute bottom-[calc(100%+6px)] left-0 right-0 z-50 rounded-2xl border border-[#E2E8F0] bg-white p-1.5 shadow-lg">
+            <Link
+              href={homeHref}
+              onClick={() => onCloseSidebar?.()}
+              className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-[#0F172A] hover:bg-[#F8FAFC] transition-colors"
+            >
+              <House className="h-4 w-4 text-[#64748B]" aria-hidden="true" />
+              {t("backToHome")}
+            </Link>
             <Link
               href="/dashboard/settings"
               className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-[#0F172A] hover:bg-[#F8FAFC] transition-colors"

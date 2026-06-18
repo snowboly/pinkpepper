@@ -7,7 +7,7 @@ import {
   publicLaunchLocales,
   publicRoutePaths,
 } from "@/i18n/public";
-import { resolveRequestLocale } from "@/i18n/request";
+import { getRouteLocaleFromPathname, resolveRequestLocale } from "@/i18n/request";
 import {
   getPublicMessages,
   getPublicPageHref,
@@ -40,6 +40,8 @@ describe("public locale config", () => {
   it("identifies public locales and localizes public paths", () => {
     expect(isPublicLocale("fr")).toBe(true);
     expect(isPublicLocale("es")).toBe(false);
+    expect(localizePublicPath("en", "/")).toBe("/");
+    expect(localizePublicPath("en", "/pricing")).toBe("/pricing");
     expect(localizePublicPath("fr", "/")).toBe("/fr");
     expect(localizePublicPath("pt", "/pricing")).toBe("/pt/pricing");
   });
@@ -48,6 +50,12 @@ describe("public locale config", () => {
     expect(resolveRequestLocale({ routeLocale: "fr", cookieLocale: "de" })).toBe("fr");
     expect(resolveRequestLocale({ routeLocale: null, cookieLocale: "pt" })).toBe("pt");
     expect(resolveRequestLocale({ routeLocale: null, cookieLocale: "bad" })).toBe("en");
+  });
+
+  it("derives the request locale from localized public paths", () => {
+    expect(getRouteLocaleFromPathname("/de/articles/haccp-plan")).toBe("de");
+    expect(getRouteLocaleFromPathname("/fr/pricing")).toBe("fr");
+    expect(getRouteLocaleFromPathname("/articles/haccp-plan")).toBeNull();
   });
 
   it("falls back to English when a public message key is missing", async () => {
@@ -60,7 +68,9 @@ describe("public locale config", () => {
 
   it("preserves supported public routes when switching locale", () => {
     expect(switchPublicLocale("/fr/pricing", "de")).toBe("/de/pricing");
+    expect(switchPublicLocale("/fr/pricing", "en")).toBe("/pricing");
     expect(switchPublicLocale("/fr/articles", "de")).toBe("/de/articles");
+    expect(getPublicPageHref("en", "/pricing")).toBe("/pricing");
     expect(getPublicPageHref("pt", "/pricing")).toBe("/pt/pricing");
     expect(getPublicPageHref("pt", "/articles")).toBe("/pt/articles");
   });
@@ -73,7 +83,7 @@ describe("public locale config", () => {
 
     expect(localizedLayout).toContain("setRequestLocale");
     expect(localizedLayout).toContain("isPublicLocale");
-    expect(localizedPricingPage).toContain("buildPublicMetadata");
+    expect(localizedPricingPage).toContain("buildLocalizedWrapperMetadata");
     expect(localizedPricingPage).toContain('"/pricing"');
     expect(localizedHomePage).toContain("<HomePage locale={locale} />");
     expect(homePage).toContain("getPublicMessages");

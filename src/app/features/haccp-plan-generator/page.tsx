@@ -166,6 +166,13 @@ export default function HaccpPlanGeneratorPage() {
             </p>
 
             <p>
+              If you want to review the structure first, start with the{" "}
+              <Link href="/resources/haccp-plan-template">HACCP plan template</Link> and the{" "}
+              <Link href="/resources/hazard-analysis-template">hazard analysis template</Link>. Those two resources show
+              the working logic behind the draft that PinkPepper helps you build.
+            </p>
+
+            <p>
               And when you need absolute confidence, a certified human food safety expert reviews the plan before you
               sign it off.
             </p>
@@ -428,19 +435,19 @@ export default function HaccpPlanGeneratorPage() {
           <div className="mt-10 grid gap-6 md:grid-cols-3">
             {[
               {
-                href: "/features/allergen-documentation",
-                label: "Allergen documentation",
-                description: "Pair your HACCP plan with allergen controls and menu-change documentation.",
+                href: "/resources/haccp-plan-template",
+                label: "HACCP plan template",
+                description: "Review the template structure before turning it into a site-specific draft.",
               },
               {
-                href: "/features/food-safety-sop-generator",
-                label: "Food safety SOP generator",
-                description: "Turn HACCP controls into day-to-day SOPs, logs, and hygiene records.",
+                href: "/resources/hazard-analysis-template",
+                label: "Hazard analysis template",
+                description: "See how hazard significance, controls, and CCP logic should be separated before review.",
               },
               {
-                href: "/pricing",
-                label: "Pricing",
-                description: "See how free, Plus, and Pro fit different food safety workloads.",
+                href: "/articles/how-to-perform-a-hazard-analysis-correctly",
+                label: "How to perform a hazard analysis correctly",
+                description: "Read the guide behind the worksheet and connect it back to the full HACCP draft.",
               },
             ].map((link) => (
               <Link
