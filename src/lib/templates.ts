@@ -24,6 +24,9 @@ export const TEMPLATES: TemplateEntry[] = [
   { slug: "haccp-plan-template_steps",            title: "HACCP step descriptions",                category: "HACCP" },
   { slug: "hazard-analysis-template",             title: "Hazard analysis template",               category: "HACCP" },
   { slug: "corrective-action-log-template",       title: "Corrective action log",                  category: "HACCP" },
+  { slug: "food-safety-audit-checklist",          title: "Food safety audit checklist",            category: "HACCP" },
+  { slug: "food-safety-document-checklist",       title: "EU and UK document checklist",           category: "HACCP" },
+  { slug: "food-safety-management-system-template", title: "Food safety management system",        category: "HACCP" },
   { slug: "product-recall-procedure-template",    title: "Product recall procedure",               category: "HACCP" },
   // Allergen
   { slug: "allergen-matrix-template",             title: "Allergen matrix template",               category: "Allergen" },

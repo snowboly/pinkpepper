@@ -153,7 +153,7 @@ export function DemoTabSwitcher() {
   const isTyping = !reduceMotion && typedChars < demo.prompt.length;
 
   return (
-    <div className="pp-glass-card rounded-3xl p-4 md:p-5">
+    <div className="pp-glass-card rounded-3xl p-4 md:p-5" data-nosnippet>
       <div className="flex items-center gap-3 border-b border-[#F1F5F9] pb-4">
         <div className="flex gap-2">
           <div className="h-3 w-3 rounded-full bg-[#FF5F57]" />

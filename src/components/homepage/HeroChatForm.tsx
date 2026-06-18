@@ -102,7 +102,7 @@ export function HeroChatForm() {
   };
 
   return (
-    <form onSubmit={handleChatSubmit} className="mx-auto w-full max-w-3xl">
+    <form onSubmit={handleChatSubmit} className="mx-auto w-full max-w-3xl" data-nosnippet>
       <div
         className={`group relative overflow-hidden rounded-2xl border bg-white shadow-[0_20px_70px_rgba(15,23,42,0.10)] transition-all duration-300 ${
           isFocused ? "border-[#E11D48]/40 shadow-[0_20px_70px_rgba(225,29,72,0.18)]" : "border-[#E2E8F0] hover:border-[#CBD5E1]"

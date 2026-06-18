@@ -1,6 +1,7 @@
 import { getArticleManifest, isArticlePreferredForIndexing } from "@/lib/articles";
 import { publicContentRoutePaths, publicLaunchLocales } from "@/i18n/public";
 import { localizePublicPath } from "@/lib/public-routes";
+import { resourceEntries } from "@/lib/resources";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -12,23 +13,6 @@ const INDEXNOW_KEY_LOCATION = `${BASE_URL}/${INDEXNOW_KEY}.txt`;
 const STATIC_PATHS = [
   "/about",
   "/resources",
-  "/resources/haccp-plan-template",
-  "/resources/hazard-analysis-template",
-  "/resources/allergen-matrix-template",
-  "/resources/food-safety-audit-checklist",
-  "/resources/cleaning-and-disinfection-sop",
-  "/resources/temperature-monitoring-log-template",
-  "/resources/supplier-approval-questionnaire",
-  "/resources/food-safety-document-checklist",
-  "/resources/corrective-action-log-template",
-  "/resources/product-recall-procedure-template",
-  "/resources/employee-food-safety-training-record",
-  "/resources/personal-hygiene-policy-template",
-  "/resources/pest-control-log-template",
-  "/resources/waste-management-log-template",
-  "/resources/waste-management-sop-template",
-  "/resources/traceability-log-template",
-  "/resources/food-safety-management-system-template",
   "/security",
   "/legal/terms",
   "/legal/privacy",
@@ -53,13 +37,15 @@ export async function GET(request: Request) {
   const englishRoutes = publicContentRoutePaths.map((path) => `${BASE_URL}${path}`);
   const localizedRoutes = publicContentRoutePaths.flatMap((path) =>
     publicLaunchLocales
-      .filter((l) => l !== "en")
+      .filter((locale) => locale !== "en")
       .map((locale) => `${BASE_URL}${localizePublicPath(locale, path)}`),
   );
   const articleUrls = articles
     .filter(isArticlePreferredForIndexing)
-    .map((a) => `${BASE_URL}/articles/${a.slug}`);
-  const staticUrls = STATIC_PATHS.map((p) => `${BASE_URL}${p}`);
+    .map((article) => `${BASE_URL}/articles/${article.slug}`);
+  const staticUrls = [...STATIC_PATHS, ...resourceEntries.map((resource) => resource.href)].map(
+    (path) => `${BASE_URL}${path}`,
+  );
 
   const urlList = [...englishRoutes, ...localizedRoutes, ...articleUrls, ...staticUrls];
 

@@ -23,7 +23,9 @@ import { homepageFaqs } from "@/data/faqs";
 const DemoTabSwitcher = dynamic(
   () => import("@/components/homepage/DemoTabSwitcher").then((mod) => mod.DemoTabSwitcher),
   {
-    loading: () => <div className="min-h-[28rem] rounded-[2rem] border border-[#E2E8F0] bg-white/60" aria-hidden="true" />,
+    loading: () => (
+      <div className="min-h-[28rem] rounded-[2rem] border border-[#E2E8F0] bg-white/60" aria-hidden="true" />
+    ),
   },
 );
 
@@ -79,7 +81,6 @@ export default async function HomePage({ locale }: HomePageProps = {}) {
     <main className="overflow-hidden">
       <script type="application/ld+json" nonce={nonce} dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <section className="relative overflow-hidden pb-20 pt-16 md:pb-28 md:pt-28">
-        {/* Background image + dark overlay */}
         <div className="absolute inset-0 -z-10">
           <Image
             src="/hero-bg.jpg"
@@ -105,8 +106,9 @@ export default async function HomePage({ locale }: HomePageProps = {}) {
             </h1>
 
             <p className="mx-auto mb-8 max-w-3xl text-base leading-relaxed text-white/80 sm:text-lg">
-              Generate free HACCP plans, hazard analysis templates, SOPs, and food safety records for EU and UK food
-              businesses. PinkPepper helps teams move faster from questions to usable compliance documents.
+              PinkPepper is AI food safety compliance software for EU and UK food businesses. Generate free HACCP
+              plans, hazard analysis templates, SOPs, and food safety records, then move faster from questions to
+              usable compliance documents.
             </p>
 
             <div className="mb-8 flex justify-center">
@@ -124,17 +126,18 @@ export default async function HomePage({ locale }: HomePageProps = {}) {
                   className="flex-shrink-0 rounded-sm"
                   xmlns="http://www.w3.org/2000/svg"
                 >
-                  <rect width="60" height="40" fill="#003399"/>
-                  {/* 12 stars at 30 degree intervals, r=13.333, center (30,20), outer r=2.2, inner r=0.9 */}
-                  {[0,30,60,90,120,150,180,210,240,270,300,330].map((deg) => {
+                  <rect width="60" height="40" fill="#003399" />
+                  {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map((deg) => {
                     const rad = (deg * Math.PI) / 180;
                     const cx = 30 + 13.333 * Math.sin(rad);
                     const cy = 20 - 13.333 * Math.cos(rad);
-                    const pts = [0,1,2,3,4,5,6,7,8,9].map((i) => {
-                      const a = (i * 36 * Math.PI) / 180;
-                      const r = i % 2 === 0 ? 2.2 : 0.9;
-                      return `${cx + r * Math.sin(a)},${cy - r * Math.cos(a)}`;
-                    }).join(" ");
+                    const pts = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+                      .map((i) => {
+                        const a = (i * 36 * Math.PI) / 180;
+                        const r = i % 2 === 0 ? 2.2 : 0.9;
+                        return `${cx + r * Math.sin(a)},${cy - r * Math.cos(a)}`;
+                      })
+                      .join(" ");
                     return <polygon key={deg} fill="#FFCC00" points={pts} />;
                   })}
                 </svg>
@@ -175,13 +178,12 @@ export default async function HomePage({ locale }: HomePageProps = {}) {
         </div>
       </section>
 
-
       <section className="relative overflow-hidden border-b border-[#F1F5F9] bg-[#F8FAFC] py-24">
         <div className="pp-container">
           <div className="mb-14 max-w-xl">
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">Built for real world operators</p>
             <h2 className="pp-display mt-4 text-4xl font-semibold tracking-[-0.01em] text-[#0F172A] md:text-5xl">
-              What PinkPepper helps you do
+              From raw notes to review-ready compliance work
             </h2>
             <p className="mt-4 text-lg text-[#475569]">
               From free HACCP plan drafts and hazard analysis templates to SOPs, monitoring logs, and corrective
@@ -245,7 +247,11 @@ export default async function HomePage({ locale }: HomePageProps = {}) {
         <div className="pp-container relative z-10">
           <div className="mx-auto mb-16 max-w-2xl text-center">
             <h2 className="pp-display mb-4 text-4xl text-[#0F172A] md:text-5xl">Pricing that follows the compliance job</h2>
-            <p className="text-lg text-[#64748B]">Start free for live questions, move to Plus for heavier Consultant use, and choose Pro when you want Auditor mode and human consultancy. <Link href="/pricing" className="underline hover:text-[#0F172A]">See full pricing</Link>.</p>
+            <p className="text-lg text-[#64748B]">
+              Start free for live questions, move to Plus for heavier Consultant use, and choose Pro when you want
+              Auditor mode and human consultancy.{" "}
+              <Link href="/pricing" className="underline hover:text-[#0F172A]">See full pricing</Link>.
+            </p>
           </div>
 
           <div className="mx-auto grid max-w-5xl gap-6 lg:grid-cols-3">
@@ -432,10 +438,8 @@ export default async function HomePage({ locale }: HomePageProps = {}) {
               </div>
             </div>
 
-            {/* Divider */}
-            <div className="hidden lg:block h-48 w-px bg-[#E2E8F0] shrink-0" />
+            <div className="hidden h-48 w-px shrink-0 bg-[#E2E8F0] lg:block" />
 
-            {/* Lead Auditor John - Pro highlight */}
             <div className="flex shrink-0 flex-col items-center gap-3 text-center">
               <div className="relative">
                 <Image
@@ -508,4 +512,3 @@ export default async function HomePage({ locale }: HomePageProps = {}) {
     </main>
   );
 }
-

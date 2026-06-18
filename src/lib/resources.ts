@@ -1,0 +1,225 @@
+export type ResourceEntry = {
+  href: string;
+  title: string;
+  description: string;
+  category: string;
+  categoryLabel: string;
+  updatedAt: string;
+};
+
+export const resourceEntries: ResourceEntry[] = [
+  {
+    href: "/resources/haccp-plan-template",
+    title: "HACCP plan template",
+    description: "What a practical HACCP plan should include before you turn it into a site-specific document.",
+    category: "haccp",
+    categoryLabel: "HACCP",
+    updatedAt: "2026-03-14",
+  },
+  {
+    href: "/resources/hazard-analysis-template",
+    title: "Hazard analysis template",
+    description: "What to include in a hazard analysis worksheet before you turn it into a business-specific HACCP document.",
+    category: "haccp",
+    categoryLabel: "HACCP",
+    updatedAt: "2026-06-18",
+  },
+  {
+    href: "/resources/corrective-action-log-template",
+    title: "Corrective action log template",
+    description: "How to document deviations, root causes, and actions taken to restore process control.",
+    category: "haccp",
+    categoryLabel: "HACCP",
+    updatedAt: "2026-03-14",
+  },
+  {
+    href: "/resources/product-recall-procedure-template",
+    title: "Product recall procedure template",
+    description: "The structure a recall procedure needs to enable a fast, traceable withdrawal or recall.",
+    category: "haccp",
+    categoryLabel: "HACCP",
+    updatedAt: "2026-03-14",
+  },
+  {
+    href: "/resources/allergen-matrix-template",
+    title: "Allergen matrix template",
+    description: "How to structure allergen information so kitchen and front-of-house teams can use it.",
+    category: "allergen",
+    categoryLabel: "Allergen",
+    updatedAt: "2026-03-14",
+  },
+  {
+    href: "/resources/cleaning-and-disinfection-sop",
+    title: "Cleaning and disinfection SOP",
+    description: "How to draft a cleaning SOP that is specific enough to follow and simple enough to keep updated.",
+    category: "cleaning",
+    categoryLabel: "Cleaning",
+    updatedAt: "2026-03-14",
+  },
+  {
+    href: "/resources/cooking-monitoring-log-template",
+    title: "Cooking monitoring log template",
+    description: "What to record for cook temperatures, batch checks, sign-off, and corrective actions when food misses its target.",
+    category: "monitoring",
+    categoryLabel: "Monitoring",
+    updatedAt: "2026-06-18",
+  },
+  {
+    href: "/resources/food-temperature-poster",
+    title: "Food temperature poster",
+    description: "A quick-reference kitchen poster for chilled, frozen, cooking, hot-hold, cooling, and reheating temperatures.",
+    category: "monitoring",
+    categoryLabel: "Monitoring",
+    updatedAt: "2026-06-18",
+  },
+  {
+    href: "/resources/temperature-monitoring-log-template",
+    title: "Temperature monitoring log template",
+    description: "What to include in fridge, freezer, hot-hold, and corrective action logs.",
+    category: "monitoring",
+    categoryLabel: "Monitoring",
+    updatedAt: "2026-03-14",
+  },
+  {
+    href: "/resources/food-safety-opening-and-closing-checklist",
+    title: "Food safety opening and closing checklist",
+    description: "A practical daily checklist structure for opening checks, closing checks, corrective actions, and shift sign-off.",
+    category: "monitoring",
+    categoryLabel: "Monitoring",
+    updatedAt: "2026-05-22",
+  },
+  {
+    href: "/resources/pest-control-log-template",
+    title: "Pest control log template",
+    description: "How to record pest activity findings, contractor visits, and remedial actions.",
+    category: "monitoring",
+    categoryLabel: "Monitoring",
+    updatedAt: "2026-03-14",
+  },
+  {
+    href: "/resources/waste-management-log-template",
+    title: "Waste management log template",
+    description: "A structure for recording food waste disposal, condemned stock, and waste contractor details.",
+    category: "monitoring",
+    categoryLabel: "Monitoring",
+    updatedAt: "2026-03-14",
+  },
+  {
+    href: "/resources/waste-management-sop-template",
+    title: "Waste management SOP template",
+    description: "How to write a waste management procedure covering segregation, storage, contractor arrangements, and compliance.",
+    category: "monitoring",
+    categoryLabel: "Monitoring",
+    updatedAt: "2026-03-14",
+  },
+  {
+    href: "/resources/traceability-log-template",
+    title: "Traceability log template",
+    description: "What one-step-back, one-step-forward traceability records should capture for EU and UK compliance.",
+    category: "traceability",
+    categoryLabel: "Traceability",
+    updatedAt: "2026-03-14",
+  },
+  {
+    href: "/resources/supplier-approval-questionnaire",
+    title: "Supplier approval questionnaire",
+    description: "Questions and evidence points food businesses use when approving or re-approving suppliers.",
+    category: "supplier",
+    categoryLabel: "Supplier",
+    updatedAt: "2026-03-14",
+  },
+  {
+    href: "/resources/supplier-registration-log",
+    title: "Supplier registration log",
+    description: "A supplier tracker for approval status, review dates, product scope, and due-diligence follow-up.",
+    category: "supplier",
+    categoryLabel: "Supplier",
+    updatedAt: "2026-06-18",
+  },
+  {
+    href: "/resources/employee-food-safety-training-record",
+    title: "Employee food safety training record",
+    description: "What training records should capture to demonstrate staff competence during inspections.",
+    category: "training",
+    categoryLabel: "Training",
+    updatedAt: "2026-03-14",
+  },
+  {
+    href: "/resources/gmp-poster",
+    title: "GMP poster",
+    description: "A visual good manufacturing practice poster covering hygiene, handling, contamination control, and daily discipline on site.",
+    category: "training",
+    categoryLabel: "Training",
+    updatedAt: "2026-06-18",
+  },
+  {
+    href: "/resources/personal-hygiene-policy-template",
+    title: "Personal hygiene policy template",
+    description: "The key elements a staff hygiene policy should cover to be enforceable and inspection-ready.",
+    category: "training",
+    categoryLabel: "Training",
+    updatedAt: "2026-03-14",
+  },
+  {
+    href: "/resources/incoming-goods-template",
+    title: "Incoming goods inspection template",
+    description: "What to record when goods arrive - supplier, product, quantity, condition, and temperature - to maintain traceability from the point of receipt.",
+    category: "traceability",
+    categoryLabel: "Traceability",
+    updatedAt: "2026-05-22",
+  },
+  {
+    href: "/resources/customer-complaint-log-template",
+    title: "Customer complaint log template",
+    description: "How to record, investigate, and close customer complaints in a way that feeds back into your HACCP and corrective action process.",
+    category: "haccp",
+    categoryLabel: "HACCP",
+    updatedAt: "2026-05-22",
+  },
+  {
+    href: "/resources/equipment-calibration-log-template",
+    title: "Equipment calibration log template",
+    description: "What calibration records should capture for probes, scales, and other critical measuring equipment used in food safety monitoring.",
+    category: "monitoring",
+    categoryLabel: "Monitoring",
+    updatedAt: "2026-05-22",
+  },
+  {
+    href: "/resources/food-safety-audit-checklist",
+    title: "Food safety audit checklist",
+    description: "A practical structure for monthly internal review and inspection preparation.",
+    category: "haccp",
+    categoryLabel: "HACCP",
+    updatedAt: "2026-03-14",
+  },
+  {
+    href: "/resources/food-safety-document-checklist",
+    title: "EU and UK document checklist",
+    description: "A document checklist covering the policies, logs, and supporting evidence food businesses are commonly asked to produce.",
+    category: "haccp",
+    categoryLabel: "HACCP",
+    updatedAt: "2026-03-14",
+  },
+  {
+    href: "/resources/food-safety-management-system-template",
+    title: "Food safety management system template",
+    description: "A structured starting point for documenting the policies, procedures, and records behind a usable food safety management system.",
+    category: "haccp",
+    categoryLabel: "HACCP",
+    updatedAt: "2026-03-14",
+  },
+];
+
+export const featuredResourceHrefs = [
+  "/resources/haccp-plan-template",
+  "/resources/allergen-matrix-template",
+  "/resources/food-safety-opening-and-closing-checklist",
+  "/resources/temperature-monitoring-log-template",
+  "/resources/corrective-action-log-template",
+] as const;
+
+export function getFeaturedResources() {
+  return resourceEntries.filter((resource) =>
+    featuredResourceHrefs.includes(resource.href as (typeof featuredResourceHrefs)[number]),
+  );
+}

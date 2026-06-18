@@ -438,6 +438,7 @@
     "billingDescription": "Manage your subscription, update payment methods, or cancel.",
     "viewPlans": "View plans",
     "manageBilling": "Manage billing",
+    "cancelSubscription": "Cancel subscription",
     "opening": "Opening...",
     "unableToOpenPortal": "Unable to open billing portal.",
     "account": "Account",

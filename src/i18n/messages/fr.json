@@ -352,6 +352,7 @@
     "billingDescription": "Gérez votre abonnement, mettez à jour vos moyens de paiement ou résiliez.",
     "viewPlans": "Voir les plans",
     "manageBilling": "Gérer la facturation",
+    "cancelSubscription": "Annuler l'abonnement",
     "opening": "Ouverture...",
     "unableToOpenPortal": "Impossible d'ouvrir le portail de facturation.",
     "account": "Compte",

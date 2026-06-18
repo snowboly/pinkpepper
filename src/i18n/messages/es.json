@@ -352,6 +352,7 @@
     "billingDescription": "Gestiona tu suscripción, actualiza los métodos de pago o cancela.",
     "viewPlans": "Ver planes",
     "manageBilling": "Gestionar facturación",
+    "cancelSubscription": "Cancelar suscripción",
     "opening": "Abriendo...",
     "unableToOpenPortal": "No se pudo abrir el portal de facturación.",
     "account": "Cuenta",

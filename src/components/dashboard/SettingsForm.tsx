@@ -343,7 +343,10 @@ export default function SettingsForm({
               {t("viewPlans")}
             </Link>
             {tier !== "free" && (
-              <ManageBillingButton />
+              <>
+                <ManageBillingButton />
+                <ManageBillingButton variant="cancel" />
+              </>
             )}
           </div>
         </div>
@@ -422,10 +425,11 @@ function UsageBar({ label, used, limit, color }: { label: string; used: number; 
   );
 }
 
-function ManageBillingButton() {
+function ManageBillingButton({ variant = "manage" }: { variant?: "manage" | "cancel" }) {
   const t = useTranslations("settings");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const isCancel = variant === "cancel";
 
   async function open() {
     setLoading(true);
@@ -450,9 +454,13 @@ function ManageBillingButton() {
       <button
         onClick={open}
         disabled={loading}
-        className="rounded-xl bg-[#0F172A] px-4 py-2 text-sm font-medium text-white hover:bg-[#1E293B] disabled:opacity-40 transition-colors"
+        className={
+          isCancel
+            ? "rounded-xl border border-[#FCA5A5] bg-white px-4 py-2 text-sm font-medium text-[#B91C1C] hover:bg-[#FFF1F2] disabled:opacity-40 transition-colors"
+            : "rounded-xl bg-[#0F172A] px-4 py-2 text-sm font-medium text-white hover:bg-[#1E293B] disabled:opacity-40 transition-colors"
+        }
       >
-        {loading ? t("opening") : t("manageBilling")}
+        {loading ? t("opening") : isCancel ? t("cancelSubscription") : t("manageBilling")}
       </button>
       {error && <p className="mt-1 text-xs text-[#E11D48]">{error}</p>}
     </div>

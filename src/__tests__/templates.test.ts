@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { getGroupedTemplates, TEMPLATES } from "@/lib/templates";
+import { resourceEntries } from "@/lib/resources";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -22,6 +23,9 @@ describe("getGroupedTemplates", () => {
     expect(grouped.find((group) => group.category === "HACCP")?.templates.map((template) => template.title)).toEqual([
       "Corrective action log",
       "Customer complaint log",
+      "EU and UK document checklist",
+      "Food safety audit checklist",
+      "Food safety management system",
       "HACCP hazards register",
       "HACCP step descriptions",
       "Hazard analysis template",
@@ -57,15 +61,33 @@ describe("getGroupedTemplates", () => {
     });
   });
 
+  it("keeps existing audit download slugs registered for live resource pages", () => {
+    expect(TEMPLATES.find((template) => template.slug === "food-safety-audit-checklist")).toMatchObject({
+      title: "Food safety audit checklist",
+      category: "HACCP",
+    });
+
+    expect(TEMPLATES.find((template) => template.slug === "food-safety-document-checklist")).toMatchObject({
+      title: "EU and UK document checklist",
+      category: "HACCP",
+    });
+
+    expect(TEMPLATES.find((template) => template.slug === "food-safety-management-system-template")).toMatchObject({
+      title: "Food safety management system",
+      category: "HACCP",
+    });
+  });
+
   it("surfaces the hazard analysis template in the registry and resources hub", () => {
     expect(TEMPLATES.find((template) => template.slug === "hazard-analysis-template")).toMatchObject({
       title: "Hazard analysis template",
       category: "HACCP",
     });
 
-    const resourcesPage = readPage("src/app/resources/page.tsx");
-    expect(resourcesPage).toContain('href: "/resources/hazard-analysis-template"');
-    expect(resourcesPage).toContain("What to include in a hazard analysis worksheet before you turn it into a business-specific HACCP document.");
+    expect(resourceEntries.find((resource) => resource.href === "/resources/hazard-analysis-template")).toMatchObject({
+      title: "Hazard analysis template",
+      description: "What to include in a hazard analysis worksheet before you turn it into a business-specific HACCP document.",
+    });
   });
 
   it("surfaces the supplier registration log in the registry and resources hub", () => {
@@ -76,9 +98,10 @@ describe("getGroupedTemplates", () => {
       storageName: "supplier-registration-template",
     });
 
-    const resourcesPage = readPage("src/app/resources/page.tsx");
-    expect(resourcesPage).toContain('href: "/resources/supplier-registration-log"');
-    expect(resourcesPage).toContain("A supplier tracker for approval status, review dates, product scope, and due-diligence follow-up.");
+    expect(resourceEntries.find((resource) => resource.href === "/resources/supplier-registration-log")).toMatchObject({
+      title: "Supplier registration log",
+      description: "A supplier tracker for approval status, review dates, product scope, and due-diligence follow-up.",
+    });
   });
 
   it("surfaces the new monitoring and poster resources in the registry and resources hub", () => {
@@ -99,10 +122,15 @@ describe("getGroupedTemplates", () => {
       fileType: "png",
     });
 
+    expect(resourceEntries.map((resource) => resource.href)).toEqual(
+      expect.arrayContaining([
+        "/resources/cooking-monitoring-log-template",
+        "/resources/food-temperature-poster",
+        "/resources/gmp-poster",
+      ]),
+    );
+
     const resourcesPage = readPage("src/app/resources/page.tsx");
-    expect(resourcesPage).toContain('href: "/resources/cooking-monitoring-log-template"');
-    expect(resourcesPage).toContain('href: "/resources/food-temperature-poster"');
-    expect(resourcesPage).toContain('href: "/resources/gmp-poster"');
     expect(resourcesPage).toContain("Free food safety templates, posters, and guides");
   });
 
