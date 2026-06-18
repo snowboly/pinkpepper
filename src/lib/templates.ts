@@ -9,7 +9,8 @@ export type TemplateEntry = {
   slug: string;
   title: string;
   category: string;
-  fileType?: "docx" | "xlsx";
+  fileType?: "docx" | "xlsx" | "png";
+  storageName?: string;
 };
 
 export type TemplateGroup = {
@@ -19,8 +20,9 @@ export type TemplateGroup = {
 
 export const TEMPLATES: TemplateEntry[] = [
   // HACCP
-  { slug: "haccp-plan-template_hazzards",         title: "HACCP hazards register",                 category: "HACCP" },
+  { slug: "haccp-plan-template_hazzards",         title: "HACCP hazards register",                 category: "HACCP",        storageName: "haccp-plan-template_hazards" },
   { slug: "haccp-plan-template_steps",            title: "HACCP step descriptions",                category: "HACCP" },
+  { slug: "hazard-analysis-template",             title: "Hazard analysis template",               category: "HACCP" },
   { slug: "corrective-action-log-template",       title: "Corrective action log",                  category: "HACCP" },
   { slug: "product-recall-procedure-template",    title: "Product recall procedure",               category: "HACCP" },
   // Allergen
@@ -28,7 +30,10 @@ export const TEMPLATES: TemplateEntry[] = [
   // Cleaning
   { slug: "cleaning-and-disinfection-sop",        title: "Cleaning and disinfection SOP",          category: "Cleaning" },
   // Monitoring
+  { slug: "cooking-monitoring-log-template",      title: "Cooking monitoring log",                 category: "Monitoring" },
+  { slug: "food-temperature-poster",              title: "Food temperature poster",                category: "Monitoring",   fileType: "png" },
   { slug: "temperature-monitoring-log-template",  title: "Temperature monitoring log",             category: "Monitoring" },
+  { slug: "food-safety-opening-and-closing-checklist", title: "Food safety opening and closing checklist", category: "Monitoring", fileType: "xlsx", storageName: "Food Safety Opening and Closing Checklist" },
   { slug: "pest-control-log-template",            title: "Pest control log",                       category: "Monitoring" },
   { slug: "waste-management-log-template",        title: "Waste management log",                   category: "Monitoring" },
   { slug: "waste-management-sop-template",        title: "Waste management SOP",                   category: "Monitoring" },
@@ -36,12 +41,10 @@ export const TEMPLATES: TemplateEntry[] = [
   { slug: "traceability-log-template",            title: "Traceability log",                       category: "Traceability" },
   // Supplier
   { slug: "supplier-approval-questionnaire",      title: "Supplier approval questionnaire",        category: "Supplier" },
-  // Audit
-  { slug: "food-safety-audit-checklist",          title: "Food safety audit checklist",            category: "Audit" },
-  { slug: "food-safety-document-checklist",       title: "EU and UK document checklist",           category: "Audit" },
-  { slug: "food-safety-management-system-template", title: "Food safety management system",        category: "Audit" },
+  { slug: "supplier-registration-log",            title: "Supplier registration log",              category: "Supplier",     fileType: "xlsx", storageName: "supplier-registration-template" },
   // Training
   { slug: "employee-food-safety-training-record", title: "Employee training record",               category: "Training" },
+  { slug: "gmp-poster",                           title: "GMP poster",                             category: "Training",     fileType: "png" },
   { slug: "personal-hygiene-policy-template",     title: "Personal hygiene policy",                category: "Training" },
   // Goods receiving
   { slug: "incoming-goods-template",              title: "Incoming goods inspection record",       category: "Traceability" },

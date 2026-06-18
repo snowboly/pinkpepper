@@ -41,7 +41,7 @@ export async function GET(
 
   if (tier === "free") {
     return Response.json(
-      { error: "Upgrade to Plus or Pro to download DOCX templates." },
+      { error: "Upgrade to Plus or Pro to download template files." },
       { status: 403 }
     );
   }
@@ -50,7 +50,8 @@ export async function GET(
   const admin = createAdminClient();
   const template = TEMPLATES.find((t) => t.slug === slug);
   const ext = template?.fileType ?? "docx";
-  const storagePath = `${slug}.${ext}`;
+  const storageBaseName = template?.storageName ?? slug;
+  const storagePath = `${storageBaseName}.${ext}`;
 
   const { data, error: urlError } = await admin.storage
     .from(BUCKETS.templates)

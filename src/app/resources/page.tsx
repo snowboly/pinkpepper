@@ -11,6 +11,13 @@ const resources: ResourceEntry[] = [
     categoryLabel: "HACCP",
   },
   {
+    href: "/resources/hazard-analysis-template",
+    title: "Hazard analysis template",
+    description: "What to include in a hazard analysis worksheet before you turn it into a business-specific HACCP document.",
+    category: "haccp",
+    categoryLabel: "HACCP",
+  },
+  {
     href: "/resources/corrective-action-log-template",
     title: "Corrective action log template",
     description: "How to document deviations, root causes, and actions taken to restore process control.",
@@ -39,9 +46,30 @@ const resources: ResourceEntry[] = [
     categoryLabel: "Cleaning",
   },
   {
+    href: "/resources/cooking-monitoring-log-template",
+    title: "Cooking monitoring log template",
+    description: "What to record for cook temperatures, batch checks, sign-off, and corrective actions when food misses its target.",
+    category: "monitoring",
+    categoryLabel: "Monitoring",
+  },
+  {
+    href: "/resources/food-temperature-poster",
+    title: "Food temperature poster",
+    description: "A quick-reference kitchen poster for chilled, frozen, cooking, hot-hold, cooling, and reheating temperatures.",
+    category: "monitoring",
+    categoryLabel: "Monitoring",
+  },
+  {
     href: "/resources/temperature-monitoring-log-template",
     title: "Temperature monitoring log template",
     description: "What to include in fridge, freezer, hot-hold, and corrective action logs.",
+    category: "monitoring",
+    categoryLabel: "Monitoring",
+  },
+  {
+    href: "/resources/food-safety-opening-and-closing-checklist",
+    title: "Food safety opening and closing checklist",
+    description: "A practical daily checklist structure for opening checks, closing checks, corrective actions, and shift sign-off.",
     category: "monitoring",
     categoryLabel: "Monitoring",
   },
@@ -81,30 +109,23 @@ const resources: ResourceEntry[] = [
     categoryLabel: "Supplier",
   },
   {
-    href: "/resources/food-safety-audit-checklist",
-    title: "Food safety audit checklist",
-    description: "A practical structure for monthly internal review and inspection preparation.",
-    category: "audit",
-    categoryLabel: "Audit",
-  },
-  {
-    href: "/resources/food-safety-document-checklist",
-    title: "EU and UK food safety document checklist",
-    description: "A broader authority asset covering HACCP, SOPs, allergen, traceability, monitoring, and audit-readiness documents.",
-    category: "audit",
-    categoryLabel: "Audit",
-  },
-  {
-    href: "/resources/food-safety-management-system-template",
-    title: "Food safety management system template",
-    description: "How to structure the overarching FSMS document that ties your HACCP plan, SOPs, and records together.",
-    category: "audit",
-    categoryLabel: "Audit",
+    href: "/resources/supplier-registration-log",
+    title: "Supplier registration log",
+    description: "A supplier tracker for approval status, review dates, product scope, and due-diligence follow-up.",
+    category: "supplier",
+    categoryLabel: "Supplier",
   },
   {
     href: "/resources/employee-food-safety-training-record",
     title: "Employee food safety training record",
     description: "What training records should capture to demonstrate staff competence during inspections.",
+    category: "training",
+    categoryLabel: "Training",
+  },
+  {
+    href: "/resources/gmp-poster",
+    title: "GMP poster",
+    description: "A visual good manufacturing practice poster covering hygiene, handling, contamination control, and daily discipline on site.",
     category: "training",
     categoryLabel: "Training",
   },
@@ -141,8 +162,8 @@ const resources: ResourceEntry[] = [
 const featuredResources = [
   "/resources/haccp-plan-template",
   "/resources/allergen-matrix-template",
+  "/resources/food-safety-opening-and-closing-checklist",
   "/resources/temperature-monitoring-log-template",
-  "/resources/food-safety-audit-checklist",
   "/resources/corrective-action-log-template",
 ];
 
@@ -162,12 +183,17 @@ const relatedWorkflows = [
     title: "Read the compliance articles",
     description: "Go deeper on HACCP, allergen control, audits, and traceability with practical operational guidance.",
   },
+  {
+    href: "/use-cases",
+    title: "Match the templates to your operation",
+    description: "Use the restaurants, catering, cafes, and manufacturing pages when you need templates in a more business-specific workflow.",
+  },
 ];
 
 export const metadata: Metadata = {
   title: "Free Food Safety Templates & Guides | PinkPepper",
   description:
-    "15 free food safety templates and guides for HACCP plans, allergen matrices, audit checklists, SOPs, temperature logs, traceability, and supplier approval for EU and UK food businesses.",
+    "Free food safety templates, posters, and guides for HACCP plans, hazard analysis, allergen matrices, opening and closing checklists, SOPs, temperature logs, traceability, and supplier approval for EU and UK food businesses.",
   alternates: {
     canonical: "https://pinkpepper.io/resources",
     languages: { "x-default": "https://pinkpepper.io/resources", en: "https://pinkpepper.io/resources" },
@@ -175,7 +201,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Free Food Safety Templates & Guides | PinkPepper",
     description:
-      "15 free food safety templates and guides for HACCP plans, allergen matrices, audit checklists, SOPs, temperature logs, traceability, and supplier approval for EU and UK food businesses.",
+      "Free food safety templates, posters, and guides for HACCP plans, hazard analysis, allergen matrices, opening and closing checklists, SOPs, temperature logs, traceability, and supplier approval for EU and UK food businesses.",
     locale: "en_GB",
     images: [{ url: "https://pinkpepper.io/social-card.png", width: 1200, height: 630, alt: "PinkPepper - AI Food Safety Compliance Software" }],
   },
@@ -234,7 +260,7 @@ export default function ResourcesPage() {
       </section>
 
       <section className="border-b border-[#F1F5F9] bg-[#FFF7ED] py-14">
-        <div className="pp-container grid gap-5 md:grid-cols-3">
+        <div className="pp-container grid gap-5 md:grid-cols-2 xl:grid-cols-4">
           {relatedWorkflows.map((item) => (
             <Link
               key={item.href}
