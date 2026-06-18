@@ -46,6 +46,20 @@ const resources: ResourceEntry[] = [
     categoryLabel: "Cleaning",
   },
   {
+    href: "/resources/cooking-monitoring-log-template",
+    title: "Cooking monitoring log template",
+    description: "What to record for cook temperatures, batch checks, sign-off, and corrective actions when food misses its target.",
+    category: "monitoring",
+    categoryLabel: "Monitoring",
+  },
+  {
+    href: "/resources/food-temperature-poster",
+    title: "Food temperature poster",
+    description: "A quick-reference kitchen poster for chilled, frozen, cooking, hot-hold, cooling, and reheating temperatures.",
+    category: "monitoring",
+    categoryLabel: "Monitoring",
+  },
+  {
     href: "/resources/temperature-monitoring-log-template",
     title: "Temperature monitoring log template",
     description: "What to include in fridge, freezer, hot-hold, and corrective action logs.",
@@ -109,6 +123,13 @@ const resources: ResourceEntry[] = [
     categoryLabel: "Training",
   },
   {
+    href: "/resources/gmp-poster",
+    title: "GMP poster",
+    description: "A visual good manufacturing practice poster covering hygiene, handling, contamination control, and daily discipline on site.",
+    category: "training",
+    categoryLabel: "Training",
+  },
+  {
     href: "/resources/personal-hygiene-policy-template",
     title: "Personal hygiene policy template",
     description: "The key elements a staff hygiene policy should cover to be enforceable and inspection-ready.",
@@ -118,7 +139,7 @@ const resources: ResourceEntry[] = [
   {
     href: "/resources/incoming-goods-template",
     title: "Incoming goods inspection template",
-    description: "What to record when goods arrive — supplier, product, quantity, condition, and temperature — to maintain traceability from the point of receipt.",
+    description: "What to record when goods arrive - supplier, product, quantity, condition, and temperature - to maintain traceability from the point of receipt.",
     category: "traceability",
     categoryLabel: "Traceability",
   },
@@ -172,7 +193,7 @@ const relatedWorkflows = [
 export const metadata: Metadata = {
   title: "Free Food Safety Templates & Guides | PinkPepper",
   description:
-    "18 free food safety templates and guides for HACCP plans, hazard analysis, allergen matrices, opening and closing checklists, SOPs, temperature logs, traceability, and supplier approval for EU and UK food businesses.",
+    "Free food safety templates, posters, and guides for HACCP plans, hazard analysis, allergen matrices, opening and closing checklists, SOPs, temperature logs, traceability, and supplier approval for EU and UK food businesses.",
   alternates: {
     canonical: "https://pinkpepper.io/resources",
     languages: { "x-default": "https://pinkpepper.io/resources", en: "https://pinkpepper.io/resources" },
@@ -180,7 +201,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Free Food Safety Templates & Guides | PinkPepper",
     description:
-      "18 free food safety templates and guides for HACCP plans, hazard analysis, allergen matrices, opening and closing checklists, SOPs, temperature logs, traceability, and supplier approval for EU and UK food businesses.",
+      "Free food safety templates, posters, and guides for HACCP plans, hazard analysis, allergen matrices, opening and closing checklists, SOPs, temperature logs, traceability, and supplier approval for EU and UK food businesses.",
     locale: "en_GB",
     images: [{ url: "https://pinkpepper.io/social-card.png", width: 1200, height: 630, alt: "PinkPepper - AI Food Safety Compliance Software" }],
   },

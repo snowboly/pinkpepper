@@ -29,12 +29,20 @@ describe("getGroupedTemplates", () => {
     ]);
 
     expect(grouped.find((group) => group.category === "Monitoring")?.templates.map((template) => template.title)).toEqual([
+      "Cooking monitoring log",
       "Equipment calibration log",
       "Food safety opening and closing checklist",
+      "Food temperature poster",
       "Pest control log",
       "Temperature monitoring log",
       "Waste management log",
       "Waste management SOP",
+    ]);
+
+    expect(grouped.find((group) => group.category === "Training")?.templates.map((template) => template.title)).toEqual([
+      "Employee training record",
+      "GMP poster",
+      "Personal hygiene policy",
     ]);
   });
 
@@ -71,6 +79,31 @@ describe("getGroupedTemplates", () => {
     const resourcesPage = readPage("src/app/resources/page.tsx");
     expect(resourcesPage).toContain('href: "/resources/supplier-registration-log"');
     expect(resourcesPage).toContain("A supplier tracker for approval status, review dates, product scope, and due-diligence follow-up.");
+  });
+
+  it("surfaces the new monitoring and poster resources in the registry and resources hub", () => {
+    expect(TEMPLATES.find((template) => template.slug === "cooking-monitoring-log-template")).toMatchObject({
+      title: "Cooking monitoring log",
+      category: "Monitoring",
+    });
+
+    expect(TEMPLATES.find((template) => template.slug === "food-temperature-poster")).toMatchObject({
+      title: "Food temperature poster",
+      category: "Monitoring",
+      fileType: "png",
+    });
+
+    expect(TEMPLATES.find((template) => template.slug === "gmp-poster")).toMatchObject({
+      title: "GMP poster",
+      category: "Training",
+      fileType: "png",
+    });
+
+    const resourcesPage = readPage("src/app/resources/page.tsx");
+    expect(resourcesPage).toContain('href: "/resources/cooking-monitoring-log-template"');
+    expect(resourcesPage).toContain('href: "/resources/food-temperature-poster"');
+    expect(resourcesPage).toContain('href: "/resources/gmp-poster"');
+    expect(resourcesPage).toContain("Free food safety templates, posters, and guides");
   });
 
   it("keeps the core HACCP cluster linked together", () => {

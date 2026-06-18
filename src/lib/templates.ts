@@ -9,7 +9,7 @@ export type TemplateEntry = {
   slug: string;
   title: string;
   category: string;
-  fileType?: "docx" | "xlsx";
+  fileType?: "docx" | "xlsx" | "png";
   storageName?: string;
 };
 
@@ -30,6 +30,8 @@ export const TEMPLATES: TemplateEntry[] = [
   // Cleaning
   { slug: "cleaning-and-disinfection-sop",        title: "Cleaning and disinfection SOP",          category: "Cleaning" },
   // Monitoring
+  { slug: "cooking-monitoring-log-template",      title: "Cooking monitoring log",                 category: "Monitoring" },
+  { slug: "food-temperature-poster",              title: "Food temperature poster",                category: "Monitoring",   fileType: "png" },
   { slug: "temperature-monitoring-log-template",  title: "Temperature monitoring log",             category: "Monitoring" },
   { slug: "food-safety-opening-and-closing-checklist", title: "Food safety opening and closing checklist", category: "Monitoring", fileType: "xlsx", storageName: "Food Safety Opening and Closing Checklist" },
   { slug: "pest-control-log-template",            title: "Pest control log",                       category: "Monitoring" },
@@ -42,6 +44,7 @@ export const TEMPLATES: TemplateEntry[] = [
   { slug: "supplier-registration-log",            title: "Supplier registration log",              category: "Supplier",     fileType: "xlsx", storageName: "supplier-registration-template" },
   // Training
   { slug: "employee-food-safety-training-record", title: "Employee training record",               category: "Training" },
+  { slug: "gmp-poster",                           title: "GMP poster",                             category: "Training",     fileType: "png" },
   { slug: "personal-hygiene-policy-template",     title: "Personal hygiene policy",                category: "Training" },
   // Goods receiving
   { slug: "incoming-goods-template",              title: "Incoming goods inspection record",       category: "Traceability" },

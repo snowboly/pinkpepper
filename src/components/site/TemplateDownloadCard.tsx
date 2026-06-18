@@ -5,14 +5,17 @@ import { TEMPLATES, type TemplateEntry } from "@/lib/templates";
 
 type Props = {
   slugs: string[];
-  /** Falls back to the registry title of the first slug when omitted */
   title?: string;
 };
 
 export async function TemplateDownloadCard({ slugs, title: titleProp }: Props) {
   const firstSlug = slugs[0];
   const title = titleProp ?? TEMPLATES.find((t) => t.slug === firstSlug)?.title ?? firstSlug;
-  // Read auth + tier server-side — no round trip from client
+  const fileTypes = Array.from(
+    new Set(slugs.map((slug) => (TEMPLATES.find((t) => t.slug === slug)?.fileType ?? "docx").toUpperCase())),
+  );
+  const fileTypeLabel = fileTypes.join(" / ");
+
   const supabase = await createClient();
   const {
     data: { user },
@@ -22,16 +25,11 @@ export async function TemplateDownloadCard({ slugs, title: titleProp }: Props) {
   if (user) {
     const [{ data: profile }, { data: subscription }] = await Promise.all([
       supabase.from("profiles").select("tier").eq("id", user.id).maybeSingle(),
-      supabase
-        .from("subscriptions")
-        .select("tier,status")
-        .eq("user_id", user.id)
-        .maybeSingle(),
+      supabase.from("subscriptions").select("tier,status").eq("user_id", user.id).maybeSingle(),
     ]);
     tier = resolveEffectiveTier(profile?.tier, subscription);
   }
 
-  // ── Plus / Pro: show download button(s) ─────────────────────────
   if (user && (tier === "plus" || tier === "pro")) {
     return (
       <div className="flex flex-col rounded-2xl border border-[#E2E8F0] bg-white p-6">
@@ -52,7 +50,7 @@ export async function TemplateDownloadCard({ slugs, title: titleProp }: Props) {
                 key={slug}
                 href={`/api/templates/${slug}/download`}
                 download
-                className="inline-flex items-center gap-2 rounded-full bg-[#E11D48] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#BE123C] self-start"
+                className="inline-flex items-center gap-2 self-start rounded-full bg-[#E11D48] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#BE123C]"
               >
                 <DownloadIcon />
                 {slugs.length > 1 ? templateTitle : `Download ${ext}`}
@@ -61,13 +59,12 @@ export async function TemplateDownloadCard({ slugs, title: titleProp }: Props) {
           })}
         </div>
         <p className="mt-3 text-xs text-[#94A3B8]">
-          Editable Microsoft Office format
+          {fileTypeLabel === "PNG" ? "Print-ready image format" : `Download format: ${fileTypeLabel}`}
         </p>
       </div>
     );
   }
 
-  // ── Logged-in free user: upgrade prompt ─────────────────────────
   if (user && tier === "free") {
     return (
       <div className="flex flex-col rounded-2xl border border-[#FBCFE8] bg-[#FFF1F2] p-6">
@@ -75,15 +72,15 @@ export async function TemplateDownloadCard({ slugs, title: titleProp }: Props) {
           Plus &amp; Pro
         </p>
         <p className="mt-3 text-base font-semibold text-[#0F172A]">
-          Download this template as DOCX
+          {`Download this file as ${fileTypeLabel}`}
         </p>
         <p className="mt-2 text-sm leading-relaxed text-[#475569]">
-          Upgrade to Plus or Pro to download all 15 food safety templates as
-          editable Word documents.
+          Upgrade to Plus or Pro to download the full PinkPepper template library, including editable
+          records, checklists, SOPs, and posters.
         </p>
         <Link
           href="/pricing"
-          className="mt-5 inline-flex items-center gap-2 rounded-full bg-[#E11D48] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#BE123C] self-start"
+          className="mt-5 inline-flex items-center gap-2 self-start rounded-full bg-[#E11D48] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#BE123C]"
         >
           View plans
         </Link>
@@ -94,22 +91,21 @@ export async function TemplateDownloadCard({ slugs, title: titleProp }: Props) {
     );
   }
 
-  // ── Unauthenticated: sign up prompt ─────────────────────────────
   return (
     <div className="flex flex-col rounded-2xl border border-[#E2E8F0] bg-white p-6">
       <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#E11D48]">
         Free template
       </p>
       <p className="mt-3 text-base font-semibold text-[#0F172A]">
-        Download this template as DOCX
+        {`Download this file as ${fileTypeLabel}`}
       </p>
       <p className="mt-2 text-sm leading-relaxed text-[#475569]">
-        Create a free account to access PinkPepper, then upgrade to Plus or Pro
-        to download all 15 templates as editable Word documents.
+        Create a free account to access PinkPepper, then upgrade to Plus or Pro to download the full
+        template library, including editable records, checklists, SOPs, and posters.
       </p>
       <Link
         href="/signup"
-        className="mt-5 inline-flex items-center gap-2 rounded-full bg-[#E11D48] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#BE123C] self-start"
+        className="mt-5 inline-flex items-center gap-2 self-start rounded-full bg-[#E11D48] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#BE123C]"
       >
         Sign up free
       </Link>
