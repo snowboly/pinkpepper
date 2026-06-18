@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { getGroupedTemplates, TEMPLATES } from "@/lib/templates";
+import { resourceEntries } from "@/lib/resources";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -63,9 +64,10 @@ describe("getGroupedTemplates", () => {
       category: "HACCP",
     });
 
-    const resourcesPage = readPage("src/app/resources/page.tsx");
-    expect(resourcesPage).toContain('href: "/resources/hazard-analysis-template"');
-    expect(resourcesPage).toContain("What to include in a hazard analysis worksheet before you turn it into a business-specific HACCP document.");
+    expect(resourceEntries.find((resource) => resource.href === "/resources/hazard-analysis-template")).toMatchObject({
+      title: "Hazard analysis template",
+      description: "What to include in a hazard analysis worksheet before you turn it into a business-specific HACCP document.",
+    });
   });
 
   it("surfaces the supplier registration log in the registry and resources hub", () => {
@@ -76,9 +78,10 @@ describe("getGroupedTemplates", () => {
       storageName: "supplier-registration-template",
     });
 
-    const resourcesPage = readPage("src/app/resources/page.tsx");
-    expect(resourcesPage).toContain('href: "/resources/supplier-registration-log"');
-    expect(resourcesPage).toContain("A supplier tracker for approval status, review dates, product scope, and due-diligence follow-up.");
+    expect(resourceEntries.find((resource) => resource.href === "/resources/supplier-registration-log")).toMatchObject({
+      title: "Supplier registration log",
+      description: "A supplier tracker for approval status, review dates, product scope, and due-diligence follow-up.",
+    });
   });
 
   it("surfaces the new monitoring and poster resources in the registry and resources hub", () => {
@@ -99,10 +102,15 @@ describe("getGroupedTemplates", () => {
       fileType: "png",
     });
 
+    expect(resourceEntries.map((resource) => resource.href)).toEqual(
+      expect.arrayContaining([
+        "/resources/cooking-monitoring-log-template",
+        "/resources/food-temperature-poster",
+        "/resources/gmp-poster",
+      ]),
+    );
+
     const resourcesPage = readPage("src/app/resources/page.tsx");
-    expect(resourcesPage).toContain('href: "/resources/cooking-monitoring-log-template"');
-    expect(resourcesPage).toContain('href: "/resources/food-temperature-poster"');
-    expect(resourcesPage).toContain('href: "/resources/gmp-poster"');
     expect(resourcesPage).toContain("Free food safety templates, posters, and guides");
   });
 

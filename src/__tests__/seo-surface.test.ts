@@ -5,30 +5,33 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 import sitemap from "@/app/sitemap";
 import robots from "@/app/robots";
+import { generateArticleMetadata } from "@/app/articles/[slug]/page";
 import { buildPublicMetadata } from "@/lib/seo/public-metadata";
 
 const readPage = (relativePath: string) => readFileSync(join(process.cwd(), relativePath), "utf8");
 
-async function renderArticlesPageForTest() {
+async function renderArticlesPageForTest(
+  mockArticles = [
+    {
+      title: "Thermometer Checks for Small Kitchens",
+      slug: "thermometer-checks-small-kitchens",
+      excerpt: "Probe use, calibration, and daily checks for small teams.",
+      category: "Operations",
+      publishedAt: "2026-04-01",
+      image: "https://images.example.com/thermometer.jpg",
+    },
+    {
+      title: "Allergen Updates Before Service",
+      slug: "allergen-updates-before-service",
+      excerpt: "How to keep substitutions and allergen information current.",
+      category: "Allergens",
+      publishedAt: "2026-04-02",
+    },
+  ],
+) {
   vi.resetModules();
   vi.doMock("@/lib/articles", () => ({
-    getArticleManifest: vi.fn().mockResolvedValue([
-      {
-        title: "Thermometer Checks for Small Kitchens",
-        slug: "thermometer-checks-small-kitchens",
-        excerpt: "Probe use, calibration, and daily checks for small teams.",
-        category: "Operations",
-        publishedAt: "2026-04-01",
-        image: "https://images.example.com/thermometer.jpg",
-      },
-      {
-        title: "Allergen Updates Before Service",
-        slug: "allergen-updates-before-service",
-        excerpt: "How to keep substitutions and allergen information current.",
-        category: "Allergens",
-        publishedAt: "2026-04-02",
-      },
-    ]),
+    getArticleManifest: vi.fn().mockResolvedValue(mockArticles),
   }));
   vi.doMock("next/image", () => ({
     default: (props: Record<string, unknown>) => {
@@ -90,6 +93,7 @@ async function renderArticleDetailPageForTest() {
         publishedAt: "2025-10-19",
       },
     ]),
+    isArticlePreferredForIndexing: vi.fn().mockReturnValue(true),
   }));
   vi.doMock("@/lib/article-content", () => ({
     processArticleContent: vi.fn().mockReturnValue({
@@ -127,8 +131,8 @@ describe("SEO surface", () => {
 
     expect(metadata.alternates?.canonical).toBe("https://pinkpepper.io/fr/pricing");
     expect(metadata.alternates?.languages).toEqual({
-      "x-default": "https://pinkpepper.io/en/pricing",
-      en: "https://pinkpepper.io/en/pricing",
+      "x-default": "https://pinkpepper.io/pricing",
+      en: "https://pinkpepper.io/pricing",
       fr: "https://pinkpepper.io/fr/pricing",
       de: "https://pinkpepper.io/de/pricing",
       pt: "https://pinkpepper.io/pt/pricing",
@@ -149,7 +153,7 @@ describe("SEO surface", () => {
     expect(layout).toContain("width: 1200");
     expect(layout).toContain("height: 630");
     expect(layout).toContain('images: ["https://pinkpepper.io/social-card.png"]');
-    expect(layout).toContain('title: "PinkPepper | AI HACCP & Food Safety Software — EU & UK"');
+    expect(layout).toContain('title: "PinkPepper | AI HACCP & Food Safety Software - EU & UK"');
     expect(layout).toContain("grounded in 35+ EU & UK regulations. Try free.");
   });
 
@@ -178,8 +182,15 @@ describe("SEO surface", () => {
     expect(entries).toContain("https://pinkpepper.io/fr");
     expect(entries).toContain("https://pinkpepper.io/pt/pricing");
     expect(entries).toContain("https://pinkpepper.io/de/features/haccp-plan-generator");
+    expect(entries).toContain("https://pinkpepper.io/features/haccp-plan-generator");
+    expect(entries).toContain("https://pinkpepper.io/use-cases/restaurants");
+    expect(entries).toContain("https://pinkpepper.io/articles/identifying-critical-control-points-in-food-safety");
     expect(entries).not.toContain("https://pinkpepper.io/login");
     expect(entries).not.toContain("https://pinkpepper.io/dashboard");
+    expect(entries).not.toContain("https://pinkpepper.io/legal/cookies");
+    expect(entries).not.toContain("https://pinkpepper.io/legal/dpa");
+    expect(entries).not.toContain("https://pinkpepper.io/legal/refund");
+    expect(entries).not.toContain("https://pinkpepper.io/articles/haccp-for-meal-prep-services-eu");
     expect(robots().sitemap).toBe("https://pinkpepper.io/sitemap.xml");
     expect(disallowLists).toEqual(
       expect.arrayContaining(["/dashboard/", "/admin/", "/api/", "/auth/"]),
@@ -190,13 +201,20 @@ describe("SEO surface", () => {
 describe("public SEO copy and linking", () => {
   it("aligns the homepage with the compliance software category narrative", () => {
     const homepage = readPage("src/app/page.tsx");
+    const heroChatForm = readPage("src/components/homepage/HeroChatForm.tsx");
+    const demoTabSwitcher = readPage("src/components/homepage/DemoTabSwitcher.tsx");
 
     expect(homepage).toContain("AI food safety compliance software");
     expect(homepage).toContain("/features/haccp-plan-generator");
     expect(homepage).toContain("/pricing");
-    expect(homepage).not.toContain("â€”");
-    expect(homepage).not.toContain("â†’");
-    expect(homepage).not.toContain("â‚¬");
+    expect(heroChatForm).toContain("data-nosnippet");
+    expect(demoTabSwitcher).toContain("data-nosnippet");
+    expect(homepage).not.toContain("â€");
+    expect(homepage).not.toContain("â€™");
+    expect(homepage).not.toContain("â€“");
+    expect(homepage).not.toContain("ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â");
+    expect(homepage).not.toContain("ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢");
+    expect(homepage).not.toContain("ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬");
   });
 
   it("routes core public pages into deeper commercial paths", () => {
@@ -205,12 +223,14 @@ describe("public SEO copy and linking", () => {
     const security = readPage("src/app/security/page.tsx");
     const contact = readPage("src/app/contact/page.tsx");
     const resources = readPage("src/app/resources/page.tsx");
+    const chrome = readPage("src/components/site/chrome.tsx");
 
     expect(pricing).toContain("/features/");
     expect(about).toContain("/pricing");
     expect(security).toContain("/pricing");
     expect(contact).toContain("/features/");
     expect(resources).toContain("/features/");
+    expect(chrome).toContain('href: "/use-cases"');
   });
 
   it("renders the articles hub as a curated resource page with key route links", async () => {
@@ -218,6 +238,8 @@ describe("public SEO copy and linking", () => {
 
     expect(markup).toContain("resource hub");
     expect(markup).toContain("operational compliance");
+    expect(markup).toContain("/use-cases");
+    expect(markup).toContain("Browse by cluster");
   });
 
   it("renders article cards with article links and fallback imagery", async () => {
@@ -228,6 +250,23 @@ describe("public SEO copy and linking", () => {
     expect(markup).toContain('src="https://images.example.com/thermometer.jpg"');
     expect(markup).toContain('alt="Thermometer Checks for Small Kitchens"');
     expect(markup).toContain("Article image coming soon");
+  });
+
+  it("caps the initial library render and defers the remaining article cards", async () => {
+    const manyArticles = Array.from({ length: 30 }, (_, index) => ({
+      title: `Article ${index + 1}`,
+      slug: `article-${index + 1}`,
+      excerpt: `Excerpt ${index + 1}`,
+      category: "Operations",
+      publishedAt: `2026-04-${String(index + 1).padStart(2, "0")}`,
+    }));
+
+    const markup = await renderArticlesPageForTest(manyArticles);
+
+    expect(markup).toContain("Article 1");
+    expect(markup).toContain("Article 24");
+    expect(markup).not.toContain("Article 25");
+    expect(markup).toContain("Show the remaining 6 articles");
   });
 
   it("tightens the public article detail hero hierarchy", () => {
@@ -284,8 +323,8 @@ describe("public SEO copy and linking", () => {
     const randomLinks = readPage("src/components/homepage/RandomArticleLinks.tsx");
 
     expect(randomLinks).toContain("/articles/building-a-haccp-process-flow-diagram");
-    expect(randomLinks).toContain("/articles/haccp-for-burger-vans-eu");
-    expect(randomLinks).toContain("/articles/haccp-for-artisanal-bakeries-eu");
+    expect(randomLinks).toContain("/articles/haccp-ccp-examples-uk-eu");
+    expect(randomLinks).toContain("/resources/haccp-plan-template");
     expect(randomLinks).not.toContain("/articles/cooling-and-reheating-haccp-high-risk-steps");
     expect(randomLinks).not.toContain("/articles/correcting-non-conformities-in-haccp");
   });
@@ -293,15 +332,21 @@ describe("public SEO copy and linking", () => {
   it("surfaces priority under-indexed URLs from the homepage and article hub", () => {
     const homepage = readPage("src/app/page.tsx");
     const articlesHub = readPage("src/app/articles/page.tsx");
+    const resources = readPage("src/app/resources/page.tsx");
 
     expect(homepage).toContain("/about");
     expect(homepage).toContain("/articles/building-a-haccp-process-flow-diagram");
     expect(homepage).toContain("/articles/haccp-ccp-examples-uk-eu");
+    expect(homepage).toContain("/use-cases");
 
     expect(articlesHub).toContain("/articles/building-a-haccp-process-flow-diagram");
     expect(articlesHub).toContain("/articles/chemical-hazards-in-haccp-controls-limits-and-what-to-record");
     expect(articlesHub).toContain("/articles/cooling-and-reheating-haccp-high-risk-steps");
     expect(articlesHub).toContain("/articles/haccp-for-artisanal-bakeries-eu");
+    expect(articlesHub).toContain("/use-cases/restaurants");
+    expect(articlesHub).toContain("/use-cases/food-manufacturing");
+
+    expect(resources).toContain("/use-cases");
   });
 
   it("keeps current public marketing pages fresh in the sitemap", async () => {
@@ -316,8 +361,25 @@ describe("public SEO copy and linking", () => {
 
     for (const url of currentPages) {
       const entry = entries.find((item) => item.url === url);
-      expect(new Date(entry?.lastModified ?? "").toISOString()).toContain("2026-03-18");
+      expect(new Date(entry?.lastModified ?? "").toISOString()).toContain("2026-06-18");
     }
+  });
+
+  it("keeps the sitemap aligned with the live resource library", async () => {
+    const entries = (await sitemap()).map((entry) => entry.url);
+
+    expect(entries).toContain("https://pinkpepper.io/resources/cooking-monitoring-log-template");
+    expect(entries).toContain("https://pinkpepper.io/resources/food-temperature-poster");
+    expect(entries).toContain("https://pinkpepper.io/resources/gmp-poster");
+    expect(entries).toContain("https://pinkpepper.io/resources/supplier-registration-log");
+  });
+
+  it("deprioritizes weak imported articles without removing stronger article pages from indexing", async () => {
+    const weakerImported = await generateArticleMetadata("haccp-for-meal-prep-services-eu", "en");
+    const strongerImported = await generateArticleMetadata("identifying-critical-control-points-in-food-safety", "en");
+
+    expect(weakerImported.robots).toEqual({ index: false, follow: true });
+    expect(strongerImported.robots).toBeUndefined();
   });
 
 });
@@ -327,8 +389,14 @@ describe("premium quality regressions", () => {
     const about = readPage("src/app/about/page.tsx");
     const pricing = readPage("src/app/pricing/page.tsx");
 
-    expect(about).not.toContain("â");
-    expect(pricing).not.toContain("â");
+    expect(about).not.toContain("â€");
+    expect(about).not.toContain("â€™");
+    expect(about).not.toContain("â€“");
+    expect(pricing).not.toContain("â€");
+    expect(pricing).not.toContain("â€™");
+    expect(pricing).not.toContain("â€“");
+    expect(about).not.toContain("ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢");
+    expect(pricing).not.toContain("ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢");
   });
 
   it("uses compliance software wording consistently in shared brand surfaces", () => {

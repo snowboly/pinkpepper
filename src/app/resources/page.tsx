@@ -1,171 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ResourcesGrid, type ResourceEntry } from "@/components/site/ResourcesGrid";
-
-const resources: ResourceEntry[] = [
-  {
-    href: "/resources/haccp-plan-template",
-    title: "HACCP plan template",
-    description: "What a practical HACCP plan should include before you turn it into a site-specific document.",
-    category: "haccp",
-    categoryLabel: "HACCP",
-  },
-  {
-    href: "/resources/hazard-analysis-template",
-    title: "Hazard analysis template",
-    description: "What to include in a hazard analysis worksheet before you turn it into a business-specific HACCP document.",
-    category: "haccp",
-    categoryLabel: "HACCP",
-  },
-  {
-    href: "/resources/corrective-action-log-template",
-    title: "Corrective action log template",
-    description: "How to document deviations, root causes, and actions taken to restore process control.",
-    category: "haccp",
-    categoryLabel: "HACCP",
-  },
-  {
-    href: "/resources/product-recall-procedure-template",
-    title: "Product recall procedure template",
-    description: "The structure a recall procedure needs to enable a fast, traceable withdrawal or recall.",
-    category: "haccp",
-    categoryLabel: "HACCP",
-  },
-  {
-    href: "/resources/allergen-matrix-template",
-    title: "Allergen matrix template",
-    description: "How to structure allergen information so kitchen and front-of-house teams can use it.",
-    category: "allergen",
-    categoryLabel: "Allergen",
-  },
-  {
-    href: "/resources/cleaning-and-disinfection-sop",
-    title: "Cleaning and disinfection SOP",
-    description: "How to draft a cleaning SOP that is specific enough to follow and simple enough to keep updated.",
-    category: "cleaning",
-    categoryLabel: "Cleaning",
-  },
-  {
-    href: "/resources/cooking-monitoring-log-template",
-    title: "Cooking monitoring log template",
-    description: "What to record for cook temperatures, batch checks, sign-off, and corrective actions when food misses its target.",
-    category: "monitoring",
-    categoryLabel: "Monitoring",
-  },
-  {
-    href: "/resources/food-temperature-poster",
-    title: "Food temperature poster",
-    description: "A quick-reference kitchen poster for chilled, frozen, cooking, hot-hold, cooling, and reheating temperatures.",
-    category: "monitoring",
-    categoryLabel: "Monitoring",
-  },
-  {
-    href: "/resources/temperature-monitoring-log-template",
-    title: "Temperature monitoring log template",
-    description: "What to include in fridge, freezer, hot-hold, and corrective action logs.",
-    category: "monitoring",
-    categoryLabel: "Monitoring",
-  },
-  {
-    href: "/resources/food-safety-opening-and-closing-checklist",
-    title: "Food safety opening and closing checklist",
-    description: "A practical daily checklist structure for opening checks, closing checks, corrective actions, and shift sign-off.",
-    category: "monitoring",
-    categoryLabel: "Monitoring",
-  },
-  {
-    href: "/resources/pest-control-log-template",
-    title: "Pest control log template",
-    description: "How to record pest activity findings, contractor visits, and remedial actions.",
-    category: "monitoring",
-    categoryLabel: "Monitoring",
-  },
-  {
-    href: "/resources/waste-management-log-template",
-    title: "Waste management log template",
-    description: "A structure for recording food waste disposal, condemned stock, and waste contractor details.",
-    category: "monitoring",
-    categoryLabel: "Monitoring",
-  },
-  {
-    href: "/resources/waste-management-sop-template",
-    title: "Waste management SOP template",
-    description: "How to write a waste management procedure covering segregation, storage, contractor arrangements, and compliance.",
-    category: "monitoring",
-    categoryLabel: "Monitoring",
-  },
-  {
-    href: "/resources/traceability-log-template",
-    title: "Traceability log template",
-    description: "What one-step-back, one-step-forward traceability records should capture for EU and UK compliance.",
-    category: "traceability",
-    categoryLabel: "Traceability",
-  },
-  {
-    href: "/resources/supplier-approval-questionnaire",
-    title: "Supplier approval questionnaire",
-    description: "Questions and evidence points food businesses use when approving or re-approving suppliers.",
-    category: "supplier",
-    categoryLabel: "Supplier",
-  },
-  {
-    href: "/resources/supplier-registration-log",
-    title: "Supplier registration log",
-    description: "A supplier tracker for approval status, review dates, product scope, and due-diligence follow-up.",
-    category: "supplier",
-    categoryLabel: "Supplier",
-  },
-  {
-    href: "/resources/employee-food-safety-training-record",
-    title: "Employee food safety training record",
-    description: "What training records should capture to demonstrate staff competence during inspections.",
-    category: "training",
-    categoryLabel: "Training",
-  },
-  {
-    href: "/resources/gmp-poster",
-    title: "GMP poster",
-    description: "A visual good manufacturing practice poster covering hygiene, handling, contamination control, and daily discipline on site.",
-    category: "training",
-    categoryLabel: "Training",
-  },
-  {
-    href: "/resources/personal-hygiene-policy-template",
-    title: "Personal hygiene policy template",
-    description: "The key elements a staff hygiene policy should cover to be enforceable and inspection-ready.",
-    category: "training",
-    categoryLabel: "Training",
-  },
-  {
-    href: "/resources/incoming-goods-template",
-    title: "Incoming goods inspection template",
-    description: "What to record when goods arrive — supplier, product, quantity, condition, and temperature — to maintain traceability from the point of receipt.",
-    category: "traceability",
-    categoryLabel: "Traceability",
-  },
-  {
-    href: "/resources/customer-complaint-log-template",
-    title: "Customer complaint log template",
-    description: "How to record, investigate, and close customer complaints in a way that feeds back into your HACCP and corrective action process.",
-    category: "haccp",
-    categoryLabel: "HACCP",
-  },
-  {
-    href: "/resources/equipment-calibration-log-template",
-    title: "Equipment calibration log template",
-    description: "What calibration records should capture for probes, scales, and other critical measuring equipment used in food safety monitoring.",
-    category: "monitoring",
-    categoryLabel: "Monitoring",
-  },
-];
-
-const featuredResources = [
-  "/resources/haccp-plan-template",
-  "/resources/allergen-matrix-template",
-  "/resources/food-safety-opening-and-closing-checklist",
-  "/resources/temperature-monitoring-log-template",
-  "/resources/corrective-action-log-template",
-];
+import { ResourcesGrid } from "@/components/site/ResourcesGrid";
+import { getFeaturedResources, resourceEntries } from "@/lib/resources";
 
 const relatedWorkflows = [
   {
@@ -203,12 +39,19 @@ export const metadata: Metadata = {
     description:
       "Free food safety templates, posters, and guides for HACCP plans, hazard analysis, allergen matrices, opening and closing checklists, SOPs, temperature logs, traceability, and supplier approval for EU and UK food businesses.",
     locale: "en_GB",
-    images: [{ url: "https://pinkpepper.io/social-card.png", width: 1200, height: 630, alt: "PinkPepper - AI Food Safety Compliance Software" }],
+    images: [
+      {
+        url: "https://pinkpepper.io/social-card.png",
+        width: 1200,
+        height: 630,
+        alt: "PinkPepper - AI Food Safety Compliance Software",
+      },
+    ],
   },
 };
 
 export default function ResourcesPage() {
-  const priorityResources = resources.filter((resource) => featuredResources.includes(resource.href));
+  const priorityResources = getFeaturedResources();
 
   return (
     <main className="overflow-hidden">
@@ -276,7 +119,7 @@ export default function ResourcesPage() {
 
       <section className="bg-[#F8FAFC] py-14">
         <div className="pp-container">
-          <ResourcesGrid resources={resources} />
+          <ResourcesGrid resources={resourceEntries} />
         </div>
       </section>
 
