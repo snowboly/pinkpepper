@@ -23,7 +23,6 @@ export async function TemplateThumbnail({ slug, alt }: Props) {
         width={600}
         height={780}
         className="w-full h-auto"
-        priority
       />
     );
   }
@@ -35,7 +34,6 @@ export async function TemplateThumbnail({ slug, alt }: Props) {
       width={600}
       height={780}
       className="w-full h-auto"
-      priority
       unoptimized
     />
   );

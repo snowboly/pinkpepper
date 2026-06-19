@@ -81,6 +81,18 @@ const CONTROL_TOKEN_PATTERNS: RegExp[] = [
 const ROLE_MARKER_PATTERN =
   /^(\s*)(system|assistant|user|developer|tool)\s*:/gim;
 
+export function sanitizeUntrustedTextUnbounded(input: string): string {
+  if (!input) return "";
+
+  let out = input;
+  for (const pattern of CONTROL_TOKEN_PATTERNS) {
+    out = out.replace(pattern, " ");
+  }
+  return out
+    .replace(ROLE_MARKER_PATTERN, "$1$2\u200b:")
+    .replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/g, " ");
+}
+
 /**
  * Sanitise a blob of untrusted text before it is handed to an LLM.
  *
@@ -155,6 +167,7 @@ type UntrustedDocChunk = {
   fileName: string;
   content: string;
   sourceRef?: string | null;
+  preserveSelectedSections?: boolean;
 };
 
 /**
@@ -172,7 +185,9 @@ export function buildUntrustedDocumentBlock(chunks: UntrustedDocChunk[]): string
   for (let i = 0; i < chunks.length; i++) {
     const chunk = chunks[i];
     const sanitizedName = sanitizeUntrustedFilename(chunk.fileName);
-    const sanitizedContent = sanitizeUntrustedText(chunk.content);
+    const sanitizedContent = chunk.preserveSelectedSections
+      ? sanitizeUntrustedTextUnbounded(chunk.content)
+      : sanitizeUntrustedText(chunk.content);
     const sanitizedRef = chunk.sourceRef
       ? sanitizeUntrustedText(chunk.sourceRef).slice(0, 120)
       : "";
@@ -227,5 +242,6 @@ export function knowledgeChunksToUntrusted(
     fileName: c.source_name,
     content: c.content,
     sourceRef: c.section_ref ?? null,
+    preserveSelectedSections: c.source_type === "official_verification",
   }));
 }

@@ -8,13 +8,13 @@ const TIER_NAMES: Record<string, string> = {
 
 const TIER_FEATURES: Record<string, string[]> = {
   plus: [
-    "25 messages per day",
-    "3 premium expert answers per day",
-    "5 image analyses per day",
+    "Higher daily chat limits",
+    "More specialist guidance",
+    "More image analyses",
     "Access to downloadable templates",
   ],
   pro: [
-    "Everything in Plus, plus 8 premium expert answers per day",
+    "Everything in Plus, plus the highest daily limits",
     "Access to Auditor mode",
     "2 hours of human food safety consultancy per month",
     "Priority support",

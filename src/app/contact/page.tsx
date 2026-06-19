@@ -1,4 +1,4 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Mail } from "lucide-react";
 import { getCspNonce } from "@/lib/security/csp";
@@ -97,4 +97,3 @@ export default async function ContactPage() {
     </main>
   );
 }
-

@@ -9,6 +9,7 @@ export type PublicMessagesDictionary = {
       resources: string;
       freeTemplates: string;
       articles: string;
+      useCases: string;
       faqs: string;
       pricing: string;
       about: string;
@@ -97,6 +98,7 @@ export type PublicMessagesDictionary = {
     library: {
       eyebrow: string;
       title: string;
+      body: string;
       haccpLinkLabel: string;
       browseAllLabel: string;
     };

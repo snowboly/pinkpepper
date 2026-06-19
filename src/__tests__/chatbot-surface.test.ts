@@ -5,6 +5,7 @@ import {
   parseMessageArtifact,
   parseMessageCitations,
 } from "@/components/dashboard/chat-message-metadata";
+import { getPublicPageHref } from "@/lib/public-routes";
 
 const ROOT = process.cwd();
 
@@ -67,6 +68,29 @@ describe("chatbot metadata parsing", () => {
 });
 
 describe("chatbot source encoding", () => {
+  it("provides a localized homepage link in the dashboard account menu", () => {
+    const sidebar = readWorkspaceFile("src/components/dashboard/ChatSidebar.tsx");
+    const locales = ["en", "de", "es", "fr", "it", "pt"];
+
+    expect(getPublicPageHref("en", "/")).toBe("/");
+    expect(getPublicPageHref("de", "/")).toBe("/de");
+    expect(getPublicPageHref("fr", "/")).toBe("/fr");
+    expect(getPublicPageHref("pt", "/")).toBe("/pt");
+    expect(sidebar).toContain("useLocale");
+    expect(sidebar).toContain("isPublicLocale");
+    expect(sidebar).toContain("getPublicPageHref");
+    expect(sidebar).toContain("href={homeHref}");
+    expect(sidebar).toContain('{t("backToHome")}');
+
+    for (const locale of locales) {
+      const messages = JSON.parse(
+        readWorkspaceFile(`src/i18n/messages/${locale}.json`)
+      ) as { sidebar?: { backToHome?: string } };
+
+      expect(messages.sidebar?.backToHome, `${locale} sidebar label`).toBeTruthy();
+    }
+  });
+
   it("does not ship known mojibake fragments in chatbot files", () => {
     const files = [
       "src/app/api/chat/stream/route.ts",
@@ -103,6 +127,15 @@ describe("chatbot source encoding", () => {
 });
 
 describe("chat workspace chrome", () => {
+  it("lets users collapse and reopen the projects section", () => {
+    const sidebar = readWorkspaceFile("src/components/dashboard/ChatSidebar.tsx");
+
+    expect(sidebar).toContain("const [projectsOpen, setProjectsOpen] = useState(true);");
+    expect(sidebar).toContain('aria-expanded={projectsOpen}');
+    expect(sidebar).toContain('onClick={() => setProjectsOpen((open) => !open)}');
+    expect(sidebar).toContain("{projectsOpen && (");
+  });
+
   it("does not render the removed top mode banner block", () => {
     const content = readWorkspaceFile("src/components/dashboard/ChatWorkspace.tsx");
 

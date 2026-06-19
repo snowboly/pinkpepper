@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { cookies } from "next/headers";
 import { getLocale } from "next-intl/server";
 import { AccountDropdown } from "@/components/site/AccountDropdown";
 import { LocaleSwitcher } from "@/components/site/LocaleSwitcher";
@@ -14,6 +15,14 @@ type NavItem =
   | { label: string; children: { href: string; label: string }[] };
 
 const DEFAULT_BRAND_BLURB = "AI food safety compliance software for EU and UK food businesses.";
+
+function hasSupabaseAuthCookie(cookieNames: string[]) {
+  return cookieNames.some(
+    (name) =>
+      name.startsWith("sb-") &&
+      (name.includes("auth-token") || name.includes("access-token") || name.includes("refresh-token")),
+  );
+}
 
 function getUserInitials(email: string | null | undefined, fullName: string | null | undefined) {
   if (fullName) {
@@ -40,6 +49,7 @@ async function getChromeContext() {
         { href: getPublicPageHref(publicLocale, "/faqs"), label: messages.chrome.nav.faqs },
       ],
     },
+    { href: "/use-cases", label: messages.chrome.nav.useCases },
     { href: getPublicPageHref(publicLocale, "/pricing"), label: messages.chrome.nav.pricing },
     { href: getPublicPageHref(publicLocale, "/about"), label: messages.chrome.nav.about },
     { href: getPublicPageHref(publicLocale, "/contact"), label: messages.chrome.nav.contact },
@@ -51,9 +61,14 @@ async function getChromeContext() {
 export async function SiteHeader() {
   let user = null;
   try {
-    const supabase = await createClient();
-    const { data } = await supabase.auth.getUser();
-    user = data.user;
+    const cookieStore = await cookies();
+    const cookieNames = cookieStore.getAll().map((cookie) => cookie.name);
+
+    if (hasSupabaseAuthCookie(cookieNames)) {
+      const supabase = await createClient();
+      const { data } = await supabase.auth.getUser();
+      user = data.user;
+    }
   } catch {
     // Supabase env vars unavailable during build-time prerendering; show logged-out state.
   }
@@ -77,7 +92,6 @@ export async function SiteHeader() {
               alt="PinkPepper"
               width={220}
               height={44}
-              priority
               className="h-8 w-auto object-contain md:h-9"
             />
           </Link>
@@ -184,6 +198,7 @@ export async function SiteFooter() {
         <div>
           <h4 className="mb-4 text-sm font-semibold text-[#1A1A1A]">{messages.chrome.footer.productHeading}</h4>
           <ul className="space-y-3 text-sm text-[#6B6B6B]">
+            <li><Link href="/use-cases" className="pp-shell-link">{messages.chrome.nav.useCases}</Link></li>
             <li><Link href={getPublicPageHref(publicLocale, "/pricing")} className="pp-shell-link">{messages.chrome.nav.pricing}</Link></li>
             <li><Link href={getPublicPageHref(publicLocale, "/about")} className="pp-shell-link">{messages.chrome.nav.about}</Link></li>
             <li><Link href={getPublicPageHref(publicLocale, "/login")} className="pp-shell-link">{messages.chrome.nav.login}</Link></li>

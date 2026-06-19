@@ -1,32 +1,25 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
 
 type ArticleCardProps = {
-  title: string;
-  slug: string;
-  excerpt: string;
   category: string;
-  publishedAt: string;
-  image?: string;
+  excerpt: string;
   href: string;
+  image?: string;
+  publishedAt: string;
+  title: string;
 };
 
 export function ArticleCard({
-  title,
-  slug,
-  excerpt,
   category,
-  publishedAt,
-  image,
+  excerpt,
   href,
+  image,
+  publishedAt,
+  title,
 }: ArticleCardProps) {
   return (
-    <article
-      key={slug}
-      className="group/article-card flex h-full flex-col overflow-hidden rounded-[2rem] border border-[#E2E8F0] bg-white shadow-[0_18px_50px_rgba(15,23,42,0.06)] transition-shadow duration-200 hover:shadow-[0_24px_70px_rgba(15,23,42,0.1)]"
-    >
+    <article className="group/article-card flex h-full flex-col overflow-hidden rounded-[2rem] border border-[#E2E8F0] bg-white shadow-[0_18px_50px_rgba(15,23,42,0.06)] transition-shadow duration-200 hover:shadow-[0_24px_70px_rgba(15,23,42,0.1)]">
       <div className="relative aspect-[16/9] overflow-hidden border-b border-[#E2E8F0] bg-[#F8FAFC]">
         {image ? (
           <Image
@@ -64,3 +57,5 @@ export function ArticleCard({
     </article>
   );
 }
+
+export default ArticleCard;

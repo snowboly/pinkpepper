@@ -7,7 +7,7 @@ import {
   publicLaunchLocales,
   publicRoutePaths,
 } from "@/i18n/public";
-import { resolveRequestLocale } from "@/i18n/request";
+import { getRouteLocaleFromPathname, resolveRequestLocale } from "@/i18n/request";
 import {
   getPublicMessages,
   getPublicPageHref,
@@ -52,6 +52,12 @@ describe("public locale config", () => {
     expect(resolveRequestLocale({ routeLocale: null, cookieLocale: "bad" })).toBe("en");
   });
 
+  it("derives the request locale from localized public paths", () => {
+    expect(getRouteLocaleFromPathname("/de/articles/haccp-plan")).toBe("de");
+    expect(getRouteLocaleFromPathname("/fr/pricing")).toBe("fr");
+    expect(getRouteLocaleFromPathname("/articles/haccp-plan")).toBeNull();
+  });
+
   it("falls back to English when a public message key is missing", async () => {
     const messages = await getPublicMessages("fr");
 
@@ -64,6 +70,7 @@ describe("public locale config", () => {
     expect(switchPublicLocale("/fr/pricing", "de")).toBe("/de/pricing");
     expect(switchPublicLocale("/fr/pricing", "en")).toBe("/pricing");
     expect(switchPublicLocale("/fr/articles", "de")).toBe("/de/articles");
+    expect(getPublicPageHref("en", "/pricing")).toBe("/pricing");
     expect(getPublicPageHref("pt", "/pricing")).toBe("/pt/pricing");
     expect(getPublicPageHref("en", "/pricing")).toBe("/pricing");
     expect(getPublicPageHref("pt", "/articles")).toBe("/pt/articles");
@@ -78,7 +85,7 @@ describe("public locale config", () => {
     expect(localizedLayout).toContain("setRequestLocale");
     expect(localizedLayout).toContain("isPublicLocale");
     expect(localizedLayout).toContain('.filter((locale) => locale !== "en")');
-    expect(localizedPricingPage).toContain("buildPublicMetadata");
+    expect(localizedPricingPage).toContain("buildLocalizedWrapperMetadata");
     expect(localizedPricingPage).toContain('"/pricing"');
     expect(localizedHomePage).toContain("<HomePage locale={locale} />");
     expect(homePage).toContain("getPublicMessages");

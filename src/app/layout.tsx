@@ -133,7 +133,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
           <SiteHeader />
           {children}
           <SiteFooter />
-          <CookieBanner />
+          <CookieBanner nonce={nonce} />
           <SpeedInsights />
         </NextIntlClientProvider>
       </body>

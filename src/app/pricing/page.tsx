@@ -1,4 +1,4 @@
-﻿import { Metadata } from "next";
+import { Metadata } from "next";
 import Link from "next/link";
 import { CheckCircle2, Mail } from "lucide-react";
 import PricingActions from "@/components/pricing/PricingActions";
@@ -339,4 +339,3 @@ export default async function PricingPage({ locale }: PricingPageProps = {}) {
     </main>
   );
 }
-
