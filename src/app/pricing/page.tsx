@@ -1,4 +1,4 @@
-import { Metadata } from "next";
+﻿import { Metadata } from "next";
 import Link from "next/link";
 import { CheckCircle2, Mail } from "lucide-react";
 import PricingActions from "@/components/pricing/PricingActions";
@@ -9,9 +9,9 @@ import { createClient } from "@/utils/supabase/server";
 import { getCspNonce } from "@/lib/security/csp";
 
 export const metadata: Metadata = {
-  title: "Pricing — From €0/mo | PinkPepper Food Safety Software",
+  title: "Pricing | PinkPepper Food Safety Compliance Software",
   description:
-    "Start free. Plus at €19/mo for daily HACCP & SOP use. Pro at €99/mo adds Auditor mode + 2h human consultancy. Save €18,000+/year on compliance costs.",
+    "Start free. Plus at EUR 19/month for daily HACCP and SOP work. Pro at EUR 99/month adds Auditor mode and 2 hours of human consultancy.",
   alternates: {
     canonical: "https://pinkpepper.io/pricing",
     languages: {
@@ -154,7 +154,7 @@ export default async function PricingPage({ locale }: PricingPageProps = {}) {
       <section className="py-16 md:py-20">
         <div className="pp-container max-w-4xl text-center">
           <h1 className="pp-display text-4xl font-black tracking-tight text-[#0F172A] md:text-5xl">
-            Save €18,000+/year on compliance costs.
+            Save EUR 18,000+/year on compliance costs.
           </h1>
           <p className="mt-5 text-lg leading-relaxed text-[#475569]">
             Start free. Upgrade when you need more daily capacity, downloadable templates, Auditor mode, or human food safety consultancy.
@@ -339,3 +339,4 @@ export default async function PricingPage({ locale }: PricingPageProps = {}) {
     </main>
   );
 }
+

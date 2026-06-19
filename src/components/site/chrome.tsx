@@ -36,6 +36,7 @@ async function getChromeContext() {
       children: [
         { href: getPublicPageHref(publicLocale, "/resources"), label: messages.chrome.nav.freeTemplates },
         { href: getPublicPageHref(publicLocale, "/articles"), label: messages.chrome.nav.articles },
+        { href: getPublicPageHref(publicLocale, "/use-cases"), label: "Use cases" },
         { href: getPublicPageHref(publicLocale, "/faqs"), label: messages.chrome.nav.faqs },
       ],
     },
@@ -194,6 +195,7 @@ export async function SiteFooter() {
           <ul className="space-y-3 text-sm text-[#6B6B6B]">
             <li><Link href={getPublicPageHref(publicLocale, "/resources")} className="pp-shell-link">{messages.chrome.nav.freeTemplates}</Link></li>
             <li><Link href={getPublicPageHref(publicLocale, "/articles")} className="pp-shell-link">{messages.chrome.nav.articles}</Link></li>
+            <li><Link href={getPublicPageHref(publicLocale, "/use-cases")} className="pp-shell-link">Use cases</Link></li>
             <li><Link href={getPublicPageHref(publicLocale, "/faqs")} className="pp-shell-link">{messages.chrome.nav.faqs}</Link></li>
             <li><Link href={getPublicPageHref(publicLocale, "/contact")} className="pp-shell-link">{messages.chrome.footer.contactSupport}</Link></li>
           </ul>

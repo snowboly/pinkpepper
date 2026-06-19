@@ -1,6 +1,9 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
+import { curatedImportedArticleSlugs } from "@/lib/article-indexing";
 import { publicLaunchLocales, type PublicLocale } from "@/i18n/public";
+
+export { isArticlePreferredForIndexing } from "@/lib/article-indexing";
 
 export type ArticleRecord = {
   title: string;
@@ -21,7 +24,7 @@ type LoaderOptions = {
   locale?: PublicLocale;
 };
 
-const DEFAULT_CONTENT_DIR = path.join(process.cwd(), "content", "articles");
+const DEFAULT_CONTENT_DIR = path.join(/* turbopackIgnore: true */ process.cwd(), "content", "articles");
 export const localizedSeoPriorityArticleSlugs = [
   "how-to-create-a-haccp-plan-step-by-step",
   "how-to-perform-a-hazard-analysis-correctly",

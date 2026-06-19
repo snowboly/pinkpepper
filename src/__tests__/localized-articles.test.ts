@@ -58,7 +58,7 @@ describe("localized SEO priority articles", () => {
     expect(articlesHub).toContain('return `/articles/${slug}`;');
     expect(articlesHub).toContain('return `/${locale}/articles/${slug}`;');
     expect(articlePage).toContain("buildArticleLanguageAlternates");
-    expect(sitemap).toContain("getLocalizedArticleManifest");
+    expect(sitemap).toContain("getLocalizedArticleSummaries");
     expect(sitemap).toContain("${BASE_URL}/${locale}/articles/${article.slug}");
   });
 });

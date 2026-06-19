@@ -72,4 +72,16 @@ describe("middleware host canonicalization", () => {
     expect(response.status).toBe(200);
     expect(response.headers.get("location")).toBeNull();
   });
+
+  it("permanently redirects legacy /en public routes to the root English path", async () => {
+    const { middleware } = await import("../../middleware");
+
+    const pricingResponse = await middleware(makeRequest("https://pinkpepper.io/en/pricing") as never);
+    const homeResponse = await middleware(makeRequest("https://pinkpepper.io/en") as never);
+
+    expect(pricingResponse.status).toBe(308);
+    expect(pricingResponse.headers.get("location")).toBe("https://pinkpepper.io/pricing");
+    expect(homeResponse.status).toBe(308);
+    expect(homeResponse.headers.get("location")).toBe("https://pinkpepper.io/");
+  });
 });

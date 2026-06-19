@@ -148,6 +148,10 @@ export function isPublicLocale(value: string): value is PublicLocale {
 }
 
 export function localizePublicPath(locale: PublicLocale, path: string) {
+  if (locale === "en") {
+    return path;
+  }
+
   return path === "/" ? `/${locale}` : `/${locale}${path}`;
 }
 

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
+import { ArticleCard } from "@/components/articles/ArticleCard";
+import { ArticleLibraryRemainder } from "@/components/articles/ArticleLibraryRemainder";
 import { getArticleManifest } from "@/lib/articles";
 import { type PublicLocale } from "@/i18n/public";
 import { getPublicPageHref } from "@/lib/public-routes";
@@ -74,7 +75,19 @@ const workflowLinks = [
     title: "Browse the template library",
     description: "Use the free templates if you need structured documents before moving into a custom compliance workflow.",
   },
+  {
+    href: "/use-cases/restaurants",
+    title: "See the restaurant workflow",
+    description: "Compare the guidance against a more concrete operating model for service kitchens and front-of-house controls.",
+  },
+  {
+    href: "/use-cases/food-manufacturing",
+    title: "See the manufacturing workflow",
+    description: "Use the manufacturing path when the article topic needs tighter traceability, production controls, and formal records.",
+  },
 ];
+
+const INITIAL_ARTICLE_COUNT = 24;
 
 export const metadata: Metadata = {
   title: "Food Safety Articles & Insights | PinkPepper",
@@ -112,6 +125,8 @@ type ArticlesPageProps = {
 export default async function ArticlesPage({ locale = "en" }: ArticlesPageProps = {}) {
   const articles = await getArticleManifest({ locale });
   const localizedArticleSlugs = new Set(articles.map((article) => article.slug));
+  const initialArticles = articles.slice(0, INITIAL_ARTICLE_COUNT);
+  const remainingArticles = articles.slice(INITIAL_ARTICLE_COUNT);
 
   return (
     <main className="overflow-hidden">
@@ -166,7 +181,10 @@ export default async function ArticlesPage({ locale = "en" }: ArticlesPageProps 
       </section>
 
       <section className="border-b border-[#F1F5F9] bg-[#FFF7ED] py-14">
-        <div className="pp-container grid gap-5 md:grid-cols-3">
+        <div className="pp-container grid gap-5 md:grid-cols-2 xl:grid-cols-5">
+          <div className="md:col-span-2 xl:col-span-5">
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">Browse by cluster</p>
+          </div>
           {workflowLinks.map((item) => (
             <Link
               key={item.href}
@@ -187,53 +205,21 @@ export default async function ArticlesPage({ locale = "en" }: ArticlesPageProps 
             <h2 className="pp-display mt-4 text-3xl text-[#0F172A] md:text-4xl">Browse every published article</h2>
           </div>
           <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {articles.map((article) => (
-              <article
+            {initialArticles.map((article) => (
+              <ArticleCard
                 key={article.slug}
-                className="group/article-card flex h-full flex-col overflow-hidden rounded-[2rem] border border-[#E2E8F0] bg-white shadow-[0_18px_50px_rgba(15,23,42,0.06)] transition-shadow duration-200 hover:shadow-[0_24px_70px_rgba(15,23,42,0.1)]"
-              >
-                <div className="relative aspect-[16/9] overflow-hidden border-b border-[#E2E8F0] bg-[#F8FAFC]">
-                  {article.image ? (
-                    <Image
-                      src={article.image}
-                      alt={article.title}
-                      fill
-                      className="object-cover transition-transform duration-300 group-hover/article-card:scale-[1.02]"
-                      sizes="(min-width: 1280px) 360px, (min-width: 768px) 50vw, 100vw"
-                    />
-                  ) : (
-                    <div className="flex h-full items-center justify-center bg-[radial-gradient(circle_at_top,_#FFE4E6,_#F8FAFC_62%)]">
-                      <span className="text-sm font-medium text-[#64748B]">Article image coming soon</span>
-                    </div>
-                  )}
-                </div>
-                <div className="flex flex-1 flex-col p-6 md:p-7">
-                  <p className="text-[11px] font-black uppercase tracking-[0.22em] text-[#E11D48]">
-                    {article.category}
-                  </p>
-                  <h2 className="mt-3 text-[1.75rem] font-bold leading-tight tracking-tight text-[#0F172A] md:text-[2rem]">
-                    <Link
-                      href={getArticleHref(article.slug, locale, localizedArticleSlugs)}
-                      className="transition-colors hover:text-[#BE123C]"
-                    >
-                      {article.title}
-                    </Link>
-                  </h2>
-                  <p className="mt-3 text-sm font-medium text-[#64748B]">{article.publishedAt}</p>
-                  <p className="mt-4 flex-1 text-[15px] leading-7 text-[#475569]">{article.excerpt}</p>
-                  <div className="mt-6 border-t border-[#F1F5F9] pt-4">
-                    <Link
-                      href={getArticleHref(article.slug, locale, localizedArticleSlugs)}
-                      className="inline-flex items-center gap-2 rounded-full border border-[#E2E8F0] px-4 py-2 text-sm font-semibold text-[#0F172A] transition-colors hover:border-[#FDA4AF] hover:text-[#BE123C]"
-                    >
-                      <span>Read article</span>
-                      <span aria-hidden="true">+</span>
-                    </Link>
-                  </div>
-                </div>
-              </article>
+                {...article}
+                href={getArticleHref(article.slug, locale, localizedArticleSlugs)}
+              />
             ))}
           </div>
+          {remainingArticles.length > 0 ? (
+            <ArticleLibraryRemainder
+              articles={remainingArticles}
+              locale={locale}
+              localizedArticleSlugs={[...localizedArticleSlugs]}
+            />
+          ) : null}
         </div>
       </section>
     </main>
