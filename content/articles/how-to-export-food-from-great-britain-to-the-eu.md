@@ -183,8 +183,8 @@ source: "pinkpepper"
 
 <ul>
   <li><a href="https://www.gov.uk/export-health-certificates">Export health certificate guidance</a></li>
-  <li><a href="https://www.gov.uk/guidance/importing-or-moving-fish-to-the-uk">Fish and catch-document guidance</a></li>
-  <li><a href="https://www.gov.uk/guidance/importing-organic-food-to-the-uk">Organic certification guidance</a></li>
+  <li><a href="https://www.gov.uk/guidance/exporting-or-moving-fish-from-the-uk">Fish and catch-document guidance</a></li>
+  <li><a href="https://www.gov.uk/guidance/exporting-organic-food-from-the-uk">Organic certification guidance</a></li>
   <li><a href="https://www.gov.uk/trade-tariff">UK Trade Tariff</a></li>
   <li><a href="https://food.ec.europa.eu">European Commission food safety and border-control guidance</a></li>
 </ul>
