@@ -485,6 +485,15 @@ describe("public SEO copy and linking", () => {
     expect(regulationsPage).toContain("/articles/how-to-export-food-from-great-britain-to-the-eu");
   });
 
+  it("points export readers to export-side fish and organic guidance", () => {
+    const exportGuide = readPage("content/articles/how-to-export-food-from-great-britain-to-the-eu.md");
+
+    expect(exportGuide).toContain("https://www.gov.uk/guidance/exporting-or-moving-fish-from-the-uk");
+    expect(exportGuide).toContain("https://www.gov.uk/guidance/exporting-organic-food-from-the-uk");
+    expect(exportGuide).not.toContain("https://www.gov.uk/guidance/importing-or-moving-fish-to-the-uk");
+    expect(exportGuide).not.toContain("https://www.gov.uk/guidance/importing-organic-food-to-the-uk");
+  });
+
   it("deprioritizes weak imported articles without removing stronger article pages from indexing", async () => {
     const weakerImported = await generateArticleMetadata("haccp-for-meal-prep-services-eu", "en");
     const strongerImported = await generateArticleMetadata("identifying-critical-control-points-in-food-safety", "en");
