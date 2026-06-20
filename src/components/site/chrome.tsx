@@ -45,13 +45,20 @@ async function getChromeContext() {
       children: [
         { href: getPublicPageHref(publicLocale, "/resources"), label: messages.chrome.nav.freeTemplates },
         { href: getPublicPageHref(publicLocale, "/articles"), label: messages.chrome.nav.articles },
-        { href: getPublicPageHref(publicLocale, "/use-cases"), label: "Use cases" },
         { href: getPublicPageHref(publicLocale, "/faqs"), label: messages.chrome.nav.faqs },
       ],
     },
     { href: "/use-cases", label: messages.chrome.nav.useCases },
     { href: getPublicPageHref(publicLocale, "/pricing"), label: messages.chrome.nav.pricing },
-    { href: getPublicPageHref(publicLocale, "/about"), label: messages.chrome.nav.about },
+    {
+      label: messages.chrome.nav.about,
+      children: [
+        { href: getPublicPageHref(publicLocale, "/about"), label: messages.chrome.nav.about },
+        { href: getPublicPageHref(publicLocale, "/methodology"), label: "Methodology" },
+        { href: getPublicPageHref(publicLocale, "/human-review"), label: "Human Review" },
+        { href: getPublicPageHref(publicLocale, "/regulations-covered"), label: "Regulations Covered" },
+      ],
+    },
     { href: getPublicPageHref(publicLocale, "/contact"), label: messages.chrome.nav.contact },
   ];
 
@@ -198,9 +205,11 @@ export async function SiteFooter() {
         <div>
           <h4 className="mb-4 text-sm font-semibold text-[#1A1A1A]">{messages.chrome.footer.productHeading}</h4>
           <ul className="space-y-3 text-sm text-[#6B6B6B]">
-            <li><Link href="/use-cases" className="pp-shell-link">{messages.chrome.nav.useCases}</Link></li>
             <li><Link href={getPublicPageHref(publicLocale, "/pricing")} className="pp-shell-link">{messages.chrome.nav.pricing}</Link></li>
             <li><Link href={getPublicPageHref(publicLocale, "/about")} className="pp-shell-link">{messages.chrome.nav.about}</Link></li>
+            <li><Link href={getPublicPageHref(publicLocale, "/methodology")} className="pp-shell-link">Methodology</Link></li>
+            <li><Link href={getPublicPageHref(publicLocale, "/human-review")} className="pp-shell-link">Human Review</Link></li>
+            <li><Link href={getPublicPageHref(publicLocale, "/regulations-covered")} className="pp-shell-link">Regulations Covered</Link></li>
             <li><Link href={getPublicPageHref(publicLocale, "/login")} className="pp-shell-link">{messages.chrome.nav.login}</Link></li>
             <li><Link href={getPublicPageHref(publicLocale, "/signup")} className="pp-shell-link">{messages.chrome.footer.createAccount}</Link></li>
           </ul>
@@ -210,7 +219,6 @@ export async function SiteFooter() {
           <ul className="space-y-3 text-sm text-[#6B6B6B]">
             <li><Link href={getPublicPageHref(publicLocale, "/resources")} className="pp-shell-link">{messages.chrome.nav.freeTemplates}</Link></li>
             <li><Link href={getPublicPageHref(publicLocale, "/articles")} className="pp-shell-link">{messages.chrome.nav.articles}</Link></li>
-            <li><Link href={getPublicPageHref(publicLocale, "/use-cases")} className="pp-shell-link">Use cases</Link></li>
             <li><Link href={getPublicPageHref(publicLocale, "/faqs")} className="pp-shell-link">{messages.chrome.nav.faqs}</Link></li>
             <li><Link href={getPublicPageHref(publicLocale, "/contact")} className="pp-shell-link">{messages.chrome.footer.contactSupport}</Link></li>
           </ul>
