@@ -1,8 +1,8 @@
-import { readFileSync } from "node:fs";
+﻿import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { createElement, type ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import sitemap from "@/app/sitemap";
 import robots from "@/app/robots";
 import { generateArticleMetadata } from "@/app/articles/[slug]/page";
@@ -122,15 +122,32 @@ function expectLink(markup: string, href: string, label?: string) {
   if (label) expect(markup).toContain(label);
 }
 
+afterEach(() => {
+  vi.resetModules();
+  vi.restoreAllMocks();
+});
+
 describe("SEO surface", () => {
   it("builds locale alternates for phase-1 public pages", () => {
     const metadata = buildPublicMetadata("fr", "/pricing", {
       title: "Tarifs",
       description: "Description",
     });
+    const englishMetadata = buildPublicMetadata("en", "/pricing", {
+      title: "Pricing",
+      description: "Description",
+    });
 
     expect(metadata.alternates?.canonical).toBe("https://pinkpepper.io/fr/pricing");
     expect(metadata.alternates?.languages).toEqual({
+      "x-default": "https://pinkpepper.io/pricing",
+      en: "https://pinkpepper.io/pricing",
+      fr: "https://pinkpepper.io/fr/pricing",
+      de: "https://pinkpepper.io/de/pricing",
+      pt: "https://pinkpepper.io/pt/pricing",
+    });
+    expect(englishMetadata.alternates?.canonical).toBe("https://pinkpepper.io/pricing");
+    expect(englishMetadata.alternates?.languages).toEqual({
       "x-default": "https://pinkpepper.io/pricing",
       en: "https://pinkpepper.io/pricing",
       fr: "https://pinkpepper.io/fr/pricing",
@@ -153,9 +170,9 @@ describe("SEO surface", () => {
     expect(layout).toContain("width: 1200");
     expect(layout).toContain("height: 630");
     expect(layout).toContain('images: ["https://pinkpepper.io/social-card.png"]');
-    expect(layout).toContain('title: "PinkPepper | AI HACCP & Food Safety Software - EU & UK"');
+    expect(layout).toContain('title: "PinkPepper | AI Food Safety Compliance Software - EU & UK"');
     expect(layout).toContain(
-      "Get free AI food safety guidance, HACCP plans and SOPs, plus EU/UK food import and export compliance support for your business."
+      "AI food safety compliance software for EU and UK food businesses. Generate HACCP plans, SOPs, allergen documentation, and practical compliance records faster."
     );
   });
 
@@ -211,12 +228,12 @@ describe("public SEO copy and linking", () => {
     expect(homepage).toContain("/pricing");
     expect(heroChatForm).toContain("data-nosnippet");
     expect(demoTabSwitcher).toContain("data-nosnippet");
-    expect(homepage).not.toContain("â€");
-    expect(homepage).not.toContain("â€™");
-    expect(homepage).not.toContain("â€“");
-    expect(homepage).not.toContain("ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â");
-    expect(homepage).not.toContain("ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢");
-    expect(homepage).not.toContain("ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬");
+    expect(homepage).not.toContain("Ã¢â‚¬");
+    expect(homepage).not.toContain("Ã¢â‚¬â„¢");
+    expect(homepage).not.toContain("Ã¢â‚¬â€œ");
+    expect(homepage).not.toContain("ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â");
+    expect(homepage).not.toContain("ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢");
+    expect(homepage).not.toContain("ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬");
   });
 
   it("routes core public pages into deeper commercial paths", () => {
@@ -232,7 +249,7 @@ describe("public SEO copy and linking", () => {
     expect(security).toContain("/pricing");
     expect(contact).toContain("/features/");
     expect(resources).toContain("/features/");
-    expect(chrome).toContain('href: "/use-cases"');
+    expect(chrome).toContain('"/use-cases"');
   });
 
   it("renders the articles hub as a curated resource page with key route links", async () => {
@@ -376,6 +393,67 @@ describe("public SEO copy and linking", () => {
     expect(entries).toContain("https://pinkpepper.io/resources/supplier-registration-log");
   });
 
+  it("keeps the IndexNow payload aligned with the canonical public surface", async () => {
+    vi.resetModules();
+    vi.doMock("@/lib/article-index-feed", () => ({
+      getIndexableEnglishArticleSummaries: vi.fn().mockReturnValue([
+        {
+          title: "Preferred article",
+          slug: "preferred-article",
+          excerpt: "Summary",
+          category: "Compliance",
+          publishedAt: "2026-06-18",
+          source: "pinkpepper",
+        },
+        {
+          title: "Imported weak article",
+          slug: "haccp-for-meal-prep-services-eu",
+          excerpt: "Summary",
+          category: "Industry Guides",
+          publishedAt: "2026-06-18",
+          source: "ilovehaccp",
+        },
+      ]),
+    }));
+    vi.doMock("@/lib/resources", () => ({
+      resourceEntries: [
+        { href: "/resources/haccp-plan-template" },
+        { href: "/resources/gmp-poster" },
+      ],
+    }));
+
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      text: async () => "",
+    });
+    vi.stubGlobal("fetch", fetchMock);
+    process.env.CRON_SECRET = "test-secret";
+
+    const { GET } = await import("@/app/api/cron/indexnow/route");
+    const response = await GET(
+      new Request("https://pinkpepper.io/api/cron/indexnow", {
+        headers: { authorization: "Bearer test-secret" },
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+
+    const [, requestInit] = fetchMock.mock.calls[0] as [string, RequestInit];
+    const payload = JSON.parse(String(requestInit.body)) as { urlList: string[] };
+
+    expect(payload.urlList).toContain("https://pinkpepper.io/pricing");
+    expect(payload.urlList).not.toContain("https://pinkpepper.io/en/pricing");
+    expect(payload.urlList).not.toContain("https://pinkpepper.io/");
+    expect(payload.urlList).toContain("https://pinkpepper.io/fr");
+    expect(payload.urlList).toContain("https://pinkpepper.io/resources/gmp-poster");
+    expect(payload.urlList).toContain("https://pinkpepper.io/articles/preferred-article");
+    expect(payload.urlList).not.toContain("https://pinkpepper.io/articles/haccp-for-meal-prep-services-eu");
+    expect(payload.urlList).not.toContain("https://pinkpepper.io/legal/cookies");
+    expect(payload.urlList).not.toContain("https://pinkpepper.io/legal/dpa");
+    expect(payload.urlList).not.toContain("https://pinkpepper.io/legal/refund");
+  });
+
   it("deprioritizes weak imported articles without removing stronger article pages from indexing", async () => {
     const weakerImported = await generateArticleMetadata("haccp-for-meal-prep-services-eu", "en");
     const strongerImported = await generateArticleMetadata("identifying-critical-control-points-in-food-safety", "en");
@@ -390,15 +468,19 @@ describe("premium quality regressions", () => {
   it("does not ship mojibake on core marketing pages", () => {
     const about = readPage("src/app/about/page.tsx");
     const pricing = readPage("src/app/pricing/page.tsx");
+    const contact = readPage("src/app/contact/page.tsx");
 
-    expect(about).not.toContain("â€");
-    expect(about).not.toContain("â€™");
-    expect(about).not.toContain("â€“");
-    expect(pricing).not.toContain("â€");
-    expect(pricing).not.toContain("â€™");
-    expect(pricing).not.toContain("â€“");
-    expect(about).not.toContain("ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢");
-    expect(pricing).not.toContain("ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢");
+    expect(about).not.toContain("Ã¢â‚¬");
+    expect(about).not.toContain("Ã¢â‚¬â„¢");
+    expect(about).not.toContain("Ã¢â‚¬â€œ");
+    expect(pricing).not.toContain("Ã¢â‚¬");
+    expect(pricing).not.toContain("Ã¢â‚¬â„¢");
+    expect(pricing).not.toContain("Ã¢â‚¬â€œ");
+    expect(about).not.toContain("ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢");
+    expect(pricing).not.toContain("ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢");
+    expect(pricing).toContain("Pricing | PinkPepper Food Safety Compliance Software");
+    expect(contact).toContain("Contact PinkPepper | Food Safety Compliance Support");
+    expect(pricing).toContain("Save EUR 18,000+/year on compliance costs.");
   });
 
   it("uses compliance software wording consistently in shared brand surfaces", () => {

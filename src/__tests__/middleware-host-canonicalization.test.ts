@@ -99,4 +99,13 @@ describe("proxy host canonicalization", { timeout: 15000 }, () => {
     expect(response.headers.get("Content-Security-Policy")).toBe(cspValue);
     expect(response.headers.get("x-csp-nonce")).toBe("test-nonce");
   });
+
+  it("redirects the bare legacy english route to the root english homepage", async () => {
+    const { proxy } = await import("../proxy");
+
+    const response = await proxy(makeRequest("https://pinkpepper.io/en") as never);
+
+    expect(response.status).toBe(308);
+    expect(response.headers.get("location")).toBe("https://pinkpepper.io/");
+  });
 });

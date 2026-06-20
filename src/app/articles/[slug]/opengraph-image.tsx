@@ -1,12 +1,12 @@
 import { ImageResponse } from "next/og";
-import { getArticleBySlug } from "@/lib/articles";
+import { getEnglishArticleSummaries } from "@/lib/article-index-feed";
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 export default async function ArticleOgImage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const article = await getArticleBySlug(slug);
+  const article = getEnglishArticleSummaries().find((entry) => entry.slug === slug);
 
   const title = article?.title ?? "Food Safety Article";
   const category = article?.category ?? "PinkPepper";

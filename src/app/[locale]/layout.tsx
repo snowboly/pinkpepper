@@ -4,7 +4,7 @@ import { publicLaunchLocales } from "@/i18n/public";
 import { isPublicLocale } from "@/lib/public-routes";
 
 export function generateStaticParams() {
-  return publicLaunchLocales.map((locale) => ({ locale }));
+  return publicLaunchLocales.filter((locale) => locale !== "en").map((locale) => ({ locale }));
 }
 
 export default async function LocalizedPublicLayout({

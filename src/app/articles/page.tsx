@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import ArticleCard from "@/components/articles/ArticleCard";
+import ArticleLibraryRemainder from "@/components/articles/ArticleLibraryRemainder";
 import { getArticleManifest } from "@/lib/articles";
 import { type PublicLocale } from "@/i18n/public";
 import { getPublicPageHref } from "@/lib/public-routes";
-import ArticleCard from "@/components/articles/ArticleCard";
-import ArticleLibraryRemainder from "@/components/articles/ArticleLibraryRemainder";
 
 const featuredGuides = [
   {
@@ -59,9 +59,6 @@ const featuredGuides = [
   },
 ];
 
-const INITIAL_ARTICLE_COUNT = 24;
-const INITIAL_FEATURED_GUIDE_COUNT = 6;
-
 const workflowLinks = [
   {
     href: "/resources/haccp-plan-template",
@@ -76,24 +73,28 @@ const workflowLinks = [
   {
     href: "/features/food-safety-sop-generator",
     title: "Build SOPs and records that fit the site",
-    description: "Use the SOP workflow when the next job is turning guidance into opening checks, cleaning procedures, and daily records.",
+    description:
+      "Use the SOP workflow when the next job is turning guidance into opening checks, cleaning procedures, and daily records.",
   },
   {
     href: "/faqs",
     title: "Check the product FAQs",
-    description: "Read direct answers on scope, pricing, accountability, and how PinkPepper fits into food safety work before you go deeper.",
+    description:
+      "Read direct answers on scope, pricing, accountability, and how PinkPepper fits into food safety work before you go deeper.",
   },
   {
     href: "/use-cases",
     title: "Find the right operating model",
-    description: "Jump into restaurant, cafe, catering, and manufacturing workflows instead of treating every business like the same HACCP problem.",
+    description:
+      "Jump into restaurant, cafe, catering, and manufacturing workflows instead of treating every business like the same HACCP problem.",
   },
 ];
 
 const clusterLinks = [
   {
     title: "HACCP fundamentals",
-    description: "Start with the core guides that explain process flow, hazard analysis, CCP logic, and what belongs in the actual plan.",
+    description:
+      "Start with the core guides that explain process flow, hazard analysis, CCP logic, and what belongs in the actual plan.",
     links: [
       { href: "/articles/building-a-haccp-process-flow-diagram", label: "Process flow diagrams" },
       { href: "/articles/how-to-perform-a-hazard-analysis-correctly", label: "Hazard analysis" },
@@ -102,7 +103,8 @@ const clusterLinks = [
   },
   {
     title: "Monitoring and records",
-    description: "Use the articles and templates that help teams record controls cleanly enough to survive audits and daily operational change.",
+    description:
+      "Use the articles and templates that help teams record controls cleanly enough to survive audits and daily operational change.",
     links: [
       { href: "/articles/cooling-and-reheating-haccp-high-risk-steps", label: "Cooling and reheating" },
       { href: "/resources/temperature-monitoring-log-template", label: "Temperature logs" },
@@ -111,7 +113,8 @@ const clusterLinks = [
   },
   {
     title: "Industry-specific workflows",
-    description: "When the operating model matters more than the generic principle, move into the use-case pages first.",
+    description:
+      "When the operating model matters more than the generic principle, move into the use-case pages first.",
     links: [
       { href: "/use-cases/cafes", label: "Cafes" },
       { href: "/use-cases/restaurants", label: "Restaurants" },
@@ -120,6 +123,9 @@ const clusterLinks = [
     ],
   },
 ];
+
+const INITIAL_ARTICLE_COUNT = 24;
+const INITIAL_FEATURED_GUIDE_COUNT = 6;
 
 export const metadata: Metadata = {
   title: "Food Safety Articles & Insights | PinkPepper",
@@ -134,15 +140,18 @@ export const metadata: Metadata = {
     description:
       "A curated library of practical guidance on HACCP, allergen management, food safety audits, and operational compliance for EU and UK food businesses.",
     locale: "en_GB",
-    images: [{ url: "https://pinkpepper.io/social-card.png", width: 1200, height: 630, alt: "PinkPepper - AI Food Safety Compliance Software" }],
+    images: [
+      {
+        url: "https://pinkpepper.io/social-card.png",
+        width: 1200,
+        height: 630,
+        alt: "PinkPepper - AI Food Safety Compliance Software",
+      },
+    ],
   },
 };
 
-function getArticleHref(
-  slug: string,
-  locale: PublicLocale = "en",
-  localizedSlugs: ReadonlySet<string> = new Set(),
-) {
+function getArticleHref(slug: string, locale: PublicLocale, localizedSlugs: ReadonlySet<string>) {
   if (locale === "en" || !localizedSlugs.has(slug)) {
     return `/articles/${slug}`;
   }
@@ -156,9 +165,9 @@ type ArticlesPageProps = {
 
 export default async function ArticlesPage({ locale = "en" }: ArticlesPageProps = {}) {
   const articles = await getArticleManifest({ locale });
-  const localizedArticleSlugs = new Set(articles.map((article) => article.slug));
+  const localizedSlugs = new Set(articles.map((article) => article.slug));
   const articleHrefBySlug = Object.fromEntries(
-    articles.map((article) => [article.slug, getArticleHref(article.slug, locale, localizedArticleSlugs)]),
+    articles.map((article) => [article.slug, getArticleHref(article.slug, locale, localizedSlugs)]),
   );
   const initialArticles = articles.slice(0, INITIAL_ARTICLE_COUNT);
   const remainingArticles = articles.slice(INITIAL_ARTICLE_COUNT);
@@ -198,11 +207,7 @@ export default async function ArticlesPage({ locale = "en" }: ArticlesPageProps 
                 key={guide.href}
                 href={
                   guide.href.startsWith("/articles/")
-                    ? getArticleHref(
-                        guide.href.replace("/articles/", ""),
-                        locale,
-                        localizedArticleSlugs,
-                      )
+                    ? getArticleHref(guide.href.replace("/articles/", ""), locale, localizedSlugs)
                     : getPublicPageHref(locale, guide.href)
                 }
                 className="rounded-3xl border border-[#E2E8F0] bg-[#F8FAFC] p-7 transition-all hover:-translate-y-0.5 hover:border-[#CBD5E1] hover:shadow-xl hover:shadow-black/[0.04]"
@@ -216,7 +221,7 @@ export default async function ArticlesPage({ locale = "en" }: ArticlesPageProps 
       </section>
 
       <section className="border-b border-[#F1F5F9] bg-[#FFF7ED] py-14">
-        <div className="pp-container grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+        <div className="pp-container grid gap-5 md:grid-cols-2 xl:grid-cols-5">
           {workflowLinks.map((item) => (
             <Link
               key={item.href}
@@ -243,10 +248,7 @@ export default async function ArticlesPage({ locale = "en" }: ArticlesPageProps 
           </div>
           <div className="mt-8 grid gap-6 lg:grid-cols-3">
             {clusterLinks.map((cluster) => (
-              <div
-                key={cluster.title}
-                className="rounded-3xl border border-[#E2E8F0] bg-[#F8FAFC] p-7"
-              >
+              <div key={cluster.title} className="rounded-3xl border border-[#E2E8F0] bg-[#F8FAFC] p-7">
                 <p className="text-xl font-semibold text-[#0F172A]">{cluster.title}</p>
                 <p className="mt-3 text-sm leading-relaxed text-[#475569]">{cluster.description}</p>
                 <div className="mt-5 flex flex-col gap-3">
@@ -288,10 +290,7 @@ export default async function ArticlesPage({ locale = "en" }: ArticlesPageProps 
               />
             ))}
           </div>
-          <ArticleLibraryRemainder
-            articles={remainingArticles}
-            articleHrefBySlug={articleHrefBySlug}
-          />
+          <ArticleLibraryRemainder articles={remainingArticles} articleHrefBySlug={articleHrefBySlug} />
         </div>
       </section>
     </main>

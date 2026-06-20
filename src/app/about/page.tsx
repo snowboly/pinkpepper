@@ -5,7 +5,7 @@ import { ArrowRight, BookOpen, Brain, FileCheck, ShieldCheck, Users } from "luci
 export const metadata = {
   title: "About PinkPepper | AI Food Safety Software",
   description:
-    "Built by a food scientist with hands-on compliance experience. PinkPepper combines AI grounded in 35+ EU & UK regulations with human food safety consultancy.",
+    "PinkPepper is AI food safety compliance software built by a food scientist with hands-on compliance experience for EU and UK food businesses.",
   alternates: {
     canonical: "https://pinkpepper.io/about",
     languages: { "x-default": "https://pinkpepper.io/about", en: "https://pinkpepper.io/about" },

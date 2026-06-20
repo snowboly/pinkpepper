@@ -9,7 +9,7 @@ type ArticleLibraryRemainderProps = {
   articleHrefBySlug: Record<string, string>;
 };
 
-export default function ArticleLibraryRemainder({
+export function ArticleLibraryRemainder({
   articles,
   articleHrefBySlug,
 }: ArticleLibraryRemainderProps) {
@@ -52,3 +52,5 @@ export default function ArticleLibraryRemainder({
     </div>
   );
 }
+
+export default ArticleLibraryRemainder;

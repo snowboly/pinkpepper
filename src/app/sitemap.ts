@@ -1,9 +1,8 @@
 import { MetadataRoute } from "next";
 import {
-  getArticleManifest,
-  getLocalizedArticleManifest,
-  isArticlePreferredForIndexing,
-} from "@/lib/articles";
+  getIndexableEnglishArticleSummaries,
+  getLocalizedArticleSummaries,
+} from "@/lib/article-index-feed";
 import { publicContentRoutePaths, publicLaunchLocales } from "@/i18n/public";
 import { localizePublicPath } from "@/lib/public-routes";
 import { resourceEntries } from "@/lib/resources";
@@ -25,15 +24,13 @@ const useCasePaths = [
 const legalPaths = ["/legal/terms", "/legal/privacy"] as const;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const articles = await getArticleManifest().catch(() => []);
-  const localizedArticles = await Promise.all(
-    publicLaunchLocales
-      .filter((locale) => locale !== "en")
-      .map(async (locale) => ({
-        locale,
-        articles: await getLocalizedArticleManifest(locale).catch(() => []),
-      })),
-  );
+  const articles = getIndexableEnglishArticleSummaries();
+  const localizedArticles = publicLaunchLocales
+    .filter((locale) => locale !== "en")
+    .map((locale) => ({
+      locale,
+      articles: getLocalizedArticleSummaries(locale),
+    }));
 
   const localizedPublicEntries = publicContentRoutePaths.flatMap((path) =>
     publicLaunchLocales.filter((locale) => locale !== "en").map((locale) => ({
@@ -79,7 +76,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "monthly" as const,
       priority: path === "/use-cases" ? 0.8 : 0.7,
     })),
-    ...articles.filter(isArticlePreferredForIndexing).map((article) => ({
+    ...articles.map((article) => ({
       url: `${BASE_URL}/articles/${article.slug}`,
       lastModified: new Date(article.publishedAt),
       changeFrequency: "monthly" as const,

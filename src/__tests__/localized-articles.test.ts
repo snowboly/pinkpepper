@@ -29,9 +29,11 @@ describe("localized SEO priority articles", () => {
       expect(
         manifest
           .map((article) => article.slug)
-          .filter((slug) => localizedSeoPriorityArticleSlugs.includes(
-            slug as (typeof localizedSeoPriorityArticleSlugs)[number],
-          )),
+          .filter((slug) =>
+            localizedSeoPriorityArticleSlugs.includes(
+              slug as (typeof localizedSeoPriorityArticleSlugs)[number],
+            ),
+          ),
       ).toEqual(localizedSeoPriorityArticleSlugs);
 
       for (const slug of localizedSeoPriorityArticleSlugs) {
@@ -42,7 +44,7 @@ describe("localized SEO priority articles", () => {
         expect(article?.title).toBeTruthy();
         expect(article?.excerpt.length).toBeGreaterThan(90);
         expect(article?.body).toContain("<h2>");
-        expect(article?.body).not.toContain("appliquér");
+        expect(article?.body).not.toContain("appliquÃ©r");
         expect(article?.body).not.toContain("This article is available in English");
       }
     }
@@ -70,7 +72,7 @@ describe("localized SEO priority articles", () => {
       'href="https://eur-lex.europa.eu/legal-content/DE/TXT/?uri=CELEX:32004R0852"',
     );
     expect(article?.body).toContain('href="/de/features/haccp-plan-generator"');
-    expect(article?.body).not.toContain("<strong>Mindestens einmal jährlich</strong>");
+    expect(article?.body).not.toContain("<strong>Mindestens einmal jÃ¤hrlich</strong>");
     expect(article?.body).not.toContain("jede zweite Charge");
   });
 
@@ -95,9 +97,7 @@ describe("localized SEO priority articles", () => {
     expect(article?.body).toContain("vor Ort");
     expect(article?.body).toContain('href="/resources/haccp-plan-template"');
     expect(article?.body).toContain('href="/de/features/haccp-plan-generator"');
-    expect(article?.body).toContain(
-      'href="/articles/correcting-non-conformities-in-haccp"',
-    );
+    expect(article?.body).toContain('href="/articles/correcting-non-conformities-in-haccp"');
     expect(article?.body).not.toContain("example.com");
     expect(article?.body).not.toContain("EU-Verordnung 2021/382");
     expect(article?.body).not.toContain("Automatische CCP-Erkennung");
@@ -124,7 +124,7 @@ describe("localized SEO priority articles", () => {
     expect(articlePage).toContain("Weitere Artikel");
     expect(articlePage).toContain("Weiterlesen");
     expect(articlePage).toContain("Zurück zur Artikelübersicht");
-    expect(sitemap).toContain("getLocalizedArticleManifest");
+    expect(sitemap).toContain("getLocalizedArticleSummaries");
     expect(sitemap).toContain("${BASE_URL}/${locale}/articles/${article.slug}");
   });
 });

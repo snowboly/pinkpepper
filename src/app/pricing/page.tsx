@@ -9,9 +9,9 @@ import { createClient } from "@/utils/supabase/server";
 import { getCspNonce } from "@/lib/security/csp";
 
 export const metadata: Metadata = {
-  title: "Pricing - From EUR 0/mo | PinkPepper Food Safety Software",
+  title: "Pricing | PinkPepper Food Safety Compliance Software",
   description:
-    "Start free. Plus at EUR 19/mo for daily HACCP & SOP use. Pro at EUR 99/mo adds Auditor mode + 2h human consultancy. Save EUR 18,000+/year on compliance costs.",
+    "Start free. Plus at EUR 19/month for daily HACCP and SOP work. Pro at EUR 99/month adds Auditor mode and 2 hours of human consultancy.",
   alternates: {
     canonical: "https://pinkpepper.io/pricing",
     languages: {
