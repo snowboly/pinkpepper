@@ -14,6 +14,11 @@ export const metadata = {
 
 const corePages = [
   {
+    href: "/regulations-covered",
+    title: "Regulations covered",
+    description: "See which EU and UK legal and guidance areas PinkPepper is grounded in before you choose a workflow.",
+  },
+  {
     href: "/features/haccp-plan-generator",
     title: "HACCP workflows",
     description: "See the main workflow for hazard analysis, CCP structure, and corrective action drafting.",
@@ -152,7 +157,7 @@ export default function AboutPage() {
       <section className="border-t border-[#F1F5F9] bg-[#F8FAFC] py-16 md:py-20">
         <div className="pp-container max-w-4xl">
           <h2 className="text-center text-2xl font-bold text-[#0F172A] md:text-3xl">Core paths to explore next</h2>
-          <div className="mt-10 grid gap-6 md:grid-cols-3">
+          <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
             {corePages.map((item) => (
               <Link
                 key={item.href}

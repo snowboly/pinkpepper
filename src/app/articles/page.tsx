@@ -8,6 +8,16 @@ import { getPublicPageHref } from "@/lib/public-routes";
 
 const featuredGuides = [
   {
+    href: "/articles/how-to-import-food-into-great-britain-from-non-eu-countries",
+    title: "How to import food into Great Britain from non-EU countries",
+    description: "A step-by-step import workflow covering classification, IPAFFS, border controls, customs, and post-import checks.",
+  },
+  {
+    href: "/articles/how-to-export-food-from-great-britain-to-the-eu",
+    title: "How to export food from Great Britain to the EU",
+    description: "The practical export route for certification, TRACES pre-notification, border control posts, and post-export records.",
+  },
+  {
     href: "/articles/building-a-haccp-process-flow-diagram",
     title: "How to build a HACCP process flow diagram",
     description: "Use a clearer process map before you assess hazards, CCP logic, and monitoring responsibilities.",
@@ -61,6 +71,11 @@ const featuredGuides = [
 
 const workflowLinks = [
   {
+    href: "/regulations-covered",
+    title: "Check the regulations covered",
+    description: "Use the trust page when you need a clearer map of the EU and UK legal and guidance areas PinkPepper covers.",
+  },
+  {
     href: "/resources/haccp-plan-template",
     title: "Start with the HACCP plan template",
     description: "Use the template hub if you need a cleaner structure before drafting a site-specific plan.",
@@ -91,6 +106,16 @@ const workflowLinks = [
 ];
 
 const clusterLinks = [
+  {
+    title: "Import and export workflows",
+    description:
+      "Use the operational guides that map the document, border, and traceability steps around moving food into or out of Great Britain.",
+    links: [
+      { href: "/articles/how-to-import-food-into-great-britain-from-non-eu-countries", label: "Import into Great Britain" },
+      { href: "/articles/how-to-export-food-from-great-britain-to-the-eu", label: "Export to the EU" },
+      { href: "/regulations-covered", label: "Regulations covered" },
+    ],
+  },
   {
     title: "HACCP fundamentals",
     description:
@@ -125,7 +150,7 @@ const clusterLinks = [
 ];
 
 const INITIAL_ARTICLE_COUNT = 24;
-const INITIAL_FEATURED_GUIDE_COUNT = 6;
+const INITIAL_FEATURED_GUIDE_COUNT = 8;
 
 export const metadata: Metadata = {
   title: "Food Safety Articles & Insights | PinkPepper",

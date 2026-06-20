@@ -21,7 +21,7 @@ source: "pinkpepper"
 
 <h2>1. Define the product before choosing the import route</h2>
 
-<p>Start with a complete specification from the manufacturer. A sales description such as “protein snack”, “seasoning” or “ready meal” is not enough. Record:</p>
+<p>Start with a complete specification from the manufacturer. A sales description such as &ldquo;protein snack&rdquo;, &ldquo;seasoning&rdquo; or &ldquo;ready meal&rdquo; is not enough. Record:</p>
 
 <ul>
   <li>the UK commodity code;</li>
@@ -61,7 +61,7 @@ source: "pinkpepper"
 
 <p>A composite product combines processed animal-origin products with plant products that are integral to the final food, such as a lasagne containing processed meat, sauce and pasta. A compound product contains more than one animal-origin product, which may be processed or unprocessed. The route depends on the ingredients, treatments and storage conditions.</p>
 
-<p>Obtain a quantitative recipe and process description before classifying a mixed food. “Shelf-stable” does not automatically mean exempt, and a single-ingredient fish product does not become composite merely because it is canned.</p>
+<p>Obtain a quantitative recipe and process description before classifying a mixed food. &ldquo;Shelf-stable&rdquo; does not automatically mean exempt, and a single-ingredient fish product does not become composite merely because it is canned.</p>
 
 <h3>High-risk food and feed of non-animal origin</h3>
 
@@ -79,19 +79,19 @@ source: "pinkpepper"
 
 <p>Fishery products for human consumption are generally POAO and follow the relevant BTOM route. Illegal, unreported and unregulated fishing controls are a separate layer. GOV.UK states that most fish imported into the UK requires a validated catch certificate from the competent authority of the country where the catching vessel is registered or licensed.</p>
 
-<p>If fish was processed or stored in another country, an endorsed processing statement or proof of storage may also be required. These IUU documents have their own advance-submission deadlines and apply independently of the product's BTOM category. Do not assume canned tuna is exempt: confirm the species, commodity code, catch method and processing chain using the current <a href="https://www.gov.uk/guidance/importing-or-moving-fish-to-the-uk">fish import guidance</a>.</p>
+<p>If fish was processed or stored in another country, an endorsed processing statement or proof of storage may also be required. These IUU documents have their own advance-submission deadlines and apply independently of the product&apos;s BTOM category. Do not assume canned tuna is exempt: confirm the species, commodity code, catch method and processing chain using the current <a href="https://www.gov.uk/guidance/importing-or-moving-fish-to-the-uk">fish import guidance</a>.</p>
 
 <h3>Organic food</h3>
 
 <p>Organic status does not replace the ordinary import route. The food must first comply with the POAO, plant, HRFNAO or standard-food requirements that apply to it.</p>
 
-<p>To import organic food from outside the EU, EEA and Switzerland into Great Britain, the importing company must be UK-based and certified by an approved UK organic control body. Each consignment needs a Great Britain certificate of inspection (COI), and the exporter’s control body and country or territory of export must appear on the relevant registers. The COI is issued by the exporter’s control body in the country of export.</p>
+<p>To import organic food from outside the EU, EEA and Switzerland into Great Britain, the importing company must be UK-based and certified by an approved UK organic control body. Each consignment needs a Great Britain certificate of inspection (COI), and the exporter&rsquo;s control body and country or territory of export must appear on the relevant registers. The COI is issued by the exporter&rsquo;s control body in the country of export.</p>
 
 <h3>Standard food not subject to SPS import controls</h3>
 
 <p>Many processed foods of non-animal origin are not HRFNAO and are not controlled plant products. They may not require an SPS certificate, IPAFFS notification or BCP presentation. Customs, food safety, composition, contaminants, labelling, traceability and recall duties still apply.</p>
 
-<p>Do not label a product “standard low risk” until you have checked the commodity code, ingredient specification, current HRFNAO listings, plant-health status and safeguards.</p>
+<p>Do not label a product &ldquo;standard low risk&rdquo; until you have checked the commodity code, ingredient specification, current HRFNAO listings, plant-health status and safeguards.</p>
 
 <h2>3. Verify country, territory and establishment eligibility</h2>
 
@@ -114,7 +114,7 @@ source: "pinkpepper"
   <li><strong>Customs and VAT arrangements:</strong> decide who submits the declaration, how import VAT and duty will be accounted for, and whether any preference or tariff quota will be claimed. VAT registration is not a universal prerequisite for every importer; obtain tax advice for your circumstances.</li>
 </ul>
 
-<p>An agent can submit customs or IPAFFS data, but the contract must state whether the agent is acting directly or indirectly and who supplies and checks each data element. Outsourcing data entry does not remove the food business's responsibility to ensure the goods can legally be imported and marketed.</p>
+<p>An agent can submit customs or IPAFFS data, but the contract must state whether the agent is acting directly or indirectly and who supplies and checks each data element. Outsourcing data entry does not remove the food business&apos;s responsibility to ensure the goods can legally be imported and marketed.</p>
 
 <h2>5. Obtain the right certificates and evidence</h2>
 
@@ -155,7 +155,7 @@ source: "pinkpepper"
     <tr>
       <td>GB certificate of inspection</td>
       <td>Organic goods from outside the EU, EEA and Switzerland</td>
-      <td>The exporter’s recognised control body issues the COI for the consignment.</td>
+      <td>The exporter&rsquo;s recognised control body issues the COI for the consignment.</td>
     </tr>
     <tr>
       <td>Licence or authorisation</td>
@@ -210,11 +210,11 @@ source: "pinkpepper"
 
 <h3>Frozen chicken from Brazil</h3>
 
-<p>This is POAO. Confirm the exact commodity code, current BTOM category, Brazil's eligibility for that commodity, establishment approval, the current GB health-certificate model, IPAFFS requirements and a BCP designated for the product. Check disease safeguards immediately before certification and dispatch.</p>
+<p>This is POAO. Confirm the exact commodity code, current BTOM category, Brazil&apos;s eligibility for that commodity, establishment approval, the current GB health-certificate model, IPAFFS requirements and a BCP designated for the product. Check disease safeguards immediately before certification and dispatch.</p>
 
 <h3>Canned tuna from Thailand</h3>
 
-<p>Canned tuna is a processed fishery product and POAO, not a composite product merely because it is canned. Check its BTOM category and SPS documents. Separately establish whether a validated catch certificate, processing statement or proof of storage is required. The fish guidance states that most fish requires IUU documentation, including where processing occurred in a country different from the vessel's flag state.</p>
+<p>Canned tuna is a processed fishery product and POAO, not a composite product merely because it is canned. Check its BTOM category and SPS documents. Separately establish whether a validated catch certificate, processing statement or proof of storage is required. The fish guidance states that most fish requires IUU documentation, including where processing occurred in a country different from the vessel&apos;s flag state.</p>
 
 <h3>Ground spices from India</h3>
 
@@ -283,5 +283,12 @@ source: "pinkpepper"
 </ul>
 
 <blockquote><strong>Final check:</strong> Treat this article as a workflow, not as a shipment authorisation. The live commodity, origin, certificate, safeguard and BCP tools determine the legal route for the consignment in front of you.</blockquote>
+
+<h2>Next step</h2>
+<ul>
+  <li><strong>Read next:</strong> <a href="/articles/how-to-export-food-from-great-britain-to-the-eu">How to export food from Great Britain to the EU</a></li>
+  <li><strong>Use this template:</strong> <a href="/resources/traceability-log-template">Traceability log template</a></li>
+  <li><strong>Create a free account:</strong> <a href="/signup">Organise import records, control checks, and border documents in one working place.</a></li>
+</ul>
 
 <p><small>Hero photograph: <a href="https://www.pexels.com/photo/cargo-ship-in-harbour-under-blue-sky-24246926/">Thomas Parker on Pexels</a>.</small></p>

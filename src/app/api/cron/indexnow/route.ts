@@ -21,6 +21,8 @@ const USE_CASE_PATHS = [
 
 const STATIC_PATHS = [
   "/about",
+  "/compare/pinkpepper-vs-consultant",
+  "/regulations-covered",
   "/resources",
   "/security",
   "/legal/terms",
