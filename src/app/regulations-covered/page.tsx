@@ -59,6 +59,11 @@ const coverageGroups = [
 
 const nextLinks = [
   {
+    href: "/methodology",
+    title: "Understand the methodology",
+    description: "See how PinkPepper separates legal requirements, guidance, and methodology-dependent decisions.",
+  },
+  {
     href: "/articles/how-to-import-food-into-great-britain-from-non-eu-countries",
     title: "Import food into Great Britain",
     description: "Use the full GB non-EU import guide when you need a step-by-step border and document workflow.",

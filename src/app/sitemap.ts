@@ -22,6 +22,8 @@ const useCasePaths = [
 ] as const;
 
 const phase2ContentPaths = [
+  "/human-review",
+  "/methodology",
   "/regulations-covered",
   "/compare/pinkpepper-vs-consultant",
 ] as const;
@@ -85,7 +87,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: `${BASE_URL}${path}`,
       lastModified: new Date(SITE_REFRESHED_AT),
       changeFrequency: "monthly" as const,
-      priority: path === "/regulations-covered" ? 0.8 : 0.7,
+      priority:
+        path === "/human-review" || path === "/methodology" || path === "/regulations-covered"
+          ? 0.8
+          : 0.7,
     })),
     ...articles.map((article) => ({
       url: `${BASE_URL}/articles/${article.slug}`,

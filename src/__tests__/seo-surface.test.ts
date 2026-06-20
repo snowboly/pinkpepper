@@ -202,6 +202,8 @@ describe("SEO surface", () => {
     expect(entries).toContain("https://pinkpepper.io/pt/pricing");
     expect(entries).toContain("https://pinkpepper.io/de/features/haccp-plan-generator");
     expect(entries).toContain("https://pinkpepper.io/features/haccp-plan-generator");
+    expect(entries).toContain("https://pinkpepper.io/methodology");
+    expect(entries).toContain("https://pinkpepper.io/human-review");
     expect(entries).toContain("https://pinkpepper.io/regulations-covered");
     expect(entries).toContain("https://pinkpepper.io/compare/pinkpepper-vs-consultant");
     expect(entries).toContain("https://pinkpepper.io/use-cases/restaurants");
@@ -248,10 +250,17 @@ describe("public SEO copy and linking", () => {
 
     expect(pricing).toContain("/features/");
     expect(about).toContain("/pricing");
+    expect(about).toContain("/methodology");
+    expect(about).toContain("/human-review");
+    expect(pricing).toContain("/human-review");
     expect(security).toContain("/pricing");
     expect(contact).toContain("/features/");
     expect(resources).toContain("/features/");
     expect(chrome).toContain('"/use-cases"');
+    expect(about).not.toContain("ilovehaccp.com");
+    expect(about).not.toContain("Part of the iLoveHACCP family");
+    expect(about).toContain("How PinkPepper is built");
+    expect(about).toContain("Where human review still matters");
   });
 
   it("renders the articles hub as a curated resource page with key route links", async () => {
@@ -378,6 +387,8 @@ describe("public SEO copy and linking", () => {
     const currentPages = [
       "https://pinkpepper.io",
       "https://pinkpepper.io/about",
+      "https://pinkpepper.io/human-review",
+      "https://pinkpepper.io/methodology",
       "https://pinkpepper.io/pricing",
       "https://pinkpepper.io/contact",
       "https://pinkpepper.io/regulations-covered",
@@ -455,6 +466,8 @@ describe("public SEO copy and linking", () => {
     const payload = JSON.parse(String(requestInit.body)) as { urlList: string[] };
 
     expect(payload.urlList).toContain("https://pinkpepper.io/pricing");
+    expect(payload.urlList).toContain("https://pinkpepper.io/human-review");
+    expect(payload.urlList).toContain("https://pinkpepper.io/methodology");
     expect(payload.urlList).toContain("https://pinkpepper.io/regulations-covered");
     expect(payload.urlList).toContain("https://pinkpepper.io/compare/pinkpepper-vs-consultant");
     expect(payload.urlList).not.toContain("https://pinkpepper.io/en/pricing");
