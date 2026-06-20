@@ -169,6 +169,9 @@ export default async function PricingPage({ locale }: PricingPageProps = {}) {
             <Link href="/contact" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
               Talk to us
             </Link>
+            <Link href="/compare/pinkpepper-vs-consultant" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
+              Compare PinkPepper vs consultant
+            </Link>
           </div>
         </div>
       </section>

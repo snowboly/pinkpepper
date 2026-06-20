@@ -202,6 +202,8 @@ describe("SEO surface", () => {
     expect(entries).toContain("https://pinkpepper.io/pt/pricing");
     expect(entries).toContain("https://pinkpepper.io/de/features/haccp-plan-generator");
     expect(entries).toContain("https://pinkpepper.io/features/haccp-plan-generator");
+    expect(entries).toContain("https://pinkpepper.io/regulations-covered");
+    expect(entries).toContain("https://pinkpepper.io/compare/pinkpepper-vs-consultant");
     expect(entries).toContain("https://pinkpepper.io/use-cases/restaurants");
     expect(entries).toContain("https://pinkpepper.io/articles/identifying-critical-control-points-in-food-safety");
     expect(entries).not.toContain("https://pinkpepper.io/login");
@@ -359,9 +361,12 @@ describe("public SEO copy and linking", () => {
     expect(homepage).toContain("/use-cases");
 
     expect(articlesHub).toContain("/articles/building-a-haccp-process-flow-diagram");
+    expect(articlesHub).toContain("/articles/how-to-import-food-into-great-britain-from-non-eu-countries");
+    expect(articlesHub).toContain("/articles/how-to-export-food-from-great-britain-to-the-eu");
     expect(articlesHub).toContain("/articles/chemical-hazards-in-haccp-controls-limits-and-what-to-record");
     expect(articlesHub).toContain("/articles/cooling-and-reheating-haccp-high-risk-steps");
     expect(articlesHub).toContain("/articles/haccp-for-artisanal-bakeries-eu");
+    expect(articlesHub).toContain("/regulations-covered");
     expect(articlesHub).toContain("/use-cases/restaurants");
     expect(articlesHub).toContain("/use-cases/food-manufacturing");
 
@@ -375,6 +380,7 @@ describe("public SEO copy and linking", () => {
       "https://pinkpepper.io/about",
       "https://pinkpepper.io/pricing",
       "https://pinkpepper.io/contact",
+      "https://pinkpepper.io/regulations-covered",
       "https://pinkpepper.io/security",
     ];
 
@@ -449,6 +455,8 @@ describe("public SEO copy and linking", () => {
     const payload = JSON.parse(String(requestInit.body)) as { urlList: string[] };
 
     expect(payload.urlList).toContain("https://pinkpepper.io/pricing");
+    expect(payload.urlList).toContain("https://pinkpepper.io/regulations-covered");
+    expect(payload.urlList).toContain("https://pinkpepper.io/compare/pinkpepper-vs-consultant");
     expect(payload.urlList).not.toContain("https://pinkpepper.io/en/pricing");
     expect(payload.urlList).not.toContain("https://pinkpepper.io/");
     expect(payload.urlList).toContain("https://pinkpepper.io/fr");
@@ -458,6 +466,23 @@ describe("public SEO copy and linking", () => {
     expect(payload.urlList).not.toContain("https://pinkpepper.io/legal/cookies");
     expect(payload.urlList).not.toContain("https://pinkpepper.io/legal/dpa");
     expect(payload.urlList).not.toContain("https://pinkpepper.io/legal/refund");
+  });
+
+  it("keeps the compare entry live while the generic compare route still redirects", () => {
+    const nextConfig = readPage("next.config.ts");
+    const comparePage = readPage("src/app/compare/pinkpepper-vs-consultant/page.tsx");
+    const regulationsPage = readPage("src/app/regulations-covered/page.tsx");
+
+    expect(nextConfig).toContain('{ source: "/compare", destination: "/pricing", permanent: true }');
+    expect(nextConfig).toContain('{ source: "/compare/haccp-software-alternatives", destination: "/pricing", permanent: true }');
+    expect(nextConfig).not.toContain("/compare/pinkpepper-vs-consultant\", destination: \"/pricing\"");
+
+    expect(comparePage).toContain('href="/pricing"');
+    expect(comparePage).toContain('href="/regulations-covered"');
+    expect(comparePage).toContain('href="/about"');
+
+    expect(regulationsPage).toContain("/articles/how-to-import-food-into-great-britain-from-non-eu-countries");
+    expect(regulationsPage).toContain("/articles/how-to-export-food-from-great-britain-to-the-eu");
   });
 
   it("deprioritizes weak imported articles without removing stronger article pages from indexing", async () => {

@@ -21,6 +21,11 @@ const useCasePaths = [
   "/use-cases/food-manufacturing",
 ] as const;
 
+const phase2ContentPaths = [
+  "/regulations-covered",
+  "/compare/pinkpepper-vs-consultant",
+] as const;
+
 const legalPaths = ["/legal/terms", "/legal/privacy"] as const;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -75,6 +80,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(USE_CASES_REFRESHED_AT),
       changeFrequency: "monthly" as const,
       priority: path === "/use-cases" ? 0.8 : 0.7,
+    })),
+    ...phase2ContentPaths.map((path) => ({
+      url: `${BASE_URL}${path}`,
+      lastModified: new Date(SITE_REFRESHED_AT),
+      changeFrequency: "monthly" as const,
+      priority: path === "/regulations-covered" ? 0.8 : 0.7,
     })),
     ...articles.map((article) => ({
       url: `${BASE_URL}/articles/${article.slug}`,
