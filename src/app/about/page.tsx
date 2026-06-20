@@ -1,11 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, BookOpen, Brain, FileCheck, ShieldCheck, Users } from "lucide-react";
+import { ArrowRight, Brain, FileCheck, ShieldCheck, Users } from "lucide-react";
 
 export const metadata = {
   title: "About PinkPepper | AI Food Safety Software",
   description:
-    "PinkPepper is AI food safety compliance software built by a food scientist with hands-on compliance experience for EU and UK food businesses.",
+    "PinkPepper is AI food safety compliance software for EU and UK food businesses, built around practical HACCP, allergen, audit, and operational compliance work.",
   alternates: {
     canonical: "https://pinkpepper.io/about",
     languages: { "x-default": "https://pinkpepper.io/about", en: "https://pinkpepper.io/about" },
@@ -13,6 +13,16 @@ export const metadata = {
 };
 
 const corePages = [
+  {
+    href: "/methodology",
+    title: "Methodology",
+    description: "See how PinkPepper forms answers across law, guidance, HACCP method, and business context.",
+  },
+  {
+    href: "/human-review",
+    title: "Human review",
+    description: "See where AI support ends and where site-specific expert judgement still needs to step in.",
+  },
   {
     href: "/regulations-covered",
     title: "Regulations covered",
@@ -84,18 +94,9 @@ export default function AboutPage() {
                 food science and hands-on experience helping food businesses build and maintain compliance systems.
               </p>
               <p>
-                After building{" "}
-                <a
-                  href="https://www.ilovehaccp.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-semibold text-[#E11D48] hover:underline"
-                >
-                  iLoveHACCP
-                </a>
-                , it became obvious that creating the plan is only one part of the problem. Teams still need practical
-                help with allergen management, SOPs, audit preparation, and document review after the first HACCP draft
-                exists.
+                The real bottleneck was never just producing a first HACCP draft. Teams still need practical help with
+                allergen management, SOPs, audit preparation, import and export workflows, document review, and the
+                routine follow-up work that keeps a compliance system usable.
               </p>
               <blockquote className="rounded-xl border border-[#E2E8F0] bg-[#FFF1F2] p-5 italic text-[#0F172A]">
                 &ldquo;Traditional consulting is too slow and too expensive for routine compliance work. PinkPepper is
@@ -104,6 +105,67 @@ export default function AboutPage() {
                 <span className="mt-2 block text-sm font-semibold not-italic text-[#E11D48]">- Dr Joao</span>
               </blockquote>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="border-t border-[#F1F5F9] py-16 md:py-20">
+        <div className="pp-container max-w-4xl">
+          <h2 className="text-center text-2xl font-bold text-[#0F172A] md:text-3xl">How PinkPepper is built</h2>
+          <p className="mx-auto mt-4 max-w-2xl text-center leading-relaxed text-[#475569]">
+            The product is designed to be useful when the work is structured, recurring, and grounded in real food
+            safety rules rather than generic assistant output.
+          </p>
+
+          <div className="mt-10 grid gap-6 md:grid-cols-3">
+            {[
+              {
+                title: "Grounded in regulations and guidance",
+                body: "PinkPepper is built around EU and UK food law, official guidance, HACCP method, and the operational facts the user provides.",
+              },
+              {
+                title: "Focused on working documents",
+                body: "The strongest workflows are the ones teams actually maintain: HACCP plans, SOPs, allergen records, logs, traceability records, and audit packs.",
+              },
+              {
+                title: "Clear about boundaries",
+                body: "The system helps produce stronger drafts faster, but site-specific validation, sign-off, and higher-risk judgement still need human input.",
+              },
+            ].map((item) => (
+              <div
+                key={item.title}
+                className="rounded-2xl border border-[#E2E8F0] bg-[#F8FAFC] p-7 shadow-sm shadow-black/[0.03]"
+              >
+                <h3 className="text-lg font-bold text-[#0F172A]">{item.title}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-[#475569]">{item.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="border-t border-[#F1F5F9] bg-[#F8FAFC] py-16 md:py-20">
+        <div className="pp-container max-w-4xl">
+          <h2 className="text-center text-2xl font-bold text-[#0F172A] md:text-3xl">Where human review still matters</h2>
+          <p className="mx-auto mt-4 max-w-2xl text-center leading-relaxed text-[#475569]">
+            PinkPepper is strongest when it accelerates structured compliance work. It is not meant to replace human
+            judgement in higher-risk or site-specific situations.
+          </p>
+
+          <div className="mt-10 grid gap-6 md:grid-cols-2">
+            {[
+              "Validation of cook, chill, reheating, and shelf-life decisions",
+              "Site-specific verification of cleaning, allergen, and segregation controls",
+              "Novel products, unusual processes, or higher-risk consumer groups",
+              "Enforcement, certification, or legal disputes where accountability is formal",
+            ].map((item) => (
+              <div
+                key={item}
+                className="rounded-2xl border border-[#E2E8F0] bg-white p-6 text-sm leading-relaxed text-[#475569] shadow-sm shadow-black/[0.03]"
+              >
+                {item}
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -157,7 +219,7 @@ export default function AboutPage() {
       <section className="border-t border-[#F1F5F9] bg-[#F8FAFC] py-16 md:py-20">
         <div className="pp-container max-w-4xl">
           <h2 className="text-center text-2xl font-bold text-[#0F172A] md:text-3xl">Core paths to explore next</h2>
-          <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+          <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-6">
             {corePages.map((item) => (
               <Link
                 key={item.href}
@@ -169,28 +231,6 @@ export default function AboutPage() {
               </Link>
             ))}
           </div>
-        </div>
-      </section>
-
-      <section className="border-t border-[#F1F5F9] bg-[#F8FAFC] py-16 md:py-20">
-        <div className="pp-container max-w-3xl text-center">
-          <div className="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-[#FFF1F2] text-[#E11D48]">
-            <BookOpen className="h-6 w-6" />
-          </div>
-          <h2 className="text-2xl font-bold text-[#0F172A]">Part of the iLoveHACCP family</h2>
-          <p className="mx-auto mt-4 max-w-xl leading-relaxed text-[#475569]">
-            PinkPepper sits alongside{" "}
-            <a
-              href="https://www.ilovehaccp.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-semibold text-[#E11D48] hover:underline"
-            >
-              iLoveHACCP.com
-            </a>
-            . One helps teams get a HACCP plan started; the other focuses on the ongoing compliance work that comes
-            after that first plan exists.
-          </p>
         </div>
       </section>
 
