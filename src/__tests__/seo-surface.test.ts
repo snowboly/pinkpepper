@@ -405,15 +405,24 @@ describe("public SEO copy and linking", () => {
     const entries = (await sitemap()).map((entry) => entry.url);
 
     expect(entries).toContain("https://pinkpepper.io/resources/allergen-checklist-poster");
+    expect(entries).toContain("https://pinkpepper.io/resources/chilled-storage-poster");
     expect(entries).toContain("https://pinkpepper.io/resources/cooking-monitoring-log-template");
+    expect(entries).toContain("https://pinkpepper.io/resources/food-safety-culture-poster");
     expect(entries).toContain("https://pinkpepper.io/resources/food-temperature-poster");
+    expect(entries).toContain("https://pinkpepper.io/resources/foreign-body-poster");
+    expect(entries).toContain("https://pinkpepper.io/resources/glass-brittle-poster");
     expect(entries).toContain("https://pinkpepper.io/resources/gmp-poster");
     expect(entries).toContain("https://pinkpepper.io/resources/halal-compliance-poster");
+    expect(entries).toContain("https://pinkpepper.io/resources/hygiene-inspection-poster");
     expect(entries).toContain("https://pinkpepper.io/resources/kosher-compliance-poster");
+    expect(entries).toContain("https://pinkpepper.io/resources/personal-hygiene-poster");
+    expect(entries).toContain("https://pinkpepper.io/resources/probe-calibration-poster");
     expect(entries).toContain("https://pinkpepper.io/resources/restaurant-closing-checklist");
     expect(entries).toContain("https://pinkpepper.io/resources/restaurant-opening-checklist");
     expect(entries).toContain("https://pinkpepper.io/resources/restaurant-opening-poster");
+    expect(entries).toContain("https://pinkpepper.io/resources/supplier-approval-poster");
     expect(entries).toContain("https://pinkpepper.io/resources/supplier-registration-log");
+    expect(entries).toContain("https://pinkpepper.io/resources/traceability-recall-poster");
   });
 
   it("keeps the IndexNow payload aligned with the canonical public surface", async () => {
