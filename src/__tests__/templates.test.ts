@@ -38,14 +38,24 @@ describe("getGroupedTemplates", () => {
       "Food safety opening and closing checklist",
       "Food temperature poster",
       "Pest control log",
+      "Restaurant closing checklist",
+      "Restaurant opening checklist",
+      "Restaurant opening poster",
       "Temperature monitoring log",
       "Waste management log",
       "Waste management SOP",
     ]);
 
+    expect(grouped.find((group) => group.category === "Allergen")?.templates.map((template) => template.title)).toEqual([
+      "Allergen checklist poster",
+      "Allergen matrix template",
+    ]);
+
     expect(grouped.find((group) => group.category === "Training")?.templates.map((template) => template.title)).toEqual([
       "Employee training record",
       "GMP poster",
+      "Halal compliance poster",
+      "Kosher compliance poster",
       "Personal hygiene policy",
     ]);
   });
@@ -105,6 +115,12 @@ describe("getGroupedTemplates", () => {
   });
 
   it("surfaces the new monitoring and poster resources in the registry and resources hub", () => {
+    expect(TEMPLATES.find((template) => template.slug === "allergen-checklist-poster")).toMatchObject({
+      title: "Allergen checklist poster",
+      category: "Allergen",
+      fileType: "png",
+    });
+
     expect(TEMPLATES.find((template) => template.slug === "cooking-monitoring-log-template")).toMatchObject({
       title: "Cooking monitoring log",
       category: "Monitoring",
@@ -122,16 +138,71 @@ describe("getGroupedTemplates", () => {
       fileType: "png",
     });
 
+    expect(TEMPLATES.find((template) => template.slug === "halal-compliance-poster")).toMatchObject({
+      title: "Halal compliance poster",
+      category: "Training",
+      fileType: "png",
+    });
+
+    expect(TEMPLATES.find((template) => template.slug === "kosher-compliance-poster")).toMatchObject({
+      title: "Kosher compliance poster",
+      category: "Training",
+      fileType: "png",
+    });
+
+    expect(TEMPLATES.find((template) => template.slug === "restaurant-closing-checklist")).toMatchObject({
+      title: "Restaurant closing checklist",
+      category: "Monitoring",
+      fileType: "xlsx",
+    });
+
+    expect(TEMPLATES.find((template) => template.slug === "restaurant-opening-checklist")).toMatchObject({
+      title: "Restaurant opening checklist",
+      category: "Monitoring",
+      fileType: "xlsx",
+    });
+
+    expect(TEMPLATES.find((template) => template.slug === "restaurant-opening-poster")).toMatchObject({
+      title: "Restaurant opening poster",
+      category: "Monitoring",
+      fileType: "png",
+    });
+
     expect(resourceEntries.map((resource) => resource.href)).toEqual(
       expect.arrayContaining([
+        "/resources/allergen-checklist-poster",
         "/resources/cooking-monitoring-log-template",
         "/resources/food-temperature-poster",
         "/resources/gmp-poster",
+        "/resources/halal-compliance-poster",
+        "/resources/kosher-compliance-poster",
+        "/resources/restaurant-closing-checklist",
+        "/resources/restaurant-opening-checklist",
+        "/resources/restaurant-opening-poster",
       ]),
     );
 
     const resourcesPage = readPage("src/app/resources/page.tsx");
     expect(resourcesPage).toContain("Free food safety templates, posters, and guides");
+  });
+
+  it("creates dedicated SEO resource pages for the new poster and restaurant assets", () => {
+    const allergenPosterPage = readPage("src/app/resources/allergen-checklist-poster/page.tsx");
+    const halalPosterPage = readPage("src/app/resources/halal-compliance-poster/page.tsx");
+    const kosherPosterPage = readPage("src/app/resources/kosher-compliance-poster/page.tsx");
+    const restaurantOpeningChecklistPage = readPage("src/app/resources/restaurant-opening-checklist/page.tsx");
+    const restaurantClosingChecklistPage = readPage("src/app/resources/restaurant-closing-checklist/page.tsx");
+    const restaurantOpeningPosterPage = readPage("src/app/resources/restaurant-opening-poster/page.tsx");
+
+    expect(allergenPosterPage).toContain("allergen-checklist-poster");
+    expect(allergenPosterPage).toContain("EU and UK");
+    expect(halalPosterPage).toContain("halal-compliance-poster");
+    expect(halalPosterPage).toContain("EU and UK");
+    expect(kosherPosterPage).toContain("kosher-compliance-poster");
+    expect(kosherPosterPage).toContain("EU and UK");
+    expect(restaurantOpeningChecklistPage).toContain("restaurant-opening-checklist");
+    expect(restaurantClosingChecklistPage).toContain("restaurant-closing-checklist");
+    expect(restaurantOpeningPosterPage).toContain("restaurant-opening-poster");
   });
 
   it("keeps the core HACCP cluster linked together", () => {
