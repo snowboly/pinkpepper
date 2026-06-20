@@ -29,6 +29,7 @@ export const TEMPLATES: TemplateEntry[] = [
   { slug: "food-safety-management-system-template", title: "Food safety management system",        category: "HACCP" },
   { slug: "product-recall-procedure-template",    title: "Product recall procedure",               category: "HACCP" },
   // Allergen
+  { slug: "allergen-checklist-poster",            title: "Allergen checklist poster",             category: "Allergen",     fileType: "png" },
   { slug: "allergen-matrix-template",             title: "Allergen matrix template",               category: "Allergen" },
   // Cleaning
   { slug: "cleaning-and-disinfection-sop",        title: "Cleaning and disinfection SOP",          category: "Cleaning" },
@@ -38,6 +39,9 @@ export const TEMPLATES: TemplateEntry[] = [
   { slug: "temperature-monitoring-log-template",  title: "Temperature monitoring log",             category: "Monitoring" },
   { slug: "food-safety-opening-and-closing-checklist", title: "Food safety opening and closing checklist", category: "Monitoring", fileType: "xlsx", storageName: "Food Safety Opening and Closing Checklist" },
   { slug: "pest-control-log-template",            title: "Pest control log",                       category: "Monitoring" },
+  { slug: "restaurant-closing-checklist",         title: "Restaurant closing checklist",           category: "Monitoring",   fileType: "xlsx" },
+  { slug: "restaurant-opening-checklist",         title: "Restaurant opening checklist",           category: "Monitoring",   fileType: "xlsx" },
+  { slug: "restaurant-opening-poster",            title: "Restaurant opening poster",              category: "Monitoring",   fileType: "png" },
   { slug: "waste-management-log-template",        title: "Waste management log",                   category: "Monitoring" },
   { slug: "waste-management-sop-template",        title: "Waste management SOP",                   category: "Monitoring" },
   // Traceability
@@ -48,6 +52,8 @@ export const TEMPLATES: TemplateEntry[] = [
   // Training
   { slug: "employee-food-safety-training-record", title: "Employee training record",               category: "Training" },
   { slug: "gmp-poster",                           title: "GMP poster",                             category: "Training",     fileType: "png" },
+  { slug: "halal-compliance-poster",              title: "Halal compliance poster",                category: "Training",     fileType: "png" },
+  { slug: "kosher-compliance-poster",             title: "Kosher compliance poster",               category: "Training",     fileType: "png" },
   { slug: "personal-hygiene-policy-template",     title: "Personal hygiene policy",                category: "Training" },
   // Goods receiving
   { slug: "incoming-goods-template",              title: "Incoming goods inspection record",       category: "Traceability" },

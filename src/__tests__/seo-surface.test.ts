@@ -387,9 +387,15 @@ describe("public SEO copy and linking", () => {
   it("keeps the sitemap aligned with the live resource library", async () => {
     const entries = (await sitemap()).map((entry) => entry.url);
 
+    expect(entries).toContain("https://pinkpepper.io/resources/allergen-checklist-poster");
     expect(entries).toContain("https://pinkpepper.io/resources/cooking-monitoring-log-template");
     expect(entries).toContain("https://pinkpepper.io/resources/food-temperature-poster");
     expect(entries).toContain("https://pinkpepper.io/resources/gmp-poster");
+    expect(entries).toContain("https://pinkpepper.io/resources/halal-compliance-poster");
+    expect(entries).toContain("https://pinkpepper.io/resources/kosher-compliance-poster");
+    expect(entries).toContain("https://pinkpepper.io/resources/restaurant-closing-checklist");
+    expect(entries).toContain("https://pinkpepper.io/resources/restaurant-opening-checklist");
+    expect(entries).toContain("https://pinkpepper.io/resources/restaurant-opening-poster");
     expect(entries).toContain("https://pinkpepper.io/resources/supplier-registration-log");
   });
 
