@@ -257,6 +257,11 @@ describe("public SEO copy and linking", () => {
     expect(contact).toContain("/features/");
     expect(resources).toContain("/features/");
     expect(chrome).toContain('"/use-cases"');
+    expect(chrome).toContain('"/methodology"');
+    expect(chrome).toContain('"/human-review"');
+    expect(chrome).toContain('"/regulations-covered"');
+    expect(chrome).not.toContain('{ href: getPublicPageHref(publicLocale, "/use-cases"), label: "Use cases" }');
+    expect(chrome).not.toContain('<li><Link href="/use-cases" className="pp-shell-link">{messages.chrome.nav.useCases}</Link></li>');
     expect(about).not.toContain("ilovehaccp.com");
     expect(about).not.toContain("Part of the iLoveHACCP family");
     expect(about).toContain("How PinkPepper is built");
