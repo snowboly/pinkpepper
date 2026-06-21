@@ -373,6 +373,8 @@ describe("public SEO copy and linking", () => {
     const resources = readPage("src/app/resources/page.tsx");
     const allergenMatrix = readPage("src/app/resources/allergen-matrix-template/page.tsx");
     const allergenFeature = readPage("src/app/features/allergen-documentation/page.tsx");
+    const supplierRegister = readPage("src/app/resources/supplier-registration-log/page.tsx");
+    const incomingGoods = readPage("src/app/resources/incoming-goods-template/page.tsx");
 
     expect(homepage).toContain("/about");
     expect(homepage).toContain("/articles/building-a-haccp-process-flow-diagram");
@@ -381,6 +383,7 @@ describe("public SEO copy and linking", () => {
 
     expect(articlesHub).toContain("/articles/building-a-haccp-process-flow-diagram");
     expect(articlesHub).toContain("/articles/allergen-documentation-requirements-for-eu-and-uk-food-businesses");
+    expect(articlesHub).toContain("/articles/supplier-approval-in-haccp-records-and-requirements");
     expect(articlesHub).toContain("/articles/how-to-import-food-into-great-britain-from-non-eu-countries");
     expect(articlesHub).toContain("/articles/how-to-export-food-from-great-britain-to-the-eu");
     expect(articlesHub).toContain("/articles/chemical-hazards-in-haccp-controls-limits-and-what-to-record");
@@ -393,6 +396,8 @@ describe("public SEO copy and linking", () => {
     expect(resources).toContain("/use-cases");
     expect(allergenMatrix).toContain("/articles/allergen-documentation-requirements-for-eu-and-uk-food-businesses");
     expect(allergenFeature).toContain("/articles/allergen-documentation-requirements-for-eu-and-uk-food-businesses");
+    expect(supplierRegister).toContain("/articles/supplier-approval-in-haccp-records-and-requirements");
+    expect(incomingGoods).toContain("/articles/supplier-approval-in-haccp-records-and-requirements");
   });
 
   it("keeps current public marketing pages fresh in the sitemap", async () => {

@@ -1,289 +1,212 @@
 ---
-title: "Supplier Approval in HACCP: What Records You Need and Why"
+title: "Supplier Approval for Food Businesses: What It Is and How to Get It Right"
 slug: "supplier-approval-in-haccp-records-and-requirements"
-excerpt: "Learn how supplier approval supports HACCP, incoming-material controls, and traceability under EU and UK food law, including practical records and emergency supplier checks."
+excerpt: "A practical guide to supplier approval for EU and UK food businesses, covering approved supplier records, specifications, incoming goods checks, traceability, emergency suppliers, and ongoing review."
 category: "Compliance"
-publishedAt: "2026-04-22"
+publishedAt: "2026-06-21"
 image: "https://images.pexels.com/photos/6169668/pexels-photo-6169668.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
 source: "pinkpepper"
 ---
 
-<p>The delivery arrives at 06:15. Your usual dried herb supplier has substituted a different origin without notice. The driver waits. Production needs the material for today's batch. The incoming goods checklist asks: "Approved supplier?" You check the approved supplier list. The name isn't there. The driver says it's the same product from their other warehouse. You waive it through. Three months later, an EHO reviews your supplier approval records during a routine inspection. They trace that delivery to your approved list. Finding: "Raw material received from unapproved supplier. No documented justification. No risk assessment." Supplier approval is not a procurement function. It is a HACCP prerequisite programme. Getting it wrong undermines every CCP that follows.</p>
+<h1>Supplier Approval for Food Businesses: What It Is and How to Get It Right</h1>
 
-<blockquote><strong>Audit Tip:</strong> Where your HACCP system or certification scheme uses an approved supplier list, auditors commonly cross-reference it against delivery records. A delivery outside the normal approval route should be handled under the site's documented exception procedure, with a proportionate risk assessment completed before use.</blockquote>
+<p>Supplier approval is not just a box to tick before you place a first order. It is the process of making sure the ingredients, packaging, and outsourced services coming into your business are safe, traceable, and consistently fit for purpose. When an inspector asks to see your supplier records or incoming goods checks, they are testing something basic: do you know where your food came from, and did you apply a proportionate check before you used it?</p>
 
-<h2>What You'll Learn</h2>
+<p>In the EU and UK, food businesses need to be able to identify the businesses that supplied them and show how incoming materials are controlled. In practice, that makes supplier approval one of the earliest and most important upstream controls in a HACCP-based system. If the supplier is weak, the hazard often reaches your site before your own team has a realistic chance to stop it.</p>
+
+<p>This is practical guidance for EU and UK food businesses, not legal advice. It explains what supplier approval looks like in real operations, what records usually matter most, and how to keep the system proportionate and usable. For the broader PinkPepper reasoning behind this kind of answer, see our <a href="/methodology">methodology</a> and the <a href="/regulations-covered">regulations covered</a> page.</p>
+
+<h2>Why supplier approval matters</h2>
+
+<p>Supplier approval matters because a large part of food safety is inherited. If you buy raw poultry, dairy, spices, sauces, packaging, or ready-made components, you are relying on someone else to control part of the risk before the product ever reaches your premises. That does not remove your responsibility. It changes how you have to manage it.</p>
+
+<p>In practical terms, supplier approval does three jobs:</p>
+
 <ul>
-<li>How supplier approval records support HACCP-based controls under Regulation (EC) 852/2004 and traceability duties under Regulation (EC) 178/2002</li>
-<li>How to evaluate GFSI certification equivalence and when additional verification is required</li>
-<li>Emergency supplier procedure that satisfies auditor scrutiny without compromising food safety</li>
+  <li><strong>It acts as an early hazard control:</strong> many microbiological, allergen, chemical, and traceability risks are easier to prevent at the supplier stage than after receipt.</li>
+  <li><strong>It supports one-step-back traceability:</strong> you need to know who supplied the food or material, what was delivered, and how that delivery links to your products.</li>
+  <li><strong>It shows that purchasing decisions are informed:</strong> price matters, but safety, consistency, and traceability must be part of the decision too.</li>
 </ul>
 
-<h2>Part 1: Regulatory Foundation</h2>
+<p>An inspector does not expect every food business to run the same supplier programme. But they do expect the business to show that suppliers have been considered in a structured way and that incoming goods are not accepted blindly.</p>
 
-<p>Regulation (EC) 852/2004 does not expressly require a document called an "approved supplier list." Article 5 instead requires food business operators to put in place, implement, and maintain procedures based on HACCP principles, with documents and records proportionate to the business. A risk-based supplier approval system is a common way to support those procedures where incoming materials can introduce hazards that later controls may not remove.</p>
+<h2>The core supplier approval records most businesses should maintain</h2>
 
-<p>Chapter IX of Annex II to Regulation (EC) 852/2004 specifically addresses provisions applicable to foodstuffs. Paragraph 3 states: "A food business operator must not accept raw materials or ingredients, other than live animals, or any other material used in processing products, if they are known to be, or might reasonably be expected to be, contaminated with parasites, pathogenic microorganisms or toxic, decomposed or foreign substances to such an extent that, even after the food business operator had hygienically applied normal sorting and/or preparatory or processing procedures, the final product would be unfit for human consumption." This creates a positive obligation to assess incoming materials before acceptance.</p>
+<p>The depth of the system should match the risk of what you buy. A small cafe buying ambient packaged goods from a national wholesaler does not need the same evidence as a manufacturer buying raw meat, dairy, or ready-to-eat ingredients from multiple processors. Even so, most businesses should be able to produce the following records quickly.</p>
 
-<p>Regulation (EC) 178/2002 Article 18 requires traceability at all stages of production, processing, and distribution. Food business operators must be able to identify any person from whom they have been supplied with a food, feed, food-producing animal, or substance intended to be incorporated into a food. This is the "one step back" traceability obligation. Supplier approval records can support that system, while delivery and transaction records provide the evidence for specific consignments.</p>
+<h3>1. Approved supplier list or supplier register</h3>
 
-<p>For UK operators, equivalent HACCP-based hygiene and traceability duties continue under the applicable domestic framework. Inspectors may examine how a business controls incoming materials and identifies its suppliers. An approved supplier list can provide useful evidence, but the legal focus is whether the operator's controls and records are effective and proportionate to the risks.</p>
+<p>This is the working document that shows who is currently approved, what they supply, and when they were last reviewed. It should not be a forgotten spreadsheet. It should be the live reference behind purchasing and receiving.</p>
 
-<h2>Part 2: Approved Supplier List — Minimum Requirements</h2>
+<p>A useful register usually shows:</p>
 
-<p>The approved supplier list is the central document of supplier control. It must be a controlled document, maintained current, and accessible to personnel making receiving decisions. A spreadsheet saved on a leaver's desktop is not an operational approved supplier list.</p>
-
-<p>Minimum content for each entry includes: supplier legal name and registered address (not only trading name), site address where product is manufactured or packed, products or material categories supplied from that site, approval status with date of initial approval and next review date, basis of approval, and any restrictions or conditions applied.</p>
-
-<p>Basis of approval is the critical field. It records <em>why</em> the supplier is approved. Options include: third-party certification to GFSI-benchmarked standard, second-party audit conducted by the purchaser, questionnaire with supporting evidence, or historical performance with certificate of analysis conformance. The basis must be appropriate to the risk of the material supplied. High-risk RTE ingredients require stronger evidence than ambient dry goods.</p>
-
-<table>
-<thead>
-<tr>
-<th>Risk Category</th>
-<th>Material Examples</th>
-<th>Minimum Approval Basis</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>High</td>
-<td>RTE dairy, cooked meats, washed produce</td>
-<td>GFSI certification or second-party audit</td>
-</tr>
-<tr>
-<td>Medium</td>
-<td>Frozen raw meat, pasteurised liquid egg</td>
-<td>Questionnaire with CoA review or certification</td>
-</tr>
-<tr>
-<td>Low</td>
-<td>Ambient dry goods, canned products</td>
-<td>Questionnaire with CoA or historical performance</td>
-</tr>
-</tbody>
-</table>
-
-<p>As a practical control, businesses should consider including suppliers of food-contact materials, cleaning chemicals, and outsourced services where these can affect food safety. The scope should follow the site's hazard analysis and contractual controls rather than assuming every service requires the same approval method.</p>
-
-<h2>Part 3: Supplier Questionnaires</h2>
-
-<p>The supplier questionnaire is the most common initial approval document. It is also the most frequently inadequate. A questionnaire that asks only "Do you have HACCP?" with a yes/no tick box provides no meaningful assurance. Auditors will reject questionnaires lacking specific, verifiable information.</p>
-
-<p>An effective questionnaire collects: site registration or approval number where applicable under Regulation (EC) 853/2004, scope and expiry date of any third-party certification with certificate number, details of HACCP team leader and qualifications, allergen management programme summary including whether site handles specific allergens of concern, pathogen environmental monitoring programme for high-risk products, and traceability test frequency.</p>
-
-<p>The questionnaire should request supporting evidence. A copy of the current third-party certificate is minimum. For high-risk materials, request the most recent audit report summary or corrective action log. A supplier unwilling to share this information presents elevated risk regardless of stated credentials.</p>
-
-<p>Questionnaires require periodic review. Annual review is standard. A questionnaire completed in 2019 provides no assurance of current practice. The approved supplier list should record questionnaire expiry and prompt renewal.</p>
-
-<h2>Part 4: Third-Party Audit Equivalence</h2>
-
-<p>GFSI-benchmarked certification standards — BRCGS Food, IFS Food, SQF, FSSC 22000 — provide a baseline of assurance. However, certification is not automatic approval. The purchaser retains responsibility for determining whether the scope of certification covers the materials supplied and whether any exclusions apply.</p>
-
-<p>Certificate verification requires checking: certifying body is accredited to ISO/IEC 17065, scope includes the product category being supplied, site address matches the supply location, certificate is current, and no exclusions are noted for relevant product safety requirements.</p>
-
-<p>BRCGS certificates include a grading system. Grade AA and A indicate full compliance at audit. Grade B indicates non-conformities requiring corrective action. Grade C indicates significant non-conformities. Purchasers should establish a policy on minimum acceptable grade. Many UK retailers require Grade A minimum for high-risk suppliers. Certificates with major non-conformities open at time of supply warrant additional scrutiny.</p>
-
-<p>Certification does not eliminate the need for ongoing verification. Certificate validity confirms the system was compliant on the audit date, which may be 11 months prior. Certificate of analysis review and incoming goods inspection remain required regardless of certification status.</p>
-
-<h2>Part 5: Certificates of Analysis</h2>
-
-<p>A certificate of analysis (CoA) or certificate of conformance (CoC) can provide batch-specific assurance. A CoA contains actual test results, while a CoC states conformance to specification without providing the data. Whether a CoA is needed for every delivery is a risk-based decision informed by the material specification, supplier performance, applicable legal limits, and the operator's verification plan.</p>
-
-<p>CoA review must verify that the results meet specification and that the testing is appropriate to the material. A CoA for RTE cooked chicken showing <em>Listeria</em> spp. tested but not <em>Listeria monocytogenes</em> is inadequate. A CoA for ground paprika showing total aflatoxin but not ochratoxin A may be incomplete depending on origin risk.</p>
-
-<p>Frequency of CoA requirement depends on risk. High-risk materials may require CoA with every delivery. Medium-risk may accept periodic CoA with reduced frequency testing. Low-risk may accept CoC with annual CoA verification. The HACCP plan should define frequency based on hazard analysis of the material.</p>
-
-<p>CoA review is a receiving CCP in many HACCP plans. The monitoring procedure must specify who reviews, what parameters are checked, and what corrective action applies when CoA is missing or shows out-of-specification results. Rejecting the load is the default corrective action. Use pending investigation is not acceptable without documented justification and traceability hold.</p>
-
-<h2>Part 6: Emergency and Unapproved Suppliers</h2>
-
-<p>Every site occasionally faces supply disruption requiring purchase from a non-approved source. The auditor expects to see a documented procedure for managing this scenario, not evidence it never occurs. A site claiming zero emergency purchases in three years invites scrutiny.</p>
-
-<p>The emergency supplier procedure must include: risk assessment completed before use, not retrospectively, specifying the material, reason standard supplier unavailable, proposed alternative source, and justification that risk is not increased. The assessment must be approved by technical management, not procurement alone.</p>
-
-<p>Additional controls for emergency use include: increased sampling and testing of the specific batch, full traceability segregation until testing clears material, enhanced incoming inspection, and formal approval review within defined period if source becomes ongoing.</p>
-
-<p>Emergency use should be time-limited. A single delivery under concession is defensible. Six months of weekly deliveries from the same "emergency" source indicates the approved list is not being maintained. The auditor will find that the procedure is being used to bypass normal approval, not to manage genuine emergencies.</p>
-
-<p>Records of emergency use must be retained with traceability to the specific batches produced. Regulation (EC) 178/2002 Article 19 requires operators to withdraw product if they have reason to believe it is not compliant with food safety requirements. Traceability records linking emergency supply to finished product are essential for effective recall.</p>
-
-<h2>Part 7: Supplier Performance Monitoring</h2>
-
-<p>Supplier approval is not a one-time event. Ongoing performance monitoring is required. The HACCP prerequisite programme must define how supplier performance is measured and what triggers review or removal from the approved list.</p>
-
-<p>Performance indicators include: CoA conformance rate, delivery note accuracy for traceability information, incoming goods inspection rejection rate, complaint or foreign body incidents traced to supplier, audit non-conformance trend where applicable, and responsiveness to corrective action requests.</p>
-
-<p>Review frequency should be defined. Annual review of all approved suppliers is minimum. High-risk suppliers may warrant quarterly review. Review includes verification that certification remains current, questionnaire renewal completed, and performance indicators within acceptable limits.</p>
-
-<p>Suppliers with declining performance require documented action. This may include increased inspection frequency, request for corrective action plan, or suspension pending audit. Suppliers removed from the approved list must be flagged to procurement with effective controls preventing future purchase. Reinstatement requires documented corrective action verification.</p>
-
-<table>
-<thead>
-<tr>
-<th>Performance Issue</th>
-<th>Required Action</th>
-<th>Documentation</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Single CoA out-of-spec</td>
-<td>Reject load, request investigation</td>
-<td>Rejection record, supplier response</td>
-</tr>
-<tr>
-<td>Repeated CoA failures</td>
-<td>Suspend approval, require corrective action plan</td>
-<td>Suspension notice, CAPA review</td>
-</tr>
-<tr>
-<td>Certification expired</td>
-<td>Suspend until renewed</td>
-<td>Updated certificate before reinstatement</td>
-</tr>
-<tr>
-<td>Traceability failure</td>
-<td>Immediate suspension</td>
-<td>Investigation report, evidence of correction</td>
-</tr>
-</tbody>
-</table>
-
-<h2>Part 8: Traceability Integration</h2>
-
-<p>Supplier approval and traceability are linked obligations. Regulation (EC) 178/2002 Article 18 requires operators to have systems in place to identify suppliers. The approved supplier list is the index for that system. Delivery records provide the transaction-level traceability.</p>
-
-<p>Traceability information required at receipt includes: supplier name and address, product description and lot or batch code, quantity, and date of receipt. This information must be retained and linked to finished product batches. Regulation (EC) 178/2002 does not prescribe a fixed retention period; retention should be proportionate to the shelf-life of the product and the reasonable foreseeable period during which a recall or investigation could arise.</p>
-
-<p>Traceability testing under Article 18 requires demonstration that the system can make information available to competent authorities without undue delay. The test should include a forward trace from raw material to finished product and backward trace from finished product to all raw materials and suppliers. Many third-party certification schemes such as BRCGS set their own benchmark timeframes for traceability exercises, but these are scheme requirements, not statutory obligations.</p>
-
-<p>Supplier approval records are examined during traceability tests. The auditor will select a finished product batch, trace to raw material lots, then verify that each supplier appears on the approved list at the date of supply. A supplier not on the list at the date of supply is a finding regardless of current approval status.</p>
-
-<h2>Part 9: Outsourced Processing and Subcontractors</h2>
-
-<p>Outsourced processing presents specific approval requirements. Where part of production is subcontracted — off-site freezing, contract packing, third-party storage — the subcontractor is a supplier for HACCP purposes and requires approval.</p>
-
-<p>Approval of subcontractors must address: whether the site requires approval under Regulation (EC) 853/2004, HACCP controls for the specific process outsourced, segregation and traceability during subcontract operation, and transport conditions between sites.</p>
-
-<p>The contractual relationship does not transfer food safety responsibility. The brand owner or manufacturer placing product on the market retains responsibility for ensuring all stages of production meet food safety requirements. Approval of subcontractors must be equivalent to direct supplier approval.</p>
-
-<p>Audit of subcontractors is often more critical than audit of raw material suppliers because the subcontractor is handling the operator's product. A second-party audit of critical subcontractors is standard industry practice. Reliance solely on third-party certification without site visit may be challenged for high-risk processes.</p>
-
-<h2>Part 10: Documentation and Record Retention</h2>
-
-<p>Supplier approval documentation must be organised and retrievable. The auditor will request the supplier approval file for a specific material. Inability to produce records within reasonable time suggests the system is not maintained.</p>
-
-<p>Required records include: approved supplier list current and historical versions, supplier questionnaires with supporting evidence, certificates of analysis for received batches, third-party certificates with verification of currency, performance review records, emergency use concessions with risk assessments, and records of any supplier audits conducted.</p>
-
-<p>Retention periods should be proportionate to the nature of the material and the foreseeable period during which a recall or enforcement investigation could arise. As a practical guide: approved supplier list versions — permanent or duration of supply relationship plus a risk-proportionate period; supplier questionnaires and certificates — duration of approval plus a suitable period to evidence historic status; CoA and delivery records — retained to cover the shelf-life of products produced plus a reasonable further period; emergency use concessions — retained for the foreseeable investigation horizon; audit reports — duration of approval plus three years. Third-party certification schemes such as BRCGS and IFS prescribe their own minimum retention periods, which operators subject to those schemes must also meet.</p>
-
-<p>Electronic systems are acceptable provided they maintain version control and prevent unauthorised amendment. An uncontrolled spreadsheet is not a compliant system. Audit trails showing who approved supplier additions or changes are required.</p>
-
-<h2>Part 11: Common Audit Findings</h2>
-
-<table>
-<thead>
-<tr>
-<th>Audit Finding</th>
-<th>Root Cause</th>
-<th>Prevention</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Supplier not on approved list at date of supply</td>
-<td>List not maintained; procurement bypasses approval</td>
-<td>Integrate approval with purchase ordering system</td>
-</tr>
-<tr>
-<td>Expired third-party certificate</td>
-<td>No certificate expiry tracking</td>
-<td>Certificate register with expiry alerts</td>
-</tr>
-<tr>
-<td>Questionnaire incomplete or outdated</td>
-<td>Annual review not conducted</td>
-<td>Scheduled review cycle with documented follow-up</td>
-</tr>
-<tr>
-<td>Emergency use without documented risk assessment</td>
-<td>No procedure or procedure ignored under pressure</td>
-<td>Simple concession form; technical sign-off required before use</td>
-</tr>
-<tr>
-<td>CoA not reviewed before use</td>
-<td>CoA arrives after material used</td>
-<td>Require CoA with delivery; positive release for high-risk materials</td>
-</tr>
-</tbody>
-</table>
-
-<h2>Part 12: Quick Reference — Supplier Approval by Material Risk</h2>
-
-<table>
-<thead>
-<tr>
-<th>Material Type</th>
-<th>Approval Basis</th>
-<th>CoA Frequency</th>
-<th>Audit Requirement</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>RTE high-risk ingredients</td>
-<td>GFSI certified + questionnaire</td>
-<td>Every delivery</td>
-<td>Second-party audit if high volume</td>
-</tr>
-<tr>
-<td>Raw meat/poultry</td>
-<td>853/2004 approval + questionnaire</td>
-<td>Periodic CoA + incoming inspection</td>
-<td>Certification or audit based on risk</td>
-</tr>
-<tr>
-<td>Ambient dry goods</td>
-<td>Questionnaire + CoA verification</td>
-<td>Annual CoA</td>
-<td>Not routinely required</td>
-</tr>
-<tr>
-<td>Food contact packaging</td>
-<td>Declaration of compliance + questionnaire</td>
-<td>CoC per delivery; migration test per specification</td>
-<td>Certification for high-risk applications</td>
-</tr>
-<tr>
-<td>Cleaning chemicals</td>
-<td>Specification + food-safe certification</td>
-<td>CoC per delivery</td>
-<td>Not routinely required</td>
-</tr>
-</tbody>
-</table>
-
-<h2>Key Takeaways</h2>
-
-<ol>
-<li>Regulation (EC) 852/2004 requires effective HACCP-based procedures and proportionate records; a controlled supplier approval system is a common way to manage risks introduced through incoming materials.</li>
-<li>Basis of approval must be appropriate to material risk. GFSI certification provides assurance but does not eliminate need for CoA review and ongoing performance monitoring.</li>
-<li>CoA review and positive release should be defined according to material risk, supplier performance, legal limits, and the site's verification plan.</li>
-<li>Emergency use of unapproved suppliers requires documented risk assessment approved by technical management <em>before</em> material use, not retrospective justification.</li>
-<li>Supplier approval records can support traceability under Regulation (EC) 178/2002, but delivery and transaction records are needed to identify the source of specific consignments. Article 18 does not prescribe a fixed retention period.</li>
-<li>Where an approved supplier list forms part of the site's documented system, deliveries outside that route should follow a defined, risk-based exception procedure.</li>
-</ol>
-
-<h2>Primary legal sources</h2>
 <ul>
-<li><a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02004R0852-20210324" rel="noopener noreferrer">Regulation (EC) No 852/2004</a> — see Article 5 and Annex II, Chapter IX.</li>
-<li><a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02002R0178-20240701" rel="noopener noreferrer">Regulation (EC) No 178/2002</a> — see Article 18 on traceability.</li>
+  <li>supplier name and contact details</li>
+  <li>what products, ingredients, or services they supply</li>
+  <li>approval status, such as approved, conditional, pending review, or blocked</li>
+  <li>initial approval date and next review date</li>
+  <li>key evidence held, such as specifications, questionnaire, certification, or audit</li>
 </ul>
 
-<h2>Put this into practice</h2>
+<p>The <a href="/resources/supplier-registration-log">supplier registration log</a> is the simplest way to make that visible without building the structure from scratch.</p>
+
+<h3>2. Product specifications and supplier information</h3>
+
+<p>For ingredients and food-contact materials, you need enough information to know what you are buying and what standards you expect it to meet. A useful specification or supplier information pack may include:</p>
+
 <ul>
-<li><a href="/resources/supplier-approval-questionnaire">Use the supplier approval questionnaire</a> to collect and review risk-relevant evidence.</li>
-<li><a href="/resources/supplier-registration-log">Maintain a supplier registration log</a> that receiving and technical teams can use consistently.</li>
-<li><a href="/resources/incoming-goods-template">Record incoming-goods checks</a> against the approved specification and acceptance criteria.</li>
+  <li>product name and description</li>
+  <li>ingredient or compositional information where relevant</li>
+  <li>allergen information</li>
+  <li>storage conditions and shelf-life details</li>
+  <li>packaging format and unit size</li>
+  <li>country of origin where relevant to the control decision</li>
 </ul>
+
+<p>Without this information, receiving staff and technical staff have nothing objective to check deliveries against. The issue is not paperwork for its own sake. It is whether the business knows what acceptable supply looks like.</p>
+
+<h3>3. Initial approval evidence</h3>
+
+<p>Before a supplier is approved, there should be some documented basis for the decision. The level of detail depends on risk, but there should be a visible reason why this supplier was accepted.</p>
+
+<p>That evidence may include:</p>
+
+<ul>
+  <li>a completed questionnaire or due-diligence form</li>
+  <li>copies of relevant third-party certification</li>
+  <li>competent-authority registration or approval evidence where relevant</li>
+  <li>a short documented rationale explaining why the approval route was considered proportionate</li>
+</ul>
+
+<p>If you need a structured starting point, the <a href="/resources/supplier-approval-questionnaire">supplier approval questionnaire</a> helps turn that decision into a repeatable process rather than a memory-based call.</p>
+
+<h3>4. Incoming goods checks</h3>
+
+<p>Supplier approval is not finished once the supplier is added to a list. It continues every time goods arrive. Incoming checks are your ongoing confirmation that the supplier is still delivering what you approved.</p>
+
+<p>For many businesses, an incoming goods record should capture:</p>
+
+<ul>
+  <li>date, supplier, product, and batch or lot details</li>
+  <li>condition of packaging and transport</li>
+  <li>temperature for chilled or frozen deliveries where relevant</li>
+  <li>shelf-life or date-code check</li>
+  <li>accept, reject, or quarantine decision</li>
+  <li>notes on any non-conformance or escalation</li>
+</ul>
+
+<p>The <a href="/resources/incoming-goods-template">incoming goods template</a> is useful here because it connects receiving checks directly to supplier approval and traceability rather than treating them as separate records.</p>
+
+<h3>5. Traceability links back to the supplier</h3>
+
+<p>Supplier approval and traceability are inseparable. Your records should make it possible to follow an ingredient from the finished product back to the approved supplier and the specific delivery or batch that entered the site.</p>
+
+<p>In practice, that usually means keeping:</p>
+
+<ul>
+  <li>delivery notes or invoices with batch references where available</li>
+  <li>incoming goods records tied to those deliveries</li>
+  <li>production or usage records that show which batches were used where needed</li>
+</ul>
+
+<p>The <a href="/resources/traceability-log-template">traceability log template</a> is the practical companion to the supplier file because it proves that the supplier record is connected to the food you actually sold or produced.</p>
+
+<h2>What higher-risk or more complex businesses may need in addition</h2>
+
+<p>For higher-risk, multi-site, or manufacturing operations, supplier approval usually needs more depth than a register, a questionnaire, and routine goods-in checks.</p>
+
+<h3>Supplier audits or stronger external verification</h3>
+
+<p>Where ingredients carry a higher microbiological, allergen, or authenticity risk, the business may decide that a questionnaire is not enough on its own. That can lead to direct supplier audits, second-party visits, stronger certificate review, or a more formal approval panel process. The point is not to create bureaucracy. It is to match the evidence to the risk.</p>
+
+<h3>Certificates of analysis or conformance where they matter</h3>
+
+<p>Some supply chains rely on batch-level evidence such as certificates of analysis or conformance. If you use those documents as part of the acceptance decision, they should be retained with the incoming goods file or clearly cross-referenced to it. Otherwise the acceptance logic becomes impossible to reconstruct later.</p>
+
+<h3>Outsourced processing, storage, or transport controls</h3>
+
+<p>Supplier approval should not stop with ingredient vendors. If another business stores, transports, packs, freezes, labels, or otherwise handles your food, their controls can affect your risk profile directly. Those outsourced providers need a proportionate approval route too.</p>
+
+<h3>Performance trending and repeated non-conformance review</h3>
+
+<p>Higher-risk businesses often need more than isolated rejection records. They need to see patterns. If one supplier repeatedly arrives warm, mislabels allergens, or delivers with damaged packaging, that should affect approval status. The issue is not just that one delivery was poor. It is that repeated failure changes the risk of continuing to buy.</p>
+
+<h2>Common supplier approval mistakes</h2>
+
+<h3>Approving on price alone</h3>
+
+<p>Cost matters, but supplier approval that is driven only by price is not really supplier approval. If the file shows no safety, traceability, or reliability logic behind the decision, the business has not demonstrated control.</p>
+
+<h3>Keeping outdated specifications or expired evidence</h3>
+
+<p>Old supplier paperwork gives false confidence. A specification from years ago, an expired certificate, or a stale questionnaire may say more about process drift than supplier strength. Reviews need to happen often enough that the information still means something.</p>
+
+<h3>Not treating incoming checks as part of approval</h3>
+
+<p>A strong approved supplier list means little if staff sign for every delivery without looking at temperature, dates, labels, or condition. Ongoing verification happens at receipt. If that step is weak, the whole supplier approval system becomes decorative.</p>
+
+<h3>Treating all suppliers as the same level of risk</h3>
+
+<p>A supplier of ambient packaging does not need the same control route as a supplier of raw shellfish or ready-to-eat chilled components. A proportionate system should show that risk was considered and that higher-risk suppliers face deeper checks.</p>
+
+<h3>No route for temporary or emergency suppliers</h3>
+
+<p>Most businesses will eventually face a short-notice purchase from a replacement supplier. That does not have to break the system, but it does need a defined route. There should be a documented way to assess limited-use suppliers before the goods are used, and a clear decision about whether they remain temporary, become approved, or are blocked after the immediate issue passes.</p>
+
+<h3>Ignoring complaints and non-conformances once the supplier is on the list</h3>
+
+<p>Supplier approval should connect to real-world performance. If customer complaints, internal failures, or receiving problems never feed back into the approval file, the system is not learning from the data it already has. The <a href="/resources/customer-complaint-log-template">customer complaint log</a> and corrective-action records should inform whether the supplier remains trusted.</p>
+
+<h2>How to keep supplier approval usable</h2>
+
+<p>Supplier approval becomes ineffective when it is handled as a folder for audits rather than a working part of purchasing and receiving. The goal is a system that the business can actually maintain.</p>
+
+<h3>Match the evidence to the risk</h3>
+
+<p>Not every supplier needs the same evidence package. The right question is not “what is the biggest file we can build?” It is “what evidence gives us justified confidence for this category of supply?” A proportionate answer is easier to maintain and easier to defend.</p>
+
+<h3>Make approval a gate before purchasing</h3>
+
+<p>If buyers can place first orders before technical or operational approval happens, the process has already failed. The approval route should sit inside the purchasing flow, not beside it.</p>
+
+<h3>Set review dates and act on them</h3>
+
+<p>A register without active review dates quickly becomes historical. Reviews should confirm that the supplier is still supplying the same risk profile, the information is current, and recent performance still supports approval.</p>
+
+<h3>Connect complaints, rejections, and supplier status</h3>
+
+<p>If a supplier starts generating repeat complaints, repeated receiving failures, or traceability problems, their status should move. Supplier approval should not live in isolation from what is happening on the floor or in customer feedback.</p>
+
+<h3>Keep the information accessible at goods-in</h3>
+
+<p>Receiving staff need quick access to the criteria they are checking. If the standards, specifications, or approval conditions are hidden in an office or scattered across email threads, the check becomes guesswork.</p>
+
+<h3>Use digital tools if the system is fragmenting</h3>
+
+<p>Once supplier data is spread across spreadsheets, inboxes, PDFs, and paper folders, the process starts to decay. Digital systems help centralise review dates, evidence, specifications, and receiving outcomes so the approval decision stays connected to daily operations. That is where platforms like PinkPepper start to reduce friction rather than add another admin layer. See <a href="/pricing">pricing</a> if you want to compare how that fits your setup.</p>
+
+<h2>Conclusion</h2>
+
+<p>Supplier approval is an ongoing control, not a one-time decision. It starts when you decide who to buy from, continues every time goods arrive, and should keep adapting as supplier performance, product risk, or business complexity changes.</p>
+
+<p>The practical standard is consistent across the EU and UK: know who your suppliers are, document why they were accepted, check that deliveries match the standard you approved, and keep the records that make traceability and review possible. The exact level of paperwork should reflect the risk. What matters is that the logic is real, proportionate, and visible when someone asks to see it.</p>
+
+<h2>Frequently asked questions</h2>
+
+<h3>Do all food businesses need an approved supplier list?</h3>
+<p>Most food businesses need some documented way to show who their suppliers are, what they supply, and whether they have been assessed. An approved supplier list is usually the clearest and most practical format, even if the business is small.</p>
+
+<h3>Can I use a supplier before they are fully approved?</h3>
+<p>That should only happen through a documented temporary or emergency route. If you need short-notice supply, the business should still complete a proportionate risk check and record why the goods were accepted.</p>
+
+<h3>How often should supplier records be reviewed?</h3>
+<p>There is no single timetable that fits every business. Annual review is a common baseline, with more frequent attention for higher-risk suppliers or suppliers with poor recent performance. The important point is that the timing is defined and followed.</p>
+
+<h3>Is certification enough on its own to approve a supplier?</h3>
+<p>Not always. Certification can be useful evidence, but it does not replace the need to understand what the supplier provides, how that fits your risk profile, and how deliveries perform in practice.</p>
+
+<h3>What if a supplier repeatedly fails receiving checks?</h3>
+<p>Record the non-conformances, escalate with the supplier, and reassess approval status. If the pattern continues, the business should be able to show why the supplier remained approved or why they were moved to conditional or blocked status.</p>
+
+<h3>Why is supplier approval linked so closely to traceability?</h3>
+<p>Because traceability only works if you can identify the source behind the ingredient or material. Supplier approval records establish who that source is, while receiving and batch records show what actually entered your site.</p>

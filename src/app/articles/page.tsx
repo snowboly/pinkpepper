@@ -159,6 +159,17 @@ const clusterLinks = [
     ],
   },
   {
+    title: "Supplier control and traceability",
+    description:
+      "Use this cluster when the main challenge is approving suppliers properly, checking incoming goods, and keeping the supply chain traceable under pressure.",
+    links: [
+      { href: "/articles/supplier-approval-in-haccp-records-and-requirements", label: "Supplier approval" },
+      { href: "/resources/supplier-registration-log", label: "Supplier register" },
+      { href: "/resources/incoming-goods-template", label: "Incoming goods checks" },
+      { href: "/resources/traceability-log-template", label: "Traceability log template" },
+    ],
+  },
+  {
     title: "Industry-specific workflows",
     description:
       "When the operating model matters more than the generic principle, move into the use-case pages first.",

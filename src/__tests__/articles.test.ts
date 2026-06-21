@@ -150,6 +150,30 @@ describe("allergen documentation article", () => {
   });
 });
 
+describe("supplier approval article", () => {
+  it("publishes a practical supplier approval guide with the planned record and trust links", async () => {
+    const slug = "supplier-approval-in-haccp-records-and-requirements";
+    const manifest = await getArticleManifest();
+    const article = await getArticleBySlug(slug);
+
+    expect(manifest.some((item) => item.slug === slug)).toBe(true);
+    expect(article).not.toBeNull();
+    expect(article?.category).toBe("Compliance");
+    expect(article?.publishedAt).toBe("2026-06-21");
+    expect(article?.image).toContain("images.pexels.com");
+    expect(article?.body).toContain("EU and UK food businesses");
+    expect(article?.body).toContain("/resources/supplier-registration-log");
+    expect(article?.body).toContain("/resources/incoming-goods-template");
+    expect(article?.body).toContain("/resources/traceability-log-template");
+    expect(article?.body).toContain("/resources/customer-complaint-log-template");
+    expect(article?.body).toContain("/methodology");
+    expect(article?.body).toContain("/regulations-covered");
+    expect(article?.body).toContain("/pricing");
+    expect(article?.body).not.toContain("Part 1: Regulatory Foundation");
+    expect(article?.body).not.toContain("â€”");
+  });
+});
+
 describe("article content processing", () => {
   it("normalizes rich article html for editorial rendering", () => {
     const result = processArticleContent(
