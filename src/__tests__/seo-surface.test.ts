@@ -542,6 +542,20 @@ describe("public SEO copy and linking", () => {
     expect(articlesHub).toContain("/articles/what-documents-does-a-food-hygiene-inspector-ask-for-first-uk");
   });
 
+  it("keeps the hazard-analysis article tied to templates, trust pages, and the CCP follow-on path", () => {
+    const hazardGuide = readPage("content/articles/how-to-perform-a-hazard-analysis-correctly.md");
+
+    expect(hazardGuide).toContain('href="/resources/hazard-analysis-template"');
+    expect(hazardGuide).toContain('href="/resources/haccp-plan-template"');
+    expect(hazardGuide).toContain('href="/methodology"');
+    expect(hazardGuide).toContain('href="/regulations-covered"');
+    expect(hazardGuide).toContain('href="/pricing"');
+    expect(hazardGuide).toContain('href="/articles/identifying-critical-control-points-in-food-safety"');
+    expect(hazardGuide).toContain('href="/signup"');
+    expect(hazardGuide).not.toContain("one-time box-ticking exercise");
+    expect(hazardGuide).not.toContain("without a look at the binder");
+  });
+
   it("deprioritizes weak imported articles without removing stronger article pages from indexing", async () => {
     const weakerImported = await generateArticleMetadata("haccp-for-meal-prep-services-eu", "en");
     const strongerImported = await generateArticleMetadata("identifying-critical-control-points-in-food-safety", "en");
