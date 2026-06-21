@@ -8,6 +8,11 @@ import { getPublicPageHref } from "@/lib/public-routes";
 
 const featuredGuides = [
   {
+    href: "/articles/allergen-documentation-requirements-for-eu-and-uk-food-businesses",
+    title: "Allergen documentation requirements for EU and UK food businesses",
+    description: "A practical guide to the records, matrices, recipe controls, and staff processes that make allergen information reliable.",
+  },
+  {
     href: "/articles/how-to-import-food-into-great-britain-from-non-eu-countries",
     title: "How to import food into Great Britain from non-EU countries",
     description: "A step-by-step import workflow covering classification, IPAFFS, border controls, customs, and post-import checks.",
@@ -141,6 +146,16 @@ const clusterLinks = [
       { href: "/resources/temperature-monitoring-log-template", label: "Temperature logs" },
       { href: "/resources/corrective-action-log-template", label: "Corrective actions" },
       { href: "/articles/what-documents-does-a-food-hygiene-inspector-ask-for-first-uk", label: "Inspection-ready records" },
+    ],
+  },
+  {
+    title: "Allergen control and documentation",
+    description:
+      "Use these pages when the main risk is keeping ingredient information, matrices, labels, and staff answers aligned.",
+    links: [
+      { href: "/articles/allergen-documentation-requirements-for-eu-and-uk-food-businesses", label: "Allergen documentation" },
+      { href: "/articles/natasha-law-haccp-ppds-allergen-obligations", label: "PPDS and Natasha's Law" },
+      { href: "/resources/allergen-matrix-template", label: "Allergen matrix template" },
     ],
   },
   {
