@@ -556,6 +556,21 @@ describe("public SEO copy and linking", () => {
     expect(hazardGuide).not.toContain("without a look at the binder");
   });
 
+  it("keeps the temperature-control article tied to monitoring templates, trust pages, and the hazard-analysis path", () => {
+    const temperatureGuide = readPage("content/articles/temperature-control-in-haccp-limits-and-monitoring.md");
+
+    expect(temperatureGuide).toContain('href="/resources/temperature-monitoring-log-template"');
+    expect(temperatureGuide).toContain('href="/resources/equipment-calibration-log-template"');
+    expect(temperatureGuide).toContain('href="/resources/cooking-monitoring-log-template"');
+    expect(temperatureGuide).toContain('href="/methodology"');
+    expect(temperatureGuide).toContain('href="/regulations-covered"');
+    expect(temperatureGuide).toContain('href="/pricing"');
+    expect(temperatureGuide).toContain('href="/articles/how-to-perform-a-hazard-analysis-correctly"');
+    expect(temperatureGuide).toContain('href="/signup"');
+    expect(temperatureGuide).not.toContain("common practice is a minimum of twice daily");
+    expect(temperatureGuide).not.toContain("weekly or more frequently in high-use environments");
+  });
+
   it("deprioritizes weak imported articles without removing stronger article pages from indexing", async () => {
     const weakerImported = await generateArticleMetadata("haccp-for-meal-prep-services-eu", "en");
     const strongerImported = await generateArticleMetadata("identifying-critical-control-points-in-food-safety", "en");
