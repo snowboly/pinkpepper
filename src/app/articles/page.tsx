@@ -43,9 +43,9 @@ const featuredGuides = [
     description: "The recurring weaknesses we see when plans are over-generic, outdated, or unsupported by records.",
   },
   {
-    href: "/articles/what-regulators-really-expect-from-small-food-businesses",
-    title: "What regulators really expect from small food businesses",
-    description: "A more realistic view of what inspectors and auditors look for beyond generic paperwork advice.",
+    href: "/articles/what-documents-does-a-food-hygiene-inspector-ask-for-first-uk",
+    title: "What documents a food hygiene inspector asks for first",
+    description: "A practical inspection-readiness guide covering the records inspectors usually want first and the gaps that cause problems.",
   },
   {
     href: "/articles/haccp-vs-brcgs-vs-ifs",
@@ -103,6 +103,12 @@ const workflowLinks = [
     description:
       "Jump into restaurant, cafe, catering, and manufacturing workflows instead of treating every business like the same HACCP problem.",
   },
+  {
+    href: "/articles/what-documents-does-a-food-hygiene-inspector-ask-for-first-uk",
+    title: "See the inspection-readiness guide",
+    description:
+      "Review the documents inspectors usually ask for first before you tighten logs, templates, or daily checks.",
+  },
 ];
 
 const clusterLinks = [
@@ -134,6 +140,7 @@ const clusterLinks = [
       { href: "/articles/cooling-and-reheating-haccp-high-risk-steps", label: "Cooling and reheating" },
       { href: "/resources/temperature-monitoring-log-template", label: "Temperature logs" },
       { href: "/resources/corrective-action-log-template", label: "Corrective actions" },
+      { href: "/articles/what-documents-does-a-food-hygiene-inspector-ask-for-first-uk", label: "Inspection-ready records" },
     ],
   },
   {

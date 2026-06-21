@@ -524,6 +524,24 @@ describe("public SEO copy and linking", () => {
     expect(exportGuide).not.toContain("https://www.gov.uk/guidance/importing-organic-food-to-the-uk");
   });
 
+  it("keeps the UK inspection-readiness article tied to records, trust pages, and key commercial paths", () => {
+    const inspectionGuide = readPage("content/articles/what-documents-does-a-food-hygiene-inspector-ask-for-first-uk.md");
+    const about = readPage("src/app/about/page.tsx");
+    const pricing = readPage("src/app/pricing/page.tsx");
+    const articlesHub = readPage("src/app/articles/page.tsx");
+
+    expect(inspectionGuide).toContain('href="/resources/food-safety-document-checklist"');
+    expect(inspectionGuide).toContain('href="/resources/temperature-monitoring-log-template"');
+    expect(inspectionGuide).toContain('href="/resources/traceability-log-template"');
+    expect(inspectionGuide).toContain('href="/methodology"');
+    expect(inspectionGuide).toContain('href="/human-review"');
+    expect(inspectionGuide).toContain('href="/pricing"');
+
+    expect(about).toContain("/articles/what-documents-does-a-food-hygiene-inspector-ask-for-first-uk");
+    expect(pricing).toContain("/articles/what-documents-does-a-food-hygiene-inspector-ask-for-first-uk");
+    expect(articlesHub).toContain("/articles/what-documents-does-a-food-hygiene-inspector-ask-for-first-uk");
+  });
+
   it("deprioritizes weak imported articles without removing stronger article pages from indexing", async () => {
     const weakerImported = await generateArticleMetadata("haccp-for-meal-prep-services-eu", "en");
     const strongerImported = await generateArticleMetadata("identifying-critical-control-points-in-food-safety", "en");

@@ -39,9 +39,9 @@ const corePages = [
     description: "Use the strongest templates first if you need structure before a custom draft.",
   },
   {
-    href: "/articles",
-    title: "Food safety articles",
-    description: "Browse practical guidance on HACCP, allergen management, audits, and operational compliance.",
+    href: "/articles/what-documents-does-a-food-hygiene-inspector-ask-for-first-uk",
+    title: "Inspection-readiness guide",
+    description: "Read the practical guide to the records inspectors usually ask for first and how teams should keep them ready.",
   },
 ];
 
