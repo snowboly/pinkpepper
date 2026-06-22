@@ -205,6 +205,7 @@ describe("SEO surface", () => {
     expect(entries).toContain("https://pinkpepper.io/methodology");
     expect(entries).toContain("https://pinkpepper.io/human-review");
     expect(entries).toContain("https://pinkpepper.io/regulations-covered");
+    expect(entries).toContain("https://pinkpepper.io/compare/haccp-software-alternatives");
     expect(entries).toContain("https://pinkpepper.io/compare/pinkpepper-vs-consultant");
     expect(entries).toContain("https://pinkpepper.io/use-cases/restaurants");
     expect(entries).toContain("https://pinkpepper.io/articles/identifying-critical-control-points-in-food-safety");
@@ -508,18 +509,29 @@ describe("public SEO copy and linking", () => {
     expect(payload.urlList).not.toContain("https://pinkpepper.io/legal/refund");
   });
 
-  it("keeps the compare entry live while the generic compare route still redirects", () => {
+  it("keeps both compare pages live while the top-level compare route still redirects", () => {
     const nextConfig = readPage("next.config.ts");
+    const alternativesPage = readPage("src/app/compare/haccp-software-alternatives/page.tsx");
     const comparePage = readPage("src/app/compare/pinkpepper-vs-consultant/page.tsx");
     const regulationsPage = readPage("src/app/regulations-covered/page.tsx");
+    const pricing = readPage("src/app/pricing/page.tsx");
+    const humanReview = readPage("src/app/human-review/page.tsx");
 
     expect(nextConfig).toContain('{ source: "/compare", destination: "/pricing", permanent: true }');
-    expect(nextConfig).toContain('{ source: "/compare/haccp-software-alternatives", destination: "/pricing", permanent: true }');
+    expect(nextConfig).not.toContain('{ source: "/compare/haccp-software-alternatives", destination: "/pricing", permanent: true }');
     expect(nextConfig).not.toContain("/compare/pinkpepper-vs-consultant\", destination: \"/pricing\"");
 
+    expect(alternativesPage).toContain('href="/pricing"');
+    expect(alternativesPage).toContain('href="/methodology"');
+    expect(alternativesPage).toContain('href="/human-review"');
+    expect(alternativesPage).toContain('href="/regulations-covered"');
+    expect(alternativesPage).toContain('href="/resources"');
+    expect(alternativesPage).toContain('href="/features/haccp-plan-generator"');
     expect(comparePage).toContain('href="/pricing"');
     expect(comparePage).toContain('href="/regulations-covered"');
     expect(comparePage).toContain('href="/about"');
+    expect(pricing).toContain("/compare/haccp-software-alternatives");
+    expect(humanReview).toContain("/compare/haccp-software-alternatives");
 
     expect(regulationsPage).toContain("/articles/how-to-import-food-into-great-britain-from-non-eu-countries");
     expect(regulationsPage).toContain("/articles/how-to-export-food-from-great-britain-to-the-eu");

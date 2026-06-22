@@ -53,6 +53,11 @@ const nextLinks = [
     description: "Use methodology first if you want to understand how PinkPepper forms answers before you decide when to escalate.",
   },
   {
+    href: "/compare/haccp-software-alternatives",
+    title: "Compare HACCP software alternatives",
+    description: "Use the alternatives page if you are deciding between generic tools, template libraries, and food-specific compliance software.",
+  },
+  {
     href: "/compare/pinkpepper-vs-consultant",
     title: "Compare PinkPepper vs consultant",
     description: "Use the comparison page if you want the boundary explained in a more commercial decision-making format.",
