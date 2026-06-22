@@ -276,7 +276,7 @@ describe("public SEO copy and linking", () => {
 
     expect(articleDetail).toContain("pp-article-hero-meta");
     expect(articleDetail).toContain("text-4xl font-bold leading-[1.05]");
-    expect(articleDetail).toContain("text-lg leading-8");
+    expect(articleDetail).toContain("text-xl leading-9");
     expect(articleDetail).toContain("https://pinkpepper.io/articles/${slug}");
     expect(articleDetail).toContain("https://pinkpepper.io/${locale}/articles/${slug}");
     expect(articleDetail).not.toContain("https://www.pinkpepper.io/articles");
@@ -293,14 +293,23 @@ describe("public SEO copy and linking", () => {
     expect(markup).toContain('href="/articles"');
   });
 
-  it("expands scoped article-body typography without touching dashboard markdown", () => {
+  it("uses larger article reading sizes and pair-based related-link grids", () => {
     const articleDetail = readPage("src/app/articles/[slug]/page.tsx");
     const globals = readPage("src/app/globals.css");
+    const resourceTemplate = readPage("src/components/site/ResourceTemplate.tsx");
+    const featureTemplate = readPage("src/components/site/FeatureTemplate.tsx");
 
     expect(articleDetail).toContain("pp-article-body");
+    expect(articleDetail).toContain("text-base font-semibold text-[#64748B]");
+    expect(articleDetail).toContain("mt-10 grid gap-6 md:grid-cols-2");
+    expect(articleDetail).toContain("mt-3 text-base leading-8 text-[#475569]");
+    expect(resourceTemplate).toContain("mt-8 grid gap-4 md:grid-cols-2");
+    expect(featureTemplate).toContain("mt-8 grid gap-5 md:grid-cols-2");
     expect(globals).toContain(".pp-article-body h2");
+    expect(globals).toContain("font-size: 1.0625rem;");
     expect(globals).toContain(".pp-article-body strong");
     expect(globals).toContain("font-weight: 700");
+    expect(globals).toContain("font-size: 1.125rem;");
     expect(globals).toContain(".pp-article-body ul {");
     expect(globals).toContain("list-style-type: disc;");
     expect(globals).toContain(".pp-article-body ol {");

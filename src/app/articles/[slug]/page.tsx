@@ -2,7 +2,12 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getArticleBySlug, getArticleManifest, getAvailableArticleLocales } from "@/lib/articles";
+import {
+  getArticleBySlug,
+  getArticleManifest,
+  getAvailableArticleLocales,
+  isArticlePreferredForIndexing,
+} from "@/lib/articles";
 import { getCspNonce } from "@/lib/security/csp";
 import { processArticleContent } from "@/lib/article-content";
 import { type PublicLocale } from "@/i18n/public";
@@ -10,6 +15,60 @@ import { type PublicLocale } from "@/i18n/public";
 type ArticlePageProps = {
   params: Promise<{ slug: string }>;
   locale?: PublicLocale;
+};
+
+const articleUiCopy: Record<
+  PublicLocale,
+  {
+    home: string;
+    articles: string;
+    relatedEyebrow: string;
+    relatedTitle: string;
+    relatedBody: string;
+    readNext: string;
+    backToHub: string;
+  }
+> = {
+  en: {
+    home: "Home",
+    articles: "Articles",
+    relatedEyebrow: "Related reading",
+    relatedTitle: "Keep building the same cluster",
+    relatedBody:
+      "Continue into related HACCP, audit, and operational compliance topics instead of dropping back to the archive.",
+    readNext: "Read next",
+    backToHub: "Back to the full article hub",
+  },
+  de: {
+    home: "Startseite",
+    articles: "Artikel",
+    relatedEyebrow: "Weitere Artikel",
+    relatedTitle: "Das Thema gezielt vertiefen",
+    relatedBody:
+      "Lesen Sie passende Beiträge zu HACCP, Audits und betrieblichen Kontrollen weiter.",
+    readNext: "Weiterlesen",
+    backToHub: "Zurück zur Artikelübersicht",
+  },
+  fr: {
+    home: "Accueil",
+    articles: "Articles",
+    relatedEyebrow: "Articles associés",
+    relatedTitle: "Approfondir ce sujet",
+    relatedBody:
+      "Poursuivez avec des articles liés au système HACCP, aux audits et aux contrôles opérationnels.",
+    readNext: "Lire la suite",
+    backToHub: "Retour à tous les articles",
+  },
+  pt: {
+    home: "Início",
+    articles: "Artigos",
+    relatedEyebrow: "Leitura relacionada",
+    relatedTitle: "Aprofundar este tema",
+    relatedBody:
+      "Continue com artigos relacionados sobre HACCP, auditorias e controlos operacionais.",
+    readNext: "Ler a seguir",
+    backToHub: "Voltar a todos os artigos",
+  },
 };
 
 export async function generateStaticParams() {
@@ -44,6 +103,7 @@ export async function generateArticleMetadata(slug: string, locale: PublicLocale
   return {
     title: `${article.title} | PinkPepper`,
     description: article.excerpt,
+    robots: isArticlePreferredForIndexing(article) ? undefined : { index: false, follow: true },
     alternates: {
       canonical: url,
       languages: await buildArticleLanguageAlternates(article.slug),
@@ -71,6 +131,7 @@ export default async function ArticleDetailPage({ params, locale = "en" }: Artic
   const article = await getArticleBySlug(slug, { locale });
   const articleManifest = await getArticleManifest({ locale });
   const nonce = await getCspNonce();
+  const copy = articleUiCopy[locale];
 
   if (!article) {
     notFound();
@@ -80,7 +141,9 @@ export default async function ArticleDetailPage({ params, locale = "en" }: Artic
   const relatedArticles = [
     ...articleManifest.filter((candidate) => candidate.slug !== article.slug && candidate.category === article.category),
     ...articleManifest.filter((candidate) => candidate.slug !== article.slug && candidate.category !== article.category),
-  ].slice(0, 3);
+  ]
+    .filter(isArticlePreferredForIndexing)
+    .slice(0, 3);
 
   const articleSchema = {
     "@context": "https://schema.org",
@@ -113,8 +176,8 @@ export default async function ArticleDetailPage({ params, locale = "en" }: Artic
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: "https://pinkpepper.io" },
-      { "@type": "ListItem", position: 2, name: "Articles", item: locale === "en" ? "https://pinkpepper.io/articles" : `https://pinkpepper.io/${locale}/articles` },
+      { "@type": "ListItem", position: 1, name: copy.home, item: "https://pinkpepper.io" },
+      { "@type": "ListItem", position: 2, name: copy.articles, item: locale === "en" ? "https://pinkpepper.io/articles" : `https://pinkpepper.io/${locale}/articles` },
       { "@type": "ListItem", position: 3, name: article.title, item: getArticleUrl(article.slug, locale) },
     ],
   };
@@ -130,8 +193,8 @@ export default async function ArticleDetailPage({ params, locale = "en" }: Artic
             <h1 className="pp-display mt-4 text-4xl font-bold leading-[1.05] tracking-tight text-[#0F172A] md:text-6xl">
               {article.title}
             </h1>
-            <p className="mt-5 text-sm font-semibold text-[#64748B]">{article.publishedAt}</p>
-            <p className="mt-6 max-w-3xl text-lg leading-8 text-[#475569]">{article.excerpt}</p>
+            <p className="mt-5 text-base font-semibold text-[#64748B]">{article.publishedAt}</p>
+            <p className="mt-6 max-w-3xl text-xl leading-9 text-[#475569]">{article.excerpt}</p>
           </div>
           {article.image ? (
             <figure className="mt-10 overflow-hidden rounded-[30px] border border-[#E2E8F0] bg-white shadow-[0_24px_80px_rgba(15,23,42,0.08)]">
@@ -157,14 +220,13 @@ export default async function ArticleDetailPage({ params, locale = "en" }: Artic
         <section className="border-t border-[#F1F5F9] bg-[#F8FAFC] py-16">
           <div className="pp-container max-w-5xl">
             <div className="max-w-2xl">
-              <p className="text-[11px] font-black uppercase tracking-[0.22em] text-[#E11D48]">Related reading</p>
-              <h2 className="mt-3 text-3xl font-bold tracking-tight text-[#0F172A]">Keep building the same cluster</h2>
+              <p className="text-[11px] font-black uppercase tracking-[0.22em] text-[#E11D48]">{copy.relatedEyebrow}</p>
+              <h2 className="mt-3 text-3xl font-bold tracking-tight text-[#0F172A]">{copy.relatedTitle}</h2>
               <p className="mt-4 text-base leading-7 text-[#475569]">
-                Continue into related HACCP, audit, and operational compliance topics instead of dropping back to the
-                archive.
+                {copy.relatedBody}
               </p>
             </div>
-            <div className="mt-10 grid gap-6 md:grid-cols-3">
+            <div className="mt-10 grid gap-6 md:grid-cols-2">
               {relatedArticles.map((candidate) => (
                 <article
                   key={candidate.slug}
@@ -176,13 +238,13 @@ export default async function ArticleDetailPage({ params, locale = "en" }: Artic
                       {candidate.title}
                     </Link>
                   </h3>
-                  <p className="mt-3 text-sm leading-7 text-[#475569]">{candidate.excerpt}</p>
+                  <p className="mt-3 text-base leading-8 text-[#475569]">{candidate.excerpt}</p>
                   <div className="mt-5 border-t border-[#F1F5F9] pt-4">
                     <Link
                       href={locale === "en" ? `/articles/${candidate.slug}` : `/${locale}/articles/${candidate.slug}`}
                       className="inline-flex items-center gap-2 rounded-full border border-[#E2E8F0] px-4 py-2 text-sm font-semibold text-[#0F172A] transition-colors hover:border-[#FDA4AF] hover:text-[#BE123C]"
                     >
-                      <span>Read next</span>
+                      <span>{copy.readNext}</span>
                       <span aria-hidden="true">+</span>
                     </Link>
                   </div>
@@ -191,7 +253,7 @@ export default async function ArticleDetailPage({ params, locale = "en" }: Artic
             </div>
             <div className="mt-8">
               <Link href={locale === "en" ? "/articles" : `/${locale}/articles`} className="text-sm font-semibold text-[#BE123C] hover:text-[#9F1239]">
-                Back to the full article hub
+                {copy.backToHub}
               </Link>
             </div>
           </div>
