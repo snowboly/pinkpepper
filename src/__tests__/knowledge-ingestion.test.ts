@@ -1,5 +1,8 @@
 import { describe, expect, it, vi } from "vitest";
-import { replaceKnowledgeChunksForSource } from "@/lib/rag/knowledge-ingestion";
+import {
+  activateVersionedKnowledgeChunks,
+  replaceKnowledgeChunksForSource,
+} from "@/lib/rag/knowledge-ingestion";
 
 describe("replaceKnowledgeChunksForSource", () => {
   it("uses a single atomic rpc replacement call", async () => {
@@ -64,5 +67,77 @@ describe("replaceKnowledgeChunksForSource", () => {
         }
       )
     ).rejects.toThrow("Database replace failed: duplicate key value violates unique constraint");
+  });
+});
+
+describe("activateVersionedKnowledgeChunks", () => {
+  it("inserts new chunks before archiving older active chunks for the same source key", async () => {
+    const rpcMock = vi.fn().mockResolvedValue({ error: null });
+
+    await activateVersionedKnowledgeChunks(
+      { rpc: rpcMock } as never,
+      {
+        sourceKey: "eu:celex:32004R0852",
+        versionKey: "eu:celex:02004R0852-20210324",
+        rows: [
+          {
+            content: "Updated hygiene article",
+            embedding: "[0,1]",
+            source_type: "regulation",
+            source_name: "Regulation (EC) No 852/2004",
+            section_ref: "Article 5",
+            metadata: { jurisdiction: "eu", source_class: "primary_law" },
+          },
+        ],
+      }
+    );
+
+    expect(rpcMock).toHaveBeenCalledOnce();
+    expect(rpcMock).toHaveBeenCalledWith("activate_versioned_knowledge_chunks", {
+      p_source_key: "eu:celex:32004R0852",
+      p_version_key: "eu:celex:02004R0852-20210324",
+      p_rows: [
+        {
+          content: "Updated hygiene article",
+          embedding: "[0,1]",
+          source_type: "regulation",
+          source_name: "Regulation (EC) No 852/2004",
+          section_ref: "Article 5",
+          metadata: {
+            jurisdiction: "eu",
+            source_class: "primary_law",
+            retrieval_status: "active",
+            source_key: "eu:celex:32004R0852",
+            version_key: "eu:celex:02004R0852-20210324",
+          },
+        },
+      ],
+    });
+  });
+
+  it("throws before archiving current chunks when versioned activation fails", async () => {
+    const rpcMock = vi.fn().mockResolvedValue({
+      error: { message: "insert failed" },
+    });
+
+    await expect(
+      activateVersionedKnowledgeChunks(
+        { rpc: rpcMock } as never,
+        {
+          sourceKey: "eu:celex:32004R0852",
+          versionKey: "eu:celex:02004R0852-20210324",
+          rows: [
+            {
+              content: "Updated hygiene article",
+              embedding: "[0,1]",
+              source_type: "regulation",
+              source_name: "Regulation (EC) No 852/2004",
+              section_ref: "Article 5",
+              metadata: { jurisdiction: "eu", source_class: "primary_law" },
+            },
+          ],
+        }
+      )
+    ).rejects.toThrow("Database version activation failed: insert failed");
   });
 });

@@ -41,8 +41,7 @@ export async function FeatureTemplate({
     "@type": "BreadcrumbList",
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "Home", item: "https://pinkpepper.io" },
-      { "@type": "ListItem", position: 2, name: "Features", item: "https://pinkpepper.io/features" },
-      { "@type": "ListItem", position: 3, name: breadcrumbName, item: breadcrumbUrl },
+      { "@type": "ListItem", position: 2, name: breadcrumbName, item: breadcrumbUrl },
     ],
   } : null;
 

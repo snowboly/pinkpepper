@@ -304,3 +304,9 @@ source: "ilovehaccp"
 </ol>
 
 <p>By embedding allergen management systematically within your HACCP plan and supporting PRPs, you not only satisfy auditor expectations—you protect your customers and your business from the most common cause of food recalls in the industry today.</p>
+<h2>Primary legal sources</h2>
+<ul>
+  <li><a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32021R0382" rel="noopener noreferrer">Commission Regulation (EU) 2021/382</a> — introduces allergen-management requirements into the food-hygiene framework.</li>
+  <li><a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02011R1169-20180101" rel="noopener noreferrer">Regulation (EU) No 1169/2011</a> — see the allergen information requirements and Annex II.</li>
+  <li><a href="/resources/allergen-matrix-template">Use the allergen matrix template</a> to connect ingredient information, cross-contact controls, and customer communication.</li>
+</ul>
