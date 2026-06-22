@@ -358,8 +358,8 @@ export default async function ArticleDetailPage({ params, locale = "en" }: Artic
             <h1 className="pp-display mt-4 text-4xl font-bold leading-[1.05] tracking-tight text-[#0F172A] md:text-6xl">
               {article.title}
             </h1>
-            <p className="mt-5 text-sm font-semibold text-[#64748B]">{article.publishedAt}</p>
-            <p className="mt-6 max-w-3xl text-lg leading-8 text-[#475569]">{article.excerpt}</p>
+            <p className="mt-5 text-base font-semibold text-[#64748B]">{article.publishedAt}</p>
+            <p className="mt-6 max-w-3xl text-xl leading-9 text-[#475569]">{article.excerpt}</p>
           </div>
           {article.image ? (
             <figure className="mt-10 overflow-hidden rounded-[30px] border border-[#E2E8F0] bg-white shadow-[0_24px_80px_rgba(15,23,42,0.08)]">
@@ -391,7 +391,7 @@ export default async function ArticleDetailPage({ params, locale = "en" }: Artic
                 {copy.bridgeBody}
               </p>
             </div>
-            <div className="mt-10 grid gap-6 md:grid-cols-3">
+            <div className="mt-10 grid gap-6 md:grid-cols-2">
               {bridgeLinks.map((link) => (
                 <Link
                   key={link.href}
@@ -399,7 +399,7 @@ export default async function ArticleDetailPage({ params, locale = "en" }: Artic
                   className="rounded-[1.75rem] border border-[#FED7AA] bg-white p-6 shadow-[0_18px_50px_rgba(15,23,42,0.05)] transition-all hover:-translate-y-0.5 hover:border-[#FDBA74] hover:shadow-[0_24px_70px_rgba(15,23,42,0.08)]"
                 >
                   <p className="text-lg font-semibold leading-tight text-[#0F172A]">{link.title}</p>
-                  <p className="mt-3 text-sm leading-7 text-[#475569]">{link.description}</p>
+                  <p className="mt-3 text-base leading-8 text-[#475569]">{link.description}</p>
                 </Link>
               ))}
             </div>
@@ -417,7 +417,7 @@ export default async function ArticleDetailPage({ params, locale = "en" }: Artic
                 {copy.relatedBody}
               </p>
             </div>
-            <div className="mt-10 grid gap-6 md:grid-cols-3">
+            <div className="mt-10 grid gap-6 md:grid-cols-2">
               {relatedArticles.map((candidate) => (
                 <article
                   key={candidate.slug}
@@ -429,7 +429,7 @@ export default async function ArticleDetailPage({ params, locale = "en" }: Artic
                       {candidate.title}
                     </Link>
                   </h3>
-                  <p className="mt-3 text-sm leading-7 text-[#475569]">{candidate.excerpt}</p>
+                  <p className="mt-3 text-base leading-8 text-[#475569]">{candidate.excerpt}</p>
                   <div className="mt-5 border-t border-[#F1F5F9] pt-4">
                     <Link
                       href={locale === "en" ? `/articles/${candidate.slug}` : `/${locale}/articles/${candidate.slug}`}

@@ -165,7 +165,7 @@ export function ResourceTemplate({
       <section className="bg-white py-16">
         <div className="pp-container max-w-4xl">
           <h2 className="text-2xl font-semibold text-[#0F172A]">Related resources</h2>
-          <div className="mt-8 grid gap-4 md:grid-cols-3">
+          <div className="mt-8 grid gap-4 md:grid-cols-2">
             {relatedLinks.map((link) => (
               <Link
                 key={link.href}

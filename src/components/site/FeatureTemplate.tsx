@@ -131,7 +131,7 @@ export async function FeatureTemplate({
               <h2 className="mt-3 text-3xl font-semibold text-[#0F172A]">Continue your evaluation</h2>
             </div>
           </div>
-          <div className="mt-8 grid gap-5 md:grid-cols-3">
+          <div className="mt-8 grid gap-5 md:grid-cols-2">
             {relatedLinks.map((link) => (
               <Link
                 key={link.href}
@@ -139,7 +139,7 @@ export async function FeatureTemplate({
                 className="rounded-2xl border border-[#E2E8F0] bg-white p-6 transition-all hover:-translate-y-0.5 hover:border-[#CBD5E1] hover:shadow-lg hover:shadow-black/[0.04]"
               >
                 <p className="text-lg font-semibold text-[#0F172A]">{link.label}</p>
-                <p className="mt-3 text-sm leading-relaxed text-[#475569]">{link.description}</p>
+                <p className="mt-3 text-base leading-7 text-[#475569]">{link.description}</p>
               </Link>
             ))}
           </div>
