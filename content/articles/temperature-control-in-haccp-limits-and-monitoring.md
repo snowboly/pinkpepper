@@ -8,8 +8,6 @@ image: "https://images.pexels.com/photos/6004155/pexels-photo-6004155.jpeg?auto=
 source: "pinkpepper"
 ---
 
-<h1>Temperature Control in HACCP: Safe Limits, Monitoring, and What to Record</h1>
-
 <p>Temperature control is one of the most visible parts of any HACCP system because it sits directly inside the steps where food safety can drift fast. It is also one of the easiest areas to get wrong when limits, targets, monitoring methods, and corrective actions are not clearly separated.</p>
 
 <p>Within HACCP, temperature is not a hazard on its own. It is a control measure used to manage hazards such as pathogen survival, pathogen growth, and in some cases toxin formation. That is why inspectors and auditors often go straight to temperature records. They want proof that the controls written into the HACCP system were actually working on the day.</p>

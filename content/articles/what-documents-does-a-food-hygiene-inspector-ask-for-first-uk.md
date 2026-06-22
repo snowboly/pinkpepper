@@ -8,8 +8,6 @@ image: "https://images.pexels.com/photos/8477052/pexels-photo-8477052.jpeg?auto=
 source: "pinkpepper"
 ---
 
-<h1>What Documents Does a Food Hygiene Inspector Ask for First in the UK?</h1>
-
 <p>If you run a food business in the UK, the question is rarely whether an inspection will happen. It is when, and whether your records are ready when the inspector starts asking for them. In practice, most food hygiene inspections begin with the documents that show whether your food safety controls are real, current, and used in day-to-day operations.</p>
 
 <p>The short answer is this: inspectors usually want to see your food safety management system first, then the working records that prove it is being followed. That often means HACCP-based documentation, temperature checks, cleaning records, allergen information, staff training evidence, and traceability records. The exact order varies by business type, risk, and inspector, but the pattern is predictable enough that you should treat these as your inspection-ready core.</p>

@@ -8,8 +8,6 @@ image: "https://images.pexels.com/photos/5953835/pexels-photo-5953835.jpeg?auto=
 source: "pinkpepper"
 ---
 
-<h1>Allergen Documentation Requirements for EU and UK Food Businesses</h1>
-
 <p>If you run a food business in the EU or UK, allergen documentation is not optional paperwork. It is the record of how you protect customers from a known and potentially severe hazard. When an inspector asks to see your allergen records, they are not checking a formality. They are checking whether the business actually knows what allergens are present, how that information reaches the customer, and what controls exist to stop cross-contact or misinformation.</p>
 
 <p>In practice, most businesses need a core set of allergen documents covering ingredients, recipes, product or menu declarations, customer communication, cross-contact controls, and staff training. Higher-risk or more complex operations often need more than that, especially where PPDS, manufacturing, or multi-site control is involved.</p>

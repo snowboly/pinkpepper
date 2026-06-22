@@ -8,8 +8,6 @@ image: "https://images.pexels.com/photos/6169668/pexels-photo-6169668.jpeg?auto=
 source: "pinkpepper"
 ---
 
-<h1>Supplier Approval for Food Businesses: What It Is and How to Get It Right</h1>
-
 <p>Supplier approval is not just a box to tick before you place a first order. It is the process of making sure the ingredients, packaging, and outsourced services coming into your business are safe, traceable, and consistently fit for purpose. When an inspector asks to see your supplier records or incoming goods checks, they are testing something basic: do you know where your food came from, and did you apply a proportionate check before you used it?</p>
 
 <p>In the EU and UK, food businesses need to be able to identify the businesses that supplied them and show how incoming materials are controlled. In practice, that makes supplier approval one of the earliest and most important upstream controls in a HACCP-based system. If the supplier is weak, the hazard often reaches your site before your own team has a realistic chance to stop it.</p>

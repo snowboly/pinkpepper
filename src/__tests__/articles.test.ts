@@ -174,6 +174,24 @@ describe("supplier approval article", () => {
   });
 });
 
+describe("refreshed phase 2 article bodies", () => {
+  it("do not ship duplicate body-level H1 headings", async () => {
+    const slugs = [
+      "what-documents-does-a-food-hygiene-inspector-ask-for-first-uk",
+      "how-to-perform-a-hazard-analysis-correctly",
+      "temperature-control-in-haccp-limits-and-monitoring",
+      "allergen-documentation-requirements-for-eu-and-uk-food-businesses",
+      "supplier-approval-in-haccp-records-and-requirements",
+    ];
+
+    for (const slug of slugs) {
+      const article = await getArticleBySlug(slug);
+      expect(article).not.toBeNull();
+      expect(article?.body).not.toContain("<h1>");
+    }
+  });
+});
+
 describe("article content processing", () => {
   it("normalizes rich article html for editorial rendering", () => {
     const result = processArticleContent(
