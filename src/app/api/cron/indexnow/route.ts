@@ -21,6 +21,7 @@ const USE_CASE_PATHS = [
 
 const STATIC_PATHS = [
   "/about",
+  "/compare/haccp-software-alternatives",
   "/compare/pinkpepper-vs-consultant",
   "/human-review",
   "/methodology",

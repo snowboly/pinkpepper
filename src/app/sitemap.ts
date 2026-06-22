@@ -25,6 +25,7 @@ const phase2ContentPaths = [
   "/human-review",
   "/methodology",
   "/regulations-covered",
+  "/compare/haccp-software-alternatives",
   "/compare/pinkpepper-vs-consultant",
 ] as const;
 

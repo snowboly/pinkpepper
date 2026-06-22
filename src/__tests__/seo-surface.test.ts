@@ -205,6 +205,7 @@ describe("SEO surface", () => {
     expect(entries).toContain("https://pinkpepper.io/methodology");
     expect(entries).toContain("https://pinkpepper.io/human-review");
     expect(entries).toContain("https://pinkpepper.io/regulations-covered");
+    expect(entries).toContain("https://pinkpepper.io/compare/haccp-software-alternatives");
     expect(entries).toContain("https://pinkpepper.io/compare/pinkpepper-vs-consultant");
     expect(entries).toContain("https://pinkpepper.io/use-cases/restaurants");
     expect(entries).toContain("https://pinkpepper.io/articles/identifying-critical-control-points-in-food-safety");
@@ -371,6 +372,10 @@ describe("public SEO copy and linking", () => {
     const homepage = readPage("src/app/page.tsx");
     const articlesHub = readPage("src/app/articles/page.tsx");
     const resources = readPage("src/app/resources/page.tsx");
+    const allergenMatrix = readPage("src/app/resources/allergen-matrix-template/page.tsx");
+    const allergenFeature = readPage("src/app/features/allergen-documentation/page.tsx");
+    const supplierRegister = readPage("src/app/resources/supplier-registration-log/page.tsx");
+    const incomingGoods = readPage("src/app/resources/incoming-goods-template/page.tsx");
 
     expect(homepage).toContain("/about");
     expect(homepage).toContain("/articles/building-a-haccp-process-flow-diagram");
@@ -378,6 +383,8 @@ describe("public SEO copy and linking", () => {
     expect(homepage).toContain("/use-cases");
 
     expect(articlesHub).toContain("/articles/building-a-haccp-process-flow-diagram");
+    expect(articlesHub).toContain("/articles/allergen-documentation-requirements-for-eu-and-uk-food-businesses");
+    expect(articlesHub).toContain("/articles/supplier-approval-in-haccp-records-and-requirements");
     expect(articlesHub).toContain("/articles/how-to-import-food-into-great-britain-from-non-eu-countries");
     expect(articlesHub).toContain("/articles/how-to-export-food-from-great-britain-to-the-eu");
     expect(articlesHub).toContain("/articles/chemical-hazards-in-haccp-controls-limits-and-what-to-record");
@@ -388,6 +395,10 @@ describe("public SEO copy and linking", () => {
     expect(articlesHub).toContain("/use-cases/food-manufacturing");
 
     expect(resources).toContain("/use-cases");
+    expect(allergenMatrix).toContain("/articles/allergen-documentation-requirements-for-eu-and-uk-food-businesses");
+    expect(allergenFeature).toContain("/articles/allergen-documentation-requirements-for-eu-and-uk-food-businesses");
+    expect(supplierRegister).toContain("/articles/supplier-approval-in-haccp-records-and-requirements");
+    expect(incomingGoods).toContain("/articles/supplier-approval-in-haccp-records-and-requirements");
   });
 
   it("keeps current public marketing pages fresh in the sitemap", async () => {
@@ -498,18 +509,29 @@ describe("public SEO copy and linking", () => {
     expect(payload.urlList).not.toContain("https://pinkpepper.io/legal/refund");
   });
 
-  it("keeps the compare entry live while the generic compare route still redirects", () => {
+  it("keeps both compare pages live while the top-level compare route still redirects", () => {
     const nextConfig = readPage("next.config.ts");
+    const alternativesPage = readPage("src/app/compare/haccp-software-alternatives/page.tsx");
     const comparePage = readPage("src/app/compare/pinkpepper-vs-consultant/page.tsx");
     const regulationsPage = readPage("src/app/regulations-covered/page.tsx");
+    const pricing = readPage("src/app/pricing/page.tsx");
+    const humanReview = readPage("src/app/human-review/page.tsx");
 
     expect(nextConfig).toContain('{ source: "/compare", destination: "/pricing", permanent: true }');
-    expect(nextConfig).toContain('{ source: "/compare/haccp-software-alternatives", destination: "/pricing", permanent: true }');
+    expect(nextConfig).not.toContain('{ source: "/compare/haccp-software-alternatives", destination: "/pricing", permanent: true }');
     expect(nextConfig).not.toContain("/compare/pinkpepper-vs-consultant\", destination: \"/pricing\"");
 
+    expect(alternativesPage).toContain('href="/pricing"');
+    expect(alternativesPage).toContain('href="/methodology"');
+    expect(alternativesPage).toContain('href="/human-review"');
+    expect(alternativesPage).toContain('href="/regulations-covered"');
+    expect(alternativesPage).toContain('href="/resources"');
+    expect(alternativesPage).toContain('href="/features/haccp-plan-generator"');
     expect(comparePage).toContain('href="/pricing"');
     expect(comparePage).toContain('href="/regulations-covered"');
     expect(comparePage).toContain('href="/about"');
+    expect(pricing).toContain("/compare/haccp-software-alternatives");
+    expect(humanReview).toContain("/compare/haccp-software-alternatives");
 
     expect(regulationsPage).toContain("/articles/how-to-import-food-into-great-britain-from-non-eu-countries");
     expect(regulationsPage).toContain("/articles/how-to-export-food-from-great-britain-to-the-eu");
@@ -522,6 +544,53 @@ describe("public SEO copy and linking", () => {
     expect(exportGuide).toContain("https://www.gov.uk/guidance/exporting-organic-food-from-the-uk");
     expect(exportGuide).not.toContain("https://www.gov.uk/guidance/importing-or-moving-fish-to-the-uk");
     expect(exportGuide).not.toContain("https://www.gov.uk/guidance/importing-organic-food-to-the-uk");
+  });
+
+  it("keeps the UK inspection-readiness article tied to records, trust pages, and key commercial paths", () => {
+    const inspectionGuide = readPage("content/articles/what-documents-does-a-food-hygiene-inspector-ask-for-first-uk.md");
+    const about = readPage("src/app/about/page.tsx");
+    const pricing = readPage("src/app/pricing/page.tsx");
+    const articlesHub = readPage("src/app/articles/page.tsx");
+
+    expect(inspectionGuide).toContain('href="/resources/food-safety-document-checklist"');
+    expect(inspectionGuide).toContain('href="/resources/temperature-monitoring-log-template"');
+    expect(inspectionGuide).toContain('href="/resources/traceability-log-template"');
+    expect(inspectionGuide).toContain('href="/methodology"');
+    expect(inspectionGuide).toContain('href="/human-review"');
+    expect(inspectionGuide).toContain('href="/pricing"');
+
+    expect(about).toContain("/articles/what-documents-does-a-food-hygiene-inspector-ask-for-first-uk");
+    expect(pricing).toContain("/articles/what-documents-does-a-food-hygiene-inspector-ask-for-first-uk");
+    expect(articlesHub).toContain("/articles/what-documents-does-a-food-hygiene-inspector-ask-for-first-uk");
+  });
+
+  it("keeps the hazard-analysis article tied to templates, trust pages, and the CCP follow-on path", () => {
+    const hazardGuide = readPage("content/articles/how-to-perform-a-hazard-analysis-correctly.md");
+
+    expect(hazardGuide).toContain('href="/resources/hazard-analysis-template"');
+    expect(hazardGuide).toContain('href="/resources/haccp-plan-template"');
+    expect(hazardGuide).toContain('href="/methodology"');
+    expect(hazardGuide).toContain('href="/regulations-covered"');
+    expect(hazardGuide).toContain('href="/pricing"');
+    expect(hazardGuide).toContain('href="/articles/identifying-critical-control-points-in-food-safety"');
+    expect(hazardGuide).toContain('href="/signup"');
+    expect(hazardGuide).not.toContain("one-time box-ticking exercise");
+    expect(hazardGuide).not.toContain("without a look at the binder");
+  });
+
+  it("keeps the temperature-control article tied to monitoring templates, trust pages, and the hazard-analysis path", () => {
+    const temperatureGuide = readPage("content/articles/temperature-control-in-haccp-limits-and-monitoring.md");
+
+    expect(temperatureGuide).toContain('href="/resources/temperature-monitoring-log-template"');
+    expect(temperatureGuide).toContain('href="/resources/equipment-calibration-log-template"');
+    expect(temperatureGuide).toContain('href="/resources/cooking-monitoring-log-template"');
+    expect(temperatureGuide).toContain('href="/methodology"');
+    expect(temperatureGuide).toContain('href="/regulations-covered"');
+    expect(temperatureGuide).toContain('href="/pricing"');
+    expect(temperatureGuide).toContain('href="/articles/how-to-perform-a-hazard-analysis-correctly"');
+    expect(temperatureGuide).toContain('href="/signup"');
+    expect(temperatureGuide).not.toContain("common practice is a minimum of twice daily");
+    expect(temperatureGuide).not.toContain("weekly or more frequently in high-use environments");
   });
 
   it("deprioritizes weak imported articles without removing stronger article pages from indexing", async () => {

@@ -8,6 +8,11 @@ import { getPublicPageHref } from "@/lib/public-routes";
 
 const featuredGuides = [
   {
+    href: "/articles/allergen-documentation-requirements-for-eu-and-uk-food-businesses",
+    title: "Allergen documentation requirements for EU and UK food businesses",
+    description: "A practical guide to the records, matrices, recipe controls, and staff processes that make allergen information reliable.",
+  },
+  {
     href: "/articles/how-to-import-food-into-great-britain-from-non-eu-countries",
     title: "How to import food into Great Britain from non-EU countries",
     description: "A step-by-step import workflow covering classification, IPAFFS, border controls, customs, and post-import checks.",
@@ -43,9 +48,9 @@ const featuredGuides = [
     description: "The recurring weaknesses we see when plans are over-generic, outdated, or unsupported by records.",
   },
   {
-    href: "/articles/what-regulators-really-expect-from-small-food-businesses",
-    title: "What regulators really expect from small food businesses",
-    description: "A more realistic view of what inspectors and auditors look for beyond generic paperwork advice.",
+    href: "/articles/what-documents-does-a-food-hygiene-inspector-ask-for-first-uk",
+    title: "What documents a food hygiene inspector asks for first",
+    description: "A practical inspection-readiness guide covering the records inspectors usually want first and the gaps that cause problems.",
   },
   {
     href: "/articles/haccp-vs-brcgs-vs-ifs",
@@ -103,6 +108,12 @@ const workflowLinks = [
     description:
       "Jump into restaurant, cafe, catering, and manufacturing workflows instead of treating every business like the same HACCP problem.",
   },
+  {
+    href: "/articles/what-documents-does-a-food-hygiene-inspector-ask-for-first-uk",
+    title: "See the inspection-readiness guide",
+    description:
+      "Review the documents inspectors usually ask for first before you tighten logs, templates, or daily checks.",
+  },
 ];
 
 const clusterLinks = [
@@ -134,6 +145,28 @@ const clusterLinks = [
       { href: "/articles/cooling-and-reheating-haccp-high-risk-steps", label: "Cooling and reheating" },
       { href: "/resources/temperature-monitoring-log-template", label: "Temperature logs" },
       { href: "/resources/corrective-action-log-template", label: "Corrective actions" },
+      { href: "/articles/what-documents-does-a-food-hygiene-inspector-ask-for-first-uk", label: "Inspection-ready records" },
+    ],
+  },
+  {
+    title: "Allergen control and documentation",
+    description:
+      "Use these pages when the main risk is keeping ingredient information, matrices, labels, and staff answers aligned.",
+    links: [
+      { href: "/articles/allergen-documentation-requirements-for-eu-and-uk-food-businesses", label: "Allergen documentation" },
+      { href: "/articles/natasha-law-haccp-ppds-allergen-obligations", label: "PPDS and Natasha's Law" },
+      { href: "/resources/allergen-matrix-template", label: "Allergen matrix template" },
+    ],
+  },
+  {
+    title: "Supplier control and traceability",
+    description:
+      "Use this cluster when the main challenge is approving suppliers properly, checking incoming goods, and keeping the supply chain traceable under pressure.",
+    links: [
+      { href: "/articles/supplier-approval-in-haccp-records-and-requirements", label: "Supplier approval" },
+      { href: "/resources/supplier-registration-log", label: "Supplier register" },
+      { href: "/resources/incoming-goods-template", label: "Incoming goods checks" },
+      { href: "/resources/traceability-log-template", label: "Traceability log template" },
     ],
   },
   {

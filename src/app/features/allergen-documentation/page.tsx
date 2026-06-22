@@ -178,9 +178,9 @@ export default function AllergenDocumentationPage() {
           <div className="mt-10 grid gap-6 md:grid-cols-3">
             {[
               {
-                href: "/features/haccp-plan-generator",
-                label: "HACCP plan generator",
-                description: "Connect allergen controls to broader hazard analysis and monitoring workflows.",
+                href: "/articles/allergen-documentation-requirements-for-eu-and-uk-food-businesses",
+                label: "Allergen documentation requirements",
+                description: "Read the practical guide to the records, matrices, training, and change-control logic behind allergen compliance.",
               },
               {
                 href: "/features/food-safety-sop-generator",

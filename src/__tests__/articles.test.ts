@@ -125,6 +125,73 @@ describe("Great Britain food import guide", () => {
   });
 });
 
+describe("allergen documentation article", () => {
+  it("publishes a practical EU and UK allergen records guide with the planned trust and resource links", async () => {
+    const slug = "allergen-documentation-requirements-for-eu-and-uk-food-businesses";
+    const manifest = await getArticleManifest();
+    const article = await getArticleBySlug(slug);
+
+    expect(manifest.some((item) => item.slug === slug)).toBe(true);
+    expect(article).not.toBeNull();
+    expect(article?.category).toBe("Compliance");
+    expect(article?.publishedAt).toBe("2026-06-21");
+    expect(article?.image).toContain("images.pexels.com");
+    expect(article?.body).toContain("EU and UK food businesses");
+    expect(article?.body).toContain("/resources/allergen-matrix-template");
+    expect(article?.body).toContain("/resources/food-safety-document-checklist");
+    expect(article?.body).toContain("/resources/employee-food-safety-training-record");
+    expect(article?.body).toContain("/resources/cleaning-and-disinfection-sop");
+    expect(article?.body).toContain("/methodology");
+    expect(article?.body).toContain("/regulations-covered");
+    expect(article?.body).toContain("/pricing");
+    expect(article?.body).toContain("/signup");
+    expect(article?.body).toContain("/articles/natasha-law-haccp-ppds-allergen-obligations");
+    expect(article?.body).not.toContain("the chef knows what's in everything");
+  });
+});
+
+describe("supplier approval article", () => {
+  it("publishes a practical supplier approval guide with the planned record and trust links", async () => {
+    const slug = "supplier-approval-in-haccp-records-and-requirements";
+    const manifest = await getArticleManifest();
+    const article = await getArticleBySlug(slug);
+
+    expect(manifest.some((item) => item.slug === slug)).toBe(true);
+    expect(article).not.toBeNull();
+    expect(article?.category).toBe("Compliance");
+    expect(article?.publishedAt).toBe("2026-06-21");
+    expect(article?.image).toContain("images.pexels.com");
+    expect(article?.body).toContain("EU and UK food businesses");
+    expect(article?.body).toContain("/resources/supplier-registration-log");
+    expect(article?.body).toContain("/resources/incoming-goods-template");
+    expect(article?.body).toContain("/resources/traceability-log-template");
+    expect(article?.body).toContain("/resources/customer-complaint-log-template");
+    expect(article?.body).toContain("/methodology");
+    expect(article?.body).toContain("/regulations-covered");
+    expect(article?.body).toContain("/pricing");
+    expect(article?.body).not.toContain("Part 1: Regulatory Foundation");
+    expect(article?.body).not.toContain("â€”");
+  });
+});
+
+describe("refreshed phase 2 article bodies", () => {
+  it("do not ship duplicate body-level H1 headings", async () => {
+    const slugs = [
+      "what-documents-does-a-food-hygiene-inspector-ask-for-first-uk",
+      "how-to-perform-a-hazard-analysis-correctly",
+      "temperature-control-in-haccp-limits-and-monitoring",
+      "allergen-documentation-requirements-for-eu-and-uk-food-businesses",
+      "supplier-approval-in-haccp-records-and-requirements",
+    ];
+
+    for (const slug of slugs) {
+      const article = await getArticleBySlug(slug);
+      expect(article).not.toBeNull();
+      expect(article?.body).not.toContain("<h1>");
+    }
+  });
+});
+
 describe("article content processing", () => {
   it("normalizes rich article html for editorial rendering", () => {
     const result = processArticleContent(
