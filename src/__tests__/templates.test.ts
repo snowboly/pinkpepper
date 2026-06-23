@@ -67,6 +67,7 @@ describe("getGroupedTemplates", () => {
     ]);
 
     expect(grouped.find((group) => group.category === "Supplier")?.templates.map((template) => template.title)).toEqual([
+      "Food specification template",
       "Supplier approval checklist poster",
       "Supplier approval questionnaire",
       "Supplier registration log",
