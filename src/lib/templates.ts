@@ -54,6 +54,7 @@ export const TEMPLATES: TemplateEntry[] = [
   { slug: "traceability-log-template",            title: "Traceability log",                       category: "Traceability" },
   // Supplier
   { slug: "supplier-approval-poster",             title: "Supplier approval checklist poster",     category: "Supplier",     fileType: "png" },
+  { slug: "food-spec-template",                   title: "Food specification template",            category: "Supplier",     storageName: "food_spec_template" },
   { slug: "supplier-approval-questionnaire",      title: "Supplier approval questionnaire",        category: "Supplier" },
   { slug: "supplier-registration-log",            title: "Supplier registration log",              category: "Supplier",     fileType: "xlsx", storageName: "supplier-registration-template" },
   // Training

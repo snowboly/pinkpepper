@@ -44,6 +44,7 @@ async function getChromeContext() {
       label: messages.chrome.nav.resources,
       children: [
         { href: getPublicPageHref(publicLocale, "/resources"), label: messages.chrome.nav.freeTemplates },
+        { href: getPublicPageHref(publicLocale, "/resources/food-spec-template"), label: messages.chrome.nav.foodSpecTemplate },
         { href: getPublicPageHref(publicLocale, "/articles"), label: messages.chrome.nav.articles },
         { href: getPublicPageHref(publicLocale, "/faqs"), label: messages.chrome.nav.faqs },
       ],

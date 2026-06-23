@@ -127,6 +127,27 @@ describe("getGroupedTemplates", () => {
     });
   });
 
+  it("surfaces the food specification template in the registry, resource page, and navigation", () => {
+    expect(TEMPLATES.find((template) => template.slug === "food-spec-template")).toMatchObject({
+      title: "Food specification template",
+      category: "Supplier",
+      storageName: "food_spec_template",
+    });
+
+    expect(resourceEntries.find((resource) => resource.href === "/resources/food-spec-template")).toMatchObject({
+      title: "Food specification template",
+      description:
+        "A structured product specification template covering composition, allergens, storage, shelf life, and supplier approval details.",
+    });
+
+    const foodSpecPage = readPage("src/app/resources/food-spec-template/page.tsx");
+    const chrome = readPage("src/components/site/chrome.tsx");
+
+    expect(foodSpecPage).toContain('templateSlug="food-spec-template"');
+    expect(chrome).toContain('href: getPublicPageHref(publicLocale, "/resources/food-spec-template")');
+    expect(chrome).toContain('label: messages.chrome.nav.foodSpecTemplate');
+  });
+
   it("surfaces the new monitoring and poster resources in the registry and resources hub", () => {
     expect(TEMPLATES.find((template) => template.slug === "allergen-checklist-poster")).toMatchObject({
       title: "Allergen checklist poster",
@@ -313,6 +334,16 @@ describe("getGroupedTemplates", () => {
     expect(supplierApprovalPosterPage).toContain("EU and UK");
     expect(traceabilityRecallPosterPage).toContain("traceability-recall-poster");
     expect(traceabilityRecallPosterPage).toContain("EU and UK");
+  });
+
+  it("keeps local thumbnail fallbacks for the live resource pages that rely on them", () => {
+    const thumbnailFiles = readPage("public/templates/thumbnails/food-spec-template.svg");
+    expect(thumbnailFiles).toContain("<svg");
+
+    expect(readPage("public/templates/thumbnails/food-safety-opening-and-closing-checklist.svg")).toContain("<svg");
+    expect(readPage("public/templates/thumbnails/haccp-plan-template.svg")).toContain("<svg");
+    expect(readPage("public/templates/thumbnails/hazard-analysis-template.svg")).toContain("<svg");
+    expect(readPage("public/templates/thumbnails/supplier-registration-log.svg")).toContain("<svg");
   });
 
   it("keeps the core HACCP cluster linked together", () => {

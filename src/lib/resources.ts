@@ -209,6 +209,15 @@ export const resourceEntries: ResourceEntry[] = [
     updatedAt: "2026-03-14",
   },
   {
+    href: "/resources/food-spec-template",
+    title: "Food specification template",
+    description:
+      "A structured product specification template covering composition, allergens, storage, shelf life, and supplier approval details.",
+    category: "supplier",
+    categoryLabel: "Supplier",
+    updatedAt: "2026-06-23",
+  },
+  {
     href: "/resources/supplier-registration-log",
     title: "Supplier registration log",
     description: "A supplier tracker for approval status, review dates, product scope, and due-diligence follow-up.",
