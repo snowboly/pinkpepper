@@ -380,6 +380,7 @@ describe("public SEO copy and linking", () => {
     const entries = (await sitemap()).map((entry) => entry.url);
 
     expect(entries).toContain("https://pinkpepper.io/resources/cooking-monitoring-log-template");
+    expect(entries).toContain("https://pinkpepper.io/resources/food-spec-template");
     expect(entries).toContain("https://pinkpepper.io/resources/food-temperature-poster");
     expect(entries).toContain("https://pinkpepper.io/resources/gmp-poster");
     expect(entries).toContain("https://pinkpepper.io/resources/supplier-registration-log");
