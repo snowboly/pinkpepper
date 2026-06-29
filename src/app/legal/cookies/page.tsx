@@ -29,9 +29,9 @@ export default function CookiesPage() {
           <h2 className="mb-3 text-xl font-semibold text-[#0F172A]">2. How we use cookies</h2>
           <p>
             PinkPepper uses cookies for authentication, payment and fraud-prevention flows where applicable,
-            and storing your cookie consent preference. We also use optional Vercel Web Analytics after
-            consent to understand high-level usage patterns. Vercel describes this analytics product as
-            anonymized and cookieless. We do not use advertising cookies or sell data to advertisers.
+            and storing your cookie consent preference. We also use optional Google Analytics after
+            consent to understand high-level usage patterns on the public site. We do not use advertising
+            cookies or sell data to advertisers.
           </p>
         </section>
 
@@ -88,9 +88,8 @@ export default function CookiesPage() {
             </table>
           </div>
           <p className="mt-3 text-sm text-[#64748B]">
-            PinkPepper currently uses optional Vercel Web Analytics after consent. According to Vercel&apos;s
-            documentation, this analytics product does not rely on cookies and stores anonymized data. We do
-            not use advertising cookies.
+            PinkPepper currently uses optional Google Analytics on the public site after consent. We do not
+            use advertising cookies.
           </p>
         </section>
 
@@ -101,7 +100,7 @@ export default function CookiesPage() {
             and payment cookies are strictly necessary for the Service to function and do not require consent
             under the ePrivacy Directive. The{" "}
             <code className="rounded bg-[#F1F5F9] px-1.5 py-0.5 text-xs">pp-cookie-consent</code> preference
-            cookie is set only after you interact with the banner. Optional Vercel Web Analytics loads only
+            cookie is set only after you interact with the banner. Optional Google Analytics loads only
             after you accept analytics in the banner.
           </p>
         </section>

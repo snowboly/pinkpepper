@@ -20,8 +20,10 @@ describe("Google Analytics public-route gating", () => {
 
   it("keeps the root layout wired to the shared GA measurement env var", () => {
     const layoutSource = readFileSync(path.join(process.cwd(), "src/app/layout.tsx"), "utf8");
+    const bannerSource = readFileSync(path.join(process.cwd(), "src/components/site/CookieBanner.tsx"), "utf8");
 
     expect(layoutSource).toContain("NEXT_PUBLIC_GA_MEASUREMENT_ID");
-    expect(layoutSource).toContain("googletagmanager.com/gtag/js");
+    expect(layoutSource).not.toContain("googletagmanager.com/gtag/js");
+    expect(bannerSource).toContain("googletagmanager.com/gtag/js");
   });
 });

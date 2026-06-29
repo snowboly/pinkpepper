@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Manrope, Space_Grotesk } from "next/font/google";
 import { headers } from "next/headers";
-import Script from "next/script";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import { CookieBanner } from "@/components/site/CookieBanner";
@@ -134,32 +133,16 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
           nonce={nonce}
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
         />
-        {shouldRenderGoogleAnalytics ? (
-          <>
-            <Script
-              id="google-analytics-loader"
-              src={`https://www.googletagmanager.com/gtag/js?id=${measurementId}`}
-              strategy="afterInteractive"
-            />
-            <Script
-              id="google-analytics-config"
-              nonce={nonce}
-              strategy="afterInteractive"
-            >{`
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', '${measurementId}');
-            `}</Script>
-          </>
-        ) : null}
       </head>
       <body className={`${manrope.variable} ${spaceGrotesk.variable} antialiased`}>
         <NextIntlClientProvider messages={messages}>
           <SiteHeader />
           {children}
           <SiteFooter />
-          <CookieBanner nonce={nonce} />
+          <CookieBanner
+            nonce={nonce}
+            googleAnalyticsMeasurementId={shouldRenderGoogleAnalytics ? measurementId : undefined}
+          />
           <SpeedInsights />
         </NextIntlClientProvider>
       </body>
