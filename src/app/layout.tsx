@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Manrope, Space_Grotesk } from "next/font/google";
+import { headers } from "next/headers";
+import Script from "next/script";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import { CookieBanner } from "@/components/site/CookieBanner";
 import { SiteFooter, SiteHeader } from "@/components/site/chrome";
+import { PUBLIC_PATHNAME_HEADER, shouldInjectGoogleAnalytics } from "@/lib/google-analytics";
 import { getCspNonce } from "@/lib/security/csp";
 import "./globals.css";
 
@@ -113,6 +116,10 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   const locale = await getLocale();
   const messages = await getMessages();
   const nonce = await getCspNonce();
+  const measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+  const requestHeaders = await headers();
+  const pathname = requestHeaders.get(PUBLIC_PATHNAME_HEADER) ?? "/";
+  const shouldRenderGoogleAnalytics = Boolean(measurementId) && shouldInjectGoogleAnalytics(pathname);
 
   return (
     <html lang={locale}>
@@ -127,6 +134,25 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
           nonce={nonce}
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
         />
+        {shouldRenderGoogleAnalytics ? (
+          <>
+            <Script
+              id="google-analytics-loader"
+              src={`https://www.googletagmanager.com/gtag/js?id=${measurementId}`}
+              strategy="afterInteractive"
+            />
+            <Script
+              id="google-analytics-config"
+              nonce={nonce}
+              strategy="afterInteractive"
+            >{`
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', '${measurementId}');
+            `}</Script>
+          </>
+        ) : null}
       </head>
       <body className={`${manrope.variable} ${spaceGrotesk.variable} antialiased`}>
         <NextIntlClientProvider messages={messages}>
