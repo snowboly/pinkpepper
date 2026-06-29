@@ -89,6 +89,19 @@ describe("proxy host canonicalization", { timeout: 15000 }, () => {
     ).toBe("de");
   });
 
+  it("forwards the request pathname to downstream layouts", async () => {
+    const { proxy } = await import("../proxy");
+
+    const response = await proxy(
+      makeRequest("https://pinkpepper.io/resources/food-spec-template") as never,
+    );
+
+    expect(
+      (response as unknown as { forwardedRequestHeaders?: Headers })
+        .forwardedRequestHeaders?.get("x-public-pathname"),
+    ).toBe("/resources/food-spec-template");
+  });
+
   it("permanently redirects legacy english-prefixed URLs to the root english routes", async () => {
     const { proxy } = await import("../proxy");
 

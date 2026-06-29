@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { isAdminUser } from "@/lib/access";
+import { PUBLIC_PATHNAME_HEADER } from "@/lib/google-analytics";
 import {
   NONCE_HEADER,
   buildContentSecurityPolicy,
@@ -32,6 +33,7 @@ export async function proxy(request: NextRequest) {
 
   const forwardedHeaders = new Headers(request.headers);
   forwardedHeaders.set(NONCE_HEADER, nonce);
+  forwardedHeaders.set(PUBLIC_PATHNAME_HEADER, request.nextUrl.pathname);
   const routeLocale = request.nextUrl.pathname.split("/").filter(Boolean)[0];
   if (routeLocale && LOCALIZED_PUBLIC_PREFIXES.has(routeLocale)) {
     forwardedHeaders.set(ROUTE_LOCALE_HEADER, routeLocale);

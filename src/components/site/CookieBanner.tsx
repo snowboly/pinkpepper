@@ -59,9 +59,10 @@ function persistConsent(value: Consent) {
 
 type CookieBannerProps = {
   nonce?: string;
+  googleAnalyticsMeasurementId?: string;
 };
 
-export function CookieBanner({ nonce }: CookieBannerProps) {
+export function CookieBanner({ nonce, googleAnalyticsMeasurementId }: CookieBannerProps) {
   const [consent, setConsent] = useState<Consent | null>(readStoredConsent);
   const [visible, setVisible] = useState(() => readStoredConsent() === null);
 
@@ -164,7 +165,26 @@ export function CookieBanner({ nonce }: CookieBannerProps) {
           `,
         }}
       />
-      {consent === "accepted" && <Analytics />}
+      {consent === "accepted" && googleAnalyticsMeasurementId ? (
+        <>
+          <Script
+            id="google-analytics-loader"
+            src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsMeasurementId}`}
+            strategy="afterInteractive"
+          />
+          <Script
+            id="google-analytics-config"
+            nonce={nonce}
+            strategy="afterInteractive"
+          >{`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${googleAnalyticsMeasurementId}');
+          `}</Script>
+          <Analytics />
+        </>
+      ) : consent === "accepted" ? <Analytics /> : null}
 
       {visible && (
         <div
@@ -181,7 +201,7 @@ export function CookieBanner({ nonce }: CookieBannerProps) {
               </span>
               <span className="hidden md:inline">
                 We use essential cookies to keep PinkPepper running, and optional
-                analytics cookies (Vercel Analytics) to understand how you use the
+                analytics cookies (Google Analytics) to understand how you use the
                 product - no personal data is collected.{" "}
               </span>
               <Link
