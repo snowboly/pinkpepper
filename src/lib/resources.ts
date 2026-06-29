@@ -342,9 +342,9 @@ export const resourceEntries: ResourceEntry[] = [
 export const featuredResourceHrefs = [
   "/resources/haccp-plan-template",
   "/resources/allergen-matrix-template",
+  "/resources/food-spec-template",
   "/resources/food-safety-opening-and-closing-checklist",
   "/resources/temperature-monitoring-log-template",
-  "/resources/corrective-action-log-template",
 ] as const;
 
 export function getFeaturedResources() {
