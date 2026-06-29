@@ -128,7 +128,7 @@ describe("getGroupedTemplates", () => {
     });
   });
 
-  it("surfaces the food specification template in the registry, resource page, and navigation", () => {
+  it("surfaces the food specification template in the registry and resources hub", () => {
     expect(TEMPLATES.find((template) => template.slug === "food-spec-template")).toMatchObject({
       title: "Food specification template",
       category: "Supplier",
@@ -142,11 +142,12 @@ describe("getGroupedTemplates", () => {
     });
 
     const foodSpecPage = readPage("src/app/resources/food-spec-template/page.tsx");
+    const resourcesModule = readPage("src/lib/resources.ts");
     const chrome = readPage("src/components/site/chrome.tsx");
 
     expect(foodSpecPage).toContain('templateSlug="food-spec-template"');
-    expect(chrome).toContain('href: getPublicPageHref(publicLocale, "/resources/food-spec-template")');
-    expect(chrome).toContain('label: messages.chrome.nav.foodSpecTemplate');
+    expect(resourcesModule).toContain('"/resources/food-spec-template"');
+    expect(chrome).not.toContain('href: getPublicPageHref(publicLocale, "/resources/food-spec-template")');
   });
 
   it("surfaces the new monitoring and poster resources in the registry and resources hub", () => {
