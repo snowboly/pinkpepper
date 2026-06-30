@@ -23,4 +23,14 @@ describe("site header account dropdown", () => {
     expect(accountDropdownSource).toContain("return <AccountDropdownMenu key={pathname}");
     expect(accountDropdownSource).not.toContain("useEffect(() => {\n    setOpen(false);");
   });
+
+  it("keeps preferences inside the settings destination instead of the dropdown body", () => {
+    const accountDropdownSource = readFileSync(
+      path.join(process.cwd(), "src/components/site/AccountDropdown.tsx"),
+      "utf8"
+    );
+
+    expect(accountDropdownSource).toContain('href="/dashboard/settings"');
+    expect(accountDropdownSource).not.toContain("Marketing emails");
+  });
 });

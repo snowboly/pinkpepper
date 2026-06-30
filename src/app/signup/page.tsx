@@ -12,9 +12,13 @@ import { createClient } from "@/utils/supabase/client";
 export default function SignupPage() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [companyName, setCompanyName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [marketingOptIn, setMarketingOptIn] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -42,6 +46,11 @@ export default function SignupPage() {
     setMessage(null);
 
     try {
+      const trimmedFirstName = firstName.trim();
+      if (!trimmedFirstName) {
+        setError("First name is required.");
+        return;
+      }
       const passwordError = validatePassword(password);
       if (passwordError) {
         setError(passwordError);
@@ -59,6 +68,12 @@ export default function SignupPage() {
         password,
         options: {
           emailRedirectTo: `${origin}/auth/callback?next=/dashboard&flow=signup`,
+          data: {
+            first_name: trimmedFirstName,
+            last_name: lastName.trim() || null,
+            company_name: companyName.trim() || null,
+            marketing_email_opt_in: marketingOptIn,
+          },
         },
       });
 
@@ -109,6 +124,11 @@ export default function SignupPage() {
       setError("Enter your email address above first.");
       return;
     }
+    const trimmedFirstName = firstName.trim();
+    if (!trimmedFirstName) {
+      setError("First name is required.");
+      return;
+    }
     setMagicLoading(true);
     setError(null);
     setMessage(null);
@@ -118,7 +138,16 @@ export default function SignupPage() {
       const origin = process.env.NEXT_PUBLIC_SITE_URL ?? window.location.origin;
       const { error: otpError } = await supabase.auth.signInWithOtp({
         email,
-        options: { emailRedirectTo: `${origin}/auth/callback?next=/dashboard&flow=signup`, shouldCreateUser: true },
+        options: {
+          emailRedirectTo: `${origin}/auth/callback?next=/dashboard&flow=signup`,
+          shouldCreateUser: true,
+          data: {
+            first_name: trimmedFirstName,
+            last_name: lastName.trim() || null,
+            company_name: companyName.trim() || null,
+            marketing_email_opt_in: marketingOptIn,
+          },
+        },
       });
       if (otpError) {
         setError(otpError.message);
@@ -167,6 +196,37 @@ export default function SignupPage() {
             <>
               <form onSubmit={onSubmit} className="mt-6 space-y-4">
                 <div>
+                  <label className="mb-1 block text-sm font-medium text-[#2B2B2B]">First name</label>
+                  <input
+                    type="text"
+                    required
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    className="w-full rounded-xl border border-[#E8DADA] bg-white px-3 py-2.5 outline-none ring-[#D96C6C]/20 focus:ring-4"
+                    placeholder="Joao"
+                  />
+                </div>
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-[#2B2B2B]">Surname</label>
+                  <input
+                    type="text"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    className="w-full rounded-xl border border-[#E8DADA] bg-white px-3 py-2.5 outline-none ring-[#D96C6C]/20 focus:ring-4"
+                    placeholder="Silva"
+                  />
+                </div>
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-[#2B2B2B]">Company name</label>
+                  <input
+                    type="text"
+                    value={companyName}
+                    onChange={(e) => setCompanyName(e.target.value)}
+                    className="w-full rounded-xl border border-[#E8DADA] bg-white px-3 py-2.5 outline-none ring-[#D96C6C]/20 focus:ring-4"
+                    placeholder="Optional"
+                  />
+                </div>
+                <div>
                   <label className="mb-1 block text-sm font-medium text-[#2B2B2B]">Email</label>
                   <input
                     type="email"
@@ -199,6 +259,15 @@ export default function SignupPage() {
                     placeholder="Repeat password"
                   />
                 </div>
+                <label className="flex items-start gap-3 rounded-xl border border-[#E8DADA] bg-[#FAF6F5] px-3 py-3 text-sm text-[#2B2B2B]">
+                  <input
+                    type="checkbox"
+                    checked={marketingOptIn}
+                    onChange={(e) => setMarketingOptIn(e.target.checked)}
+                    className="mt-0.5 h-4 w-4 rounded border border-[#D0D7DE] text-[#D96C6C] focus:ring-[#D96C6C]"
+                  />
+                  <span>Email me about new features, document templates, and occasional offers.</span>
+                </label>
                 <button disabled={loading} type="submit" className="w-full rounded-xl bg-[#D96C6C] py-3 font-bold text-white transition-colors hover:bg-[#C95A5A] disabled:opacity-70">
                   {loading ? "Creating account..." : "Create account"}
                 </button>
