@@ -10,18 +10,23 @@ import { formatDailyResetLabel } from "./reset-time";
 
 const LOCALE_LABELS: Record<Locale, string> = {
   en: "English",
-  fr: "Français",
+  fr: "FranÃ§ais",
   de: "Deutsch",
-  es: "Español",
+  es: "EspaÃ±ol",
   it: "Italiano",
-  pt: "Português",
+  pt: "PortuguÃªs",
 };
 
 type SettingsFormProps = {
+  companyName: string;
+  currentPeriodEnd: string | null;
   email: string;
+  firstName: string;
+  lastName: string;
   tier: string;
   isAdmin: boolean;
   chatLanguage: string;
+  marketingEmailOptIn: boolean;
   usage: number;
   usageLimit: number | null;
   auditorUsage: number;
@@ -31,10 +36,15 @@ type SettingsFormProps = {
 };
 
 export default function SettingsForm({
+  companyName: initialCompanyName,
+  currentPeriodEnd,
   email,
+  firstName: initialFirstName,
+  lastName: initialLastName,
   tier,
   isAdmin,
   chatLanguage: initialChatLanguage,
+  marketingEmailOptIn: initialMarketingEmailOptIn,
   usage,
   usageLimit,
   auditorUsage,
@@ -44,9 +54,17 @@ export default function SettingsForm({
 }: SettingsFormProps) {
   const t = useTranslations("settings");
   const currentLocale = useLocale() as Locale;
+  const [firstName, setFirstName] = useState(initialFirstName);
+  const [lastName, setLastName] = useState(initialLastName);
+  const [companyName, setCompanyName] = useState(initialCompanyName);
+  const [profileSaving, setProfileSaving] = useState(false);
+  const [profileMsg, setProfileMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [chatLanguage, setChatLanguage] = useState(initialChatLanguage);
   const [chatLangSaving, setChatLangSaving] = useState(false);
   const [chatLangMsg, setChatLangMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const [marketingEmailOptIn, setMarketingEmailOptIn] = useState(initialMarketingEmailOptIn);
+  const [marketingSaving, setMarketingSaving] = useState(false);
+  const [marketingMsg, setMarketingMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -59,6 +77,9 @@ export default function SettingsForm({
 
   const supabase = createClient();
   const resetLabel = formatDailyResetLabel(new Date(), { locale: currentLocale });
+  const formattedPeriodEnd = currentPeriodEnd
+    ? new Intl.DateTimeFormat(currentLocale, { dateStyle: "medium" }).format(new Date(currentPeriodEnd))
+    : null;
 
   const tierColour =
     isAdmin
@@ -85,7 +106,6 @@ export default function SettingsForm({
 
     setPasswordLoading(true);
     try {
-      // Re-authenticate with current password first
       const { error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password: currentPassword,
@@ -121,9 +141,6 @@ export default function SettingsForm({
     setDeleteLoading(true);
     setDeleteError(null);
     try {
-      // The server requires both a typed confirmation phrase and the
-      // authenticated user's email address to destroy the account; this
-      // defeats one-click CSRF variants and accidental no-confirm wipes.
       const res = await fetch("/api/account/delete", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
@@ -144,10 +161,45 @@ export default function SettingsForm({
 
   return (
     <div className="space-y-6">
-      {/* Profile card */}
       <div className="rounded-2xl border border-[#E2E8F0] bg-white p-6">
         <h2 className="text-sm font-semibold text-[#0F172A] mb-4">{t("profile")}</h2>
         <div className="space-y-3">
+          <div>
+            <label className="block text-xs text-[#64748B] mb-1" htmlFor="first-name">
+              {t("firstName")}
+            </label>
+            <input
+              id="first-name"
+              type="text"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              className="w-full rounded-xl border border-[#E2E8F0] bg-[#F8F9FB] px-4 py-2.5 text-sm text-[#0F172A] outline-none focus:border-[#E11D48] focus:ring-1 focus:ring-[#E11D48] transition-colors"
+            />
+          </div>
+          <div>
+            <label className="block text-xs text-[#64748B] mb-1" htmlFor="last-name">
+              {t("lastName")}
+            </label>
+            <input
+              id="last-name"
+              type="text"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              className="w-full rounded-xl border border-[#E2E8F0] bg-[#F8F9FB] px-4 py-2.5 text-sm text-[#0F172A] outline-none focus:border-[#E11D48] focus:ring-1 focus:ring-[#E11D48] transition-colors"
+            />
+          </div>
+          <div>
+            <label className="block text-xs text-[#64748B] mb-1" htmlFor="company-name">
+              {t("companyName")}
+            </label>
+            <input
+              id="company-name"
+              type="text"
+              value={companyName}
+              onChange={(e) => setCompanyName(e.target.value)}
+              className="w-full rounded-xl border border-[#E2E8F0] bg-[#F8F9FB] px-4 py-2.5 text-sm text-[#0F172A] outline-none focus:border-[#E11D48] focus:ring-1 focus:ring-[#E11D48] transition-colors"
+            />
+          </div>
           <div>
             <p className="text-xs text-[#64748B] mb-1">{t("emailAddress")}</p>
             <p className="rounded-xl border border-[#E2E8F0] bg-[#F8F9FB] px-4 py-2.5 text-sm text-[#334155]">{email}</p>
@@ -158,38 +210,109 @@ export default function SettingsForm({
               {isAdmin ? "Admin" : tier}
             </span>
           </div>
+          {profileMsg && (
+            <p className={`text-xs ${profileMsg.type === "success" ? "text-[#059669]" : "text-[#E11D48]"}`}>
+              {profileMsg.text}
+            </p>
+          )}
+          <button
+            type="button"
+            onClick={async () => {
+              setProfileSaving(true);
+              setProfileMsg(null);
+              try {
+                const res = await fetch("/api/profile", {
+                  method: "PATCH",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    first_name: firstName,
+                    last_name: lastName,
+                    company_name: companyName,
+                  }),
+                });
+                const data = await res.json() as { error?: string };
+                if (!res.ok) {
+                  setProfileMsg({ type: "error", text: data.error ?? t("unexpectedError") });
+                  return;
+                }
+                setProfileMsg({ type: "success", text: t("profileSaved") });
+              } catch {
+                setProfileMsg({ type: "error", text: t("unexpectedError") });
+              } finally {
+                setProfileSaving(false);
+              }
+            }}
+            disabled={profileSaving || !firstName.trim()}
+            className="rounded-xl bg-[#0F172A] px-4 py-2.5 text-sm font-medium text-white hover:bg-[#1E293B] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          >
+            {profileSaving ? t("saving") : t("save")}
+          </button>
         </div>
       </div>
 
-      {/* Usage card */}
+      <div className="rounded-2xl border border-[#E2E8F0] bg-white p-6">
+        <h2 className="text-sm font-semibold text-[#0F172A] mb-1">{t("marketingEmails")}</h2>
+        <p className="text-xs text-[#64748B] mb-4">{t("transactionalEmailsNotice")}</p>
+        <label className="flex items-start gap-3 rounded-xl border border-[#E2E8F0] bg-[#F8F9FB] px-4 py-3 text-sm text-[#0F172A]">
+          <input
+            type="checkbox"
+            checked={marketingEmailOptIn}
+            onChange={(e) => setMarketingEmailOptIn(e.target.checked)}
+            className="mt-0.5 h-4 w-4 rounded border border-[#CBD5E1] text-[#E11D48] focus:ring-[#E11D48]"
+          />
+          <span>{t("marketingEmailsDescription")}</span>
+        </label>
+        <div className="mt-3 flex items-center gap-3">
+          <button
+            type="button"
+            onClick={async () => {
+              setMarketingSaving(true);
+              setMarketingMsg(null);
+              try {
+                const res = await fetch("/api/profile", {
+                  method: "PATCH",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    marketing_email_opt_in: marketingEmailOptIn,
+                  }),
+                });
+                const data = await res.json() as { error?: string };
+                if (!res.ok) {
+                  setMarketingMsg({ type: "error", text: data.error ?? t("unexpectedError") });
+                  return;
+                }
+                setMarketingMsg({ type: "success", text: t("emailPreferencesSaved") });
+              } catch {
+                setMarketingMsg({ type: "error", text: t("unexpectedError") });
+              } finally {
+                setMarketingSaving(false);
+              }
+            }}
+            disabled={marketingSaving}
+            className="rounded-xl bg-[#0F172A] px-4 py-2.5 text-sm font-medium text-white hover:bg-[#1E293B] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          >
+            {marketingSaving ? t("saving") : t("save")}
+          </button>
+          {marketingMsg && (
+            <p className={`text-xs ${marketingMsg.type === "success" ? "text-[#059669]" : "text-[#E11D48]"}`}>
+              {marketingMsg.text}
+            </p>
+          )}
+        </div>
+      </div>
+
       {!isAdmin && (
         <div className="rounded-2xl border border-[#E2E8F0] bg-white p-6">
           <h2 className="text-sm font-semibold text-[#0F172A] mb-1">{t("usage")}</h2>
           <p className="text-xs text-[#94A3B8] mb-4">{resetLabel}</p>
           <div className="space-y-4">
-            <UsageBar
-              label={t("dailyMessages")}
-              used={usage}
-              limit={usageLimit}
-              color="#E11D48"
-            />
-            <UsageBar
-              label={t("dailyAuditorMessages")}
-              used={auditorUsage}
-              limit={auditorUsageLimit}
-              color="#2563EB"
-            />
-            <UsageBar
-              label={t("dailyImageAnalyses")}
-              used={imageUsage}
-              limit={imageUsageLimit}
-              color="#0F766E"
-            />
+            <UsageBar label={t("dailyMessages")} used={usage} limit={usageLimit} color="#E11D48" />
+            <UsageBar label={t("dailyAuditorMessages")} used={auditorUsage} limit={auditorUsageLimit} color="#2563EB" />
+            <UsageBar label={t("dailyImageAnalyses")} used={imageUsage} limit={imageUsageLimit} color="#0F766E" />
           </div>
         </div>
       )}
 
-      {/* Language card */}
       <div className="rounded-2xl border border-[#E2E8F0] bg-white p-6">
         <h2 className="text-sm font-semibold text-[#0F172A] mb-4">{t("language")}</h2>
         <p className="text-xs text-[#64748B] mb-3">{t("languageDescription")}</p>
@@ -201,7 +324,6 @@ export default function SettingsForm({
             try {
               await supabase.from("profiles").update({ locale: newLocale }).eq("id", (await supabase.auth.getUser()).data.user?.id ?? "");
             } catch {
-              // Non-blocking — cookie is the primary source
             }
             window.location.reload();
           }}
@@ -215,7 +337,6 @@ export default function SettingsForm({
         </select>
       </div>
 
-      {/* Chatbot language card */}
       <div className="rounded-2xl border border-[#E2E8F0] bg-white p-6">
         <h2 className="text-sm font-semibold text-[#0F172A] mb-1">{t("chatbotLanguage")}</h2>
         <p className="text-xs text-[#64748B] mb-3">{t("chatbotLanguageDescription")}</p>
@@ -262,7 +383,6 @@ export default function SettingsForm({
         )}
       </div>
 
-      {/* Change password card */}
       <div className="rounded-2xl border border-[#E2E8F0] bg-white p-6">
         <h2 className="text-sm font-semibold text-[#0F172A] mb-4">{t("changePassword")}</h2>
         <form onSubmit={handleChangePassword} className="space-y-3">
@@ -328,12 +448,13 @@ export default function SettingsForm({
         </form>
       </div>
 
-      {/* Billing card */}
       {!isAdmin && (
         <div className="rounded-2xl border border-[#E2E8F0] bg-white p-6">
           <h2 className="text-sm font-semibold text-[#0F172A] mb-4">{t("billing")}</h2>
+          <p className="text-xs text-[#64748B] mb-3">{t("billingDescription")}</p>
           <p className="text-xs text-[#64748B] mb-3">
-            {t("billingDescription")}
+            {t("cancelAtPeriodEnd")}
+            {formattedPeriodEnd ? ` ${t("currentPeriodEndsOn")} ${formattedPeriodEnd}.` : ""}
           </p>
           <div className="flex gap-2">
             <Link
@@ -352,7 +473,6 @@ export default function SettingsForm({
         </div>
       )}
 
-      {/* Account / Danger zone */}
       <div className="rounded-2xl border border-[#E2E8F0] bg-white p-6">
         <h2 className="text-sm font-semibold text-[#0F172A] mb-4">{t("account")}</h2>
         <button
@@ -364,27 +484,26 @@ export default function SettingsForm({
         </button>
       </div>
 
-      {/* Danger zone */}
       <div className="rounded-2xl border border-[#FCA5A5] bg-[#FFF5F5] p-6">
         <h2 className="text-sm font-semibold text-[#B91C1C] mb-1">{t("dangerZone")}</h2>
         <p className="text-xs text-[#EF4444] mb-4">{t("deleteAccountDescription")}</p>
         <button
-          onClick={() => { setDeleteError(null); setShowDeleteConfirm(true); }}
+          onClick={() => {
+            setDeleteError(null);
+            setShowDeleteConfirm(true);
+          }}
           className="rounded-xl border border-[#EF4444] bg-white px-4 py-2 text-sm font-medium text-[#EF4444] hover:bg-[#FEE2E2] transition-colors"
         >
           {t("deleteAccount")}
         </button>
       </div>
 
-      {/* Delete confirmation modal */}
       {showDeleteConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
           <div className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl">
             <h3 className="text-base font-semibold text-[#0F172A] mb-2">{t("deleteAccountConfirmTitle")}</h3>
             <p className="text-sm text-[#64748B] mb-5">{t("deleteAccountConfirmBody")}</p>
-            {deleteError && (
-              <p className="mb-3 text-xs text-[#E11D48]">{deleteError}</p>
-            )}
+            {deleteError && <p className="mb-3 text-xs text-[#E11D48]">{deleteError}</p>}
             <div className="flex gap-3">
               <button
                 onClick={() => setShowDeleteConfirm(false)}

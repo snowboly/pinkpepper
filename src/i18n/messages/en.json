@@ -95,8 +95,7 @@
     "recordingUnsupported": "Voice recording is not supported in this browser.",
     "recordingPermissionError": "Microphone access is blocked. Please allow microphone permission and try again.",
     "transcriptionError": "We could not transcribe your recording. Please try again.",
-    "transcriptionEmptyError": "No speech was detected. Please try recording again."
-    ,
+    "transcriptionEmptyError": "No speech was detected. Please try recording again.",
     "modeGuidance": {
       "examplesLabel": "Try asking:",
       "consultant": {
@@ -462,7 +461,16 @@
     "deleteAccountConfirmBody": "This will permanently delete your account and all your data, including conversations, documents, and settings. This action cannot be undone.",
     "deleteAccountConfirm": "Yes, delete my account",
     "cancel": "Cancel",
-    "deleting": "Deleting..."
+    "deleting": "Deleting...",
+    "firstName": "First name",
+    "lastName": "Surname",
+    "companyName": "Company name (optional)",
+    "profileSaved": "Profile saved.",
+    "cancelAtPeriodEnd": "Cancels automatic renewal. Your plan stays active until the end of the current billing period.",
+    "currentPeriodEndsOn": "Current period ends on",
+    "marketingEmails": "Marketing emails",
+    "marketingEmailsDescription": "Get occasional emails about new features, document templates, and offers.",
+    "transactionalEmailsNotice": "Transactional emails like billing, security, and account notices will still be sent.",
+    "emailPreferencesSaved": "Email preferences updated."
   }
 }
-
