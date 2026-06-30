@@ -376,6 +376,16 @@
     "deleteAccountConfirmBody": "Questo eliminerà definitivamente il tuo account e tutti i tuoi dati, incluse conversazioni, documenti e impostazioni. Questa azione non può essere annullata.",
     "deleteAccountConfirm": "Sì, elimina il mio account",
     "cancel": "Annulla",
-    "deleting": "Eliminazione..."
+    "deleting": "Eliminazione...",
+    "firstName": "Nome",
+    "lastName": "Cognome",
+    "companyName": "Nome azienda (opzionale)",
+    "profileSaved": "Profilo salvato.",
+    "cancelAtPeriodEnd": "Annulla il rinnovo automatico. Il tuo piano resterà attivo fino alla fine del ciclo di fatturazione corrente.",
+    "currentPeriodEndsOn": "Il periodo attuale termina il",
+    "marketingEmails": "Email di marketing",
+    "marketingEmailsDescription": "Ricevi email occasionali su nuove funzionalità, modelli di documenti e offerte.",
+    "transactionalEmailsNotice": "Le email transazionali come fatturazione, sicurezza e avvisi account continueranno a essere inviate.",
+    "emailPreferencesSaved": "Preferenze email aggiornate."
   }
 }
