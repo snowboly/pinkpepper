@@ -18,16 +18,24 @@ export default async function SettingsPage() {
     redirect("/login?next=/dashboard/settings");
   }
 
-  type ProfileRow = { tier?: string | null; is_admin?: boolean | null; chat_language?: string | null };
+  type ProfileRow = {
+    chat_language?: string | null;
+    company_name?: string | null;
+    first_name?: string | null;
+    is_admin?: boolean | null;
+    last_name?: string | null;
+    marketing_email_opt_in?: boolean | null;
+    tier?: string | null;
+  };
   const [profileResult, subscriptionResult] = await Promise.all([
     supabase
       .from("profiles")
-      .select("tier,is_admin,chat_language")
+      .select("tier,is_admin,chat_language,first_name,last_name,company_name,marketing_email_opt_in")
       .eq("id", user.id)
       .maybeSingle(),
     supabase
       .from("subscriptions")
-      .select("tier,status")
+      .select("tier,status,current_period_end")
       .eq("user_id", user.id)
       .maybeSingle(),
   ]);
@@ -73,9 +81,14 @@ export default async function SettingsPage() {
 
         <SettingsForm
           email={user.email ?? ""}
+          firstName={profile?.first_name ?? ""}
+          lastName={profile?.last_name ?? ""}
+          companyName={profile?.company_name ?? ""}
           tier={tier}
           isAdmin={isAdmin}
           chatLanguage={chatLanguage}
+          marketingEmailOptIn={Boolean(profile?.marketing_email_opt_in)}
+          currentPeriodEnd={subscriptionResult.data?.current_period_end ?? null}
           usage={usageCount}
           usageLimit={isAdmin ? null : caps.dailyMessages}
           auditorUsage={auditorUsageCount}
