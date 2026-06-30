@@ -13,6 +13,7 @@ describe("settings billing surface", () => {
     expect(settingsForm).toContain('variant?: "manage" | "cancel"');
     expect(settingsForm).toContain('isCancel ? t("cancelSubscription") : t("manageBilling")');
     expect(settingsForm).toContain('fetch("/api/billing/portal", { method: "POST" })');
+    expect(settingsForm).toContain('t("cancelAtPeriodEnd")');
   });
 
   it("ships cancel subscription copy across supported locales", () => {
@@ -28,6 +29,7 @@ describe("settings billing surface", () => {
     for (const file of localeFiles) {
       const content = readPage(file);
       expect(content).toContain('"cancelSubscription":');
+      expect(content).toContain('"billingDescription":');
     }
   });
 });
