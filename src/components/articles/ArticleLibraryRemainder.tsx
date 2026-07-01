@@ -9,7 +9,7 @@ type ArticleLibraryRemainderProps = {
   articleHrefBySlug: Record<string, string>;
 };
 
-export function ArticleLibraryRemainder({
+export default function ArticleLibraryRemainder({
   articles,
   articleHrefBySlug,
 }: ArticleLibraryRemainderProps) {
@@ -30,7 +30,7 @@ export function ArticleLibraryRemainder({
           onClick={() => setIsExpanded(true)}
           className="inline-flex items-center rounded-full border border-[#E2E8F0] bg-white px-5 py-2.5 text-sm font-semibold text-[#0F172A] transition-colors hover:border-[#FDA4AF] hover:text-[#BE123C]"
         >
-          Show the remaining {articles.length} articles
+          Load more articles
         </button>
       </div>
     );
@@ -52,5 +52,3 @@ export function ArticleLibraryRemainder({
     </div>
   );
 }
-
-export default ArticleLibraryRemainder;

@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import ArticleCard from "@/components/articles/ArticleCard";
 import ArticleLibraryRemainder from "@/components/articles/ArticleLibraryRemainder";
-import { getArticleManifest } from "@/lib/articles";
+import RotatingArticleHighlights from "@/components/articles/RotatingArticleHighlights";
 import { type PublicLocale } from "@/i18n/public";
+import { getArticleManifest } from "@/lib/articles";
 import { getPublicPageHref } from "@/lib/public-routes";
 
 const featuredGuides = [
@@ -49,8 +50,8 @@ const featuredGuides = [
   },
   {
     href: "/articles/what-documents-does-a-food-hygiene-inspector-ask-for-first-uk",
-    title: "What documents a food hygiene inspector asks for first",
-    description: "A practical inspection-readiness guide covering the records inspectors usually want first and the gaps that cause problems.",
+    title: "What documents does a food hygiene inspector ask for first in the UK?",
+    description: "A practical guide to the records and checks UK food hygiene inspectors usually ask for first, from your food safety system and temperature logs to allergen and cleaning records.",
   },
   {
     href: "/articles/haccp-vs-brcgs-vs-ifs",
@@ -71,48 +72,6 @@ const featuredGuides = [
     href: "/articles/haccp-for-artisanal-bakeries-eu",
     title: "HACCP for artisanal bakeries",
     description: "A sector-specific guide for bakery operators who need a more usable process and hazard structure.",
-  },
-];
-
-const workflowLinks = [
-  {
-    href: "/regulations-covered",
-    title: "Check the regulations covered",
-    description: "Use the trust page when you need a clearer map of the EU and UK legal and guidance areas PinkPepper covers.",
-  },
-  {
-    href: "/resources/haccp-plan-template",
-    title: "Start with the HACCP plan template",
-    description: "Use the template hub if you need a cleaner structure before drafting a site-specific plan.",
-  },
-  {
-    href: "/features/haccp-plan-generator",
-    title: "Move into the HACCP workflow",
-    description: "See how PinkPepper supports hazard analysis, CCP structure, and corrective action drafting.",
-  },
-  {
-    href: "/features/food-safety-sop-generator",
-    title: "Build SOPs and records that fit the site",
-    description:
-      "Use the SOP workflow when the next job is turning guidance into opening checks, cleaning procedures, and daily records.",
-  },
-  {
-    href: "/faqs",
-    title: "Check the product FAQs",
-    description:
-      "Read direct answers on scope, pricing, accountability, and how PinkPepper fits into food safety work before you go deeper.",
-  },
-  {
-    href: "/use-cases",
-    title: "Find the right operating model",
-    description:
-      "Jump into restaurant, cafe, catering, and manufacturing workflows instead of treating every business like the same HACCP problem.",
-  },
-  {
-    href: "/articles/what-documents-does-a-food-hygiene-inspector-ask-for-first-uk",
-    title: "See the inspection-readiness guide",
-    description:
-      "Review the documents inspectors usually ask for first before you tighten logs, templates, or daily checks.",
   },
 ];
 
@@ -217,6 +176,14 @@ function getArticleHref(slug: string, locale: PublicLocale, localizedSlugs: Read
   return `/${locale}/articles/${slug}`;
 }
 
+function resolveHref(path: string, locale: PublicLocale, localizedSlugs: ReadonlySet<string>) {
+  if (path.startsWith("/articles/")) {
+    return getArticleHref(path.replace("/articles/", ""), locale, localizedSlugs);
+  }
+
+  return getPublicPageHref(locale, path);
+}
+
 type ArticlesPageProps = {
   locale?: PublicLocale;
 };
@@ -227,6 +194,10 @@ export default async function ArticlesPage({ locale = "en" }: ArticlesPageProps 
   const articleHrefBySlug = Object.fromEntries(
     articles.map((article) => [article.slug, getArticleHref(article.slug, locale, localizedSlugs)]),
   );
+  const featuredGuideSlugs = new Set(
+    featuredGuides.slice(0, INITIAL_FEATURED_GUIDE_COUNT).map((guide) => guide.href.replace("/articles/", "")),
+  );
+  const rotatingArticles = articles.filter((article) => !featuredGuideSlugs.has(article.slug));
   const initialArticles = articles.slice(0, INITIAL_ARTICLE_COUNT);
   const remainingArticles = articles.slice(INITIAL_ARTICLE_COUNT);
 
@@ -259,15 +230,11 @@ export default async function ArticlesPage({ locale = "en" }: ArticlesPageProps 
               If you are new to PinkPepper, start with these core articles before branching into narrower sector pages.
             </p>
           </div>
-          <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+          <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
             {featuredGuides.slice(0, INITIAL_FEATURED_GUIDE_COUNT).map((guide) => (
               <Link
                 key={guide.href}
-                href={
-                  guide.href.startsWith("/articles/")
-                    ? getArticleHref(guide.href.replace("/articles/", ""), locale, localizedSlugs)
-                    : getPublicPageHref(locale, guide.href)
-                }
+                href={resolveHref(guide.href, locale, localizedSlugs)}
                 className="rounded-3xl border border-[#E2E8F0] bg-[#F8FAFC] p-7 transition-all hover:-translate-y-0.5 hover:border-[#CBD5E1] hover:shadow-xl hover:shadow-black/[0.04]"
               >
                 <p className="text-xl font-semibold leading-tight text-[#0F172A]">{guide.title}</p>
@@ -278,20 +245,7 @@ export default async function ArticlesPage({ locale = "en" }: ArticlesPageProps 
         </div>
       </section>
 
-      <section className="border-b border-[#F1F5F9] bg-[#FFF7ED] py-14">
-        <div className="pp-container grid gap-5 md:grid-cols-2 xl:grid-cols-5">
-          {workflowLinks.map((item) => (
-            <Link
-              key={item.href}
-              href={getPublicPageHref(locale, item.href)}
-              className="rounded-3xl border border-[#FED7AA] bg-white p-7 transition-all hover:-translate-y-0.5 hover:border-[#FDBA74] hover:shadow-xl hover:shadow-black/[0.04]"
-            >
-              <p className="text-lg font-semibold text-[#0F172A]">{item.title}</p>
-              <p className="mt-3 text-sm leading-relaxed text-[#475569]">{item.description}</p>
-            </Link>
-          ))}
-        </div>
-      </section>
+      <RotatingArticleHighlights articles={rotatingArticles} articleHrefBySlug={articleHrefBySlug} />
 
       <section className="border-b border-[#F1F5F9] bg-white py-14">
         <div className="pp-container">
@@ -313,7 +267,7 @@ export default async function ArticlesPage({ locale = "en" }: ArticlesPageProps 
                   {cluster.links.map((link) => (
                     <Link
                       key={link.href}
-                      href={getPublicPageHref(locale, link.href)}
+                      href={resolveHref(link.href, locale, localizedSlugs)}
                       className="text-sm font-semibold text-[#BE123C] transition-colors hover:text-[#9F1239]"
                     >
                       {link.label}
