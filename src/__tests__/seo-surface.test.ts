@@ -244,6 +244,52 @@ describe("public SEO copy and linking", () => {
     expect(markup).toContain("Browse by cluster");
   });
 
+  it("renders a secondary rotating discovery block below the fixed featured guides", async () => {
+    const markup = await renderArticlesPageForTest([
+      {
+        title: "Thermometer Checks for Small Kitchens",
+        slug: "thermometer-checks-small-kitchens",
+        excerpt: "Probe use, calibration, and daily checks for small teams.",
+        category: "Operations",
+        publishedAt: "2026-04-01",
+        image: "https://images.example.com/thermometer.jpg",
+      },
+      {
+        title: "Allergen Updates Before Service",
+        slug: "allergen-updates-before-service",
+        excerpt: "How to keep substitutions and allergen information current.",
+        category: "Allergens",
+        publishedAt: "2026-04-02",
+      },
+      {
+        title: "Opening Checks for Food Trucks",
+        slug: "opening-checks-food-trucks",
+        excerpt: "A quick pre-service checklist for mobile operations.",
+        category: "Operations",
+        publishedAt: "2026-04-03",
+      },
+      {
+        title: "Supplier Review Notes",
+        slug: "supplier-review-notes",
+        excerpt: "What to capture when supplier evidence changes.",
+        category: "Compliance",
+        publishedAt: "2026-04-04",
+      },
+    ]);
+
+    expect(markup).toContain("More guides to explore");
+    expect(markup).toContain("Thermometer Checks for Small Kitchens");
+    expect(markup).toContain("Allergen Updates Before Service");
+  });
+
+  it("surfaces the UK inspector paperwork guide in the strongest-guides block", () => {
+    const articlesHub = readPage("src/app/articles/page.tsx");
+
+    expect(articlesHub).toContain("const INITIAL_FEATURED_GUIDE_COUNT = 8;");
+    expect(articlesHub).toContain("/articles/what-documents-does-a-food-hygiene-inspector-ask-for-first-uk");
+    expect(articlesHub).toContain("What documents does a food hygiene inspector ask for first in the UK?");
+  });
+
   it("renders article cards with article links and fallback imagery", async () => {
     const markup = await renderArticlesPageForTest();
 
@@ -268,7 +314,24 @@ describe("public SEO copy and linking", () => {
     expect(markup).toContain("Article 1");
     expect(markup).toContain("Article 24");
     expect(markup).not.toContain("Article 25");
-    expect(markup).toContain("Show the remaining 6 articles");
+    expect(markup).toContain("Load more articles");
+  });
+
+  it("keeps upgraded Pexels imagery on priority compliance and sector articles", () => {
+    const articleManifest = readPage("content/articles/manifest.json");
+
+    expect(articleManifest).toContain('"slug": "shelf-life-validation-in-haccp"');
+    expect(articleManifest).toContain("photos/18338496/pexels-photo-18338496.jpeg");
+    expect(articleManifest).toContain('"slug": "chemical-hazards-in-haccp-controls-limits-and-what-to-record"');
+    expect(articleManifest).toContain("photos/3869239/pexels-photo-3869239.jpeg");
+    expect(articleManifest).toContain('"slug": "radiological-hazards-in-haccp"');
+    expect(articleManifest).toContain("photos/6170405/pexels-photo-6170405.jpeg");
+    expect(articleManifest).toContain('"slug": "haccp-for-hospital-catering-eu"');
+    expect(articleManifest).toContain("photos/18429457/pexels-photo-18429457.jpeg");
+    expect(articleManifest).toContain('"slug": "failed-haccp-inspection-consequences-uk"');
+    expect(articleManifest).toContain("photos/15671373/pexels-photo-15671373.jpeg");
+    expect(articleManifest).toContain('"slug": "haccp-for-food-trucks"');
+    expect(articleManifest).toContain("photos/5779380/pexels-photo-5779380.jpeg");
   });
 
   it("tightens the public article detail hero hierarchy", () => {

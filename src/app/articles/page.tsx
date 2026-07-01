@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { getArticleManifest } from "@/lib/articles";
 import { type PublicLocale } from "@/i18n/public";
 import { getPublicPageHref } from "@/lib/public-routes";
+import ArticleCard from "@/components/articles/ArticleCard";
+import ArticleLibraryRemainder from "@/components/articles/ArticleLibraryRemainder";
+import RotatingArticleHighlights from "@/components/articles/RotatingArticleHighlights";
 
 const featuredGuides = [
   {
@@ -32,6 +34,11 @@ const featuredGuides = [
     description: "The recurring weaknesses we see when plans are over-generic, outdated, or unsupported by records.",
   },
   {
+    href: "/articles/what-documents-does-a-food-hygiene-inspector-ask-for-first-uk",
+    title: "What documents does a food hygiene inspector ask for first in the UK?",
+    description: "A practical guide to the records and checks UK food hygiene inspectors usually ask for first, from your food safety system and temperature logs to allergen and cleaning records.",
+  },
+  {
     href: "/articles/what-regulators-really-expect-from-small-food-businesses",
     title: "What regulators really expect from small food businesses",
     description: "A more realistic view of what inspectors and auditors look for beyond generic paperwork advice.",
@@ -58,21 +65,36 @@ const featuredGuides = [
   },
 ];
 
-const workflowLinks = [
+const INITIAL_ARTICLE_COUNT = 24;
+const INITIAL_FEATURED_GUIDE_COUNT = 8;
+
+const clusterLinks = [
   {
-    href: "/resources/haccp-plan-template",
-    title: "Start with the HACCP plan template",
-    description: "Use the template hub if you need a cleaner structure before drafting a site-specific plan.",
+    title: "HACCP fundamentals",
+    description: "Start with the core guides that explain process flow, hazard analysis, CCP logic, and what belongs in the actual plan.",
+    links: [
+      { href: "/articles/building-a-haccp-process-flow-diagram", label: "Process flow diagrams" },
+      { href: "/articles/how-to-perform-a-hazard-analysis-correctly", label: "Hazard analysis" },
+      { href: "/articles/identifying-critical-control-points-in-food-safety", label: "CCP decisions" },
+    ],
   },
   {
-    href: "/features/haccp-plan-generator",
-    title: "Move into the HACCP workflow",
-    description: "See how PinkPepper supports hazard analysis, CCP structure, and corrective action drafting.",
+    title: "Monitoring and records",
+    description: "Use the articles and templates that help teams record controls cleanly enough to survive audits and daily operational change.",
+    links: [
+      { href: "/articles/cooling-and-reheating-haccp-high-risk-steps", label: "Cooling and reheating" },
+      { href: "/resources/temperature-monitoring-log-template", label: "Temperature logs" },
+      { href: "/resources/corrective-action-log-template", label: "Corrective actions" },
+    ],
   },
   {
-    href: "/resources",
-    title: "Browse the template library",
-    description: "Use the free templates if you need structured documents before moving into a custom compliance workflow.",
+    title: "Industry-specific workflows",
+    description: "When the operating model matters more than the generic principle, move into the use-case pages first.",
+    links: [
+      { href: "/use-cases/restaurants", label: "Restaurants" },
+      { href: "/use-cases/catering", label: "Catering" },
+      { href: "/use-cases/food-manufacturing", label: "Food manufacturing" },
+    ],
   },
 ];
 
@@ -112,6 +134,17 @@ type ArticlesPageProps = {
 export default async function ArticlesPage({ locale = "en" }: ArticlesPageProps = {}) {
   const articles = await getArticleManifest({ locale });
   const localizedArticleSlugs = new Set(articles.map((article) => article.slug));
+  const articleHrefBySlug = Object.fromEntries(
+    articles.map((article) => [article.slug, getArticleHref(article.slug, locale, localizedArticleSlugs)]),
+  );
+  const featuredGuideSlugs = new Set(
+    featuredGuides
+      .slice(0, INITIAL_FEATURED_GUIDE_COUNT)
+      .map((guide) => guide.href.replace("/articles/", "")),
+  );
+  const rotatingArticles = articles.filter((article) => !featuredGuideSlugs.has(article.slug));
+  const initialArticles = articles.slice(0, INITIAL_ARTICLE_COUNT);
+  const remainingArticles = articles.slice(INITIAL_ARTICLE_COUNT);
 
   return (
     <main className="overflow-hidden">
@@ -143,7 +176,7 @@ export default async function ArticlesPage({ locale = "en" }: ArticlesPageProps 
             </p>
           </div>
           <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-            {featuredGuides.map((guide) => (
+            {featuredGuides.slice(0, INITIAL_FEATURED_GUIDE_COUNT).map((guide) => (
               <Link
                 key={guide.href}
                 href={
@@ -165,18 +198,44 @@ export default async function ArticlesPage({ locale = "en" }: ArticlesPageProps 
         </div>
       </section>
 
-      <section className="border-b border-[#F1F5F9] bg-[#FFF7ED] py-14">
-        <div className="pp-container grid gap-5 md:grid-cols-3">
-          {workflowLinks.map((item) => (
-            <Link
-              key={item.href}
-              href={getPublicPageHref(locale, item.href)}
-              className="rounded-3xl border border-[#FED7AA] bg-white p-7 transition-all hover:-translate-y-0.5 hover:border-[#FDBA74] hover:shadow-xl hover:shadow-black/[0.04]"
-            >
-              <p className="text-lg font-semibold text-[#0F172A]">{item.title}</p>
-              <p className="mt-3 text-sm leading-relaxed text-[#475569]">{item.description}</p>
-            </Link>
-          ))}
+      <RotatingArticleHighlights
+        articles={rotatingArticles}
+        articleHrefBySlug={articleHrefBySlug}
+      />
+
+      <section className="border-b border-[#F1F5F9] bg-white py-14">
+        <div className="pp-container">
+          <div className="max-w-3xl">
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">Browse by cluster</p>
+            <h2 className="pp-display mt-4 text-3xl text-[#0F172A] md:text-4xl">
+              Follow the topic path that matches the work in front of you
+            </h2>
+            <p className="mt-4 text-base leading-relaxed text-[#475569]">
+              Use these cluster paths when you want a tighter route through the library instead of scanning every article card.
+            </p>
+          </div>
+          <div className="mt-8 grid gap-6 lg:grid-cols-3">
+            {clusterLinks.map((cluster) => (
+              <div
+                key={cluster.title}
+                className="rounded-3xl border border-[#E2E8F0] bg-[#F8FAFC] p-7"
+              >
+                <p className="text-xl font-semibold text-[#0F172A]">{cluster.title}</p>
+                <p className="mt-3 text-sm leading-relaxed text-[#475569]">{cluster.description}</p>
+                <div className="mt-5 flex flex-col gap-3">
+                  {cluster.links.map((link) => (
+                    <Link
+                      key={link.href}
+                      href={getPublicPageHref(locale, link.href)}
+                      className="text-sm font-semibold text-[#BE123C] transition-colors hover:text-[#9F1239]"
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -185,55 +244,28 @@ export default async function ArticlesPage({ locale = "en" }: ArticlesPageProps 
           <div className="mb-8 max-w-3xl">
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">Full library</p>
             <h2 className="pp-display mt-4 text-3xl text-[#0F172A] md:text-4xl">Browse every published article</h2>
+            <p className="mt-4 text-base leading-relaxed text-[#475569]">
+              The first set loads immediately, and the rest of the archive stays one click away when you want to go deeper.
+            </p>
           </div>
           <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {articles.map((article) => (
-              <article
+            {initialArticles.map((article) => (
+              <ArticleCard
                 key={article.slug}
-                className="group/article-card flex h-full flex-col overflow-hidden rounded-[2rem] border border-[#E2E8F0] bg-white shadow-[0_18px_50px_rgba(15,23,42,0.06)] transition-shadow duration-200 hover:shadow-[0_24px_70px_rgba(15,23,42,0.1)]"
-              >
-                <div className="relative aspect-[16/9] overflow-hidden border-b border-[#E2E8F0] bg-[#F8FAFC]">
-                  {article.image ? (
-                    <Image
-                      src={article.image}
-                      alt={article.title}
-                      fill
-                      className="object-cover transition-transform duration-300 group-hover/article-card:scale-[1.02]"
-                      sizes="(min-width: 1280px) 360px, (min-width: 768px) 50vw, 100vw"
-                    />
-                  ) : (
-                    <div className="flex h-full items-center justify-center bg-[radial-gradient(circle_at_top,_#FFE4E6,_#F8FAFC_62%)]">
-                      <span className="text-sm font-medium text-[#64748B]">Article image coming soon</span>
-                    </div>
-                  )}
-                </div>
-                <div className="flex flex-1 flex-col p-6 md:p-7">
-                  <p className="text-[11px] font-black uppercase tracking-[0.22em] text-[#E11D48]">
-                    {article.category}
-                  </p>
-                  <h2 className="mt-3 text-[1.75rem] font-bold leading-tight tracking-tight text-[#0F172A] md:text-[2rem]">
-                    <Link
-                      href={getArticleHref(article.slug, locale, localizedArticleSlugs)}
-                      className="transition-colors hover:text-[#BE123C]"
-                    >
-                      {article.title}
-                    </Link>
-                  </h2>
-                  <p className="mt-3 text-sm font-medium text-[#64748B]">{article.publishedAt}</p>
-                  <p className="mt-4 flex-1 text-[15px] leading-7 text-[#475569]">{article.excerpt}</p>
-                  <div className="mt-6 border-t border-[#F1F5F9] pt-4">
-                    <Link
-                      href={getArticleHref(article.slug, locale, localizedArticleSlugs)}
-                      className="inline-flex items-center gap-2 rounded-full border border-[#E2E8F0] px-4 py-2 text-sm font-semibold text-[#0F172A] transition-colors hover:border-[#FDA4AF] hover:text-[#BE123C]"
-                    >
-                      <span>Read article</span>
-                      <span aria-hidden="true">+</span>
-                    </Link>
-                  </div>
-                </div>
-              </article>
+                category={article.category}
+                excerpt={article.excerpt}
+                href={articleHrefBySlug[article.slug]}
+                image={article.image}
+                publishedAt={article.publishedAt}
+                title={article.title}
+              />
             ))}
           </div>
+          <ArticleLibraryRemainder
+            articles={remainingArticles}
+            articleHrefBySlug={articleHrefBySlug}
+            locale={locale}
+          />
         </div>
       </section>
     </main>
