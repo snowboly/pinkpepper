@@ -266,7 +266,7 @@ export default function SignupPage() {
                     onChange={(e) => setMarketingOptIn(e.target.checked)}
                     className="mt-0.5 h-4 w-4 rounded border border-[#D0D7DE] text-[#D96C6C] focus:ring-[#D96C6C]"
                   />
-                  <span>Email me about new features, document templates, and occasional offers.</span>
+                  <span>I would like to receive occasional product updates, new document templates, and relevant offers from PinkPepper. I can unsubscribe at any time.</span>
                 </label>
                 <button disabled={loading} type="submit" className="w-full rounded-xl bg-[#D96C6C] py-3 font-bold text-white transition-colors hover:bg-[#C95A5A] disabled:opacity-70">
                   {loading ? "Creating account..." : "Create account"}

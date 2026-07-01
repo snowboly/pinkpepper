@@ -29,6 +29,7 @@ describe("settings profile surface", () => {
     expect(englishMessages).toContain('"lastName": "Surname"');
     expect(englishMessages).toContain('"companyName": "Company name (optional)"');
     expect(englishMessages).toContain('"marketingEmails": "Marketing emails"');
+    expect(englishMessages).toContain('"marketingEmailsDescription": "I would like to receive occasional product updates, new document templates, and relevant offers from PinkPepper. I can unsubscribe at any time."');
     expect(englishMessages).toContain('"transactionalEmailsNotice":');
     expect(englishMessages).toContain('"cancelAtPeriodEnd":');
   });
