@@ -384,7 +384,7 @@
     "cancelAtPeriodEnd": "Die automatische Verlängerung wird beendet. Ihr Tarif bleibt bis zum Ende des aktuellen Abrechnungszeitraums aktiv.",
     "currentPeriodEndsOn": "Der aktuelle Zeitraum endet am",
     "marketingEmails": "Marketing-E-Mails",
-    "marketingEmailsDescription": "Erhalten Sie gelegentliche E-Mails zu neuen Funktionen, Dokumentvorlagen und Angeboten.",
+    "marketingEmailsDescription": "Ich möchte gelegentlich Produktneuigkeiten, neue Dokumentvorlagen und relevante Angebote von PinkPepper erhalten. Ich kann mich jederzeit abmelden.",
     "transactionalEmailsNotice": "Transaktionale E-Mails wie Abrechnung, Sicherheit und Kontohinweise werden weiterhin gesendet.",
     "emailPreferencesSaved": "E-Mail-Einstellungen aktualisiert."
   }

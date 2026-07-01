@@ -469,7 +469,7 @@
     "cancelAtPeriodEnd": "Cancels automatic renewal. Your plan stays active until the end of the current billing period.",
     "currentPeriodEndsOn": "Current period ends on",
     "marketingEmails": "Marketing emails",
-    "marketingEmailsDescription": "Get occasional emails about new features, document templates, and offers.",
+    "marketingEmailsDescription": "I would like to receive occasional product updates, new document templates, and relevant offers from PinkPepper. I can unsubscribe at any time.",
     "transactionalEmailsNotice": "Transactional emails like billing, security, and account notices will still be sent.",
     "emailPreferencesSaved": "Email preferences updated."
   }
