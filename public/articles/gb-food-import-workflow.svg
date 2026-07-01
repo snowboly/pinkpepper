@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620" role="img" aria-labelledby="title desc">
+  <title id="title">Seven-step workflow for importing food into Great Britain</title>
+  <desc id="desc">A flow from product classification through approvals, documents, notification, border checks, customs, and post-import controls.</desc>
+  <rect width="1200" height="620" rx="36" fill="#F8FAFC"/>
+  <text x="72" y="78" fill="#0F172A" font-family="Arial, sans-serif" font-size="34" font-weight="700">Your GB food-import workflow</text>
+  <text x="72" y="116" fill="#64748B" font-family="Arial, sans-serif" font-size="18">Complete each gate before the consignment moves.</text>
+  <g font-family="Arial, sans-serif">
+    <g transform="translate(72 170)">
+      <rect width="280" height="128" rx="22" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="2"/>
+      <circle cx="38" cy="38" r="20" fill="#E11D48"/><text x="38" y="45" text-anchor="middle" fill="#FFFFFF" font-size="20" font-weight="700">1</text>
+      <text x="72" y="43" fill="#0F172A" font-size="21" font-weight="700">Classify the product</text>
+      <text x="24" y="82" fill="#475569" font-size="16">Commodity code, ingredients,</text>
+      <text x="24" y="106" fill="#475569" font-size="16">processing, origin and use.</text>
+    </g>
+    <path d="M352 234H388" stroke="#E11D48" stroke-width="4"/><path d="M388 234l-12-8v16z" fill="#E11D48"/>
+    <g transform="translate(400 170)">
+      <rect width="280" height="128" rx="22" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="2"/>
+      <circle cx="38" cy="38" r="20" fill="#E11D48"/><text x="38" y="45" text-anchor="middle" fill="#FFFFFF" font-size="20" font-weight="700">2</text>
+      <text x="72" y="43" fill="#0F172A" font-size="21" font-weight="700">Check the route</text>
+      <text x="24" y="82" fill="#475569" font-size="16">Risk status, safeguards, country</text>
+      <text x="24" y="106" fill="#475569" font-size="16">and establishment eligibility.</text>
+    </g>
+    <path d="M680 234H716" stroke="#E11D48" stroke-width="4"/><path d="M716 234l-12-8v16z" fill="#E11D48"/>
+    <g transform="translate(728 170)">
+      <rect width="400" height="128" rx="22" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="2"/>
+      <circle cx="38" cy="38" r="20" fill="#E11D48"/><text x="38" y="45" text-anchor="middle" fill="#FFFFFF" font-size="20" font-weight="700">3</text>
+      <text x="72" y="43" fill="#0F172A" font-size="21" font-weight="700">Secure documents</text>
+      <text x="24" y="82" fill="#475569" font-size="16">Certificate, commercial document, licence,</text>
+      <text x="24" y="106" fill="#475569" font-size="16">analysis, IUU or organic COI as applicable.</text>
+    </g>
+    <path d="M928 298V330" stroke="#E11D48" stroke-width="4"/><path d="M928 330l-8-12h16z" fill="#E11D48"/>
+    <g transform="translate(848 342)">
+      <rect width="280" height="128" rx="22" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="2"/>
+      <circle cx="38" cy="38" r="20" fill="#E11D48"/><text x="38" y="45" text-anchor="middle" fill="#FFFFFF" font-size="20" font-weight="700">4</text>
+      <text x="72" y="43" fill="#0F172A" font-size="21" font-weight="700">Pre-notify</text>
+      <text x="24" y="82" fill="#475569" font-size="16">Use IPAFFS when your product</text>
+      <text x="24" y="106" fill="#475569" font-size="16">route requires notification.</text>
+    </g>
+    <path d="M848 406H812" stroke="#E11D48" stroke-width="4"/><path d="M812 406l12-8v16z" fill="#E11D48"/>
+    <g transform="translate(520 342)">
+      <rect width="280" height="128" rx="22" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="2"/>
+      <circle cx="38" cy="38" r="20" fill="#E11D48"/><text x="38" y="45" text-anchor="middle" fill="#FFFFFF" font-size="20" font-weight="700">5</text>
+      <text x="72" y="43" fill="#0F172A" font-size="21" font-weight="700">Present for controls</text>
+      <text x="24" y="82" fill="#475569" font-size="16">Route through the correct BCP</text>
+      <text x="24" y="106" fill="#475569" font-size="16">or control point when required.</text>
+    </g>
+    <path d="M520 406H484" stroke="#E11D48" stroke-width="4"/><path d="M484 406l12-8v16z" fill="#E11D48"/>
+    <g transform="translate(192 342)">
+      <rect width="280" height="128" rx="22" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="2"/>
+      <circle cx="38" cy="38" r="20" fill="#E11D48"/><text x="38" y="45" text-anchor="middle" fill="#FFFFFF" font-size="20" font-weight="700">6</text>
+      <text x="72" y="43" fill="#0F172A" font-size="21" font-weight="700">Clear customs</text>
+      <text x="24" y="82" fill="#475569" font-size="16">Submit CDS data and pay duty</text>
+      <text x="24" y="106" fill="#475569" font-size="16">and import VAT as applicable.</text>
+    </g>
+    <path d="M192 406H156" stroke="#E11D48" stroke-width="4"/><path d="M156 406l12-8v16z" fill="#E11D48"/>
+    <g transform="translate(72 492)">
+      <rect width="1056" height="82" rx="22" fill="#0F172A"/>
+      <circle cx="42" cy="41" r="20" fill="#E11D48"/><text x="42" y="48" text-anchor="middle" fill="#FFFFFF" font-size="20" font-weight="700">7</text>
+      <text x="78" y="36" fill="#FFFFFF" font-size="21" font-weight="700">Control the product after release</text>
+      <text x="78" y="61" fill="#CBD5E1" font-size="16">Verify labels, traceability, storage, records, withdrawals and recalls before sale.</text>
+    </g>
+  </g>
+</svg>

@@ -4,7 +4,7 @@ import { FeatureTemplate } from "@/components/site/FeatureTemplate";
 export const metadata: Metadata = {
   title: "Food Safety Software for Cafes | PinkPepper",
   description:
-    "PinkPepper helps cafes create HACCP plans, hygiene SOPs, allergen records, and audit documentation for smaller food operations.",
+    "PinkPepper handles the paperwork side of running a cafe: HACCP plans for display fridges and ambient counters, allergen records for sandwiches and baked goods, temperature logs, and SOPs for reheating and milk steaming.",
   alternates: {
     canonical: "https://pinkpepper.io/use-cases/cafes",
   },
@@ -13,35 +13,35 @@ export const metadata: Metadata = {
 export default function CafeUseCasePage() {
   return (
     <FeatureTemplate
-      eyebrow="Cafes & bakeries"
-      title="Food safety docs for cafes and bakeries where one person does everything"
-      description="You don't have a compliance manager. You have an owner-operator who also makes coffee, bakes scones, and restocks the display fridge. PinkPepper gives small teams the same documentation quality as bigger operations — opening checks, allergen records, cleaning SOPs, HACCP — without needing a consultant for every document."
-      primaryCta="Start your cafe HACCP"
+      eyebrow="For coffee shops, bakeries, and grab-and-go food spots"
+      title="Food safety documentation light enough for a small team, solid enough for audit"
+      description="PinkPepper handles the paperwork side of running a cafe: HACCP plans for display fridges and ambient counters, allergen records for sandwiches and baked goods, temperature logs, and SOPs for reheating and milk steaming. Built for owner-operators and small teams who do not have a dedicated compliance person but still need records that stand up to an EHO inspection."
+      primaryCta="Start a cafe plan"
       painPoints={[
-        "You need HACCP, allergen records, and cleaning schedules — but nobody's job title is 'compliance officer.'",
-        "Cafes mix beverage prep, ambient pastry, chilled sandwiches, reheated soups, and front-counter service all in one small space.",
-        "EHO inspectors expect the same documentation rigour from a 12-seat cafe as a 200-cover restaurant.",
+        "HACCP templates designed for large kitchens expect dedicated monitoring roles that a three-person cafe team simply does not have.",
+        "Display fridges, ambient bakery displays, and grab-and-go items create a mix of food safety risks that most generic checklists ignore.",
+        "The owner-operator is also the head chef, barista, and food safety lead, with no time to maintain documentation that takes longer than the tasks it records.",
       ]}
       outcomes={[
-        "A HACCP plan sized for your operation — not a 40-page document designed for a factory.",
-        "Opening and closing checklists your team will actually complete every shift.",
-        "Allergen records that cover baked goods, display items, and counter service in one place.",
+        "Monitoring routines fit the cadence of a cafe shift: opening checks, mid-morning display fridge logs, and close-down records.",
+        "Allergen information for sandwiches, cakes, and seasonal items stays current and accessible to counter staff during a rush.",
+        "EHO-ready records compile quickly without pulling the owner away from the floor for half a day.",
       ]}
       sections={[
         {
-          title: "Small space, mixed risks",
+          title: "Documentation that fits a cafe, not a hotel kitchen",
           body:
-            "A cafe handles ambient pastries, chilled grab-and-go, reheated soups, milk-based drinks, and display-fridge storage — often with shared equipment and one prep area. PinkPepper structures HACCP controls around that reality instead of treating it like a simplified restaurant.",
+            "Most cafe teams run with two or three people on shift. One person opens, makes coffee, restocks the display, serves customers, and handles the closing checks. PinkPepper builds HACCP plans and monitoring logs around that reality. The system covers the workflows that actually matter in a cafe: display fridge temperature checks every few hours, ambient shelf-life tracking for pastries and cakes, steam wand cleaning logs, and reheat records for toasties and hot food items. No modules about sous-vide or blast chilling that you have to scroll past to find the relevant sections.",
         },
         {
-          title: "Daily routines that actually get done",
+          title: "Allergen management for counters and displays",
           body:
-            "The biggest compliance gap in cafes isn't missing a HACCP plan — it's that the opening checks, fridge logs, and cleaning records aren't getting filled in. PinkPepper generates short, clear checklists designed to survive a morning rush.",
+            "A cafe allergen risk is different from a restaurant. Customers pick items from a display, often without reading ingredient lists. Staff need to answer questions about milk alternatives, gluten content, nut traces, and egg in baked goods, quickly and accurately, while a queue forms at the till. PinkPepper builds an allergen matrix that covers your entire counter offer, including seasonal specials and supplier substitutions. Counter staff check it on the device they use for orders, and it updates whenever a recipe or ingredient changes. The information your team gives to a customer with a nut allergy is the same information the kitchen used when they prepped that banana bread this morning.",
         },
         {
-          title: "Bakery-specific allergen complexity",
+          title: "Records that work for the owner-operator",
           body:
-            "Flour dust, nut toppings, shared ovens, egg wash cross-contact — bakery allergen risks are different from restaurant risks. PinkPepper generates allergen matrices and cross-contact SOPs that account for baking-specific hazards, not just menu-level declarations.",
+            "If you run a cafe, you are probably the person opening up at 6am, taking deliveries, prepping food, working the machine, and closing down at 5pm. Food safety documentation has to fit into the gaps between those tasks or it simply will not get done. PinkPepper gives you fast daily checklists, automatic prompts for the checks that matter at each point in the day, and a single place where all your records accumulate without you having to file anything. When an EHO visits, you can show them a complete set of logs and plans without apologising for gaps. That matters for your hygiene rating and it matters for the confidence you project when a customer asks about your controls.",
         },
       ]}
       heroImage={{
@@ -50,19 +50,19 @@ export default function CafeUseCasePage() {
       }}
       relatedLinks={[
         {
-          href: "/features/food-safety-sop-generator",
-          label: "Food safety SOP generator",
-          description: "Generate daily checklists, cleaning SOPs, and hygiene procedures for smaller teams.",
-        },
-        {
           href: "/features/allergen-documentation",
           label: "Allergen documentation",
-          description: "Document bakery, pastry, and menu allergen controls more cleanly.",
+          description: "Keep sandwich, bakery, milk alternative, and seasonal-item allergen information accurate during busy counter service.",
         },
         {
-          href: "/pricing",
-          label: "Pricing",
-          description: "See which tier fits smaller teams moving from questions to usable documents.",
+          href: "/features/food-safety-sop-generator",
+          label: "Food safety SOP generator",
+          description: "Create opening checks, cleaning routines, reheating procedures, and daily records that suit small teams.",
+        },
+        {
+          href: "/resources/food-safety-opening-and-closing-checklist",
+          label: "Food safety opening and closing checklist",
+          description: "Start with a practical daily checklist for opening checks, display monitoring, and close-down routines.",
         },
       ]}
     />

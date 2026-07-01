@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { FeatureTemplate } from "@/components/site/FeatureTemplate";
 
 export const metadata: Metadata = {
-  title: "Food Safety SOP Generator — AI-Powered | PinkPepper",
+  title: "Food Safety SOP Generator - AI-Powered | PinkPepper",
   description:
-    "Generate cleaning SOPs, hygiene procedures, temperature logs & training records in minutes. Grounded in EC 852/2004 & UK FSA guidance. Try free.",
+    "Generate cleaning SOPs, hygiene procedures, temperature logs and training records in minutes. Grounded in EC 852/2004 and UK FSA guidance. Try free.",
   alternates: {
     canonical: "https://pinkpepper.io/features/food-safety-sop-generator",
   },
@@ -36,14 +36,14 @@ export default function FoodSafetySopGeneratorPage() {
             "PinkPepper is suited to the documents teams actually use: cleaning SOPs, opening and closing checks, staff hygiene procedures, temperature logs, corrective action forms, and training records.",
         },
         {
+          title: "Monitoring records sit inside the same workflow",
+          body:
+            "Temperature checks and daily monitoring logs work better when they are treated as part of the same SOP system rather than separate forms nobody owns. PinkPepper helps teams connect opening checks, close-down routines, and temperature records so the daily workflow is easier to follow and easier to review.",
+        },
+        {
           title: "Supports local review and adaptation",
           body:
             "Generated drafts are a starting point for site-specific review. That makes it easier to adapt wording, assign accountability, and export the record into the formats your business already uses.",
-        },
-        {
-          title: "Pairs well with the rest of the compliance stack",
-          body:
-            "SOP generation is more useful when it connects to HACCP plans, allergen controls, and audit readiness. PinkPepper is positioned around that wider workflow instead of isolated document creation.",
         },
       ]}
       heroImage={{
@@ -52,19 +52,19 @@ export default function FoodSafetySopGeneratorPage() {
       }}
       relatedLinks={[
         {
-          href: "/features/haccp-plan-generator",
-          label: "HACCP plan generator",
-          description: "Use HACCP outputs to inform SOP structure, monitoring, and corrective actions.",
+          href: "/resources/food-safety-opening-and-closing-checklist",
+          label: "Food safety opening and closing checklist",
+          description: "Start with a daily checklist structure for shift checks, sign-off, and corrective actions.",
         },
         {
-          href: "/features/allergen-documentation",
-          label: "Allergen documentation",
-          description: "Pair SOPs with allergen controls and menu-change records.",
+          href: "/resources/temperature-monitoring-log-template",
+          label: "Temperature monitoring log template",
+          description: "Use a clearer log structure for fridges, freezers, hot hold, and out-of-range actions.",
         },
         {
-          href: "/pricing",
-          label: "Pricing",
-          description: "See which plan covers document generation, exports, and food safety consultancy.",
+          href: "/articles/temperature-control-in-haccp-limits-and-monitoring",
+          label: "Temperature control in HACCP",
+          description: "Read the practical guide behind the limits, monitoring routines, and records teams actually need.",
         },
       ]}
     />

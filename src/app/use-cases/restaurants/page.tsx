@@ -4,7 +4,7 @@ import { FeatureTemplate } from "@/components/site/FeatureTemplate";
 export const metadata: Metadata = {
   title: "Food Safety Software for Restaurants | PinkPepper",
   description:
-    "PinkPepper helps restaurants create HACCP plans, SOPs, allergen records, and audit-ready food safety documentation.",
+    "PinkPepper creates HACCP plans, monitoring logs, allergen records, and SOPs that work inside the rhythm of a restaurant kitchen.",
   alternates: {
     canonical: "https://pinkpepper.io/use-cases/restaurants",
   },
@@ -13,35 +13,35 @@ export const metadata: Metadata = {
 export default function RestaurantUseCasePage() {
   return (
     <FeatureTemplate
-      eyebrow="Restaurants"
-      title="HACCP plans, SOPs, and allergen records that match how your kitchen actually runs"
-      description="Your HACCP plan should reflect your menu, your prep flow, and your service model — not a generic template written for a different type of operation. PinkPepper drafts compliance documents around the way restaurants actually work: receiving, prep, cook, hot hold, cooling, plating, and service."
-      primaryCta="Start your restaurant HACCP"
+      eyebrow="For restaurant kitchens and FOH teams"
+      title="Food safety documentation that keeps up with service"
+      description="PinkPepper creates HACCP plans, monitoring logs, allergen records, and SOPs that work inside the rhythm of a restaurant kitchen. Prep schedules, line checks, hot-hold temperatures, cooling logs, reheating records, and the allergen handoff to front of house all live in one place. Built for operators who need documentation that still works when the pass is full and the printer will not stop."
+      primaryCta="Start a restaurant plan"
       painPoints={[
-        "Menus change weekly but allergen records and HACCP plans are still based on last year's version.",
-        "Compliance records live across paper forms, shared drives, and someone's WhatsApp photos.",
-        "Documentation needs to survive a busy Friday night — if staff can't follow it during service, it's useless.",
+        "Paper logs get filled in after the fact because nobody has time to find the right clipboard during a busy service.",
+        "Menu changes, specials, and supplier swaps break the HACCP plan that was written six months ago and never updated.",
+        "Allergen communication between kitchen and front of house relies on verbal handoffs and a ring binder nobody checks.",
       ]}
       outcomes={[
-        "HACCP plans built around your actual menu and prep flow, not a generic food business template.",
-        "Allergen matrices that update when your menu does — with cross-contact controls for each station.",
-        "Audit evidence you can export and hand to an inspector without scrambling.",
+        "Monitoring logs are quick enough to complete in real time, so your records reflect what actually happened during service.",
+        "HACCP plans update when your menu changes, with CCPs recalculated for new dishes and modified prep steps.",
+        "Front-of-house staff access live allergen matrices for every dish, so they answer customer questions without running to the pass.",
       ]}
       sections={[
         {
-          title: "Multi-station kitchens, one compliance system",
+          title: "HACCP plans built around prep and service, not just theory",
           body:
-            "Restaurants juggle cold prep, hot cooking, holding, reheating, and plating across multiple stations. PinkPepper structures your HACCP around those stages so monitoring points and corrective actions map to what actually happens on shift — not a theoretical process flow.",
+            "A restaurant HACCP plan has to cover prep, cooking, hot-hold, cooling, and reheating, often across a split shift. PinkPepper structures your plan so each stage matches a real workflow: morning prep for the lunch service, afternoon prep for dinner, and the cooling and storage that happens between them. When your menu shifts seasonally or a supplier changes, you adjust the plan without rebuilding it from scratch. The document stays live and useful, not something that gathers dust on a shelf above the office door.",
         },
         {
-          title: "Allergen handoff between BOH and FOH",
+          title: "Allergen records that connect kitchen and front of house",
           body:
-            "The riskiest moment in restaurant allergen control is the handoff between kitchen and service. PinkPepper generates allergen matrices, menu-change records, and front-of-house communication SOPs so both sides of the pass have the same information.",
+            "The most common point of failure in restaurant allergen management is the gap between what the kitchen puts on a plate and what the server tells the customer. PinkPepper ties your allergen matrix to your dish specs and makes it accessible to FOH staff on the device they already carry. When a prep cook substitutes an ingredient or the pastry section changes a garnish, the matrix updates and the front-of-house team sees it immediately. No more shouting across the pass about whether the sauce contains dairy.",
         },
         {
-          title: "Menu changes without compliance lag",
+          title: "Logs and records that survive a busy shift",
           body:
-            "New dish? Seasonal rotation? Supplier swap? Each change should trigger an allergen review and potentially a HACCP update. PinkPepper lets you regenerate the affected documentation in minutes instead of weeks.",
+            "Temperature checks, line checks, fridge monitoring, and hot-hold logs need to be fast enough that they actually get done when the kitchen is under pressure. PinkPepper strips the process down to the essentials, with pre-set checklists, smart defaults, and a structure that works on a phone or tablet without zooming and scrolling. When an EHO walks in on a Saturday lunch service, you can pull up a week of completed logs instead of rifling through a folder with half the pages blank and the others unreadable.",
         },
       ]}
       heroImage={{
@@ -50,19 +50,19 @@ export default function RestaurantUseCasePage() {
       }}
       relatedLinks={[
         {
-          href: "/features/haccp-plan-generator",
-          label: "HACCP plan generator",
-          description: "Build restaurant-specific hazard analysis and monitoring logic.",
-        },
-        {
           href: "/features/allergen-documentation",
           label: "Allergen documentation",
-          description: "Keep allergen matrices and menu controls aligned with service changes.",
+          description: "Keep kitchen and front-of-house allergen information aligned as dishes, garnishes, and ingredients change.",
         },
         {
-          href: "/pricing",
-          label: "Pricing",
-          description: "Review plans for document generation, exports, and review support.",
+          href: "/features/haccp-plan-generator",
+          label: "HACCP plan generator",
+          description: "Build HACCP plans that reflect prep, service, hot hold, cooling, and reheating in real restaurant workflows.",
+        },
+        {
+          href: "/resources/temperature-monitoring-log-template",
+          label: "Temperature monitoring log template",
+          description: "Use a practical structure for line checks, hot-hold logs, cooling records, and fridge monitoring.",
         },
       ]}
     />

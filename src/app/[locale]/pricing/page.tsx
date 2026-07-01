@@ -1,5 +1,5 @@
 import PricingPage from "@/app/pricing/page";
-import { buildPublicMetadata } from "@/lib/seo/public-metadata";
+import { buildLocalizedWrapperMetadata } from "@/lib/seo/public-metadata";
 import { isPublicLocale, getPublicMessages } from "@/lib/public-routes";
 import { notFound } from "next/navigation";
 
@@ -7,7 +7,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const { locale } = await params;
   if (!isPublicLocale(locale)) notFound();
   const messages = await getPublicMessages(locale);
-  return buildPublicMetadata(locale, "/pricing", messages.pages.pricing);
+  return buildLocalizedWrapperMetadata(locale, "/pricing", messages.pages.pricing);
 }
 
 export default async function LocalizedPricingPage({

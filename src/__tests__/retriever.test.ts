@@ -2,9 +2,12 @@ import { describe, expect, it } from "vitest";
 import { buildChunkMetadata } from "@/lib/rag/source-taxonomy";
 import {
   buildKnowledgeSearchRequest,
+  buildLegalSearchTerms,
   buildUserDocumentSearchRpcArgs,
   filterAuthorityFallbackChunks,
   rankRetrievedChunks,
+  rankLegalChunks,
+  selectDistinctSourceChunks,
   shouldRetryLegacyUserDocumentSearch,
   type KnowledgeChunk,
 } from "@/lib/rag/retriever";
@@ -19,6 +22,92 @@ describe("chunk metadata", () => {
 });
 
 describe("retrieval ranking", () => {
+  it("ranks an explicit amendment target above a newer unrelated act", () => {
+    const ranked = rankLegalChunks(
+      [
+        {
+          id: "551",
+          content: "Regulation (EU) 2026/551 amends Implementing Regulation (EU) 2021/632.",
+          source_type: "regulation",
+          source_name: "Regulation (EU) No 551/2026",
+          section_ref: null,
+          metadata: { source_class: "primary_law", dateDocument: "2026-03-13" },
+          similarity: 0.94,
+        },
+        {
+          id: "194",
+          content: "Regulation (EU) 2026/194 amends Implementing Regulation (EU) 2019/1793.",
+          source_type: "regulation",
+          source_name: "Regulation (EU) No 194/2026",
+          section_ref: null,
+          metadata: { source_class: "primary_law", dateDocument: "2026-01-28" },
+          similarity: 0.78,
+        },
+      ],
+      {
+        precisionRequired: true,
+        recencyRequired: true,
+        exactReferences: ["2019/1793"],
+        celexReferences: [],
+        targetInstrumentReferences: ["2019/1793"],
+        relationship: "amends",
+        requestedDetails: [],
+      }
+    );
+
+    expect(ranked.map((chunk) => chunk.id)).toEqual(["194", "551"]);
+  });
+
+  it("uses document recency after exact amendment relevance", () => {
+    const ranked = rankLegalChunks(
+      [
+        {
+          id: "194",
+          content: "Regulation (EU) 2026/194 amends Regulation (EU) 2019/1793.",
+          source_type: "regulation",
+          source_name: "Regulation (EU) 2026/194",
+          section_ref: null,
+          metadata: { source_class: "primary_law", dateDocument: "2026-01-28" },
+          similarity: 0.95,
+        },
+        {
+          id: "459",
+          content: "Regulation (EU) 2026/459 amends Regulation (EU) 2019/1793.",
+          source_type: "regulation",
+          source_name: "Regulation (EU) 2026/459",
+          section_ref: null,
+          metadata: { source_class: "primary_law", dateDocument: "2026-02-24" },
+          similarity: 0.75,
+        },
+      ],
+      {
+        precisionRequired: true,
+        recencyRequired: true,
+        exactReferences: ["2019/1793"],
+        celexReferences: [],
+        targetInstrumentReferences: ["2019/1793"],
+        relationship: "amends",
+        requestedDetails: [],
+      }
+    );
+
+    expect(ranked.map((chunk) => chunk.id)).toEqual(["459", "194"]);
+  });
+
+  it("caps repeated chunks from one legal source", () => {
+    const chunks = [1, 2, 3].map((index) => ({
+      id: `a-${index}`,
+      content: `Article ${index}`,
+      source_type: "regulation",
+      source_name: "Regulation A",
+      section_ref: `Article ${index}`,
+      metadata: { source_key: "eu:a", source_class: "primary_law" },
+      similarity: 0.9 - index / 100,
+    })) satisfies KnowledgeChunk[];
+
+    expect(selectDistinctSourceChunks(chunks, 2).map((chunk) => chunk.id)).toEqual(["a-1", "a-2"]);
+  });
+
   it("ranks primary law above internal practice", () => {
     const ranked = rankRetrievedChunks([
       {
@@ -88,7 +177,21 @@ describe("retrieval ranking", () => {
     });
   });
 
-  it("recovers authoritative EU regulation chunks even when sync metadata is missing", () => {
+  it("builds lexical legal search terms from target identifiers and relationships", () => {
+    expect(
+      buildLegalSearchTerms({
+        precisionRequired: true,
+        recencyRequired: true,
+        exactReferences: ["2019/1793"],
+        celexReferences: [],
+        targetInstrumentReferences: ["2019/1793"],
+        relationship: "amends",
+        requestedDetails: ["annex"],
+      })
+    ).toEqual(["2019/1793", "amend"]);
+  });
+
+  it("does not recover regulation chunks as authoritative when provenance is missing", () => {
     const filtered = filterAuthorityFallbackChunks(
       [
         {
@@ -116,7 +219,7 @@ describe("retrieval ranking", () => {
       }
     );
 
-    expect(filtered.map((chunk) => chunk.id)).toEqual(["1"]);
+    expect(filtered).toEqual([]);
   });
 
   it("builds conversation-scoped user document rpc args when a conversation id is provided", () => {

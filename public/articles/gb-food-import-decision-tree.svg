@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+  <title id="title">Decision tree for selecting a Great Britain food import route</title>
+  <desc id="desc">A route-selection diagram separating animal products, high-risk non-animal food, plants, organic products, and standard food.</desc>
+  <rect width="1200" height="760" rx="36" fill="#F8FAFC"/>
+  <g font-family="Arial, sans-serif">
+    <text x="70" y="70" fill="#0F172A" font-size="34" font-weight="700">Which import route applies?</text>
+    <text x="70" y="106" fill="#64748B" font-size="18">A product can follow more than one route. Organic and IUU controls are additional layers.</text>
+    <rect x="390" y="142" width="420" height="86" rx="24" fill="#0F172A"/>
+    <text x="600" y="178" text-anchor="middle" fill="#FFFFFF" font-size="22" font-weight="700">What exactly are you importing?</text>
+    <text x="600" y="205" text-anchor="middle" fill="#CBD5E1" font-size="16">Use the commodity code and full specification.</text>
+    <path d="M600 228V270M155 270H1045" stroke="#94A3B8" stroke-width="3"/>
+    <g>
+      <path d="M155 270V302" stroke="#94A3B8" stroke-width="3"/>
+      <rect x="45" y="302" width="220" height="152" rx="22" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="2"/>
+      <text x="155" y="340" text-anchor="middle" fill="#E11D48" font-size="19" font-weight="700">Animal content?</text>
+      <text x="155" y="371" text-anchor="middle" fill="#0F172A" font-size="17" font-weight="700">POAO, ABP or</text>
+      <text x="155" y="395" text-anchor="middle" fill="#0F172A" font-size="17" font-weight="700">composite product</text>
+      <text x="155" y="429" text-anchor="middle" fill="#64748B" font-size="15">Check BTOM category,</text>
+      <text x="155" y="449" text-anchor="middle" fill="#64748B" font-size="15">approval and BCP route.</text>
+    </g>
+    <g>
+      <path d="M377 270V302" stroke="#94A3B8" stroke-width="3"/>
+      <rect x="267" y="302" width="220" height="152" rx="22" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="2"/>
+      <text x="377" y="340" text-anchor="middle" fill="#E11D48" font-size="19" font-weight="700">Listed HRFNAO?</text>
+      <text x="377" y="371" text-anchor="middle" fill="#0F172A" font-size="17" font-weight="700">Product and origin</text>
+      <text x="377" y="395" text-anchor="middle" fill="#0F172A" font-size="17" font-weight="700">combination matters</text>
+      <text x="377" y="429" text-anchor="middle" fill="#64748B" font-size="15">Use the current GB list,</text>
+      <text x="377" y="449" text-anchor="middle" fill="#64748B" font-size="15">certificate and CHED-D rules.</text>
+    </g>
+    <g>
+      <path d="M600 270V302" stroke="#94A3B8" stroke-width="3"/>
+      <rect x="490" y="302" width="220" height="152" rx="22" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="2"/>
+      <text x="600" y="340" text-anchor="middle" fill="#E11D48" font-size="19" font-weight="700">Plant health goods?</text>
+      <text x="600" y="371" text-anchor="middle" fill="#0F172A" font-size="17" font-weight="700">Plants, fresh produce,</text>
+      <text x="600" y="395" text-anchor="middle" fill="#0F172A" font-size="17" font-weight="700">seeds or simple products</text>
+      <text x="600" y="429" text-anchor="middle" fill="#64748B" font-size="15">Check the plant-health risk</text>
+      <text x="600" y="449" text-anchor="middle" fill="#64748B" font-size="15">category and certificate route.</text>
+    </g>
+    <g>
+      <path d="M823 270V302" stroke="#94A3B8" stroke-width="3"/>
+      <rect x="713" y="302" width="220" height="152" rx="22" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="2"/>
+      <text x="823" y="340" text-anchor="middle" fill="#E11D48" font-size="19" font-weight="700">Fishery product?</text>
+      <text x="823" y="371" text-anchor="middle" fill="#0F172A" font-size="17" font-weight="700">Follow the POAO route</text>
+      <text x="823" y="395" text-anchor="middle" fill="#0F172A" font-size="17" font-weight="700">plus separate IUU rules</text>
+      <text x="823" y="429" text-anchor="middle" fill="#64748B" font-size="15">Most wild-caught fish needs</text>
+      <text x="823" y="449" text-anchor="middle" fill="#64748B" font-size="15">validated catch documentation.</text>
+    </g>
+    <g>
+      <path d="M1045 270V302" stroke="#94A3B8" stroke-width="3"/>
+      <rect x="935" y="302" width="220" height="152" rx="22" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="2"/>
+      <text x="1045" y="340" text-anchor="middle" fill="#E11D48" font-size="19" font-weight="700">Standard food?</text>
+      <text x="1045" y="371" text-anchor="middle" fill="#0F172A" font-size="17" font-weight="700">No SPS route found</text>
+      <text x="1045" y="395" text-anchor="middle" fill="#0F172A" font-size="17" font-weight="700">after live checks</text>
+      <text x="1045" y="429" text-anchor="middle" fill="#64748B" font-size="15">Customs, food law, labelling</text>
+      <text x="1045" y="449" text-anchor="middle" fill="#64748B" font-size="15">and traceability still apply.</text>
+    </g>
+    <path d="M155 454V508M1045 454V508M155 508H1045" stroke="#94A3B8" stroke-width="3"/>
+    <rect x="170" y="540" width="390" height="132" rx="24" fill="#FFF1F2" stroke="#FECDD3" stroke-width="2"/>
+    <text x="365" y="579" text-anchor="middle" fill="#9F1239" font-size="20" font-weight="700">Is it sold as organic?</text>
+    <text x="365" y="611" text-anchor="middle" fill="#475569" font-size="16">Add organic importer certification and a</text>
+    <text x="365" y="636" text-anchor="middle" fill="#475569" font-size="16">GB certificate of inspection where required.</text>
+    <rect x="640" y="540" width="390" height="132" rx="24" fill="#FFF1F2" stroke="#FECDD3" stroke-width="2"/>
+    <text x="835" y="579" text-anchor="middle" fill="#9F1239" font-size="20" font-weight="700">Are safeguards or licences active?</text>
+    <text x="835" y="611" text-anchor="middle" fill="#475569" font-size="16">Check disease restrictions, emergency controls,</text>
+    <text x="835" y="636" text-anchor="middle" fill="#475569" font-size="16">CITES and product-specific authorisations.</text>
+    <text x="600" y="718" text-anchor="middle" fill="#64748B" font-size="16">Re-check the live official tools before every shipment.</text>
+  </g>
+</svg>

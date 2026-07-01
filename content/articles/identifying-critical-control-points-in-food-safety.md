@@ -1,148 +1,181 @@
 ---
-title: "How to Identify Critical Control Points Without Overcomplicating HACCP"
+title: "Critical Control Points vs Prerequisite Programmes: How Food Businesses Really Manage Safety"
 slug: "identifying-critical-control-points-in-food-safety"
-excerpt: "Learn how to identify genuine CCPs, avoid turning routine controls into CCPs, and keep your HACCP plan practical enough to use on site."
+excerpt: "Understand the operational difference between CCPs and PRPs in HACCP plans. A practical guide for EU and UK food businesses that want compliant, workable food safety systems."
 category: "Fundamentals"
 publishedAt: "2025-12-03"
 image: "https://images.pexels.com/photos/5953502/pexels-photo-5953502.jpeg?auto=compress&cs=tinysrgb&w=1600&q=80"
 source: "ilovehaccp"
 ---
 
-<div class="pp-article-callout"><strong>Audit Tip:</strong> If your HACCP plan has more than six CCPs on a single production line, you are almost certainly listing Prerequisite Programmes as CCPs. Auditors will push on this — a bloated plan signals that the team does not understand the distinction.</div>
+<h2>Why the distinction matters inside a real kitchen</h2>
 
-<p>You have performed your hazard analysis and identified a significant risk — perhaps <em>Salmonella</em> in raw poultry or metal fragments from a grinding operation. The next question is the most operational of the entire HACCP process: <strong>where in my process flow do I stop this hazard?</strong></p>
+<p>Walk into any serious food business and you will find people managing safety all day long. A chef checks the core temperature of a chicken breast before it leaves the pass. A porter tests the concentration of sanitiser in the pot wash sink. A shift manager walks through the dry store and glances at the wall thermometer.</p>
 
-<p>This is the role of the Critical Control Point (CCP). Misidentifying CCPs is one of the most common reasons HACCP plans fail audits — either the plan has too few CCPs, leaving the consumer unprotected, or too many, making the plan bloated, unmanageable, and ignored by staff. Here is how to identify them correctly.</p>
+<p>Only one of those actions is a Critical Control Point. The others are prerequisite programmes. The difference is not academic. If a business labels everything as a CCP, the HACCP plan becomes noise. If it misses a genuine CCP, the plan fails at its only job: controlling hazards that would otherwise make someone ill.</p>
 
-<h2>What exactly is a CCP — and what it is not</h2>
+<p>This article is for food business operators, technical managers, and anyone who signs off a HACCP plan in an EU or UK establishment. It explains the boundary between CCPs and PRPs in operational terms, clarifies where the confusion usually starts, and gives you a framework for making the distinction stick in daily practice, not just on paper.</p>
 
-<p>A <strong>Critical Control Point (CCP)</strong> is defined as a step at which control can be applied and is <strong>essential</strong> to prevent, eliminate, or reduce a food safety hazard to an acceptable level. Understanding what a CCP is not is just as important.</p>
+<h2>Definitions that actually mean something</h2>
 
-<table>
-  <thead>
-    <tr>
-      <th>Term</th>
-      <th>Definition</th>
-      <th>Example</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>Control Point (CP)</strong></td>
-      <td>Any step where some form of control is exercised</td>
-      <td>Checking the temperature of a cooler</td>
-    </tr>
-    <tr>
-      <td><strong>Critical Control Point (CCP)</strong></td>
-      <td>The <em>last</em> practical point where loss of control results in an unacceptable health risk</td>
-      <td>Cooking raw chicken to 74°C to kill pathogens</td>
-    </tr>
-    <tr>
-      <td><strong>Prerequisite Programme (PRP)</strong></td>
-      <td>Basic environmental and operational conditions</td>
-      <td>Cleaning the floor, pest control, handwashing</td>
-    </tr>
-  </tbody>
-</table>
+<h3>What a Critical Control Point is</h3>
 
-<div class="pp-article-callout"><strong>Key Distinction:</strong> If a step fails and the product can be fixed later before it reaches the consumer, it is likely a Control Point. If failure means the product must be destroyed or causes illness, it is a CCP.</div>
+<p>A Critical Control Point is a step in the process where a specific hazard can be prevented, eliminated, or reduced to an acceptable level, <em>and</em> where failure at that step leaves no later stage to fix it. Control must be measurable. You need a critical limit, you need monitoring, and you need a corrective action that everyone understands.</p>
 
-<h2>The decision tree: your objective tool for CCP identification</h2>
+<p>The classic example is cooking raw poultry. If the core temperature does not reach a level that kills <em>Campylobacter</em> and <em>Salmonella</em>, the hazard moves straight to the customer. No subsequent chilling, holding, or packaging step can undo it. That is why cooking is nearly always a CCP in a kitchen that handles raw meat.</p>
 
-<p>You cannot identify CCPs based on gut feeling or convenience. You must use a structured logic sequence known as the <strong>CCP Decision Tree</strong>. This tool, recommended by Codex Alimentarius, removes subjectivity by asking a series of specific yes/no questions for <strong>every significant hazard</strong> identified in your hazard analysis.</p>
+<h3>What a Prerequisite Programme is</h3>
 
-<h3>Step 1: Is there a subsequent step that will eliminate the hazard?</h3>
+<p>A Prerequisite Programme is a foundational control measure that creates the environment for safe production. It is typically general, applies across multiple products or processes, and rarely has a single measurable critical limit. If a PRP fails, it does not usually create an immediate, direct public health threat in the same way a missed CCP failure does, though repeated PRP failure absolutely corrodes safety.</p>
 
-<p><em>If I do not control this hazard here, will a later step in my process take care of it?</em></p>
+<p>Common PRPs include supplier approval, cleaning and disinfection schedules, pest control, personal hygiene rules, waste management, and maintenance of cold storage rooms. A walk-in chiller running at 6°C instead of 4°C is a PRP failure, but it is not automatically a CCP failure unless a specific chilled product with a strict temperature-dependent shelf-life limit is involved and no further control step exists.</p>
 
-<ul>
-  <li><strong>Yes:</strong> the current step is <strong>not</strong> a CCP. Proceed to evaluate the later step. <em>Example: you identify bone fragments in incoming raw meat. You have a grinder with a bone-collection system later in the process. The receiving step is a Control Point (supplier monitoring), but the grinding step is the CCP.</em></li>
-  <li><strong>No:</strong> proceed to Step 2.</li>
-</ul>
+<h2>The operational test: would you reject the batch?</h2>
 
-<h3>Step 2: Is this step specifically designed to eliminate or reduce the hazard?</h3>
+<p>The simplest way to check whether something is a CCP is to ask one question: <em>if monitoring shows the limit was breached, do you reject or rework that specific batch, or do you just fix the process?</em></p>
 
-<p><em>Is the purpose of this step to kill pathogens or remove foreign material?</em></p>
+<p>If the answer is that you hold the batch, quarantine it, reprocess it, or bin it, you are almost certainly looking at a CCP. If the answer is that you call maintenance, adjust the thermostat, retrain someone, or increase cleaning frequency, you are probably looking at a PRP.</p>
 
-<ul>
-  <li><strong>Yes:</strong> this is almost certainly a <strong>CCP</strong>. <em>Examples: a pasteuriser, a metal detector, a cooking kettle, a filter screen.</em></li>
-  <li><strong>No:</strong> proceed to Step 3.</li>
-</ul>
+<p>This distinction collapses when businesses write HACCP plans that treat everything as a CCP because they are afraid an auditor will criticise them for not having enough control. The result is a plan with twenty-five CCPs, no one monitoring them properly, and a team that stops taking any of it seriously.</p>
 
-<h3>Step 3: Could contamination occur or increase to unacceptable levels at this step?</h3>
+<h2>Where food businesses get the boundary wrong</h2>
 
-<p><em>Is this a danger zone where hazards multiply — for example through temperature abuse — or are introduced through cross-contact?</em></p>
+<p>The boundary between CCPs and PRPs causes practical problems in five recurring areas. Each is worth auditing in your own plan.</p>
 
-<ul>
-  <li><strong>Yes: CCP.</strong> This is common in holding or cooling steps. <em>Example: cooling a large vat of soup. If not cooled from 57°C to 21°C within 2 hours, <em>Clostridium perfringens</em> can grow. Cooling is a CCP.</em></li>
-  <li><strong>No:</strong> not a CCP. Proceed to the next step in the process flow.</li>
-</ul>
+<h3>1. Chilled storage</h3>
 
-<h2>Common CCPs in food manufacturing by category</h2>
+<p>A cold room at or below 5°C is a PRP for most operations. It becomes a CCP only in narrower cases where a specific product relies on that temperature as the main barrier to pathogen growth and no later step restores the safety margin. If you treat every chiller as a CCP, you create paperwork for deviations that are operationally important but not batch-level food safety failures.</p>
 
-<p>While every facility is different, CCPs tend to cluster around specific types of operations. If you are struggling to find yours, look for these in your process flow.</p>
+<h3>2. Metal detection and foreign body control</h3>
+
+<p>Metal detection after packing is typically a CCP. The hazard is physical. The critical limit is defined by test piece size. The monitoring is immediate. The corrective action is quarantine and re-inspection of the affected product. This is not the same as a PRP maintenance check on the detector itself, which is a separate requirement.</p>
+
+<h3>3. Allergen management</h3>
+
+<p>Allergen control often spans both PRPs and tighter process-stage checks. Supplier allergen declarations, segregation rules, cleaning controls, and utensil management are usually PRPs. Packing-stage label verification, however, may be treated as a CCP or another tightly controlled step where a wrong label would create an immediate consumer risk with no later chance to correct it. The right classification depends on the process and the hazard analysis, not on a blanket rule.</p>
+
+<h3>4. Cleaning</h3>
+
+<p>Routine cleaning of food contact surfaces is a PRP. It becomes a CCP only in very specific circumstances, typically where clean-in-place systems are validated for allergen removal between production runs, with measurable limits and defined verification. In most small and medium businesses, cleaning remains a PRP. The risk is over-validating something you cannot measure in real time and then pretending it is a CCP on the plan.</p>
+
+<h3>5. Supplier monitoring</h3>
+
+<p>Approved supplier lists, certificates of analysis, and periodic audits are PRPs. They are essential. They reduce the likelihood of a hazard entering the site. But they do not control a specific hazard at a specific process step with a measurable critical limit, so they are not CCPs.</p>
+
+<h2>A comparison table you can use for a plan review</h2>
+
+<p>Use this table when you sit down with your HACCP team to challenge every CCP on the plan. If a control point does not match the left-hand column, it is probably a PRP or a general operational control.</p>
 
 <table>
   <thead>
     <tr>
-      <th>Category</th>
-      <th>Typical CCPs</th>
-      <th>Hazard controlled</th>
+      <th>Characteristic</th>
+      <th>Critical Control Point</th>
+      <th>Prerequisite Programme</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td><strong>Thermal Processing</strong></td>
-      <td>Cooking, baking, frying, pasteurisation, retorting</td>
-      <td>Biological (pathogen kill step)</td>
+      <td>Scope</td>
+      <td>Specific to a process step and product</td>
+      <td>Applies across the whole site or department</td>
     </tr>
     <tr>
-      <td><strong>Chilling/Fermentation</strong></td>
-      <td>Cooling, cold storage, acidification (pH drop)</td>
-      <td>Biological (pathogen growth inhibition)</td>
+      <td>Measurable critical limit</td>
+      <td>Yes, defined and immediately verifiable</td>
+      <td>Rarely; more often a target range or qualitative standard</td>
     </tr>
     <tr>
-      <td><strong>Foreign Material Removal</strong></td>
-      <td>Metal detection, X-ray, sifting, filtration, magnets</td>
-      <td>Physical (metal, glass, stones, bone)</td>
+      <td>Monitoring frequency</td>
+      <td>Real-time or per batch</td>
+      <td>Scheduled, daily, weekly, or periodic</td>
     </tr>
     <tr>
-      <td><strong>Formulation</strong></td>
-      <td>Allergen addition, preservative addition</td>
-      <td>Chemical (allergen cross-contact, spoilage)</td>
+      <td>Consequence of failure</td>
+      <td>Potentially unsafe product released</td>
+      <td>Increased risk, but not necessarily an immediate unsafe batch</td>
+    </tr>
+    <tr>
+      <td>Corrective action</td>
+      <td>Product held, reworked, or rejected; process corrected before restart</td>
+      <td>Process adjusted, maintenance called, cleaning repeated, staff retrained</td>
+    </tr>
+    <tr>
+      <td>Validation approach</td>
+      <td>Proves the critical limit controls the hazard</td>
+      <td>Proves the programme is working as intended across the site</td>
+    </tr>
+    <tr>
+      <td>Documentation</td>
+      <td>Specific monitoring log per CCP, per batch</td>
+      <td>Schedule, checklist, or record of completion</td>
     </tr>
   </tbody>
 </table>
 
-<h2>The "last chance" rule</h2>
+<h2>Why this matters to an enforcement officer or third-party auditor</h2>
 
-<p>Place the CCP as far downstream as possible — but <strong>before</strong> the hazard is sealed in the package and cannot be fixed.</p>
+<p>When an officer or auditor reviews a HACCP plan, they do not just count CCPs. They look for coherence. A plan with too many CCPs suggests the team does not understand the difference between foundational controls and process-step-specific hazards. A plan with too few, or none, suggests the business has not identified where control must be measurable.</p>
+
+<p>They will also look at what happens when a CCP critical limit is breached. If the monitoring log shows a deviation and there is no record of product disposition, the system is not working. That single gap often triggers a non-conformance far more serious than a PRP checklist that was signed off late.</p>
+
+<p>In the UK, the FSA's "Safer Food, Better Business" guidance reflects this distinction by separating practical safe methods from broader opening and closing checks. In EU Member States, this distinction sits within the broader food hygiene framework under Regulation (EC) No 852/2004, where prerequisite programmes form the foundation on which HACCP principles are applied.</p>
+
+<h2>Making the distinction operational, not just theoretical</h2>
+
+<p>The real test of whether your team understands CCPs versus PRPs is not what is written in the HACCP manual. It is what happens on a Friday afternoon when the kitchen or factory floor is under pressure and a deviation occurs.</p>
+
+<p>If a CCP limit is breached, the shift leader needs to know three things without looking anything up: which product is affected, what to do with it, and where to record it. If the deviation is a PRP issue, like a handwash sink running out of soap or a drain backing up, they need to know how to escalate it without filling out a corrective action form designed for CCP failures.</p>
+
+<p>Practical steps that make this distinction hold up under pressure include:</p>
 
 <ul>
-  <li><strong>Poor placement:</strong> checking for metal on raw potatoes before they go into the fryer. Slicer blades might break after this check.</li>
-  <li><strong>Correct placement:</strong> metal detection after slicing and immediately before final packaging. This is the last chance to catch metal from the entire process.</li>
+  <li><strong>Use two different log formats.</strong> A CCP monitoring log should include the critical limit, the actual reading, the batch or time reference, and a corrective action column that starts with "Product held." A PRP checklist should look entirely different so no one confuses them in a rush.</li>
+  <li><strong>Train on the batch decision.</strong> In team training, walk through a CCP deviation scenario and a PRP failure scenario back to back. Ask the team what they would do with the product in each case. The contrast sticks when people hear themselves make the wrong call and then correct it.</li>
+  <li><strong>Keep CCPs visible on the flow diagram.</strong> If a HACCP flow diagram does not clearly mark which steps are CCPs, the plan is not usable on the floor. Everyone in production should be able to point to the diagram and say, "These are the steps where we must get it right every time."</li>
+  <li><strong>Review annually with product in hand.</strong> A desk review of the HACCP plan is not enough. Walk the process line with the product, the flow diagram, and the current list of CCPs. Check whether any new equipment, a different ingredient, or a changed packing step has shifted where control really sits.</li>
 </ul>
 
-<h2>Are you over-identifying CCPs?</h2>
+<h2>When PRPs should be upgraded to operational control points</h2>
 
-<p>A common reaction to a food safety audit is to make everything a CCP. This is a dangerous mistake. A plan with 15 CCPs is unmanageable — operators become fatigued and ignore alarms.</p>
+<p>Some businesses, particularly those certified against a GFSI-benchmarked standard such as BRCGS or FSSC 22000, use the concept of Operational Prerequisite Programmes. An oPRP sits between a PRP and a CCP. It controls a specific hazard that is not immediately measurable at a critical limit but is important enough to need defined monitoring, corrective actions, and verification.</p>
 
-<p>A typical HACCP plan for a single production line should have <strong>between 2 and 5 CCPs</strong>. If you have more than 6, you are likely confusing Prerequisite Programmes with CCPs.</p>
+<p>For a small or medium food business not operating under those standards, the simpler CCP/PRP distinction is usually sufficient and is the framework most local authorities expect. Introducing oPRPs without a clear reason tends to complicate the plan without improving safety. If your hazard analysis genuinely identifies a gap where a PRP is insufficient but a CCP is not technically appropriate, that is the moment to consider the operational PRP model, with support from a competent technical lead.</p>
+
+<h2>Common friction points during HACCP validation</h2>
+
+<p>Validation is where the CCP/PRP distinction often unravels. A HACCP team validates cooking as a CCP by demonstrating that the core temperature-time combination achieves a sufficient reduction of the target pathogen. That is straightforward. But when the same team tries to validate a cleaning PRP as if it were a CCP, they start writing critical limits for visual cleanliness, which is not measurable in the way HACCP requires.</p>
+
+<p>The better approach is to validate PRPs by demonstrating that they are effective as a system. Supplier approval is validated by reviewing delivery rejections, non-conformance trends, and audit outcomes over time. Pest control is validated by trending activity reports and mapping them against the site layout. None of these require a CCP-style critical limit, and forcing one in creates documentation that no one believes in.</p>
+
+<h2>Documentation that matches how you actually operate</h2>
+
+<p>A lean, usable HACCP plan keeps CCPs few, clearly justified, and linked to a monitoring procedure that someone can execute in under a minute. It keeps PRPs in a separate document, typically a prerequisite programme schedule or a food safety manual section, with evidence that they are being delivered and reviewed.</p>
+
+<p>If you are building or reworking this documentation, two resources help structure the paper side so you can focus on the operational side:</p>
 
 <ul>
-  <li><strong>PRP (not a CCP):</strong> a refrigerated truck arriving at 7°C. This is receiving control — a Supplier Verification/PRP — because the product will be stored in a cold warehouse and cooked later.</li>
-  <li><strong>CCP:</strong> cooling cooked product from 57°C to below 8°C within the required time. There is no later step to fix it if bacteria grow during this window.</li>
+  <li>A HACCP plan template that separates the hazard analysis, CCP decision logic, and monitoring procedures into distinct, auditable sections.</li>
+  <li>A temperature monitoring log that works for both CCP checks, such as cooking and hot holding, and PRP checks, such as chiller and freezer ambient readings, without blurring them together.</li>
 </ul>
 
-<h2>Documenting the decision</h2>
+<p>The aim is a system where anyone who picks up a log knows immediately whether they are recording a CCP that controls batch safety or a PRP check that confirms the environment is stable.</p>
 
-<p>The final, non-negotiable step is documentation. In your HACCP Plan Summary Table, you must record:</p>
+<h2>How to test your own HACCP plan in 30 minutes</h2>
+
+<p>Take your current plan and a highlighter. Mark every step on the flow diagram that you have labelled as a CCP. Now go down the list and ask:</p>
 
 <ol>
-  <li><strong>Process step:</strong> Cooking — Kettle #3</li>
-  <li><strong>CCP number:</strong> CCP #1 (Biological)</li>
-  <li><strong>Significant hazard:</strong> Pathogen survival (<em>Salmonella</em>)</li>
-  <li><strong>Justification:</strong> Identified via Codex Decision Tree Q2. This is a kill step specifically designed to eliminate pathogens. No subsequent kill step exists.</li>
+  <li>Is there a measurable critical limit at this step?</li>
+  <li>Can I monitor it in real time or per batch?</li>
+  <li>If it fails, is the product unsafe unless I specifically intervene on that batch?</li>
+  <li>Is there a later step that could eliminate or reduce the hazard if this step fails?</li>
 </ol>
 
-<p>By applying the decision tree objectively and focusing on the last chance to control the hazard, you create a plan that is scientifically sound, operationally efficient, and defensible during any third-party audit.</p>
+<p>If the answer to any of the first three questions is no, or the answer to the fourth is yes, you are probably looking at a PRP or an operational control that does not meet the CCP definition. Move it off the CCP list. You will end up with fewer CCPs, clearer accountability, and a plan your team can actually use when it matters.</p>
+
+<h2>Next step</h2>
+
+<p>Getting the CCP/PRP split right makes the difference between a HACCP plan that works under pressure and one that only works in a folder. If you are writing or revising your plan, start with a <a href="/resources/haccp-plan-template">HACCP plan template</a> that forces the distinction clearly from the hazard analysis stage.</p>
+
+<p>If your monitoring logs currently make everything look like a CCP, a dedicated <a href="/resources/temperature-monitoring-log-template">temperature monitoring log template</a> helps separate batch-safety checks from environmental monitoring without adding paperwork. For teams that want to generate full HACCP documentation from their process flow and hazard analysis, the <a href="/features/haccp-plan-generator">HACCP plan generator</a> walks through the logic step by step and produces a plan that distinguishes CCPs from PRPs by design.</p>

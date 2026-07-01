@@ -1,3 +1,5 @@
+import pdfParse from "pdf-parse";
+
 /**
  * EUR-Lex CELLAR API Client
  *
@@ -56,6 +58,18 @@ export type CellarRegulation = {
   dateDocument: string;
   dateLastModified: string;
   legacyAliases: string[];
+  jurisdiction?: "eu" | "gb";
+  sourceKey?: string;
+  versionKey?: string;
+  officialUrl?: string;
+  textUrl?: string;
+  actType?:
+    | "regulation"
+    | "implementing_regulation"
+    | "amending_act"
+    | "directive"
+    | "statutory_instrument"
+    | "import_export_control";
   /** True when auto-discovered via SPARQL rather than from the curated seed list. */
   discovered?: boolean;
 };
@@ -66,6 +80,15 @@ type CoreRegulationSeed = {
   dateDocument: string;
   eliPath: string;
   legacyAliases: string[];
+};
+
+type ManualBackfillSeed = {
+  identifier: string;
+  title: string;
+  publicationDate: string;
+  jurisdiction: "eu" | "gb";
+  officialUrl: string;
+  actType: CellarRegulation["actType"];
 };
 
 const CORE_REGULATION_SEEDS: CoreRegulationSeed[] = [
@@ -267,11 +290,14 @@ const CORE_REGULATION_SEEDS: CoreRegulationSeed[] = [
 
   // === Allergens & Specific Substances ===
   {
-    baseCelex: "32006R2065",
+    baseCelex: "32003R2065",
     title: "Regulation (EC) No 2065/2003 on smoke flavourings used or intended for use in or on foods",
     dateDocument: "2003-11-10",
     eliPath: "https://eur-lex.europa.eu/eli/reg/2003/2065/oj",
-    legacyAliases: ["EC 2065 2003 smoke flavourings"],
+    legacyAliases: [
+      "EC 2065 2003 smoke flavourings",
+      "Regulation (EC) No 2065/2006",
+    ],
   },
 
   // === Animal Feed ===
@@ -392,6 +418,233 @@ const CORE_REGULATION_SEEDS: CoreRegulationSeed[] = [
   },
 ];
 
+const MANUAL_BACKFILL_SEEDS: ManualBackfillSeed[] = [
+  {
+    identifier: "32026R0748",
+    title: "Commission Implementing Regulation (EU) 2026/748 concerning the coordinated pesticide residue control programme for 2027, 2028 and 2029",
+    publicationDate: "2026-04-01",
+    jurisdiction: "eu",
+    officialUrl: "https://eur-lex.europa.eu/eli/reg_impl/2026/748/oj",
+    actType: "implementing_regulation",
+  },
+  {
+    identifier: "32026R0751",
+    title: "Commission Regulation (EU) 2026/751 correcting maximum residue levels for flupyradifurone and potassium phosphonate",
+    publicationDate: "2026-04-01",
+    jurisdiction: "eu",
+    officialUrl: "https://eur-lex.europa.eu/eli/reg/2026/751/oj",
+    actType: "amending_act",
+  },
+  {
+    identifier: "32026R0752",
+    title: "Commission Regulation (EU) 2026/752 amending Annex IV to Regulation (EC) No 396/2005 on pesticide maximum residue levels",
+    publicationDate: "2026-04-01",
+    jurisdiction: "eu",
+    officialUrl: "https://eur-lex.europa.eu/eli/reg/2026/752/oj",
+    actType: "amending_act",
+  },
+  {
+    identifier: "32026R0765",
+    title: "Commission Implementing Regulation (EU) 2026/765 on sampling and analysis for official control of pesticide residues in food and feed",
+    publicationDate: "2026-04-07",
+    jurisdiction: "eu",
+    officialUrl: "https://eur-lex.europa.eu/eli/reg_impl/2026/765/oj",
+    actType: "implementing_regulation",
+  },
+  {
+    identifier: "32026R0273",
+    title: "Commission Delegated Regulation (EU) 2026/273 amending border-control exemptions for certain animals and goods",
+    publicationDate: "2026-04-13",
+    jurisdiction: "eu",
+    officialUrl: "https://eur-lex.europa.eu/eli/reg_del/2026/273/oj",
+    actType: "amending_act",
+  },
+  {
+    identifier: "32026R0824",
+    title: "Commission Implementing Regulation (EU) 2026/824 correcting the pesticide residue control programme",
+    publicationDate: "2026-04-15",
+    jurisdiction: "eu",
+    officialUrl: "https://eur-lex.europa.eu/eli/reg_impl/2026/824/oj",
+    actType: "amending_act",
+  },
+  {
+    identifier: "32026R0840",
+    title: "Commission Regulation (EU) 2026/840 amending maximum residue levels for copper compounds",
+    publicationDate: "2026-04-16",
+    jurisdiction: "eu",
+    officialUrl: "https://eur-lex.europa.eu/eli/reg/2026/840/oj",
+    actType: "amending_act",
+  },
+  {
+    identifier: "32026R0814",
+    title: "Commission Implementing Regulation (EU) 2026/814 amending import eligibility for poultry and fresh poultry meat",
+    publicationDate: "2026-04-07",
+    jurisdiction: "eu",
+    officialUrl: "https://eur-lex.europa.eu/eli/reg_impl/2026/814/oj",
+    actType: "import_export_control",
+  },
+  {
+    identifier: "32026R0853",
+    title: "Commission Implementing Regulation (EU) 2026/853 amending import eligibility for poultry and fresh poultry meat",
+    publicationDate: "2026-04-13",
+    jurisdiction: "eu",
+    officialUrl: "https://eur-lex.europa.eu/eli/reg_impl/2026/853/oj",
+    actType: "import_export_control",
+  },
+  {
+    identifier: "32026R0876",
+    title: "Commission Regulation (EU) 2026/876 amending maximum residue levels for five pesticide substances",
+    publicationDate: "2026-04-22",
+    jurisdiction: "eu",
+    officialUrl: "https://eur-lex.europa.eu/eli/reg/2026/876/oj",
+    actType: "amending_act",
+  },
+  {
+    identifier: "32026R0914",
+    title: "Commission Implementing Regulation (EU) 2026/914 amending import eligibility for animals and products of animal origin",
+    publicationDate: "2026-04-23",
+    jurisdiction: "eu",
+    officialUrl: "https://eur-lex.europa.eu/eli/reg_impl/2026/914/oj",
+    actType: "import_export_control",
+  },
+  {
+    identifier: "32026R0892",
+    title: "Commission Implementing Regulation (EU) 2026/892 setting the lidocaine maximum residue limit in foodstuffs of animal origin",
+    publicationDate: "2026-04-24",
+    jurisdiction: "eu",
+    officialUrl: "https://eur-lex.europa.eu/eli/reg_impl/2026/892/oj",
+    actType: "amending_act",
+  },
+  {
+    identifier: "32026R1011",
+    title: "Commission Implementing Regulation (EU) 2026/1011 correcting feed premixture labelling rules",
+    publicationDate: "2026-05-08",
+    jurisdiction: "eu",
+    officialUrl: "https://eur-lex.europa.eu/eli/reg_impl/2026/1011/oj",
+    actType: "amending_act",
+  },
+  {
+    identifier: "32026R1088",
+    title: "Commission Implementing Regulation (EU) 2026/1088 amending import eligibility for poultry and fresh poultry meat",
+    publicationDate: "2026-05-13",
+    jurisdiction: "eu",
+    officialUrl: "https://eur-lex.europa.eu/eli/reg_impl/2026/1088/oj",
+    actType: "import_export_control",
+  },
+  {
+    identifier: "32026R1115",
+    title: "Commission Implementing Regulation (EU) 2026/1115 amending feed additive authorisation application requirements",
+    publicationDate: "2026-05-27",
+    jurisdiction: "eu",
+    officialUrl: "https://eur-lex.europa.eu/eli/reg_impl/2026/1115/oj",
+    actType: "amending_act",
+  },
+  {
+    identifier: "32026R1118",
+    title: "Commission Regulation (EU) 2026/1118 refusing a health claim for creatine and cognitive function",
+    publicationDate: "2026-05-27",
+    jurisdiction: "eu",
+    officialUrl: "https://eur-lex.europa.eu/eli/reg/2026/1118/oj",
+    actType: "regulation",
+  },
+  {
+    identifier: "32026R1123",
+    title: "Commission Regulation (EU) 2026/1123 laying down labelling requirements for plant protection products",
+    publicationDate: "2026-05-27",
+    jurisdiction: "eu",
+    officialUrl: "https://eur-lex.europa.eu/eli/reg/2026/1123/oj",
+    actType: "regulation",
+  },
+  {
+    identifier: "32026R1207",
+    title: "Commission Implementing Regulation (EU) 2026/1207 amending import eligibility for poultry and fresh poultry meat",
+    publicationDate: "2026-06-03",
+    jurisdiction: "eu",
+    officialUrl: "https://eur-lex.europa.eu/eli/reg_impl/2026/1207/oj",
+    actType: "import_export_control",
+  },
+  {
+    identifier: "32026R1189",
+    title: "Commission Implementing Regulation (EU) 2026/1189 on restrictions for antimicrobial medicinal products in imported animals and products of animal origin",
+    publicationDate: "2026-06-05",
+    jurisdiction: "eu",
+    officialUrl: "https://eur-lex.europa.eu/eli/reg_impl/2026/1189/oj",
+    actType: "implementing_regulation",
+  },
+  {
+    identifier: "uksi/2026/412",
+    title: "The Nutrition (Amendment etc.) (EU Exit) (Amendment) Regulations 2026",
+    publicationDate: "2026-04-21",
+    jurisdiction: "gb",
+    officialUrl: "https://www.legislation.gov.uk/uksi/2026/412/made",
+    actType: "statutory_instrument",
+  },
+  {
+    identifier: "uksi/2026/440",
+    title: "The Avian Influenza and Influenza of Avian Origin in Mammals (England) (Amendment) Order 2026",
+    publicationDate: "2026-04-21",
+    jurisdiction: "gb",
+    officialUrl: "https://www.legislation.gov.uk/uksi/2026/440/made",
+    actType: "statutory_instrument",
+  },
+  {
+    identifier: "uksi/2026/493",
+    title: "The Charges for Residues Surveillance (Amendment) (England) Regulations 2026",
+    publicationDate: "2026-05-06",
+    jurisdiction: "gb",
+    officialUrl: "https://www.legislation.gov.uk/uksi/2026/493/made",
+    actType: "statutory_instrument",
+  },
+  {
+    identifier: "nisr/2026/103",
+    title: "The Jam and Similar Products (Amendment) Regulations (Northern Ireland) 2026",
+    publicationDate: "2026-06-05",
+    jurisdiction: "gb",
+    officialUrl: "https://www.legislation.gov.uk/nisr/2026/103/made",
+    actType: "statutory_instrument",
+  },
+];
+
+export function getManualBackfillRegulations(): CellarRegulation[] {
+  return MANUAL_BACKFILL_SEEDS.map((seed) => {
+    if (seed.jurisdiction === "eu") {
+      const sourceKey = `eu:celex:${seed.identifier}`;
+      return {
+        celex: seed.identifier,
+        baseCelex: seed.identifier,
+        title: seed.title,
+        dateDocument: seed.publicationDate,
+        dateLastModified: seed.publicationDate,
+        legacyAliases: [],
+        jurisdiction: "eu",
+        sourceKey,
+        versionKey: sourceKey,
+        officialUrl: seed.officialUrl,
+        actType: seed.actType,
+        discovered: true,
+      };
+    }
+
+    const [type, year, number] = seed.identifier.split("/");
+    const sourceKey = `uk:${type}:${year}:${number}`;
+    return {
+      celex: seed.identifier,
+      baseCelex: seed.identifier,
+      title: seed.title,
+      dateDocument: seed.publicationDate,
+      dateLastModified: seed.publicationDate,
+      legacyAliases: [],
+      jurisdiction: "gb",
+      sourceKey,
+      versionKey: `${sourceKey}:${seed.publicationDate}`,
+      officialUrl: seed.officialUrl,
+      textUrl: `${seed.officialUrl}/data.xml`,
+      actType: seed.actType,
+      discovered: true,
+    };
+  });
+}
+
 function toIsoDateFromDisplay(input: string): string | null {
   const match = input.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
   if (!match) return null;
@@ -441,6 +694,11 @@ export async function searchFoodSafetyRegulations(
         dateDocument: seed.dateDocument,
         dateLastModified: current.currentVersionDate ?? sinceDate,
         legacyAliases: seed.legacyAliases,
+        jurisdiction: "eu" as const,
+        sourceKey: `eu:celex:${seed.baseCelex}`,
+        versionKey: `eu:celex:${current.celex}`,
+        officialUrl: seed.eliPath,
+        actType: detectEuActType(seed.title),
       };
     })
   );
@@ -464,15 +722,18 @@ export async function searchFoodSafetyRegulations(
  */
 export async function fetchRegulationText(celexNumber: string): Promise<string> {
   const encoded = encodeURIComponent(celexNumber);
-  const candidateUrls = [
-    `https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:${encoded}&from=EN`,
-    `https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:${encoded}`,
-    `https://eur-lex.europa.eu/LexUriServ/LexUriServ.do?uri=CELEX:${encoded}:EN:HTML`,
+  const candidateUrls: Array<{ url: string; kind: "pdf" | "text" }> = [
+    { url: `https://eur-lex.europa.eu/legal-content/EN/TXT/PDF/?uri=CELEX:${encoded}`, kind: "pdf" },
+    { url: `https://eur-lex.europa.eu/legal-content/EN/TXT/XML/?uri=CELEX:${encoded}`, kind: "text" },
+    { url: `https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:${encoded}&from=EN`, kind: "text" },
+    { url: `https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:${encoded}`, kind: "text" },
+    { url: `https://eur-lex.europa.eu/LexUriServ/LexUriServ.do?uri=CELEX:${encoded}:EN:HTML`, kind: "text" },
   ];
 
   const attempts: string[] = [];
 
-  for (const url of candidateUrls) {
+  for (const candidate of candidateUrls) {
+    const { url } = candidate;
     let response: Response;
     try {
       response = await fetch(url, {
@@ -489,7 +750,17 @@ export async function fetchRegulationText(celexNumber: string): Promise<string> 
       continue;
     }
 
-    const html = await response.text();
+    let html: string;
+    try {
+      html = candidate.kind === "pdf"
+        ? await extractPdfText(response)
+        : await response.text();
+    } catch (err) {
+      attempts.push(
+        `${url} â†’ body extraction error: ${err instanceof Error ? err.message : String(err)}`
+      );
+      continue;
+    }
     const text = stripHtmlToText(html);
 
     if (text.length >= MIN_REGULATION_TEXT_CHARS) {
@@ -507,6 +778,22 @@ export async function fetchRegulationText(celexNumber: string): Promise<string> 
   throw new Error(
     `Failed to fetch adequate regulation text for ${celexNumber}.\n${attempts.join("\n")}`
   );
+}
+
+async function extractPdfText(response: Response): Promise<string> {
+  if (typeof response.arrayBuffer !== "function") {
+    return "";
+  }
+
+  const contentType = response.headers?.get?.("content-type")?.toLowerCase() ?? "";
+  const buffer = Buffer.from(await response.arrayBuffer());
+  const looksLikePdf = buffer.subarray(0, 5).toString("utf8") === "%PDF-";
+  if (!contentType.includes("pdf") && !looksLikePdf) {
+    throw new Error(`PDF endpoint returned non-PDF content-type: ${contentType || "unknown"}`);
+  }
+
+  const parsed = await pdfParse(buffer);
+  return parsed.text;
 }
 
 function describeBadRegulationPage(html: string, text: string): { reason: string; snippet: string } {
@@ -574,7 +861,18 @@ export const EUROVOC_FOOD_SAFETY_CONCEPTS = [
   "3135",  // food inspection
 ] as const;
 
-const SPARQL_ENDPOINT = "https://eur-lex.europa.eu/EURLex-WS/sparql";
+const SPARQL_ENDPOINT = "https://publications.europa.eu/webapi/rdf/sparql";
+const EU_RELEVANCE_PATTERN =
+  "food|feed|hygiene|allergen|contaminant|pesticide|residue|official control|" +
+  "border control|animal origin|traceability|labelling|labeling|food contact|" +
+  "microbiological|maximum level|antimicrobial|veterinary medicinal";
+const EU_OFFICIAL_JOURNAL_LOOKBACK_DAYS = 35;
+const EU_OFFICIAL_JOURNAL_TIMEOUT_MS = 10_000;
+
+export type EuOfficialJournalDiscoveryResult = {
+  regulations: CellarRegulation[];
+  failures: Array<{ date: string; error: string }>;
+};
 
 function buildDiscoverySparql(sinceDate: string): string {
   const values = EUROVOC_FOOD_SAFETY_CONCEPTS
@@ -583,16 +881,22 @@ function buildDiscoverySparql(sinceDate: string): string {
 
   return `
 PREFIX cdm: <http://publications.europa.eu/ontology/cdm#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
 SELECT DISTINCT ?celex ?title ?dateDocument WHERE {
   ?work cdm:resource_legal_id_celex ?celex .
   ?work cdm:work_date_document ?dateDocument .
-  ?work cdm:is_about ?concept .
   ?exp cdm:expression_belongs_to_work ?work .
   ?exp cdm:expression_uses_language <http://publications.europa.eu/resource/authority/language/ENG> .
   ?exp cdm:expression_title ?title .
-  VALUES ?concept { ${values} }
   FILTER(?dateDocument >= "${sinceDate}"^^xsd:date)
+  FILTER(
+    EXISTS {
+      ?work cdm:is_about ?concept .
+      VALUES ?concept { ${values} }
+    }
+    || REGEX(STR(?title), "${EU_RELEVANCE_PATTERN}", "i")
+  )
 }
 ORDER BY DESC(?dateDocument)
 LIMIT 200`.trim();
@@ -636,6 +940,7 @@ export async function discoverNewRegulations(
   const seedCelexSet = new Set(CORE_REGULATION_SEEDS.map((s) => s.baseCelex));
 
   return json.results.bindings
+    .filter((b) => isLegislativeCelex(b.celex.value))
     .filter((b) => !seedCelexSet.has(b.celex.value))
     .map((b) => ({
       celex: b.celex.value,
@@ -644,8 +949,389 @@ export async function discoverNewRegulations(
       dateDocument: b.dateDocument.value,
       dateLastModified: b.dateDocument.value,
       legacyAliases: [],
+      jurisdiction: "eu" as const,
+      sourceKey: `eu:celex:${b.celex.value}`,
+      versionKey: `eu:celex:${b.celex.value}`,
+      officialUrl: `https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:${b.celex.value}`,
+      actType: detectEuActType(b.title.value),
       discovered: true,
     }));
+}
+
+function isLegislativeCelex(celex: string): boolean {
+  return /^[03]\d{4}[RLD]\d{4}(?:-\d{8})?$/i.test(celex);
+}
+
+function isoDate(date: Date): string {
+  return date.toISOString().slice(0, 10);
+}
+
+function formatOfficialJournalDate(date: Date): string {
+  const day = String(date.getUTCDate()).padStart(2, "0");
+  const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+  return `${day}${month}${date.getUTCFullYear()}`;
+}
+
+function buildOfficialJournalDates(sinceDate: string, now: Date): Date[] {
+  const requestedStart = new Date(`${sinceDate}T00:00:00.000Z`);
+  const earliestAllowed = new Date(now);
+  earliestAllowed.setUTCDate(earliestAllowed.getUTCDate() - EU_OFFICIAL_JOURNAL_LOOKBACK_DAYS + 1);
+  earliestAllowed.setUTCHours(0, 0, 0, 0);
+
+  const start = requestedStart > earliestAllowed ? requestedStart : earliestAllowed;
+  const end = new Date(now);
+  end.setUTCHours(0, 0, 0, 0);
+  if (start > end) return [];
+
+  const dates: Date[] = [];
+  for (const cursor = new Date(start); cursor <= end; cursor.setUTCDate(cursor.getUTCDate() + 1)) {
+    dates.push(new Date(cursor));
+  }
+  return dates;
+}
+
+function parseOfficialJournalRegulations(html: string, publicationDate: string): CellarRegulation[] {
+  const regulations: CellarRegulation[] = [];
+  const anchorPattern = /<a\b[^>]*href="[^"]*uri=OJ:L_\d+"[^>]*>([\s\S]*?)<\/a>/gi;
+
+  for (const match of html.matchAll(anchorPattern)) {
+    const title = stripHtmlToText(match[1]).replace(/\s+/g, " ").trim();
+    if (!new RegExp(EU_RELEVANCE_PATTERN, "i").test(title)) continue;
+
+    const identifier = title.match(
+      /\b(Implementing Regulation|Delegated Regulation|Regulation|Directive)\s+\(EU\)\s+(\d{4})\/(\d+)\b/i
+    );
+    if (!identifier) continue;
+
+    const kind = identifier[1].toLowerCase();
+    const year = identifier[2];
+    const number = identifier[3].padStart(4, "0");
+    const celex = `3${year}${kind === "directive" ? "L" : "R"}${number}`;
+    const sourceKey = `eu:celex:${celex}`;
+
+    regulations.push({
+      celex,
+      baseCelex: celex,
+      title,
+      dateDocument: publicationDate,
+      dateLastModified: publicationDate,
+      legacyAliases: [],
+      jurisdiction: "eu",
+      sourceKey,
+      versionKey: sourceKey,
+      officialUrl: `https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:${celex}`,
+      actType:
+        kind === "implementing regulation"
+          ? "implementing_regulation"
+          : kind === "directive"
+            ? "directive"
+            : /\bamending\b|\bcorrecting\b/i.test(title)
+              ? "amending_act"
+              : detectEuActType(title),
+      discovered: true,
+    });
+  }
+
+  return regulations;
+}
+
+export async function discoverEuOfficialJournalRegulations(
+  sinceDate: string,
+  now: Date = new Date()
+): Promise<EuOfficialJournalDiscoveryResult> {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(sinceDate)) {
+    throw new Error(`Invalid sinceDate format: ${sinceDate}`);
+  }
+
+  const results = await Promise.all(
+    buildOfficialJournalDates(sinceDate, now).map(async (date) => {
+      const dateLabel = isoDate(date);
+      const url =
+        "https://eur-lex.europa.eu/oj/daily-view/L-series/default.html" +
+        `?ojDate=${formatOfficialJournalDate(date)}`;
+
+      try {
+        const response = await fetch(url, {
+          headers: EURLEX_HEADERS,
+          signal: AbortSignal.timeout(EU_OFFICIAL_JOURNAL_TIMEOUT_MS),
+        });
+        if (!response.ok) {
+          throw new Error(`Official Journal daily view returned ${response.status}`);
+        }
+        return {
+          date: dateLabel,
+          regulations: parseOfficialJournalRegulations(await response.text(), dateLabel),
+          error: null,
+        };
+      } catch (err) {
+        return {
+          date: dateLabel,
+          regulations: [],
+          error: err instanceof Error ? err.message : String(err),
+        };
+      }
+    })
+  );
+
+  const discovered = new Map<string, CellarRegulation>();
+  const failures: EuOfficialJournalDiscoveryResult["failures"] = [];
+
+  for (const result of results) {
+    if (result.error) {
+      failures.push({ date: result.date, error: result.error });
+      continue;
+    }
+    for (const regulation of result.regulations) {
+      discovered.set(regulation.sourceKey ?? regulation.celex, regulation);
+    }
+  }
+
+  return {
+    regulations: [...discovered.values()],
+    failures,
+  };
+}
+
+const UK_RELEVANCE_TERMS = [
+  "food",
+  "feed",
+  "nutrition",
+  "supplement",
+  "jam",
+  "honey",
+  "juice",
+  "hygiene",
+  "safety",
+  "allergen",
+  "allergy",
+  "contaminant",
+  "pesticide",
+  "residue",
+  "import",
+  "export",
+  "official control",
+  "border control",
+  "animal origin",
+  "traceability",
+  "labelling",
+  "labeling",
+  "materials and articles",
+];
+
+const UK_DISCOVERY_FEEDS = UK_RELEVANCE_TERMS.map((term) =>
+  `https://www.legislation.gov.uk/ukpga+ukla+uksi+wsi+ssi+nisr/` +
+    `data.feed?text=${encodeURIComponent(term)}&results-count=100`
+);
+const UK_DISCOVERY_TIMEOUT_MS = 12_000;
+
+export type UkDiscoveryResult = {
+  regulations: CellarRegulation[];
+  failures: Array<{ feedUrl: string; error: string }>;
+};
+
+type AtomEntry = {
+  title: string;
+  id: string;
+  updated: string;
+  published: string | null;
+  href: string;
+  textHref: string | null;
+};
+
+function parseAtomEntries(feedXml: string): AtomEntry[] {
+  const entries = [...feedXml.matchAll(/<entry\b[\s\S]*?<\/entry>/gi)].map((entryMatch) => {
+    const entry = entryMatch[0];
+    const title = extractXmlElementText(entry, "title");
+    const id = extractXmlElementText(entry, "id");
+    const updated = extractXmlElementText(entry, "updated");
+    const published = extractXmlElementText(entry, "published");
+    const links = [...entry.matchAll(/<link\b([^>]*)href="([^"]+)"[^>]*>/gi)].map(
+      (match) => ({ attributes: match[1], href: match[2] })
+    );
+    const textHref =
+      links.find((link) => /type="application\/xml"/i.test(link.attributes))?.href ?? null;
+    const href =
+      links.find(
+        (link) =>
+          !/\/id\//i.test(link.href) &&
+          !/\/data\.(xml|rdf|akn|xht|html?|csv|pdf)$/i.test(link.href)
+      )?.href ??
+      id;
+
+    return { title, id, updated, published, href, textHref };
+  });
+
+  return entries.filter((entry) => entry.title && entry.href && entry.updated);
+}
+
+function extractXmlElementText(xml: string, element: string): string {
+  const match = xml.match(new RegExp(`<${element}\\b[^>]*>([\\s\\S]*?)<\\/${element}>`, "i"));
+  return normalizeLegislationTitle(match?.[1] ?? "");
+}
+
+function decodeXmlEntities(value: string): string {
+  return value
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'");
+}
+
+export function normalizeLegislationTitle(value: string): string {
+  const englishTitle = value.match(
+    /<span\b[^>]*xml:lang=["']en["'][^>]*>([\s\S]*?)<\/span>/i
+  )?.[1];
+  const selected = englishTitle ?? value;
+
+  return decodeXmlEntities(selected.replace(/<[^>]+>/g, " "))
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function isRelevantFoodLawTitle(title: string): boolean {
+  const normalized = title.toLowerCase();
+  return UK_RELEVANCE_TERMS.some((term) => normalized.includes(term));
+}
+
+function normalizeUkLegislationUrl(input: string): string {
+  return input
+    .replace(/^http:\/\//i, "https://")
+    .replace(/legislation\.gov\.uk\/id\//i, "legislation.gov.uk/")
+    .replace(/\/data\.(xml|feed)$/i, "");
+}
+
+function parseUkIdentifier(url: string): { type: string; year: string; number: string } | null {
+  const match = normalizeUkLegislationUrl(url).match(/legislation\.gov\.uk\/([^/]+)\/(\d{4})\/(\d+)/i);
+  if (!match) return null;
+  return { type: match[1], year: match[2], number: match[3] };
+}
+
+function dateOnly(input: string): string {
+  return new Date(input).toISOString().slice(0, 10);
+}
+
+function isOnOrAfterDate(input: string, sinceDate: string): boolean {
+  return dateOnly(input) >= sinceDate;
+}
+
+function toUkRegulation(entry: AtomEntry): CellarRegulation | null {
+  if (!isRelevantFoodLawTitle(entry.title)) return null;
+  if (/\brevoked\b/i.test(entry.title)) return null;
+  if (!entry.updated) return null;
+
+  const officialUrl = normalizeUkLegislationUrl(entry.href);
+  const parsed = parseUkIdentifier(officialUrl);
+  if (!parsed) return null;
+
+  const baseId = `${parsed.type}/${parsed.year}/${parsed.number}`;
+  const sourceKey = `uk:${parsed.type}:${parsed.year}:${parsed.number}`;
+  const updatedDate = dateOnly(entry.updated);
+
+  return {
+    celex: baseId,
+    baseCelex: baseId,
+    title: entry.title,
+    dateDocument: entry.published ? dateOnly(entry.published) : updatedDate,
+    dateLastModified: updatedDate,
+    legacyAliases: [],
+    jurisdiction: "gb",
+    sourceKey,
+    versionKey: `${sourceKey}:${updatedDate}`,
+    officialUrl,
+    textUrl: entry.textHref
+      ? entry.textHref.replace(/^http:\/\//i, "https://")
+      : `${officialUrl}/data.xml`,
+    actType: "statutory_instrument",
+    discovered: true,
+  };
+}
+
+export async function discoverUkRegulations(sinceDate: string): Promise<UkDiscoveryResult> {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(sinceDate)) {
+    throw new Error(`Invalid sinceDate format: ${sinceDate}`);
+  }
+
+  const discovered = new Map<string, CellarRegulation>();
+  const failures: UkDiscoveryResult["failures"] = [];
+
+  const feedResults = await Promise.all(
+    UK_DISCOVERY_FEEDS.map(async (feedUrl) => {
+      try {
+        const response = await fetch(feedUrl, {
+          headers: { Accept: "application/atom+xml,application/xml;q=0.9,*/*;q=0.8" },
+          signal: AbortSignal.timeout(UK_DISCOVERY_TIMEOUT_MS),
+        });
+
+        if (!response.ok) {
+          throw new Error(`UK legislation feed returned ${response.status}`);
+        }
+
+        return { feedUrl, feedXml: await response.text(), error: null };
+      } catch (err) {
+        return {
+          feedUrl,
+          feedXml: null,
+          error: err instanceof Error ? err.message : String(err),
+        };
+      }
+    })
+  );
+
+  for (const feedResult of feedResults) {
+    if (feedResult.error || feedResult.feedXml === null) {
+      failures.push({
+        feedUrl: feedResult.feedUrl,
+        error: feedResult.error ?? "Unknown UK feed failure",
+      });
+      continue;
+    }
+
+    for (const entry of parseAtomEntries(feedResult.feedXml)) {
+      if (!isOnOrAfterDate(entry.updated, sinceDate)) continue;
+      const regulation = toUkRegulation(entry);
+      if (regulation) discovered.set(regulation.versionKey ?? regulation.celex, regulation);
+    }
+  }
+
+  return {
+    regulations: [...discovered.values()],
+    failures,
+  };
+}
+
+export async function fetchUkLegislationText(regulation: CellarRegulation): Promise<string> {
+  const url = regulation.textUrl ?? `${normalizeUkLegislationUrl(regulation.officialUrl ?? "")}/data.xml`;
+  if (!url || url === "/data.xml") {
+    throw new Error(`Missing UK text URL for ${regulation.celex}`);
+  }
+
+  const response = await fetch(url, {
+    headers: { Accept: "application/xml,text/xml;q=0.9,*/*;q=0.8" },
+    signal: AbortSignal.timeout(60_000),
+  });
+
+  if (!response.ok) {
+    throw new Error(`UK legislation text returned ${response.status} for ${regulation.celex}`);
+  }
+
+  const text = stripHtmlToText(await response.text());
+  if (text.length < MIN_REGULATION_TEXT_CHARS) {
+    throw new Error(`UK legislation text too short for ${regulation.celex} (${text.length} chars)`);
+  }
+
+  return text;
+}
+
+function detectEuActType(title: string): CellarRegulation["actType"] {
+  const normalized = title.toLowerCase();
+  if (normalized.includes("implementing regulation")) return "implementing_regulation";
+  if (normalized.includes("amending") || normalized.includes("correcting")) return "amending_act";
+  if (normalized.includes("directive")) return "directive";
+  if (normalized.includes("import") || normalized.includes("entry into the union") || normalized.includes("export")) {
+    return "import_export_control";
+  }
+  return "regulation";
 }
 
 /**

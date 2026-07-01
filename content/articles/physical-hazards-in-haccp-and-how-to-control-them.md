@@ -535,3 +535,10 @@ source: "ilovehaccp"
 </ol>
 
 <p>By treating physical hazards with the same rigour as microbiological risks, you protect your consumers from injury and your business from the consequences of a preventable recall.</p>
+
+<h2>Primary guidance and next steps</h2>
+<ul>
+  <li><a href="https://www.fao.org/fao-who-codexalimentarius/codex-texts/codes-of-practice/en/" rel="noopener noreferrer">Codex Alimentarius codes of practice</a> — consult the General Principles of Food Hygiene and its HACCP annex.</li>
+  <li><a href="/resources/haccp-plan-template">Use the HACCP plan template</a> to document physical hazards, controls, monitoring, and corrective actions.</li>
+  <li><a href="/articles/how-to-perform-a-hazard-analysis-correctly">Review the hazard-analysis method</a> before deciding whether a control belongs in a PRP or at a CCP.</li>
+</ul>

@@ -1,0 +1,47 @@
+COMMISSION REGULATION (EU) 2021/382
+of 3 March 2021
+amending the Annexes to Regulation (EC) No 852/2004 on the hygiene of foodstuffs as regards food allergen management, redistribution of food and food safety culture
+
+OFFICIAL SOURCE
+- EUR-Lex ELI: https://eur-lex.europa.eu/eli/reg/2021/382/oj/eng
+- OJ L 74, 4.3.2021, pp. 3-6
+- CELEX: 32021R0382
+
+LEGAL PURPOSE
+- Updates the hygiene framework in Regulation (EC) No 852/2004
+- Brings food allergen management, redistribution of surplus food, and food safety culture more clearly into the hygiene baseline
+
+KEY LEGAL EFFECTS
+
+1. FOOD ALLERGEN MANAGEMENT
+- Allergen control is not only a labelling issue under Regulation (EU) No 1169/2011
+- Hygiene controls must also address the risk of cross-contact from allergenic substances
+- Equipment, containers, transport, storage, and handling practices need to be considered where allergens are present
+
+2. REDISTRIBUTION OF FOOD
+- Surplus food may be redistributed for human consumption where it is safe to do so
+- Food business operators remain responsible for assessing safety and suitability
+- Key practical factors include:
+  - shelf life and date marking
+  - storage temperatures
+  - packaging integrity
+  - traceability
+
+3. FOOD SAFETY CULTURE
+- Food safety culture is incorporated into the hygiene framework
+- Management should support:
+  - leadership and commitment
+  - staff awareness
+  - open communication on food safety issues
+  - training and supervision
+  - sufficient resources and clear responsibilities
+
+WHY THIS MATTERS FOR RETRIEVAL
+- Useful for answers about whether food safety culture is a legal expectation
+- Useful for allergen-management questions focused on operations rather than label wording
+- Useful for questions about food donations and redistribution under hygiene law
+
+USE WITH
+- Regulation (EC) No 852/2004
+- Regulation (EU) No 1169/2011
+- Codex General Principles of Food Hygiene (CXC 1-1969)

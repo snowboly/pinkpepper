@@ -1,6 +1,9 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { publicLaunchLocales, type PublicLocale } from "@/i18n/public";
+
+export { curatedImportedArticleSlugs, isArticlePreferredForIndexing } from "@/lib/article-indexing";
 
 export type ArticleRecord = {
   title: string;
@@ -21,7 +24,11 @@ type LoaderOptions = {
   locale?: PublicLocale;
 };
 
-const DEFAULT_CONTENT_DIR = path.join(process.cwd(), "content", "articles");
+const DEFAULT_CONTENT_DIR = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  "../../content/articles",
+);
+
 export const localizedSeoPriorityArticleSlugs = [
   "how-to-create-a-haccp-plan-step-by-step",
   "how-to-perform-a-hazard-analysis-correctly",

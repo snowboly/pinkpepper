@@ -63,7 +63,7 @@ export default function FoodSafetyAuditChecklistPage() {
       ]}
       ctaTitle="Create audit prep documents before inspection pressure builds"
       ctaBody="PinkPepper helps teams draft audit checklists, evidence summaries, and corrective action tracking so internal review becomes more structured."
-      templateSlug="food-safety-audit-checklist"
+      showBottomCta={false}
       relatedLinks={[
         { href: "/features/haccp-plan-generator", label: "HACCP plan generator" },
         { href: "/pricing", label: "Pricing" },
