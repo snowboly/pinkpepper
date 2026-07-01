@@ -48,7 +48,6 @@ async function getChromeContext() {
         { href: getPublicPageHref(publicLocale, "/faqs"), label: messages.chrome.nav.faqs },
       ],
     },
-    { href: "/use-cases", label: messages.chrome.nav.useCases },
     { href: getPublicPageHref(publicLocale, "/pricing"), label: messages.chrome.nav.pricing },
     { href: getPublicPageHref(publicLocale, "/about"), label: messages.chrome.nav.about },
     { href: getPublicPageHref(publicLocale, "/contact"), label: messages.chrome.nav.contact },
