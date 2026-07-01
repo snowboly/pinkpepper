@@ -376,6 +376,16 @@
     "deleteAccountConfirmBody": "Cela supprimera définitivement votre compte et toutes vos données, y compris les conversations, documents et paramètres. Cette action est irréversible.",
     "deleteAccountConfirm": "Oui, supprimer mon compte",
     "cancel": "Annuler",
-    "deleting": "Suppression..."
+    "deleting": "Suppression...",
+    "firstName": "Prénom",
+    "lastName": "Nom de famille",
+    "companyName": "Nom de l'entreprise (facultatif)",
+    "profileSaved": "Profil enregistré.",
+    "cancelAtPeriodEnd": "L'arrêt du renouvellement automatique prend effet à la fin de la période de facturation en cours.",
+    "currentPeriodEndsOn": "La période en cours se termine le",
+    "marketingEmails": "E-mails marketing",
+    "marketingEmailsDescription": "Je souhaite recevoir occasionnellement des mises à jour produit, de nouveaux modèles de documents et des offres pertinentes de PinkPepper. Je peux me désinscrire à tout moment.",
+    "transactionalEmailsNotice": "Les e-mails transactionnels comme la facturation, la sécurité et les notifications de compte seront toujours envoyés.",
+    "emailPreferencesSaved": "Préférences e-mail mises à jour."
   }
 }

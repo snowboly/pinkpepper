@@ -12,6 +12,9 @@ describe("security headers", () => {
 
     expect(csp).not.toContain("'unsafe-eval'");
     expect(csp).toContain("https://va.vercel-scripts.com");
+    expect(csp).toContain("https://www.google-analytics.com");
+    expect(csp).toContain("https://region1.google-analytics.com");
+    expect(csp).toContain("https://www.googletagmanager.com");
     // Ensure next.config.ts no longer ships a static CSP header (which
     // would shadow the per-request nonced policy set by middleware).
     expect(nextConfig).not.toMatch(/key:\s*["']Content-Security-Policy["']/);

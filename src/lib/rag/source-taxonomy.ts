@@ -10,6 +10,8 @@ const EU_PATTERN = /\b(eu|european union|germany|deutschland|france|spain|italy|
 const CODEX_PATTERN = /\b(codex)\b/i;
 const GUIDANCE_PATTERN = /\b(guidance|guide|fsa[-\s])/i;
 const REGULATION_PATTERN = /\b(regulations?|directive|ec[-\s]?\d+|eu[-\s]?\d+|food hygiene regulations)\b/i;
+const LOCAL_REGULATION_DOCUMENT_PATTERN =
+  /(?:^|[\\/])knowledge-(?:docs|sources)[\\/]regulations[\\/]/i;
 
 export function inferJurisdiction(pathOrName: string): Jurisdiction {
   const hasGb = GB_PATTERN.test(pathOrName);
@@ -26,6 +28,7 @@ export function inferQueryJurisdiction(query: string): Jurisdiction {
 }
 
 export function inferSourceClass(pathOrName: string): SourceClass {
+  if (LOCAL_REGULATION_DOCUMENT_PATTERN.test(pathOrName)) return "internal_practice";
   if (CODEX_PATTERN.test(pathOrName)) return "reference_standard";
   if (GUIDANCE_PATTERN.test(pathOrName)) return "official_guidance";
   if (REGULATION_PATTERN.test(pathOrName)) return "primary_law";

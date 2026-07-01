@@ -11,6 +11,16 @@ type VerificationContext = {
   userMessage?: string;
 };
 
+type VerificationChunk = {
+  source_class?: SourceClass | string;
+  source_type?: string;
+  source_name?: string;
+  jurisdiction?: string;
+  source_key?: string;
+  version_key?: string;
+  official_url?: string;
+};
+
 const CERTIFICATION_STANDARD_PATTERN =
   /\b(brcgs|sqf|ifs|fssc\s*22000|salsa|iso\s*22000|certification|certified|standard audit)\b/i;
 
@@ -27,12 +37,7 @@ function isCertificationStandardQuestion(context?: VerificationContext) {
 }
 
 export function getVerificationState(
-  chunks: Array<{
-    source_class?: SourceClass | string;
-    source_type?: string;
-    source_name?: string;
-    jurisdiction?: string;
-  }>,
+  chunks: VerificationChunk[],
   context?: VerificationContext
 ): VerificationState {
   if (
@@ -44,7 +49,15 @@ export function getVerificationState(
               [chunk.source_type, chunk.source_name].filter(Boolean).join(" ")
             );
 
-      return isAuthoritativeSourceClass(inferredSourceClass);
+      if (!isAuthoritativeSourceClass(inferredSourceClass)) {
+        return false;
+      }
+
+      if (inferredSourceClass === "primary_law") {
+        return Boolean(chunk.source_key && chunk.version_key && chunk.official_url);
+      }
+
+      return Boolean(chunk.official_url);
     })
   ) {
     return "verified";

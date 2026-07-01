@@ -376,6 +376,16 @@
     "deleteAccountConfirmBody": "Dadurch werden Ihr Konto und alle Ihre Daten dauerhaft gelöscht, einschließlich Gespräche, Dokumente und Einstellungen. Diese Aktion kann nicht rückgängig gemacht werden.",
     "deleteAccountConfirm": "Ja, mein Konto löschen",
     "cancel": "Abbrechen",
-    "deleting": "Löschen..."
+    "deleting": "Löschen...",
+    "firstName": "Vorname",
+    "lastName": "Nachname",
+    "companyName": "Firmenname (optional)",
+    "profileSaved": "Profil gespeichert.",
+    "cancelAtPeriodEnd": "Die automatische Verlängerung wird beendet. Ihr Tarif bleibt bis zum Ende des aktuellen Abrechnungszeitraums aktiv.",
+    "currentPeriodEndsOn": "Der aktuelle Zeitraum endet am",
+    "marketingEmails": "Marketing-E-Mails",
+    "marketingEmailsDescription": "Ich möchte gelegentlich Produktneuigkeiten, neue Dokumentvorlagen und relevante Angebote von PinkPepper erhalten. Ich kann mich jederzeit abmelden.",
+    "transactionalEmailsNotice": "Transaktionale E-Mails wie Abrechnung, Sicherheit und Kontohinweise werden weiterhin gesendet.",
+    "emailPreferencesSaved": "E-Mail-Einstellungen aktualisiert."
   }
 }

@@ -96,6 +96,102 @@ publishedAt: "2026-02-10"
   });
 });
 
+describe("Great Britain food import guide", () => {
+  it("publishes a scoped, illustrated guide without known route-classification errors", async () => {
+    const slug = "how-to-import-food-into-great-britain-from-non-eu-countries";
+    const manifest = await getArticleManifest();
+    const article = await getArticleBySlug(slug);
+
+    expect(manifest.some((item) => item.slug === slug)).toBe(true);
+    expect(article).not.toBeNull();
+    expect(article?.category).toBe("Import & Export");
+    expect(article?.publishedAt).toBe("2026-06-15");
+    expect(article?.image).toContain("images.pexels.com");
+    expect(article?.body).toContain("England, Scotland and Wales");
+    expect(article?.body).toContain("Northern Ireland");
+    expect(article?.body).toContain("/articles/gb-food-import-workflow.svg");
+    expect(article?.body).toContain("/articles/gb-food-import-decision-tree.svg");
+    expect(article?.body).toContain("Canned tuna is a processed fishery product and POAO, not a composite product");
+    expect(article?.body).not.toContain("canned tuna from Thailand is a shelf-stable composite product");
+    expect(article?.body).not.toContain("Low risk can enter through any point");
+    expect(article?.body).toContain("only apply to non-EU countries that Defra has risk assessed");
+    expect(article?.body).toContain(
+      "https://www.gov.uk/government/publications/risk-categories-for-animal-and-animal-product-imports-from-non-eu-countries-to-great-britain",
+    );
+    expect(article?.body).not.toContain(
+      "https://www.gov.uk/government/publications/risk-categories-for-animal-and-animal-product-imports-to-great-britain",
+    );
+    expect(article?.body.match(/https:\/\/www\.food\.gov\.uk\/business-guidance\/importing-high-risk-food-and-feed-of-non-animal-origin-hrfnao-into-great-britain/g)?.length).toBe(2);
+  });
+});
+
+describe("allergen documentation article", () => {
+  it("publishes a practical EU and UK allergen records guide with the planned trust and resource links", async () => {
+    const slug = "allergen-documentation-requirements-for-eu-and-uk-food-businesses";
+    const manifest = await getArticleManifest();
+    const article = await getArticleBySlug(slug);
+
+    expect(manifest.some((item) => item.slug === slug)).toBe(true);
+    expect(article).not.toBeNull();
+    expect(article?.category).toBe("Compliance");
+    expect(article?.publishedAt).toBe("2026-06-21");
+    expect(article?.image).toContain("images.pexels.com");
+    expect(article?.body).toContain("EU and UK food businesses");
+    expect(article?.body).toContain("/resources/allergen-matrix-template");
+    expect(article?.body).toContain("/resources/food-safety-document-checklist");
+    expect(article?.body).toContain("/resources/employee-food-safety-training-record");
+    expect(article?.body).toContain("/resources/cleaning-and-disinfection-sop");
+    expect(article?.body).toContain("/methodology");
+    expect(article?.body).toContain("/regulations-covered");
+    expect(article?.body).toContain("/pricing");
+    expect(article?.body).toContain("/signup");
+    expect(article?.body).toContain("/articles/natasha-law-haccp-ppds-allergen-obligations");
+    expect(article?.body).not.toContain("the chef knows what's in everything");
+  });
+});
+
+describe("supplier approval article", () => {
+  it("publishes a practical supplier approval guide with the planned record and trust links", async () => {
+    const slug = "supplier-approval-in-haccp-records-and-requirements";
+    const manifest = await getArticleManifest();
+    const article = await getArticleBySlug(slug);
+
+    expect(manifest.some((item) => item.slug === slug)).toBe(true);
+    expect(article).not.toBeNull();
+    expect(article?.category).toBe("Compliance");
+    expect(article?.publishedAt).toBe("2026-06-21");
+    expect(article?.image).toContain("images.pexels.com");
+    expect(article?.body).toContain("EU and UK food businesses");
+    expect(article?.body).toContain("/resources/supplier-registration-log");
+    expect(article?.body).toContain("/resources/incoming-goods-template");
+    expect(article?.body).toContain("/resources/traceability-log-template");
+    expect(article?.body).toContain("/resources/customer-complaint-log-template");
+    expect(article?.body).toContain("/methodology");
+    expect(article?.body).toContain("/regulations-covered");
+    expect(article?.body).toContain("/pricing");
+    expect(article?.body).not.toContain("Part 1: Regulatory Foundation");
+    expect(article?.body).not.toContain("â€”");
+  });
+});
+
+describe("refreshed phase 2 article bodies", () => {
+  it("do not ship duplicate body-level H1 headings", async () => {
+    const slugs = [
+      "what-documents-does-a-food-hygiene-inspector-ask-for-first-uk",
+      "how-to-perform-a-hazard-analysis-correctly",
+      "temperature-control-in-haccp-limits-and-monitoring",
+      "allergen-documentation-requirements-for-eu-and-uk-food-businesses",
+      "supplier-approval-in-haccp-records-and-requirements",
+    ];
+
+    for (const slug of slugs) {
+      const article = await getArticleBySlug(slug);
+      expect(article).not.toBeNull();
+      expect(article?.body).not.toContain("<h1>");
+    }
+  });
+});
+
 describe("article content processing", () => {
   it("normalizes rich article html for editorial rendering", () => {
     const result = processArticleContent(

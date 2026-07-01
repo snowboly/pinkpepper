@@ -65,6 +65,7 @@ export default function SupplierRegistrationLogPage() {
       ctaBody="PinkPepper helps teams create supplier approval questionnaires, working registration logs, and follow-up records that are easier to review and maintain."
       templateSlug="supplier-registration-log"
       relatedLinks={[
+        { href: "/articles/supplier-approval-in-haccp-records-and-requirements", label: "Supplier approval guide" },
         { href: "/resources/supplier-approval-questionnaire", label: "Supplier approval questionnaire" },
         { href: "/resources/traceability-log-template", label: "Traceability log template" },
         { href: "/features/food-safety-sop-generator", label: "Food safety SOP generator" },

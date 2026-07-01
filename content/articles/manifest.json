@@ -1,20 +1,47 @@
 [
   {
+    "title": "Supplier Approval for Food Businesses: What It Is and How to Get It Right",
+    "slug": "supplier-approval-in-haccp-records-and-requirements",
+    "excerpt": "A practical guide to supplier approval for EU and UK food businesses, covering approved supplier records, specifications, incoming goods checks, traceability, emergency suppliers, and ongoing review.",
+    "category": "Compliance",
+    "publishedAt": "2026-06-21",
+    "image": "https://images.pexels.com/photos/6169668/pexels-photo-6169668.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "source": "pinkpepper"
+  },
+  {
+    "title": "How to Export Food from Great Britain to the EU",
+    "slug": "how-to-export-food-from-great-britain-to-the-eu",
+    "excerpt": "A step-by-step guide for Great Britain exporters covering product classification, establishment approval, export health certification, TRACES, EU border controls, and post-export compliance.",
+    "category": "Import & Export",
+    "publishedAt": "2026-06-20",
+    "image": "https://images.pexels.com/photos/262353/pexels-photo-262353.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=900&w=1600",
+    "source": "pinkpepper"
+  },
+  {
+    "title": "How to Import Food into Great Britain from Non-EU Countries",
+    "slug": "how-to-import-food-into-great-britain-from-non-eu-countries",
+    "excerpt": "A step-by-step guide for commercial food importers covering classification, BTOM routes, IPAFFS, certificates, border controls, customs and post-import compliance in England, Scotland and Wales.",
+    "category": "Import & Export",
+    "publishedAt": "2026-06-15",
+    "image": "https://images.pexels.com/photos/24246926/pexels-photo-24246926.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=900&w=1600",
+    "source": "pinkpepper"
+  },
+  {
+    "title": "Allergen Documentation Requirements for EU and UK Food Businesses",
+    "slug": "allergen-documentation-requirements-for-eu-and-uk-food-businesses",
+    "excerpt": "A practical guide to allergen documentation for EU and UK food businesses, covering supplier information, allergen matrices, recipe control, customer communication, cross-contact records, training, and PPDS workflows.",
+    "category": "Compliance",
+    "publishedAt": "2026-06-21",
+    "image": "https://images.pexels.com/photos/5953835/pexels-photo-5953835.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "source": "pinkpepper"
+  },
+  {
     "title": "Natasha's Law and HACCP: Pre-Packed for Direct Sale Allergen Obligations",
     "slug": "natasha-law-haccp-ppds-allergen-obligations",
     "excerpt": "UK Food Information (Amendment) Regulations 2021 mandate full ingredient labelling for PPDS foods. How to integrate these requirements into HACCP allergen controls and what EHOs verify during inspection.",
     "category": "Compliance",
     "publishedAt": "2026-04-22",
     "image": "https://images.pexels.com/photos/6210958/pexels-photo-6210958.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-    "source": "pinkpepper"
-  },
-  {
-    "title": "Supplier Approval in HACCP: What Records You Need and Why",
-    "slug": "supplier-approval-in-haccp-records-and-requirements",
-    "excerpt": "Regulation (EC) 852/2004 requires approved suppliers. What records auditors expect, how to assess GFSI certification equivalence, and managing emergency suppliers without compromising HACCP.",
-    "category": "Compliance",
-    "publishedAt": "2026-04-22",
-    "image": "https://images.pexels.com/photos/6169668/pexels-photo-6169668.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
     "source": "pinkpepper"
   },
   {
@@ -110,9 +137,9 @@
   {
     "title": "What Documents Does a Food Hygiene Inspector Ask for First in the UK?",
     "slug": "what-documents-does-a-food-hygiene-inspector-ask-for-first-uk",
-    "excerpt": "A practical guide to the records and checks UK food hygiene inspectors usually ask for first, from your food safety system and temperature logs to allergen and cleaning records.",
+    "excerpt": "A practical UK guide to the records food hygiene inspectors usually ask for first, from your HACCP-based system and temperature logs to allergen, cleaning, training, and traceability records.",
     "category": "Compliance",
-    "publishedAt": "2026-04-19",
+    "publishedAt": "2026-06-21",
     "image": "https://images.pexels.com/photos/8477052/pexels-photo-8477052.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
     "source": "pinkpepper"
   },
@@ -490,9 +517,9 @@
     "slug": "temperature-control-in-haccp-limits-and-monitoring",
     "excerpt": "A practical guide to HACCP temperature control, including safe limits, monitoring routines, corrective actions, and the records teams actually need.",
     "category": "Compliance",
-    "publishedAt": "2025-12-27",
+    "publishedAt": "2026-06-21",
     "image": "https://images.pexels.com/photos/6004155/pexels-photo-6004155.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-    "source": "ilovehaccp"
+    "source": "pinkpepper"
   },
   {
     "title": "Cooling and Reheating Food Safely: The HACCP Checks That Matter Most",
@@ -542,11 +569,11 @@
   {
     "title": "How to Perform a HACCP Hazard Analysis That Actually Holds Up",
     "slug": "how-to-perform-a-hazard-analysis-correctly",
-    "excerpt": "A practical guide to hazard analysis that helps you identify real hazards, justify your decisions, and avoid the weak logic auditors challenge first.",
+    "excerpt": "A practical HACCP hazard analysis guide for EU and UK food businesses covering real hazards, significance, controls, CCP logic, and the mistakes that make plans fail under review.",
     "category": "Fundamentals",
-    "publishedAt": "2025-12-01",
+    "publishedAt": "2026-06-21",
     "image": "https://images.pexels.com/photos/35492405/pexels-photo-35492405.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-    "source": "ilovehaccp"
+    "source": "pinkpepper"
   },
   {
     "title": "Mastering HACCP: A Step-by-Step Guide to Building an Effective Process Flow Diagram",

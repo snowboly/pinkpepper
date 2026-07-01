@@ -95,8 +95,7 @@
     "recordingUnsupported": "Voice recording is not supported in this browser.",
     "recordingPermissionError": "Microphone access is blocked. Please allow microphone permission and try again.",
     "transcriptionError": "We could not transcribe your recording. Please try again.",
-    "transcriptionEmptyError": "No speech was detected. Please try recording again."
-    ,
+    "transcriptionEmptyError": "No speech was detected. Please try recording again.",
     "modeGuidance": {
       "examplesLabel": "Try asking:",
       "consultant": {
@@ -325,7 +324,7 @@
     "triggers": {
       "message_limit": {
         "heading": "You've reached your daily message limit",
-        "body": "Upgrade for 25 messages per day on Plus or 100 per day on Pro."
+        "body": "Upgrade for higher daily limits on Plus or Pro."
       },
       "expert_limit": {
         "heading": "You've reached your daily Auditor limit",
@@ -353,8 +352,8 @@
         "name": "Plus",
         "price": "€19/mo",
         "highlights": [
-          "25 messages per day",
-          "5 image analyses per day",
+          "Higher daily chat limits",
+          "More image analyses",
           "Unlimited saved conversations and projects",
           "Access to downloadable templates"
         ],
@@ -462,7 +461,16 @@
     "deleteAccountConfirmBody": "This will permanently delete your account and all your data, including conversations, documents, and settings. This action cannot be undone.",
     "deleteAccountConfirm": "Yes, delete my account",
     "cancel": "Cancel",
-    "deleting": "Deleting..."
+    "deleting": "Deleting...",
+    "firstName": "First name",
+    "lastName": "Surname",
+    "companyName": "Company name (optional)",
+    "profileSaved": "Profile saved.",
+    "cancelAtPeriodEnd": "Cancels automatic renewal. Your plan stays active until the end of the current billing period.",
+    "currentPeriodEndsOn": "Current period ends on",
+    "marketingEmails": "Marketing emails",
+    "marketingEmailsDescription": "I would like to receive occasional product updates, new document templates, and relevant offers from PinkPepper. I can unsubscribe at any time.",
+    "transactionalEmailsNotice": "Transactional emails like billing, security, and account notices will still be sent.",
+    "emailPreferencesSaved": "Email preferences updated."
   }
 }
-
