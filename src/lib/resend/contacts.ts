@@ -38,6 +38,7 @@ export async function syncMarketingContact(input: SyncMarketingContactInput) {
   }
 
   const createResult = await resend.contacts.create({
+    audienceId,
     email: input.email,
     firstName: input.firstName ?? undefined,
     lastName: input.lastName ?? undefined,
