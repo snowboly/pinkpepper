@@ -232,7 +232,7 @@ describe("public SEO copy and linking", () => {
     expect(security).toContain("/pricing");
     expect(contact).toContain("/features/");
     expect(resources).toContain("/features/");
-    expect(chrome).toContain('href: "/use-cases"');
+    expect(chrome).not.toContain('href: "/use-cases"');
   });
 
   it("renders the articles hub as a curated resource page with key route links", async () => {

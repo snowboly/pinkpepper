@@ -337,7 +337,6 @@ describe("getGroupedTemplates", () => {
     expect(traceabilityRecallPosterPage).toContain("traceability-recall-poster");
     expect(traceabilityRecallPosterPage).toContain("EU and UK");
   });
-
   it("keeps local thumbnail fallbacks for the live resource pages that rely on them", () => {
     const thumbnailFiles = readPage("public/templates/thumbnails/food-spec-template.svg");
     expect(thumbnailFiles).toContain("<svg");
