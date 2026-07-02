@@ -7,7 +7,7 @@ import { join } from "node:path";
 const readPage = (relativePath: string) => readFileSync(join(process.cwd(), relativePath), "utf8");
 
 describe("getGroupedTemplates", () => {
-  it("sorts categories and template titles alphabetically", () => {
+  it("sorts categories alphabetically and keeps editable templates ahead of posters", () => {
     const grouped = getGroupedTemplates();
 
     expect(grouped.map((group) => group.category)).toEqual([
@@ -26,51 +26,60 @@ describe("getGroupedTemplates", () => {
       "EU and UK document checklist",
       "Food safety audit checklist",
       "Food safety management system",
-      "Foreign body prevention poster",
-      "Glass and brittle plastic control poster",
       "HACCP hazards register",
       "HACCP step descriptions",
       "Hazard analysis template",
       "Product recall procedure",
+      "Foreign body prevention poster",
+      "Glass and brittle plastic control poster",
     ]);
 
     expect(grouped.find((group) => group.category === "Monitoring")?.templates.map((template) => template.title)).toEqual([
-      "Chilled storage checklist poster",
       "Cooking monitoring log",
       "Equipment calibration log",
       "Food safety opening and closing checklist",
-      "Food temperature poster",
       "Pest control log",
-      "Pre-operational hygiene inspection poster",
-      "Probe thermometer calibration poster",
       "Restaurant closing checklist",
       "Restaurant opening checklist",
-      "Restaurant opening poster",
       "Temperature monitoring log",
       "Waste management log",
       "Waste management SOP",
+      "Chill chain checklist poster",
+      "Chilled storage checklist poster",
+      "Date coding reminder poster",
+      "Food temperature poster",
+      "Label checking poster",
+      "Pre-operational hygiene inspection poster",
+      "Probe thermometer calibration poster",
+      "Restaurant opening poster",
     ]);
 
     expect(grouped.find((group) => group.category === "Allergen")?.templates.map((template) => template.title)).toEqual([
-      "Allergen checklist poster",
       "Allergen matrix template",
+      "Allergen checklist poster",
     ]);
 
     expect(grouped.find((group) => group.category === "Training")?.templates.map((template) => template.title)).toEqual([
       "Employee training record",
+      "Personal hygiene policy",
       "Food safety culture poster",
       "GMP poster",
       "Halal compliance poster",
+      "Handwashing checklist poster",
       "Kosher compliance poster",
       "Personal hygiene checklist poster",
-      "Personal hygiene policy",
     ]);
 
     expect(grouped.find((group) => group.category === "Supplier")?.templates.map((template) => template.title)).toEqual([
       "Food specification template",
-      "Supplier approval checklist poster",
       "Supplier approval questionnaire",
       "Supplier registration log",
+      "Supplier approval checklist poster",
+    ]);
+
+    expect(grouped.find((group) => group.category === "Cleaning")?.templates.map((template) => template.title)).toEqual([
+      "Cleaning and disinfection SOP",
+      "Cleaning safety poster",
     ]);
   });
 
@@ -174,6 +183,36 @@ describe("getGroupedTemplates", () => {
       fileType: "png",
     });
 
+    expect(TEMPLATES.find((template) => template.slug === "chill-chain-poster")).toMatchObject({
+      title: "Chill chain checklist poster",
+      category: "Monitoring",
+      fileType: "png",
+    });
+
+    expect(TEMPLATES.find((template) => template.slug === "label-check-poster")).toMatchObject({
+      title: "Label checking poster",
+      category: "Monitoring",
+      fileType: "png",
+    });
+
+    expect(TEMPLATES.find((template) => template.slug === "date-coding-poster")).toMatchObject({
+      title: "Date coding reminder poster",
+      category: "Monitoring",
+      fileType: "png",
+    });
+
+    expect(TEMPLATES.find((template) => template.slug === "cleaning-safety-poster")).toMatchObject({
+      title: "Cleaning safety poster",
+      category: "Cleaning",
+      fileType: "png",
+    });
+
+    expect(TEMPLATES.find((template) => template.slug === "handwashing-poster")).toMatchObject({
+      title: "Handwashing checklist poster",
+      category: "Training",
+      fileType: "png",
+    });
+
     expect(TEMPLATES.find((template) => template.slug === "halal-compliance-poster")).toMatchObject({
       title: "Halal compliance poster",
       category: "Training",
@@ -207,11 +246,16 @@ describe("getGroupedTemplates", () => {
     expect(resourceEntries.map((resource) => resource.href)).toEqual(
       expect.arrayContaining([
         "/resources/allergen-checklist-poster",
+        "/resources/chill-chain-poster",
+        "/resources/cleaning-safety-poster",
         "/resources/cooking-monitoring-log-template",
+        "/resources/date-coding-poster",
         "/resources/food-temperature-poster",
         "/resources/gmp-poster",
         "/resources/halal-compliance-poster",
+        "/resources/handwashing-poster",
         "/resources/kosher-compliance-poster",
+        "/resources/label-check-poster",
         "/resources/restaurant-closing-checklist",
         "/resources/restaurant-opening-checklist",
         "/resources/restaurant-opening-poster",
@@ -220,6 +264,12 @@ describe("getGroupedTemplates", () => {
 
     const resourcesPage = readPage("src/app/resources/page.tsx");
     expect(resourcesPage).toContain("Free food safety templates, posters, and guides");
+
+    expect(readPage("src/app/resources/chill-chain-poster/page.tsx")).toContain('templateSlug="chill-chain-poster"');
+    expect(readPage("src/app/resources/cleaning-safety-poster/page.tsx")).toContain('templateSlug="cleaning-safety-poster"');
+    expect(readPage("src/app/resources/date-coding-poster/page.tsx")).toContain('templateSlug="date-coding-poster"');
+    expect(readPage("src/app/resources/handwashing-poster/page.tsx")).toContain('templateSlug="handwashing-poster"');
+    expect(readPage("src/app/resources/label-check-poster/page.tsx")).toContain('templateSlug="label-check-poster"');
   });
 
   it("surfaces the second poster wave in the registry and resources hub", () => {
@@ -337,13 +387,19 @@ describe("getGroupedTemplates", () => {
     expect(traceabilityRecallPosterPage).toContain("traceability-recall-poster");
     expect(traceabilityRecallPosterPage).toContain("EU and UK");
   });
+
   it("keeps local thumbnail fallbacks for the live resource pages that rely on them", () => {
     const thumbnailFiles = readPage("public/templates/thumbnails/food-spec-template.svg");
     expect(thumbnailFiles).toContain("<svg");
 
+    expect(readPage("public/templates/thumbnails/chill-chain-poster.svg")).toContain("<svg");
+    expect(readPage("public/templates/thumbnails/cleaning-safety-poster.svg")).toContain("<svg");
+    expect(readPage("public/templates/thumbnails/date-coding-poster.svg")).toContain("<svg");
     expect(readPage("public/templates/thumbnails/food-safety-opening-and-closing-checklist.svg")).toContain("<svg");
+    expect(readPage("public/templates/thumbnails/handwashing-poster.svg")).toContain("<svg");
     expect(readPage("public/templates/thumbnails/haccp-plan-template.svg")).toContain("<svg");
     expect(readPage("public/templates/thumbnails/hazard-analysis-template.svg")).toContain("<svg");
+    expect(readPage("public/templates/thumbnails/label-check-poster.svg")).toContain("<svg");
     expect(readPage("public/templates/thumbnails/supplier-registration-log.svg")).toContain("<svg");
   });
 
