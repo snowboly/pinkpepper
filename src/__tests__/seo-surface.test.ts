@@ -242,6 +242,17 @@ describe("public SEO copy and linking", () => {
     expect(chrome).not.toContain('href: "/use-cases"');
   });
 
+  it("keeps a legal landing page behind the shared legal breadcrumb root", () => {
+    const legalHub = readPage("src/app/legal/page.tsx");
+    const legalLayout = readPage("src/app/legal/layout.tsx");
+
+    expect(legalLayout).toContain("https://pinkpepper.io/legal");
+    expect(legalHub).toContain("Legal policies");
+    expect(legalHub).toContain("/legal/terms");
+    expect(legalHub).toContain("/legal/privacy");
+    expect(legalHub).toContain("/legal/cookies");
+  });
+
   it("renders the articles hub as a curated resource page with key route links", async () => {
     const markup = await renderArticlesPageForTest();
 
