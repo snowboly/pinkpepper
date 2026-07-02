@@ -28,8 +28,15 @@ async function renderArticlesPageForTest(
       publishedAt: "2026-04-02",
     },
   ],
+  libraryMode?: "full" | "lazy",
 ) {
   vi.resetModules();
+  vi.unstubAllEnvs();
+  if (libraryMode) {
+    vi.stubEnv("ARTICLES_LIBRARY_MODE", libraryMode);
+  } else {
+    vi.stubEnv("ARTICLES_LIBRARY_MODE", "");
+  }
   vi.doMock("@/lib/articles", () => ({
     getArticleManifest: vi.fn().mockResolvedValue(mockArticles),
   }));
@@ -300,7 +307,7 @@ describe("public SEO copy and linking", () => {
     expect(markup).toContain("Article image coming soon");
   });
 
-  it("caps the initial library render and defers the remaining article cards", async () => {
+  it("renders the full library by default", async () => {
     const manyArticles = Array.from({ length: 30 }, (_, index) => ({
       title: `Article ${index + 1}`,
       slug: `article-${index + 1}`,
@@ -310,6 +317,24 @@ describe("public SEO copy and linking", () => {
     }));
 
     const markup = await renderArticlesPageForTest(manyArticles);
+
+    expect(markup).toContain("Article 1");
+    expect(markup).toContain("Article 24");
+    expect(markup).toContain("Article 25");
+    expect(markup).toContain("Article 30");
+    expect(markup).not.toContain("Load more articles");
+  });
+
+  it("keeps the deferred remainder when ARTICLES_LIBRARY_MODE=lazy", async () => {
+    const manyArticles = Array.from({ length: 30 }, (_, index) => ({
+      title: `Article ${index + 1}`,
+      slug: `article-${index + 1}`,
+      excerpt: `Excerpt ${index + 1}`,
+      category: "Operations",
+      publishedAt: `2026-04-${String(index + 1).padStart(2, "0")}`,
+    }));
+
+    const markup = await renderArticlesPageForTest(manyArticles, "lazy");
 
     expect(markup).toContain("Article 1");
     expect(markup).toContain("Article 24");

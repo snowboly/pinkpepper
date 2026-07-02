@@ -2,13 +2,11 @@
 
 import { useState } from "react";
 import type { ArticleSummary } from "@/lib/articles";
-import type { PublicLocale } from "@/i18n/public";
 import ArticleCard from "@/components/articles/ArticleCard";
 
 type ArticleLibraryRemainderProps = {
   articles: ArticleSummary[];
   articleHrefBySlug: Record<string, string>;
-  locale: PublicLocale;
 };
 
 export default function ArticleLibraryRemainder({
