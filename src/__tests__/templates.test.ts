@@ -7,7 +7,7 @@ import { join } from "node:path";
 const readPage = (relativePath: string) => readFileSync(join(process.cwd(), relativePath), "utf8");
 
 describe("getGroupedTemplates", () => {
-  it("sorts categories and template titles alphabetically", () => {
+  it("sorts categories alphabetically and keeps editable templates ahead of posters", () => {
     const grouped = getGroupedTemplates();
 
     expect(grouped.map((group) => group.category)).toEqual([
@@ -26,55 +26,55 @@ describe("getGroupedTemplates", () => {
       "EU and UK document checklist",
       "Food safety audit checklist",
       "Food safety management system",
-      "Foreign body prevention poster",
-      "Glass and brittle plastic control poster",
       "HACCP hazards register",
       "HACCP step descriptions",
       "Hazard analysis template",
       "Product recall procedure",
+      "Foreign body prevention poster",
+      "Glass and brittle plastic control poster",
     ]);
 
     expect(grouped.find((group) => group.category === "Monitoring")?.templates.map((template) => template.title)).toEqual([
-      "Chill chain poster",
-      "Chilled storage checklist poster",
       "Cooking monitoring log",
-      "Date coding poster",
       "Equipment calibration log",
       "Food safety opening and closing checklist",
-      "Food temperature poster",
-      "Label check poster",
       "Pest control log",
-      "Pre-operational hygiene inspection poster",
-      "Probe thermometer calibration poster",
       "Restaurant closing checklist",
       "Restaurant opening checklist",
-      "Restaurant opening poster",
       "Temperature monitoring log",
       "Waste management log",
       "Waste management SOP",
+      "Chill chain checklist poster",
+      "Chilled storage checklist poster",
+      "Date coding reminder poster",
+      "Food temperature poster",
+      "Label checking poster",
+      "Pre-operational hygiene inspection poster",
+      "Probe thermometer calibration poster",
+      "Restaurant opening poster",
     ]);
 
     expect(grouped.find((group) => group.category === "Allergen")?.templates.map((template) => template.title)).toEqual([
-      "Allergen checklist poster",
       "Allergen matrix template",
+      "Allergen checklist poster",
     ]);
 
     expect(grouped.find((group) => group.category === "Training")?.templates.map((template) => template.title)).toEqual([
       "Employee training record",
+      "Personal hygiene policy",
       "Food safety culture poster",
       "GMP poster",
       "Halal compliance poster",
-      "Handwashing poster",
+      "Handwashing checklist poster",
       "Kosher compliance poster",
       "Personal hygiene checklist poster",
-      "Personal hygiene policy",
     ]);
 
     expect(grouped.find((group) => group.category === "Supplier")?.templates.map((template) => template.title)).toEqual([
       "Food specification template",
-      "Supplier approval checklist poster",
       "Supplier approval questionnaire",
       "Supplier registration log",
+      "Supplier approval checklist poster",
     ]);
 
     expect(grouped.find((group) => group.category === "Cleaning")?.templates.map((template) => template.title)).toEqual([
@@ -184,19 +184,19 @@ describe("getGroupedTemplates", () => {
     });
 
     expect(TEMPLATES.find((template) => template.slug === "chill-chain-poster")).toMatchObject({
-      title: "Chill chain poster",
+      title: "Chill chain checklist poster",
       category: "Monitoring",
       fileType: "png",
     });
 
     expect(TEMPLATES.find((template) => template.slug === "label-check-poster")).toMatchObject({
-      title: "Label check poster",
+      title: "Label checking poster",
       category: "Monitoring",
       fileType: "png",
     });
 
     expect(TEMPLATES.find((template) => template.slug === "date-coding-poster")).toMatchObject({
-      title: "Date coding poster",
+      title: "Date coding reminder poster",
       category: "Monitoring",
       fileType: "png",
     });
@@ -208,7 +208,7 @@ describe("getGroupedTemplates", () => {
     });
 
     expect(TEMPLATES.find((template) => template.slug === "handwashing-poster")).toMatchObject({
-      title: "Handwashing poster",
+      title: "Handwashing checklist poster",
       category: "Training",
       fileType: "png",
     });
