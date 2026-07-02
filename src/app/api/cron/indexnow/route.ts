@@ -1,4 +1,5 @@
-import { getArticleManifest, isArticlePreferredForIndexing } from "@/lib/articles";
+import { getIndexableEnglishArticleSummaries } from "@/lib/article-index-feed";
+import { isArticlePreferredForIndexing } from "@/lib/article-indexing";
 import { publicContentRoutePaths, publicLaunchLocales } from "@/i18n/public";
 import { localizePublicPath } from "@/lib/public-routes";
 import { resourceEntries } from "@/lib/resources";
@@ -10,17 +11,26 @@ const BASE_URL = "https://pinkpepper.io";
 const INDEXNOW_KEY = "181c6ef4ee9b418590ef0828aa795a1f";
 const INDEXNOW_KEY_LOCATION = `${BASE_URL}/${INDEXNOW_KEY}.txt`;
 
+const USE_CASE_PATHS = [
+  "/use-cases",
+  "/use-cases/restaurants",
+  "/use-cases/cafes",
+  "/use-cases/catering",
+  "/use-cases/food-manufacturing",
+] as const;
+
 const STATIC_PATHS = [
   "/about",
+  "/compare/haccp-software-alternatives",
+  "/compare/pinkpepper-vs-consultant",
+  "/human-review",
+  "/methodology",
+  "/regulations-covered",
   "/resources",
   "/security",
   "/legal/terms",
   "/legal/privacy",
-  "/legal/cookies",
-  "/legal/dpa",
-  "/legal/acceptable-use",
-  "/legal/refund",
-];
+] as const;
 
 export async function GET(request: Request) {
   const secret = process.env.CRON_SECRET;
@@ -32,14 +42,17 @@ export async function GET(request: Request) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const articles = await getArticleManifest().catch(() => []);
+  const articles = getIndexableEnglishArticleSummaries();
 
-  const englishRoutes = publicContentRoutePaths.map((path) => `${BASE_URL}${path}`);
+  const englishRoutes = publicContentRoutePaths
+    .filter((path) => path !== "/")
+    .map((path) => `${BASE_URL}${path}`);
   const localizedRoutes = publicContentRoutePaths.flatMap((path) =>
     publicLaunchLocales
       .filter((locale) => locale !== "en")
       .map((locale) => `${BASE_URL}${localizePublicPath(locale, path)}`),
   );
+  const useCaseUrls = USE_CASE_PATHS.map((path) => `${BASE_URL}${path}`);
   const articleUrls = articles
     .filter(isArticlePreferredForIndexing)
     .map((article) => `${BASE_URL}/articles/${article.slug}`);
@@ -47,7 +60,14 @@ export async function GET(request: Request) {
     (path) => `${BASE_URL}${path}`,
   );
 
-  const urlList = [...englishRoutes, ...localizedRoutes, ...articleUrls, ...staticUrls];
+  const urlList = [
+    BASE_URL,
+    ...englishRoutes,
+    ...localizedRoutes,
+    ...useCaseUrls,
+    ...articleUrls,
+    ...staticUrls,
+  ].filter((url, index, urls) => urls.indexOf(url) === index);
 
   const res = await fetch("https://api.indexnow.org/indexnow", {
     method: "POST",

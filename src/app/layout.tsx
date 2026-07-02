@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Manrope, Space_Grotesk } from "next/font/google";
+import { headers } from "next/headers";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import { CookieBanner } from "@/components/site/CookieBanner";
 import { SiteFooter, SiteHeader } from "@/components/site/chrome";
+import { PUBLIC_PATHNAME_HEADER, shouldInjectGoogleAnalytics } from "@/lib/google-analytics";
 import { getCspNonce } from "@/lib/security/csp";
 import "./globals.css";
 
@@ -29,13 +31,13 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://pinkpepper.io",
   },
-  title: "PinkPepper | AI HACCP & Food Safety Software - EU & UK",
+  title: "PinkPepper | AI Food Safety Compliance Software - EU & UK",
   description:
-    "Get free AI food safety guidance, HACCP plans and SOPs, plus EU/UK food import and export compliance support for your business.",
+    "AI food safety compliance software for EU and UK food businesses. Generate HACCP plans, SOPs, allergen documentation, and practical compliance records faster.",
   openGraph: {
-    title: "PinkPepper | AI HACCP & Food Safety Software - EU & UK",
+    title: "PinkPepper | AI Food Safety Compliance Software - EU & UK",
     description:
-      "Get free AI food safety guidance, HACCP plans and SOPs, plus EU/UK food import and export compliance support for your business.",
+      "AI food safety compliance software for EU and UK food businesses. Generate HACCP plans, SOPs, allergen documentation, and practical compliance records faster.",
     url: "https://pinkpepper.io",
     siteName: "PinkPepper",
     locale: "en_GB",
@@ -51,9 +53,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "PinkPepper | AI HACCP & Food Safety Software - EU & UK",
+    title: "PinkPepper | AI Food Safety Compliance Software - EU & UK",
     description:
-      "Get free AI food safety guidance, HACCP plans and SOPs, plus EU/UK food import and export compliance support for your business.",
+      "AI food safety compliance software for EU and UK food businesses. Generate HACCP plans, SOPs, allergen documentation, and practical compliance records faster.",
     images: ["https://pinkpepper.io/social-card.png"],
   },
   manifest: "/logo/site.webmanifest",
@@ -113,6 +115,10 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   const locale = await getLocale();
   const messages = await getMessages();
   const nonce = await getCspNonce();
+  const measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+  const requestHeaders = await headers();
+  const pathname = requestHeaders.get(PUBLIC_PATHNAME_HEADER) ?? "/";
+  const shouldRenderGoogleAnalytics = Boolean(measurementId) && shouldInjectGoogleAnalytics(pathname);
 
   return (
     <html lang={locale}>
@@ -133,7 +139,10 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
           <SiteHeader />
           {children}
           <SiteFooter />
-          <CookieBanner />
+          <CookieBanner
+            nonce={nonce}
+            googleAnalyticsMeasurementId={shouldRenderGoogleAnalytics ? measurementId : undefined}
+          />
           <SpeedInsights />
         </NextIntlClientProvider>
       </body>

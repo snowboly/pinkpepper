@@ -12,11 +12,10 @@ export default function CookiesPage() {
     <main className="pp-container max-w-4xl py-16">
       <div className="mb-8 border-b border-[#F1F5F9] pb-8">
         <h1 className="text-4xl font-semibold text-[#0F172A]">Cookie Policy</h1>
-        <p className="mt-2 text-sm text-[#94A3B8]">Last updated: March 2026</p>
+        <p className="mt-2 text-sm text-[#94A3B8]">Last updated: May 2026</p>
       </div>
 
       <div className="space-y-10 text-[#374151] leading-relaxed">
-
         <section>
           <h2 className="mb-3 text-xl font-semibold text-[#0F172A]">1. What are cookies?</h2>
           <p>
@@ -29,8 +28,10 @@ export default function CookiesPage() {
         <section>
           <h2 className="mb-3 text-xl font-semibold text-[#0F172A]">2. How we use cookies</h2>
           <p>
-            PinkPepper uses cookies for two purposes only: authentication (so you stay logged in) and storing
-            your cookie consent preference. We do not use advertising cookies or sell data to advertisers.
+            PinkPepper uses cookies for authentication, payment and fraud-prevention flows where applicable,
+            and storing your cookie consent preference. We also use optional Google Analytics after
+            consent to understand high-level usage patterns on the public site. We do not use advertising
+            cookies or sell data to advertisers.
           </p>
         </section>
 
@@ -50,14 +51,14 @@ export default function CookiesPage() {
               <tbody className="divide-y divide-[#F1F5F9]">
                 <tr>
                   <td className="px-4 py-3 font-mono text-xs">sb-auth-token</td>
-                  <td className="px-4 py-3">Supabase authentication session token — keeps you logged in</td>
+                  <td className="px-4 py-3">Supabase authentication session token - keeps you logged in</td>
                   <td className="px-4 py-3">Session</td>
                   <td className="px-4 py-3">PinkPepper / Supabase</td>
                   <td className="px-4 py-3">Essential</td>
                 </tr>
                 <tr>
                   <td className="px-4 py-3 font-mono text-xs">sb-refresh-token</td>
-                  <td className="px-4 py-3">Supabase refresh token — renews your session without re-login</td>
+                  <td className="px-4 py-3">Supabase refresh token - renews your session without re-login</td>
                   <td className="px-4 py-3">Up to 60 days</td>
                   <td className="px-4 py-3">PinkPepper / Supabase</td>
                   <td className="px-4 py-3">Essential</td>
@@ -71,14 +72,14 @@ export default function CookiesPage() {
                 </tr>
                 <tr>
                   <td className="px-4 py-3 font-mono text-xs">__stripe_mid</td>
-                  <td className="px-4 py-3">Stripe fraud prevention — identifies the browser during payment sessions</td>
+                  <td className="px-4 py-3">Stripe fraud prevention - identifies the browser during payment sessions</td>
                   <td className="px-4 py-3">1 year</td>
                   <td className="px-4 py-3">Stripe</td>
                   <td className="px-4 py-3">Essential (payment)</td>
                 </tr>
                 <tr>
                   <td className="px-4 py-3 font-mono text-xs">__stripe_sid</td>
-                  <td className="px-4 py-3">Stripe fraud prevention — identifies the browser during a payment session</td>
+                  <td className="px-4 py-3">Stripe fraud prevention - identifies the browser during a payment session</td>
                   <td className="px-4 py-3">30 minutes</td>
                   <td className="px-4 py-3">Stripe</td>
                   <td className="px-4 py-3">Essential (payment)</td>
@@ -87,8 +88,8 @@ export default function CookiesPage() {
             </table>
           </div>
           <p className="mt-3 text-sm text-[#64748B]">
-            We do not currently use analytics, tracking, or advertising cookies. If this changes we will update
-            this policy and, where required, seek your consent before setting such cookies.
+            PinkPepper currently uses optional Google Analytics on the public site after consent. We do not
+            use advertising cookies.
           </p>
         </section>
 
@@ -97,8 +98,10 @@ export default function CookiesPage() {
           <p>
             When you first visit PinkPepper, a cookie banner informs you of our use of cookies. Authentication
             and payment cookies are strictly necessary for the Service to function and do not require consent
-            under the ePrivacy Directive. The <code className="rounded bg-[#F1F5F9] px-1.5 py-0.5 text-xs">pp-cookie-consent</code> preference cookie
-            is set only after you interact with the banner.
+            under the ePrivacy Directive. The{" "}
+            <code className="rounded bg-[#F1F5F9] px-1.5 py-0.5 text-xs">pp-cookie-consent</code> preference
+            cookie is set only after you interact with the banner. Optional Google Analytics loads only
+            after you accept analytics in the banner.
           </p>
         </section>
 
@@ -110,16 +113,16 @@ export default function CookiesPage() {
           </p>
           <ul className="list-disc space-y-2 pl-6 text-sm">
             <li>
-              <strong>Chrome:</strong> Settings → Privacy and security → Cookies and other site data
+              <strong>Chrome:</strong> Settings -&gt; Privacy and security -&gt; Cookies and other site data
             </li>
             <li>
-              <strong>Firefox:</strong> Settings → Privacy &amp; Security → Cookies and Site Data
+              <strong>Firefox:</strong> Settings -&gt; Privacy &amp; Security -&gt; Cookies and Site Data
             </li>
             <li>
-              <strong>Safari:</strong> Preferences → Privacy → Manage Website Data
+              <strong>Safari:</strong> Preferences -&gt; Privacy -&gt; Manage Website Data
             </li>
             <li>
-              <strong>Edge:</strong> Settings → Cookies and site permissions → Cookies and site data
+              <strong>Edge:</strong> Settings -&gt; Cookies and site permissions -&gt; Cookies and site data
             </li>
           </ul>
         </section>
@@ -128,10 +131,12 @@ export default function CookiesPage() {
           <h2 className="mb-3 text-xl font-semibold text-[#0F172A]">6. Contact</h2>
           <p>
             For questions about our use of cookies, contact us at{" "}
-            <a href="mailto:support@pinkpepper.io" className="text-[#E11D48] hover:underline">support@pinkpepper.io</a>.
+            <a href="mailto:support@pinkpepper.io" className="text-[#E11D48] hover:underline">
+              support@pinkpepper.io
+            </a>
+            .
           </p>
         </section>
-
       </div>
     </main>
   );

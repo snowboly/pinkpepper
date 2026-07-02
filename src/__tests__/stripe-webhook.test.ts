@@ -211,4 +211,38 @@ describe("syncSubscriptionFromStripe", () => {
     expect(adminState.profileUpdates[0]).toMatchObject({ tier: "pro" });
     expect(sendBillingEmailMock).toHaveBeenCalledTimes(1);
   });
+
+  it("can sync subscription state without dispatching billing email", async () => {
+    adminState.subscriptionRow = { user_id: "user_123" };
+    stripeRetrieveSubscriptionMock.mockRejectedValue(new Error("not needed in this test"));
+    getUserByIdMock.mockResolvedValue({
+      data: { user: { email: "owner@example.com" } },
+    });
+
+    await syncSubscriptionFromStripe(
+      {
+        id: "sub_123",
+        customer: "cus_123",
+        status: "active",
+        items: {
+          data: [
+            {
+              price: { id: "price_pro" },
+              current_period_end: 1_710_000_000,
+            },
+          ],
+        },
+      } as unknown as Stripe.Subscription,
+      "customer.subscription.updated",
+      { sendEmail: false }
+    );
+
+    expect(adminState.upserts[0]).toMatchObject({
+      user_id: "user_123",
+      stripe_customer_id: "cus_123",
+      tier: "pro",
+    });
+    expect(adminState.profileUpdates[0]).toMatchObject({ tier: "pro" });
+    expect(sendBillingEmailMock).not.toHaveBeenCalled();
+  });
 });

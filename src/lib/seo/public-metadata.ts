@@ -16,10 +16,16 @@ type PublicMetadataInput = {
   description: string;
 };
 
+type PublicMetadataOptions = {
+  index?: boolean;
+  follow?: boolean;
+};
+
 export function buildPublicMetadata(
   locale: PublicLocale,
   path: string,
   copy: PublicMetadataInput,
+  options: PublicMetadataOptions = {},
 ): Metadata {
   const canonicalPath = localizePublicPath(locale, path);
   const enPath = `${BASE_URL}${localizePublicPath("en", path)}`;
@@ -36,6 +42,10 @@ export function buildPublicMetadata(
         ),
       },
     },
+    robots:
+      options.index === false
+        ? { index: false, follow: options.follow ?? true }
+        : undefined,
     openGraph: {
       title: copy.title,
       description: copy.description,
@@ -44,6 +54,14 @@ export function buildPublicMetadata(
       images: [DEFAULT_OG_IMAGE],
     },
   };
+}
+
+export function buildLocalizedWrapperMetadata(
+  locale: PublicLocale,
+  path: string,
+  copy: PublicMetadataInput,
+): Metadata {
+  return buildPublicMetadata(locale, path, copy, { index: false, follow: true });
 }
 
 /** For pages that are English-only (no [locale] route yet). */

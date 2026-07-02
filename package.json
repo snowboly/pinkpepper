@@ -6,9 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint src scripts next.config.ts middleware.ts vitest.config.ts eslint.config.mjs",
+    "lint": "eslint src scripts next.config.ts vitest.config.ts eslint.config.mjs",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "kb:cleanup": "node --use-system-ca scripts/cleanup-knowledge-integrity.mjs",
     "articles:migrate:ilovehaccp": "node scripts/migrate-ilovehaccp-articles.mjs",
     "supabase:types": "supabase gen types typescript --project-id klzvpixfslfsrjafbwkc > src/types/database.types.ts"
   },
@@ -41,12 +42,13 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@vitejs/plugin-react": "^5.1.4",
+    "@vitejs/plugin-react": "^5.2.0",
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9",
     "eslint-config-next": "16.2.6",
     "tailwindcss": "^4",
     "typescript": "5.9.3",
+    "vite": "^8.0.16",
     "vitest": "^4.0.18"
   },
   "overrides": {

@@ -3,6 +3,7 @@
     "nav": {
       "resources": "Resources",
       "freeTemplates": "Free Templates",
+      "foodSpecTemplate": "Food spec template",
       "articles": "Articles",
       "useCases": "Use Cases",
       "faqs": "FAQs",
@@ -35,8 +36,8 @@
   },
   "home": {
     "heroBadge": "Built for EU & UK food safety regulations",
-    "heroTitle": "HACCP plans, SOPs & audit prep in minutes - not weeks.",
-    "heroDescription": "PinkPepper is AI food safety compliance software that saves your team 10+ hours a week on documentation. Get regulation-grounded answers, generate audit-ready records, and escalate to human consultants when the risk is higher.",
+    "heroTitle": "Generate free HACCP plans, SOPs and food safety records in minutes",
+    "heroDescription": "Generate free HACCP plans, hazard analysis templates, SOPs, and food safety records for EU and UK food businesses. PinkPepper helps teams move faster from questions to usable compliance documents.",
     "eurLexLabel": "Regulation data powered by",
     "trustCards": {
       "groundedTitle": "Grounded in 35+ EU & UK regulations",
@@ -49,7 +50,7 @@
     "workflows": {
       "eyebrow": "Built for real world operators",
       "title": "What PinkPepper helps you do",
-      "body": "From raw notes to review-ready compliance work, PinkPepper is designed to shorten the time between a food safety problem and something your team can actually use.",
+      "body": "From free HACCP plan drafts and hazard analysis templates to SOPs, monitoring logs, and corrective action records, PinkPepper helps food businesses build documents they can actually use on site.",
       "answerTitle": "Answer compliance questions faster",
       "answerBody": "Get regulation-grounded answers anchored in EC 852/2004, UK FSA guidance, and Codex HACCP references.",
       "buildTitle": "Build HACCP and audit prep faster",
@@ -112,6 +113,7 @@
     "library": {
       "eyebrow": "From the library",
       "title": "Articles, guides & templates",
+      "body": "Start with free HACCP templates, hazard analysis worksheets, guides, and practical food safety records.",
       "haccpLinkLabel": "HACCP plan generator",
       "browseAllLabel": "Browse all"
     },
@@ -163,8 +165,8 @@
   },
   "pages": {
     "home": {
-      "title": "PinkPepper | AI HACCP & Food Safety Software for EU & UK Businesses",
-      "description": "Generate HACCP plans, allergen records, SOPs & audit-ready documents in minutes. AI food safety software grounded in 35+ EU & UK regulations. Start free."
+      "title": "PinkPepper | AI Food Safety Compliance Software - EU & UK",
+      "description": "AI food safety compliance software for EU and UK food businesses. Generate HACCP plans, SOPs, allergen documentation, and practical compliance records faster."
     },
     "pricing": {
       "title": "Pricing - From EUR0/mo | PinkPepper Food Safety Software",
