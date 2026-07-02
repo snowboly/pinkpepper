@@ -75,6 +75,10 @@ const featuredGuides = [
   },
 ];
 
+const INITIAL_ARTICLE_COUNT = 24;
+const INITIAL_FEATURED_GUIDE_COUNT = 8;
+const DEFAULT_ARTICLES_LIBRARY_MODE = "full";
+
 const clusterLinks = [
   {
     title: "Import and export workflows",
@@ -141,9 +145,6 @@ const clusterLinks = [
   },
 ];
 
-const INITIAL_ARTICLE_COUNT = 24;
-const INITIAL_FEATURED_GUIDE_COUNT = 8;
-
 export const metadata: Metadata = {
   title: "Food Safety Articles & Insights | PinkPepper",
   description:
@@ -175,6 +176,10 @@ function getArticleHref(slug: string, locale: PublicLocale, localizedSlugs: Read
 
   return `/${locale}/articles/${slug}`;
 }
+function getArticlesLibraryMode() {
+  const configuredMode = process.env.ARTICLES_LIBRARY_MODE?.trim().toLowerCase();
+  return configuredMode === "lazy" ? "lazy" : DEFAULT_ARTICLES_LIBRARY_MODE;
+}
 
 function resolveHref(path: string, locale: PublicLocale, localizedSlugs: ReadonlySet<string>) {
   if (path.startsWith("/articles/")) {
@@ -190,6 +195,8 @@ type ArticlesPageProps = {
 
 export default async function ArticlesPage({ locale = "en" }: ArticlesPageProps = {}) {
   const articles = await getArticleManifest({ locale });
+  const libraryMode = getArticlesLibraryMode();
+  const shouldLazyLoadRemainder = libraryMode === "lazy";
   const localizedSlugs = new Set(articles.map((article) => article.slug));
   const articleHrefBySlug = Object.fromEntries(
     articles.map((article) => [article.slug, getArticleHref(article.slug, locale, localizedSlugs)]),
@@ -198,8 +205,8 @@ export default async function ArticlesPage({ locale = "en" }: ArticlesPageProps 
     featuredGuides.slice(0, INITIAL_FEATURED_GUIDE_COUNT).map((guide) => guide.href.replace("/articles/", "")),
   );
   const rotatingArticles = articles.filter((article) => !featuredGuideSlugs.has(article.slug));
-  const initialArticles = articles.slice(0, INITIAL_ARTICLE_COUNT);
-  const remainingArticles = articles.slice(INITIAL_ARTICLE_COUNT);
+  const initialArticles = shouldLazyLoadRemainder ? articles.slice(0, INITIAL_ARTICLE_COUNT) : articles;
+  const remainingArticles = shouldLazyLoadRemainder ? articles.slice(INITIAL_ARTICLE_COUNT) : [];
 
   return (
     <main className="overflow-hidden">
