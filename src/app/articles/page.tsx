@@ -74,9 +74,11 @@ const featuredGuides = [
     description: "A sector-specific guide for bakery operators who need a more usable process and hazard structure.",
   },
 ];
+
 const INITIAL_ARTICLE_COUNT = 24;
 const INITIAL_FEATURED_GUIDE_COUNT = 8;
 const DEFAULT_ARTICLES_LIBRARY_MODE = "full";
+
 const clusterLinks = [
   {
     title: "Import and export workflows",
@@ -143,9 +145,6 @@ const clusterLinks = [
   },
 ];
 
-const INITIAL_ARTICLE_COUNT = 24;
-const INITIAL_FEATURED_GUIDE_COUNT = 8;
-
 export const metadata: Metadata = {
   title: "Food Safety Articles & Insights | PinkPepper",
   description:
@@ -180,13 +179,14 @@ function getArticleHref(slug: string, locale: PublicLocale, localizedSlugs: Read
 function getArticlesLibraryMode() {
   const configuredMode = process.env.ARTICLES_LIBRARY_MODE?.trim().toLowerCase();
   return configuredMode === "lazy" ? "lazy" : DEFAULT_ARTICLES_LIBRARY_MODE;
-=======
+}
+
 function resolveHref(path: string, locale: PublicLocale, localizedSlugs: ReadonlySet<string>) {
   if (path.startsWith("/articles/")) {
     return getArticleHref(path.replace("/articles/", ""), locale, localizedSlugs);
   }
 
-  return getPublicPageHref(locale, path)
+  return getPublicPageHref(locale, path);
 }
 
 type ArticlesPageProps = {
@@ -197,7 +197,6 @@ export default async function ArticlesPage({ locale = "en" }: ArticlesPageProps 
   const articles = await getArticleManifest({ locale });
   const libraryMode = getArticlesLibraryMode();
   const shouldLazyLoadRemainder = libraryMode === "lazy";
-  const localizedArticleSlugs = new Set(articles.map((article) => article.slug));
   const localizedSlugs = new Set(articles.map((article) => article.slug));
   const articleHrefBySlug = Object.fromEntries(
     articles.map((article) => [article.slug, getArticleHref(article.slug, locale, localizedSlugs)]),
