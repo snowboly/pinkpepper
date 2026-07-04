@@ -14,13 +14,11 @@ export default function ConfirmPage() {
     const type = params.get("type") as EmailOtpType | null;
     const code = params.get("code");
     const next = params.get("next") ?? "/dashboard";
-    const flow = params.get("flow");
 
     const supabase = createClient();
 
     async function confirm() {
       let verified = false;
-      let isSignup = flow === "signup";
 
       // PKCE flow — Supabase redirects with a `code` param
       if (code) {
@@ -32,7 +30,6 @@ export default function ConfirmPage() {
       if (!verified && token_hash && type) {
         const { error } = await supabase.auth.verifyOtp({ token_hash, type });
         verified = !error;
-        isSignup = isSignup || type === "signup";
       }
 
       if (!verified) {
@@ -43,11 +40,6 @@ export default function ConfirmPage() {
           : "invalid_or_expired_link";
         router.replace(`/login?error=${errorParam}`);
         return;
-      }
-
-      // Fire welcome email for new signups (fire-and-forget)
-      if (isSignup) {
-        fetch("/api/auth/welcome", { method: "POST" }).catch(() => {});
       }
 
       router.replace(next);
