@@ -7,6 +7,8 @@ function escapeHtml(value: string) {
     .replaceAll("'", "&#39;");
 }
 
+const DASHBOARD_URL = "https://pinkpepper.io/dashboard";
+
 export function buildWelcomeEmail(firstName?: string | null): { subject: string; html: string } {
   const safeFirstName = escapeHtml(firstName?.trim() || "there");
 
@@ -25,7 +27,7 @@ export function buildWelcomeEmail(firstName?: string | null): { subject: string;
     </h1>
 
     <div style="margin:0 0 36px 0;">
-      <a href="https://pinkpepper.io" target="_blank" rel="noopener" style="display:inline-block; background-color:#E11D48; color:#ffffff; text-decoration:none; font-size:15px; font-weight:700; padding:12px 22px; border-radius:999px;">
+      <a href="${DASHBOARD_URL}" target="_blank" rel="noopener" style="display:inline-block; background-color:#E11D48; color:#ffffff; text-decoration:none; font-size:15px; font-weight:700; padding:12px 22px; border-radius:999px;">
         Open PinkPepper
       </a>
     </div>
@@ -75,7 +77,7 @@ export function buildWelcomeEmail(firstName?: string | null): { subject: string;
     </p>
 
     <div style="margin:0 0 30px 0;">
-      <a href="https://pinkpepper.io" target="_blank" rel="noopener" style="display:inline-block; background-color:#E11D48; color:#ffffff; text-decoration:none; font-size:15px; font-weight:700; padding:12px 22px; border-radius:999px;">
+      <a href="${DASHBOARD_URL}" target="_blank" rel="noopener" style="display:inline-block; background-color:#E11D48; color:#ffffff; text-decoration:none; font-size:15px; font-weight:700; padding:12px 22px; border-radius:999px;">
         Start using PinkPepper
       </a>
     </div>

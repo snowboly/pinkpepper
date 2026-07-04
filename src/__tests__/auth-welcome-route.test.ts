@@ -56,6 +56,8 @@ describe("auth welcome route", () => {
     });
     expect(String(welcomeState.sentEmails[0].html)).toContain("Hi Joao,");
     expect(String(welcomeState.sentEmails[0].html)).toContain("Start using PinkPepper");
+    expect(String(welcomeState.sentEmails[0].html)).toContain('href="https://pinkpepper.io/dashboard"');
+    expect(String(welcomeState.sentEmails[0].html)).not.toContain('href="https://pinkpepper.io"');
     expect(String(welcomeState.sentEmails[0].html)).not.toContain("RESEND_UNSUBSCRIBE_URL");
     expect(welcomeState.updatePayloads[0].welcome_email_sent_at).toBeTypeOf("string");
   });
