@@ -38,6 +38,7 @@ describe("getGroupedTemplates", () => {
       "Cooking monitoring log",
       "Equipment calibration log",
       "Food safety opening and closing checklist",
+      "Label check record template",
       "Pest control log",
       "Restaurant closing checklist",
       "Restaurant opening checklist",
@@ -195,6 +196,12 @@ describe("getGroupedTemplates", () => {
       fileType: "png",
     });
 
+    expect(TEMPLATES.find((template) => template.slug === "label-check-record-template")).toMatchObject({
+      title: "Label check record template",
+      category: "Monitoring",
+      fileType: "xlsx",
+    });
+
     expect(TEMPLATES.find((template) => template.slug === "date-coding-poster")).toMatchObject({
       title: "Date coding reminder poster",
       category: "Monitoring",
@@ -256,6 +263,7 @@ describe("getGroupedTemplates", () => {
         "/resources/handwashing-poster",
         "/resources/kosher-compliance-poster",
         "/resources/label-check-poster",
+        "/resources/label-check-record-template",
         "/resources/restaurant-closing-checklist",
         "/resources/restaurant-opening-checklist",
         "/resources/restaurant-opening-poster",
@@ -270,6 +278,9 @@ describe("getGroupedTemplates", () => {
     expect(readPage("src/app/resources/date-coding-poster/page.tsx")).toContain('templateSlug="date-coding-poster"');
     expect(readPage("src/app/resources/handwashing-poster/page.tsx")).toContain('templateSlug="handwashing-poster"');
     expect(readPage("src/app/resources/label-check-poster/page.tsx")).toContain('templateSlug="label-check-poster"');
+    expect(readPage("src/app/resources/label-check-record-template/page.tsx")).toContain(
+      'templateSlug="label-check-record-template"',
+    );
   });
 
   it("surfaces the second poster wave in the registry and resources hub", () => {
@@ -400,6 +411,7 @@ describe("getGroupedTemplates", () => {
     expect(readPage("public/templates/thumbnails/haccp-plan-template.svg")).toContain("<svg");
     expect(readPage("public/templates/thumbnails/hazard-analysis-template.svg")).toContain("<svg");
     expect(readPage("public/templates/thumbnails/label-check-poster.svg")).toContain("<svg");
+    expect(readPage("public/templates/thumbnails/label-check-record-template.svg")).toContain("<svg");
     expect(readPage("public/templates/thumbnails/supplier-registration-log.svg")).toContain("<svg");
   });
 
