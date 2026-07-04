@@ -32,7 +32,12 @@ export async function POST() {
     return NextResponse.json({ ok: true });
   }
 
-  await sendEmail({ to: user.email, ...buildWelcomeEmail() });
+  const firstName =
+    typeof user.user_metadata?.first_name === "string"
+      ? user.user_metadata.first_name
+      : null;
+
+  await sendEmail({ to: user.email, ...buildWelcomeEmail(firstName) });
 
   await supabase.auth.updateUser({
     data: {
