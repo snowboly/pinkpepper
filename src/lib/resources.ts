@@ -137,6 +137,15 @@ export const resourceEntries: ResourceEntry[] = [
     updatedAt: "2026-07-02",
   },
   {
+    href: "/resources/label-check-record-template",
+    title: "Label check record template",
+    description:
+      "What to record when checking product labels, allergens, date codes, storage instructions, and acceptance decisions during intake and prep.",
+    category: "monitoring",
+    categoryLabel: "Monitoring",
+    updatedAt: "2026-07-04",
+  },
+  {
     href: "/resources/temperature-monitoring-log-template",
     title: "Temperature monitoring log template",
     description: "What to include in fridge, freezer, hot-hold, and corrective action logs.",
