@@ -3,9 +3,13 @@ import {
   getIndexableEnglishArticleSummaries,
   getLocalizedArticleSummaries,
 } from "@/lib/article-index-feed";
+import {
+  shouldIndexArticle,
+} from "@/lib/article-indexing";
 import { publicContentRoutePaths, publicLaunchLocales } from "@/i18n/public";
 import { localizePublicPath } from "@/lib/public-routes";
 import { resourceEntries } from "@/lib/resources";
+import { shouldIndexPublicRoute } from "@/lib/seo/indexability";
 
 const BASE_URL = "https://pinkpepper.io";
 const SITE_REFRESHED_AT = "2026-06-18";
@@ -41,7 +45,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }));
 
   const localizedPublicEntries = publicContentRoutePaths.flatMap((path) =>
-    publicLaunchLocales.filter((locale) => locale !== "en").map((locale) => ({
+    publicLaunchLocales.filter((locale) => locale !== "en" && shouldIndexPublicRoute(path, locale)).map((locale) => ({
       url: `${BASE_URL}${localizePublicPath(locale, path)}`,
       lastModified: new Date(MARKETING_REFRESHED_AT),
       changeFrequency: path === "/" ? ("weekly" as const) : ("monthly" as const),
@@ -93,14 +97,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           ? 0.8
           : 0.7,
     })),
-    ...articles.map((article) => ({
+    ...articles.filter((article) => shouldIndexArticle(article, "en")).map((article) => ({
       url: `${BASE_URL}/articles/${article.slug}`,
       lastModified: new Date(article.publishedAt),
       changeFrequency: "monthly" as const,
       priority: 0.6,
     })),
     ...localizedArticles.flatMap(({ locale, articles: localized }) =>
-      localized.map((article) => ({
+      localized.filter((article) => shouldIndexArticle(article, locale)).map((article) => ({
         url: `${BASE_URL}/${locale}/articles/${article.slug}`,
         lastModified: new Date(article.publishedAt),
         changeFrequency: "monthly" as const,

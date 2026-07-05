@@ -6,7 +6,7 @@ import {
   getArticleBySlug,
   getArticleManifest,
   getAvailableArticleLocales,
-  isArticlePreferredForIndexing,
+  shouldIndexArticle,
   type ArticleRecord,
 } from "@/lib/articles";
 import { getCspNonce } from "@/lib/security/csp";
@@ -267,7 +267,7 @@ export async function generateArticleMetadata(slug: string, locale: PublicLocale
   return {
     title: `${article.title} | PinkPepper`,
     description: article.excerpt,
-    robots: isArticlePreferredForIndexing(article) ? undefined : { index: false, follow: true },
+    robots: shouldIndexArticle(article, locale) ? undefined : { index: false, follow: true },
     alternates: {
       canonical: url,
       languages: await buildArticleLanguageAlternates(article.slug),
@@ -307,7 +307,7 @@ export default async function ArticleDetailPage({ params, locale = "en" }: Artic
     ...articleManifest.filter((candidate) => candidate.slug !== article.slug && candidate.category === article.category),
     ...articleManifest.filter((candidate) => candidate.slug !== article.slug && candidate.category !== article.category),
   ]
-    .filter(isArticlePreferredForIndexing)
+    .filter((candidate) => shouldIndexArticle(candidate, locale))
     .slice(0, 3);
 
   const articleSchema = {

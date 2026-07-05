@@ -27,7 +27,40 @@ export const curatedImportedArticleSlugs = [
 ] as const;
 
 const curatedImportedSlugSet = new Set<string>(curatedImportedArticleSlugs);
+const articleNoindexSlugSet = new Set<string>([
+  "haccp-for-chinese-restaurants-and-takeaways-eu",
+  "haccp-for-craft-breweries-eu",
+  "haccp-for-farm-shops-eu",
+  "haccp-for-vegan-and-plant-based-cafes-eu",
+  "haccp-for-gelato-and-ice-cream-parlors-eu",
+  "haccp-monitoring-record-templates",
+]);
+const localizedArticleNoindexSlugSet = new Set<string>([
+  "how-to-create-a-haccp-plan-step-by-step",
+  "haccp-monitoring-record-templates",
+  "haccp-vs-brcgs-vs-ifs",
+  "haccp-ccp-examples-uk-eu",
+]);
 
 export function isArticlePreferredForIndexing(article: ArticleIndexCandidate) {
   return article.source !== "ilovehaccp" || curatedImportedSlugSet.has(article.slug);
+}
+
+export function shouldIndexArticle(
+  article: ArticleIndexCandidate,
+  locale: "en" | "de" | "fr" | "pt" = "en",
+) {
+  if (!isArticlePreferredForIndexing(article)) {
+    return false;
+  }
+
+  if (articleNoindexSlugSet.has(article.slug)) {
+    return false;
+  }
+
+  if (locale !== "en" && localizedArticleNoindexSlugSet.has(article.slug)) {
+    return false;
+  }
+
+  return true;
 }
