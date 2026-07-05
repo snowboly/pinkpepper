@@ -1,8 +1,9 @@
 import { getIndexableEnglishArticleSummaries } from "@/lib/article-index-feed";
-import { isArticlePreferredForIndexing } from "@/lib/article-indexing";
+import { shouldIndexArticle } from "@/lib/article-indexing";
 import { publicContentRoutePaths, publicLaunchLocales } from "@/i18n/public";
 import { localizePublicPath } from "@/lib/public-routes";
 import { resourceEntries } from "@/lib/resources";
+import { shouldIndexPublicRoute } from "@/lib/seo/indexability";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -49,12 +50,12 @@ export async function GET(request: Request) {
     .map((path) => `${BASE_URL}${path}`);
   const localizedRoutes = publicContentRoutePaths.flatMap((path) =>
     publicLaunchLocales
-      .filter((locale) => locale !== "en")
+      .filter((locale) => locale !== "en" && shouldIndexPublicRoute(path, locale))
       .map((locale) => `${BASE_URL}${localizePublicPath(locale, path)}`),
   );
   const useCaseUrls = USE_CASE_PATHS.map((path) => `${BASE_URL}${path}`);
   const articleUrls = articles
-    .filter(isArticlePreferredForIndexing)
+    .filter((article) => shouldIndexArticle(article, "en"))
     .map((article) => `${BASE_URL}/articles/${article.slug}`);
   const staticUrls = [...STATIC_PATHS, ...resourceEntries.map((resource) => resource.href)].map(
     (path) => `${BASE_URL}${path}`,

@@ -6,6 +6,8 @@ import { describe, expect, it, vi } from "vitest";
 import sitemap from "@/app/sitemap";
 import robots from "@/app/robots";
 import { generateArticleMetadata } from "@/app/articles/[slug]/page";
+import { metadata as allergenDocumentationMetadata } from "@/app/features/allergen-documentation/page";
+import { generateMetadata as generateLocalizedAllergenDocumentationMetadata } from "@/app/[locale]/features/allergen-documentation/page";
 import { buildPublicMetadata } from "@/lib/seo/public-metadata";
 
 const readPage = (relativePath: string) => readFileSync(join(process.cwd(), relativePath), "utf8");
@@ -100,7 +102,7 @@ async function renderArticleDetailPageForTest() {
         publishedAt: "2025-10-19",
       },
     ]),
-    isArticlePreferredForIndexing: vi.fn().mockReturnValue(true),
+    shouldIndexArticle: vi.fn().mockReturnValue(true),
   }));
   vi.doMock("@/lib/article-content", () => ({
     processArticleContent: vi.fn().mockReturnValue({
@@ -194,6 +196,9 @@ describe("SEO surface", () => {
     expect(entries).toContain("https://pinkpepper.io/features/haccp-plan-generator");
     expect(entries).toContain("https://pinkpepper.io/use-cases/restaurants");
     expect(entries).toContain("https://pinkpepper.io/articles/identifying-critical-control-points-in-food-safety");
+    expect(entries).not.toContain("https://pinkpepper.io/fr/features/allergen-documentation");
+    expect(entries).not.toContain("https://pinkpepper.io/fr/articles/haccp-vs-brcgs-vs-ifs");
+    expect(entries).not.toContain("https://pinkpepper.io/articles/haccp-for-craft-breweries-eu");
     expect(entries).not.toContain("https://pinkpepper.io/login");
     expect(entries).not.toContain("https://pinkpepper.io/dashboard");
     expect(entries).not.toContain("https://pinkpepper.io/legal/cookies");
@@ -488,9 +493,22 @@ describe("public SEO copy and linking", () => {
   it("deprioritizes weak imported articles without removing stronger article pages from indexing", async () => {
     const weakerImported = await generateArticleMetadata("haccp-for-meal-prep-services-eu", "en");
     const strongerImported = await generateArticleMetadata("identifying-critical-control-points-in-food-safety", "en");
+    const weakerSector = await generateArticleMetadata("haccp-for-craft-breweries-eu", "en");
+    const weakerLocalized = await generateArticleMetadata("haccp-vs-brcgs-vs-ifs", "fr");
 
     expect(weakerImported.robots).toEqual({ index: false, follow: true });
+    expect(weakerSector.robots).toEqual({ index: false, follow: true });
+    expect(weakerLocalized.robots).toEqual({ index: false, follow: true });
     expect(strongerImported.robots).toBeUndefined();
+  });
+
+  it("keeps the English allergen feature indexable while noindexing its localized variants", async () => {
+    const localizedFeature = await generateLocalizedAllergenDocumentationMetadata({
+      params: Promise.resolve({ locale: "fr" }),
+    });
+
+    expect(allergenDocumentationMetadata.robots).toBeUndefined();
+    expect(localizedFeature.robots).toEqual({ index: false, follow: true });
   });
 
 });
