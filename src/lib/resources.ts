@@ -137,6 +137,15 @@ export const resourceEntries: ResourceEntry[] = [
     updatedAt: "2026-07-02",
   },
   {
+    href: "/resources/label-check-record-template",
+    title: "Label check record template",
+    description:
+      "What to record when checking product labels, allergens, date codes, storage instructions, and acceptance decisions during intake and prep.",
+    category: "monitoring",
+    categoryLabel: "Monitoring",
+    updatedAt: "2026-07-04",
+  },
+  {
     href: "/resources/temperature-monitoring-log-template",
     title: "Temperature monitoring log template",
     description: "What to include in fridge, freezer, hot-hold, and corrective action logs.",
@@ -362,6 +371,14 @@ export const resourceEntries: ResourceEntry[] = [
     updatedAt: "2026-03-14",
   },
   {
+    href: "/resources/brc-checklist-poster",
+    title: "BRC checklist poster",
+    description: "A printable poster for visible BRC-style site standards around hygiene, housekeeping, segregation, records, and audit-readiness.",
+    category: "haccp",
+    categoryLabel: "HACCP",
+    updatedAt: "2026-07-05",
+  },
+  {
     href: "/resources/food-safety-document-checklist",
     title: "EU and UK document checklist",
     description: "A document checklist covering the policies, logs, and supporting evidence food businesses are commonly asked to produce.",
@@ -376,6 +393,22 @@ export const resourceEntries: ResourceEntry[] = [
     category: "haccp",
     categoryLabel: "HACCP",
     updatedAt: "2026-03-14",
+  },
+  {
+    href: "/resources/iso22000-checklist-poster",
+    title: "ISO 22000 checklist poster",
+    description: "A printable poster for ISO 22000-style system discipline across prerequisite programmes, monitoring, records, and review routines.",
+    category: "haccp",
+    categoryLabel: "HACCP",
+    updatedAt: "2026-07-05",
+  },
+  {
+    href: "/resources/workplace-compliance-poster",
+    title: "Workplace compliance poster",
+    description: "A visual workplace poster for hygiene, conduct, clothing, reporting discipline, and safe handling expectations on site.",
+    category: "training",
+    categoryLabel: "Training",
+    updatedAt: "2026-07-05",
   },
 ];
 

@@ -25,11 +25,13 @@ export const TEMPLATES: TemplateEntry[] = [
   { slug: "hazard-analysis-template",             title: "Hazard analysis template",               category: "HACCP" },
   { slug: "corrective-action-log-template",       title: "Corrective action log",                  category: "HACCP" },
   { slug: "food-safety-audit-checklist",          title: "Food safety audit checklist",            category: "HACCP" },
+  { slug: "brc-checklist-poster",                 title: "BRC checklist poster",                   category: "HACCP",        fileType: "png" },
   { slug: "food-safety-document-checklist",       title: "EU and UK document checklist",           category: "HACCP" },
   { slug: "food-safety-management-system-template", title: "Food safety management system",        category: "HACCP" },
   { slug: "foreign-body-poster",                  title: "Foreign body prevention poster",          category: "HACCP",        fileType: "png" },
   { slug: "glass-brittle-poster",                 title: "Glass and brittle plastic control poster", category: "HACCP",      fileType: "png" },
   { slug: "product-recall-procedure-template",    title: "Product recall procedure",               category: "HACCP" },
+  { slug: "iso22000-checklist-poster",            title: "ISO 22000 checklist poster",             category: "HACCP",        fileType: "png" },
   // Allergen
   { slug: "allergen-checklist-poster",            title: "Allergen checklist poster",             category: "Allergen",     fileType: "png" },
   { slug: "allergen-matrix-template",             title: "Allergen matrix template",               category: "Allergen" },
@@ -43,6 +45,7 @@ export const TEMPLATES: TemplateEntry[] = [
   { slug: "date-coding-poster",                   title: "Date coding reminder poster",            category: "Monitoring",   fileType: "png" },
   { slug: "food-temperature-poster",              title: "Food temperature poster",                category: "Monitoring",   fileType: "png" },
   { slug: "label-check-poster",                   title: "Label checking poster",                  category: "Monitoring",   fileType: "png" },
+  { slug: "label-check-record-template",          title: "Label check record template",            category: "Monitoring",   fileType: "xlsx" },
   { slug: "temperature-monitoring-log-template",  title: "Temperature monitoring log",             category: "Monitoring" },
   { slug: "food-safety-opening-and-closing-checklist", title: "Food safety opening and closing checklist", category: "Monitoring", fileType: "xlsx", storageName: "Food Safety Opening and Closing Checklist" },
   { slug: "hygiene-inspection-poster",            title: "Pre-operational hygiene inspection poster", category: "Monitoring", fileType: "png" },
@@ -70,6 +73,7 @@ export const TEMPLATES: TemplateEntry[] = [
   { slug: "kosher-compliance-poster",             title: "Kosher compliance poster",               category: "Training",     fileType: "png" },
   { slug: "personal-hygiene-poster",              title: "Personal hygiene checklist poster",      category: "Training",     fileType: "png" },
   { slug: "personal-hygiene-policy-template",     title: "Personal hygiene policy",                category: "Training" },
+  { slug: "workplace-compliance-poster",          title: "Workplace compliance poster",            category: "Training",     fileType: "png" },
   // Goods receiving
   { slug: "incoming-goods-template",              title: "Incoming goods inspection record",       category: "Traceability" },
   // Quality
