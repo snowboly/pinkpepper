@@ -1,4 +1,5 @@
 import { Resend } from "resend";
+import { getResendFromAddress } from "@/lib/resend/config";
 
 type BillingEmailInput = {
   to: string;
@@ -8,10 +9,10 @@ type BillingEmailInput = {
 
 export async function sendBillingEmail(input: BillingEmailInput) {
   const apiKey = process.env.RESEND_API_KEY;
-  const from = process.env.RESEND_FROM_EMAIL;
+  const from = getResendFromAddress();
 
   if (!apiKey || !from) {
-    console.warn("sendBillingEmail: RESEND_API_KEY or RESEND_FROM not configured, skipping email");
+    console.warn("sendBillingEmail: RESEND_API_KEY or RESEND_FROM_EMAIL not configured, skipping email");
     return;
   }
 
