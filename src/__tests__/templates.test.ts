@@ -30,9 +30,9 @@ describe("getGroupedTemplates", () => {
       "HACCP step descriptions",
       "Hazard analysis template",
       "Product recall procedure",
+      "BRC checklist poster",
       "Foreign body prevention poster",
       "Glass and brittle plastic control poster",
-      "BRC checklist poster",
       "ISO 22000 checklist poster",
     ]);
 
@@ -79,7 +79,6 @@ describe("getGroupedTemplates", () => {
       "Supplier approval questionnaire",
       "Supplier registration log",
       "Supplier approval checklist poster",
-    ]);
     ]);
 
     expect(grouped.find((group) => group.category === "Cleaning")?.templates.map((template) => template.title)).toEqual([
@@ -226,6 +225,9 @@ describe("getGroupedTemplates", () => {
 
     expect(TEMPLATES.find((template) => template.slug === "halal-compliance-poster")).toMatchObject({
       title: "Halal compliance poster",
+      category: "Training",
+      fileType: "png",
+    });
 
     expect(TEMPLATES.find((template) => template.slug === "brc-checklist-poster")).toMatchObject({
       title: "BRC checklist poster",
