@@ -288,6 +288,7 @@ describe("getGroupedTemplates", () => {
         "/resources/iso22000-checklist-poster",
         "/resources/label-check-record-template",
         "/resources/workplace-compliance-poster",
+        "/resources/label-check-record-template",
         "/resources/restaurant-closing-checklist",
         "/resources/restaurant-opening-checklist",
         "/resources/restaurant-opening-poster",

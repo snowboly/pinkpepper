@@ -104,12 +104,12 @@ describe("public locale config", () => {
   });
 
   it("keeps auth entry cross-links locale-aware", () => {
-    const loginPage = readPage("src/app/login/page.tsx");
-    const signupPage = readPage("src/app/signup/page.tsx");
+    const loginForm = readPage("src/app/login/LoginForm.tsx");
+    const signupForm = readPage("src/app/signup/SignupForm.tsx");
 
-    expect(loginPage).toContain("getPublicPageHref");
-    expect(signupPage).toContain("getPublicPageHref");
-    expect(loginPage).toContain("usePathname");
-    expect(signupPage).toContain("usePathname");
+    expect(loginForm).toContain("getPublicPageHref");
+    expect(signupForm).toContain("getPublicPageHref");
+    expect(loginForm).toContain("usePathname");
+    expect(signupForm).toContain("usePathname");
   });
 });
