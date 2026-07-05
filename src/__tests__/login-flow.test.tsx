@@ -69,12 +69,16 @@ describe("LoginEmailCodePanel", () => {
 });
 
 describe("login page wiring", () => {
-  it("replaces magic-link copy with email-code flow and verifies OTP codes directly", () => {
+  it("keeps a thin server page and moves auth logic into the client form", () => {
     const pageSource = readFileSync(path.join(process.cwd(), "src/app/login/page.tsx"), "utf8");
+    const formSource = readFileSync(path.join(process.cwd(), "src/app/login/LoginForm.tsx"), "utf8");
     const helperSource = readFileSync(path.join(process.cwd(), "src/app/login/login-flow.tsx"), "utf8");
 
-    expect(pageSource).toContain("LoginEmailCodePanel");
-    expect(pageSource).toContain("verifyOtp");
+    expect(pageSource).not.toContain('"use client"');
+    expect(pageSource).toContain("LoginForm");
+    expect(formSource).toContain('"use client"');
+    expect(formSource).toContain("LoginEmailCodePanel");
+    expect(formSource).toContain("verifyOtp");
     expect(pageSource).not.toContain("Send magic link");
     expect(helperSource).toContain("Send email code");
   });

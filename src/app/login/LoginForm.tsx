@@ -1,0 +1,226 @@
+"use client";
+
+import Link from "next/link";
+import { FormEvent, useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
+import { type PublicLocale } from "@/i18n/public";
+import { getPublicPageHref, isPublicLocale } from "@/lib/public-routes";
+import {
+  getLoginFlashErrorMessage,
+  getSafeNextPath,
+  LoginEmailCodePanel,
+} from "@/app/login/login-flow";
+import { createClient } from "@/utils/supabase/client";
+
+export function LoginForm() {
+  const pathname = usePathname();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [code, setCode] = useState("");
+  const [codeLoading, setCodeLoading] = useState(false);
+  const [codeSent, setCodeSent] = useState(false);
+  const [verifyLoading, setVerifyLoading] = useState(false);
+  const [resendLoading, setResendLoading] = useState(false);
+  const [nextPath, setNextPath] = useState("/dashboard");
+  const [flashError, setFlashError] = useState<string | null>(null);
+  const currentLocale = (() => {
+    const maybeLocale = pathname.split("/").filter(Boolean)[0];
+    return isPublicLocale(maybeLocale ?? "") ? (maybeLocale as PublicLocale) : "en";
+  })();
+  const signupHref = getPublicPageHref(currentLocale, "/signup");
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const next = params.get("next");
+    const err = params.get("error");
+
+    if (err) {
+      setFlashError(err);
+    }
+
+    setNextPath(getSafeNextPath(next));
+  }, []);
+
+  async function onSubmit(event: FormEvent) {
+    event.preventDefault();
+    setLoading(true);
+    setError(null);
+    setMessage(null);
+
+    try {
+      const supabase = createClient();
+      const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+      if (signInError) {
+        setError(signInError.message);
+        return;
+      }
+      window.location.href = nextPath;
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function resetEmailCodeState() {
+    setCode("");
+    setCodeSent(false);
+    setMessage(null);
+    setError(null);
+    setFlashError(null);
+  }
+
+  function handleEmailChange(value: string) {
+    setEmail(value);
+    if (codeSent) {
+      resetEmailCodeState();
+      setEmail(value);
+      return;
+    }
+    setError(null);
+    setMessage(null);
+  }
+
+  async function sendEmailCode(isResend = false) {
+    if (!email) {
+      setError("Enter your email address above first.");
+      return;
+    }
+    if (isResend) {
+      setResendLoading(true);
+    } else {
+      setCodeLoading(true);
+    }
+    setError(null);
+    setMessage(null);
+    setFlashError(null);
+
+    try {
+      const supabase = createClient();
+      const { error: otpError } = await supabase.auth.signInWithOtp({
+        email,
+      });
+      if (otpError) {
+        setError(otpError.message);
+        return;
+      }
+      setCodeSent(true);
+      setCode("");
+      setMessage(isResend ? "A new email code has been sent." : "Email code sent. Check your inbox.");
+    } finally {
+      if (isResend) {
+        setResendLoading(false);
+      } else {
+        setCodeLoading(false);
+      }
+    }
+  }
+
+  async function verifyCode() {
+    if (!code.trim()) {
+      setError("Enter the email code first.");
+      return;
+    }
+
+    setVerifyLoading(true);
+    setError(null);
+    setMessage(null);
+    setFlashError(null);
+
+    try {
+      const supabase = createClient();
+      const { error: verifyError } = await supabase.auth.verifyOtp({
+        email,
+        token: code.trim(),
+        type: "email",
+      });
+
+      if (verifyError) {
+        setError(verifyError.message);
+        return;
+      }
+
+      window.location.href = nextPath;
+    } finally {
+      setVerifyLoading(false);
+    }
+  }
+
+  const flashMessage = getLoginFlashErrorMessage(flashError);
+
+  return (
+    <>
+      {(flashMessage || error) && (
+        <p className="mt-4 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+          {error ?? flashMessage}
+        </p>
+      )}
+      {message && <p className="mt-4 rounded-xl border border-[#E8DADA] bg-[#FAF6F5] px-3 py-2 text-sm">{message}</p>}
+
+      <form onSubmit={onSubmit} className="mt-6 space-y-4">
+        <div>
+          <label className="mb-1 block text-sm font-medium text-[#2B2B2B]">Email</label>
+          <input
+            type="email"
+            required
+            value={email}
+            onChange={(e) => handleEmailChange(e.target.value)}
+            className="w-full rounded-xl border border-[#E8DADA] bg-white px-3 py-2.5 outline-none ring-[#D96C6C]/20 focus:ring-4"
+            placeholder="you@company.com"
+          />
+        </div>
+        <div>
+          <label className="mb-1 block text-sm font-medium text-[#2B2B2B]">Password</label>
+          <input
+            type="password"
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full rounded-xl border border-[#E8DADA] bg-white px-3 py-2.5 outline-none ring-[#D96C6C]/20 focus:ring-4"
+            placeholder="********"
+          />
+        </div>
+        <button disabled={loading} type="submit" className="w-full rounded-xl bg-[#D96C6C] py-3 font-bold text-white transition-colors hover:bg-[#C95A5A] disabled:opacity-70">
+          {loading ? "Signing in..." : "Log In"}
+        </button>
+      </form>
+
+      <div className="my-5 flex items-center gap-3">
+        <div className="h-px flex-1 bg-[#E8DADA]" />
+        <span className="text-xs text-[#9B9B9B]">or</span>
+        <div className="h-px flex-1 bg-[#E8DADA]" />
+      </div>
+
+      <LoginEmailCodePanel
+        email={email}
+        code={code}
+        codeSent={codeSent}
+        codeLoading={codeLoading}
+        verifyLoading={verifyLoading}
+        resendLoading={resendLoading}
+        onCodeChange={(e) => {
+          setCode(e.target.value);
+          setError(null);
+        }}
+        onSendCode={() => {
+          void sendEmailCode(false);
+        }}
+        onVerifyCode={() => {
+          void verifyCode();
+        }}
+        onResendCode={() => {
+          void sendEmailCode(true);
+        }}
+        onUseDifferentEmail={() => {
+          resetEmailCodeState();
+        }}
+      />
+
+      <div className="mt-4 flex items-center justify-between text-sm text-[#6B6B6B]">
+        <Link href="/forgot-password" className="underline">Forgot password?</Link>
+        <Link href={signupHref} className="underline">Create account</Link>
+      </div>
+    </>
+  );
+}
