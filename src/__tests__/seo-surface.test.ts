@@ -152,7 +152,8 @@ describe("SEO surface", () => {
     const layout = readPage("src/app/layout.tsx");
 
     expect(layout).toContain("AI Food Safety Compliance Software");
-    expect(layout).toContain("EU and UK food businesses");
+    expect(layout).toContain("AI food safety consultant for HACCP and compliance.");
+    expect(layout).toContain("Generate food safety documents");
   });
 
   it("points social metadata at a dedicated static social card", () => {
@@ -163,9 +164,9 @@ describe("SEO surface", () => {
     expect(layout).toContain("height: 630");
     expect(layout).toContain('images: ["https://pinkpepper.io/social-card.png"]');
     expect(layout).toContain('title: "PinkPepper | AI Food Safety Compliance Software - EU & UK"');
-    expect(layout).toContain(
-      "AI food safety compliance software for EU and UK food businesses. Generate HACCP plans, SOPs, allergen documentation, and practical compliance records faster."
-    );
+    expect(layout).toContain("AI food safety consultant for HACCP and compliance.");
+    expect(layout).toContain("Generate food safety documents");
+    expect(layout).toContain("get answers to food safety questions");
   });
 
   it("allows article imagery from the configured external sources", () => {
@@ -432,6 +433,15 @@ describe("public SEO copy and linking", () => {
     const resources = readPage("src/app/resources/page.tsx");
 
     expect(resources).not.toContain("long-tail questions and template searches");
+  });
+
+  it("adds FAQ schema and retrieval-friendly questions to the HACCP template page", () => {
+    const haccpTemplatePage = readPage("src/app/resources/haccp-plan-template/page.tsx");
+
+    expect(haccpTemplatePage).toContain('"@type": "FAQPage"');
+    expect(haccpTemplatePage).toContain("Can AI generate HACCP documents?");
+    expect(haccpTemplatePage).toContain("Can I ask food safety questions before finalising the paperwork?");
+    expect(haccpTemplatePage).toContain("Frequently asked questions");
   });
 
   it("biases homepage article links toward cleaned evergreen pages", () => {
