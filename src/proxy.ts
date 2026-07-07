@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { isAdminUser } from "@/lib/access";
+import { PUBLIC_PATHNAME_HEADER } from "@/lib/google-analytics";
 import {
   NONCE_HEADER,
   buildContentSecurityPolicy,
@@ -30,17 +31,14 @@ export async function proxy(request: NextRequest) {
   const nonce = generateCspNonce();
   const csp = buildContentSecurityPolicy(nonce);
 
-  // Forward the nonce to downstream server components via a request
-  // header. `NextResponse.next({ request: { headers: ... } })` rewrites
-  // the incoming headers that the RSC render pipeline sees.
   const forwardedHeaders = new Headers(request.headers);
   forwardedHeaders.set(NONCE_HEADER, nonce);
+  forwardedHeaders.set(PUBLIC_PATHNAME_HEADER, request.nextUrl.pathname);
   const routeLocale = request.nextUrl.pathname.split("/").filter(Boolean)[0];
   if (routeLocale && LOCALIZED_PUBLIC_PREFIXES.has(routeLocale)) {
     forwardedHeaders.set(ROUTE_LOCALE_HEADER, routeLocale);
   }
 
-  /** Attach CSP + nonce headers to any response we return. */
   const finalize = (response: NextResponse) => {
     response.headers.set("Content-Security-Policy", csp);
     response.headers.set(NONCE_HEADER, nonce);
@@ -69,8 +67,6 @@ export async function proxy(request: NextRequest) {
   const isAdminPage = pathname.startsWith("/admin");
   const needsSession = isAuthPage || isProtected || isAdminPage;
 
-  // Fast path: pages that do not touch auth skip the Supabase round-trip
-  // entirely. CSP headers still get applied.
   if (!needsSession) {
     return finalize(NextResponse.next({ request: { headers: forwardedHeaders } }));
   }
@@ -107,7 +103,6 @@ export async function proxy(request: NextRequest) {
     return finalize(NextResponse.redirect(redirectUrl));
   }
 
-  // Block unconfirmed users from protected pages
   if ((isProtected || isAdminPage) && user && !user.email_confirmed_at) {
     const redirectUrl = request.nextUrl.clone();
     redirectUrl.pathname = "/signup";
@@ -138,7 +133,6 @@ export async function proxy(request: NextRequest) {
     return finalize(NextResponse.redirect(redirectUrl));
   }
 
-  // Sync locale cookie from profile if missing
   if (user && !request.cookies.get("locale")?.value) {
     const { data: profile } = await supabase
       .from("profiles")
@@ -157,9 +151,6 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // Run on every request EXCEPT static assets and API routes. CSP does
-  // not apply to JSON/API responses, and running middleware on static
-  // assets wastes edge CPU.
   matcher: [
     "/((?!api|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js|woff|woff2|ttf|otf|map)$).*)",
   ],

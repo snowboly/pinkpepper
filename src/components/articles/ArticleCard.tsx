@@ -10,7 +10,7 @@ type ArticleCardProps = {
   title: string;
 };
 
-export default function ArticleCard({
+export function ArticleCard({
   category,
   excerpt,
   href,
@@ -57,3 +57,5 @@ export default function ArticleCard({
     </article>
   );
 }
+
+export default ArticleCard;

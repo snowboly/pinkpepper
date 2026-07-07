@@ -65,6 +65,7 @@ export default function IncomingGoodsTemplatePage() {
       ctaBody="PinkPepper can help you produce an incoming goods template that reflects your supplier list, the product categories you receive, and the monitoring frequencies your HACCP plan requires."
       templateSlug="incoming-goods-template"
       relatedLinks={[
+        { href: "/articles/supplier-approval-in-haccp-records-and-requirements", label: "Supplier approval guide" },
         { href: "/resources/traceability-log-template", label: "Traceability log template" },
         { href: "/resources/supplier-approval-questionnaire", label: "Supplier approval questionnaire" },
         { href: "/resources/corrective-action-log-template", label: "Corrective action log template" },

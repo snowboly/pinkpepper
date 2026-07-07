@@ -352,6 +352,7 @@
     "billingDescription": "Gestiona tu suscripción, actualiza los métodos de pago o cancela.",
     "viewPlans": "Ver planes",
     "manageBilling": "Gestionar facturación",
+    "cancelSubscription": "Cancelar suscripción",
     "opening": "Abriendo...",
     "unableToOpenPortal": "No se pudo abrir el portal de facturación.",
     "account": "Cuenta",
@@ -375,6 +376,16 @@
     "deleteAccountConfirmBody": "Esto eliminará permanentemente tu cuenta y todos tus datos, incluidas conversaciones, documentos y configuraciones. Esta acción no se puede deshacer.",
     "deleteAccountConfirm": "Sí, eliminar mi cuenta",
     "cancel": "Cancelar",
-    "deleting": "Eliminando..."
+    "deleting": "Eliminando...",
+    "firstName": "Nombre",
+    "lastName": "Apellidos",
+    "companyName": "Nombre de la empresa (opcional)",
+    "profileSaved": "Perfil guardado.",
+    "cancelAtPeriodEnd": "Cancela la renovación automática. Tu plan seguirá activo hasta el final del ciclo de facturación actual.",
+    "currentPeriodEndsOn": "El periodo actual termina el",
+    "marketingEmails": "Correos de marketing",
+    "marketingEmailsDescription": "Me gustaría recibir ocasionalmente actualizaciones del producto, nuevas plantillas de documentos y ofertas relevantes de PinkPepper. Puedo darme de baja en cualquier momento.",
+    "transactionalEmailsNotice": "Los correos transaccionales como facturación, seguridad y avisos de cuenta seguirán enviándose.",
+    "emailPreferencesSaved": "Preferencias de correo actualizadas."
   }
 }

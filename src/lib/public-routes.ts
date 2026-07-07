@@ -8,6 +8,7 @@ export type PublicMessagesDictionary = {
     nav: {
       resources: string;
       freeTemplates: string;
+      foodSpecTemplate: string;
       articles: string;
       useCases: string;
       faqs: string;

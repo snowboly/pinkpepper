@@ -1,12 +1,28 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getArticleManifest } from "@/lib/articles";
-import { type PublicLocale } from "@/i18n/public";
-import { getPublicPageHref } from "@/lib/public-routes";
 import ArticleCard from "@/components/articles/ArticleCard";
 import ArticleLibraryRemainder from "@/components/articles/ArticleLibraryRemainder";
+import RotatingArticleHighlights from "@/components/articles/RotatingArticleHighlights";
+import { type PublicLocale } from "@/i18n/public";
+import { getArticleManifest } from "@/lib/articles";
+import { getPublicPageHref } from "@/lib/public-routes";
 
 const featuredGuides = [
+  {
+    href: "/articles/allergen-documentation-requirements-for-eu-and-uk-food-businesses",
+    title: "Allergen documentation requirements for EU and UK food businesses",
+    description: "A practical guide to the records, matrices, recipe controls, and staff processes that make allergen information reliable.",
+  },
+  {
+    href: "/articles/how-to-import-food-into-great-britain-from-non-eu-countries",
+    title: "How to import food into Great Britain from non-EU countries",
+    description: "A step-by-step import workflow covering classification, IPAFFS, border controls, customs, and post-import checks.",
+  },
+  {
+    href: "/articles/how-to-export-food-from-great-britain-to-the-eu",
+    title: "How to export food from Great Britain to the EU",
+    description: "The practical export route for certification, TRACES pre-notification, border control posts, and post-export records.",
+  },
   {
     href: "/articles/building-a-haccp-process-flow-diagram",
     title: "How to build a HACCP process flow diagram",
@@ -33,9 +49,9 @@ const featuredGuides = [
     description: "The recurring weaknesses we see when plans are over-generic, outdated, or unsupported by records.",
   },
   {
-    href: "/articles/what-regulators-really-expect-from-small-food-businesses",
-    title: "What regulators really expect from small food businesses",
-    description: "A more realistic view of what inspectors and auditors look for beyond generic paperwork advice.",
+    href: "/articles/what-documents-does-a-food-hygiene-inspector-ask-for-first-uk",
+    title: "What documents does a food hygiene inspector ask for first in the UK?",
+    description: "A practical guide to the records and checks UK food hygiene inspectors usually ask for first, from your food safety system and temperature logs to allergen and cleaning records.",
   },
   {
     href: "/articles/haccp-vs-brcgs-vs-ifs",
@@ -60,40 +76,24 @@ const featuredGuides = [
 ];
 
 const INITIAL_ARTICLE_COUNT = 24;
-const INITIAL_FEATURED_GUIDE_COUNT = 6;
-
-const workflowLinks = [
-  {
-    href: "/resources/haccp-plan-template",
-    title: "Start with the HACCP plan template",
-    description: "Use the template hub if you need a cleaner structure before drafting a site-specific plan.",
-  },
-  {
-    href: "/features/haccp-plan-generator",
-    title: "Move into the HACCP workflow",
-    description: "See how PinkPepper supports hazard analysis, CCP structure, and corrective action drafting.",
-  },
-  {
-    href: "/features/food-safety-sop-generator",
-    title: "Build SOPs and records that fit the site",
-    description: "Use the SOP workflow when the next job is turning guidance into opening checks, cleaning procedures, and daily records.",
-  },
-  {
-    href: "/faqs",
-    title: "Check the product FAQs",
-    description: "Read direct answers on scope, pricing, accountability, and how PinkPepper fits into food safety work before you go deeper.",
-  },
-  {
-    href: "/use-cases",
-    title: "Find the right operating model",
-    description: "Jump into restaurant, cafe, catering, and manufacturing workflows instead of treating every business like the same HACCP problem.",
-  },
-];
+const INITIAL_FEATURED_GUIDE_COUNT = 8;
+const DEFAULT_ARTICLES_LIBRARY_MODE = "full";
 
 const clusterLinks = [
   {
+    title: "Import and export workflows",
+    description:
+      "Use the operational guides that map the document, border, and traceability steps around moving food into or out of Great Britain.",
+    links: [
+      { href: "/articles/how-to-import-food-into-great-britain-from-non-eu-countries", label: "Import into Great Britain" },
+      { href: "/articles/how-to-export-food-from-great-britain-to-the-eu", label: "Export to the EU" },
+      { href: "/regulations-covered", label: "Regulations covered" },
+    ],
+  },
+  {
     title: "HACCP fundamentals",
-    description: "Start with the core guides that explain process flow, hazard analysis, CCP logic, and what belongs in the actual plan.",
+    description:
+      "Start with the core guides that explain process flow, hazard analysis, CCP logic, and what belongs in the actual plan.",
     links: [
       { href: "/articles/building-a-haccp-process-flow-diagram", label: "Process flow diagrams" },
       { href: "/articles/how-to-perform-a-hazard-analysis-correctly", label: "Hazard analysis" },
@@ -102,16 +102,40 @@ const clusterLinks = [
   },
   {
     title: "Monitoring and records",
-    description: "Use the articles and templates that help teams record controls cleanly enough to survive audits and daily operational change.",
+    description:
+      "Use the articles and templates that help teams record controls cleanly enough to survive audits and daily operational change.",
     links: [
       { href: "/articles/cooling-and-reheating-haccp-high-risk-steps", label: "Cooling and reheating" },
       { href: "/resources/temperature-monitoring-log-template", label: "Temperature logs" },
       { href: "/resources/corrective-action-log-template", label: "Corrective actions" },
+      { href: "/articles/what-documents-does-a-food-hygiene-inspector-ask-for-first-uk", label: "Inspection-ready records" },
+    ],
+  },
+  {
+    title: "Allergen control and documentation",
+    description:
+      "Use these pages when the main risk is keeping ingredient information, matrices, labels, and staff answers aligned.",
+    links: [
+      { href: "/articles/allergen-documentation-requirements-for-eu-and-uk-food-businesses", label: "Allergen documentation" },
+      { href: "/articles/natasha-law-haccp-ppds-allergen-obligations", label: "PPDS and Natasha's Law" },
+      { href: "/resources/allergen-matrix-template", label: "Allergen matrix template" },
+    ],
+  },
+  {
+    title: "Supplier control and traceability",
+    description:
+      "Use this cluster when the main challenge is approving suppliers properly, checking incoming goods, and keeping the supply chain traceable under pressure.",
+    links: [
+      { href: "/articles/supplier-approval-in-haccp-records-and-requirements", label: "Supplier approval" },
+      { href: "/resources/supplier-registration-log", label: "Supplier register" },
+      { href: "/resources/incoming-goods-template", label: "Incoming goods checks" },
+      { href: "/resources/traceability-log-template", label: "Traceability log template" },
     ],
   },
   {
     title: "Industry-specific workflows",
-    description: "When the operating model matters more than the generic principle, move into the use-case pages first.",
+    description:
+      "When the operating model matters more than the generic principle, move into the use-case pages first.",
     links: [
       { href: "/use-cases/cafes", label: "Cafes" },
       { href: "/use-cases/restaurants", label: "Restaurants" },
@@ -134,20 +158,35 @@ export const metadata: Metadata = {
     description:
       "A curated library of practical guidance on HACCP, allergen management, food safety audits, and operational compliance for EU and UK food businesses.",
     locale: "en_GB",
-    images: [{ url: "https://pinkpepper.io/social-card.png", width: 1200, height: 630, alt: "PinkPepper - AI Food Safety Compliance Software" }],
+    images: [
+      {
+        url: "https://pinkpepper.io/social-card.png",
+        width: 1200,
+        height: 630,
+        alt: "PinkPepper - AI Food Safety Compliance Software",
+      },
+    ],
   },
 };
 
-function getArticleHref(
-  slug: string,
-  locale: PublicLocale = "en",
-  localizedSlugs: ReadonlySet<string> = new Set(),
-) {
+function getArticleHref(slug: string, locale: PublicLocale, localizedSlugs: ReadonlySet<string>) {
   if (locale === "en" || !localizedSlugs.has(slug)) {
     return `/articles/${slug}`;
   }
 
   return `/${locale}/articles/${slug}`;
+}
+function getArticlesLibraryMode() {
+  const configuredMode = process.env.ARTICLES_LIBRARY_MODE?.trim().toLowerCase();
+  return configuredMode === "lazy" ? "lazy" : DEFAULT_ARTICLES_LIBRARY_MODE;
+}
+
+function resolveHref(path: string, locale: PublicLocale, localizedSlugs: ReadonlySet<string>) {
+  if (path.startsWith("/articles/")) {
+    return getArticleHref(path.replace("/articles/", ""), locale, localizedSlugs);
+  }
+
+  return getPublicPageHref(locale, path);
 }
 
 type ArticlesPageProps = {
@@ -156,12 +195,18 @@ type ArticlesPageProps = {
 
 export default async function ArticlesPage({ locale = "en" }: ArticlesPageProps = {}) {
   const articles = await getArticleManifest({ locale });
-  const localizedArticleSlugs = new Set(articles.map((article) => article.slug));
+  const libraryMode = getArticlesLibraryMode();
+  const shouldLazyLoadRemainder = libraryMode === "lazy";
+  const localizedSlugs = new Set(articles.map((article) => article.slug));
   const articleHrefBySlug = Object.fromEntries(
-    articles.map((article) => [article.slug, getArticleHref(article.slug, locale, localizedArticleSlugs)]),
+    articles.map((article) => [article.slug, getArticleHref(article.slug, locale, localizedSlugs)]),
   );
-  const initialArticles = articles.slice(0, INITIAL_ARTICLE_COUNT);
-  const remainingArticles = articles.slice(INITIAL_ARTICLE_COUNT);
+  const featuredGuideSlugs = new Set(
+    featuredGuides.slice(0, INITIAL_FEATURED_GUIDE_COUNT).map((guide) => guide.href.replace("/articles/", "")),
+  );
+  const rotatingArticles = articles.filter((article) => !featuredGuideSlugs.has(article.slug));
+  const initialArticles = shouldLazyLoadRemainder ? articles.slice(0, INITIAL_ARTICLE_COUNT) : articles;
+  const remainingArticles = shouldLazyLoadRemainder ? articles.slice(INITIAL_ARTICLE_COUNT) : [];
 
   return (
     <main className="overflow-hidden">
@@ -192,19 +237,11 @@ export default async function ArticlesPage({ locale = "en" }: ArticlesPageProps 
               If you are new to PinkPepper, start with these core articles before branching into narrower sector pages.
             </p>
           </div>
-          <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+          <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
             {featuredGuides.slice(0, INITIAL_FEATURED_GUIDE_COUNT).map((guide) => (
               <Link
                 key={guide.href}
-                href={
-                  guide.href.startsWith("/articles/")
-                    ? getArticleHref(
-                        guide.href.replace("/articles/", ""),
-                        locale,
-                        localizedArticleSlugs,
-                      )
-                    : getPublicPageHref(locale, guide.href)
-                }
+                href={resolveHref(guide.href, locale, localizedSlugs)}
                 className="rounded-3xl border border-[#E2E8F0] bg-[#F8FAFC] p-7 transition-all hover:-translate-y-0.5 hover:border-[#CBD5E1] hover:shadow-xl hover:shadow-black/[0.04]"
               >
                 <p className="text-xl font-semibold leading-tight text-[#0F172A]">{guide.title}</p>
@@ -215,20 +252,7 @@ export default async function ArticlesPage({ locale = "en" }: ArticlesPageProps 
         </div>
       </section>
 
-      <section className="border-b border-[#F1F5F9] bg-[#FFF7ED] py-14">
-        <div className="pp-container grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-          {workflowLinks.map((item) => (
-            <Link
-              key={item.href}
-              href={getPublicPageHref(locale, item.href)}
-              className="rounded-3xl border border-[#FED7AA] bg-white p-7 transition-all hover:-translate-y-0.5 hover:border-[#FDBA74] hover:shadow-xl hover:shadow-black/[0.04]"
-            >
-              <p className="text-lg font-semibold text-[#0F172A]">{item.title}</p>
-              <p className="mt-3 text-sm leading-relaxed text-[#475569]">{item.description}</p>
-            </Link>
-          ))}
-        </div>
-      </section>
+      <RotatingArticleHighlights articles={rotatingArticles} articleHrefBySlug={articleHrefBySlug} />
 
       <section className="border-b border-[#F1F5F9] bg-white py-14">
         <div className="pp-container">
@@ -243,17 +267,14 @@ export default async function ArticlesPage({ locale = "en" }: ArticlesPageProps 
           </div>
           <div className="mt-8 grid gap-6 lg:grid-cols-3">
             {clusterLinks.map((cluster) => (
-              <div
-                key={cluster.title}
-                className="rounded-3xl border border-[#E2E8F0] bg-[#F8FAFC] p-7"
-              >
+              <div key={cluster.title} className="rounded-3xl border border-[#E2E8F0] bg-[#F8FAFC] p-7">
                 <p className="text-xl font-semibold text-[#0F172A]">{cluster.title}</p>
                 <p className="mt-3 text-sm leading-relaxed text-[#475569]">{cluster.description}</p>
                 <div className="mt-5 flex flex-col gap-3">
                   {cluster.links.map((link) => (
                     <Link
                       key={link.href}
-                      href={getPublicPageHref(locale, link.href)}
+                      href={resolveHref(link.href, locale, localizedSlugs)}
                       className="text-sm font-semibold text-[#BE123C] transition-colors hover:text-[#9F1239]"
                     >
                       {link.label}
@@ -288,10 +309,7 @@ export default async function ArticlesPage({ locale = "en" }: ArticlesPageProps 
               />
             ))}
           </div>
-          <ArticleLibraryRemainder
-            articles={remainingArticles}
-            articleHrefBySlug={articleHrefBySlug}
-          />
+          <ArticleLibraryRemainder articles={remainingArticles} articleHrefBySlug={articleHrefBySlug} />
         </div>
       </section>
     </main>

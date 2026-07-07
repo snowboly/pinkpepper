@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
 import { sendEmail } from "@/lib/email";
 import { buildWelcomeEmail } from "@/lib/auth-emails";
+import { syncMarketingContact } from "@/lib/resend/contacts";
 
 export async function POST() {
   const supabase = await createClient();
@@ -15,12 +16,28 @@ export async function POST() {
     return NextResponse.json({ ok: true });
   }
 
+  if (user.user_metadata?.marketing_email_opt_in) {
+    await syncMarketingContact({
+      email: user.email,
+      firstName:
+        typeof user.user_metadata.first_name === "string" ? user.user_metadata.first_name : null,
+      lastName:
+        typeof user.user_metadata.last_name === "string" ? user.user_metadata.last_name : null,
+      subscribed: true,
+    });
+  }
+
   const welcomeEmailSentAt = user.user_metadata?.welcome_email_sent_at;
   if (welcomeEmailSentAt) {
     return NextResponse.json({ ok: true });
   }
 
-  await sendEmail({ to: user.email, ...buildWelcomeEmail() });
+  const firstName =
+    typeof user.user_metadata?.first_name === "string"
+      ? user.user_metadata.first_name
+      : null;
+
+  await sendEmail({ to: user.email, ...buildWelcomeEmail(firstName) });
 
   await supabase.auth.updateUser({
     data: {

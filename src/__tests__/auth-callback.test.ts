@@ -11,6 +11,7 @@ const { authState } = vi.hoisted(() => ({
     exchangeError: null as Error | null,
     verifyError: null as Error | null,
     cookiesWritten: [] as CookieRecord[],
+    fetchCalls: [] as Array<{ input: string; init?: RequestInit }>,
   },
 }));
 
@@ -74,6 +75,14 @@ vi.mock("next/server", () => {
 
 import { GET } from "@/app/auth/callback/route";
 
+vi.stubGlobal("fetch", vi.fn(async (input: string | URL | Request, init?: RequestInit) => {
+  authState.fetchCalls.push({
+    input: typeof input === "string" ? input : input instanceof URL ? String(input) : input.url,
+    init,
+  });
+  return new Response(null, { status: 200 });
+}));
+
 function makeRequest(url: string) {
   const parsed = new URL(url);
   return {
@@ -93,6 +102,7 @@ describe("auth callback route", () => {
     authState.exchangeError = null;
     authState.verifyError = null;
     authState.cookiesWritten = [];
+    authState.fetchCalls = [];
     process.env.NEXT_PUBLIC_SUPABASE_URL = "https://example.supabase.co";
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = "anon-key";
   });
@@ -109,5 +119,19 @@ describe("auth callback route", () => {
         expect.objectContaining({ name: "sb-refresh-token", value: "refresh-token" }),
       ]),
     );
+  });
+
+  it("triggers the welcome email route after confirmed signup callbacks", async () => {
+    const response = await GET(
+      makeRequest("https://pinkpepper.io/auth/callback?code=pkce-code&next=/dashboard&flow=signup") as never,
+    );
+
+    expect(response.headers.get("location")).toBe("https://pinkpepper.io/dashboard");
+    expect(authState.fetchCalls).toEqual([
+      {
+        input: "https://pinkpepper.io/api/auth/welcome",
+        init: { method: "POST" },
+      },
+    ]);
   });
 });

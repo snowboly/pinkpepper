@@ -207,11 +207,17 @@ export type Database = {
         Row: {
           business_type: string | null
           chat_language: string | null
+          company_name: string | null
           created_at: string
           email: string | null
+          first_name: string | null
           id: string
           is_admin: boolean
+          last_name: string | null
           locale: string | null
+          marketing_email_opt_in: boolean
+          marketing_email_opted_at: string | null
+          marketing_email_unsubscribed_at: string | null
           onboarding_completed: boolean
           tier: Database["public"]["Enums"]["subscription_tier"]
           updated_at: string
@@ -219,11 +225,17 @@ export type Database = {
         Insert: {
           business_type?: string | null
           chat_language?: string | null
+          company_name?: string | null
           created_at?: string
           email?: string | null
+          first_name?: string | null
           id: string
           is_admin?: boolean
+          last_name?: string | null
           locale?: string | null
+          marketing_email_opt_in?: boolean
+          marketing_email_opted_at?: string | null
+          marketing_email_unsubscribed_at?: string | null
           onboarding_completed?: boolean
           tier?: Database["public"]["Enums"]["subscription_tier"]
           updated_at?: string
@@ -231,11 +243,17 @@ export type Database = {
         Update: {
           business_type?: string | null
           chat_language?: string | null
+          company_name?: string | null
           created_at?: string
           email?: string | null
+          first_name?: string | null
           id?: string
           is_admin?: boolean
+          last_name?: string | null
           locale?: string | null
+          marketing_email_opt_in?: boolean
+          marketing_email_opted_at?: string | null
+          marketing_email_unsubscribed_at?: string | null
           onboarding_completed?: boolean
           tier?: Database["public"]["Enums"]["subscription_tier"]
           updated_at?: string

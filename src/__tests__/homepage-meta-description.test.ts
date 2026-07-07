@@ -3,7 +3,7 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
 const expectedDescription =
-  "Get free AI food safety guidance, HACCP plans and SOPs, plus EU/UK food import and export compliance support for your business.";
+  "AI food safety compliance software for EU and UK food businesses. Generate HACCP plans, SOPs, allergen documentation, and practical compliance records faster.";
 
 describe("homepage meta description", () => {
   it("uses the approved English positioning across search and social metadata", () => {

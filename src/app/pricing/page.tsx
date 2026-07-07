@@ -9,9 +9,9 @@ import { createClient } from "@/utils/supabase/server";
 import { getCspNonce } from "@/lib/security/csp";
 
 export const metadata: Metadata = {
-  title: "Pricing - From EUR 0/mo | PinkPepper Food Safety Software",
+  title: "Pricing | PinkPepper Food Safety Compliance Software",
   description:
-    "Start free. Plus at EUR 19/mo for daily HACCP & SOP use. Pro at EUR 99/mo adds Auditor mode + 2h human consultancy. Save EUR 18,000+/year on compliance costs.",
+    "Start free. Plus at EUR 19/month for daily HACCP and SOP work. Pro at EUR 99/month adds Auditor mode and 2 hours of human consultancy.",
   alternates: {
     canonical: "https://pinkpepper.io/pricing",
     languages: {
@@ -166,8 +166,17 @@ export default async function PricingPage({ locale }: PricingPageProps = {}) {
             <Link href="/resources/food-safety-document-checklist" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
               Review the document checklist
             </Link>
-            <Link href="/contact" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
-              Talk to us
+            <Link href="/articles/what-documents-does-a-food-hygiene-inspector-ask-for-first-uk" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
+              See what inspectors ask for first
+            </Link>
+            <Link href="/compare/pinkpepper-vs-consultant" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
+              Compare PinkPepper vs consultant
+            </Link>
+            <Link href="/compare/haccp-software-alternatives" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
+              Compare HACCP software alternatives
+            </Link>
+            <Link href="/human-review" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
+              See when human review is needed
             </Link>
           </div>
         </div>

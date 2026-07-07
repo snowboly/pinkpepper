@@ -66,7 +66,7 @@ export default function AllergenMatrixTemplatePage() {
       templateSlug="allergen-matrix-template"
       relatedLinks={[
         { href: "/features/allergen-documentation", label: "Allergen documentation" },
-        { href: "/articles", label: "Food safety articles" },
+        { href: "/articles/allergen-documentation-requirements-for-eu-and-uk-food-businesses", label: "Allergen documentation requirements" },
         { href: "/resources/cleaning-and-disinfection-sop", label: "Cleaning and disinfection SOP" },
       ]}
     />

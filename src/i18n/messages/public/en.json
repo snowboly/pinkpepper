@@ -3,6 +3,7 @@
     "nav": {
       "resources": "Resources",
       "freeTemplates": "Free Templates",
+      "foodSpecTemplate": "Food spec template",
       "articles": "Articles",
       "useCases": "Use Cases",
       "faqs": "FAQs",
@@ -164,8 +165,8 @@
   },
   "pages": {
     "home": {
-      "title": "PinkPepper | AI HACCP & Food Safety Software for EU & UK Businesses",
-      "description": "Get free AI food safety guidance, HACCP plans and SOPs, plus EU/UK food import and export compliance support for your business."
+      "title": "PinkPepper | AI Food Safety Compliance Software - EU & UK",
+      "description": "AI food safety compliance software for EU and UK food businesses. Generate HACCP plans, SOPs, allergen documentation, and practical compliance records faster."
     },
     "pricing": {
       "title": "Pricing - From EUR0/mo | PinkPepper Food Safety Software",

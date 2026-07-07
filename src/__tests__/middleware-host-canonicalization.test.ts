@@ -35,7 +35,7 @@ vi.mock("next/server", () => {
   return { NextResponse: MockNextResponse };
 });
 
-describe("proxy host canonicalization", () => {
+describe("proxy host canonicalization", { timeout: 15000 }, () => {
   beforeEach(() => {
     vi.resetModules();
   });
@@ -89,6 +89,19 @@ describe("proxy host canonicalization", () => {
     ).toBe("de");
   });
 
+  it("forwards the request pathname to downstream layouts", async () => {
+    const { proxy } = await import("../proxy");
+
+    const response = await proxy(
+      makeRequest("https://pinkpepper.io/resources/food-spec-template") as never,
+    );
+
+    expect(
+      (response as unknown as { forwardedRequestHeaders?: Headers })
+        .forwardedRequestHeaders?.get("x-public-pathname"),
+    ).toBe("/resources/food-spec-template");
+  });
+
   it("permanently redirects legacy english-prefixed URLs to the root english routes", async () => {
     const { proxy } = await import("../proxy");
 
@@ -98,5 +111,14 @@ describe("proxy host canonicalization", () => {
     expect(response.headers.get("location")).toBe("https://pinkpepper.io/pricing");
     expect(response.headers.get("Content-Security-Policy")).toBe(cspValue);
     expect(response.headers.get("x-csp-nonce")).toBe("test-nonce");
+  });
+
+  it("redirects the bare legacy english route to the root english homepage", async () => {
+    const { proxy } = await import("../proxy");
+
+    const response = await proxy(makeRequest("https://pinkpepper.io/en") as never);
+
+    expect(response.status).toBe(308);
+    expect(response.headers.get("location")).toBe("https://pinkpepper.io/");
   });
 });

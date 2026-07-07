@@ -1,6 +1,9 @@
-import { getArticleManifest, isArticlePreferredForIndexing } from "@/lib/articles";
+import { getIndexableEnglishArticleSummaries } from "@/lib/article-index-feed";
+import { shouldIndexArticle } from "@/lib/article-indexing";
 import { publicContentRoutePaths, publicLaunchLocales } from "@/i18n/public";
 import { localizePublicPath } from "@/lib/public-routes";
+import { resourceEntries } from "@/lib/resources";
+import { shouldIndexPublicRoute } from "@/lib/seo/indexability";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -9,34 +12,26 @@ const BASE_URL = "https://pinkpepper.io";
 const INDEXNOW_KEY = "181c6ef4ee9b418590ef0828aa795a1f";
 const INDEXNOW_KEY_LOCATION = `${BASE_URL}/${INDEXNOW_KEY}.txt`;
 
+const USE_CASE_PATHS = [
+  "/use-cases",
+  "/use-cases/restaurants",
+  "/use-cases/cafes",
+  "/use-cases/catering",
+  "/use-cases/food-manufacturing",
+] as const;
+
 const STATIC_PATHS = [
   "/about",
+  "/compare/haccp-software-alternatives",
+  "/compare/pinkpepper-vs-consultant",
+  "/human-review",
+  "/methodology",
+  "/regulations-covered",
   "/resources",
-  "/resources/haccp-plan-template",
-  "/resources/hazard-analysis-template",
-  "/resources/allergen-matrix-template",
-  "/resources/food-safety-audit-checklist",
-  "/resources/cleaning-and-disinfection-sop",
-  "/resources/temperature-monitoring-log-template",
-  "/resources/supplier-approval-questionnaire",
-  "/resources/food-safety-document-checklist",
-  "/resources/corrective-action-log-template",
-  "/resources/product-recall-procedure-template",
-  "/resources/employee-food-safety-training-record",
-  "/resources/personal-hygiene-policy-template",
-  "/resources/pest-control-log-template",
-  "/resources/waste-management-log-template",
-  "/resources/waste-management-sop-template",
-  "/resources/traceability-log-template",
-  "/resources/food-safety-management-system-template",
   "/security",
   "/legal/terms",
   "/legal/privacy",
-  "/legal/cookies",
-  "/legal/dpa",
-  "/legal/acceptable-use",
-  "/legal/refund",
-];
+] as const;
 
 export async function GET(request: Request) {
   const secret = process.env.CRON_SECRET;
@@ -48,20 +43,32 @@ export async function GET(request: Request) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const articles = await getArticleManifest().catch(() => []);
+  const articles = getIndexableEnglishArticleSummaries();
 
-  const englishRoutes = publicContentRoutePaths.map((path) => `${BASE_URL}${path}`);
+  const englishRoutes = publicContentRoutePaths
+    .filter((path) => path !== "/")
+    .map((path) => `${BASE_URL}${path}`);
   const localizedRoutes = publicContentRoutePaths.flatMap((path) =>
     publicLaunchLocales
-      .filter((l) => l !== "en")
+      .filter((locale) => locale !== "en" && shouldIndexPublicRoute(path, locale))
       .map((locale) => `${BASE_URL}${localizePublicPath(locale, path)}`),
   );
+  const useCaseUrls = USE_CASE_PATHS.map((path) => `${BASE_URL}${path}`);
   const articleUrls = articles
-    .filter(isArticlePreferredForIndexing)
-    .map((a) => `${BASE_URL}/articles/${a.slug}`);
-  const staticUrls = STATIC_PATHS.map((p) => `${BASE_URL}${p}`);
+    .filter((article) => shouldIndexArticle(article, "en"))
+    .map((article) => `${BASE_URL}/articles/${article.slug}`);
+  const staticUrls = [...STATIC_PATHS, ...resourceEntries.map((resource) => resource.href)].map(
+    (path) => `${BASE_URL}${path}`,
+  );
 
-  const urlList = [...englishRoutes, ...localizedRoutes, ...articleUrls, ...staticUrls];
+  const urlList = [
+    BASE_URL,
+    ...englishRoutes,
+    ...localizedRoutes,
+    ...useCaseUrls,
+    ...articleUrls,
+    ...staticUrls,
+  ].filter((url, index, urls) => urls.indexOf(url) === index);
 
   const res = await fetch("https://api.indexnow.org/indexnow", {
     method: "POST",

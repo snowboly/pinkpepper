@@ -48,7 +48,6 @@ async function getChromeContext() {
         { href: getPublicPageHref(publicLocale, "/faqs"), label: messages.chrome.nav.faqs },
       ],
     },
-    { href: "/use-cases", label: messages.chrome.nav.useCases },
     { href: getPublicPageHref(publicLocale, "/pricing"), label: messages.chrome.nav.pricing },
     { href: getPublicPageHref(publicLocale, "/about"), label: messages.chrome.nav.about },
     { href: getPublicPageHref(publicLocale, "/contact"), label: messages.chrome.nav.contact },
@@ -197,11 +196,11 @@ export async function SiteFooter() {
         <div>
           <h4 className="mb-4 text-sm font-semibold text-[#1A1A1A]">{messages.chrome.footer.productHeading}</h4>
           <ul className="space-y-3 text-sm text-[#6B6B6B]">
-            <li><Link href="/use-cases" className="pp-shell-link">{messages.chrome.nav.useCases}</Link></li>
             <li><Link href={getPublicPageHref(publicLocale, "/pricing")} className="pp-shell-link">{messages.chrome.nav.pricing}</Link></li>
             <li><Link href={getPublicPageHref(publicLocale, "/about")} className="pp-shell-link">{messages.chrome.nav.about}</Link></li>
-            <li><Link href={getPublicPageHref(publicLocale, "/login")} className="pp-shell-link">{messages.chrome.nav.login}</Link></li>
-            <li><Link href={getPublicPageHref(publicLocale, "/signup")} className="pp-shell-link">{messages.chrome.footer.createAccount}</Link></li>
+            <li><Link href={getPublicPageHref(publicLocale, "/methodology")} className="pp-shell-link">Methodology</Link></li>
+            <li><Link href={getPublicPageHref(publicLocale, "/human-review")} className="pp-shell-link">Human Review</Link></li>
+            <li><Link href={getPublicPageHref(publicLocale, "/regulations-covered")} className="pp-shell-link">Regulations Covered</Link></li>
           </ul>
         </div>
         <div>

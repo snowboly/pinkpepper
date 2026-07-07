@@ -72,6 +72,7 @@ describe("public locale config", () => {
     expect(switchPublicLocale("/fr/articles", "de")).toBe("/de/articles");
     expect(getPublicPageHref("en", "/pricing")).toBe("/pricing");
     expect(getPublicPageHref("pt", "/pricing")).toBe("/pt/pricing");
+    expect(getPublicPageHref("en", "/pricing")).toBe("/pricing");
     expect(getPublicPageHref("pt", "/articles")).toBe("/pt/articles");
   });
 
@@ -83,6 +84,7 @@ describe("public locale config", () => {
 
     expect(localizedLayout).toContain("setRequestLocale");
     expect(localizedLayout).toContain("isPublicLocale");
+    expect(localizedLayout).toContain('.filter((locale) => locale !== "en")');
     expect(localizedPricingPage).toContain("buildLocalizedWrapperMetadata");
     expect(localizedPricingPage).toContain('"/pricing"');
     expect(localizedHomePage).toContain("<HomePage locale={locale} />");
@@ -102,12 +104,12 @@ describe("public locale config", () => {
   });
 
   it("keeps auth entry cross-links locale-aware", () => {
-    const loginPage = readPage("src/app/login/page.tsx");
-    const signupPage = readPage("src/app/signup/page.tsx");
+    const loginForm = readPage("src/app/login/LoginForm.tsx");
+    const signupForm = readPage("src/app/signup/SignupForm.tsx");
 
-    expect(loginPage).toContain("getPublicPageHref");
-    expect(signupPage).toContain("getPublicPageHref");
-    expect(loginPage).toContain("usePathname");
-    expect(signupPage).toContain("usePathname");
+    expect(loginForm).toContain("getPublicPageHref");
+    expect(signupForm).toContain("getPublicPageHref");
+    expect(loginForm).toContain("usePathname");
+    expect(signupForm).toContain("usePathname");
   });
 });

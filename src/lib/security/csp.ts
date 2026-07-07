@@ -62,7 +62,7 @@ export function buildContentSecurityPolicy(nonce: string): string {
     // a larger change. Tracked as an audit follow-up.
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' blob: data: https://*.supabase.co https://images.unsplash.com https://images.pexels.com",
-    "connect-src 'self' https://*.supabase.co https://api.groq.com https://api.openai.com https://api.stripe.com https://js.stripe.com https://va.vercel-scripts.com",
+    "connect-src 'self' https://*.supabase.co https://api.groq.com https://api.openai.com https://api.stripe.com https://js.stripe.com https://va.vercel-scripts.com https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com",
     "frame-src https://js.stripe.com https://hooks.stripe.com",
     "frame-ancestors 'none'",
     "base-uri 'self'",
