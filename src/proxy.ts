@@ -64,6 +64,7 @@ export async function proxy(request: NextRequest) {
 
   const isAuthPage = pathname === "/login" || pathname === "/signup";
   const isProtected = pathname.startsWith("/dashboard");
+  const isCompleteProfilePage = pathname === "/dashboard/complete-profile";
   const isAdminPage = pathname.startsWith("/admin");
   const needsSession = isAuthPage || isProtected || isAdminPage;
 
@@ -95,6 +96,23 @@ export async function proxy(request: NextRequest) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
+  let profile:
+    | {
+        first_name?: string | null;
+        is_admin?: boolean | null;
+        locale?: string | null;
+      }
+    | null
+    | undefined;
+
+  if (user) {
+    const { data } = await supabase
+      .from("profiles")
+      .select("first_name,is_admin,locale")
+      .eq("id", user.id)
+      .maybeSingle();
+    profile = data;
+  }
 
   if ((isProtected || isAdminPage) && !user) {
     const redirectUrl = request.nextUrl.clone();
@@ -110,13 +128,14 @@ export async function proxy(request: NextRequest) {
     return finalize(NextResponse.redirect(redirectUrl));
   }
 
-  if (isAdminPage && user) {
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("is_admin")
-      .eq("id", user.id)
-      .maybeSingle();
+  if ((isProtected || isAdminPage) && user && !profile?.first_name && !isCompleteProfilePage) {
+    const redirectUrl = request.nextUrl.clone();
+    redirectUrl.pathname = "/dashboard/complete-profile";
+    redirectUrl.search = "";
+    return finalize(NextResponse.redirect(redirectUrl));
+  }
 
+  if (isAdminPage && user) {
     const allowed = isAdminUser(profile?.is_admin, user.email);
     if (!allowed) {
       const redirectUrl = request.nextUrl.clone();
@@ -128,17 +147,12 @@ export async function proxy(request: NextRequest) {
 
   if (isAuthPage && user) {
     const redirectUrl = request.nextUrl.clone();
-    redirectUrl.pathname = "/dashboard";
+    redirectUrl.pathname = profile?.first_name ? "/dashboard" : "/dashboard/complete-profile";
     redirectUrl.search = "";
     return finalize(NextResponse.redirect(redirectUrl));
   }
 
   if (user && !request.cookies.get("locale")?.value) {
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("locale")
-      .eq("id", user.id)
-      .maybeSingle();
     if (profile?.locale) {
       response.cookies.set("locale", profile.locale, {
         path: "/",

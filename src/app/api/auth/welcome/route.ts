@@ -16,35 +16,31 @@ export async function POST() {
     return NextResponse.json({ ok: true });
   }
 
-  if (user.user_metadata?.marketing_email_opt_in) {
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("first_name,last_name,marketing_email_opt_in,welcome_email_sent_at")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  if (profile?.marketing_email_opt_in) {
     await syncMarketingContact({
       email: user.email,
-      firstName:
-        typeof user.user_metadata.first_name === "string" ? user.user_metadata.first_name : null,
-      lastName:
-        typeof user.user_metadata.last_name === "string" ? user.user_metadata.last_name : null,
+      firstName: profile.first_name ?? null,
+      lastName: profile.last_name ?? null,
       subscribed: true,
     });
   }
 
-  const welcomeEmailSentAt = user.user_metadata?.welcome_email_sent_at;
-  if (welcomeEmailSentAt) {
+  if (profile?.welcome_email_sent_at) {
     return NextResponse.json({ ok: true });
   }
 
-  const firstName =
-    typeof user.user_metadata?.first_name === "string"
-      ? user.user_metadata.first_name
-      : null;
+  await sendEmail({ to: user.email, ...buildWelcomeEmail(profile?.first_name ?? null) });
 
-  await sendEmail({ to: user.email, ...buildWelcomeEmail(firstName) });
-
-  await supabase.auth.updateUser({
-    data: {
-      ...(user.user_metadata ?? {}),
-      welcome_email_sent_at: new Date().toISOString(),
-    },
-  });
+  await supabase
+    .from("profiles")
+    .update({ welcome_email_sent_at: new Date().toISOString() })
+    .eq("id", user.id);
 
   return NextResponse.json({ ok: true });
 }

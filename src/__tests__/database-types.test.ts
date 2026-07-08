@@ -28,5 +28,6 @@ describe("generated database types", () => {
     expect(databaseTypes).toContain("marketing_email_opted_at: string | null");
     expect(databaseTypes).toContain("marketing_email_unsubscribed_at: string | null");
     expect(databaseTypes).toContain("last_name: string | null");
+    expect(databaseTypes).toContain("welcome_email_sent_at: string | null");
   });
 });

@@ -10,6 +10,7 @@ describe("auth flow surface", () => {
     const confirmPage = readPage("src/app/auth/confirm/page.tsx");
 
     expect(callbackRoute).toContain('/api/auth/welcome');
+    expect(callbackRoute).not.toContain('flow === "signup" || type === "signup"');
     expect(confirmPage).not.toContain('/api/auth/welcome');
   });
 });

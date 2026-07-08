@@ -221,6 +221,7 @@ export type Database = {
           onboarding_completed: boolean
           tier: Database["public"]["Enums"]["subscription_tier"]
           updated_at: string
+          welcome_email_sent_at: string | null
         }
         Insert: {
           business_type?: string | null
@@ -239,6 +240,7 @@ export type Database = {
           onboarding_completed?: boolean
           tier?: Database["public"]["Enums"]["subscription_tier"]
           updated_at?: string
+          welcome_email_sent_at?: string | null
         }
         Update: {
           business_type?: string | null
@@ -257,6 +259,7 @@ export type Database = {
           onboarding_completed?: boolean
           tier?: Database["public"]["Enums"]["subscription_tier"]
           updated_at?: string
+          welcome_email_sent_at?: string | null
         }
         Relationships: []
       }
