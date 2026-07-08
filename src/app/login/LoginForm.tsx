@@ -13,6 +13,17 @@ import {
 import { buildGoogleOAuthOptions, resolveBrowserAuthOrigin } from "@/app/auth/oauth";
 import { createClient } from "@/utils/supabase/client";
 
+function GoogleMark() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 18 18" className="h-5 w-5">
+      <path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84a4.14 4.14 0 0 1-1.8 2.72v2.26h2.92c1.72-1.58 2.68-3.92 2.68-6.62Z" />
+      <path fill="#34A853" d="M9 18c2.43 0 4.46-.8 5.95-2.18l-2.92-2.26c-.81.54-1.84.86-3.03.86-2.33 0-4.3-1.57-5-3.68H1v2.31A8.99 8.99 0 0 0 9 18Z" />
+      <path fill="#FBBC05" d="M4 10.74A5.4 5.4 0 0 1 3.72 9c0-.6.1-1.18.28-1.74V4.95H1A8.99 8.99 0 0 0 0 9c0 1.45.35 2.82 1 4.05l3-2.31Z" />
+      <path fill="#EA4335" d="M9 3.58c1.32 0 2.5.46 3.44 1.36l2.58-2.58C13.45.9 11.42 0 9 0A8.99 8.99 0 0 0 1 4.95l3 2.31c.7-2.11 2.67-3.68 5-3.68Z" />
+    </svg>
+  );
+}
+
 export function LoginForm() {
   const pathname = usePathname();
   const [email, setEmail] = useState("");
@@ -177,11 +188,11 @@ export function LoginForm() {
   return (
     <>
       {(flashMessage || error) && (
-        <p className="mt-4 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+        <p className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
           {error ?? flashMessage}
         </p>
       )}
-      {message && <p className="mt-4 rounded-xl border border-[#E8DADA] bg-[#FAF6F5] px-3 py-2 text-sm">{message}</p>}
+      {message && <p className="rounded-xl border border-[#E8DADA] bg-[#FAF6F5] px-3 py-2 text-sm">{message}</p>}
 
       <button
         type="button"
@@ -189,44 +200,49 @@ export function LoginForm() {
         onClick={() => {
           void onGoogleSignIn();
         }}
-        className="mt-6 w-full rounded-xl border border-[#E8DADA] bg-white py-3 text-sm font-semibold text-[#2B2B2B] transition-colors hover:bg-[#FAF6F5] disabled:opacity-70"
+        className="mt-2 flex w-full items-center justify-center gap-3 rounded-2xl border border-[#D9DEE8] bg-white px-4 py-4 text-base font-semibold text-[#1E2A3A] shadow-sm transition-colors hover:bg-[#F8FAFC] disabled:opacity-70"
       >
+        <GoogleMark />
         {googleLoading ? "Redirecting..." : "Continue with Google"}
       </button>
 
-      <form onSubmit={onSubmit} className="mt-6 space-y-4">
+      <div className="my-8 flex items-center gap-4">
+        <div className="h-px flex-1 bg-[#E2E8F0]" />
+        <span className="text-xs font-semibold uppercase tracking-[0.24em] text-[#94A3B8]">or</span>
+        <div className="h-px flex-1 bg-[#E2E8F0]" />
+      </div>
+
+      <form onSubmit={onSubmit} className="space-y-4">
         <div>
-          <label className="mb-1 block text-sm font-medium text-[#2B2B2B]">Email</label>
+          <label className="mb-1.5 block text-sm font-medium text-[#2B2B2B]">Work email address</label>
           <input
             type="email"
             required
             value={email}
             onChange={(e) => handleEmailChange(e.target.value)}
-            className="w-full rounded-xl border border-[#E8DADA] bg-white px-3 py-2.5 outline-none ring-[#D96C6C]/20 focus:ring-4"
+            className="w-full rounded-2xl border border-[#D9DEE8] bg-white px-4 py-3.5 text-base outline-none ring-[#D96C6C]/15 focus:ring-4"
             placeholder="you@company.com"
           />
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium text-[#2B2B2B]">Password</label>
+          <label className="mb-1.5 block text-sm font-medium text-[#2B2B2B]">Password</label>
           <input
             type="password"
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full rounded-xl border border-[#E8DADA] bg-white px-3 py-2.5 outline-none ring-[#D96C6C]/20 focus:ring-4"
+            className="w-full rounded-2xl border border-[#D9DEE8] bg-white px-4 py-3.5 text-base outline-none ring-[#D96C6C]/15 focus:ring-4"
             placeholder="********"
           />
         </div>
-        <button disabled={loading} type="submit" className="w-full rounded-xl bg-[#D96C6C] py-3 font-bold text-white transition-colors hover:bg-[#C95A5A] disabled:opacity-70">
+        <button disabled={loading} type="submit" className="w-full rounded-2xl bg-[#FF5A1F] py-3.5 text-lg font-bold text-white transition-colors hover:bg-[#EC4E15] disabled:opacity-70">
           {loading ? "Signing in..." : "Log In"}
         </button>
       </form>
 
-      <div className="my-5 flex items-center gap-3">
-        <div className="h-px flex-1 bg-[#E8DADA]" />
-        <span className="text-xs text-[#9B9B9B]">or</span>
-        <div className="h-px flex-1 bg-[#E8DADA]" />
-      </div>
+      <p className="mt-4 text-sm text-[#6B6B6B]">
+        Prefer a passwordless login? Use the email code option below.
+      </p>
 
       <LoginEmailCodePanel
         email={email}
@@ -253,7 +269,7 @@ export function LoginForm() {
         }}
       />
 
-      <div className="mt-4 flex items-center justify-between text-sm text-[#6B6B6B]">
+      <div className="mt-6 flex items-center justify-between text-sm text-[#6B6B6B]">
         <Link href="/forgot-password" className="underline">Forgot password?</Link>
         <Link href={signupHref} className="underline">Create account</Link>
       </div>

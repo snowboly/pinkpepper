@@ -55,24 +55,27 @@ function getTextContent(node: unknown): string {
 }
 
 describe("signup surface", () => {
-  it("keeps a thin server page while the client form collects profile fields and marketing opt-in metadata", () => {
+  it("keeps a thin server page while the client form stays minimal and defers profile fields to completion", () => {
     const signupPage = readPage("src/app/signup/page.tsx");
     const signupForm = readPage("src/app/signup/SignupForm.tsx");
+    const completeProfileForm = readPage("src/app/dashboard/complete-profile/CompleteProfileForm.tsx");
 
     expect(signupPage).not.toContain('"use client"');
     expect(signupPage).toContain("SignupForm");
 
     expect(signupForm).toContain('"use client"');
-    expect(signupForm).toContain("First name");
-    expect(signupForm).toContain("Surname");
-    expect(signupForm).toContain("Company name");
+    expect(signupForm).toContain("Work email address");
+    expect(signupForm).toContain("Password");
+    expect(signupForm).toContain("Sign up with magic link");
+    expect(signupForm).not.toContain("First name");
+    expect(signupForm).not.toContain("Surname");
+    expect(signupForm).not.toContain("Company name");
     expect(signupForm).toContain("I would like to receive occasional product updates, new document templates, and relevant offers from PinkPepper. I can unsubscribe at any time.");
     expect(signupForm).toContain("marketing_email_opt_in");
-    expect(signupForm).toContain("company_name");
-    expect(signupForm).toContain("first_name");
-    expect(signupForm).toContain("last_name");
     expect(signupForm).toContain("options:");
     expect(signupForm).toContain("data:");
+    expect(completeProfileForm).toContain("First name");
+    expect(completeProfileForm).toContain("Company name");
   });
 
   it("offers a Continue with Google CTA that keeps the signup callback intent", async () => {
