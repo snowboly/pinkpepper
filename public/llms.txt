@@ -1,0 +1,40 @@
+# PinkPepper
+
+> AI food safety consultant for HACCP and compliance. Generate food safety documents, build HACCP paperwork, and get answers to food safety questions.
+
+PinkPepper is an AI food safety consultant for EU and UK food businesses. It helps operators create practical food safety documents, HACCP paperwork, SOPs, allergen records, audit preparation materials, and compliance answers from a specialist food safety knowledge base.
+
+## Core Pages
+
+- Homepage: https://pinkpepper.io/
+- Pricing: https://pinkpepper.io/pricing
+- About: https://pinkpepper.io/about
+- Methodology: https://pinkpepper.io/methodology
+- Regulations covered: https://pinkpepper.io/regulations-covered
+- Security: https://pinkpepper.io/security
+- FAQs: https://pinkpepper.io/faqs
+- Contact: https://pinkpepper.io/contact
+
+## Food Safety Document Generation
+
+- HACCP plan generator: https://pinkpepper.io/features/haccp-plan-generator
+- Food safety SOP generator: https://pinkpepper.io/features/food-safety-sop-generator
+- Allergen documentation: https://pinkpepper.io/features/allergen-documentation
+- Food safety resources: https://pinkpepper.io/resources
+- HACCP plan template: https://pinkpepper.io/resources/haccp-plan-template
+- Food safety document checklist: https://pinkpepper.io/resources/food-safety-document-checklist
+
+## Guidance And Articles
+
+- Articles library: https://pinkpepper.io/articles
+- Building a HACCP process flow diagram: https://pinkpepper.io/articles/building-a-haccp-process-flow-diagram
+- HACCP CCP examples for UK and EU food businesses: https://pinkpepper.io/articles/haccp-ccp-examples-uk-eu
+- What documents a UK food hygiene inspector asks for first: https://pinkpepper.io/articles/what-documents-does-a-food-hygiene-inspector-ask-for-first-uk
+
+## Product Boundaries
+
+PinkPepper provides food safety software, document drafting, and food safety consultancy support. It is not legal advice, and users remain responsible for reviewing documents, applying site-specific judgement, and meeting applicable legal and customer requirements.
+
+## Preferred Citation Summary
+
+PinkPepper is an AI food safety consultant for HACCP and compliance that helps EU and UK food businesses generate food safety documents, build HACCP paperwork, create SOPs and allergen records, and get practical answers to food safety questions.

@@ -44,7 +44,6 @@ export function SignupForm() {
     const maybeLocale = pathname.split("/").filter(Boolean)[0];
     return isPublicLocale(maybeLocale ?? "") ? (maybeLocale as PublicLocale) : "en";
   })();
-  const loginHref = getPublicPageHref(currentLocale, "/login");
   const termsHref = getPublicPageHref(currentLocale, "/legal/terms");
   const privacyHref = getPublicPageHref(currentLocale, "/legal/privacy");
 
@@ -274,21 +273,9 @@ export function SignupForm() {
             <button disabled={loading} type="submit" className="w-full rounded-2xl bg-[#E11D48] py-3.5 text-lg font-bold text-white transition-colors hover:bg-[#BE123C] disabled:opacity-70">
               {loading ? "Creating account..." : "Create account"}
             </button>
-            <p className="text-center text-sm leading-relaxed text-[#6B6B6B]">
-              By signing up, you agree to our{" "}
-              <Link href={termsHref} className="underline">
-                Terms of Service
-              </Link>{" "}
-              and{" "}
-              <Link href={privacyHref} className="underline">
-                Privacy Policy
-              </Link>
-              .
-            </p>
           </form>
 
           <div className="mt-4">
-            <p className="mb-3 text-sm text-[#6B6B6B]">Prefer to skip the password? We&apos;ll still ask for your profile details after you open the signup link.</p>
             {magicSent ? (
               <p className="rounded-2xl border border-[#E8DADA] bg-[#FAF6F5] px-4 py-3 text-center text-sm text-[#2B2B2B]">
                 Magic link sent. Check your inbox to activate your account, then complete your profile.
@@ -305,8 +292,16 @@ export function SignupForm() {
             )}
           </div>
 
-          <p className="mt-6 text-center text-sm text-[#6B6B6B]">
-            Already have an account? <Link href={loginHref} className="underline">Log in</Link>
+          <p className="mt-5 text-center text-sm leading-relaxed text-[#6B6B6B]">
+            By signing up, you agree to our{" "}
+            <Link href={termsHref} className="underline">
+              Terms of Service
+            </Link>{" "}
+            and{" "}
+            <Link href={privacyHref} className="underline">
+              Privacy Policy
+            </Link>
+            .
           </p>
         </>
       )}
