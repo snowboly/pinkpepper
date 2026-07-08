@@ -45,6 +45,8 @@ export function SignupForm() {
     return isPublicLocale(maybeLocale ?? "") ? (maybeLocale as PublicLocale) : "en";
   })();
   const loginHref = getPublicPageHref(currentLocale, "/login");
+  const termsHref = getPublicPageHref(currentLocale, "/legal/terms");
+  const privacyHref = getPublicPageHref(currentLocale, "/legal/privacy");
 
   useEffect(() => {
     if (searchParams.get("error") === "confirm_email") {
@@ -269,9 +271,20 @@ export function SignupForm() {
               />
               <span>I would like to receive occasional product updates, new document templates, and relevant offers from PinkPepper. I can unsubscribe at any time.</span>
             </label>
-            <button disabled={loading} type="submit" className="w-full rounded-2xl bg-[#FF5A1F] py-3.5 text-lg font-bold text-white transition-colors hover:bg-[#EC4E15] disabled:opacity-70">
+            <button disabled={loading} type="submit" className="w-full rounded-2xl bg-[#E11D48] py-3.5 text-lg font-bold text-white transition-colors hover:bg-[#BE123C] disabled:opacity-70">
               {loading ? "Creating account..." : "Create account"}
             </button>
+            <p className="text-center text-sm leading-relaxed text-[#6B6B6B]">
+              By signing up, you agree to our{" "}
+              <Link href={termsHref} className="underline">
+                Terms of Service
+              </Link>{" "}
+              and{" "}
+              <Link href={privacyHref} className="underline">
+                Privacy Policy
+              </Link>
+              .
+            </p>
           </form>
 
           <div className="mt-4">

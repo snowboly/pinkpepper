@@ -219,7 +219,8 @@ describe("public SEO copy and linking", () => {
     const heroChatForm = readPage("src/components/homepage/HeroChatForm.tsx");
     const demoTabSwitcher = readPage("src/components/homepage/DemoTabSwitcher.tsx");
 
-    expect(homepage).toContain("AI food safety compliance software");
+    expect(homepage).toContain("AI food safety consultant for HACCP and compliance");
+    expect(homepage).toContain("Generate food safety documents");
     expect(homepage).toContain("/features/haccp-plan-generator");
     expect(homepage).toContain("/pricing");
     expect(heroChatForm).toContain("data-nosnippet");

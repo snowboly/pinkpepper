@@ -1,5 +1,4 @@
 import { SignupForm } from "@/app/signup/SignupForm";
-import { AuthHeaderLink } from "@/app/auth/AuthHeaderLink";
 
 export default function SignupPage() {
   return (
@@ -11,11 +10,6 @@ export default function SignupPage() {
 
       <div className="pp-container">
         <div className="mx-auto max-w-3xl">
-          <div className="flex justify-end">
-            <p className="text-sm text-[#6B6B6B]">
-              Already have an account? <AuthHeaderLink href="/login">Log in</AuthHeaderLink>
-            </p>
-          </div>
           <div className="mx-auto mt-12 max-w-xl text-center">
             <h1 className="text-4xl font-black tracking-tight text-[#2B2B2B] md:text-5xl">Create your account</h1>
             <p className="mt-3 text-lg text-[#6B6B6B]">Start free and finish your profile after signup.</p>

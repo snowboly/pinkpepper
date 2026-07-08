@@ -235,7 +235,7 @@ export function LoginForm() {
             placeholder="********"
           />
         </div>
-        <button disabled={loading} type="submit" className="w-full rounded-2xl bg-[#FF5A1F] py-3.5 text-lg font-bold text-white transition-colors hover:bg-[#EC4E15] disabled:opacity-70">
+        <button disabled={loading} type="submit" className="w-full rounded-2xl bg-[#E11D48] py-3.5 text-lg font-bold text-white transition-colors hover:bg-[#BE123C] disabled:opacity-70">
           {loading ? "Signing in..." : "Log In"}
         </button>
       </form>
