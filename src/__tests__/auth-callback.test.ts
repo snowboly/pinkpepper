@@ -10,6 +10,14 @@ const { authState } = vi.hoisted(() => ({
   authState: {
     exchangeError: null as Error | null,
     verifyError: null as Error | null,
+    user: {
+      id: "user_123",
+      email_confirmed_at: "2026-07-07T10:00:00.000Z",
+    } as { id: string; email_confirmed_at: string } | null,
+    profile: {
+      first_name: "Joao",
+      welcome_email_sent_at: null,
+    } as { first_name: string | null; welcome_email_sent_at: string | null } | null,
     cookiesWritten: [] as CookieRecord[],
     fetchCalls: [] as Array<{ input: string; init?: RequestInit }>,
   },
@@ -35,6 +43,27 @@ vi.mock("@supabase/ssr", () => ({
 
         return { error: authState.verifyError };
       },
+      getUser: async () => ({
+        data: {
+          user: authState.user,
+        },
+      }),
+    },
+    from: (table: string) => {
+      if (table !== "profiles") {
+        throw new Error(`Unexpected table ${table}`);
+      }
+
+      return {
+        select: () => ({
+          eq: () => ({
+            maybeSingle: async () => ({
+              data: authState.profile,
+              error: null,
+            }),
+          }),
+        }),
+      };
     },
   }),
 }));
@@ -101,6 +130,14 @@ describe("auth callback route", () => {
   beforeEach(() => {
     authState.exchangeError = null;
     authState.verifyError = null;
+    authState.user = {
+      id: "user_123",
+      email_confirmed_at: "2026-07-07T10:00:00.000Z",
+    };
+    authState.profile = {
+      first_name: "Joao",
+      welcome_email_sent_at: null,
+    };
     authState.cookiesWritten = [];
     authState.fetchCalls = [];
     process.env.NEXT_PUBLIC_SUPABASE_URL = "https://example.supabase.co";
