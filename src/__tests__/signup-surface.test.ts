@@ -67,6 +67,8 @@ describe("signup surface", () => {
     expect(signupForm).toContain("Work email address");
     expect(signupForm).toContain("Password");
     expect(signupForm).toContain("Sign up with magic link");
+    expect(signupForm).not.toContain("Prefer to skip the password?");
+    expect(signupForm.indexOf("Sign up with magic link")).toBeLessThan(signupForm.indexOf("By signing up, you agree to our"));
     expect(signupForm).not.toContain("First name");
     expect(signupForm).not.toContain("Surname");
     expect(signupForm).not.toContain("Company name");
