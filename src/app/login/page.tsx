@@ -9,13 +9,19 @@ export default function LoginPage() {
       </div>
 
       <div className="pp-container">
-        <div className="mx-auto max-w-md rounded-[2rem] border border-[#E8DADA] bg-white p-7 shadow-xl md:p-8">
-          <p className="inline-flex rounded-full bg-[#FCEEEE] px-3 py-1 text-[11px] font-black uppercase tracking-widest text-[#B85C5C]">
-            Account Access
-          </p>
-          <h1 className="mt-4 text-3xl font-black tracking-tight text-[#2B2B2B]">Log In</h1>
-          <p className="mt-2 text-sm text-[#6B6B6B]">Access your PinkPepper dashboard.</p>
-          <LoginForm />
+        <div className="mx-auto max-w-3xl">
+          <div className="flex justify-end">
+            <p className="text-sm text-[#6B6B6B]">
+              Need an account? <a href="/signup" className="font-semibold text-[#D96C6C] hover:text-[#C95A5A]">Sign up</a>
+            </p>
+          </div>
+          <div className="mx-auto mt-12 max-w-xl text-center">
+            <h1 className="text-4xl font-black tracking-tight text-[#2B2B2B] md:text-5xl">Welcome back</h1>
+            <p className="mt-3 text-lg text-[#6B6B6B]">Log in to your PinkPepper account.</p>
+          </div>
+          <div className="mx-auto mt-10 max-w-2xl rounded-[1.75rem] border border-[#E6E9EF] bg-white p-6 shadow-[0_18px_50px_rgba(43,43,43,0.08)] md:p-9">
+            <LoginForm />
+          </div>
         </div>
       </div>
     </main>
