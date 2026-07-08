@@ -102,13 +102,12 @@ export default async function HomePage({ locale }: HomePageProps = {}) {
             </div>
 
             <h1 className="pp-display mx-auto mb-8 max-w-4xl text-2xl leading-[1.15] tracking-[-0.02em] text-white sm:text-3xl md:text-4xl lg:text-5xl">
-              Generate free HACCP plans, SOPs and food safety records in minutes
+              AI food safety consultant for HACCP and compliance
             </h1>
 
             <p className="mx-auto mb-8 max-w-3xl text-base leading-relaxed text-white/80 sm:text-lg">
-              PinkPepper is AI food safety compliance software for EU and UK food businesses. Generate free HACCP
-              plans, hazard analysis templates, SOPs, and food safety records, then move faster from questions to
-              usable compliance documents.
+              AI food safety consultant for HACCP and compliance. Generate food safety documents, build HACCP
+              paperwork, and get answers to food safety questions.
             </p>
 
             <div className="mb-8 flex justify-center">
