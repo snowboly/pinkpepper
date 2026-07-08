@@ -1,4 +1,4 @@
-import { createElement } from "react";
+import { createElement, type ReactNode } from "react";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it, vi } from "vitest";
@@ -6,8 +6,10 @@ import { describe, expect, it, vi } from "vitest";
 const readPage = (relativePath: string) => readFileSync(join(process.cwd(), relativePath), "utf8");
 
 type ReactElementLike = {
+  type?: unknown;
   props?: {
     children?: unknown;
+    onClick?: (event: { preventDefault(): void }) => unknown;
     [key: string]: unknown;
   };
   [key: string]: unknown;
@@ -81,7 +83,7 @@ describe("signup surface", () => {
     process.env.NEXT_PUBLIC_SITE_URL = "https://preview.pinkpepper.io";
 
     vi.doMock("next/link", () => ({
-      default: ({ children, href }: { children: unknown; href: string }) => createElement("a", { href }, children),
+      default: ({ children, href }: { children: ReactNode; href: string }) => createElement("a", { href }, children),
     }));
     vi.doMock("next/navigation", () => ({
       usePathname: () => "/signup",
