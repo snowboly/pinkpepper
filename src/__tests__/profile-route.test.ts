@@ -115,6 +115,7 @@ describe("profile route", () => {
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
           first_name: "Joao",
+          business_type: "catering",
           onboarding_completed: true,
         }),
       }),
@@ -123,7 +124,9 @@ describe("profile route", () => {
     expect(response.status).toBe(200);
     expect(routeState.updates[0]).toMatchObject({
       first_name: "Joao",
+      business_type: "catering",
       onboarding_completed: true,
     });
+    expect(routeState.syncCalls).toHaveLength(0);
   });
 });

@@ -7,6 +7,29 @@ type CompleteProfileFormProps = {
   initialLastName: string;
   initialCompanyName: string;
   initialMarketingOptIn: boolean;
+  initialBusinessType: string;
+};
+
+const BUSINESS_TYPE_KEYS = [
+  "restaurant_cafe",
+  "food_manufacturer",
+  "retailer_deli",
+  "catering",
+  "street_food",
+  "wholesaler",
+  "consultant",
+  "other",
+] as const;
+
+const BUSINESS_TYPE_LABELS: Record<(typeof BUSINESS_TYPE_KEYS)[number], string> = {
+  restaurant_cafe: "Restaurant or cafe",
+  food_manufacturer: "Food manufacturer",
+  retailer_deli: "Retailer or deli",
+  catering: "Catering",
+  street_food: "Street food",
+  wholesaler: "Wholesaler",
+  consultant: "Consultant",
+  other: "Other",
 };
 
 export default function CompleteProfileForm({
@@ -14,11 +37,13 @@ export default function CompleteProfileForm({
   initialLastName,
   initialCompanyName,
   initialMarketingOptIn,
+  initialBusinessType,
 }: CompleteProfileFormProps) {
   const [firstName, setFirstName] = useState(initialFirstName);
   const [lastName, setLastName] = useState(initialLastName);
   const [companyName, setCompanyName] = useState(initialCompanyName);
   const [marketingOptIn, setMarketingOptIn] = useState(initialMarketingOptIn);
+  const [businessType, setBusinessType] = useState(initialBusinessType);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -28,16 +53,22 @@ export default function CompleteProfileForm({
     setError(null);
 
     try {
+      const payload: Record<string, unknown> = {
+        first_name: firstName,
+        last_name: lastName,
+        company_name: companyName,
+        business_type: businessType,
+        onboarding_completed: true,
+      };
+
+      if (marketingOptIn !== initialMarketingOptIn) {
+        payload.marketing_email_opt_in = marketingOptIn;
+      }
+
       const response = await fetch("/api/profile", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          first_name: firstName,
-          last_name: lastName,
-          company_name: companyName,
-          marketing_email_opt_in: marketingOptIn,
-          onboarding_completed: true,
-        }),
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) {
@@ -92,6 +123,26 @@ export default function CompleteProfileForm({
         />
       </div>
 
+      <div>
+        <p className="mb-2 block text-sm font-medium text-[#2B2B2B]">Business type</p>
+        <div className="grid grid-cols-2 gap-2">
+          {BUSINESS_TYPE_KEYS.map((key) => (
+            <button
+              key={key}
+              type="button"
+              onClick={() => setBusinessType(key)}
+              className={`rounded-xl border px-3 py-2.5 text-left text-xs font-medium transition-colors ${
+                businessType === key
+                  ? "border-[#D96C6C] bg-[#FEF2F2] text-[#C95A5A]"
+                  : "border-[#E8DADA] bg-[#FAF6F5] text-[#2B2B2B] hover:bg-white"
+              }`}
+            >
+              {BUSINESS_TYPE_LABELS[key]}
+            </button>
+          ))}
+        </div>
+      </div>
+
       <label className="flex items-start gap-3 rounded-xl border border-[#E8DADA] bg-[#FAF6F5] px-3 py-3 text-sm text-[#2B2B2B]">
         <input
           type="checkbox"
@@ -104,7 +155,7 @@ export default function CompleteProfileForm({
 
       <button
         type="submit"
-        disabled={loading}
+        disabled={loading || !businessType}
         className="w-full rounded-xl bg-[#D96C6C] py-3 font-bold text-white transition-colors hover:bg-[#C95A5A] disabled:opacity-70"
       >
         {loading ? "Saving..." : "Continue"}

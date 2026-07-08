@@ -16,7 +16,7 @@ export default async function CompleteProfilePage() {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("first_name,last_name,company_name,marketing_email_opt_in")
+    .select("first_name,last_name,company_name,marketing_email_opt_in,business_type")
     .eq("id", user.id)
     .maybeSingle();
 
@@ -35,6 +35,7 @@ export default async function CompleteProfilePage() {
           initialLastName={profile?.last_name ?? ""}
           initialCompanyName={profile?.company_name ?? ""}
           initialMarketingOptIn={Boolean(profile?.marketing_email_opt_in)}
+          initialBusinessType={profile?.business_type ?? ""}
         />
       </div>
     </main>
