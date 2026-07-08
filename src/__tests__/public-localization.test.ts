@@ -101,8 +101,11 @@ function getTextContent(node: unknown): string {
   return getTextContent((node as ReactElementLike).props?.children);
 }
 
-function findFirstFunctionElement(node: unknown): ReactElementLike | null {
-  return findElement(node, (element) => typeof element.type === "function");
+function findFunctionElementByName(node: unknown, name: string): ReactElementLike | null {
+  return findElement(
+    node,
+    (element) => typeof element.type === "function" && (element.type as { name?: string }).name === name,
+  );
 }
 
 describe("public locale config", () => {
@@ -193,11 +196,18 @@ describe("public locale config", () => {
   it("keeps auth entry cross-links locale-aware", () => {
     const loginForm = readPage("src/app/login/LoginForm.tsx");
     const signupForm = readPage("src/app/signup/SignupForm.tsx");
+    const loginShell = readPage("src/app/login/page.tsx");
+    const signupShell = readPage("src/app/signup/page.tsx");
+    const authHeaderLink = readPage("src/app/auth/AuthHeaderLink.tsx");
 
     expect(loginForm).toContain("getPublicPageHref");
     expect(signupForm).toContain("getPublicPageHref");
     expect(loginForm).toContain("usePathname");
     expect(signupForm).toContain("usePathname");
+    expect(loginShell).toContain("AuthHeaderLink");
+    expect(signupShell).toContain("AuthHeaderLink");
+    expect(authHeaderLink).toContain("usePathname");
+    expect(authHeaderLink).toContain("getPublicPageHref(locale, href)");
   });
 
   it("routes localized login paths to the real shared auth surface with safe next preservation", async () => {
@@ -238,7 +248,7 @@ describe("public locale config", () => {
     try {
       const { default: LocalizedLoginPage } = await import("@/app/[locale]/login/page");
       const pageTree = LocalizedLoginPage();
-      const formElement = findFirstFunctionElement(pageTree);
+      const formElement = findFunctionElementByName(pageTree, "LoginForm");
 
       expect(formElement).toBeTruthy();
 
@@ -312,7 +322,7 @@ describe("public locale config", () => {
     try {
       const { default: LocalizedSignupPage } = await import("@/app/[locale]/signup/page");
       const pageTree = LocalizedSignupPage();
-      const formElement = findFirstFunctionElement(pageTree);
+      const formElement = findFunctionElementByName(pageTree, "SignupForm");
 
       expect(formElement).toBeTruthy();
 

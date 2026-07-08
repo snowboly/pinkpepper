@@ -1,4 +1,5 @@
 import { SignupForm } from "@/app/signup/SignupForm";
+import { AuthHeaderLink } from "@/app/auth/AuthHeaderLink";
 
 export default function SignupPage() {
   return (
@@ -12,7 +13,7 @@ export default function SignupPage() {
         <div className="mx-auto max-w-3xl">
           <div className="flex justify-end">
             <p className="text-sm text-[#6B6B6B]">
-              Already have an account? <a href="/login" className="font-semibold text-[#D96C6C] hover:text-[#C95A5A]">Log in</a>
+              Already have an account? <AuthHeaderLink href="/login">Log in</AuthHeaderLink>
             </p>
           </div>
           <div className="mx-auto mt-12 max-w-xl text-center">

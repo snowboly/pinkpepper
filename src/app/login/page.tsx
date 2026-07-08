@@ -1,4 +1,5 @@
 import { LoginForm } from "@/app/login/LoginForm";
+import { AuthHeaderLink } from "@/app/auth/AuthHeaderLink";
 
 export default function LoginPage() {
   return (
@@ -12,7 +13,7 @@ export default function LoginPage() {
         <div className="mx-auto max-w-3xl">
           <div className="flex justify-end">
             <p className="text-sm text-[#6B6B6B]">
-              Need an account? <a href="/signup" className="font-semibold text-[#D96C6C] hover:text-[#C95A5A]">Sign up</a>
+              Need an account? <AuthHeaderLink href="/signup">Sign up</AuthHeaderLink>
             </p>
           </div>
           <div className="mx-auto mt-12 max-w-xl text-center">
