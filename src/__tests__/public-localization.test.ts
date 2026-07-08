@@ -196,18 +196,11 @@ describe("public locale config", () => {
   it("keeps auth entry cross-links locale-aware", () => {
     const loginForm = readPage("src/app/login/LoginForm.tsx");
     const signupForm = readPage("src/app/signup/SignupForm.tsx");
-    const loginShell = readPage("src/app/login/page.tsx");
-    const signupShell = readPage("src/app/signup/page.tsx");
-    const authHeaderLink = readPage("src/app/auth/AuthHeaderLink.tsx");
 
     expect(loginForm).toContain("getPublicPageHref");
     expect(signupForm).toContain("getPublicPageHref");
     expect(loginForm).toContain("usePathname");
     expect(signupForm).toContain("usePathname");
-    expect(loginShell).toContain("AuthHeaderLink");
-    expect(signupShell).toContain("AuthHeaderLink");
-    expect(authHeaderLink).toContain("usePathname");
-    expect(authHeaderLink).toContain("getPublicPageHref(locale, href)");
   });
 
   it("routes localized login paths to the real shared auth surface with safe next preservation", async () => {

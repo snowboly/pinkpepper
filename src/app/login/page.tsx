@@ -1,5 +1,4 @@
 import { LoginForm } from "@/app/login/LoginForm";
-import { AuthHeaderLink } from "@/app/auth/AuthHeaderLink";
 
 export default function LoginPage() {
   return (
@@ -11,11 +10,6 @@ export default function LoginPage() {
 
       <div className="pp-container">
         <div className="mx-auto max-w-3xl">
-          <div className="flex justify-end">
-            <p className="text-sm text-[#6B6B6B]">
-              Need an account? <AuthHeaderLink href="/signup">Sign up</AuthHeaderLink>
-            </p>
-          </div>
           <div className="mx-auto mt-12 max-w-xl text-center">
             <h1 className="text-4xl font-black tracking-tight text-[#2B2B2B] md:text-5xl">Welcome back</h1>
             <p className="mt-3 text-lg text-[#6B6B6B]">Log in to your PinkPepper account.</p>
