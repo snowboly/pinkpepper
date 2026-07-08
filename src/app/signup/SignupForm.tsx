@@ -5,6 +5,11 @@ import { FormEvent, useEffect, useState } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { type PublicLocale } from "@/i18n/public";
 import { getPublicPageHref, isPublicLocale } from "@/lib/public-routes";
+import {
+  buildBrowserAuthCallbackUrl,
+  buildGoogleOAuthOptions,
+  resolveBrowserAuthOrigin,
+} from "@/app/auth/oauth";
 import { validatePassword } from "@/lib/password";
 import { createClient } from "@/utils/supabase/client";
 
@@ -21,6 +26,7 @@ export function SignupForm() {
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const [magicLoading, setMagicLoading] = useState(false);
   const [magicSent, setMagicSent] = useState(false);
   const [signupDone, setSignupDone] = useState(false);
@@ -61,12 +67,15 @@ export function SignupForm() {
       }
 
       const supabase = createClient();
-      const origin = process.env.NEXT_PUBLIC_SITE_URL ?? window.location.origin;
       const { data, error: signUpError } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          emailRedirectTo: `${origin}/auth/callback?next=/dashboard&flow=signup`,
+          emailRedirectTo: buildBrowserAuthCallbackUrl({
+            origin: resolveBrowserAuthOrigin(),
+            next: "/dashboard",
+            flow: "signup",
+          }),
           data: {
             first_name: trimmedFirstName,
             last_name: lastName.trim() || null,
@@ -98,12 +107,15 @@ export function SignupForm() {
     setResendMessage(null);
     try {
       const supabase = createClient();
-      const origin = process.env.NEXT_PUBLIC_SITE_URL ?? window.location.origin;
       const { error: resendError } = await supabase.auth.resend({
         type: "signup",
         email,
         options: {
-          emailRedirectTo: `${origin}/auth/callback?next=/dashboard&flow=signup`,
+          emailRedirectTo: buildBrowserAuthCallbackUrl({
+            origin: resolveBrowserAuthOrigin(),
+            next: "/dashboard",
+            flow: "signup",
+          }),
         },
       });
       if (resendError) {
@@ -132,11 +144,14 @@ export function SignupForm() {
 
     try {
       const supabase = createClient();
-      const origin = process.env.NEXT_PUBLIC_SITE_URL ?? window.location.origin;
       const { error: otpError } = await supabase.auth.signInWithOtp({
         email,
         options: {
-          emailRedirectTo: `${origin}/auth/callback?next=/dashboard&flow=signup`,
+          emailRedirectTo: buildBrowserAuthCallbackUrl({
+            origin: resolveBrowserAuthOrigin(),
+            next: "/dashboard",
+            flow: "signup",
+          }),
           shouldCreateUser: true,
           data: {
             first_name: trimmedFirstName,
@@ -153,6 +168,29 @@ export function SignupForm() {
       setMagicSent(true);
     } finally {
       setMagicLoading(false);
+    }
+  }
+
+  async function onGoogleSignUp() {
+    setGoogleLoading(true);
+    setError(null);
+    setMessage(null);
+
+    try {
+      const supabase = createClient();
+      const { error: oauthError } = await supabase.auth.signInWithOAuth(
+        buildGoogleOAuthOptions({
+          origin: resolveBrowserAuthOrigin(),
+          next: "/dashboard",
+          flow: "signup",
+        }),
+      );
+
+      if (oauthError) {
+        setError(oauthError.message);
+      }
+    } finally {
+      setGoogleLoading(false);
     }
   }
 
@@ -178,6 +216,17 @@ export function SignupForm() {
         </div>
       ) : (
         <>
+          <button
+            type="button"
+            disabled={googleLoading}
+            onClick={() => {
+              void onGoogleSignUp();
+            }}
+            className="mt-6 w-full rounded-xl border border-[#E8DADA] bg-white py-3 text-sm font-semibold text-[#2B2B2B] transition-colors hover:bg-[#FAF6F5] disabled:opacity-70"
+          >
+            {googleLoading ? "Redirecting..." : "Continue with Google"}
+          </button>
+
           <form onSubmit={onSubmit} className="mt-6 space-y-4">
             <div>
               <label className="mb-1 block text-sm font-medium text-[#2B2B2B]">First name</label>

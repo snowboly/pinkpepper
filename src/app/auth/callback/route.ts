@@ -79,15 +79,27 @@ export async function GET(request: NextRequest) {
     return errorResponse;
   }
 
-  // Fire welcome email for signups (via internal API)
-  const isSignup = flow === "signup" || type === "signup";
-  if (isSignup) {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const { data: profile } = user
+    ? await supabase
+        .from("profiles")
+        .select("first_name,welcome_email_sent_at")
+        .eq("id", user.id)
+        .maybeSingle()
+    : { data: null };
+
+  if (flow === "signup" && user?.email_confirmed_at && !profile?.welcome_email_sent_at) {
     const origin = request.nextUrl.origin;
     fetch(`${origin}/api/auth/welcome`, { method: "POST" }).catch(() => {});
   }
 
-  // Redirect to the intended destination
-  const redirectUrl = new URL(next, request.nextUrl.origin);
+  const redirectUrl = new URL(
+    profile?.first_name ? next : "/dashboard/complete-profile",
+    request.nextUrl.origin,
+  );
   const redirectResponse = NextResponse.redirect(redirectUrl);
   response.cookies.getAll().forEach(({ name, value, ...rest }) => {
     redirectResponse.cookies.set(name, value, rest);

@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import {
   publicAuthRoutePaths,
   publicContentRoutePaths,
@@ -17,6 +17,93 @@ import {
 } from "@/lib/public-routes";
 
 const readPage = (relativePath: string) => readFileSync(join(process.cwd(), relativePath), "utf8");
+
+type ReactElementLike = {
+  type?: unknown;
+  props?: {
+    children?: unknown;
+    onClick?: (event: { preventDefault(): void }) => unknown;
+    [key: string]: unknown;
+  };
+  [key: string]: unknown;
+};
+
+function createHookHarness() {
+  const state: unknown[] = [];
+  const effects: Array<() => void> = [];
+  let cursor = 0;
+
+  return {
+    beginRender() {
+      cursor = 0;
+    },
+    flushEffects() {
+      while (effects.length > 0) {
+        effects.shift()?.();
+      }
+    },
+    useEffect(effect: () => void) {
+      effects.push(effect);
+    },
+    useState<T>(initialState: T) {
+      const index = cursor++;
+
+      if (state.length <= index) {
+        state.push(initialState);
+      }
+
+      const setState = (value: T | ((current: T) => T)) => {
+        const currentValue = state[index] as T;
+        state[index] = typeof value === "function" ? (value as (current: T) => T)(currentValue) : value;
+      };
+
+      return [state[index] as T, setState] as const;
+    },
+  };
+}
+
+function findElement(node: unknown, predicate: (value: ReactElementLike) => boolean): ReactElementLike | null {
+  if (!node) return null;
+
+  if (Array.isArray(node)) {
+    for (const child of node) {
+      const match = findElement(child, predicate);
+      if (match) return match;
+    }
+    return null;
+  }
+
+  if (typeof node !== "object") {
+    return null;
+  }
+
+  const element = node as ReactElementLike;
+  if (predicate(element)) {
+    return element;
+  }
+
+  return findElement(element.props?.children, predicate);
+}
+
+function getTextContent(node: unknown): string {
+  if (typeof node === "string" || typeof node === "number") {
+    return String(node);
+  }
+
+  if (Array.isArray(node)) {
+    return node.map(getTextContent).join("");
+  }
+
+  if (!node || typeof node !== "object") {
+    return "";
+  }
+
+  return getTextContent((node as ReactElementLike).props?.children);
+}
+
+function findFirstFunctionElement(node: unknown): ReactElementLike | null {
+  return findElement(node, (element) => typeof element.type === "function");
+}
 
 describe("public locale config", () => {
   it("limits phase 1 public routing to en, fr, de, and pt", () => {
@@ -112,4 +199,150 @@ describe("public locale config", () => {
     expect(loginForm).toContain("usePathname");
     expect(signupForm).toContain("usePathname");
   });
+
+  it("routes localized login paths to the real shared auth surface with safe next preservation", async () => {
+    vi.resetModules();
+
+    const originalWindow = globalThis.window;
+    const hooks = createHookHarness();
+    const signInWithOAuth = vi.fn().mockResolvedValue({ data: {}, error: null });
+    globalThis.window = {
+      location: {
+        search: "?next=%2Fpricing",
+        origin: "https://preview.pinkpepper.io",
+      },
+    } as Window & typeof globalThis;
+
+    vi.doMock("next/navigation", () => ({
+      usePathname: () => "/fr/login",
+    }));
+    vi.doMock("next/link", () => ({
+      default: ({ children }: { children: unknown }) => children,
+    }));
+    vi.doMock("@/utils/supabase/client", () => ({
+      createClient: () => ({
+        auth: {
+          signInWithOAuth,
+        },
+      }),
+    }));
+    vi.doMock("react", async () => {
+      const actual = await vi.importActual<typeof import("react")>("react");
+      return {
+        ...actual,
+        useEffect: hooks.useEffect,
+        useState: hooks.useState,
+      };
+    });
+
+    try {
+      const { default: LocalizedLoginPage } = await import("@/app/[locale]/login/page");
+      const pageTree = LocalizedLoginPage();
+      const formElement = findFirstFunctionElement(pageTree);
+
+      expect(formElement).toBeTruthy();
+
+      hooks.beginRender();
+      (formElement?.type as (() => unknown) | undefined)?.();
+      hooks.flushEffects();
+      hooks.beginRender();
+      const formTree = (formElement?.type as (() => unknown) | undefined)?.();
+      const googleButton = findElement(
+        formTree,
+        (element) => element.type === "button" && getTextContent(element.props?.children).includes("Continue with Google"),
+      );
+
+      expect(googleButton).toBeTruthy();
+
+      await googleButton?.props?.onClick?.({ preventDefault() {} });
+
+      expect(signInWithOAuth).toHaveBeenCalledWith({
+        provider: "google",
+        options: {
+          redirectTo: "https://preview.pinkpepper.io/auth/callback?next=%2Fpricing",
+        },
+      });
+    } finally {
+      globalThis.window = originalWindow;
+      vi.doUnmock("next/navigation");
+      vi.doUnmock("next/link");
+      vi.doUnmock("@/utils/supabase/client");
+      vi.doUnmock("react");
+    }
+  }, 15000);
+
+  it("routes localized signup paths to the real shared auth surface with signup callback intent", async () => {
+    vi.resetModules();
+
+    const originalWindow = globalThis.window;
+    const originalSiteUrl = process.env.NEXT_PUBLIC_SITE_URL;
+    const hooks = createHookHarness();
+    const signInWithOAuth = vi.fn().mockResolvedValue({ data: {}, error: null });
+    process.env.NEXT_PUBLIC_SITE_URL = "https://preview.pinkpepper.io";
+    globalThis.window = {
+      location: {
+        search: "",
+        origin: "https://preview.pinkpepper.io",
+      },
+    } as Window & typeof globalThis;
+
+    vi.doMock("next/navigation", () => ({
+      usePathname: () => "/pt/signup",
+      useSearchParams: () => new URLSearchParams(),
+    }));
+    vi.doMock("next/link", () => ({
+      default: ({ children }: { children: unknown }) => children,
+    }));
+    vi.doMock("@/utils/supabase/client", () => ({
+      createClient: () => ({
+        auth: {
+          signInWithOAuth,
+        },
+      }),
+    }));
+    vi.doMock("react", async () => {
+      const actual = await vi.importActual<typeof import("react")>("react");
+      return {
+        ...actual,
+        useEffect: hooks.useEffect,
+        useState: hooks.useState,
+      };
+    });
+
+    try {
+      const { default: LocalizedSignupPage } = await import("@/app/[locale]/signup/page");
+      const pageTree = LocalizedSignupPage();
+      const formElement = findFirstFunctionElement(pageTree);
+
+      expect(formElement).toBeTruthy();
+
+      hooks.beginRender();
+      (formElement?.type as (() => unknown) | undefined)?.();
+      hooks.flushEffects();
+      hooks.beginRender();
+      const formTree = (formElement?.type as (() => unknown) | undefined)?.();
+      const googleButton = findElement(
+        formTree,
+        (element) => element.type === "button" && getTextContent(element.props?.children).includes("Continue with Google"),
+      );
+
+      expect(googleButton).toBeTruthy();
+
+      await googleButton?.props?.onClick?.({ preventDefault() {} });
+
+      expect(signInWithOAuth).toHaveBeenCalledWith({
+        provider: "google",
+        options: {
+          redirectTo: "https://preview.pinkpepper.io/auth/callback?next=%2Fdashboard&flow=signup",
+        },
+      });
+    } finally {
+      process.env.NEXT_PUBLIC_SITE_URL = originalSiteUrl;
+      globalThis.window = originalWindow;
+      vi.doUnmock("next/navigation");
+      vi.doUnmock("next/link");
+      vi.doUnmock("@/utils/supabase/client");
+      vi.doUnmock("react");
+    }
+  }, 15000);
 });

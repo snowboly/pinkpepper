@@ -107,4 +107,26 @@ describe("profile route", () => {
     });
     expect(routeState.updates[0].marketing_email_unsubscribed_at).toBeTypeOf("string");
   });
+
+  it("marks onboarding complete when profile completion submits a first name", async () => {
+    const response = await PATCH(
+      new Request("https://pinkpepper.io/api/profile", {
+        method: "PATCH",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          first_name: "Joao",
+          business_type: "catering",
+          onboarding_completed: true,
+        }),
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(routeState.updates[0]).toMatchObject({
+      first_name: "Joao",
+      business_type: "catering",
+      onboarding_completed: true,
+    });
+    expect(routeState.syncCalls).toHaveLength(0);
+  });
 });

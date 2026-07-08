@@ -10,6 +10,7 @@ import {
   getSafeNextPath,
   LoginEmailCodePanel,
 } from "@/app/login/login-flow";
+import { buildGoogleOAuthOptions, resolveBrowserAuthOrigin } from "@/app/auth/oauth";
 import { createClient } from "@/utils/supabase/client";
 
 export function LoginForm() {
@@ -24,6 +25,7 @@ export function LoginForm() {
   const [codeSent, setCodeSent] = useState(false);
   const [verifyLoading, setVerifyLoading] = useState(false);
   const [resendLoading, setResendLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const [nextPath, setNextPath] = useState("/dashboard");
   const [flashError, setFlashError] = useState<string | null>(null);
   const currentLocale = (() => {
@@ -60,6 +62,29 @@ export function LoginForm() {
       window.location.href = nextPath;
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function onGoogleSignIn() {
+    setGoogleLoading(true);
+    setError(null);
+    setMessage(null);
+    setFlashError(null);
+
+    try {
+      const supabase = createClient();
+      const { error: oauthError } = await supabase.auth.signInWithOAuth(
+        buildGoogleOAuthOptions({
+          origin: resolveBrowserAuthOrigin(),
+          next: nextPath,
+        }),
+      );
+
+      if (oauthError) {
+        setError(oauthError.message);
+      }
+    } finally {
+      setGoogleLoading(false);
     }
   }
 
@@ -157,6 +182,17 @@ export function LoginForm() {
         </p>
       )}
       {message && <p className="mt-4 rounded-xl border border-[#E8DADA] bg-[#FAF6F5] px-3 py-2 text-sm">{message}</p>}
+
+      <button
+        type="button"
+        disabled={googleLoading}
+        onClick={() => {
+          void onGoogleSignIn();
+        }}
+        className="mt-6 w-full rounded-xl border border-[#E8DADA] bg-white py-3 text-sm font-semibold text-[#2B2B2B] transition-colors hover:bg-[#FAF6F5] disabled:opacity-70"
+      >
+        {googleLoading ? "Redirecting..." : "Continue with Google"}
+      </button>
 
       <form onSubmit={onSubmit} className="mt-6 space-y-4">
         <div>
