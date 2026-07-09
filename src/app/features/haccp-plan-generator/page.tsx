@@ -1,21 +1,22 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { getCspNonce } from "@/lib/security/csp";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "HACCP Plan Template for Small Food Businesses | PinkPepper",
+  title: "AI HACCP Plan Generator for Food Businesses | PinkPepper",
   description:
-    "Use a practical HACCP plan template for small food businesses, then turn it into a tailored draft with PinkPepper. Built for UK and EU food safety workflows.",
+    "Use an AI HACCP plan generator to build a faster first draft for your food business. Map hazards, controls, monitoring, and corrective actions for UK and EU food safety workflows.",
   alternates: {
     canonical: "https://pinkpepper.io/features/haccp-plan-generator",
   },
 };
 
 const quickWins = [
-  "Start with a practical HACCP plan template",
-  "Tailor hazards, controls, and monitoring to your operation",
-  "Prepare a cleaner draft for audit review",
+  "Generate a HACCP first draft from your actual process flow",
+  "Map hazards, controls, monitoring, and corrective actions faster",
+  "Prepare a cleaner draft before internal or expert review",
 ];
 
 const bestFor = [
@@ -40,21 +41,61 @@ const earlySteps = [
   },
 ];
 
-export default function HaccpPlanGeneratorPage() {
+const softwareApplicationSchema = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: "PinkPepper HACCP Plan Generator",
+  applicationCategory: "BusinessApplication",
+  operatingSystem: "Web",
+  url: "https://pinkpepper.io/features/haccp-plan-generator",
+  description:
+    "An AI HACCP plan generator for food businesses that helps teams build a faster first draft for hazards, controls, monitoring, corrective actions, and supporting food safety paperwork.",
+  offers: [
+    {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "EUR",
+    },
+  ],
+};
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://pinkpepper.io" },
+    { "@type": "ListItem", position: 2, name: "Features", item: "https://pinkpepper.io/features/haccp-plan-generator" },
+    { "@type": "ListItem", position: 3, name: "AI HACCP plan generator", item: "https://pinkpepper.io/features/haccp-plan-generator" },
+  ],
+};
+
+export default async function HaccpPlanGeneratorPage() {
+  const nonce = await getCspNonce();
+
   return (
     <main className="overflow-hidden">
+      <script
+        type="application/ld+json"
+        nonce={nonce}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareApplicationSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        nonce={nonce}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <section className="border-b border-[#F1F5F9] bg-[#F8FAFC] py-16 md:py-24">
         <div className="pp-container grid max-w-6xl gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
           <div className="max-w-4xl">
             <p className="text-[11px] font-black uppercase tracking-[0.22em] text-[#E11D48]">
-              HACCP software for small food businesses
+              AI HACCP software for food businesses
             </p>
             <h1 className="pp-display mt-4 text-4xl font-bold leading-[1.05] tracking-tight text-[#0F172A] md:text-6xl">
-              HACCP Plan Template for Small Food Businesses
+              AI HACCP plan generator for food businesses
             </h1>
             <p className="mt-6 max-w-3xl text-lg leading-8 text-[#475569]">
-              Start with a practical HACCP plan template, then tailor it to your products, process steps, hazards, and
-              controls without building everything from scratch.
+              Build a faster HACCP first draft from your real process flow, then refine hazards, controls, monitoring,
+              and corrective actions without starting from a blank document.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
               <Link
@@ -73,7 +114,7 @@ export default function HaccpPlanGeneratorPage() {
             </div>
             <div className="mt-8 flex flex-wrap gap-3 text-sm font-medium text-[#475569]">
               <span className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2">
-                HACCP template structure
+                AI HACCP draft generation
               </span>
               <span className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2">
                 Hazard analysis support
@@ -160,8 +201,8 @@ export default function HaccpPlanGeneratorPage() {
 
             <p>
               PinkPepper is built for businesses that want more than a blank HACCP plan template. You answer a
-              structured series of questions about your product and process, and the software turns that template logic
-              into a practical draft tailored to your operation, grounded in Regulation (EC) 852/2004, Codex
+              structured series of questions about your product and process, and the AI HACCP plan generator turns
+              that process logic into a practical draft tailored to your operation, grounded in Regulation (EC) 852/2004, Codex
               Alimentarius, and GFSI scheme requirements.
             </p>
 
