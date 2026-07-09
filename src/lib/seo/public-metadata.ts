@@ -87,5 +87,5 @@ const DEFAULT_OG_IMAGE = {
   url: `${BASE_URL}/social-card.png`,
   width: 1200,
   height: 630,
-  alt: "PinkPepper - AI Food Safety Compliance Software for EU and UK Businesses",
+  alt: "PinkPepper - AI Food Safety Consultant for HACCP and compliance",
 };

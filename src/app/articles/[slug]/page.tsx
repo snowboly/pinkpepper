@@ -279,7 +279,7 @@ export async function generateArticleMetadata(slug: string, locale: PublicLocale
       images: [
         article.image
           ? { url: article.image, width: 1200, height: 630, alt: article.title }
-          : { url: "https://pinkpepper.io/social-card.png", width: 1200, height: 630, alt: "PinkPepper - AI Food Safety Compliance Software" },
+          : { url: "https://pinkpepper.io/social-card.png", width: 1200, height: 630, alt: "PinkPepper - AI Food Safety Consultant for HACCP and compliance" },
       ],
     },
   };

@@ -215,7 +215,7 @@ describe("SEO surface", () => {
 });
 
 describe("public SEO copy and linking", () => {
-  it("aligns the homepage with the compliance software category narrative", () => {
+  it("aligns the homepage with the consultant category narrative", () => {
     const homepage = readPage("src/app/page.tsx");
     const heroChatForm = readPage("src/components/homepage/HeroChatForm.tsx");
     const demoTabSwitcher = readPage("src/components/homepage/DemoTabSwitcher.tsx");
@@ -458,6 +458,19 @@ describe("public SEO copy and linking", () => {
     expect(templatePage).toContain("HACCP template");
   });
 
+  it("keeps localized public SEO messages aligned with the primary English metadata", () => {
+    const messages = readPage("src/i18n/messages/public/en.json");
+    const publicMetadata = readPage("src/lib/seo/public-metadata.ts");
+
+    expect(messages).toContain("AI food safety consultant for HACCP and compliance.");
+    expect(messages).toContain("PinkPepper | AI Food Safety Consultant for HACCP & Compliance");
+    expect(messages).toContain("AI HACCP Plan Generator for Food Businesses | PinkPepper");
+    expect(messages).toContain("FAQs - HACCP, Allergens, Regulations & More | PinkPepper");
+    expect(messages).not.toContain("AI Food Safety Compliance Software - EU & UK");
+    expect(messages).not.toContain("HACCP Plan Template for Small Food Businesses | PinkPepper");
+    expect(publicMetadata).toContain("PinkPepper - AI Food Safety Consultant for HACCP and compliance");
+  });
+
   it("adds software and breadcrumb schema to the HACCP generator page", () => {
     const generatorPage = readPage("src/app/features/haccp-plan-generator/page.tsx");
 
@@ -508,7 +521,7 @@ describe("public SEO copy and linking", () => {
 
     for (const url of currentPages) {
       const entry = entries.find((item) => item.url === url);
-      expect(new Date(entry?.lastModified ?? "").toISOString()).toContain("2026-06-18");
+      expect(new Date(entry?.lastModified ?? "").toISOString()).toContain("2026-07-09");
     }
   });
 
@@ -569,11 +582,11 @@ describe("premium quality regressions", () => {
     expect(faqs).toContain("FAQs - HACCP, Allergens, Regulations & More | PinkPepper");
   });
 
-  it("uses compliance software wording consistently in shared brand surfaces", () => {
+  it("uses consultant wording consistently in shared brand surfaces", () => {
     const headerFooter = readPage("src/components/site/chrome.tsx");
     const pricing = readPage("src/app/pricing/page.tsx");
 
-    expect(headerFooter).toContain("AI food safety compliance software");
+    expect(headerFooter).toContain("AI food safety consultant");
     expect(headerFooter).not.toContain("AI Food Safety and Compliance Assistant");
     expect(pricing).not.toContain("AI food safety assistant");
   });
@@ -591,7 +604,7 @@ describe("premium quality regressions", () => {
     const chrome = readPage("src/components/site/chrome.tsx");
     const globals = readPage("src/app/globals.css");
 
-    expect(chrome).toContain("AI food safety compliance software");
+    expect(chrome).toContain("AI food safety consultant");
     expect(chrome).toContain("pp-shell-link");
     expect(globals).not.toContain("a[href]:hover,");
     expect(globals).toContain(".pp-interactive");
