@@ -45,7 +45,7 @@ const homepageTestimonials = [
 ] as const;
 
 export const metadata: Metadata = {
-  title: "PinkPepper | AI Food Safety Compliance Software - EU & UK",
+  title: "PinkPepper | AI Food Safety Consultant for HACCP & Compliance",
   description:
     "AI food safety consultant for HACCP and compliance. Generate food safety documents, build HACCP paperwork, and get answers to food safety questions.",
   alternates: {

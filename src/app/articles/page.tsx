@@ -163,7 +163,7 @@ export const metadata: Metadata = {
         url: "https://pinkpepper.io/social-card.png",
         width: 1200,
         height: 630,
-        alt: "PinkPepper - AI Food Safety Compliance Software",
+        alt: "PinkPepper - AI Food Safety Consultant for HACCP and compliance",
       },
     ],
   },

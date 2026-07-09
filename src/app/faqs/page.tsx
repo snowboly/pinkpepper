@@ -17,7 +17,7 @@ const faqPageSchema = {
 };
 
 export const metadata: Metadata = {
-  title: "FAQs — HACCP, Allergens, Regulations & More | PinkPepper",
+  title: "FAQs - HACCP, Allergens, Regulations & More | PinkPepper",
   description:
     "Answers to common questions about PinkPepper: HACCP plans, allergen compliance, EU & UK regulations covered, data security, Consultant vs Auditor mode, and pricing.",
   alternates: {
@@ -25,16 +25,24 @@ export const metadata: Metadata = {
     languages: { "x-default": "https://pinkpepper.io/faqs", en: "https://pinkpepper.io/faqs" },
   },
   openGraph: {
-    title: "FAQs — HACCP, Allergens, Regulations & More | PinkPepper",
+    title: "FAQs - HACCP, Allergens, Regulations & More | PinkPepper",
     description:
       "Answers to common questions about PinkPepper: HACCP plans, allergen compliance, EU & UK regulations covered, data security, Consultant vs Auditor mode, and pricing.",
     locale: "en_GB",
-    images: [{ url: "https://pinkpepper.io/social-card.png", width: 1200, height: 630, alt: "PinkPepper - AI Food Safety Compliance Software" }],
+    images: [
+      {
+        url: "https://pinkpepper.io/social-card.png",
+        width: 1200,
+        height: 630,
+        alt: "PinkPepper - food safety FAQs",
+      },
+    ],
   },
 };
 
 export default async function FaqsPage() {
   const nonce = await getCspNonce();
+
   return (
     <main className="overflow-hidden">
       <script

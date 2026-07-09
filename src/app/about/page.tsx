@@ -5,7 +5,7 @@ import { ArrowRight, Brain, FileCheck, ShieldCheck, Users } from "lucide-react";
 export const metadata = {
   title: "About PinkPepper | AI Food Safety Software",
   description:
-    "PinkPepper is AI food safety compliance software for EU and UK food businesses, built around practical HACCP, allergen, audit, and operational compliance work.",
+    "PinkPepper is an AI food safety consultant for EU and UK food businesses, built around practical HACCP, allergen, audit, and operational compliance work.",
   alternates: {
     canonical: "https://pinkpepper.io/about",
     languages: { "x-default": "https://pinkpepper.io/about", en: "https://pinkpepper.io/about" },
@@ -53,7 +53,7 @@ export default function AboutPage() {
         <div className="pp-container max-w-3xl">
           <p className="text-sm font-semibold uppercase tracking-widest text-[#E11D48]">About PinkPepper</p>
           <h1 className="mt-4 text-4xl font-black tracking-tight text-[#0F172A] md:text-5xl">
-            AI food safety compliance software built around real operational work
+            AI food safety consultant built around real operational work
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-[#475569]">
             PinkPepper was built for food businesses that need faster help with HACCP, allergen records, SOPs, audit

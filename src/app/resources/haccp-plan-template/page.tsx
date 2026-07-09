@@ -3,7 +3,7 @@ import { ResourceTemplate } from "@/components/site/ResourceTemplate";
 import { getCspNonce } from "@/lib/security/csp";
 
 export const metadata: Metadata = {
-  title: "HACCP Plan Template | PinkPepper",
+  title: "Free HACCP Plan Template for Food Businesses | PinkPepper",
   description:
     "Use PinkPepper's AI food safety consultant to generate HACCP documents, build HACCP paperwork, and get answers to food safety questions.",
   alternates: {

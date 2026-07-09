@@ -12,8 +12,8 @@ import { resourceEntries } from "@/lib/resources";
 import { shouldIndexPublicRoute } from "@/lib/seo/indexability";
 
 const BASE_URL = "https://pinkpepper.io";
-const SITE_REFRESHED_AT = "2026-06-18";
-const MARKETING_REFRESHED_AT = "2026-06-18";
+const SITE_REFRESHED_AT = "2026-07-09";
+const MARKETING_REFRESHED_AT = "2026-07-09";
 const USE_CASES_REFRESHED_AT = "2026-05-16";
 const LEGAL_REFRESHED_AT = "2026-04-15";
 

@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     description:
       "Questions about HACCP plans, pricing, or enterprise plans? Contact PinkPepper for food safety compliance support. We respond within 1 business day.",
     locale: "en_GB",
-    images: [{ url: "https://pinkpepper.io/social-card.png", width: 1200, height: 630, alt: "PinkPepper - AI Food Safety Compliance Software" }],
+    images: [{ url: "https://pinkpepper.io/social-card.png", width: 1200, height: 630, alt: "PinkPepper - AI Food Safety Consultant for HACCP and compliance" }],
   },
 };
 
@@ -56,7 +56,7 @@ export default async function ContactPage() {
             Contact &amp; Support
           </h1>
           <p className="mt-4 text-lg text-[#6B6B6B]">
-            We&apos;re here to help with food safety compliance software questions, account issues, and feedback.
+            We&apos;re here to help with food safety consultant questions, account issues, and feedback.
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3 text-sm font-medium text-[#475569]">
             <Link href="/features/haccp-plan-generator" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">

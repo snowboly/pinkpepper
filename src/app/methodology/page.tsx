@@ -88,7 +88,7 @@ export default function MethodologyPage() {
             How PinkPepper forms food safety answers and drafts
           </h1>
           <p className="mt-6 max-w-3xl text-lg leading-relaxed text-[#475569]">
-            PinkPepper is AI food safety compliance software built for EU and UK food businesses. It helps with
+            PinkPepper is an AI food safety consultant built for EU and UK food businesses. It helps with
             HACCP, allergen records, SOPs, monitoring logs, traceability, audit preparation, and import or export
             workflows. This page explains what sits behind the output, what the system is strong at, and where your
             own judgement still matters.

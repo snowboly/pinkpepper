@@ -14,7 +14,7 @@ type NavItem =
   | { href: string; label: string }
   | { label: string; children: { href: string; label: string }[] };
 
-const DEFAULT_BRAND_BLURB = "AI food safety compliance software for EU and UK food businesses.";
+const DEFAULT_BRAND_BLURB = "AI food safety consultant for HACCP and compliance.";
 
 function hasSupabaseAuthCookie(cookieNames: string[]) {
   return cookieNames.some(

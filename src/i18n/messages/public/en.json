@@ -14,7 +14,7 @@
       "getStarted": "Get started"
     },
     "footer": {
-      "brandBlurb": "AI food safety compliance software for EU and UK food businesses.",
+      "brandBlurb": "AI food safety consultant for HACCP and compliance.",
       "productHeading": "Product",
       "resourcesHeading": "Resources",
       "legalHeading": "Security & Legal",
@@ -165,7 +165,7 @@
   },
   "pages": {
     "home": {
-      "title": "PinkPepper | AI Food Safety Compliance Software - EU & UK",
+      "title": "PinkPepper | AI Food Safety Consultant for HACCP & Compliance",
       "description": "AI food safety consultant for HACCP and compliance. Generate food safety documents, build HACCP paperwork, and get answers to food safety questions."
     },
     "pricing": {
@@ -181,17 +181,17 @@
       "description": "A curated library of practical guidance on HACCP, allergen management, food safety audits, and operational compliance for EU and UK food businesses."
     },
     "faqs": {
-      "title": "FAQs — HACCP, Allergens, Regulations & More | PinkPepper",
+      "title": "FAQs - HACCP, Allergens, Regulations & More | PinkPepper",
       "description": "Answers to common questions about PinkPepper: HACCP plans, allergen compliance, EU & UK regulations covered, data security, Consultant vs Auditor mode, and pricing."
     },
     "contact": {
-      "title": "Contact PinkPepper — Food Safety Compliance Support",
+      "title": "Contact PinkPepper - Food Safety Compliance Support",
       "description": "Questions about HACCP plans, pricing, or enterprise plans? Contact PinkPepper for food safety compliance support. We respond within 1 business day."
     },
     "features": {
       "haccpPlanGenerator": {
-        "title": "HACCP Plan Template for Small Food Businesses | PinkPepper",
-        "description": "Use a practical HACCP plan template for small food businesses, then turn it into a tailored draft with PinkPepper. Built for UK and EU food safety workflows."
+        "title": "AI HACCP Plan Generator for Food Businesses | PinkPepper",
+        "description": "Use an AI HACCP plan generator to build a faster first draft for your food business. Map hazards, controls, monitoring, and corrective actions for UK and EU food safety workflows."
       },
       "allergenDocumentation": {
         "title": "Allergen Documentation Software | PinkPepper",
