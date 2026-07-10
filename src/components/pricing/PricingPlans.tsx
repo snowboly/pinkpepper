@@ -45,35 +45,36 @@ export default function PricingPlans({ isLoggedIn, signupHref, ctaNeutral, ctaSe
           ))}
         </div>
       </div>
-      <div className="mx-auto grid max-w-5xl gap-6 lg:grid-cols-3">
-        <div className="flex flex-col rounded-3xl border border-[#E2E8F0] bg-[#FCFDFE] p-8">
+      <div className="mx-auto grid max-w-5xl items-stretch gap-6 lg:grid-cols-3">
+        <div className="flex h-full flex-col rounded-3xl border border-[#E2E8F0] bg-[#FCFDFE] p-8">
           <h2 className="text-xs font-semibold uppercase tracking-[0.18em] text-[#94A3B8]">Free</h2>
-          <p className="mt-4 min-h-[4.5rem] text-sm leading-relaxed text-[#64748B]">Best for testing fit on live questions and everyday checks before you commit.</p>
+          <p className="mt-4 min-h-[4.5rem] text-sm leading-relaxed text-[#64748B]">For trying PinkPepper on everyday food safety questions before upgrading.</p>
+          <div className="mt-4 min-h-7" aria-hidden="true" />
           <div className="mt-6 flex items-baseline gap-1"><span className="text-5xl font-bold tracking-tight text-[#0F172A]"><span className="text-2xl align-super">EUR </span>0</span><span className="text-base text-[#94A3B8]">/month</span></div>
           <div className="my-6 border-t border-[#F1F5F9]" />
-          <PlanList items={["Chat on web and mobile (app coming soon)", "Write, edit, and create food safety content", "Analyze text and images", "Access to curated knowledge base", "Everyday compliance guidance"]} muted />
-          <Link href={signupHref} className={ctaNeutral}>Get started free</Link>
+          <PlanList items={["Chat on web and mobile", "Create food safety drafts", "Analyze text and images", "Access curated food safety guidance", "Basic usage limits"]} muted />
+          <Link href={signupHref} className={`${ctaNeutral} mt-auto`}>Get started free</Link>
         </div>
 
-        <div className="relative flex flex-col rounded-3xl border-2 border-[#E11D48] bg-white p-8">
+        <div className="relative flex h-full flex-col rounded-3xl border-2 border-[#E11D48] bg-white p-8">
           <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-[#E11D48] px-4 py-1 text-xs font-bold text-white">Most Popular</div>
           <h2 className="text-xs font-semibold uppercase tracking-[0.18em] text-[#94A3B8]">Plus</h2>
-          <p className="mt-4 min-h-[4.5rem] text-sm leading-relaxed text-[#64748B]">For teams that use PinkPepper daily for HACCP, SOPs, allergen records, and downloadable templates.</p>
-          {interval === "annual" && <p className="mt-4 inline-flex w-fit rounded-full bg-[#FFF1F2] px-3 py-1 text-xs font-bold text-[#BE123C]">Save 10%</p>}
+          <p className="mt-4 min-h-[4.5rem] text-sm leading-relaxed text-[#64748B]">For small food teams using PinkPepper daily for HACCP, SOPs, records, and templates.</p>
+          <div className="mt-4 min-h-7">{interval === "annual" && <p className="inline-flex w-fit rounded-full bg-[#FFF1F2] px-3 py-1 text-xs font-bold text-[#BE123C]">Save 10%</p>}</div>
           <Price price={plusPrice.price} suffix={plusPrice.suffix} note={plusPrice.note} />
           <div className="my-6 border-t border-[#FCE7F3]" />
-          <PlanList items={["Everything in Free", "Heavier day-to-day Consultant use", "Higher daily usage limits", "Unlimited saved conversations and projects", "Access to downloadable templates"]} />
-          <PricingActions isLoggedIn={isLoggedIn} plan="plus" interval={interval} label={plusPrice.cta} className={ctaSecondary} />
+          <PlanList items={["Everything in Free", "Higher daily usage limits", "Saved conversations and projects", "Downloadable templates", "Best for daily compliance work"]} />
+          <PricingActions isLoggedIn={isLoggedIn} plan="plus" interval={interval} label={plusPrice.cta} className={`${ctaSecondary} mt-auto`} />
         </div>
 
-        <div className="flex flex-col rounded-3xl border border-[#F9A8D4] bg-[#FFF8FB] p-8">
+        <div className="flex h-full flex-col rounded-3xl border border-[#F9A8D4] bg-[#FFF8FB] p-8">
           <h2 className="text-xs font-semibold uppercase tracking-[0.18em] text-[#BE123C]">Pro</h2>
-          <p className="mt-4 min-h-[4.5rem] text-sm leading-relaxed text-[#64748B]">For teams that want both AI modes, stronger audit workflows, and careful human food safety consultancy for higher-risk work.</p>
-          {interval === "annual" && <p className="mt-4 inline-flex w-fit rounded-full bg-white px-3 py-1 text-xs font-bold text-[#BE123C]">Save 5%</p>}
+          <p className="mt-4 min-h-[4.5rem] text-sm leading-relaxed text-[#64748B]">For higher-risk teams needing stronger AI workflows plus human food safety consultancy.</p>
+          <div className="mt-4 min-h-7">{interval === "annual" && <p className="inline-flex w-fit rounded-full bg-white px-3 py-1 text-xs font-bold text-[#BE123C]">Save 5%</p>}</div>
           <Price price={proPrice.price} suffix={proPrice.suffix} note={proPrice.note} />
           <div className="my-6 border-t border-[#F1F5F9]" />
-          <PlanList items={["Everything in Plus", "More capacity for higher-risk work", "Highest daily usage limits", "Access to Auditor mode", "2h/month of human food safety consultancy", "Priority support"]} />
-          <PricingActions isLoggedIn={isLoggedIn} plan="pro" interval={interval} label={proPrice.cta} className={ctaPrimary} />
+          <PlanList items={["Everything in Plus", "Highest usage limits", "Auditor mode access", "2h/month human consultancy", "Priority support"]} />
+          <PricingActions isLoggedIn={isLoggedIn} plan="pro" interval={interval} label={proPrice.cta} className={`${ctaPrimary} mt-auto`} />
         </div>
       </div>
     </div>
