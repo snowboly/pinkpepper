@@ -84,7 +84,7 @@ export default function PricingActions({
         }
       }
 
-      track("checkout_started", { plan, interval, source });
+      track("checkout_started", { plan, source });
       const res = await fetch("/api/billing/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
