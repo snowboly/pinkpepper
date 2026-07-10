@@ -71,4 +71,15 @@ describe("sendEmail", () => {
     expect(thrownResult.ok).toBe(false);
     expect(thrownResult).toMatchObject({ reason: "resend_error" });
   });
+
+  it("throws via sendEmailOrThrow when Resend reports failure", async () => {
+    process.env.RESEND_API_KEY = "re_test";
+    process.env.RESEND_FROM_EMAIL = "PinkPepper <hello@example.com>";
+    resendState.sendResult = { data: null, error: { message: "Domain not verified" } };
+    const { SendEmailError, sendEmailOrThrow } = await import("@/lib/email");
+
+    await expect(
+      sendEmailOrThrow({ to: "owner@example.com", subject: "Hi", html: "<p>Hi</p>" })
+    ).rejects.toBeInstanceOf(SendEmailError);
+  });
 });

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { detectDocumentMimeFromBytes } from "@/lib/documents/extract";
-import { sendEmail } from "@/lib/email";
+import { sendEmailOrThrow } from "@/lib/email";
 import { sanitizeUntrustedFilename } from "@/lib/rag";
 import { createClient } from "@/utils/supabase/server";
 
@@ -92,7 +92,7 @@ export async function POST(request: Request) {
   const safeEmailHeader = stripNewlines(user.email ?? "");
 
   try {
-    await sendEmail({
+    await sendEmailOrThrow({
       to: adminInbox,
       subject: `[Review Request] ${safeSubjectHeader} - ${safeEmailHeader}`,
       html,

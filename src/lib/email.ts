@@ -17,6 +17,13 @@ type EmailInput = {
   attachments?: EmailAttachment[];
 };
 
+export class SendEmailError extends Error {
+  constructor(public readonly result: Extract<SendEmailResult, { ok: false }>) {
+    super(`Email could not be sent: ${result.reason}`);
+    this.name = "SendEmailError";
+  }
+}
+
 export async function sendEmail(input: EmailInput): Promise<SendEmailResult> {
   const apiKey = process.env.RESEND_API_KEY;
   const from = getResendFromAddress();
@@ -46,4 +53,14 @@ export async function sendEmail(input: EmailInput): Promise<SendEmailResult> {
     console.error("sendEmail: Resend threw while sending email", error);
     return { ok: false, reason: "resend_error", error };
   }
+}
+
+export async function sendEmailOrThrow(input: EmailInput): Promise<Extract<SendEmailResult, { ok: true }>> {
+  const result = await sendEmail(input);
+
+  if (!result.ok) {
+    throw new SendEmailError(result);
+  }
+
+  return result;
 }
