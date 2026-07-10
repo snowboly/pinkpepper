@@ -3,7 +3,7 @@ import { createClient } from "@/utils/supabase/server";
 import { createAdminClient } from "@/utils/supabase/admin";
 import type { Database } from "@/types/database.types";
 import { resolveUserAccess } from "@/lib/access";
-import { sendEmail } from "@/lib/email";
+import { sendEmailOrThrow } from "@/lib/email";
 import { uploadFile, BUCKETS } from "@/lib/storage";
 import {
   buildReviewPickedUpEmail,
@@ -200,7 +200,7 @@ export async function PATCH(
       }
 
       if (emailContent) {
-        await sendEmail({ to: userProfile.email, ...emailContent });
+        await sendEmailOrThrow({ to: userProfile.email, ...emailContent });
       }
     }
   } catch (err) {

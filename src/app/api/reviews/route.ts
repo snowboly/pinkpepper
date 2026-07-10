@@ -4,7 +4,7 @@ import { createAdminClient } from "@/utils/supabase/admin";
 import { resolveUserAccess } from "@/lib/access";
 import { TIER_CAPABILITIES } from "@/lib/tier";
 import { countUsageSince, utcMonthStartIso } from "@/lib/policy";
-import { sendEmail } from "@/lib/email";
+import { sendEmailOrThrow } from "@/lib/email";
 import { buildNewReviewAdminEmail, buildReviewSubmittedEmail } from "@/lib/review-emails";
 
 export const dynamic = "force-dynamic";
@@ -223,7 +223,7 @@ export async function POST(request: Request) {
         priority,
         notes: notes.length > 0 ? notes : null,
       });
-      await sendEmail({ to: allAdmins, ...emailContent });
+      await sendEmailOrThrow({ to: allAdmins, ...emailContent });
     }
   } catch (err) {
     console.error("Failed to send admin notification email:", err);
@@ -236,7 +236,7 @@ export async function POST(request: Request) {
         documentCategory,
         priority,
       });
-      await sendEmail({ to: user.email, ...confirmationEmail });
+      await sendEmailOrThrow({ to: user.email, ...confirmationEmail });
     } catch (err) {
       console.error("Failed to send review submission confirmation email:", err);
     }
