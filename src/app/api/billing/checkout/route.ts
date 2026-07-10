@@ -4,7 +4,7 @@ import { createAdminClient } from "@/utils/supabase/admin";
 import { getStripe } from "@/lib/billing/stripe";
 import { isAllowedBillingRequest, getTrustedSiteOrigin } from "@/lib/billing/request-origin";
 import { billingLimiter, checkRateLimit } from "@/lib/ratelimit";
-import { getStripePriceIdForPlan, hasStripePriceConfigError, isBillingInterval, isBillingTier } from "@/lib/billing/subscription-price-config";
+import { getStripePriceIdForPlan, hasStripePriceConfigError, isBillingInterval, isBillingTier } from "@/lib/billing/price-config";
 
 export const dynamic = "force-dynamic";
 

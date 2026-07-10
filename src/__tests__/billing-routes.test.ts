@@ -398,7 +398,7 @@ describe("billing route origin validation", () => {
   it("returns a billing configuration error when all configured monthly plan envs are invalid", async () => {
     process.env.STRIPE_PLUS_MONTHLY_PRICE_ID = "prod_bad";
     process.env.STRIPE_PLUS_PRICE_ID = "";
-
+    
     const response = await checkoutPost(
       new Request("https://pinkpepper.io/api/billing/checkout", {
         method: "POST",
@@ -415,6 +415,7 @@ describe("billing route origin validation", () => {
     await expect(response.json()).resolves.toEqual({
       error: "Billing is misconfigured. Stripe price IDs must start with `price_`.",
     });
+    expect(createCheckoutSessionMock).not.toHaveBeenCalled();
   });
 
   it("returns structured json when Stripe checkout creation throws", async () => {
