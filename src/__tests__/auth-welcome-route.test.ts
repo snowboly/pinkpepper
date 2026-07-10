@@ -13,6 +13,7 @@ const welcomeState = vi.hoisted(() => ({
     welcome_email_sent_at: null,
   } as Record<string, unknown> | null,
   sentEmails: [] as Array<Record<string, unknown>>,
+  sendEmailResult: { ok: true, id: "email_123" } as { ok: true; id?: string } | { ok: false; reason: "missing_config" | "resend_error"; error?: unknown },
   updatePayloads: [] as Array<Record<string, unknown>>,
   syncCalls: [] as Array<Record<string, unknown>>,
 }));
@@ -22,7 +23,7 @@ vi.mock("@/utils/supabase/server", () => ({
     auth: {
       getUser: async () => ({ data: { user: welcomeState.user } }),
     },
-    from: (table: string) => ({
+    from: () => ({
       select: () => ({
         eq: () => ({
           maybeSingle: async () => ({ data: welcomeState.profile, error: null }),
@@ -41,6 +42,7 @@ vi.mock("@/utils/supabase/server", () => ({
 vi.mock("@/lib/email", () => ({
   sendEmail: async (payload: Record<string, unknown>) => {
     welcomeState.sentEmails.push(payload);
+    return welcomeState.sendEmailResult;
   },
 }));
 
@@ -65,6 +67,7 @@ describe("auth welcome route", () => {
       welcome_email_sent_at: null,
     };
     welcomeState.sentEmails = [];
+    welcomeState.sendEmailResult = { ok: true, id: "email_123" };
     welcomeState.updatePayloads = [];
     welcomeState.syncCalls = [];
   });
@@ -120,6 +123,31 @@ describe("auth welcome route", () => {
 
     expect(response.status).toBe(200);
     expect(welcomeState.sentEmails).toHaveLength(0);
+    expect(welcomeState.updatePayloads).toHaveLength(0);
+  }, 30000);
+
+  it("updates welcome_email_sent_at only after the email send succeeds", async () => {
+    const { POST } = await import("@/app/api/auth/welcome/route");
+
+    const response = await POST();
+
+    expect(response.status).toBe(200);
+    expect(welcomeState.sentEmails).toHaveLength(1);
+    expect(welcomeState.updatePayloads).toHaveLength(1);
+    expect(welcomeState.updatePayloads[0].welcome_email_sent_at).toBeTypeOf("string");
+  }, 30000);
+
+  it("does not update welcome_email_sent_at when the email send fails", async () => {
+    welcomeState.sendEmailResult = { ok: false, reason: "resend_error", error: { message: "bad sender" } };
+
+    const { POST } = await import("@/app/api/auth/welcome/route");
+
+    const response = await POST();
+    const body = await response.json();
+
+    expect(response.status).toBe(500);
+    expect(body).toEqual({ ok: false, error: "Welcome email could not be sent." });
+    expect(welcomeState.sentEmails).toHaveLength(1);
     expect(welcomeState.updatePayloads).toHaveLength(0);
   }, 30000);
 });

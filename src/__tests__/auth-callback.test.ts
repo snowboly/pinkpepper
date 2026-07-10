@@ -100,6 +100,7 @@ vi.mock("next/server", () => {
   }
 
   return { NextResponse: MockNextResponse };
+
 });
 
 import { GET } from "@/app/auth/callback/route";
@@ -167,8 +168,42 @@ describe("auth callback route", () => {
     expect(authState.fetchCalls).toEqual([
       {
         input: "https://pinkpepper.io/api/auth/welcome",
-        init: { method: "POST" },
+        init: {
+          method: "POST",
+          headers: { Cookie: "sb-access-token=access-token; sb-refresh-token=refresh-token" },
+        },
       },
     ]);
+  });
+
+  it("triggers the welcome email route for a new confirmed OAuth user when flow is missing", async () => {
+    const response = await GET(
+      makeRequest("https://pinkpepper.io/auth/callback?code=pkce-code&next=/dashboard") as never,
+    );
+
+    expect(response.headers.get("location")).toBe("https://pinkpepper.io/dashboard");
+    expect(authState.fetchCalls).toEqual([
+      {
+        input: "https://pinkpepper.io/api/auth/welcome",
+        init: {
+          method: "POST",
+          headers: { Cookie: "sb-access-token=access-token; sb-refresh-token=refresh-token" },
+        },
+      },
+    ]);
+  });
+
+  it("does not duplicate the welcome trigger when the profile already has a sent timestamp", async () => {
+    authState.profile = {
+      first_name: "Joao",
+      welcome_email_sent_at: "2026-07-07T10:05:00.000Z",
+    };
+
+    const response = await GET(
+      makeRequest("https://pinkpepper.io/auth/callback?code=pkce-code&next=/dashboard") as never,
+    );
+
+    expect(response.headers.get("location")).toBe("https://pinkpepper.io/dashboard");
+    expect(authState.fetchCalls).toHaveLength(0);
   });
 });

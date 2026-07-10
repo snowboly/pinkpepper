@@ -91,9 +91,22 @@ export async function GET(request: NextRequest) {
         .maybeSingle()
     : { data: null };
 
-  if (flow === "signup" && user?.email_confirmed_at && !profile?.welcome_email_sent_at) {
+  if (user?.email_confirmed_at && !profile?.welcome_email_sent_at) {
     const origin = request.nextUrl.origin;
-    fetch(`${origin}/api/auth/welcome`, { method: "POST" }).catch(() => {});
+    const cookieHeader = response.cookies
+      .getAll()
+      .map(({ name, value }) => `${name}=${value}`)
+      .join("; ");
+
+    console.info("auth callback triggering welcome email route", { userId: user.id, flow });
+    fetch(`${origin}/api/auth/welcome`, {
+      method: "POST",
+      ...(cookieHeader ? { headers: { Cookie: cookieHeader } } : {}),
+    }).catch((error) => {
+      console.error("auth callback welcome email trigger failed", { userId: user.id, error });
+    });
+  } else if (user?.email_confirmed_at && profile?.welcome_email_sent_at) {
+    console.info("auth callback skipped welcome email trigger: already sent", { userId: user.id });
   }
 
   const redirectUrl = new URL(
