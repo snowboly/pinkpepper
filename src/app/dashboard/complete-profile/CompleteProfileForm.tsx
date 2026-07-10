@@ -61,9 +61,7 @@ export default function CompleteProfileForm({
         onboarding_completed: true,
       };
 
-      if (marketingOptIn !== initialMarketingOptIn) {
-        payload.marketing_email_opt_in = marketingOptIn;
-      }
+      payload.marketing_email_opt_in = marketingOptIn;
 
       const response = await fetch("/api/profile", {
         method: "PATCH",
@@ -150,7 +148,7 @@ export default function CompleteProfileForm({
           onChange={(event) => setMarketingOptIn(event.target.checked)}
           className="mt-0.5 h-4 w-4 rounded border border-[#D0D7DE] text-[#D96C6C] focus:ring-[#D96C6C]"
         />
-        <span>Email me about new features, document templates, and occasional offers.</span>
+        <span>Email me marketing updates about new features, document templates, and occasional offers. This is separate from transactional account emails, which we may still send when needed.</span>
       </label>
 
       <button

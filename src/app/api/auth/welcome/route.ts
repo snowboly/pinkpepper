@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
 import { sendEmail } from "@/lib/email";
 import { buildWelcomeEmail } from "@/lib/auth-emails";
-import { syncMarketingContact } from "@/lib/resend/contacts";
 
 export async function POST() {
   const supabase = await createClient();
@@ -18,18 +17,9 @@ export async function POST() {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("first_name,last_name,marketing_email_opt_in,welcome_email_sent_at")
+    .select("first_name,welcome_email_sent_at")
     .eq("id", user.id)
     .maybeSingle();
-
-  if (profile?.marketing_email_opt_in) {
-    await syncMarketingContact({
-      email: user.email,
-      firstName: profile.first_name ?? null,
-      lastName: profile.last_name ?? null,
-      subscribed: true,
-    });
-  }
 
   if (profile?.welcome_email_sent_at) {
     return NextResponse.json({ ok: true });

@@ -108,6 +108,39 @@ describe("profile route", () => {
     expect(routeState.updates[0].marketing_email_unsubscribed_at).toBeTypeOf("string");
   });
 
+  it("profile completion with marketing disabled stores unsubscribe state and syncs unsubscribed contact", async () => {
+    const response = await PATCH(
+      new Request("https://pinkpepper.io/api/profile", {
+        method: "PATCH",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          first_name: "Joao",
+          last_name: "Silva",
+          business_type: "catering",
+          onboarding_completed: true,
+          marketing_email_opt_in: false,
+        }),
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(routeState.updates[0]).toMatchObject({
+      first_name: "Joao",
+      last_name: "Silva",
+      business_type: "catering",
+      onboarding_completed: true,
+      marketing_email_opt_in: false,
+      marketing_email_opted_at: null,
+    });
+    expect(routeState.syncCalls[0]).toMatchObject({
+      email: "owner@example.com",
+      firstName: "Joao",
+      lastName: "Silva",
+      subscribed: false,
+    });
+    expect(routeState.updates[0].marketing_email_unsubscribed_at).toBeTypeOf("string");
+  });
+
   it("marks onboarding complete when profile completion submits a first name", async () => {
     const response = await PATCH(
       new Request("https://pinkpepper.io/api/profile", {

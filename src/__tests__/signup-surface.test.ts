@@ -128,6 +128,8 @@ describe("signup surface", () => {
           redirectTo: "https://preview.pinkpepper.io/auth/callback?next=%2Fdashboard&flow=signup",
         },
       });
+      expect(signInWithOAuth.mock.calls[0][0]).not.toHaveProperty("data");
+      expect(JSON.stringify(signInWithOAuth.mock.calls[0][0])).not.toContain("marketing_email_opt_in");
     } finally {
       process.env.NEXT_PUBLIC_SITE_URL = originalSiteUrl;
       vi.doUnmock("next/link");
