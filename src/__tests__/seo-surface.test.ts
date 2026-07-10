@@ -631,6 +631,22 @@ describe("premium quality regressions", () => {
     expect(pricingActions).toContain('track("checkout_started", { plan, source })');
   });
 
+  it("keeps pricing billing UI and legal billing-period copy aligned", () => {
+    const pricingPlans = readPage("src/components/pricing/PricingPlans.tsx");
+    const pricingActions = readPage("src/components/pricing/PricingActions.tsx");
+    const terms = readPage("src/app/legal/terms/page.tsx");
+
+    expect(pricingPlans).toContain('useState<BillingInterval>("monthly")');
+    expect(pricingPlans).toContain('price: "205"');
+    expect(pricingPlans).toContain('price: "1,129"');
+    expect(pricingPlans).toContain("Save 10%");
+    expect(pricingPlans).toContain("Save 5%");
+    expect(pricingPlans).toContain('interval={interval}');
+    expect(pricingActions).toContain('body: JSON.stringify({ plan, interval })');
+    expect(terms).toContain("monthly or annual billing interval selected at checkout");
+    expect(terms).not.toContain("Subscriptions are billed monthly in advance");
+  });
+
   it("makes the Pro tier clearly about Auditor mode plus human consultancy", () => {
     const pricing = readPage("src/app/pricing/page.tsx");
 
