@@ -88,6 +88,24 @@ describe("auth welcome route", () => {
     expect(welcomeState.updatePayloads[0].welcome_email_sent_at).toBeTypeOf("string");
   }, 30000);
 
+  it("keeps welcome email delivery independent from marketing contact sync", async () => {
+    welcomeState.profile = {
+      first_name: "Joao",
+      last_name: "Silva",
+      marketing_email_opt_in: true,
+      welcome_email_sent_at: null,
+    };
+
+    const { POST } = await import("@/app/api/auth/welcome/route");
+
+    const response = await POST();
+
+    expect(response.status).toBe(200);
+    expect(welcomeState.sentEmails).toHaveLength(1);
+    expect(welcomeState.syncCalls).toHaveLength(0);
+    expect(welcomeState.updatePayloads[0].welcome_email_sent_at).toBeTypeOf("string");
+  }, 30000);
+
   it("does not resend when the profile already has a sent timestamp", async () => {
     welcomeState.profile = {
       first_name: "Joao",
