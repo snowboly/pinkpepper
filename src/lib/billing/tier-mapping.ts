@@ -1,5 +1,5 @@
 import type { SubscriptionTier } from "@/lib/tier";
-import { getConfiguredStripePriceIds, normalizeStripePriceId } from "@/lib/billing/price-config";
+import { getConfiguredStripePriceIds, normalizeStripePriceId } from "@/lib/billing/subscription-price-config";
 
 export type StripeSubscriptionSnapshot = {
   status: string;
