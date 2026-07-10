@@ -18,19 +18,28 @@ function getNonBlankEnvValue(value: string | undefined): string | undefined {
   return value?.trim() ? value : undefined;
 }
 
+function getMonthlyPriceEnvValue(preferredValue: string | undefined, legacyValue: string | undefined): string | undefined {
+  const preferredPriceId = normalizeStripePriceId(preferredValue);
+  if (preferredPriceId) {
+    return preferredPriceId;
+  }
+
+  return legacyValue;
+}
+
 function getLegacyMonthlyPriceEnvValue(plan: BillingTier): string | undefined {
   return plan === "plus" ? process.env.STRIPE_PLUS_PRICE_ID : process.env.STRIPE_PRO_PRICE_ID;
 }
 
 function getConfiguredPriceEnvValue(plan: BillingTier, interval: BillingInterval): string | undefined {
   if (plan === "plus" && interval === "monthly") {
-    return getNonBlankEnvValue(process.env.STRIPE_PLUS_MONTHLY_PRICE_ID) ?? process.env.STRIPE_PLUS_PRICE_ID;
+    return getMonthlyPriceEnvValue(process.env.STRIPE_PLUS_MONTHLY_PRICE_ID, process.env.STRIPE_PLUS_PRICE_ID);
   }
   if (plan === "plus" && interval === "annual") {
     return process.env.STRIPE_PLUS_ANNUAL_PRICE_ID;
   }
   if (plan === "pro" && interval === "monthly") {
-    return getNonBlankEnvValue(process.env.STRIPE_PRO_MONTHLY_PRICE_ID) ?? process.env.STRIPE_PRO_PRICE_ID;
+    return getMonthlyPriceEnvValue(process.env.STRIPE_PRO_MONTHLY_PRICE_ID, process.env.STRIPE_PRO_PRICE_ID);
   }
   return process.env.STRIPE_PRO_ANNUAL_PRICE_ID;
 }
@@ -93,5 +102,15 @@ export function hasStripePriceConfigError(
   }
 
   const envValue = getConfiguredPriceEnvValue(plan, interval);
-  return Boolean(envValue && !normalizeStripePriceId(envValue));
+  if (envValue && !normalizeStripePriceId(envValue)) {
+    return true;
+  }
+
+  if (interval !== "monthly") {
+    return false;
+  }
+
+  const preferredEnvValue =
+    plan === "plus" ? getNonBlankEnvValue(process.env.STRIPE_PLUS_MONTHLY_PRICE_ID) : getNonBlankEnvValue(process.env.STRIPE_PRO_MONTHLY_PRICE_ID);
+  return Boolean(preferredEnvValue && !normalizeStripePriceId(preferredEnvValue) && !normalizeStripePriceId(getLegacyMonthlyPriceEnvValue(plan)));
 }
