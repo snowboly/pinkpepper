@@ -225,7 +225,7 @@ describe("syncSubscriptionFromStripe", () => {
     ["price_pro_monthly", "pro"],
     ["price_pro_legacy", "pro"],
     ["price_pro_annual", "pro"],
-  ] as const)("maps Stripe price ID %s to %s entitlements", async (priceId, tier) => {
+  ] as const)("maps configured and legacy Stripe price ID %s to %s entitlements", async (priceId, tier) => {
     adminState.subscriptionRow = { user_id: "user_123" };
     stripeRetrieveSubscriptionMock.mockRejectedValue(new Error("not needed in this test"));
     getUserByIdMock.mockResolvedValue({ data: { user: { email: "owner@example.com" } } });

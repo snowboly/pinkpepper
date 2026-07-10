@@ -29,9 +29,13 @@ function getConfiguredPriceEnvValue(plan: BillingTier, interval: BillingInterval
 
 function getConfiguredPriceEnvValuesForMapping(tier: BillingTier, interval: BillingInterval): Array<string | undefined> {
   if (tier === "plus" && interval === "monthly") {
+    // Webhook/reconcile tier detection must recognize both the rollout-era
+    // monthly price and the legacy alias so existing subscriptions keep access.
     return [process.env.STRIPE_PLUS_MONTHLY_PRICE_ID, process.env.STRIPE_PLUS_PRICE_ID];
   }
   if (tier === "pro" && interval === "monthly") {
+    // See Plus monthly above: checkout can prefer the new env var, but inbound
+    // Stripe events may still reference subscriptions created with the alias.
     return [process.env.STRIPE_PRO_MONTHLY_PRICE_ID, process.env.STRIPE_PRO_PRICE_ID];
   }
   return [getConfiguredPriceEnvValue(tier, interval)];
