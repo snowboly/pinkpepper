@@ -20,6 +20,15 @@ describe("subscription Stripe price configuration", () => {
     expect(getStripePriceIdForPlan("pro", "monthly")).toBe("price_pro_legacy");
   });
 
+
+  it("falls back to legacy monthly aliases when preferred monthly env vars are invalid", () => {
+    process.env.STRIPE_PLUS_MONTHLY_PRICE_ID = "prod_plus_wrong";
+    process.env.STRIPE_PRO_MONTHLY_PRICE_ID = "not_a_price";
+
+    expect(getStripePriceIdForPlan("plus", "monthly")).toBe("price_plus_legacy");
+    expect(getStripePriceIdForPlan("pro", "monthly")).toBe("price_pro_legacy");
+  });
+
   it.each([
     ["price_plus_monthly", "plus"],
     ["price_plus_legacy", "plus"],

@@ -1,6 +1,8 @@
 export type BillingTier = "plus" | "pro";
 export type BillingInterval = "monthly" | "annual";
 
+type PriceConfig = { tier: BillingTier; interval: BillingInterval; priceId: string };
+
 export function normalizeStripePriceId(value: string | null | undefined): string | null {
   if (!value) {
     return null;
@@ -14,34 +16,41 @@ export function normalizeStripePriceId(value: string | null | undefined): string
   return normalized;
 }
 
-function preferConfiguredStripePriceId(
-  preferred: string | null | undefined,
-  fallback: string | null | undefined
-): string | undefined {
-  return preferred?.trim() ? preferred : fallback ?? undefined;
+function hasNonBlankValue(value: string | null | undefined): boolean {
+  return Boolean(value?.trim());
 }
 
-function getConfiguredPriceEnvValue(plan: BillingTier, interval: BillingInterval): string | undefined {
-  if (plan === "plus" && interval === "monthly") {
-    return preferConfiguredStripePriceId(process.env.STRIPE_PLUS_MONTHLY_PRICE_ID, process.env.STRIPE_PLUS_PRICE_ID);
-  }
-  if (plan === "plus" && interval === "annual") {
-    return process.env.STRIPE_PLUS_ANNUAL_PRICE_ID;
-  }
-  if (plan === "pro" && interval === "monthly") {
-    return preferConfiguredStripePriceId(process.env.STRIPE_PRO_MONTHLY_PRICE_ID, process.env.STRIPE_PRO_PRICE_ID);
-  }
-  return process.env.STRIPE_PRO_ANNUAL_PRICE_ID;
+function getMonthlyEnvValues(tier: BillingTier): [preferred: string | undefined, legacy: string | undefined] {
+  return tier === "plus"
+    ? [process.env.STRIPE_PLUS_MONTHLY_PRICE_ID, process.env.STRIPE_PLUS_PRICE_ID]
+    : [process.env.STRIPE_PRO_MONTHLY_PRICE_ID, process.env.STRIPE_PRO_PRICE_ID];
 }
 
-function getConfiguredPriceEnvValuesForMapping(tier: BillingTier, interval: BillingInterval): Array<string | undefined> {
-  if (tier === "plus" && interval === "monthly") {
-    return [process.env.STRIPE_PLUS_MONTHLY_PRICE_ID, process.env.STRIPE_PLUS_PRICE_ID];
+function getAnnualEnvValue(tier: BillingTier): string | undefined {
+  return tier === "plus" ? process.env.STRIPE_PLUS_ANNUAL_PRICE_ID : process.env.STRIPE_PRO_ANNUAL_PRICE_ID;
+}
+
+function getConfiguredPriceId(plan: BillingTier, interval: BillingInterval): string | null {
+  if (interval === "annual") {
+    return normalizeStripePriceId(getAnnualEnvValue(plan));
   }
-  if (tier === "pro" && interval === "monthly") {
-    return [process.env.STRIPE_PRO_MONTHLY_PRICE_ID, process.env.STRIPE_PRO_PRICE_ID];
+
+  const [preferred, legacy] = getMonthlyEnvValues(plan);
+  return normalizeStripePriceId(preferred) ?? normalizeStripePriceId(legacy);
+}
+
+function getConfiguredPriceIdsForMapping(tier: BillingTier, interval: BillingInterval): string[] {
+  if (interval === "annual") {
+    return [getAnnualEnvValue(tier)].flatMap((envValue) => {
+      const priceId = normalizeStripePriceId(envValue);
+      return priceId ? [priceId] : [];
+    });
   }
-  return [getConfiguredPriceEnvValue(tier, interval)];
+
+  return getMonthlyEnvValues(tier).flatMap((envValue) => {
+    const priceId = normalizeStripePriceId(envValue);
+    return priceId ? [priceId] : [];
+  });
 }
 
 export function isBillingTier(value: unknown): value is BillingTier {
@@ -60,10 +69,10 @@ export function getStripePriceIdForPlan(
     return null;
   }
 
-  return normalizeStripePriceId(getConfiguredPriceEnvValue(plan, interval));
+  return getConfiguredPriceId(plan, interval);
 }
 
-export function getConfiguredStripePriceIds(): Array<{ tier: BillingTier; interval: BillingInterval; priceId: string }> {
+export function getConfiguredStripePriceIds(): PriceConfig[] {
   const configs: Array<{ tier: BillingTier; interval: BillingInterval }> = [
     { tier: "plus", interval: "monthly" },
     { tier: "plus", interval: "annual" },
@@ -73,9 +82,8 @@ export function getConfiguredStripePriceIds(): Array<{ tier: BillingTier; interv
   const seen = new Set<string>();
 
   return configs.flatMap(({ tier, interval }) =>
-    getConfiguredPriceEnvValuesForMapping(tier, interval).flatMap((envValue) => {
-      const priceId = normalizeStripePriceId(envValue);
-      if (!priceId || seen.has(priceId)) {
+    getConfiguredPriceIdsForMapping(tier, interval).flatMap((priceId) => {
+      if (seen.has(priceId)) {
         return [];
       }
       seen.add(priceId);
@@ -92,6 +100,16 @@ export function hasStripePriceConfigError(
     return false;
   }
 
-  const envValue = getConfiguredPriceEnvValue(plan, interval);
-  return Boolean(envValue && !normalizeStripePriceId(envValue));
+  if (interval === "annual") {
+    const annualEnvValue = getAnnualEnvValue(plan);
+    return hasNonBlankValue(annualEnvValue) && !normalizeStripePriceId(annualEnvValue);
+  }
+
+  const [preferred, legacy] = getMonthlyEnvValues(plan);
+  const hasValidMonthlyPrice = Boolean(normalizeStripePriceId(preferred) ?? normalizeStripePriceId(legacy));
+  if (hasValidMonthlyPrice) {
+    return false;
+  }
+
+  return [preferred, legacy].some((envValue) => hasNonBlankValue(envValue) && !normalizeStripePriceId(envValue));
 }
