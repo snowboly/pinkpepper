@@ -6,12 +6,14 @@ import { track } from "@vercel/analytics";
 import { createClient } from "@/utils/supabase/client";
 
 type Plan = "plus" | "pro";
+export type BillingInterval = "monthly" | "annual";
 
 interface Props {
   isLoggedIn?: boolean;
   plan: Plan;
   label: string;
   className: string;
+  interval?: BillingInterval;
   source?: "pricing_page" | "homepage";
 }
 
@@ -35,8 +37,8 @@ function openCheckout(url: string) {
   window.location.href = url;
 }
 
-function redirectToSignup(plan: Plan) {
-  window.location.href = `/signup?plan=${plan}`;
+function redirectToSignup(plan: Plan, interval: BillingInterval) {
+  window.location.href = `/signup?plan=${plan}&interval=${interval}`;
 }
 
 export default function PricingActions({
@@ -44,6 +46,7 @@ export default function PricingActions({
   plan,
   label,
   className,
+  interval = "monthly",
   source = "pricing_page",
 }: Props) {
   const [loading, setLoading] = useState(false);
@@ -53,9 +56,9 @@ export default function PricingActions({
   if (isLoggedIn === false) {
     return (
       <Link
-        href={`/signup?plan=${plan}`}
+        href={`/signup?plan=${plan}&interval=${interval}`}
         className={className}
-        onClick={() => track("pricing_signup_click", { plan, source })}
+        onClick={() => track("pricing_signup_click", { plan, interval, source })}
       >
         {label}
       </Link>
@@ -75,17 +78,17 @@ export default function PricingActions({
         } = await supabase.auth.getUser();
 
         if (!user) {
-          track("pricing_signup_click", { plan, source });
-          redirectToSignup(plan);
+          track("pricing_signup_click", { plan, interval, source });
+          redirectToSignup(plan, interval);
           return;
         }
       }
 
-      track("checkout_started", { plan, source });
+      track("checkout_started", { plan, interval, source });
       const res = await fetch("/api/billing/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan }),
+        body: JSON.stringify({ plan, interval }),
       });
 
       const data = await readCheckoutResponse(res);
