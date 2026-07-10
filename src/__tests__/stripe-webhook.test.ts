@@ -102,6 +102,10 @@ describe("syncSubscriptionFromStripe", () => {
     stripeRetrieveSubscriptionMock.mockReset();
     consoleWarnMock.mockReset();
     consoleErrorMock.mockReset();
+    process.env.STRIPE_PLUS_MONTHLY_PRICE_ID = "price_plus_monthly";
+    process.env.STRIPE_PLUS_ANNUAL_PRICE_ID = "price_plus_annual";
+    process.env.STRIPE_PRO_MONTHLY_PRICE_ID = "price_pro_monthly";
+    process.env.STRIPE_PRO_ANNUAL_PRICE_ID = "price_pro_annual";
     process.env.STRIPE_PRO_PRICE_ID = "price_pro";
   });
 
@@ -123,7 +127,7 @@ describe("syncSubscriptionFromStripe", () => {
         items: {
           data: [
             {
-              price: { id: "price_pro" },
+              price: { id: "price_pro_monthly" },
               current_period_end: 1_710_000_000,
             },
           ],
@@ -158,7 +162,7 @@ describe("syncSubscriptionFromStripe", () => {
         items: {
           data: [
             {
-              price: { id: "price_pro" },
+              price: { id: "price_pro_monthly" },
               current_period_end: 1_710_000_000,
             },
           ],
@@ -193,7 +197,7 @@ describe("syncSubscriptionFromStripe", () => {
           items: {
             data: [
               {
-                price: { id: "price_pro" },
+                price: { id: "price_pro_monthly" },
                 current_period_end: 1_710_000_000,
               },
             ],
@@ -212,6 +216,32 @@ describe("syncSubscriptionFromStripe", () => {
     expect(sendBillingEmailMock).toHaveBeenCalledTimes(1);
   });
 
+
+  it.each([
+    ["price_plus_monthly", "plus"],
+    ["price_plus_annual", "plus"],
+    ["price_pro_monthly", "pro"],
+    ["price_pro_annual", "pro"],
+  ] as const)("maps Stripe price ID %s to %s entitlements", async (priceId, tier) => {
+    adminState.subscriptionRow = { user_id: "user_123" };
+    stripeRetrieveSubscriptionMock.mockRejectedValue(new Error("not needed in this test"));
+    getUserByIdMock.mockResolvedValue({ data: { user: { email: "owner@example.com" } } });
+
+    await syncSubscriptionFromStripe(
+      {
+        id: "sub_123",
+        customer: "cus_123",
+        status: "active",
+        items: { data: [{ price: { id: priceId }, current_period_end: 1_710_000_000 }] },
+      } as unknown as Stripe.Subscription,
+      "customer.subscription.updated",
+      { sendEmail: false }
+    );
+
+    expect(adminState.upserts[0]).toMatchObject({ stripe_price_id: priceId, tier });
+    expect(adminState.profileUpdates[0]).toMatchObject({ tier });
+  });
+
   it("can sync subscription state without dispatching billing email", async () => {
     adminState.subscriptionRow = { user_id: "user_123" };
     stripeRetrieveSubscriptionMock.mockRejectedValue(new Error("not needed in this test"));
@@ -227,7 +257,7 @@ describe("syncSubscriptionFromStripe", () => {
         items: {
           data: [
             {
-              price: { id: "price_pro" },
+              price: { id: "price_pro_monthly" },
               current_period_end: 1_710_000_000,
             },
           ],

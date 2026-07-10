@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { CheckCircle2, Mail } from "lucide-react";
-import PricingActions from "@/components/pricing/PricingActions";
+import { Mail } from "lucide-react";
+import PricingPlans from "@/components/pricing/PricingPlans";
 import { faqs as sharedFaqs } from "@/data/faqs";
 import { type PublicLocale } from "@/i18n/public";
 import { getPublicPageHref } from "@/lib/public-routes";
@@ -184,129 +184,13 @@ export default async function PricingPage({ locale }: PricingPageProps = {}) {
 
       <section className="relative overflow-hidden border-y border-[#F1F5F9] bg-white py-16">
         <div className="pp-container">
-          <div className="mx-auto grid max-w-5xl gap-6 lg:grid-cols-3">
-            <div className="flex flex-col rounded-3xl border border-[#E2E8F0] bg-[#FCFDFE] p-8">
-              <h2 className="text-xs font-semibold uppercase tracking-[0.18em] text-[#94A3B8]">Free</h2>
-              <p className="mt-4 min-h-[4.5rem] text-sm leading-relaxed text-[#64748B]">
-                Best for testing fit on live questions and everyday checks before you commit.
-              </p>
-              <div className="mt-6 flex items-baseline gap-1">
-                <span className="text-5xl font-bold tracking-tight text-[#0F172A]"><span className="text-2xl align-super">EUR </span>0</span>
-                <span className="text-base text-[#94A3B8]">/month</span>
-              </div>
-              <div className="my-6 border-t border-[#F1F5F9]" />
-              <ul className="flex-1 space-y-3.5 text-sm text-[#475569]">
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />
-                  Chat on web and mobile (app coming soon)
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />
-                  Write, edit, and create food safety content
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />
-                  Analyze text and images
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />
-                  Access to curated knowledge base
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#CBD5E1]" />
-                  Everyday compliance guidance
-                </li>
-              </ul>
-              <Link href={signupHref} className={ctaNeutral}>
-                Get started free
-              </Link>
-            </div>
-
-            <div className="relative flex flex-col rounded-3xl border-2 border-[#E11D48] bg-white p-8">
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-[#E11D48] px-4 py-1 text-xs font-bold text-white">Most Popular</div>
-              <h2 className="text-xs font-semibold uppercase tracking-[0.18em] text-[#94A3B8]">Plus</h2>
-              <p className="mt-4 min-h-[4.5rem] text-sm leading-relaxed text-[#64748B]">
-                For teams that use PinkPepper daily for HACCP, SOPs, allergen records, and downloadable templates.
-              </p>
-              <div className="mt-6 flex items-baseline gap-1">
-                <span className="text-5xl font-bold tracking-tight text-[#0F172A]"><span className="text-2xl align-super">EUR </span>19</span>
-                <span className="text-base text-[#94A3B8]">/month + VAT</span>
-              </div>
-              <div className="my-6 border-t border-[#FCE7F3]" />
-              <ul className="flex-1 space-y-3.5 text-sm text-[#475569]">
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  Everything in Free
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  Heavier day-to-day Consultant use
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  Higher daily usage limits
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  Unlimited saved conversations and projects
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  Access to downloadable templates
-                </li>
-              </ul>
-              <PricingActions
-                isLoggedIn={isLoggedIn}
-                plan="plus"
-                label="Choose Plus"
-                className={ctaSecondary}
-              />
-            </div>
-
-            <div className="flex flex-col rounded-3xl border border-[#F9A8D4] bg-[#FFF8FB] p-8">
-              <h2 className="text-xs font-semibold uppercase tracking-[0.18em] text-[#BE123C]">Pro</h2>
-              <p className="mt-4 min-h-[4.5rem] text-sm leading-relaxed text-[#64748B]">
-                For teams that want both AI modes, stronger audit workflows, and human food safety consultancy for higher-risk work.
-              </p>
-              <div className="mt-6 flex items-baseline gap-1">
-                <span className="text-5xl font-bold tracking-tight text-[#0F172A]"><span className="text-2xl align-super">EUR </span>99</span>
-                <span className="text-base text-[#94A3B8]">/month + VAT</span>
-              </div>
-              <div className="my-6 border-t border-[#F1F5F9]" />
-              <ul className="flex-1 space-y-3.5 text-sm text-[#475569]">
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  Everything in Plus
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  More capacity for higher-risk work
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  Highest daily usage limits
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  Access to Auditor mode
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  2h/month of human food safety consultancy
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#E11D48]" />
-                  Priority support
-                </li>
-              </ul>
-              <PricingActions
-                isLoggedIn={isLoggedIn}
-                plan="pro"
-                label="Choose Pro"
-                className={ctaPrimary}
-              />
-            </div>
-          </div>
+          <PricingPlans
+            isLoggedIn={isLoggedIn}
+            signupHref={signupHref}
+            ctaNeutral={ctaNeutral}
+            ctaSecondary={ctaSecondary}
+            ctaPrimary={ctaPrimary}
+          />
         </div>
       </section>
 
