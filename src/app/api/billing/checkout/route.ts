@@ -4,7 +4,7 @@ import { createAdminClient } from "@/utils/supabase/admin";
 import { getStripe } from "@/lib/billing/stripe";
 import { isAllowedBillingRequest, getTrustedSiteOrigin } from "@/lib/billing/request-origin";
 import { billingLimiter, checkRateLimit } from "@/lib/ratelimit";
-import { getStripePriceIdForPlan, hasStripePriceConfigError } from "@/lib/billing/price-config";
+import { getStripePriceIdForPlan, hasStripePriceConfigError, isBillingInterval, isBillingTier } from "@/lib/billing/price-config";
 
 export const dynamic = "force-dynamic";
 
@@ -28,18 +28,24 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const body = (await request.json()) as { plan?: "plus" | "pro" };
-    const plan = body.plan;
-    if (hasStripePriceConfigError(plan)) {
+    const body = (await request.json()) as { plan?: unknown; interval?: unknown; tier?: unknown };
+    const plan = body.plan ?? body.tier;
+    const interval = body.interval ?? "monthly";
+
+    if (!isBillingTier(plan) || !isBillingInterval(interval)) {
+      return NextResponse.json({ error: "Invalid plan or billing interval." }, { status: 400 });
+    }
+
+    if (hasStripePriceConfigError(plan, interval)) {
       return NextResponse.json(
         { error: "Billing is misconfigured. Stripe price IDs must start with `price_`." },
         { status: 500 }
       );
     }
 
-    const priceId = getStripePriceIdForPlan(plan);
-    if (!plan || !priceId) {
-      return NextResponse.json({ error: "Invalid plan." }, { status: 400 });
+    const priceId = getStripePriceIdForPlan(plan, interval);
+    if (!priceId) {
+      return NextResponse.json({ error: "Invalid plan or billing interval." }, { status: 400 });
     }
     // Stripe callback URLs must not be attacker-spoofable via a manipulated
     // Host header — Stripe blindly redirects users there on completion.
@@ -93,6 +99,8 @@ export async function POST(request: Request) {
       metadata: {
         user_id: user.id,
         plan,
+        tier: plan,
+        interval,
       },
     });
 

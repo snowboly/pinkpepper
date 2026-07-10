@@ -4,6 +4,10 @@ const { billingState, createCheckoutSessionMock, createCustomerMock, createPorta
   process.env.NEXT_PUBLIC_SITE_URL = "https://pinkpepper.io/";
   process.env.STRIPE_PLUS_PRICE_ID = "price_plus";
   process.env.STRIPE_PRO_PRICE_ID = "price_pro";
+  process.env.STRIPE_PLUS_MONTHLY_PRICE_ID = "price_plus_monthly";
+  process.env.STRIPE_PLUS_ANNUAL_PRICE_ID = "price_plus_annual";
+  process.env.STRIPE_PRO_MONTHLY_PRICE_ID = "price_pro_monthly";
+  process.env.STRIPE_PRO_ANNUAL_PRICE_ID = "price_pro_annual";
 
   return {
     billingState: {
@@ -101,6 +105,10 @@ describe("billing route origin validation", () => {
     process.env.NEXT_PUBLIC_SITE_URL = "https://pinkpepper.io/";
     process.env.STRIPE_PLUS_PRICE_ID = "price_plus";
     process.env.STRIPE_PRO_PRICE_ID = "price_pro";
+    process.env.STRIPE_PLUS_MONTHLY_PRICE_ID = "price_plus_monthly";
+    process.env.STRIPE_PLUS_ANNUAL_PRICE_ID = "price_plus_annual";
+    process.env.STRIPE_PRO_MONTHLY_PRICE_ID = "price_pro_monthly";
+    process.env.STRIPE_PRO_ANNUAL_PRICE_ID = "price_pro_annual";
   });
 
   it("allows checkout with same-origin request", async () => {
@@ -267,8 +275,59 @@ describe("billing route origin validation", () => {
     expect(response.status).toBe(403);
   });
 
+
+  it("uses the Plus annual Stripe price ID for annual Plus checkout", async () => {
+    const response = await checkoutPost(
+      new Request("https://pinkpepper.io/api/billing/checkout", {
+        method: "POST",
+        headers: { host: "pinkpepper.io", origin: "https://pinkpepper.io", "content-type": "application/json" },
+        body: JSON.stringify({ plan: "plus", interval: "annual" }),
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(createCheckoutSessionMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        line_items: [{ price: "price_plus_annual", quantity: 1 }],
+        metadata: expect.objectContaining({ plan: "plus", tier: "plus", interval: "annual" }),
+      })
+    );
+  });
+
+  it("uses the Pro annual Stripe price ID for annual Pro checkout", async () => {
+    const response = await checkoutPost(
+      new Request("https://pinkpepper.io/api/billing/checkout", {
+        method: "POST",
+        headers: { host: "pinkpepper.io", origin: "https://pinkpepper.io", "content-type": "application/json" },
+        body: JSON.stringify({ plan: "pro", interval: "annual" }),
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(createCheckoutSessionMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        line_items: [{ price: "price_pro_annual", quantity: 1 }],
+        metadata: expect.objectContaining({ plan: "pro", tier: "pro", interval: "annual" }),
+      })
+    );
+  });
+
+  it("rejects invalid checkout tier or interval server-side", async () => {
+    const response = await checkoutPost(
+      new Request("https://pinkpepper.io/api/billing/checkout", {
+        method: "POST",
+        headers: { host: "pinkpepper.io", origin: "https://pinkpepper.io", "content-type": "application/json" },
+        body: JSON.stringify({ plan: "free", interval: "quarterly" }),
+      }),
+    );
+
+    expect(response.status).toBe(400);
+    await expect(response.json()).resolves.toEqual({ error: "Invalid plan or billing interval." });
+    expect(createCheckoutSessionMock).not.toHaveBeenCalled();
+  });
+
   it("returns a billing configuration error when a plan env uses a Stripe product id", async () => {
-    process.env.STRIPE_PLUS_PRICE_ID = "prod_bad";
+    process.env.STRIPE_PLUS_MONTHLY_PRICE_ID = "prod_bad";
 
     const response = await checkoutPost(
       new Request("https://pinkpepper.io/api/billing/checkout", {
