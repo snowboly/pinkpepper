@@ -128,6 +128,50 @@ describe("billing route origin validation", () => {
     await expect(response.json()).resolves.toEqual({ url: "https://checkout.stripe.test/session_123" });
   });
 
+  it("falls back to the legacy Plus monthly alias when the new monthly env is blank", async () => {
+    process.env.STRIPE_PLUS_MONTHLY_PRICE_ID = "";
+    process.env.STRIPE_PLUS_PRICE_ID = "price_plus_legacy";
+
+    const response = await checkoutPost(
+      new Request("https://pinkpepper.io/api/billing/checkout", {
+        method: "POST",
+        headers: {
+          host: "pinkpepper.io",
+          origin: "https://pinkpepper.io",
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({ plan: "plus", interval: "monthly" }),
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(createCheckoutSessionMock).toHaveBeenCalledWith(
+      expect.objectContaining({ line_items: [{ price: "price_plus_legacy", quantity: 1 }] })
+    );
+  });
+
+  it("falls back to the legacy Pro monthly alias when the new monthly env is blank", async () => {
+    process.env.STRIPE_PRO_MONTHLY_PRICE_ID = "   ";
+    process.env.STRIPE_PRO_PRICE_ID = "price_pro_legacy";
+
+    const response = await checkoutPost(
+      new Request("https://pinkpepper.io/api/billing/checkout", {
+        method: "POST",
+        headers: {
+          host: "pinkpepper.io",
+          origin: "https://pinkpepper.io",
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({ plan: "pro", interval: "monthly" }),
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(createCheckoutSessionMock).toHaveBeenCalledWith(
+      expect.objectContaining({ line_items: [{ price: "price_pro_legacy", quantity: 1 }] })
+    );
+  });
+
   it("allows billing-portal access with same-origin request", async () => {
     billingState.subscriptionRow = { stripe_customer_id: "cus_123" };
 

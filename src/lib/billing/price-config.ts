@@ -14,15 +14,22 @@ export function normalizeStripePriceId(value: string | null | undefined): string
   return normalized;
 }
 
+function preferConfiguredStripePriceId(
+  preferred: string | null | undefined,
+  fallback: string | null | undefined
+): string | undefined {
+  return preferred?.trim() ? preferred : fallback ?? undefined;
+}
+
 function getConfiguredPriceEnvValue(plan: BillingTier, interval: BillingInterval): string | undefined {
   if (plan === "plus" && interval === "monthly") {
-    return process.env.STRIPE_PLUS_MONTHLY_PRICE_ID ?? process.env.STRIPE_PLUS_PRICE_ID;
+    return preferConfiguredStripePriceId(process.env.STRIPE_PLUS_MONTHLY_PRICE_ID, process.env.STRIPE_PLUS_PRICE_ID);
   }
   if (plan === "plus" && interval === "annual") {
     return process.env.STRIPE_PLUS_ANNUAL_PRICE_ID;
   }
   if (plan === "pro" && interval === "monthly") {
-    return process.env.STRIPE_PRO_MONTHLY_PRICE_ID ?? process.env.STRIPE_PRO_PRICE_ID;
+    return preferConfiguredStripePriceId(process.env.STRIPE_PRO_MONTHLY_PRICE_ID, process.env.STRIPE_PRO_PRICE_ID);
   }
   return process.env.STRIPE_PRO_ANNUAL_PRICE_ID;
 }

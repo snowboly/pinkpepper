@@ -33,4 +33,11 @@ describe("pricing billing UI", () => {
     expect(pricingPlans).toContain('interval={interval}');
     expect(pricingActions).toContain('body: JSON.stringify({ plan, interval })');
   });
+  it("keeps the Terms billing period disclosure aligned with monthly and annual checkout", () => {
+    const terms = readPage("src/app/legal/terms/page.tsx");
+
+    expect(terms).toContain("monthly or annual billing interval selected at checkout");
+    expect(terms).not.toContain("Subscriptions are billed monthly in advance");
+  });
+
 });
