@@ -126,6 +126,31 @@ describe("billing route origin validation", () => {
 
     expect(response.status).toBe(200);
     await expect(response.json()).resolves.toEqual({ url: "https://checkout.stripe.test/session_123" });
+    expect(createCheckoutSessionMock).toHaveBeenCalledWith(
+      expect.objectContaining({ line_items: [{ price: "price_plus_monthly", quantity: 1 }] })
+    );
+  });
+
+  it("falls back to the legacy Plus monthly alias when the new monthly env is missing", async () => {
+    delete process.env.STRIPE_PLUS_MONTHLY_PRICE_ID;
+    process.env.STRIPE_PLUS_PRICE_ID = "price_plus_legacy";
+
+    const response = await checkoutPost(
+      new Request("https://pinkpepper.io/api/billing/checkout", {
+        method: "POST",
+        headers: {
+          host: "pinkpepper.io",
+          origin: "https://pinkpepper.io",
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({ plan: "plus", interval: "monthly" }),
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(createCheckoutSessionMock).toHaveBeenCalledWith(
+      expect.objectContaining({ line_items: [{ price: "price_plus_legacy", quantity: 1 }] })
+    );
   });
 
   it("falls back to the legacy Plus monthly alias when the new monthly env is blank", async () => {
