@@ -326,8 +326,9 @@ describe("billing route origin validation", () => {
     expect(createCheckoutSessionMock).not.toHaveBeenCalled();
   });
 
-  it("returns a billing configuration error when a plan env uses a Stripe product id", async () => {
+  it("returns a billing configuration error when a plan env uses a Stripe product id with no valid legacy alias", async () => {
     process.env.STRIPE_PLUS_MONTHLY_PRICE_ID = "prod_bad";
+    process.env.STRIPE_PLUS_PRICE_ID = "";
 
     const response = await checkoutPost(
       new Request("https://pinkpepper.io/api/billing/checkout", {

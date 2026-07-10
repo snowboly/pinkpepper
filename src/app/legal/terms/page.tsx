@@ -75,7 +75,7 @@ export default function TermsPage() {
               <Link href="/pricing" className="text-[#E11D48] hover:underline">Pricing page</Link>.
             </li>
             <li>Prices are stated exclusive of VAT. VAT is applied at checkout based on your location.</li>
-            <li>Subscriptions are billed monthly in advance via Stripe. Your subscription renews automatically at the end of each billing period.</li>
+            <li>Subscriptions are billed monthly or annually in advance via Stripe, depending on the billing interval selected at checkout. Your subscription renews automatically at the end of each billing period.</li>
             <li>You authorise PinkPepper to charge your payment method on file for all applicable fees.</li>
             <li>Failed payments may result in downgrade to the free tier after a grace period.</li>
           </ul>
