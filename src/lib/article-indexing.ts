@@ -34,6 +34,10 @@ const articleNoindexSlugSet = new Set<string>([
   "haccp-for-vegan-and-plant-based-cafes-eu",
   "haccp-for-gelato-and-ice-cream-parlors-eu",
   "haccp-monitoring-record-templates",
+  "haccp-plan-example-restaurant",
+  "how-to-keep-haccp-practical-not-bureaucratic",
+  "the-biggest-haccp-mistakes-we-see-in-professional-reviews",
+  "when-to-hire-a-haccp-consultant",
 ]);
 const localizedArticleNoindexSlugSet = new Set<string>([
   "how-to-create-a-haccp-plan-step-by-step",

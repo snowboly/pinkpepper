@@ -12,6 +12,7 @@ export const metadata: Metadata = {
       en: "https://pinkpepper.io/resources/halal-compliance-poster",
     },
   },
+  robots: { index: false, follow: true },
 };
 
 export default function HalalCompliancePosterPage() {
