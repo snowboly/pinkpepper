@@ -9,7 +9,7 @@ import {
 import { publicContentRoutePaths, publicLaunchLocales } from "@/i18n/public";
 import { localizePublicPath } from "@/lib/public-routes";
 import { resourceEntries } from "@/lib/resources";
-import { shouldIndexPublicRoute } from "@/lib/seo/indexability";
+import { shouldIndexPublicRoute, shouldIndexResourceRoute } from "@/lib/seo/indexability";
 
 const BASE_URL = "https://pinkpepper.io";
 const SITE_REFRESHED_AT = "2026-07-09";
@@ -72,7 +72,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...englishPublicEntries,
     ...localizedPublicEntries,
     { url: `${BASE_URL}/resources`, lastModified: new Date(SITE_REFRESHED_AT), changeFrequency: "weekly", priority: 0.8 },
-    ...resourceEntries.map((resource) => ({
+    ...resourceEntries.filter((resource) => shouldIndexResourceRoute(resource.href)).map((resource) => ({
       url: `${BASE_URL}${resource.href}`,
       lastModified: new Date(resource.updatedAt),
       changeFrequency: "monthly" as const,

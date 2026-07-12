@@ -12,6 +12,7 @@ export const metadata: Metadata = {
       en: "https://pinkpepper.io/resources/brc-checklist-poster",
     },
   },
+  robots: { index: false, follow: true },
 };
 
 export default function BrcChecklistPosterPage() {

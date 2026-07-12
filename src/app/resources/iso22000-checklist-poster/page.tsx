@@ -12,6 +12,7 @@ export const metadata: Metadata = {
       en: "https://pinkpepper.io/resources/iso22000-checklist-poster",
     },
   },
+  robots: { index: false, follow: true },
 };
 
 export default function Iso22000ChecklistPosterPage() {

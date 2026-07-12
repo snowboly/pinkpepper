@@ -7,7 +7,14 @@ import sitemap from "@/app/sitemap";
 import robots from "@/app/robots";
 import { generateArticleMetadata } from "@/app/articles/[slug]/page";
 import { metadata as allergenDocumentationMetadata } from "@/app/features/allergen-documentation/page";
+import { metadata as brcChecklistPosterMetadata } from "@/app/resources/brc-checklist-poster/page";
+import { metadata as halalCompliancePosterMetadata } from "@/app/resources/halal-compliance-poster/page";
+import { metadata as iso22000ChecklistPosterMetadata } from "@/app/resources/iso22000-checklist-poster/page";
+import { metadata as kosherCompliancePosterMetadata } from "@/app/resources/kosher-compliance-poster/page";
+import { metadata as workplaceCompliancePosterMetadata } from "@/app/resources/workplace-compliance-poster/page";
 import { generateMetadata as generateLocalizedAllergenDocumentationMetadata } from "@/app/[locale]/features/allergen-documentation/page";
+import { generateMetadata as generateLocalizedHomeMetadata } from "@/app/[locale]/page";
+import { generateMetadata as generateLocalizedPricingMetadata } from "@/app/[locale]/pricing/page";
 import { buildPublicMetadata } from "@/lib/seo/public-metadata";
 
 const readPage = (relativePath: string) => readFileSync(join(process.cwd(), relativePath), "utf8");
@@ -192,12 +199,12 @@ describe("SEO surface", () => {
     });
 
     expect(entries).toContain("https://pinkpepper.io/resources");
-    expect(entries).toContain("https://pinkpepper.io/fr");
-    expect(entries).toContain("https://pinkpepper.io/pt/pricing");
-    expect(entries).toContain("https://pinkpepper.io/de/features/haccp-plan-generator");
     expect(entries).toContain("https://pinkpepper.io/features/haccp-plan-generator");
     expect(entries).toContain("https://pinkpepper.io/use-cases/restaurants");
     expect(entries).toContain("https://pinkpepper.io/articles/identifying-critical-control-points-in-food-safety");
+    expect(entries).not.toContain("https://pinkpepper.io/fr");
+    expect(entries).not.toContain("https://pinkpepper.io/pt/pricing");
+    expect(entries).not.toContain("https://pinkpepper.io/de/features/haccp-plan-generator");
     expect(entries).not.toContain("https://pinkpepper.io/fr/features/allergen-documentation");
     expect(entries).not.toContain("https://pinkpepper.io/fr/articles/haccp-vs-brcgs-vs-ifs");
     expect(entries).not.toContain("https://pinkpepper.io/articles/haccp-for-craft-breweries-eu");
@@ -540,20 +547,50 @@ describe("public SEO copy and linking", () => {
     const strongerImported = await generateArticleMetadata("identifying-critical-control-points-in-food-safety", "en");
     const weakerSector = await generateArticleMetadata("haccp-for-craft-breweries-eu", "en");
     const weakerLocalized = await generateArticleMetadata("haccp-vs-brcgs-vs-ifs", "fr");
+    const genericImported = await generateArticleMetadata("how-to-keep-haccp-practical-not-bureaucratic", "en");
+    const keywordStuffedImported = await generateArticleMetadata("haccp-plan-example-restaurant", "en");
 
     expect(weakerImported.robots).toEqual({ index: false, follow: true });
     expect(weakerSector.robots).toEqual({ index: false, follow: true });
     expect(weakerLocalized.robots).toEqual({ index: false, follow: true });
+    expect(genericImported.robots).toEqual({ index: false, follow: true });
+    expect(keywordStuffedImported.robots).toEqual({ index: false, follow: true });
     expect(strongerImported.robots).toBeUndefined();
   });
 
-  it("keeps the English allergen feature indexable while noindexing its localized variants", async () => {
+  it("keeps English commercial pages indexable while noindexing weak localized wrappers", async () => {
     const localizedFeature = await generateLocalizedAllergenDocumentationMetadata({
       params: Promise.resolve({ locale: "fr" }),
+    });
+    const localizedHome = await generateLocalizedHomeMetadata({
+      params: Promise.resolve({ locale: "fr" }),
+    });
+    const localizedPricing = await generateLocalizedPricingMetadata({
+      params: Promise.resolve({ locale: "pt" }),
     });
 
     expect(allergenDocumentationMetadata.robots).toBeUndefined();
     expect(localizedFeature.robots).toEqual({ index: false, follow: true });
+    expect(localizedHome.robots).toEqual({ index: false, follow: true });
+    expect(localizedPricing.robots).toEqual({ index: false, follow: true });
+  });
+
+  it("keeps low-intent poster resources out of the indexable sitemap while preserving stronger resources", async () => {
+    const entries = (await sitemap()).map((entry) => entry.url);
+
+    expect(entries).toContain("https://pinkpepper.io/resources/haccp-plan-template");
+    expect(entries).toContain("https://pinkpepper.io/resources/food-spec-template");
+    expect(entries).toContain("https://pinkpepper.io/resources/temperature-monitoring-log-template");
+    expect(entries).not.toContain("https://pinkpepper.io/resources/kosher-compliance-poster");
+    expect(entries).not.toContain("https://pinkpepper.io/resources/halal-compliance-poster");
+    expect(entries).not.toContain("https://pinkpepper.io/resources/workplace-compliance-poster");
+    expect(entries).not.toContain("https://pinkpepper.io/resources/brc-checklist-poster");
+    expect(entries).not.toContain("https://pinkpepper.io/resources/iso22000-checklist-poster");
+    expect(kosherCompliancePosterMetadata.robots).toEqual({ index: false, follow: true });
+    expect(halalCompliancePosterMetadata.robots).toEqual({ index: false, follow: true });
+    expect(workplaceCompliancePosterMetadata.robots).toEqual({ index: false, follow: true });
+    expect(brcChecklistPosterMetadata.robots).toEqual({ index: false, follow: true });
+    expect(iso22000ChecklistPosterMetadata.robots).toEqual({ index: false, follow: true });
   });
 
 });
