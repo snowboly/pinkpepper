@@ -42,6 +42,11 @@ const relatedLinks = [
       "Build opening checks, cleaning procedures, closing routines, and daily records that fit each operating environment.",
   },
   {
+    href: "/ai-food-safety-consultant",
+    title: "AI food safety consultant",
+    description: "See how AI drafting and optional human review support EU and UK food businesses.",
+  },
+  {
     href: "/faqs",
     title: "Food safety FAQs",
     description: "Answer practical questions about HACCP, allergen controls, records, and how the workflow fits your business.",
@@ -49,9 +54,9 @@ const relatedLinks = [
 ];
 
 export const metadata: Metadata = {
-  title: "Food Safety Software for Restaurants, Cafes, Caterers & Manufacturers | PinkPepper",
+  title: "AI Food Safety Consultant for Food Businesses | PinkPepper",
   description:
-    "Food safety documentation tailored to your business type. HACCP plans, records, and audit-ready workflows for restaurants, cafes, caterers, and manufacturers.",
+    "AI food safety consultant support for EU and UK restaurants, cafes, caterers, and manufacturers, with optional human review for higher-risk HACCP, SOP, and allergen work.",
   alternates: {
     canonical: "https://pinkpepper.io/use-cases",
   },
@@ -66,12 +71,12 @@ export default function UseCasesPage() {
             Food safety documentation built for how you actually operate
           </p>
           <h1 className="pp-display mt-4 text-4xl text-[#0F172A] md:text-6xl">
-            HACCP plans, records, and audit docs that fit your business type
+            AI food safety consultant support by business type
           </h1>
           <p className="mt-6 max-w-3xl text-lg leading-relaxed text-[#475569]">
             A restaurant kitchen on a Friday night does not work the same way as a contract caterer running an off-site
             event. Your food safety paperwork should not look identical either. PinkPepper adapts to the workflows,
-            risks, and daily routines of different food businesses, so the documentation you produce actually reflects
+            risks, and daily routines of different food businesses, with optional human food safety consultant review for higher-risk decisions, so the documentation you produce actually reflects
             the operation you run.
           </p>
           <p className="mt-5 max-w-3xl text-base leading-relaxed text-[#64748B]">

@@ -26,6 +26,7 @@ const useCasePaths = [
 ] as const;
 
 const phase2ContentPaths = [
+  "/ai-food-safety-consultant",
   "/human-review",
   "/methodology",
   "/regulations-covered",

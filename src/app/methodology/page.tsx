@@ -55,12 +55,17 @@ const strengths = [
 ];
 
 const limits = [
-  "It does not replace legal advice, certification decisions, or enforcement representation.",
+  "AI outputs are drafts, not legal advice, certification decisions, or enforcement representation.",
   "It cannot validate a shelf life, swab a site, or carry out physical verification of your operation.",
-  "It should not be treated as the final sign-off when the answer depends on site-specific evidence or higher-risk judgement.",
+  "Users must adapt outputs to their business, local requirements, and site evidence; human consultant support is available for review or escalation.",
 ];
 
 const nextLinks = [
+  {
+    href: "/ai-food-safety-consultant",
+    title: "AI food safety consultant",
+    description: "See how AI drafts fit with optional human food safety consultant review and user responsibility.",
+  },
   {
     href: "/regulations-covered",
     title: "See the regulations covered",

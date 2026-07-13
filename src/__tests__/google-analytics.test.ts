@@ -7,6 +7,7 @@ describe("Google Analytics public-route gating", () => {
   it("injects analytics for public marketing routes only", () => {
     expect(shouldInjectGoogleAnalytics("/")).toBe(true);
     expect(shouldInjectGoogleAnalytics("/articles")).toBe(true);
+    expect(shouldInjectGoogleAnalytics("/ai-food-safety-consultant")).toBe(true);
     expect(shouldInjectGoogleAnalytics("/resources/food-spec-template")).toBe(true);
     expect(shouldInjectGoogleAnalytics("/use-cases/restaurants")).toBe(true);
     expect(shouldInjectGoogleAnalytics("/de/articles/haccp-plan")).toBe(true);

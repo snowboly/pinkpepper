@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { FeatureTemplate } from "@/components/site/FeatureTemplate";
 
 export const metadata: Metadata = {
-  title: "Food Safety Software for Cafes | PinkPepper",
+  title: "AI Food Safety Consultant for Cafes | PinkPepper",
   description:
-    "PinkPepper handles the paperwork side of running a cafe: HACCP plans for display fridges and ambient counters, allergen records for sandwiches and baked goods, temperature logs, and SOPs for reheating and milk steaming.",
+    "PinkPepper uses AI to organise the paperwork side of running a cafe: HACCP plans for display fridges and ambient counters, allergen records for sandwiches and baked goods, temperature logs, and SOPs for reheating and milk steaming.",
   alternates: {
     canonical: "https://pinkpepper.io/use-cases/cafes",
   },
@@ -15,7 +15,7 @@ export default function CafeUseCasePage() {
     <FeatureTemplate
       eyebrow="For coffee shops, bakeries, and grab-and-go food spots"
       title="Food safety documentation light enough for a small team, solid enough for audit"
-      description="PinkPepper handles the paperwork side of running a cafe: HACCP plans for display fridges and ambient counters, allergen records for sandwiches and baked goods, temperature logs, and SOPs for reheating and milk steaming. Built for owner-operators and small teams who do not have a dedicated compliance person but still need records that stand up to an EHO inspection."
+      description="PinkPepper uses AI to organise the paperwork side of running a cafe: HACCP plans for display fridges and ambient counters, allergen records for sandwiches and baked goods, temperature logs, and SOPs for reheating and milk steaming. Built for EU and UK owner-operators and small teams who do not have a dedicated compliance person but still need records that stand up to an EHO inspection."
       primaryCta="Start a cafe plan"
       painPoints={[
         "HACCP templates designed for large kitchens expect dedicated monitoring roles that a three-person cafe team simply does not have.",
@@ -25,18 +25,18 @@ export default function CafeUseCasePage() {
       outcomes={[
         "Monitoring routines fit the cadence of a cafe shift: opening checks, mid-morning display fridge logs, and close-down records.",
         "Allergen information for sandwiches, cakes, and seasonal items stays current and accessible to counter staff during a rush.",
-        "EHO-ready records compile quickly without pulling the owner away from the floor for half a day.",
+        "EHO-facing records compile quickly without pulling the owner away from the floor for half a day.",
       ]}
       sections={[
         {
           title: "Documentation that fits a cafe, not a hotel kitchen",
           body:
-            "Most cafe teams run with two or three people on shift. One person opens, makes coffee, restocks the display, serves customers, and handles the closing checks. PinkPepper builds HACCP plans and monitoring logs around that reality. The system covers the workflows that actually matter in a cafe: display fridge temperature checks every few hours, ambient shelf-life tracking for pastries and cakes, steam wand cleaning logs, and reheat records for toasties and hot food items. No modules about sous-vide or blast chilling that you have to scroll past to find the relevant sections.",
+            "Most cafe teams run with two or three people on shift. One person opens, makes coffee, restocks the display, serves customers, and handles the closing checks. PinkPepper helps draft HACCP plans and monitoring logs around that reality. The system covers the workflows that actually matter in a cafe: display fridge temperature checks every few hours, ambient shelf-life tracking for pastries and cakes, steam wand cleaning logs, and reheat records for toasties and hot food items. No modules about sous-vide or blast chilling that you have to scroll past to find the relevant sections.",
         },
         {
           title: "Allergen management for counters and displays",
           body:
-            "A cafe allergen risk is different from a restaurant. Customers pick items from a display, often without reading ingredient lists. Staff need to answer questions about milk alternatives, gluten content, nut traces, and egg in baked goods, quickly and accurately, while a queue forms at the till. PinkPepper builds an allergen matrix that covers your entire counter offer, including seasonal specials and supplier substitutions. Counter staff check it on the device they use for orders, and it updates whenever a recipe or ingredient changes. The information your team gives to a customer with a nut allergy is the same information the kitchen used when they prepped that banana bread this morning.",
+            "A cafe allergen risk is different from a restaurant. Customers pick items from a display, often without reading ingredient lists. Staff need to answer questions about milk alternatives, gluten content, nut traces, and egg in baked goods, quickly and accurately, while a queue forms at the till. PinkPepper helps draft an allergen matrix that covers your entire counter offer, including seasonal specials and supplier substitutions. Counter staff check it on the device they use for orders, and it updates whenever a recipe or ingredient changes. The information your team gives to a customer with a nut allergy is the same information the kitchen used when they prepped that banana bread this morning.",
         },
         {
           title: "Records that work for the owner-operator",
@@ -63,6 +63,11 @@ export default function CafeUseCasePage() {
           href: "/resources/food-safety-opening-and-closing-checklist",
           label: "Food safety opening and closing checklist",
           description: "Start with a practical daily checklist for opening checks, display monitoring, and close-down routines.",
+        },
+        {
+          href: "/ai-food-safety-consultant",
+          label: "AI food safety consultant",
+          description: "See how AI drafting and optional human consultant review fit EU and UK food safety work.",
         },
       ]}
     />

@@ -158,9 +158,9 @@ describe("SEO surface", () => {
   it("uses the consultant positioning in shared metadata titles and descriptions", () => {
     const layout = readPage("src/app/layout.tsx");
 
-    expect(layout).toContain("AI Food Safety Consultant for HACCP & Compliance");
-    expect(layout).toContain("AI food safety consultant for HACCP and compliance.");
-    expect(layout).toContain("Generate food safety documents");
+    expect(layout).toContain("AI Food Safety Consultant for EU & UK Businesses");
+    expect(layout).toContain("Get AI-powered food safety support with optional human consultant review. Create HACCP documents, SOPs, allergen records, and compliance workflows for EU and UK food businesses.");
+    expect(layout).toContain("Create HACCP documents");
     expect(layout).not.toContain("AI Food Safety Compliance Software - EU & UK");
   });
 
@@ -171,10 +171,10 @@ describe("SEO surface", () => {
     expect(layout).toContain("width: 1200");
     expect(layout).toContain("height: 630");
     expect(layout).toContain('images: ["https://pinkpepper.io/social-card.png"]');
-    expect(layout).toContain('title: "PinkPepper | AI Food Safety Consultant for HACCP & Compliance"');
-    expect(layout).toContain("AI food safety consultant for HACCP and compliance.");
-    expect(layout).toContain("Generate food safety documents");
-    expect(layout).toContain("get answers to food safety questions");
+    expect(layout).toContain('title: "AI Food Safety Consultant for EU & UK Businesses | PinkPepper"');
+    expect(layout).toContain("Get AI-powered food safety support with optional human consultant review. Create HACCP documents, SOPs, allergen records, and compliance workflows for EU and UK food businesses.");
+    expect(layout).toContain("Create HACCP documents");
+    expect(layout).toContain("compliance workflows for EU and UK food businesses");
   });
 
   it("allows article imagery from the configured external sources", () => {
@@ -227,8 +227,8 @@ describe("public SEO copy and linking", () => {
     const heroChatForm = readPage("src/components/homepage/HeroChatForm.tsx");
     const demoTabSwitcher = readPage("src/components/homepage/DemoTabSwitcher.tsx");
 
-    expect(homepage).toContain("AI food safety consultant for HACCP and compliance");
-    expect(homepage).toContain("Generate food safety documents");
+    expect(homepage).toContain("AI food safety consultant for EU and UK food businesses");
+    expect(homepage).toContain("Create HACCP documents");
     expect(homepage).toContain("/features/haccp-plan-generator");
     expect(homepage).toContain("/pricing");
     expect(heroChatForm).toContain("data-nosnippet");
@@ -469,8 +469,8 @@ describe("public SEO copy and linking", () => {
     const messages = readPage("src/i18n/messages/public/en.json");
     const publicMetadata = readPage("src/lib/seo/public-metadata.ts");
 
-    expect(messages).toContain("AI food safety consultant for HACCP and compliance.");
-    expect(messages).toContain("PinkPepper | AI Food Safety Consultant for HACCP & Compliance");
+    expect(messages).toContain("Get AI-powered food safety support with optional human consultant review. Create HACCP documents, SOPs, allergen records, and compliance workflows for EU and UK food businesses.");
+    expect(messages).toContain("AI Food Safety Consultant for EU & UK Businesses | PinkPepper");
     expect(messages).toContain("AI HACCP Plan Generator for Food Businesses | PinkPepper");
     expect(messages).toContain("FAQs - HACCP, Allergens, Regulations & More | PinkPepper");
     expect(messages).not.toContain("AI Food Safety Compliance Software - EU & UK");
@@ -625,7 +625,7 @@ describe("premium quality regressions", () => {
 
     expect(headerFooter).toContain("AI food safety consultant");
     expect(headerFooter).not.toContain("AI Food Safety and Compliance Assistant");
-    expect(pricing).not.toContain("AI food safety assistant");
+    expect(pricing).toContain("AI food safety assistant and consultant features");
   });
 
   it("provides a dedicated mobile navigation trigger in the shared header", () => {
@@ -651,7 +651,7 @@ describe("premium quality regressions", () => {
     const homepage = readPage("src/app/page.tsx");
 
     expect(homepage).toContain("Built for real world operators");
-    expect(homepage).toContain("From raw notes to review-ready compliance work");
+    expect(homepage).toContain("From raw notes to practical compliance drafts");
     expect(homepage).toContain("Switch from Consultant to Auditor when the job changes");
     expect(homepage).toContain("human consultancy");
   });

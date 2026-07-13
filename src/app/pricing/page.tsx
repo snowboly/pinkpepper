@@ -9,9 +9,9 @@ import { createClient } from "@/utils/supabase/server";
 import { getCspNonce } from "@/lib/security/csp";
 
 export const metadata: Metadata = {
-  title: "Pricing | PinkPepper Food Safety Compliance Software",
+  title: "Pricing | PinkPepper AI Food Safety Consultant",
   description:
-    "Start free. Plus at EUR 19/month for daily HACCP and SOP work. Pro at EUR 99/month adds Auditor mode and 2 hours of human consultancy.",
+    "Start free with AI food safety consultant features. Plus supports daily HACCP and SOP work. Pro adds AI support plus human food safety consultancy/review.",
   alternates: {
     canonical: "https://pinkpepper.io/pricing",
     languages: {
@@ -84,7 +84,7 @@ export default async function PricingPage({ locale }: PricingPageProps = {}) {
     operatingSystem: "Web",
     url: "https://pinkpepper.io",
     description:
-      "Food safety compliance software for EU and UK food businesses. Use it for HACCP, allergen documentation, SOP support, audit preparation, templates, and specialist-backed review workflows.",
+      "AI food safety consultant for EU and UK food businesses. Use it for HACCP, allergen documentation, SOP support, compliance workflows, templates, and optional human food safety consultant review.",
     offers: [
       {
         "@type": "Offer",
@@ -154,10 +154,10 @@ export default async function PricingPage({ locale }: PricingPageProps = {}) {
       <section className="py-16 md:py-20">
         <div className="pp-container max-w-4xl text-center">
           <h1 className="pp-display text-4xl font-black tracking-tight text-[#0F172A] md:text-5xl">
-            Save EUR 18,000+/year on compliance costs.
+            AI speed, human food safety expertise when needed.
           </h1>
           <p className="mt-5 text-lg leading-relaxed text-[#475569]">
-            Start free. Upgrade when you need more daily capacity, downloadable templates, Auditor mode, or human food safety consultancy.
+            Free and Plus include AI food safety assistant and consultant features. Pro adds AI support plus human food safety consultancy/review for higher-risk work.
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3 text-sm font-medium text-[#475569]">
             <Link href={haccpHref} className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
@@ -174,6 +174,9 @@ export default async function PricingPage({ locale }: PricingPageProps = {}) {
             </Link>
             <Link href="/compare/haccp-software-alternatives" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
               Compare HACCP software alternatives
+            </Link>
+            <Link href="/ai-food-safety-consultant" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
+              AI food safety consultant
             </Link>
             <Link href="/human-review" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 transition-colors hover:border-[#FDA4AF] hover:text-[#0F172A]">
               See when human review is needed

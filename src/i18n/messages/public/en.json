@@ -14,7 +14,7 @@
       "getStarted": "Get started"
     },
     "footer": {
-      "brandBlurb": "AI food safety consultant for HACCP and compliance.",
+      "brandBlurb": "AI food safety consultant for EU and UK food businesses.",
       "productHeading": "Product",
       "resourcesHeading": "Resources",
       "legalHeading": "Security & Legal",
@@ -36,8 +36,8 @@
   },
   "home": {
     "heroBadge": "Built for EU & UK food safety regulations",
-    "heroTitle": "AI food safety consultant for HACCP and compliance",
-    "heroDescription": "AI food safety consultant for HACCP and compliance. Generate food safety documents, build HACCP paperwork, and get answers to food safety questions.",
+    "heroTitle": "AI food safety consultant for EU and UK food businesses",
+    "heroDescription": "Create HACCP documents, SOPs, allergen records, and food safety procedures with AI — and get human food safety consultant support when you need expert review.",
     "eurLexLabel": "Regulation data powered by",
     "trustCards": {
       "groundedTitle": "Grounded in 35+ EU & UK regulations",
@@ -165,8 +165,8 @@
   },
   "pages": {
     "home": {
-      "title": "PinkPepper | AI Food Safety Consultant for HACCP & Compliance",
-      "description": "AI food safety consultant for HACCP and compliance. Generate food safety documents, build HACCP paperwork, and get answers to food safety questions."
+      "title": "AI Food Safety Consultant for EU & UK Businesses | PinkPepper",
+      "description": "Get AI-powered food safety support with optional human consultant review. Create HACCP documents, SOPs, allergen records, and compliance workflows for EU and UK food businesses."
     },
     "pricing": {
       "title": "Pricing - From EUR0/mo | PinkPepper Food Safety Software",

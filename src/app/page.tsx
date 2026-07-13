@@ -45,11 +45,28 @@ const homepageTestimonials = [
 ] as const;
 
 export const metadata: Metadata = {
-  title: "PinkPepper | AI Food Safety Consultant for HACCP & Compliance",
+  title: "AI Food Safety Consultant for EU & UK Businesses | PinkPepper",
   description:
-    "AI food safety consultant for HACCP and compliance. Generate food safety documents, build HACCP paperwork, and get answers to food safety questions.",
+    "Get AI-powered food safety support with optional human consultant review. Create HACCP documents, SOPs, allergen records, and compliance workflows for EU and UK food businesses.",
   alternates: {
     canonical: "https://pinkpepper.io",
+  },
+  openGraph: {
+    title: "AI Food Safety Consultant for EU & UK Businesses | PinkPepper",
+    description:
+      "Get AI-powered food safety support with optional human consultant review. Create HACCP documents, SOPs, allergen records, and compliance workflows for EU and UK food businesses.",
+    url: "https://pinkpepper.io",
+    siteName: "PinkPepper",
+    locale: "en_GB",
+    type: "website",
+    images: [{ url: "https://pinkpepper.io/social-card.png", width: 1200, height: 630, alt: "PinkPepper AI food safety consultant" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "AI Food Safety Consultant for EU & UK Businesses | PinkPepper",
+    description:
+      "Get AI-powered food safety support with optional human consultant review. Create HACCP documents, SOPs, allergen records, and compliance workflows for EU and UK food businesses.",
+    images: ["https://pinkpepper.io/social-card.png"],
   },
 };
 
@@ -105,12 +122,11 @@ export default async function HomePage({ locale }: HomePageProps = {}) {
             </div>
 
             <h1 className="pp-display mx-auto mb-8 max-w-4xl text-2xl leading-[1.15] tracking-[-0.02em] text-white sm:text-3xl md:text-4xl lg:text-5xl">
-              AI food safety consultant for HACCP and compliance
+              AI food safety consultant for EU and UK food businesses
             </h1>
 
             <p className="mx-auto mb-8 max-w-3xl text-base leading-relaxed text-white/80 sm:text-lg">
-              AI food safety consultant for HACCP and compliance. Generate food safety documents, build HACCP
-              paperwork, and get answers to food safety questions.
+              Create HACCP documents, SOPs, allergen records, and food safety procedures with AI — and get human food safety consultant support when you need expert review.
             </p>
 
             <div className="mb-8 flex justify-center">
@@ -154,6 +170,47 @@ export default async function HomePage({ locale }: HomePageProps = {}) {
         </div>
       </section>
 
+      <section className="border-b border-[#F1F5F9] bg-white py-16">
+        <div className="pp-container max-w-5xl">
+          <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">AI speed + human expertise</p>
+              <h2 className="pp-display mt-4 text-3xl font-semibold text-[#0F172A] md:text-4xl">
+                Use AI for the first draft, then escalate when the risk is higher
+              </h2>
+              <p className="mt-5 text-base leading-relaxed text-[#475569]">
+                PinkPepper is an AI food safety consultant for EU and UK food businesses, not a promise that software
+                can replace professional judgement or your own site controls.
+              </p>
+              <Link href="/ai-food-safety-consultant" className="mt-6 inline-flex text-sm font-semibold text-[#E11D48] hover:text-[#BE123C]">
+                Learn how the AI consultant works →
+              </Link>
+            </div>
+            <div className="grid gap-4 md:grid-cols-3">
+              {[
+                {
+                  title: "Draft and organise faster",
+                  body: "AI helps draft, explain, and organise HACCP documents, SOPs, allergen records, cleaning schedules, and compliance workflows quickly.",
+                },
+                {
+                  title: "Human review when needed",
+                  body: "Human food safety consultant support is available for higher-risk questions, review, and escalation where expert judgement matters.",
+                },
+                {
+                  title: "Your business stays responsible",
+                  body: "Outputs are drafts. Your team must review, adapt, implement, and maintain the final system for your site and local requirements.",
+                },
+              ].map((item) => (
+                <article key={item.title} className="rounded-2xl border border-[#E2E8F0] bg-[#F8FAFC] p-6">
+                  <h3 className="text-base font-semibold text-[#0F172A]">{item.title}</h3>
+                  <p className="mt-3 text-sm leading-relaxed text-[#64748B]">{item.body}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="border-y border-[#F1F5F9] bg-white py-8">
         <div className="pp-container">
           <div className="grid gap-4 md:grid-cols-3">
@@ -164,11 +221,11 @@ export default async function HomePage({ locale }: HomePageProps = {}) {
               },
               {
                 title: "Save 10+ hours every week",
-                body: "Generate HACCP plans, SOPs, allergen matrices, and audit-ready records in minutes instead of starting from blank pages.",
+                body: "Draft HACCP plans, SOPs, allergen matrices, and supporting records quickly instead of starting from blank pages.",
               },
               {
                 title: "Human consultants when it matters",
-                body: "Handle routine compliance with AI, then escalate to qualified food safety professionals for higher-risk reviews and sign-off.",
+                body: "Handle routine drafting with AI, then use human food safety consultant support for higher-risk questions and review.",
               },
             ].map((item) => (
               <div key={item.title} className="rounded-2xl border border-[#E2E8F0] bg-[#F8FAFC] p-5">
@@ -185,7 +242,7 @@ export default async function HomePage({ locale }: HomePageProps = {}) {
           <div className="mb-14 max-w-xl">
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">Built for real world operators</p>
             <h2 className="pp-display mt-4 text-4xl font-semibold tracking-[-0.01em] text-[#0F172A] md:text-5xl">
-              From raw notes to review-ready compliance work
+              From raw notes to practical compliance drafts
             </h2>
             <p className="mt-4 text-lg text-[#475569]">
               From free HACCP plan drafts and hazard analysis templates to SOPs, monitoring logs, and corrective
@@ -251,7 +308,7 @@ export default async function HomePage({ locale }: HomePageProps = {}) {
             <h2 className="pp-display mb-4 text-4xl text-[#0F172A] md:text-5xl">Pricing that follows the compliance job</h2>
             <p className="text-lg text-[#64748B]">
               Start free for live questions, move to Plus for heavier Consultant use, and choose Pro when you want
-              Auditor mode and human consultancy.{" "}
+              Auditor mode and human food safety consultant review.{" "}
               <Link href="/pricing" className="underline hover:text-[#0F172A]">See full pricing</Link>.
             </p>
           </div>

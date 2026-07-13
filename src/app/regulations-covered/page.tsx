@@ -59,6 +59,11 @@ const coverageGroups = [
 
 const nextLinks = [
   {
+    href: "/ai-food-safety-consultant",
+    title: "AI food safety consultant",
+    description: "See how AI drafts fit with optional human food safety consultant review and user responsibility.",
+  },
+  {
     href: "/methodology",
     title: "Understand the methodology",
     description: "See how PinkPepper separates legal requirements, guidance, and methodology-dependent decisions.",

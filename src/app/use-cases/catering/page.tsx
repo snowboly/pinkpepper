@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { FeatureTemplate } from "@/components/site/FeatureTemplate";
 
 export const metadata: Metadata = {
-  title: "Food Safety Software for Catering Businesses | PinkPepper",
+  title: "AI Food Safety Consultant for Catering Businesses | PinkPepper",
   description:
-    "PinkPepper handles the HACCP paperwork behind off-site catering, from prep in the production kitchen through transport, temporary setup, service, and pack-down.",
+    "PinkPepper uses AI to organise the HACCP paperwork behind off-site catering, from prep in the production kitchen through transport, temporary setup, service, and pack-down.",
   alternates: {
     canonical: "https://pinkpepper.io/use-cases/catering",
   },
@@ -15,7 +15,7 @@ export default function CateringUseCasePage() {
     <FeatureTemplate
       eyebrow="For contract caterers and event kitchens"
       title="Food safety documentation that moves with your service"
-      description="PinkPepper handles the HACCP paperwork behind off-site catering, from prep in the production kitchen through to transport, temporary setup, service, and pack-down. You get documentation that matches the way you actually work: event by event, menu by menu, venue by venue. No static templates. No blank sheets on the day of service."
+      description="PinkPepper uses AI to organise the HACCP paperwork behind off-site catering, from prep in the production kitchen through to transport, temporary setup, service, and pack-down. You get documentation that matches the way you actually work: event by event, menu by menu, venue by venue. No static templates. No blank sheets on the day of service."
       primaryCta="Start a catering plan"
       painPoints={[
         "Static HACCP templates fall apart the moment the menu, venue, or holding setup changes between events.",
@@ -25,7 +25,7 @@ export default function CateringUseCasePage() {
       outcomes={[
         "Each event gets its own set of HACCP records, built from your core menus but adapted to the venue and service timeline.",
         "Transport, hot-hold, cold-hold, and display monitoring logs stay consistent across production and service teams.",
-        "Audit-ready packs are ready before the van leaves, not pieced together after the event.",
+        "Reviewable packs are ready before the van leaves, not pieced together after the event.",
       ]}
       sections={[
         {
@@ -63,6 +63,11 @@ export default function CateringUseCasePage() {
           href: "/resources/temperature-monitoring-log-template",
           label: "Temperature monitoring log template",
           description: "Use a monitoring structure that works across kitchen prep, transport, hot hold, and cold hold checks.",
+        },
+        {
+          href: "/ai-food-safety-consultant",
+          label: "AI food safety consultant",
+          description: "See how AI drafting and optional human consultant review fit EU and UK food safety work.",
         },
       ]}
     />
