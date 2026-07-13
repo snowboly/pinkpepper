@@ -7,7 +7,7 @@ import { ArrowRight, CheckCircle2 } from "lucide-react";
 export const metadata: Metadata = {
   title: "AI HACCP Plan Generator for Food Businesses | PinkPepper",
   description:
-    "Use an AI HACCP plan generator to build a faster first draft for your food business. Map hazards, controls, monitoring, and corrective actions for UK and EU food safety workflows.",
+    "Use AI-assisted HACCP drafting to build a faster first draft for your food business, with optional human food safety consultant review for higher-risk work.",
   alternates: {
     canonical: "https://pinkpepper.io/features/haccp-plan-generator",
   },
@@ -49,7 +49,7 @@ const softwareApplicationSchema = {
   operatingSystem: "Web",
   url: "https://pinkpepper.io/features/haccp-plan-generator",
   description:
-    "An AI HACCP plan generator for food businesses that helps teams build a faster first draft for hazards, controls, monitoring, corrective actions, and supporting food safety paperwork.",
+    "An AI-assisted HACCP drafting with optional human review that helps teams build a faster first draft for hazards, controls, monitoring, corrective actions, and supporting food safety paperwork.",
   offers: [
     {
       "@type": "Offer",
@@ -91,11 +91,10 @@ export default async function HaccpPlanGeneratorPage() {
               AI HACCP software for food businesses
             </p>
             <h1 className="pp-display mt-4 text-4xl font-bold leading-[1.05] tracking-tight text-[#0F172A] md:text-6xl">
-              AI HACCP plan generator for food businesses
+              AI-assisted HACCP drafting with optional human review
             </h1>
             <p className="mt-6 max-w-3xl text-lg leading-8 text-[#475569]">
-              Build a faster HACCP first draft from your real process flow, then refine hazards, controls, monitoring,
-              and corrective actions without starting from a blank document.
+              Build a faster HACCP first draft from your real process flow, then refine hazards, controls, monitoring, and corrective actions. Add human review when the work is higher risk or needs expert challenge.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
               <Link
@@ -111,6 +110,7 @@ export default async function HaccpPlanGeneratorPage() {
               >
                 View pricing
               </Link>
+              <Link href="/human-review" className="inline-flex items-center gap-2 rounded-full border border-[#E2E8F0] bg-white px-6 py-3 text-sm font-semibold text-[#0F172A] transition-colors hover:border-[#CBD5E1] hover:bg-[#F8FAFC]">Human review</Link>
             </div>
             <div className="mt-8 flex flex-wrap gap-3 text-sm font-medium text-[#475569]">
               <span className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2">
@@ -214,8 +214,8 @@ export default async function HaccpPlanGeneratorPage() {
             </p>
 
             <p>
-              And when you need absolute confidence, a certified human food safety expert reviews the plan before you
-              sign it off.
+              And when the work is higher risk, optional human food safety consultant review can help challenge the
+              draft before your business decides whether to adopt and sign off the plan.
             </p>
 
             <h2>What This HACCP Plan Template Includes</h2>

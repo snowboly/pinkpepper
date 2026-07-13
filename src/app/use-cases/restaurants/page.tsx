@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { FeatureTemplate } from "@/components/site/FeatureTemplate";
 
 export const metadata: Metadata = {
-  title: "Food Safety Software for Restaurants | PinkPepper",
+  title: "AI Food Safety Consultant for Restaurants | PinkPepper",
   description:
-    "PinkPepper creates HACCP plans, monitoring logs, allergen records, and SOPs that work inside the rhythm of a restaurant kitchen.",
+    "PinkPepper uses AI to draft HACCP plans, monitoring logs, allergen records, and SOPs that work inside the rhythm of a restaurant kitchen.",
   alternates: {
     canonical: "https://pinkpepper.io/use-cases/restaurants",
   },
@@ -15,7 +15,7 @@ export default function RestaurantUseCasePage() {
     <FeatureTemplate
       eyebrow="For restaurant kitchens and FOH teams"
       title="Food safety documentation that keeps up with service"
-      description="PinkPepper creates HACCP plans, monitoring logs, allergen records, and SOPs that work inside the rhythm of a restaurant kitchen. Prep schedules, line checks, hot-hold temperatures, cooling logs, reheating records, and the allergen handoff to front of house all live in one place. Built for operators who need documentation that still works when the pass is full and the printer will not stop."
+      description="PinkPepper uses AI to draft HACCP plans, monitoring logs, allergen records, and SOPs that work inside the rhythm of a restaurant kitchen. Prep schedules, line checks, hot-hold temperatures, cooling logs, reheating records, and the allergen handoff to front of house all live in one place. Built for EU and UK operators who need documentation that still works when the pass is full and the printer will not stop."
       primaryCta="Start a restaurant plan"
       painPoints={[
         "Paper logs get filled in after the fact because nobody has time to find the right clipboard during a busy service.",
@@ -63,6 +63,11 @@ export default function RestaurantUseCasePage() {
           href: "/resources/temperature-monitoring-log-template",
           label: "Temperature monitoring log template",
           description: "Use a practical structure for line checks, hot-hold logs, cooling records, and fridge monitoring.",
+        },
+        {
+          href: "/ai-food-safety-consultant",
+          label: "AI food safety consultant",
+          description: "See how AI drafting and optional human consultant review fit EU and UK food safety work.",
         },
       ]}
     />

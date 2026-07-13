@@ -66,6 +66,11 @@ export default function FoodSafetySopGeneratorPage() {
           label: "Temperature control in HACCP",
           description: "Read the practical guide behind the limits, monitoring routines, and records teams actually need.",
         },
+        {
+          href: "/ai-food-safety-consultant",
+          label: "AI food safety consultant",
+          description: "See how AI drafting and optional human consultant review fit EU and UK food safety work.",
+        },
       ]}
     />
   );

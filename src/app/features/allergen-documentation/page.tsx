@@ -3,9 +3,9 @@ import Image from "next/image";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Allergen Documentation — UK & EU HACCP Records | PinkPepper",
+  title: "AI Allergen Documentation Support with Human Review | PinkPepper",
   description:
-    "Build the full allergen documentation pack your HACCP plan requires: supplier matrices, version-controlled recipes, PPDS labels, changeover logs, and enquiry records — aligned with EU 1169/2011 and Natasha's Law.",
+    "Use PinkPepper to support allergen record and document drafting for EU and UK food businesses, with optional human food safety consultant review for higher-risk work.",
   alternates: {
     canonical: "https://pinkpepper.io/features/allergen-documentation",
   },
@@ -20,11 +20,17 @@ export default function AllergenDocumentationPage() {
           <div className="pp-article-hero-meta max-w-4xl">
             <p className="text-[11px] font-black uppercase tracking-[0.22em] text-[#E11D48]">Allergen management</p>
             <h1 className="pp-display mt-4 text-4xl font-bold leading-[1.05] tracking-tight text-[#0F172A] md:text-6xl">
-              The Paper Trail of Safety: Allergen Documentation in HACCP
+              AI support for allergen documentation and review
             </h1>
             <p className="mt-6 max-w-3xl text-lg leading-8 text-[#475569]">
-              A guide to the documentation UK and EU law requires — supplier matrices, version-controlled recipes, PPDS labels, changeover records, and the enquiry log that protects you in court.
+              Draft supplier matrices, recipe records, PPDS checks, changeover logs, and enquiry records faster, then
+              use human food safety consultant review when allergen risk or business impact is higher.
             </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link href="/pricing" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 text-sm font-semibold text-[#0F172A] hover:bg-[#F8FAFC]">View pricing</Link>
+              <Link href="/human-review" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 text-sm font-semibold text-[#0F172A] hover:bg-[#F8FAFC]">Human review</Link>
+              <Link href="/ai-food-safety-consultant" className="rounded-full border border-[#E2E8F0] bg-white px-4 py-2 text-sm font-semibold text-[#0F172A] hover:bg-[#F8FAFC]">AI food safety consultant</Link>
+            </div>
           </div>
           <figure className="mt-10 overflow-hidden rounded-[30px] border border-[#E2E8F0] bg-white shadow-[0_24px_80px_rgba(15,23,42,0.08)]">
             <Image

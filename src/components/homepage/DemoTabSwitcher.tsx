@@ -20,14 +20,14 @@ const demoMap: Record<
     label: "HACCP (Cafe)",
     prompt: "Create a HACCP plan for a 40-seat cafe serving soups, sandwiches, and chilled desserts.",
     rawNotes: "Fridge checks happen daily. Team cools soups and stores desserts in display fridge.",
-    title: "Audit-ready HACCP controls",
+    title: "Reviewable HACCP controls",
     checklist: [
       "CCP: Chilled storage at 5 C or below",
       "Monitoring: Every 4 hours + opening and closing checks",
       "Corrective action: Isolate batch, assess exposure time, discard if unsafe, log incident",
       "Records: Temperature log, corrective action register, calibration checks",
     ],
-    tags: ["EC 852/2004", "FSA Guidance", "Audit-ready"],
+    tags: ["EC 852/2004", "FSA Guidance", "Reviewable"],
   },
   allergen: {
     label: "Allergen Matrix",
@@ -44,7 +44,7 @@ const demoMap: Record<
   },
   audit: {
     label: "Audit Pack",
-    prompt: "Prepare an audit-ready checklist for monthly internal food safety review.",
+    prompt: "Prepare an reviewable checklist for monthly internal food safety review.",
     rawNotes: "Need one place for SOP files, temperature logs, and open corrective actions.",
     title: "Inspection checklist and evidence set",
     checklist: [

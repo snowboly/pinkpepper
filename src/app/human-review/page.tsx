@@ -48,6 +48,11 @@ const reviewReasons = [
 
 const nextLinks = [
   {
+    href: "/ai-food-safety-consultant",
+    title: "AI food safety consultant",
+    description: "See what AI can help with, where human review fits, and the limits users need to understand.",
+  },
+  {
     href: "/methodology",
     title: "Read the methodology",
     description: "Use methodology first if you want to understand how PinkPepper forms answers before you decide when to escalate.",
@@ -76,12 +81,11 @@ export default function HumanReviewPage() {
         <div className="pp-container max-w-4xl">
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E11D48]">Human review</p>
           <h1 className="pp-display mt-4 text-4xl text-[#0F172A] md:text-6xl">
-            When PinkPepper output needs human review
+            Human food safety consultant review for higher-risk work
           </h1>
           <p className="mt-6 max-w-3xl text-lg leading-relaxed text-[#475569]">
             PinkPepper is designed to move routine food safety work forward faster. It is not designed to remove human
-            judgement from higher-risk decisions. This page explains the boundary clearly: where software support is
-            enough to improve the draft, and where a competent person still needs to review, validate, or take over.
+            judgement from higher-risk decisions. This page explains the boundary clearly: where AI food safety consultant support is enough to improve a draft, and where a competent human food safety consultant should review, validate, or take over.
           </p>
         </div>
       </section>

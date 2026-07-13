@@ -31,13 +31,13 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://pinkpepper.io",
   },
-  title: "PinkPepper | AI Food Safety Consultant for HACCP & Compliance",
+  title: "AI Food Safety Consultant for EU & UK Businesses | PinkPepper",
   description:
-    "AI food safety consultant for HACCP and compliance. Generate food safety documents, build HACCP paperwork, and get answers to food safety questions.",
+    "Get AI-powered food safety support with optional human consultant review. Create HACCP documents, SOPs, allergen records, and compliance workflows for EU and UK food businesses.",
   openGraph: {
-    title: "PinkPepper | AI Food Safety Consultant for HACCP & Compliance",
+    title: "AI Food Safety Consultant for EU & UK Businesses | PinkPepper",
     description:
-      "AI food safety consultant for HACCP and compliance. Generate food safety documents, build HACCP paperwork, and get answers to food safety questions.",
+      "Get AI-powered food safety support with optional human consultant review. Create HACCP documents, SOPs, allergen records, and compliance workflows for EU and UK food businesses.",
     url: "https://pinkpepper.io",
     siteName: "PinkPepper",
     locale: "en_GB",
@@ -53,9 +53,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "PinkPepper | AI Food Safety Consultant for HACCP & Compliance",
+    title: "AI Food Safety Consultant for EU & UK Businesses | PinkPepper",
     description:
-      "AI food safety consultant for HACCP and compliance. Generate food safety documents, build HACCP paperwork, and get answers to food safety questions.",
+      "Get AI-powered food safety support with optional human consultant review. Create HACCP documents, SOPs, allergen records, and compliance workflows for EU and UK food businesses.",
     images: ["https://pinkpepper.io/social-card.png"],
   },
   manifest: "/logo/site.webmanifest",
@@ -84,7 +84,7 @@ const organizationSchema = {
   url: "https://pinkpepper.io",
   logo: "https://pinkpepper.io/logo/android-chrome-512x512.png",
   description:
-    "AI food safety consultant for food businesses. Generate HACCP documents, allergen paperwork, SOPs, and answers to food safety compliance questions.",
+    "AI food safety consultant for EU and UK food businesses, with optional human food safety consultant support for HACCP documents, SOPs, allergen records, and compliance workflows.",
   contactPoint: {
     "@type": "ContactPoint",
     email: "support@pinkpepper.io",
@@ -99,8 +99,8 @@ const websiteSchema = {
   name: "PinkPepper",
   url: "https://pinkpepper.io",
   description:
-    "AI food safety consultant for HACCP plans, food safety documents, compliance questions, and EU/UK compliance workflows.",
-  inLanguage: ["en", "de", "fr", "es", "pt", "it"],
+    "AI food safety consultant for EU and UK food businesses, combining fast AI drafting with optional human food safety consultant review for higher-risk work.",
+  inLanguage: ["en", "de", "fr", "pt"],
   potentialAction: {
     "@type": "SearchAction",
     target: {

@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { FeatureTemplate } from "@/components/site/FeatureTemplate";
 
 export const metadata: Metadata = {
-  title: "Food Safety Software for Food Manufacturing | PinkPepper",
+  title: "AI Food Safety Consultant for Food Manufacturing | PinkPepper",
   description:
-    "PinkPepper builds your HACCP plans, process flow diagrams, CCP monitoring records, corrective action logs, and traceability documentation into a single working system.",
+    "PinkPepper helps draft your HACCP plans, process flow diagrams, CCP monitoring records, corrective action logs, and traceability documentation into a single working system.",
   alternates: {
     canonical: "https://pinkpepper.io/use-cases/food-manufacturing",
   },
@@ -15,7 +15,7 @@ export default function FoodManufacturingUseCasePage() {
     <FeatureTemplate
       eyebrow="For technical managers and HACCP team leads"
       title="Manufacturing documentation that holds up under audit pressure"
-      description="PinkPepper builds your HACCP plans, process flow diagrams, CCP monitoring records, corrective action logs, and traceability documentation into a single working system. It is designed for production lines, QC checkpoints, technical review cycles, and the reality of unannounced audits. Not a Q and A tool. Not a consultant in a browser. Software that supports the documentation work your technical team already runs."
+      description="PinkPepper helps draft your HACCP plans, process flow diagrams, CCP monitoring records, corrective action logs, and traceability documentation into a single working system. It is designed for production lines, QC checkpoints, technical review cycles, and the reality of unannounced audits. Not a Q and A tool. Not just another generic AI tool. Software that supports the documentation work your technical team already runs."
       primaryCta="See manufacturing features"
       painPoints={[
         "Process flow changes during line trials or recipe adjustments leave HACCP plans out of date and CCPs unaccounted for.",
@@ -63,6 +63,11 @@ export default function FoodManufacturingUseCasePage() {
           href: "/resources/equipment-calibration-log-template",
           label: "Equipment calibration log template",
           description: "Support monitoring and verification records for probes, scales, and other critical measuring equipment.",
+        },
+        {
+          href: "/ai-food-safety-consultant",
+          label: "AI food safety consultant",
+          description: "See how AI drafting and optional human consultant review fit EU and UK food safety work.",
         },
       ]}
     />
