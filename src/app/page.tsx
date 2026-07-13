@@ -83,10 +83,13 @@ export default async function HomePage({ locale }: HomePageProps = {}) {
       <section className="relative overflow-hidden pb-20 pt-16 md:pb-28 md:pt-28">
         <div className="absolute inset-0 -z-10">
           <Image
-            src="/hero-bg.jpg"
+            src="/hero-bg.webp"
             alt=""
             fill
             priority
+            fetchPriority="high"
+            placeholder="blur"
+            blurDataURL="data:image/webp;base64,UklGRiIAAABXRUJQVlA4IBYAAAAwAQCdASoBAAEAAUAmJQBOgB6AA/vuUAAA"
             sizes="100vw"
             className="object-cover"
             quality={55}
