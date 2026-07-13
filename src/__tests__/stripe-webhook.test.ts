@@ -216,6 +216,40 @@ describe("syncSubscriptionFromStripe", () => {
     expect(sendBillingEmailMock).toHaveBeenCalledTimes(1);
   });
 
+  it("uses the billed paid tier in non-active subscription update emails", async () => {
+    adminState.subscriptionRow = { user_id: "user_123" };
+    stripeRetrieveSubscriptionMock.mockRejectedValue(new Error("not needed in this test"));
+    getUserByIdMock.mockResolvedValue({
+      data: { user: { email: "owner@example.com" } },
+    });
+
+    await syncSubscriptionFromStripe(
+      {
+        id: "sub_123",
+        customer: "cus_123",
+        status: "past_due",
+        items: {
+          data: [
+            {
+              price: { id: "price_plus_monthly" },
+              current_period_end: 1_710_000_000,
+            },
+          ],
+        },
+      } as unknown as Stripe.Subscription,
+      "customer.subscription.updated"
+    );
+
+    expect(adminState.profileUpdates[0]).toMatchObject({ tier: "free" });
+    expect(sendBillingEmailMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        to: "owner@example.com",
+        html: expect.stringContaining("Plus"),
+      })
+    );
+    expect(sendBillingEmailMock.mock.calls[0]?.[0]?.html).not.toContain(">Free</td>");
+  });
+
 
   it.each([
     ["price_plus_monthly", "plus"],
