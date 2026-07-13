@@ -175,7 +175,7 @@ export async function syncSubscriptionFromStripe(
     } else {
       emailContent = buildSubscriptionUpdatedEmail({
         status: snapshot.status,
-        tier: snapshot.tier,
+        tier: snapshot.planTier,
       });
     }
 
