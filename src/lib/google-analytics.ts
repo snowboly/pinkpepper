@@ -5,6 +5,7 @@ export const PUBLIC_PATHNAME_HEADER = "x-public-pathname";
 const PUBLIC_ANALYTICS_PREFIXES = [
   "/",
   "/about",
+  "/ai-food-safety-consultant",
   "/articles",
   "/compare",
   "/contact",
