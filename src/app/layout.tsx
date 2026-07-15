@@ -5,7 +5,7 @@ import { headers } from "next/headers";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import { CookieBanner } from "@/components/site/CookieBanner";
-import { SiteFooter, SiteHeader } from "@/components/site/chrome";
+import { LegalSiteFooter, LegalSiteHeader, SiteFooter, SiteHeader } from "@/components/site/chrome";
 import { PUBLIC_PATHNAME_HEADER, shouldInjectGoogleAnalytics } from "@/lib/google-analytics";
 import { getCspNonce } from "@/lib/security/csp";
 import "./globals.css";
@@ -118,6 +118,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   const measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
   const requestHeaders = await headers();
   const pathname = requestHeaders.get(PUBLIC_PATHNAME_HEADER) ?? "/";
+  const isLegalRoute = pathname === "/legal" || pathname.startsWith("/legal/");
   const shouldRenderGoogleAnalytics = Boolean(measurementId) && shouldInjectGoogleAnalytics(pathname);
 
   return (
@@ -136,9 +137,9 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
       </head>
       <body className={`${manrope.variable} ${spaceGrotesk.variable} antialiased`}>
         <NextIntlClientProvider messages={messages}>
-          <SiteHeader />
+          {isLegalRoute ? <LegalSiteHeader /> : <SiteHeader />}
           {children}
-          <SiteFooter />
+          {isLegalRoute ? <LegalSiteFooter /> : <SiteFooter />}
           <CookieBanner
             nonce={nonce}
             googleAnalyticsMeasurementId={shouldRenderGoogleAnalytics ? measurementId : undefined}

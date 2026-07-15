@@ -159,6 +159,45 @@ export async function SiteHeader() {
   );
 }
 
+export function LegalSiteHeader() {
+  return (
+    <header className="border-b border-[#E2E8F0]/80 bg-white">
+      <div className="pp-container flex h-14 items-center justify-between md:h-16">
+        <Link href="/" className="flex items-center leading-none" aria-label="PinkPepper home">
+          <Image
+            src="/logo/LogoV3.png"
+            alt="PinkPepper"
+            width={180}
+            height={36}
+            className="h-8 w-auto object-contain"
+            priority
+          />
+        </Link>
+        <nav aria-label="Legal navigation" className="flex items-center gap-4 text-sm font-semibold text-[#64748B]">
+          <Link href="/legal" className="pp-shell-link">Legal</Link>
+          <Link href="/contact" className="pp-shell-link">Contact</Link>
+        </nav>
+      </div>
+    </header>
+  );
+}
+
+export function LegalSiteFooter() {
+  return (
+    <footer className="border-t border-[#F1F5F9] bg-white py-8">
+      <div className="pp-container flex flex-col justify-between gap-4 text-sm text-[#64748B] md:flex-row md:items-center">
+        <p>&copy; {new Date().getFullYear()} PinkPepper.io. All rights reserved.</p>
+        <nav aria-label="Legal footer" className="flex flex-wrap gap-x-5 gap-y-2">
+          <Link href="/legal/terms" className="pp-shell-link">Terms</Link>
+          <Link href="/legal/privacy" className="pp-shell-link">Privacy</Link>
+          <Link href="/legal/cookies" className="pp-shell-link">Cookies</Link>
+          <Link href="/legal/dpa" className="pp-shell-link">DPA</Link>
+        </nav>
+      </div>
+    </footer>
+  );
+}
+
 export async function SiteFooter() {
   const { messages, publicLocale } = await getChromeContext();
   const homeHref = getPublicPageHref(publicLocale, "/");
