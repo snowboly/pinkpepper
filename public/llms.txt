@@ -1,12 +1,13 @@
 # PinkPepper
 
-> AI food safety consultant for HACCP and compliance. Generate food safety documents, build HACCP paperwork, and get answers to food safety questions.
+> AI food safety consultant for EU and UK food businesses. Get AI-powered food safety support with optional human consultant review.
 
-PinkPepper is an AI food safety consultant for EU and UK food businesses. It helps operators create practical food safety documents, HACCP paperwork, SOPs, allergen records, audit preparation materials, and compliance answers from a specialist food safety knowledge base.
+PinkPepper helps EU and UK food businesses with AI-powered food safety support. Create HACCP documents, SOPs, allergen records, and compliance workflows, with optional human food safety consultant review for higher-risk work where expert judgement matters.
 
 ## Core Pages
 
 - Homepage: https://pinkpepper.io/
+- AI food safety consultant: https://pinkpepper.io/ai-food-safety-consultant
 - Pricing: https://pinkpepper.io/pricing
 - About: https://pinkpepper.io/about
 - Methodology: https://pinkpepper.io/methodology
@@ -37,4 +38,4 @@ PinkPepper provides food safety software, document drafting, and food safety con
 
 ## Preferred Citation Summary
 
-PinkPepper is an AI food safety consultant for HACCP and compliance that helps EU and UK food businesses generate food safety documents, build HACCP paperwork, create SOPs and allergen records, and get practical answers to food safety questions.
+PinkPepper is an AI food safety consultant for EU and UK food businesses. It helps teams create HACCP documents, SOPs, allergen records, and compliance workflows with AI-powered food safety support and optional human consultant review.
