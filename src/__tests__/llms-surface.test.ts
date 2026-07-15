@@ -8,8 +8,10 @@ describe("llms.txt", () => {
 
     expect(llms).toMatch(/^# PinkPepper/);
     expect(llms).toContain(
-      "AI food safety consultant for HACCP and compliance. Generate food safety documents, build HACCP paperwork, and get answers to food safety questions.",
+      "AI food safety consultant for EU and UK food businesses. Get AI-powered food safety support with optional human consultant review.",
     );
+    expect(llms).toContain("Create HACCP documents, SOPs, allergen records, and compliance workflows");
+    expect(llms).toContain("https://pinkpepper.io/ai-food-safety-consultant");
     expect(llms).toContain("https://pinkpepper.io/features/haccp-plan-generator");
     expect(llms).toContain("https://pinkpepper.io/features/food-safety-sop-generator");
     expect(llms).toContain("https://pinkpepper.io/features/allergen-documentation");
