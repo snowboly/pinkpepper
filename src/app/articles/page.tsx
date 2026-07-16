@@ -77,7 +77,7 @@ const featuredGuides = [
 
 const INITIAL_ARTICLE_COUNT = 24;
 const INITIAL_FEATURED_GUIDE_COUNT = 8;
-const DEFAULT_ARTICLES_LIBRARY_MODE = "full";
+const DEFAULT_ARTICLES_LIBRARY_MODE = "lazy";
 
 const clusterLinks = [
   {
@@ -181,6 +181,34 @@ function getArticlesLibraryMode() {
   return configuredMode === "lazy" ? "lazy" : DEFAULT_ARTICLES_LIBRARY_MODE;
 }
 
+function getDailyArticleSeed(date = new Date()) {
+  const utcMonth = date.getUTCMonth() + 1;
+  const utcDate = date.getUTCDate();
+  return Number(`${date.getUTCFullYear()}${String(utcMonth).padStart(2, "0")}${String(utcDate).padStart(2, "0")}`);
+}
+
+function createSeededRandom(seed: number) {
+  let state = seed % 2147483647;
+  if (state <= 0) state += 2147483646;
+
+  return () => {
+    state = (state * 16807) % 2147483647;
+    return (state - 1) / 2147483646;
+  };
+}
+
+function shuffleArticlesForSeed<T>(items: T[], seed: number) {
+  const shuffled = [...items];
+  const random = createSeededRandom(seed);
+
+  for (let index = shuffled.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(random() * (index + 1));
+    [shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex], shuffled[index]];
+  }
+
+  return shuffled;
+}
+
 function resolveHref(path: string, locale: PublicLocale, localizedSlugs: ReadonlySet<string>) {
   if (path.startsWith("/articles/")) {
     return getArticleHref(path.replace("/articles/", ""), locale, localizedSlugs);
@@ -205,8 +233,11 @@ export default async function ArticlesPage({ locale = "en" }: ArticlesPageProps 
     featuredGuides.slice(0, INITIAL_FEATURED_GUIDE_COUNT).map((guide) => guide.href.replace("/articles/", "")),
   );
   const rotatingArticles = articles.filter((article) => !featuredGuideSlugs.has(article.slug));
-  const initialArticles = shouldLazyLoadRemainder ? articles.slice(0, INITIAL_ARTICLE_COUNT) : articles;
-  const remainingArticles = shouldLazyLoadRemainder ? articles.slice(INITIAL_ARTICLE_COUNT) : [];
+  const libraryArticles = shouldLazyLoadRemainder
+    ? shuffleArticlesForSeed(articles, getDailyArticleSeed())
+    : articles;
+  const initialArticles = shouldLazyLoadRemainder ? libraryArticles.slice(0, INITIAL_ARTICLE_COUNT) : libraryArticles;
+  const remainingArticles = shouldLazyLoadRemainder ? libraryArticles.slice(INITIAL_ARTICLE_COUNT) : [];
 
   return (
     <main className="overflow-hidden">
