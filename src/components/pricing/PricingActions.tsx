@@ -14,6 +14,7 @@ interface Props {
   label: string;
   className: string;
   interval?: BillingInterval;
+  signupHref?: string;
   source?: "pricing_page" | "homepage";
 }
 
@@ -37,8 +38,13 @@ function openCheckout(url: string) {
   window.location.href = url;
 }
 
-function redirectToSignup(plan: Plan, interval: BillingInterval) {
-  window.location.href = `/signup?plan=${plan}&interval=${interval}`;
+function buildSignupHref(plan: Plan, interval: BillingInterval, signupHref = "/signup") {
+  const separator = signupHref.includes("?") ? "&" : "?";
+  return `${signupHref}${separator}plan=${plan}&interval=${interval}`;
+}
+
+function redirectToSignup(plan: Plan, interval: BillingInterval, signupHref?: string) {
+  window.location.href = buildSignupHref(plan, interval, signupHref);
 }
 
 export default function PricingActions({
@@ -47,6 +53,7 @@ export default function PricingActions({
   label,
   className,
   interval = "monthly",
+  signupHref,
   source = "pricing_page",
 }: Props) {
   const [loading, setLoading] = useState(false);
@@ -56,7 +63,7 @@ export default function PricingActions({
   if (isLoggedIn === false) {
     return (
       <Link
-        href={`/signup?plan=${plan}&interval=${interval}`}
+        href={buildSignupHref(plan, interval, signupHref)}
         className={className}
         onClick={() => track("pricing_signup_click", { plan, interval, source })}
       >
@@ -79,7 +86,7 @@ export default function PricingActions({
 
         if (!user) {
           track("pricing_signup_click", { plan, interval, source });
-          redirectToSignup(plan, interval);
+          redirectToSignup(plan, interval, signupHref);
           return;
         }
       }
