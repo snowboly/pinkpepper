@@ -77,7 +77,7 @@ const featuredGuides = [
 
 const INITIAL_ARTICLE_COUNT = 24;
 const INITIAL_FEATURED_GUIDE_COUNT = 8;
-const DEFAULT_ARTICLES_LIBRARY_MODE = "lazy";
+const DEFAULT_ARTICLES_LIBRARY_MODE = "full";
 
 const clusterLinks = [
   {
@@ -178,7 +178,7 @@ function getArticleHref(slug: string, locale: PublicLocale, localizedSlugs: Read
 }
 function getArticlesLibraryMode() {
   const configuredMode = process.env.ARTICLES_LIBRARY_MODE?.trim().toLowerCase();
-  return configuredMode === "lazy" ? "lazy" : DEFAULT_ARTICLES_LIBRARY_MODE;
+  return configuredMode === "lazy" || configuredMode === "full" ? configuredMode : DEFAULT_ARTICLES_LIBRARY_MODE;
 }
 
 function getDailyArticleSeed(date = new Date()) {
