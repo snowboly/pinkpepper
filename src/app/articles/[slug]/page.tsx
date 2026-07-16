@@ -19,6 +19,17 @@ type ArticlePageProps = {
   locale?: PublicLocale;
 };
 
+const articlePublisherNames = [
+  "John",
+  "Sarah",
+  "Dr. Margarida",
+] as const;
+
+export function getArticlePublisherName(slug: string) {
+  const hash = [...slug].reduce((total, character) => total + character.charCodeAt(0), 0);
+  return articlePublisherNames[hash % articlePublisherNames.length] ?? "John";
+}
+
 const articleUiCopy: Record<
   PublicLocale,
   {
@@ -302,6 +313,7 @@ export default async function ArticleDetailPage({ params, locale = "en" }: Artic
   }
 
   const { processedContent } = processArticleContent(article.body);
+  const publisherName = getArticlePublisherName(article.slug);
   const bridgeLinks = resolveArticleBridgeLinks(article);
   const relatedArticles = [
     ...articleManifest.filter((candidate) => candidate.slug !== article.slug && candidate.category === article.category),
@@ -317,8 +329,8 @@ export default async function ArticleDetailPage({ params, locale = "en" }: Artic
     description: article.excerpt,
     datePublished: article.publishedAt,
     author: {
-      "@type": "Organization",
-      name: "PinkPepper",
+      "@type": "Person",
+      name: publisherName,
       url: "https://pinkpepper.io",
     },
     publisher: {
@@ -358,7 +370,9 @@ export default async function ArticleDetailPage({ params, locale = "en" }: Artic
             <h1 className="pp-display mt-4 text-4xl font-bold leading-[1.05] tracking-tight text-[#0F172A] md:text-6xl">
               {article.title}
             </h1>
-            <p className="mt-5 text-base font-semibold text-[#64748B]">{article.publishedAt}</p>
+            <p className="mt-5 text-base font-semibold text-[#64748B]">
+              {article.publishedAt} · Published by: {publisherName}
+            </p>
             <p className="mt-6 max-w-3xl text-xl leading-9 text-[#475569]">{article.excerpt}</p>
           </div>
           {article.image ? (

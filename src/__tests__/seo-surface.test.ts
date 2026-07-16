@@ -416,12 +416,30 @@ describe("public SEO copy and linking", () => {
   it("renders related reading links on article detail pages", async () => {
     const markup = await renderArticleDetailPageForTest();
 
+    expect(markup).toContain("Published by:");
     expect(markup).toContain("Related reading");
     expect(markup).toContain("Keep building the same cluster");
     expect(markup).toContain('href="/articles/temperature-control-in-haccp-limits-and-monitoring"');
     expect(markup).toContain('href="/articles/building-a-haccp-process-flow-diagram"');
     expect(markup).toContain('href="/articles/haccp-checklist-for-new-food-businesses"');
     expect(markup).toContain('href="/articles"');
+  });
+
+  it("assigns stable randomized article publishers for author freshness", async () => {
+    const articleDetailPageModule = await import("@/app/articles/[slug]/page");
+
+    expect(articleDetailPageModule.getArticlePublisherName("cooling-and-reheating-haccp-high-risk-steps")).toBe(
+      articleDetailPageModule.getArticlePublisherName("cooling-and-reheating-haccp-high-risk-steps"),
+    );
+    expect(
+      [
+        "how-to-create-a-haccp-plan-step-by-step",
+        "temperature-control-in-haccp-limits-and-monitoring",
+        "haccp-for-vegan-and-plant-based-cafes-eu",
+        "cooling-and-reheating-haccp-high-risk-steps",
+        "haccp-for-food-trucks",
+      ].map((slug) => articleDetailPageModule.getArticlePublisherName(slug)),
+    ).toContain("John");
   });
 
   it("uses larger article reading sizes and pair-based related-link grids", () => {
@@ -737,4 +755,3 @@ describe("premium quality regressions", () => {
     }
   });
 });
-
