@@ -66,7 +66,7 @@ async function renderArticlesPageForTest(
   return renderToStaticMarkup(await ArticlesPage());
 }
 
-async function renderArticleDetailPageForTest() {
+async function renderArticleDetailPageForTest(locale: "en" | "fr" | "de" | "pt" = "en") {
   vi.resetModules();
   vi.doMock("@/lib/articles", () => ({
     getArticleBySlug: vi.fn().mockResolvedValue({
@@ -129,6 +129,7 @@ async function renderArticleDetailPageForTest() {
   return renderToStaticMarkup(
     await ArticleDetailPage({
       params: Promise.resolve({ slug: "cooling-and-reheating-haccp-high-risk-steps" }),
+      locale,
     }),
   );
 }
@@ -423,6 +424,13 @@ describe("public SEO copy and linking", () => {
     expect(markup).toContain('href="/articles/building-a-haccp-process-flow-diagram"');
     expect(markup).toContain('href="/articles/haccp-checklist-for-new-food-businesses"');
     expect(markup).toContain('href="/articles"');
+  });
+
+  it("localizes article publisher labels on translated article pages", async () => {
+    const markup = await renderArticleDetailPageForTest("fr");
+
+    expect(markup).toContain("Publié par :");
+    expect(markup).not.toContain("Published by:");
   });
 
   it("assigns stable randomized article publishers for author freshness", async () => {
