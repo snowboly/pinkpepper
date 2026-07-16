@@ -1,8 +1,8 @@
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
+import { DemoTabSwitcherIsland } from "@/components/homepage/DemoTabSwitcherIsland";
 import { HomepageTestimonial } from "@/components/homepage/HomepageTestimonial";
-import PricingActions from "@/components/pricing/PricingActions";
 import { type PublicLocale } from "@/i18n/public";
 import { type PublicMessagesDictionary, getPublicPageHref } from "@/lib/public-routes";
 import { getCspNonce } from "@/lib/security/csp";
@@ -16,13 +16,6 @@ import {
   Users,
 } from "lucide-react";
 import { HeroChatForm } from "@/components/homepage/HeroChatForm";
-
-const DemoTabSwitcher = dynamic(
-  () => import("@/components/homepage/DemoTabSwitcher").then((mod) => mod.DemoTabSwitcher),
-  {
-    loading: () => <div className="min-h-[28rem] rounded-[2rem] border border-[#E2E8F0] bg-white/60" aria-hidden="true" />,
-  },
-);
 
 const RandomArticleLinks = dynamic(() => import("@/components/homepage/RandomArticleLinks"), {
   loading: () => <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4" aria-hidden="true" />,
@@ -55,6 +48,8 @@ export async function LocalizedHomePage({ locale, copy }: LocalizedHomePageProps
   const nonce = await getCspNonce();
   const pricingHref = getPublicPageHref(locale, "/pricing");
   const signupHref = getPublicPageHref(locale, "/signup");
+  const plusSignupHref = `${signupHref}?plan=plus&interval=monthly`;
+  const proSignupHref = `${signupHref}?plan=pro&interval=monthly`;
   const articlesHref = getPublicPageHref(locale, "/articles");
   const haccpHref = getPublicPageHref(locale, "/features/haccp-plan-generator");
   const faqSchema = {
@@ -208,7 +203,7 @@ export async function LocalizedHomePage({ locale, copy }: LocalizedHomePageProps
               </div>
             </div>
 
-            <DemoTabSwitcher />
+            <DemoTabSwitcherIsland />
           </div>
         </div>
       </section>
@@ -265,12 +260,9 @@ export async function LocalizedHomePage({ locale, copy }: LocalizedHomePageProps
                   </li>
                 ))}
               </ul>
-              <PricingActions
-                plan="plus"
-                label={copy.pricing.plusCta}
-                source="homepage"
-                className="mt-8 block rounded-xl border border-[#FBCFE8] bg-[#FFF1F2] py-3.5 text-center text-sm font-semibold text-[#BE123C] transition-all duration-200 hover:bg-[#FFE4E6] hover:-translate-y-0.5 hover:shadow-md active:scale-[0.98]"
-              />
+              <Link href={plusSignupHref} className="mt-8 block rounded-xl border border-[#FBCFE8] bg-[#FFF1F2] py-3.5 text-center text-sm font-semibold text-[#BE123C] transition-all duration-200 hover:bg-[#FFE4E6] hover:-translate-y-0.5 hover:shadow-md active:scale-[0.98]">
+                {copy.pricing.plusCta}
+              </Link>
             </div>
 
             <div className="flex flex-col rounded-3xl border border-[#F9A8D4] bg-[#FFF8FB] p-8">
@@ -289,12 +281,9 @@ export async function LocalizedHomePage({ locale, copy }: LocalizedHomePageProps
                   </li>
                 ))}
               </ul>
-              <PricingActions
-                plan="pro"
-                label={copy.pricing.proCta}
-                source="homepage"
-                className="mt-8 block rounded-xl bg-[#E11D48] py-3.5 text-center text-sm font-semibold text-white transition-all duration-200 hover:bg-[#BE123C] hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#E11D48]/25 active:scale-[0.98]"
-              />
+              <Link href={proSignupHref} className="mt-8 block rounded-xl bg-[#E11D48] py-3.5 text-center text-sm font-semibold text-white transition-all duration-200 hover:bg-[#BE123C] hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#E11D48]/25 active:scale-[0.98]">
+                {copy.pricing.proCta}
+              </Link>
             </div>
           </div>
         </div>
