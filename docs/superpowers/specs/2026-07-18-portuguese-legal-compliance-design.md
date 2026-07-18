@@ -25,16 +25,18 @@ The implementation creates a strong operational baseline. It does not replace re
 - Legal languages: English (`en`), French (`fr`), German (`de`), Spanish (`es`), Italian (`it`), and Portuguese (`pt`).
 - Consumer withdrawal policy: a full refund for an EU/UK private consumer who withdraws within 14 days of the initial subscription purchase.
 - Governing law: Portuguese law, subject to mandatory rights and jurisdiction rules that protect consumers in their country of residence.
-- Published date: 18 July 2026.
-- Effective date for new users: 18 July 2026.
-- Effective date for existing users: 17 August 2026.
+- Published instant: 18 July 2026 at 00:00 Europe/Lisbon (`2026-07-18T00:00:00+01:00`).
+- Effective instant for new users: the published instant.
+- Effective instant for existing users: 17 August 2026 at 00:00 Europe/Lisbon (`2026-08-17T00:00:00+01:00`).
+
+All database and resolver comparisons parse these ISO instants and compare them in UTC. A new user is an account whose `created_at` is at or after the published instant; an existing user is an account created before it.
 
 ## Goals
 
 1. Correct the operator identity, governing law, regulator, consumer-dispute, and withdrawal information.
 2. Make every policy factually consistent with the application and vendor relationships.
 3. Provide full, structurally equivalent legal policies in all six configured languages.
-4. make policy acceptance explicit, versioned, minimal, and auditable across signup and checkout.
+4. Make policy acceptance explicit, versioned, minimal, and auditable across signup and checkout.
 5. Give users an equally easy way to withdraw optional analytics consent.
 6. Prevent future translation drift and reintroduction of obsolete or false claims through automated tests.
 7. Preserve mandatory EU/EEA and UK consumer and data-protection rights rather than attempting to contract around them.
@@ -175,7 +177,9 @@ The following surfaces must link to the legal page matching the user's current s
 - cookie banner and cookie-settings control;
 - security page;
 - legal hub and cross-policy links; and
-- generated authentication and transactional emails when a locale is known.
+- the bounded email inventory described below.
+
+For email integration, app-generated messages using `src/lib/email-wrapper.ts` or `src/lib/auth-emails.ts` will accept a supported profile/account locale and generate localized legal links. Missing or unsupported locale values use the canonical English links. The static Supabase templates in `src/lib/supabase-auth-templates/*.html` have no reliable per-recipient locale context and will retain canonical English links. Translating complete email bodies is outside this project.
 
 Localized legal routes must be recognized by route-chrome and analytics-exclusion logic so they receive the same legal-page layout and do not unexpectedly load optional analytics.
 
@@ -227,15 +231,15 @@ The DPA will separate the Article 28 processor relationship from João's indepen
 - information and proportionate audit rights that do not obstruct Article 28 rights;
 - international-transfer terms for EU/EEA and UK data only where the applicable mechanism exists;
 - Portuguese governing law, subject to mandatory applicable data-protection law; and
-- an electronic acceptance mechanism plus the existing option to request a countersigned copy.
+- incorporation through the accepted Terms for business customers plus the existing option to request a countersigned copy.
 
 Billing, fraud prevention, tax records, and direct account administration will not be misdescribed as processing solely on a customer's documented instructions.
 
 ### Cookie Policy and consent
 
-The Cookie Policy and banner will match actual storage and telemetry behaviour. The inventory will cover first-party authentication/session storage, the PinkPepper consent preference, Stripe payment/fraud storage where set, Google Analytics after consent, Vercel Analytics after consent, and non-cookie telemetry such as Speed Insights where applicable.
+The Cookie Policy and banner will match actual storage and telemetry behaviour. The inventory will cover first-party authentication/session storage, the PinkPepper consent preference, Stripe payment/fraud storage where set, Google Analytics after consent, Vercel Analytics after consent, and Vercel Speed Insights after consent.
 
-Optional analytics must not load before affirmative consent. A persistent `Cookie settings` control will reopen the choice after dismissal, and selecting essential-only will remove or disable optional analytics state to the extent technically possible. With only one optional purpose, separate `Accept analytics` and `Essential only` choices are sufficient; a complex preference center is unnecessary.
+Google Analytics, Vercel Analytics, and Vercel Speed Insights are all treated as optional analytics and must not render or load before affirmative consent. A persistent `Cookie settings` control will reopen the choice after dismissal. Choosing `Essential only` or withdrawing a prior analytics choice will save the essential-only preference, update Google consent to denied if `gtag` is present, expire visible first-party `_ga` and `_ga_*` cookies on PinkPepper's host/path, and reload the page so none of the three analytics components is rendered. Third-party cookies set on Stripe or another provider's domain cannot be deleted by PinkPepper and are described separately. With only one optional purpose, separate `Accept analytics` and `Essential only` choices are sufficient; a complex preference center is unnecessary.
 
 ### Refund Policy
 
@@ -247,6 +251,8 @@ The Refund Policy will:
 - distinguish the statutory consumer withdrawal rule from discretionary business-customer refunds, billing errors, and service-unavailability remedies;
 - explain renewals, downgrades, consultancy allocations, refund-request steps, response targets, payment-method timing, and VAT treatment without limiting mandatory law; and
 - use the support email as a valid withdrawal channel without requiring a reason.
+
+Refund requests and Stripe refund execution remain a manual support operation. This project supplies accurate policy text, request instructions, and internal handoff criteria; it does not add automatic eligibility adjudication, a refund API, or automated Stripe refunds.
 
 ### Acceptable Use Policy
 
@@ -278,6 +284,8 @@ Before final policy text is accepted, every operational claim must be checked ag
 
 If a claim cannot be substantiated, the policy will use accurate criteria-based wording or remove the claim. This project does not create a new retention job or security control solely to preserve boilerplate wording; a separate implementation decision is required for any new operational guarantee.
 
+Findings will be recorded in `docs/legal/vendor-and-policy-claims-audit.md` with the claim, repository or vendor evidence, verification date, conclusion, and resulting policy wording. This makes the factual audit reproducible without treating the design document as evidence of vendor contracts.
+
 ## Acceptance and versioning
 
 ### Data model
@@ -287,23 +295,28 @@ An append-only `legal_policy_acceptances` table will record:
 - user ID;
 - Terms version;
 - Privacy version acknowledged;
-- Refund version when applicable;
-- DPA version when applicable;
+- Refund version;
 - locale;
-- source (`signup`, `policy_update`, `checkout`, or `dpa`); and
+- source (`signup`, `policy_update`, or `checkout`); and
 - server-recorded acceptance timestamp.
 
-The table will not store IP address, raw user agent, or device fingerprint. Users may read their own records. Only trusted server/database paths may insert records; users cannot update or delete acceptance history through normal client APIs.
+The DPA is not stored in this table. The tuple `(user_id, terms_version, privacy_version, refund_version, source)` is unique. This preserves distinct signup/policy-update and checkout evidence while making callback retries and repeated checkout attempts idempotent within the same source. The table will not store IP address, raw user agent, or device fingerprint. Users may read their own records. Only trusted server paths may insert records; users cannot update or delete acceptance history through normal client APIs.
+
+A shared server-side `resolveLegalRequirements(userId, now)` function returns the required Terms, Privacy, and Refund versions, whether the effective date has passed for that user, and whether the user has a satisfying acceptance tuple. Signup gating, the dashboard notice, protected feature APIs, and checkout must use this resolver rather than duplicating version comparisons.
+
+For the general service gate, a current-version record from any source satisfies the policy requirement because each source uses the same explicit acceptance language. Checkout additionally requires a current-version record with source `checkout`; if none exists, the checkout disclosure must be accepted and that source-specific record inserted before Stripe Checkout opens.
 
 ### Signup
 
-Password, magic-link, and Google signup require an unchecked explicit control stating that the user agrees to the current Terms and acknowledges the Privacy Policy. Marketing remains a separate optional unchecked choice.
+Password, magic-link, and Google signup all complete through an authenticated legal-acceptance step before normal dashboard access. That page has an unchecked explicit control stating that the user agrees to the current Terms and acknowledges the Privacy and Refund policies. Marketing remains a separate optional unchecked choice on the original signup form.
 
-Because some authentication methods complete after an external redirect, the server will create a short-lived, signed, HttpOnly pending-acceptance token containing only the selected versions and locale. The authentication callback consumes that token after the user identity is known and appends the acceptance record. If the token is missing, invalid, expired, or cannot be persisted, account access pauses on a clear retry screen rather than silently recording acceptance or granting normal dashboard access.
+After password email confirmation, magic-link authentication, or Google OAuth, the existing authentication callback resolves the authenticated user and calls the shared resolver. A new user without current signup acceptance is redirected to `/legal/acceptance` immediately. An existing user without current policy-update acceptance is allowed through to the non-blocking notice before the existing-user effective instant and is redirected to mandatory acceptance only on or after that instant. This avoids pre-authentication acceptance tokens and works when the callback opens on another device. The authenticated acceptance endpoint reads current versions from server configuration, inserts the source-specific unique tuple idempotently, and then redirects to the original safe in-app destination. Duplicate callback execution or a repeated submission returns the existing acceptance as success. If persistence fails, the user remains on the acceptance page with a retry message and access only to the exception routes listed below.
 
 ### Existing users and material changes
 
-Existing users receive a localized in-app notice showing the publication date, effective date, summary, and policy links. A material policy version can require explicit re-acceptance no later than its effective date. Failure to persist acceptance leaves the notice active and prevents new checkout or continued paid use after the effective date, while preserving access needed to export data, cancel, contact support, or exercise legal rights.
+Every existing user must accept Terms version `2026-07-18` and acknowledge Privacy and Refund versions `2026-07-18` by 17 August 2026. The localized in-app notice shows the publication date, effective date, summary, and policy links. Before the effective date it is non-blocking; on and after the effective date the resolver requires the exact current three-version tuple.
+
+On and after the effective date, a missing tuple blocks all endpoints that create new AI output, consume paid quota, start a document review, submit an audit interaction, or initiate/change a paid subscription. It does not block public/legal routes, authentication/signout, the acceptance page and endpoint, read-only access to existing conversations/documents, downloading an existing user-owned file, account settings, account deletion, the Stripe billing portal used to cancel, or support/privacy-rights contact. Enforcement is a shared server guard imported by every in-scope mutation/API route, with a matching UI gate for usability; middleware or UI-only checks are insufficient. A route-inventory test lists each protected and exempt endpoint so newly added paid-feature routes cannot bypass the resolver silently.
 
 No customer email is sent as part of this repository change. The handoff will provide the audience, effective date, and localized notice copy needed for a separately authorized communication.
 
@@ -312,6 +325,8 @@ No customer email is sent as part of this repository change. The handoff will pr
 Before opening Stripe Checkout, PinkPepper displays the selected plan, billing interval, recurring nature, VAT statement, cancellation timing, 14-day private-consumer refund link, Terms, Privacy, and Refund links. The user must explicitly accept the current contractual versions. The server verifies and records acceptance before creating the Stripe session; client-supplied version strings are never trusted over server configuration.
 
 If configured, Stripe's own terms-of-service consent collection may provide additional evidence, but it does not replace PinkPepper's versioned record or depend on an unverified dashboard setting.
+
+The published DPA is incorporated into the Terms for business customers using PinkPepper as a processor. It has its own displayed document version and remains available for countersignature, but it does not create a separate in-product acceptance gate or `legal_policy_acceptances` field in this project.
 
 ## Failure behaviour and edge cases
 
@@ -349,7 +364,7 @@ Automated tests will cover:
 - required but initially unchecked signup acceptance;
 - independent optional marketing consent;
 - password, magic-link, and Google redirect acceptance persistence;
-- expired/invalid pending-acceptance tokens;
+- cross-device authentication callbacks, duplicate callbacks, failed acceptance writes, and idempotent resubmission;
 - existing-user policy notices and effective-date gating;
 - checkout rejection without current acceptance;
 - server-side rejection of stale or forged version values;
@@ -395,4 +410,3 @@ The implementation is ready for handoff when:
 - versioned acceptance is stored with data minimization and server-side validation;
 - all required test/build/browser checks pass; and
 - the unresolved complaints-book registration and UK representative risk are plainly documented without false compliance claims.
-
