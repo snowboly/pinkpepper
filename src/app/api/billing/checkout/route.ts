@@ -5,6 +5,7 @@ import { getStripe } from "@/lib/billing/stripe";
 import { isAllowedBillingRequest, getTrustedSiteOrigin } from "@/lib/billing/request-origin";
 import { billingLimiter, checkRateLimit } from "@/lib/ratelimit";
 import { getStripePriceIdForPlan, hasStripePriceConfigError, isBillingInterval, isBillingTier } from "@/lib/billing/price-config";
+import { recordLegalAcceptance } from "@/lib/legal/requirements";
 
 export const dynamic = "force-dynamic";
 
@@ -28,9 +29,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const body = (await request.json()) as { plan?: unknown; interval?: unknown; tier?: unknown };
+    const body = (await request.json()) as { plan?: unknown; interval?: unknown; tier?: unknown; legalAccepted?: unknown };
     const plan = body.plan ?? body.tier;
     const interval = body.interval ?? "monthly";
+
+    if (body.legalAccepted !== true) {
+      return NextResponse.json({ code: "LEGAL_CHECKOUT_ACCEPTANCE_REQUIRED", acceptanceUrl: "/legal/acceptance?capability=checkout", error: "Please accept the current Terms, Privacy Policy, and Refund Policy before checkout." }, { status: 428 });
+    }
 
     if (!isBillingTier(plan) || !isBillingInterval(interval)) {
       return NextResponse.json({ error: "Invalid plan or billing interval." }, { status: 400 });

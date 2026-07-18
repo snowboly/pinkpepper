@@ -15,6 +15,7 @@ const { billingState, createCheckoutSessionMock, createCustomerMock, createPorta
       subscriptionRow: null as { stripe_customer_id?: string | null } | null,
       upserts: [] as Array<Record<string, unknown>>,
       adminUpsertError: null as { message: string } | null,
+      legalAcceptanceInserts: [] as Array<Record<string, unknown>>,
     },
     createCheckoutSessionMock: vi.fn(),
     createCustomerMock: vi.fn(),
@@ -96,6 +97,7 @@ describe("billing route origin validation", () => {
     billingState.subscriptionRow = null;
     billingState.upserts = [];
     billingState.adminUpsertError = null;
+    billingState.legalAcceptanceInserts = [];
     createCheckoutSessionMock.mockReset();
     createCustomerMock.mockReset();
     createPortalSessionMock.mockReset();
@@ -120,7 +122,7 @@ describe("billing route origin validation", () => {
           origin: "https://pinkpepper.io",
           "content-type": "application/json",
         },
-        body: JSON.stringify({ plan: "plus" }),
+        body: JSON.stringify({ plan: "plus", legalAccepted: true }),
       }),
     );
 
@@ -156,7 +158,7 @@ describe("billing route origin validation", () => {
           origin: "https://pinkpepper.io",
           "content-type": "application/json",
         },
-        body: JSON.stringify({ plan: "plus" }),
+        body: JSON.stringify({ plan: "plus", legalAccepted: true }),
       }),
     );
 
@@ -176,7 +178,7 @@ describe("billing route origin validation", () => {
           host: "pinkpepper.io",
           "content-type": "application/json",
         },
-        body: JSON.stringify({ plan: "plus" }),
+        body: JSON.stringify({ plan: "plus", legalAccepted: true }),
       }),
     );
 
@@ -192,7 +194,7 @@ describe("billing route origin validation", () => {
           referer: "https://pinkpepper.io/pricing",
           "content-type": "application/json",
         },
-        body: JSON.stringify({ plan: "plus" }),
+        body: JSON.stringify({ plan: "plus", legalAccepted: true }),
       }),
     );
 
@@ -214,7 +216,7 @@ describe("billing route origin validation", () => {
           origin: "https://www.pinkpepper.io",
           "content-type": "application/json",
         },
-        body: JSON.stringify({ plan: "plus" }),
+        body: JSON.stringify({ plan: "plus", legalAccepted: true }),
       }),
     );
 
@@ -233,12 +235,27 @@ describe("billing route origin validation", () => {
           origin: "https://pinkpepper.io",
           "content-type": "application/json",
         },
-        body: JSON.stringify({ plan: "pro" }),
+        body: JSON.stringify({ plan: "pro", legalAccepted: true }),
       }),
     );
 
     expect(response.status).toBe(200);
     await expect(response.json()).resolves.toEqual({ url: "https://checkout.stripe.test/session_123" });
+  });
+
+  it("rejects checkout without legal acknowledgement before Stripe side effects", async () => {
+    const response = await checkoutPost(
+      new Request("https://pinkpepper.io/api/billing/checkout", {
+        method: "POST",
+        headers: { host: "pinkpepper.io", origin: "https://pinkpepper.io", "content-type": "application/json" },
+        body: JSON.stringify({ plan: "plus" }),
+      }),
+    );
+
+    expect(response.status).toBe(428);
+    await expect(response.json()).resolves.toMatchObject({ code: "LEGAL_CHECKOUT_ACCEPTANCE_REQUIRED" });
+    expect(createCustomerMock).not.toHaveBeenCalled();
+    expect(createCheckoutSessionMock).not.toHaveBeenCalled();
   });
 
   it("rejects checkout from a different origin", async () => {
@@ -250,7 +267,7 @@ describe("billing route origin validation", () => {
           origin: "https://evil.com",
           "content-type": "application/json",
         },
-        body: JSON.stringify({ plan: "plus" }),
+        body: JSON.stringify({ plan: "plus", legalAccepted: true }),
       }),
     );
 
@@ -268,7 +285,7 @@ describe("billing route origin validation", () => {
           origin: "https://pinkpepper.io.evil.com",
           "content-type": "application/json",
         },
-        body: JSON.stringify({ plan: "plus" }),
+        body: JSON.stringify({ plan: "plus", legalAccepted: true }),
       }),
     );
 
@@ -281,7 +298,7 @@ describe("billing route origin validation", () => {
       new Request("https://pinkpepper.io/api/billing/checkout", {
         method: "POST",
         headers: { host: "pinkpepper.io", origin: "https://pinkpepper.io", "content-type": "application/json" },
-        body: JSON.stringify({ plan: "plus", interval: "annual" }),
+        body: JSON.stringify({ plan: "plus", interval: "annual", legalAccepted: true }),
       }),
     );
 
@@ -299,7 +316,7 @@ describe("billing route origin validation", () => {
       new Request("https://pinkpepper.io/api/billing/checkout", {
         method: "POST",
         headers: { host: "pinkpepper.io", origin: "https://pinkpepper.io", "content-type": "application/json" },
-        body: JSON.stringify({ plan: "pro", interval: "annual" }),
+        body: JSON.stringify({ plan: "pro", interval: "annual", legalAccepted: true }),
       }),
     );
 
@@ -317,7 +334,7 @@ describe("billing route origin validation", () => {
       new Request("https://pinkpepper.io/api/billing/checkout", {
         method: "POST",
         headers: { host: "pinkpepper.io", origin: "https://pinkpepper.io", "content-type": "application/json" },
-        body: JSON.stringify({ plan: "free", interval: "quarterly" }),
+        body: JSON.stringify({ plan: "free", interval: "quarterly", legalAccepted: true }),
       }),
     );
 
@@ -338,7 +355,7 @@ describe("billing route origin validation", () => {
           origin: "https://pinkpepper.io",
           "content-type": "application/json",
         },
-        body: JSON.stringify({ plan: "plus" }),
+        body: JSON.stringify({ plan: "plus", legalAccepted: true }),
       }),
     );
 
@@ -359,7 +376,7 @@ describe("billing route origin validation", () => {
           origin: "https://pinkpepper.io",
           "content-type": "application/json",
         },
-        body: JSON.stringify({ plan: "plus" }),
+        body: JSON.stringify({ plan: "plus", legalAccepted: true }),
       }),
     );
 
@@ -380,7 +397,7 @@ describe("billing route origin validation", () => {
           origin: "https://pinkpepper.io",
           "content-type": "application/json",
         },
-        body: JSON.stringify({ plan: "plus" }),
+        body: JSON.stringify({ plan: "plus", legalAccepted: true }),
       }),
     );
 

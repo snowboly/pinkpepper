@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Manrope, Space_Grotesk } from "next/font/google";
 import { headers } from "next/headers";
 import { NextIntlClientProvider } from "next-intl";
@@ -149,7 +148,6 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
             nonce={nonce}
             googleAnalyticsMeasurementId={shouldRenderGoogleAnalytics ? measurementId : undefined}
           />
-          <SpeedInsights />
         </NextIntlClientProvider>
       </body>
     </html>

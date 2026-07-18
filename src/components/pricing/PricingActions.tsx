@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRef, useState } from "react";
 import { track } from "@vercel/analytics";
 import { createClient } from "@/utils/supabase/client";
+import { CheckoutLegalDisclosure } from "@/components/legal/CheckoutLegalDisclosure";
 
 type Plan = "plus" | "pro";
 export type BillingInterval = "monthly" | "annual";
@@ -51,6 +52,7 @@ export default function PricingActions({
 }: Props) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [legalAccepted, setLegalAccepted] = useState(false);
   const checkoutInFlight = useRef(false);
 
   if (isLoggedIn === false) {
@@ -66,6 +68,7 @@ export default function PricingActions({
   }
 
   async function startCheckout() {
+    if (!legalAccepted) { setError("Please accept the Terms, Privacy Policy, and Refund Policy before checkout."); return; }
     if (checkoutInFlight.current) return;
     checkoutInFlight.current = true;
     setLoading(true);
@@ -88,7 +91,7 @@ export default function PricingActions({
       const res = await fetch("/api/billing/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan, interval }),
+        body: JSON.stringify({ plan, interval, legalAccepted }),
       });
 
       const data = await readCheckoutResponse(res);
@@ -112,7 +115,7 @@ export default function PricingActions({
       <button
         type="button"
         onClick={startCheckout}
-        disabled={loading}
+        disabled={loading || !legalAccepted}
         className={`${className} w-full flex items-center justify-center appearance-none`}
       >
         {loading ? "Loading..." : label}

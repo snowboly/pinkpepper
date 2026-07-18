@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { buildConsentCookie, parseConsent, readConsentCookie } from "@/components/site/CookieBanner";
+import { buildConsentCookie, parseConsent, readConsentCookie, visibleGoogleAnalyticsCookieNames, COOKIE_SETTINGS_EVENT } from "@/components/site/CookieBanner";
 
 describe("cookie banner persistence", () => {
   it("parses stored consent values from cookies", () => {
@@ -56,6 +56,7 @@ describe("cookie banner source wiring", () => {
     expect(bannerSource).toContain('data-cookie-action="accepted"');
     expect(bannerSource).toContain('data-cookie-action="essential"');
     expect(bannerSource).toContain('window.dispatchEvent(new Event(eventName))');
+    expect(bannerSource).toContain(COOKIE_SETTINGS_EVENT);
   });
 
   it("loads Google Analytics only after accepted consent", () => {
@@ -65,7 +66,7 @@ describe("cookie banner source wiring", () => {
     );
     const layoutSource = readFileSync(path.join(process.cwd(), "src/app/layout.tsx"), "utf8");
     const cookiesPolicySource = readFileSync(
-      path.join(process.cwd(), "src/app/legal/cookies/page.tsx"),
+      path.join(process.cwd(), "src/lib/legal/content.ts"),
       "utf8",
     );
 
@@ -73,7 +74,11 @@ describe("cookie banner source wiring", () => {
     expect(bannerSource).toContain("googletagmanager.com/gtag/js");
     expect(layoutSource).not.toContain("googletagmanager.com/gtag/js");
     expect(cookiesPolicySource).toContain("Google Analytics");
-    expect(cookiesPolicySource).toContain("loads only");
+    expect(cookiesPolicySource).toContain("load only after optional analytics consent");
+    expect(layoutSource).not.toContain("<SpeedInsights />");
+    expect(bannerSource).toContain("<SpeedInsights />");
+    expect(bannerSource).toContain("analytics_storage");
+    expect(bannerSource).toContain("window.location.reload");
   });
 
   it("threads the request CSP nonce from the root layout into the cookie banner", () => {
