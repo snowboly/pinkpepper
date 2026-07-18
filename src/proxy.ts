@@ -12,7 +12,7 @@ const CANONICAL_HOST = "pinkpepper.io";
 const LEGACY_WWW_HOST = "www.pinkpepper.io";
 const LEGACY_EN_PREFIX = "/en";
 const ROUTE_LOCALE_HEADER = "X-NEXT-INTL-LOCALE";
-const LOCALIZED_PUBLIC_PREFIXES = new Set(["de", "fr", "pt"]);
+const LOCALIZED_PUBLIC_PREFIXES = new Set(["de", "fr", "pt", "es", "it"]);
 
 /**
  * Proxy is responsible for two things:
