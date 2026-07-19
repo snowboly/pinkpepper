@@ -62,6 +62,7 @@ export default function PricingPlans({ isLoggedIn, signupHref, ctaNeutral, ctaSe
           <p className="mt-4 min-h-[4.5rem] text-sm leading-relaxed text-[#64748B]">For small food teams using AI food safety consultant features daily for HACCP, SOPs, records, and templates.</p>
           <div className="mt-4 min-h-7">{interval === "annual" && <p className="inline-flex w-fit rounded-full bg-[#FFF1F2] px-3 py-1 text-xs font-bold text-[#BE123C]">Save 10%</p>}</div>
           <Price price={plusPrice.price} suffix={plusPrice.suffix} note={plusPrice.note} />
+          <SubscriptionDetails interval={interval} />
           <div className="my-6 border-t border-[#FCE7F3]" />
           <PlanList items={["Everything in Free", "Higher daily usage limits", "Saved conversations and projects", "Downloadable templates", "AI consultant support for daily compliance work"]} />
           <PricingActions isLoggedIn={isLoggedIn} plan="plus" interval={interval} label={plusPrice.cta} className={`${ctaSecondary} mt-auto`} />
@@ -72,6 +73,7 @@ export default function PricingPlans({ isLoggedIn, signupHref, ctaNeutral, ctaSe
           <p className="mt-4 min-h-[4.5rem] text-sm leading-relaxed text-[#64748B]">For teams needing AI food safety support plus human food safety consultancy/review for higher-risk work.</p>
           <div className="mt-4 min-h-7">{interval === "annual" && <p className="inline-flex w-fit rounded-full bg-white px-3 py-1 text-xs font-bold text-[#BE123C]">Save 5%</p>}</div>
           <Price price={proPrice.price} suffix={proPrice.suffix} note={proPrice.note} />
+          <SubscriptionDetails interval={interval} />
           <div className="my-6 border-t border-[#F1F5F9]" />
           <PlanList items={["Everything in Plus", "Highest usage limits", "Auditor mode access", "2h/month human consultant review", "Priority support"]} />
           <PricingActions isLoggedIn={isLoggedIn} plan="pro" interval={interval} label={proPrice.cta} className={`${ctaPrimary} mt-auto`} />
@@ -83,6 +85,17 @@ export default function PricingPlans({ isLoggedIn, signupHref, ctaNeutral, ctaSe
 
 function Price({ price, suffix, note }: { price: string; suffix: string; note: string }) {
   return <><div className="mt-6 flex items-baseline gap-1"><span className="text-5xl font-bold tracking-tight text-[#0F172A]"><span className="text-2xl align-super">EUR </span>{price}</span><span className="text-base text-[#94A3B8]">{suffix}</span></div><p className="mt-2 min-h-5 text-xs font-medium text-[#64748B]">{note}</p></>;
+}
+
+function SubscriptionDetails({ interval }: { interval: BillingInterval }) {
+  const billingCopy = interval === "monthly" ? "Billed monthly in advance" : "Billed annually in advance";
+
+  return (
+    <p className="mt-3 rounded-2xl border border-[#E2E8F0] bg-[#F8FAFC] px-4 py-3 text-xs leading-5 text-[#64748B]">
+      <span className="font-semibold text-[#0F172A]">Recurring subscription.</span> {billingCopy}.
+      Renews automatically until cancelled. VAT calculated at checkout.
+    </p>
+  );
 }
 
 function PlanList({ items, muted = false }: { items: string[]; muted?: boolean }) {
