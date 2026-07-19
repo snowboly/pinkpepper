@@ -23,10 +23,13 @@ describe("legal release baseline", () => {
 
   it("tracks unresolved production compliance actions", () => {
     const checklist = readFileSync("docs/legal/production-compliance-checklist.md", "utf8");
-    for (const heading of ["Qualified Portuguese legal review", "UK representative appointment or written exemption opinion", "Professional review of five translations", "Electronic Complaints Book registration", "Applicable Portuguese ADR confirmation", "Stripe production Terms URL/consent configuration", "Migration deployment", "Authorized existing-customer notice", "Production deployment"]) expect(checklist).toContain(heading);
+    for (const heading of ["Qualified Portuguese legal review", "UK representative appointment or written exemption opinion", "Professional review of five translations", "Electronic Complaints Book registration", "Applicable Portuguese ADR confirmation", "Stripe production Terms URL/consent configuration", "Migration deployment", "Authorized existing-customer notice", "EU AI Act launch readiness assessment", "Production deployment"]) expect(checklist).toContain(heading);
     expect(checklist).toContain("| item | status | owner | evidence link/location | completion date |");
     expect(checklist).toContain("Electronic Complaints Book registration | unchecked");
     expect(checklist).toContain("UK representative appointment or written exemption opinion | unchecked");
+    expect(checklist).toContain("EU AI Act launch readiness assessment | unchecked");
+    expect(checklist).toContain("Article 50 transparency obligations apply from 2 August 2026");
+    expect(checklist).toContain("AI literacy obligations applied from 2 February 2025");
   });
 
   it("keeps legal identity pages noindexed and off the global indexed footer", () => {
