@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { track } from "@vercel/analytics";
 import type { SubscriptionTier } from "@/lib/tier";
+import { CheckoutLegalDisclosure } from "@/components/legal/CheckoutLegalDisclosure";
 
 type UpgradeModalProps = {
   trigger: "message_limit" | "expert_limit" | "image_limit" | "export" | "review" | "audit_mode" | "template_download";
@@ -51,6 +52,7 @@ export default function UpgradeModal({ trigger, currentTier, onClose }: UpgradeM
   const t = useTranslations("upgrade");
   const [loading, setLoading] = useState<SubscriptionTier | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [legalAccepted, setLegalAccepted] = useState(false);
   const checkoutInFlight = useRef(false);
   const heading = trigger === "template_download"
     ? "Download DOCX templates"
@@ -68,6 +70,7 @@ export default function UpgradeModal({ trigger, currentTier, onClose }: UpgradeM
   }, [currentTier, trigger]);
 
   async function checkout(plan: SubscriptionTier) {
+    if (!legalAccepted) { setError("Please accept the Terms, Privacy Policy, and Refund Policy before checkout."); return; }
     if (checkoutInFlight.current) return;
     checkoutInFlight.current = true;
     track("checkout_started", { plan, source: "upgrade_modal", trigger, currentTier });
@@ -77,7 +80,7 @@ export default function UpgradeModal({ trigger, currentTier, onClose }: UpgradeM
       const res = await fetch("/api/billing/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan }),
+        body: JSON.stringify({ plan, legalAccepted }),
       });
       const data = await readCheckoutResponse(res);
       if (!res.ok || !data.url) {
@@ -123,6 +126,7 @@ export default function UpgradeModal({ trigger, currentTier, onClose }: UpgradeM
                   <span className="text-xs font-semibold text-[#64748B]">{t(`plans.${plan.key}.price`)}</span>
                 </div>
                 <ul className="space-y-1 mb-4">
+                  <CheckoutLegalDisclosure plan={plan.tier} interval="monthly" accepted={legalAccepted} onAcceptedChange={setLegalAccepted} />
                   {highlights.map((h: string) => (
                     <li key={h} className="flex items-center gap-1.5 text-xs text-[#334155]">
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 text-[#059669] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -134,7 +138,7 @@ export default function UpgradeModal({ trigger, currentTier, onClose }: UpgradeM
                 </ul>
                 <button
                   onClick={() => void checkout(plan.tier)}
-                  disabled={loading !== null}
+                  disabled={loading !== null || !legalAccepted}
                   className={`w-full rounded-xl py-2 text-xs font-semibold text-white transition-colors disabled:opacity-50 ${plan.btnColour}`}
                 >
                   {loading === plan.tier ? t("redirecting") : t(`plans.${plan.key}.cta`)}

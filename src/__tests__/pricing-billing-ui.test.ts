@@ -31,6 +31,6 @@ describe("pricing billing UI", () => {
     const pricingActions = readPage("src/components/pricing/PricingActions.tsx");
 
     expect(pricingPlans).toContain('interval={interval}');
-    expect(pricingActions).toContain('body: JSON.stringify({ plan, interval })');
+    expect(pricingActions).toContain('body: JSON.stringify({ plan, interval, legalAccepted })');
   });
 });

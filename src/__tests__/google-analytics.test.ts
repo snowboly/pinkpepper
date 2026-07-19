@@ -17,6 +17,10 @@ describe("Google Analytics public-route gating", () => {
     expect(shouldInjectGoogleAnalytics("/dashboard")).toBe(false);
     expect(shouldInjectGoogleAnalytics("/admin/reviews")).toBe(false);
     expect(shouldInjectGoogleAnalytics("/api/chat")).toBe(false);
+    expect(shouldInjectGoogleAnalytics("/legal")).toBe(false);
+    expect(shouldInjectGoogleAnalytics("/legal/privacy")).toBe(false);
+    expect(shouldInjectGoogleAnalytics("/fr/legal/privacy")).toBe(false);
+    expect(shouldInjectGoogleAnalytics("/it/legal/refund")).toBe(false);
   });
 
   it("keeps the root layout wired to the shared GA measurement env var", () => {

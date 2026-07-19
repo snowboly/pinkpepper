@@ -1,10 +1,11 @@
 import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
-import { publicLaunchLocales } from "@/i18n/public";
 import { isPublicLocale } from "@/lib/public-routes";
+import { LEGAL_LOCALES } from "@/lib/legal/config";
+import { isLegalLocale } from "@/lib/legal/routes";
 
 export function generateStaticParams() {
-  return publicLaunchLocales.filter((locale) => locale !== "en").map((locale) => ({ locale }));
+  return LEGAL_LOCALES.filter((locale) => locale !== "en").map((locale) => ({ locale }));
 }
 
 export default async function LocalizedPublicLayout({
@@ -16,11 +17,11 @@ export default async function LocalizedPublicLayout({
 }) {
   const { locale } = await params;
 
-  if (!isPublicLocale(locale)) {
+  if (!isLegalLocale(locale)) {
     notFound();
   }
 
-  setRequestLocale(locale);
+  setRequestLocale(isPublicLocale(locale) ? locale : "en");
 
   return children;
 }

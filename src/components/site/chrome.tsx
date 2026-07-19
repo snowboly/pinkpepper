@@ -3,6 +3,7 @@ import Link from "next/link";
 import { cookies } from "next/headers";
 import { getLocale } from "next-intl/server";
 import { AccountDropdown } from "@/components/site/AccountDropdown";
+import { CookieSettingsButton } from "@/components/site/CookieSettingsButton";
 import { LocaleSwitcher } from "@/components/site/LocaleSwitcher";
 import { MobileNavMenu } from "@/components/site/MobileNavMenu";
 import { NavDropdown } from "@/components/site/NavDropdown";
@@ -186,12 +187,13 @@ export function LegalSiteFooter() {
   return (
     <footer className="border-t border-[#F1F5F9] bg-white py-8">
       <div className="pp-container flex flex-col justify-between gap-4 text-sm text-[#64748B] md:flex-row md:items-center">
-        <p>&copy; {new Date().getFullYear()} PinkPepper.io. All rights reserved.</p>
+        <p>&copy; {new Date().getFullYear()} PinkPepper.io. All rights reserved. João Pedro Reis, NIF 256709661.</p>
         <nav aria-label="Legal footer" className="flex flex-wrap gap-x-5 gap-y-2">
           <Link href="/legal/terms" className="pp-shell-link">Terms</Link>
           <Link href="/legal/privacy" className="pp-shell-link">Privacy</Link>
           <Link href="/legal/cookies" className="pp-shell-link">Cookies</Link>
           <Link href="/legal/dpa" className="pp-shell-link">DPA</Link>
+          <CookieSettingsButton />
         </nav>
       </div>
     </footer>
@@ -261,6 +263,7 @@ export async function SiteFooter() {
             <li><Link href={getPublicPageHref(publicLocale, "/legal/dpa")} className="pp-shell-link">{messages.chrome.footer.dpa}</Link></li>
             <li><Link href={getPublicPageHref(publicLocale, "/legal/acceptable-use")} className="pp-shell-link">{messages.chrome.footer.acceptableUse}</Link></li>
             <li><Link href={getPublicPageHref(publicLocale, "/legal/refund")} className="pp-shell-link">{messages.chrome.footer.refund}</Link></li>
+            <li><CookieSettingsButton /></li>
           </ul>
         </div>
       </div>
