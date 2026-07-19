@@ -193,6 +193,7 @@ export function LegalSiteFooter() {
           <Link href="/legal/privacy" className="pp-shell-link">Privacy</Link>
           <Link href="/legal/cookies" className="pp-shell-link">Cookies</Link>
           <Link href="/legal/dpa" className="pp-shell-link">DPA</Link>
+          <CookieSettingsButton />
         </nav>
       </div>
     </footer>
@@ -262,6 +263,7 @@ export async function SiteFooter() {
             <li><Link href={getPublicPageHref(publicLocale, "/legal/dpa")} className="pp-shell-link">{messages.chrome.footer.dpa}</Link></li>
             <li><Link href={getPublicPageHref(publicLocale, "/legal/acceptable-use")} className="pp-shell-link">{messages.chrome.footer.acceptableUse}</Link></li>
             <li><Link href={getPublicPageHref(publicLocale, "/legal/refund")} className="pp-shell-link">{messages.chrome.footer.refund}</Link></li>
+            <li><CookieSettingsButton /></li>
           </ul>
         </div>
       </div>

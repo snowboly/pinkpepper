@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
-import { publicLaunchLocales } from "@/i18n/public";
 import { isPublicLocale } from "@/lib/public-routes";
 import { LEGAL_LOCALES } from "@/lib/legal/config";
 import { isLegalLocale } from "@/lib/legal/routes";

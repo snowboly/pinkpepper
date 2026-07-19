@@ -81,6 +81,10 @@ describe("cookie banner source wiring", () => {
     expect(bannerSource).toContain("window.location.reload");
   });
 
+  it("exposes only Google Analytics cookie names in preferences copy", () => {
+    expect(visibleGoogleAnalyticsCookieNames("_ga=1; _ga_ABC=2; session=3")).toEqual(["_ga", "_ga_ABC"]);
+  });
+
   it("threads the request CSP nonce from the root layout into the cookie banner", () => {
     const layoutSource = readFileSync(path.join(process.cwd(), "src/app/layout.tsx"), "utf8");
 

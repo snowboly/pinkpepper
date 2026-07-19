@@ -5,7 +5,7 @@ import { getStripe } from "@/lib/billing/stripe";
 import { isAllowedBillingRequest, getTrustedSiteOrigin } from "@/lib/billing/request-origin";
 import { billingLimiter, checkRateLimit } from "@/lib/ratelimit";
 import { getStripePriceIdForPlan, hasStripePriceConfigError, isBillingInterval, isBillingTier } from "@/lib/billing/price-config";
-import { recordLegalAcceptance } from "@/lib/legal/requirements";
+import { recordLegalAcceptance, type SupabaseLegalClient } from "@/lib/legal/requirements";
 
 export const dynamic = "force-dynamic";
 
@@ -61,8 +61,9 @@ export async function POST(request: Request) {
         { status: 500 }
       );
     }
-    const stripe = getStripe();
     const admin = createAdminClient();
+    await recordLegalAcceptance(admin as unknown as SupabaseLegalClient, { userId: user.id, locale: "en", source: "checkout", request });
+    const stripe = getStripe();
 
     const { data: subRow } = await supabase
       .from("subscriptions")

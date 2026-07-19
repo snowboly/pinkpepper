@@ -112,6 +112,12 @@ export default function PricingActions({
   return (
     <div className="w-full">
       {error && <p className="mb-2 text-xs text-red-600">{error}</p>}
+      <CheckoutLegalDisclosure
+        plan={plan}
+        interval={interval}
+        accepted={legalAccepted}
+        onAcceptedChange={setLegalAccepted}
+      />
       <button
         type="button"
         onClick={startCheckout}

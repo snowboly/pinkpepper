@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/utils/supabase/admin";
 import { createClient } from "@/utils/supabase/server";
-import { recordLegalAcceptance } from "@/lib/legal/requirements";
+import { recordLegalAcceptance, type SupabaseLegalClient } from "@/lib/legal/requirements";
 import { isLegalLocale } from "@/lib/legal/routes";
 import type { AcceptanceSource } from "@/lib/legal/types";
 
@@ -17,6 +17,6 @@ export async function POST(request: Request) {
   if (body.accepted !== true) return NextResponse.json({ error: "Legal acceptance is required." }, { status: 400 });
   const locale = typeof body.locale === "string" && isLegalLocale(body.locale) ? body.locale : "en";
   const source: AcceptanceSource = body.source === "checkout" ? "checkout" : "policy_update";
-  await recordLegalAcceptance(createAdminClient() as any, { userId: user.id, locale, source, request });
+  await recordLegalAcceptance(createAdminClient() as unknown as SupabaseLegalClient, { userId: user.id, locale, source, request });
   return NextResponse.json({ ok: true, returnTo: safeReturnTo(body.returnTo) });
 }

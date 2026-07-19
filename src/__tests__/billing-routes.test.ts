@@ -51,6 +51,15 @@ vi.mock("@/utils/supabase/server", () => ({
 vi.mock("@/utils/supabase/admin", () => ({
   createAdminClient: () => ({
     from: (table: string) => {
+      if (table === "legal_policy_acceptances") {
+        return {
+          insert: async (payload: Record<string, unknown>) => {
+            billingState.legalAcceptanceInserts.push(payload);
+            return { error: null };
+          },
+        };
+      }
+
       if (table !== "subscriptions") {
         throw new Error(`Unexpected admin table ${table}`);
       }
@@ -128,6 +137,9 @@ describe("billing route origin validation", () => {
 
     expect(response.status).toBe(200);
     await expect(response.json()).resolves.toEqual({ url: "https://checkout.stripe.test/session_123" });
+    expect(billingState.legalAcceptanceInserts).toContainEqual(
+      expect.objectContaining({ user_id: "user_123", source: "checkout", locale: "en" }),
+    );
   });
 
   it("allows billing-portal access with same-origin request", async () => {
@@ -256,6 +268,7 @@ describe("billing route origin validation", () => {
     await expect(response.json()).resolves.toMatchObject({ code: "LEGAL_CHECKOUT_ACCEPTANCE_REQUIRED" });
     expect(createCustomerMock).not.toHaveBeenCalled();
     expect(createCheckoutSessionMock).not.toHaveBeenCalled();
+    expect(billingState.legalAcceptanceInserts).toHaveLength(0);
   });
 
   it("rejects checkout from a different origin", async () => {

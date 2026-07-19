@@ -1,4 +1,4 @@
-import { legalAcceptanceRequiredResponse, hasCurrentLegalAcceptance } from "./requirements";
+import { legalAcceptanceRequiredResponse, hasCurrentLegalAcceptance, type SupabaseLegalClient } from "./requirements";
 import type { LegalCapability } from "./types";
 
 export const PROTECTED_LEGAL_API_ROUTES = [
@@ -15,7 +15,7 @@ export const PROTECTED_LEGAL_API_ROUTES = [
   "POST /api/billing/checkout",
 ] as const;
 
-export async function requireLegalCapability(args: { admin: { from: (table: string) => any }; userId: string; capability?: LegalCapability }) {
+export async function requireLegalCapability(args: { admin: SupabaseLegalClient; userId: string; capability?: LegalCapability }) {
   const capability = args.capability ?? "general";
   const accepted = await hasCurrentLegalAcceptance(args.admin, args.userId, capability);
   return accepted ? null : legalAcceptanceRequiredResponse(capability === "checkout" ? "/legal/acceptance?capability=checkout" : "/legal/acceptance");

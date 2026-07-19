@@ -8,7 +8,37 @@ export const CURRENT_ACCEPTANCE_VERSIONS = {
   refund: LEGAL_POLICY_VERSIONS.refund,
 } as const;
 
-type SupabaseLike = { from: (table: string) => any };
+type LegalAcceptanceError = { code?: string; message?: string };
+type LegalAcceptanceRow = { id: string };
+
+type LegalAcceptanceInsert = {
+  user_id: string;
+  terms_version: string;
+  privacy_version: string;
+  refund_version: string;
+  locale: LegalLocale;
+  source: AcceptanceSource;
+  ip_address: string | null;
+  user_agent: string | null;
+};
+
+type LegalAcceptanceLimitQuery = {
+  limit(count: number): Promise<{ data: LegalAcceptanceRow[] | null; error: LegalAcceptanceError | null }>;
+};
+
+type LegalAcceptanceFilterQuery = LegalAcceptanceLimitQuery & {
+  eq(column: string, value: string): LegalAcceptanceFilterQuery;
+  in(column: string, values: string[]): LegalAcceptanceLimitQuery;
+};
+
+type LegalAcceptanceTable = {
+  select(columns: string): LegalAcceptanceFilterQuery;
+  insert(row: LegalAcceptanceInsert): Promise<{ error: LegalAcceptanceError | null }>;
+};
+
+export type SupabaseLegalClient = {
+  from(table: "legal_policy_acceptances"): LegalAcceptanceTable;
+};
 
 export function resolveLegalRequirements(args: { createdAt?: string | null; now?: Date; hasCurrentGeneralAcceptance: boolean; hasCurrentCheckoutAcceptance: boolean; capability?: LegalCapability }) {
   const nowMs = (args.now ?? new Date()).getTime();
@@ -22,7 +52,7 @@ export function resolveLegalRequirements(args: { createdAt?: string | null; now?
   return { cohort, phase, requiredVersions: CURRENT_ACCEPTANCE_VERSIONS, publishedAt: LEGAL_TIMELINE.publishedAt, existingEffectiveAt: LEGAL_TIMELINE.existingUserEffectiveAt, hasCurrentGeneralAcceptance: args.hasCurrentGeneralAcceptance, hasCurrentCheckoutAcceptance: args.hasCurrentCheckoutAcceptance, mustBlock: phase === "new_user_gate" || phase === "existing_gate" || (needsCheckout && !args.hasCurrentCheckoutAcceptance) };
 }
 
-export async function hasCurrentLegalAcceptance(admin: SupabaseLike, userId: string, capability: LegalCapability = "general") {
+export async function hasCurrentLegalAcceptance(admin: SupabaseLegalClient, userId: string, capability: LegalCapability = "general") {
   const sources = capability === "checkout" ? ["checkout"] : ["signup", "policy_update", "checkout"];
   const { data, error } = await admin
     .from("legal_policy_acceptances")
@@ -37,7 +67,7 @@ export async function hasCurrentLegalAcceptance(admin: SupabaseLike, userId: str
   return Array.isArray(data) && data.length > 0;
 }
 
-export async function recordLegalAcceptance(admin: SupabaseLike, args: { userId: string; locale: LegalLocale; source: AcceptanceSource; request?: Request }) {
+export async function recordLegalAcceptance(admin: SupabaseLegalClient, args: { userId: string; locale: LegalLocale; source: AcceptanceSource; request?: Request }) {
   const { error } = await admin.from("legal_policy_acceptances").insert({
     user_id: args.userId,
     terms_version: CURRENT_ACCEPTANCE_VERSIONS.terms,

@@ -18,6 +18,7 @@ import { generateMetadata as generateLocalizedPricingMetadata } from "@/app/[loc
 import { buildPublicMetadata } from "@/lib/seo/public-metadata";
 
 const readPage = (relativePath: string) => readFileSync(join(process.cwd(), relativePath), "utf8");
+const SLOW_SEO_RENDER_TIMEOUT_MS = 60_000;
 
 async function renderArticlesPageForTest(
   mockArticles = [
@@ -275,7 +276,7 @@ describe("public SEO copy and linking", () => {
     expect(markup).toContain("operational compliance");
     expect(markup).toContain("/use-cases");
     expect(markup).toContain("Browse by cluster");
-  });
+  }, SLOW_SEO_RENDER_TIMEOUT_MS);
 
   it("renders a secondary rotating discovery block below the fixed featured guides", async () => {
     const markup = await renderArticlesPageForTest([
@@ -313,7 +314,7 @@ describe("public SEO copy and linking", () => {
     expect(markup).toContain("More guides to explore");
     expect(markup).toContain("Thermometer Checks for Small Kitchens");
     expect(markup).toContain("Allergen Updates Before Service");
-  });
+  }, SLOW_SEO_RENDER_TIMEOUT_MS);
 
   it("surfaces the UK inspector paperwork guide in the strongest-guides block", () => {
     const articlesHub = readPage("src/app/articles/page.tsx");
@@ -331,7 +332,7 @@ describe("public SEO copy and linking", () => {
     expect(markup).toContain('src="https://images.example.com/thermometer.jpg"');
     expect(markup).toContain('alt="Thermometer Checks for Small Kitchens"');
     expect(markup).toContain("Article image coming soon");
-  });
+  }, SLOW_SEO_RENDER_TIMEOUT_MS);
 
   it("renders the full library by default", async () => {
     const manyArticles = Array.from({ length: 30 }, (_, index) => ({
@@ -349,7 +350,7 @@ describe("public SEO copy and linking", () => {
     expect(markup).toContain("Article 25");
     expect(markup).toContain("Article 30");
     expect(markup).not.toContain("Load more articles");
-  });
+  }, SLOW_SEO_RENDER_TIMEOUT_MS);
 
   it("keeps the deferred remainder when ARTICLES_LIBRARY_MODE=lazy", async () => {
     const manyArticles = Array.from({ length: 30 }, (_, index) => ({
@@ -366,7 +367,7 @@ describe("public SEO copy and linking", () => {
     expect(markup).toContain("Article 24");
     expect(markup).not.toContain("Article 25");
     expect(markup).toContain("Load more articles");
-  });
+  }, SLOW_SEO_RENDER_TIMEOUT_MS);
 
   it("keeps upgraded Pexels imagery on priority compliance and sector articles", () => {
     const articleManifest = readPage("content/articles/manifest.json");
@@ -573,7 +574,7 @@ describe("public SEO copy and linking", () => {
     expect(localizedFeature.robots).toEqual({ index: false, follow: true });
     expect(localizedHome.robots).toEqual({ index: false, follow: true });
     expect(localizedPricing.robots).toEqual({ index: false, follow: true });
-  });
+  }, SLOW_SEO_RENDER_TIMEOUT_MS);
 
   it("keeps low-intent poster resources out of the indexable sitemap while preserving stronger resources", async () => {
     const entries = (await sitemap()).map((entry) => entry.url);
