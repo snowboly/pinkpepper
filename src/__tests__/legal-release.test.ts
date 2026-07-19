@@ -28,4 +28,37 @@ describe("legal release baseline", () => {
     expect(checklist).toContain("Electronic Complaints Book registration | unchecked");
     expect(checklist).toContain("UK representative appointment or written exemption opinion | unchecked");
   });
+
+  it("keeps legal identity pages noindexed and off the global indexed footer", () => {
+    const legalPageFiles = [
+      "src/app/legal/page.tsx",
+      "src/app/legal/terms/page.tsx",
+      "src/app/legal/privacy/page.tsx",
+      "src/app/legal/cookies/page.tsx",
+      "src/app/legal/dpa/page.tsx",
+      "src/app/legal/acceptable-use/page.tsx",
+      "src/app/legal/refund/page.tsx",
+      "src/app/legal/acceptance/page.tsx",
+      "src/app/[locale]/legal/page.tsx",
+      "src/app/[locale]/legal/[policy]/page.tsx",
+    ];
+
+    for (const file of legalPageFiles) {
+      expect(readFileSync(file, "utf8"), file).toContain("robots: { index: false, follow: true }");
+    }
+
+    const localizedPolicyRoute = readFileSync("src/app/[locale]/legal/[policy]/page.tsx", "utf8");
+    expect(localizedPolicyRoute).not.toContain("index: true");
+
+    const chrome = readFileSync("src/components/site/chrome.tsx", "utf8");
+    const legalFooterStart = chrome.indexOf("export function LegalSiteFooter");
+    const siteFooterStart = chrome.indexOf("export async function SiteFooter");
+    const legalFooter = chrome.slice(legalFooterStart, siteFooterStart);
+    const siteFooter = chrome.slice(siteFooterStart);
+
+    expect(legalFooter).toContain("Jo\u00e3o Pedro Reis");
+    expect(legalFooter).toContain("NIF 256709661");
+    expect(siteFooter).not.toContain("Jo\u00e3o Pedro Reis");
+    expect(siteFooter).not.toContain("NIF 256709661");
+  });
 });

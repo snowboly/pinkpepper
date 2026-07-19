@@ -269,7 +269,7 @@ export async function SiteFooter() {
       </div>
       <div className="pp-container border-t border-[#F1F5F9] pt-8">
         <div className="flex flex-col items-center justify-between gap-4 text-center text-sm text-[#9B9B9B] md:flex-row md:text-left">
-          <p>&copy; {new Date().getFullYear()} PinkPepper.io. {messages.chrome.footer.rightsReserved} João Pedro Reis, NIF 256709661.</p>
+          <p>&copy; {new Date().getFullYear()} PinkPepper.io. {messages.chrome.footer.rightsReserved}</p>
         </div>
       </div>
     </footer>

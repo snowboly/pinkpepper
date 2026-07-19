@@ -1,6 +1,9 @@
 import { redirect } from "next/navigation";
 import { LegalAcceptanceForm } from "@/components/legal/LegalAcceptanceForm";
 import { createClient } from "@/utils/supabase/server";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = { title: "Legal Acceptance | PinkPepper", robots: { index: false, follow: true } };
 
 export default async function LegalAcceptancePage({ searchParams }: { searchParams: Promise<{ next?: string; locale?: string }> }) {
   const supabase = await createClient();
