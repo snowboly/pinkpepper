@@ -33,4 +33,14 @@ describe("pricing billing UI", () => {
     expect(pricingPlans).toContain('interval={interval}');
     expect(pricingActions).toContain('body: JSON.stringify({ plan, interval, legalAccepted })');
   });
+
+  it("shows monthly and annual subscription details on pricing cards", () => {
+    const pricingPlans = readPage("src/components/pricing/PricingPlans.tsx");
+
+    expect(pricingPlans).toContain("Recurring subscription");
+    expect(pricingPlans).toContain("Billed monthly in advance");
+    expect(pricingPlans).toContain("Billed annually in advance");
+    expect(pricingPlans).toContain("Renews automatically until cancelled");
+    expect(pricingPlans).toContain("VAT calculated at checkout");
+  });
 });
