@@ -18,7 +18,7 @@ describe("terms billing and law copy", () => {
   it("uses Portugal, not Ireland, as the governing-law baseline", () => {
     const text = termsText();
     expect(text).toContain("Portuguese law");
-    expect(text).toContain("Jo?o Pedro Reis");
+    expect(text).toContain("João Pedro Reis");
     expect(text).toContain("256709661");
     expect(text).not.toMatch(/Irish law|courts of Ireland|Republic of Ireland|ec\.europa\.eu\/consumers\/odr/i);
   });

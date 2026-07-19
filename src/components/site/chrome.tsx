@@ -187,7 +187,7 @@ export function LegalSiteFooter() {
   return (
     <footer className="border-t border-[#F1F5F9] bg-white py-8">
       <div className="pp-container flex flex-col justify-between gap-4 text-sm text-[#64748B] md:flex-row md:items-center">
-        <p>&copy; {new Date().getFullYear()} PinkPepper.io. All rights reserved. Jo?o Pedro Reis, NIF 256709661.</p>
+        <p>&copy; {new Date().getFullYear()} PinkPepper.io. All rights reserved. João Pedro Reis, NIF 256709661.</p>
         <nav aria-label="Legal footer" className="flex flex-wrap gap-x-5 gap-y-2">
           <Link href="/legal/terms" className="pp-shell-link">Terms</Link>
           <Link href="/legal/privacy" className="pp-shell-link">Privacy</Link>
@@ -269,7 +269,7 @@ export async function SiteFooter() {
       </div>
       <div className="pp-container border-t border-[#F1F5F9] pt-8">
         <div className="flex flex-col items-center justify-between gap-4 text-center text-sm text-[#9B9B9B] md:flex-row md:text-left">
-          <p>&copy; {new Date().getFullYear()} PinkPepper.io. {messages.chrome.footer.rightsReserved} Jo?o Pedro Reis, NIF 256709661.</p>
+          <p>&copy; {new Date().getFullYear()} PinkPepper.io. {messages.chrome.footer.rightsReserved} João Pedro Reis, NIF 256709661.</p>
         </div>
       </div>
     </footer>

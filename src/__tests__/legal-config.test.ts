@@ -5,7 +5,7 @@ import { buildLegalHubPath, buildLegalPath, getLegalAlternates, isLegalLocale, p
 
 describe("legal config", () => {
   it("defines the Portuguese sole trader identity and timeline", () => {
-    expect(LEGAL_OPERATOR).toMatchObject({ legalName: "Jo?o Pedro Reis", tradingName: "PinkPepper", taxIdLabel: "NIF", taxId: "256709661", address: "Rua Duarte Galv?o 14 r/c dto., 1500-254 Lisboa, Portugal", country: "Portugal", contactEmail: "support@pinkpepper.io" });
+    expect(LEGAL_OPERATOR).toMatchObject({ legalName: "João Pedro Reis", tradingName: "PinkPepper", taxIdLabel: "NIF", taxId: "256709661", address: "Rua Duarte Galvão 14 r/c dto., 1500-254 Lisboa, Portugal", country: "Portugal", contactEmail: "support@pinkpepper.io" });
     expect(LEGAL_LOCALES).toEqual(["en", "fr", "de", "es", "it", "pt"]);
     expect(LEGAL_POLICY_SLUGS).toEqual(["terms", "privacy", "cookies", "dpa", "acceptable-use", "refund"]);
     expect(LEGAL_TIMELINE).toEqual({ publishedAt: "2026-07-18T00:00:00+01:00", newUserEffectiveAt: "2026-07-18T00:00:00+01:00", existingUserEffectiveAt: "2026-08-17T00:00:00+01:00" });

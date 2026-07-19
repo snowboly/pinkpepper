@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { LEGAL_LOCALES, LEGAL_POLICY_SLUGS } from "@/lib/legal/config";
 import { getLegalDocument } from "@/lib/legal/content";
 
-const expectedLaw = { en: "Portuguese law", fr: "droit portugais", de: "portugiesischem Recht", es: "Derecho portugu?s", it: "legge portoghese", pt: "direito portugu?s" } as const;
+const expectedLaw = { en: "Portuguese law", fr: "droit portugais", de: "portugiesischem Recht", es: "Derecho portugués", it: "legge portoghese", pt: "direito português" } as const;
 
 describe("localized legal policies", () => {
   it("preserves clause order and key facts across six locales", () => {
@@ -11,7 +11,7 @@ describe("localized legal policies", () => {
       const doc = getLegalDocument(slug, locale);
       expect(doc.clauses.map((clause) => clause.id)).toEqual(englishIds[slug]);
       const text = doc.clauses.flatMap((clause) => clause.blocks).map((block) => block.type === "paragraph" ? block.text : "").join(" ");
-      expect(text).toContain("Jo?o Pedro Reis");
+      expect(text).toContain("João Pedro Reis");
       expect(text).toContain("256709661");
       expect(text).not.toMatch(/Irish law|courts of Ireland|Data Protection Commission|ec\.europa\.eu\/consumers\/odr|72 hours/i);
     }

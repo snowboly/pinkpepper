@@ -19,7 +19,7 @@ const legalDocuments = {
           "blocks": [
             {
               "type": "paragraph",
-              "text": "This policy applies to PinkPepper and is published by Jo?o Pedro Reis, trading as PinkPepper. Operator: Jo?o Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galv?o 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io."
+              "text": "This policy applies to PinkPepper and is published by João Pedro Reis, trading as PinkPepper. Operator: João Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galvão 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io."
             }
           ]
         },
@@ -119,7 +119,7 @@ const legalDocuments = {
           "blocks": [
             {
               "type": "paragraph",
-              "text": "These Terms are governed by Portuguese law. Mandatory consumer rights in the user?s country of residence remain unaffected."
+              "text": "These Terms are governed by Portuguese law. Mandatory consumer rights in the user's country of residence remain unaffected."
             }
           ]
         },
@@ -139,7 +139,7 @@ const legalDocuments = {
           "blocks": [
             {
               "type": "paragraph",
-              "text": "Operator: Jo?o Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galv?o 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io."
+              "text": "Operator: João Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galvão 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io."
             }
           ]
         }
@@ -161,7 +161,7 @@ const legalDocuments = {
           "blocks": [
             {
               "type": "paragraph",
-              "text": "Operator: Jo?o Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galv?o 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io. Jo?o Pedro Reis is the data controller for account, billing, support, product, and analytics data unless a DPA states otherwise."
+              "text": "Operator: João Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galvão 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io. João Pedro Reis is the data controller for account, billing, support, product, and analytics data unless a DPA states otherwise."
             }
           ]
         },
@@ -343,7 +343,7 @@ const legalDocuments = {
           "blocks": [
             {
               "type": "paragraph",
-              "text": "Operator: Jo?o Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galv?o 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io."
+              "text": "Operator: João Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galvão 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io."
             }
           ]
         }
@@ -365,7 +365,7 @@ const legalDocuments = {
           "blocks": [
             {
               "type": "paragraph",
-              "text": "Operator: Jo?o Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galv?o 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io. For customer content processed on documented instructions, the customer is controller and PinkPepper is processor."
+              "text": "Operator: João Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galvão 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io. For customer content processed on documented instructions, the customer is controller and PinkPepper is processor."
             }
           ]
         },
@@ -437,7 +437,7 @@ const legalDocuments = {
           "blocks": [
             {
               "type": "paragraph",
-              "text": "Operator: Jo?o Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galv?o 14 r/c dto., 1500-254 Lisboa, Portugal. Do not use PinkPepper for illegal conduct, evading regulation, or creating unsafe food-safety practices."
+              "text": "Operator: João Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galvão 14 r/c dto., 1500-254 Lisboa, Portugal. Do not use PinkPepper for illegal conduct, evading regulation, or creating unsafe food-safety practices."
             }
           ]
         },
@@ -489,7 +489,7 @@ const legalDocuments = {
           "blocks": [
             {
               "type": "paragraph",
-              "text": "Operator: Jo?o Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galv?o 14 r/c dto., 1500-254 Lisboa, Portugal. This Refund Policy applies to paid PinkPepper subscriptions bought by private consumers."
+              "text": "Operator: João Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galvão 14 r/c dto., 1500-254 Lisboa, Portugal. This Refund Policy applies to paid PinkPepper subscriptions bought by private consumers."
             }
           ]
         },
@@ -551,7 +551,7 @@ const legalDocuments = {
       "slug": "terms",
       "locale": "fr",
       "title": "Terms of Service",
-      "description": "Terms of Service for PinkPepper (Fran?ais).",
+      "description": "Terms of Service for PinkPepper (Français).",
       "navigationLabel": "Terms of Service",
       "version": "2026-07-18",
       "publishedLabel": "Published: 18 July 2026",
@@ -563,7 +563,7 @@ const legalDocuments = {
           "blocks": [
             {
               "type": "paragraph",
-              "text": "Cette politique s?applique ? PinkPepper et est publi?e par Jo?o Pedro Reis, exer?ant sous le nom PinkPepper. Operator: Jo?o Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galv?o 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io."
+              "text": "Cette politique s’applique à PinkPepper et est publiée par João Pedro Reis, exerçant sous le nom PinkPepper. Operator: João Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galvão 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io."
             }
           ]
         },
@@ -663,7 +663,7 @@ const legalDocuments = {
           "blocks": [
             {
               "type": "paragraph",
-              "text": "These Terms are governed by droit portugais. Mandatory consumer rights in the user?s country of residence remain unaffected."
+              "text": "These Terms are governed by droit portugais. Mandatory consumer rights in the user's country of residence remain unaffected."
             }
           ]
         },
@@ -683,7 +683,7 @@ const legalDocuments = {
           "blocks": [
             {
               "type": "paragraph",
-              "text": "Operator: Jo?o Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galv?o 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io."
+              "text": "Operator: João Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galvão 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io."
             }
           ]
         }
@@ -693,7 +693,7 @@ const legalDocuments = {
       "slug": "privacy",
       "locale": "fr",
       "title": "Privacy Policy",
-      "description": "Privacy Policy for PinkPepper (Fran?ais).",
+      "description": "Privacy Policy for PinkPepper (Français).",
       "navigationLabel": "Privacy Policy",
       "version": "2026-07-18",
       "publishedLabel": "Published: 18 July 2026",
@@ -705,7 +705,7 @@ const legalDocuments = {
           "blocks": [
             {
               "type": "paragraph",
-              "text": "Operator: Jo?o Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galv?o 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io. Jo?o Pedro Reis is the data controller for account, billing, support, product, and analytics data unless a DPA states otherwise."
+              "text": "Operator: João Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galvão 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io. João Pedro Reis is the data controller for account, billing, support, product, and analytics data unless a DPA states otherwise."
             }
           ]
         },
@@ -835,7 +835,7 @@ const legalDocuments = {
       "slug": "cookies",
       "locale": "fr",
       "title": "Cookie Policy",
-      "description": "Cookie Policy for PinkPepper (Fran?ais).",
+      "description": "Cookie Policy for PinkPepper (Français).",
       "navigationLabel": "Cookie Policy",
       "version": "2026-07-18",
       "publishedLabel": "Published: 18 July 2026",
@@ -887,7 +887,7 @@ const legalDocuments = {
           "blocks": [
             {
               "type": "paragraph",
-              "text": "Operator: Jo?o Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galv?o 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io."
+              "text": "Operator: João Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galvão 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io."
             }
           ]
         }
@@ -897,7 +897,7 @@ const legalDocuments = {
       "slug": "dpa",
       "locale": "fr",
       "title": "Data Processing Agreement",
-      "description": "Data Processing Agreement for PinkPepper (Fran?ais).",
+      "description": "Data Processing Agreement for PinkPepper (Français).",
       "navigationLabel": "Data Processing Agreement",
       "version": "2026-07-18",
       "publishedLabel": "Published: 18 July 2026",
@@ -909,7 +909,7 @@ const legalDocuments = {
           "blocks": [
             {
               "type": "paragraph",
-              "text": "Operator: Jo?o Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galv?o 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io. For customer content processed on documented instructions, the customer is controller and PinkPepper is processor."
+              "text": "Operator: João Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galvão 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io. For customer content processed on documented instructions, the customer is controller and PinkPepper is processor."
             }
           ]
         },
@@ -969,7 +969,7 @@ const legalDocuments = {
       "slug": "acceptable-use",
       "locale": "fr",
       "title": "Acceptable Use Policy",
-      "description": "Acceptable Use Policy for PinkPepper (Fran?ais).",
+      "description": "Acceptable Use Policy for PinkPepper (Français).",
       "navigationLabel": "Acceptable Use Policy",
       "version": "2026-07-18",
       "publishedLabel": "Published: 18 July 2026",
@@ -981,7 +981,7 @@ const legalDocuments = {
           "blocks": [
             {
               "type": "paragraph",
-              "text": "Operator: Jo?o Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galv?o 14 r/c dto., 1500-254 Lisboa, Portugal. Do not use PinkPepper for illegal conduct, evading regulation, or creating unsafe food-safety practices."
+              "text": "Operator: João Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galvão 14 r/c dto., 1500-254 Lisboa, Portugal. Do not use PinkPepper for illegal conduct, evading regulation, or creating unsafe food-safety practices."
             }
           ]
         },
@@ -1021,7 +1021,7 @@ const legalDocuments = {
       "slug": "refund",
       "locale": "fr",
       "title": "Refund Policy",
-      "description": "Refund Policy for PinkPepper (Fran?ais).",
+      "description": "Refund Policy for PinkPepper (Français).",
       "navigationLabel": "Refund Policy",
       "version": "2026-07-18",
       "publishedLabel": "Published: 18 July 2026",
@@ -1033,7 +1033,7 @@ const legalDocuments = {
           "blocks": [
             {
               "type": "paragraph",
-              "text": "Operator: Jo?o Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galv?o 14 r/c dto., 1500-254 Lisboa, Portugal. This Refund Policy applies to paid PinkPepper subscriptions bought by private consumers."
+              "text": "Operator: João Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galvão 14 r/c dto., 1500-254 Lisboa, Portugal. This Refund Policy applies to paid PinkPepper subscriptions bought by private consumers."
             }
           ]
         },
@@ -1107,7 +1107,7 @@ const legalDocuments = {
           "blocks": [
             {
               "type": "paragraph",
-              "text": "Diese Richtlinie gilt f?r PinkPepper und wird von Jo?o Pedro Reis, handelnd als PinkPepper, ver?ffentlicht. Operator: Jo?o Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galv?o 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io."
+              "text": "Diese Richtlinie gilt für PinkPepper und wird von João Pedro Reis, handelnd als PinkPepper, veröffentlicht. Operator: João Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galvão 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io."
             }
           ]
         },
@@ -1133,7 +1133,7 @@ const legalDocuments = {
         },
         {
           "id": "acceptable-use",
-          "heading": "Zul?ssige Nutzung",
+          "heading": "Zulässige Nutzung",
           "blocks": [
             {
               "type": "paragraph",
@@ -1207,7 +1207,7 @@ const legalDocuments = {
           "blocks": [
             {
               "type": "paragraph",
-              "text": "These Terms are governed by portugiesischem Recht. Mandatory consumer rights in the user?s country of residence remain unaffected."
+              "text": "These Terms are governed by portugiesischem Recht. Mandatory consumer rights in the user's country of residence remain unaffected."
             }
           ]
         },
@@ -1227,7 +1227,7 @@ const legalDocuments = {
           "blocks": [
             {
               "type": "paragraph",
-              "text": "Operator: Jo?o Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galv?o 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io."
+              "text": "Operator: João Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galvão 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io."
             }
           ]
         }
@@ -1249,7 +1249,7 @@ const legalDocuments = {
           "blocks": [
             {
               "type": "paragraph",
-              "text": "Operator: Jo?o Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galv?o 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io. Jo?o Pedro Reis is the data controller for account, billing, support, product, and analytics data unless a DPA states otherwise."
+              "text": "Operator: João Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galvão 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io. João Pedro Reis is the data controller for account, billing, support, product, and analytics data unless a DPA states otherwise."
             }
           ]
         },
@@ -1431,7 +1431,7 @@ const legalDocuments = {
           "blocks": [
             {
               "type": "paragraph",
-              "text": "Operator: Jo?o Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galv?o 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io."
+              "text": "Operator: João Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galvão 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io."
             }
           ]
         }
@@ -1453,7 +1453,7 @@ const legalDocuments = {
           "blocks": [
             {
               "type": "paragraph",
-              "text": "Operator: Jo?o Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galv?o 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io. For customer content processed on documented instructions, the customer is controller and PinkPepper is processor."
+              "text": "Operator: João Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galvão 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io. For customer content processed on documented instructions, the customer is controller and PinkPepper is processor."
             }
           ]
         },
@@ -1525,7 +1525,7 @@ const legalDocuments = {
           "blocks": [
             {
               "type": "paragraph",
-              "text": "Operator: Jo?o Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galv?o 14 r/c dto., 1500-254 Lisboa, Portugal. Do not use PinkPepper for illegal conduct, evading regulation, or creating unsafe food-safety practices."
+              "text": "Operator: João Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galvão 14 r/c dto., 1500-254 Lisboa, Portugal. Do not use PinkPepper for illegal conduct, evading regulation, or creating unsafe food-safety practices."
             }
           ]
         },
@@ -1577,7 +1577,7 @@ const legalDocuments = {
           "blocks": [
             {
               "type": "paragraph",
-              "text": "Operator: Jo?o Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galv?o 14 r/c dto., 1500-254 Lisboa, Portugal. This Refund Policy applies to paid PinkPepper subscriptions bought by private consumers."
+              "text": "Operator: João Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galvão 14 r/c dto., 1500-254 Lisboa, Portugal. This Refund Policy applies to paid PinkPepper subscriptions bought by private consumers."
             }
           ]
         },
@@ -1639,7 +1639,7 @@ const legalDocuments = {
       "slug": "terms",
       "locale": "es",
       "title": "Terms of Service",
-      "description": "Terms of Service for PinkPepper (Espa?ol).",
+      "description": "Terms of Service for PinkPepper (Español).",
       "navigationLabel": "Terms of Service",
       "version": "2026-07-18",
       "publishedLabel": "Published: 18 July 2026",
@@ -1651,7 +1651,7 @@ const legalDocuments = {
           "blocks": [
             {
               "type": "paragraph",
-              "text": "Esta pol?tica se aplica a PinkPepper y la publica Jo?o Pedro Reis, que opera como PinkPepper. Operator: Jo?o Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galv?o 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io."
+              "text": "Esta política se aplica a PinkPepper y la publica João Pedro Reis, que opera como PinkPepper. Operator: João Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galvão 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io."
             }
           ]
         },
@@ -1751,7 +1751,7 @@ const legalDocuments = {
           "blocks": [
             {
               "type": "paragraph",
-              "text": "These Terms are governed by Derecho portugu?s. Mandatory consumer rights in the user?s country of residence remain unaffected."
+              "text": "These Terms are governed by Derecho portugués. Mandatory consumer rights in the user's country of residence remain unaffected."
             }
           ]
         },
@@ -1771,7 +1771,7 @@ const legalDocuments = {
           "blocks": [
             {
               "type": "paragraph",
-              "text": "Operator: Jo?o Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galv?o 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io."
+              "text": "Operator: João Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galvão 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io."
             }
           ]
         }
@@ -1781,7 +1781,7 @@ const legalDocuments = {
       "slug": "privacy",
       "locale": "es",
       "title": "Privacy Policy",
-      "description": "Privacy Policy for PinkPepper (Espa?ol).",
+      "description": "Privacy Policy for PinkPepper (Español).",
       "navigationLabel": "Privacy Policy",
       "version": "2026-07-18",
       "publishedLabel": "Published: 18 July 2026",
@@ -1793,7 +1793,7 @@ const legalDocuments = {
           "blocks": [
             {
               "type": "paragraph",
-              "text": "Operator: Jo?o Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galv?o 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io. Jo?o Pedro Reis is the data controller for account, billing, support, product, and analytics data unless a DPA states otherwise."
+              "text": "Operator: João Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galvão 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io. João Pedro Reis is the data controller for account, billing, support, product, and analytics data unless a DPA states otherwise."
             }
           ]
         },
@@ -1923,7 +1923,7 @@ const legalDocuments = {
       "slug": "cookies",
       "locale": "es",
       "title": "Cookie Policy",
-      "description": "Cookie Policy for PinkPepper (Espa?ol).",
+      "description": "Cookie Policy for PinkPepper (Español).",
       "navigationLabel": "Cookie Policy",
       "version": "2026-07-18",
       "publishedLabel": "Published: 18 July 2026",
@@ -1975,7 +1975,7 @@ const legalDocuments = {
           "blocks": [
             {
               "type": "paragraph",
-              "text": "Operator: Jo?o Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galv?o 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io."
+              "text": "Operator: João Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galvão 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io."
             }
           ]
         }
@@ -1985,7 +1985,7 @@ const legalDocuments = {
       "slug": "dpa",
       "locale": "es",
       "title": "Data Processing Agreement",
-      "description": "Data Processing Agreement for PinkPepper (Espa?ol).",
+      "description": "Data Processing Agreement for PinkPepper (Español).",
       "navigationLabel": "Data Processing Agreement",
       "version": "2026-07-18",
       "publishedLabel": "Published: 18 July 2026",
@@ -1997,7 +1997,7 @@ const legalDocuments = {
           "blocks": [
             {
               "type": "paragraph",
-              "text": "Operator: Jo?o Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galv?o 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io. For customer content processed on documented instructions, the customer is controller and PinkPepper is processor."
+              "text": "Operator: João Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galvão 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io. For customer content processed on documented instructions, the customer is controller and PinkPepper is processor."
             }
           ]
         },
@@ -2057,7 +2057,7 @@ const legalDocuments = {
       "slug": "acceptable-use",
       "locale": "es",
       "title": "Acceptable Use Policy",
-      "description": "Acceptable Use Policy for PinkPepper (Espa?ol).",
+      "description": "Acceptable Use Policy for PinkPepper (Español).",
       "navigationLabel": "Acceptable Use Policy",
       "version": "2026-07-18",
       "publishedLabel": "Published: 18 July 2026",
@@ -2069,7 +2069,7 @@ const legalDocuments = {
           "blocks": [
             {
               "type": "paragraph",
-              "text": "Operator: Jo?o Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galv?o 14 r/c dto., 1500-254 Lisboa, Portugal. Do not use PinkPepper for illegal conduct, evading regulation, or creating unsafe food-safety practices."
+              "text": "Operator: João Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galvão 14 r/c dto., 1500-254 Lisboa, Portugal. Do not use PinkPepper for illegal conduct, evading regulation, or creating unsafe food-safety practices."
             }
           ]
         },
@@ -2109,7 +2109,7 @@ const legalDocuments = {
       "slug": "refund",
       "locale": "es",
       "title": "Refund Policy",
-      "description": "Refund Policy for PinkPepper (Espa?ol).",
+      "description": "Refund Policy for PinkPepper (Español).",
       "navigationLabel": "Refund Policy",
       "version": "2026-07-18",
       "publishedLabel": "Published: 18 July 2026",
@@ -2121,7 +2121,7 @@ const legalDocuments = {
           "blocks": [
             {
               "type": "paragraph",
-              "text": "Operator: Jo?o Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galv?o 14 r/c dto., 1500-254 Lisboa, Portugal. This Refund Policy applies to paid PinkPepper subscriptions bought by private consumers."
+              "text": "Operator: João Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galvão 14 r/c dto., 1500-254 Lisboa, Portugal. This Refund Policy applies to paid PinkPepper subscriptions bought by private consumers."
             }
           ]
         },
@@ -2171,7 +2171,7 @@ const legalDocuments = {
           "blocks": [
             {
               "type": "paragraph",
-              "text": "This policy is governed by Derecho portugu?s and does not limit mandatory consumer rights."
+              "text": "This policy is governed by Derecho portugués and does not limit mandatory consumer rights."
             }
           ]
         }
@@ -2195,7 +2195,7 @@ const legalDocuments = {
           "blocks": [
             {
               "type": "paragraph",
-              "text": "Questa informativa si applica a PinkPepper ed ? pubblicata da Jo?o Pedro Reis, che opera come PinkPepper. Operator: Jo?o Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galv?o 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io."
+              "text": "Questa informativa si applica a PinkPepper ed è pubblicata da João Pedro Reis, che opera come PinkPepper. Operator: João Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galvão 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io."
             }
           ]
         },
@@ -2295,7 +2295,7 @@ const legalDocuments = {
           "blocks": [
             {
               "type": "paragraph",
-              "text": "These Terms are governed by legge portoghese. Mandatory consumer rights in the user?s country of residence remain unaffected."
+              "text": "These Terms are governed by legge portoghese. Mandatory consumer rights in the user's country of residence remain unaffected."
             }
           ]
         },
@@ -2315,7 +2315,7 @@ const legalDocuments = {
           "blocks": [
             {
               "type": "paragraph",
-              "text": "Operator: Jo?o Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galv?o 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io."
+              "text": "Operator: João Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galvão 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io."
             }
           ]
         }
@@ -2337,7 +2337,7 @@ const legalDocuments = {
           "blocks": [
             {
               "type": "paragraph",
-              "text": "Operator: Jo?o Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galv?o 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io. Jo?o Pedro Reis is the data controller for account, billing, support, product, and analytics data unless a DPA states otherwise."
+              "text": "Operator: João Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galvão 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io. João Pedro Reis is the data controller for account, billing, support, product, and analytics data unless a DPA states otherwise."
             }
           ]
         },
@@ -2519,7 +2519,7 @@ const legalDocuments = {
           "blocks": [
             {
               "type": "paragraph",
-              "text": "Operator: Jo?o Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galv?o 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io."
+              "text": "Operator: João Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galvão 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io."
             }
           ]
         }
@@ -2541,7 +2541,7 @@ const legalDocuments = {
           "blocks": [
             {
               "type": "paragraph",
-              "text": "Operator: Jo?o Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galv?o 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io. For customer content processed on documented instructions, the customer is controller and PinkPepper is processor."
+              "text": "Operator: João Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galvão 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io. For customer content processed on documented instructions, the customer is controller and PinkPepper is processor."
             }
           ]
         },
@@ -2613,7 +2613,7 @@ const legalDocuments = {
           "blocks": [
             {
               "type": "paragraph",
-              "text": "Operator: Jo?o Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galv?o 14 r/c dto., 1500-254 Lisboa, Portugal. Do not use PinkPepper for illegal conduct, evading regulation, or creating unsafe food-safety practices."
+              "text": "Operator: João Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galvão 14 r/c dto., 1500-254 Lisboa, Portugal. Do not use PinkPepper for illegal conduct, evading regulation, or creating unsafe food-safety practices."
             }
           ]
         },
@@ -2665,7 +2665,7 @@ const legalDocuments = {
           "blocks": [
             {
               "type": "paragraph",
-              "text": "Operator: Jo?o Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galv?o 14 r/c dto., 1500-254 Lisboa, Portugal. This Refund Policy applies to paid PinkPepper subscriptions bought by private consumers."
+              "text": "Operator: João Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galvão 14 r/c dto., 1500-254 Lisboa, Portugal. This Refund Policy applies to paid PinkPepper subscriptions bought by private consumers."
             }
           ]
         },
@@ -2727,7 +2727,7 @@ const legalDocuments = {
       "slug": "terms",
       "locale": "pt",
       "title": "Terms of Service",
-      "description": "Terms of Service for PinkPepper (Portugu?s).",
+      "description": "Terms of Service for PinkPepper (Português).",
       "navigationLabel": "Terms of Service",
       "version": "2026-07-18",
       "publishedLabel": "Published: 18 July 2026",
@@ -2739,7 +2739,7 @@ const legalDocuments = {
           "blocks": [
             {
               "type": "paragraph",
-              "text": "Esta pol?tica aplica-se ? PinkPepper e ? publicada por Jo?o Pedro Reis, a operar como PinkPepper. Operator: Jo?o Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galv?o 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io."
+              "text": "Esta política aplica-se à PinkPepper e é publicada por João Pedro Reis, a operar como PinkPepper. Operator: João Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galvão 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io."
             }
           ]
         },
@@ -2765,7 +2765,7 @@ const legalDocuments = {
         },
         {
           "id": "acceptable-use",
-          "heading": "Utiliza??o aceit?vel",
+          "heading": "Utilização aceitável",
           "blocks": [
             {
               "type": "paragraph",
@@ -2839,7 +2839,7 @@ const legalDocuments = {
           "blocks": [
             {
               "type": "paragraph",
-              "text": "These Terms are governed by direito portugu?s. Mandatory consumer rights in the user?s country of residence remain unaffected."
+              "text": "These Terms are governed by direito português. Mandatory consumer rights in the user's country of residence remain unaffected."
             }
           ]
         },
@@ -2859,7 +2859,7 @@ const legalDocuments = {
           "blocks": [
             {
               "type": "paragraph",
-              "text": "Operator: Jo?o Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galv?o 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io."
+              "text": "Operator: João Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galvão 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io."
             }
           ]
         }
@@ -2869,7 +2869,7 @@ const legalDocuments = {
       "slug": "privacy",
       "locale": "pt",
       "title": "Privacy Policy",
-      "description": "Privacy Policy for PinkPepper (Portugu?s).",
+      "description": "Privacy Policy for PinkPepper (Português).",
       "navigationLabel": "Privacy Policy",
       "version": "2026-07-18",
       "publishedLabel": "Published: 18 July 2026",
@@ -2881,7 +2881,7 @@ const legalDocuments = {
           "blocks": [
             {
               "type": "paragraph",
-              "text": "Operator: Jo?o Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galv?o 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io. Jo?o Pedro Reis is the data controller for account, billing, support, product, and analytics data unless a DPA states otherwise."
+              "text": "Operator: João Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galvão 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io. João Pedro Reis is the data controller for account, billing, support, product, and analytics data unless a DPA states otherwise."
             }
           ]
         },
@@ -3011,7 +3011,7 @@ const legalDocuments = {
       "slug": "cookies",
       "locale": "pt",
       "title": "Cookie Policy",
-      "description": "Cookie Policy for PinkPepper (Portugu?s).",
+      "description": "Cookie Policy for PinkPepper (Português).",
       "navigationLabel": "Cookie Policy",
       "version": "2026-07-18",
       "publishedLabel": "Published: 18 July 2026",
@@ -3063,7 +3063,7 @@ const legalDocuments = {
           "blocks": [
             {
               "type": "paragraph",
-              "text": "Operator: Jo?o Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galv?o 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io."
+              "text": "Operator: João Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galvão 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io."
             }
           ]
         }
@@ -3073,7 +3073,7 @@ const legalDocuments = {
       "slug": "dpa",
       "locale": "pt",
       "title": "Data Processing Agreement",
-      "description": "Data Processing Agreement for PinkPepper (Portugu?s).",
+      "description": "Data Processing Agreement for PinkPepper (Português).",
       "navigationLabel": "Data Processing Agreement",
       "version": "2026-07-18",
       "publishedLabel": "Published: 18 July 2026",
@@ -3085,7 +3085,7 @@ const legalDocuments = {
           "blocks": [
             {
               "type": "paragraph",
-              "text": "Operator: Jo?o Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galv?o 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io. For customer content processed on documented instructions, the customer is controller and PinkPepper is processor."
+              "text": "Operator: João Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galvão 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io. For customer content processed on documented instructions, the customer is controller and PinkPepper is processor."
             }
           ]
         },
@@ -3145,7 +3145,7 @@ const legalDocuments = {
       "slug": "acceptable-use",
       "locale": "pt",
       "title": "Acceptable Use Policy",
-      "description": "Acceptable Use Policy for PinkPepper (Portugu?s).",
+      "description": "Acceptable Use Policy for PinkPepper (Português).",
       "navigationLabel": "Acceptable Use Policy",
       "version": "2026-07-18",
       "publishedLabel": "Published: 18 July 2026",
@@ -3157,7 +3157,7 @@ const legalDocuments = {
           "blocks": [
             {
               "type": "paragraph",
-              "text": "Operator: Jo?o Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galv?o 14 r/c dto., 1500-254 Lisboa, Portugal. Do not use PinkPepper for illegal conduct, evading regulation, or creating unsafe food-safety practices."
+              "text": "Operator: João Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galvão 14 r/c dto., 1500-254 Lisboa, Portugal. Do not use PinkPepper for illegal conduct, evading regulation, or creating unsafe food-safety practices."
             }
           ]
         },
@@ -3197,7 +3197,7 @@ const legalDocuments = {
       "slug": "refund",
       "locale": "pt",
       "title": "Refund Policy",
-      "description": "Refund Policy for PinkPepper (Portugu?s).",
+      "description": "Refund Policy for PinkPepper (Português).",
       "navigationLabel": "Refund Policy",
       "version": "2026-07-18",
       "publishedLabel": "Published: 18 July 2026",
@@ -3209,7 +3209,7 @@ const legalDocuments = {
           "blocks": [
             {
               "type": "paragraph",
-              "text": "Operator: Jo?o Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galv?o 14 r/c dto., 1500-254 Lisboa, Portugal. This Refund Policy applies to paid PinkPepper subscriptions bought by private consumers."
+              "text": "Operator: João Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galvão 14 r/c dto., 1500-254 Lisboa, Portugal. This Refund Policy applies to paid PinkPepper subscriptions bought by private consumers."
             }
           ]
         },
@@ -3259,7 +3259,7 @@ const legalDocuments = {
           "blocks": [
             {
               "type": "paragraph",
-              "text": "This policy is governed by direito portugu?s and does not limit mandatory consumer rights."
+              "text": "This policy is governed by direito português and does not limit mandatory consumer rights."
             }
           ]
         }
@@ -3285,7 +3285,7 @@ const legalHubs = {
         "blocks": [
           {
             "type": "paragraph",
-            "text": "Operator: Jo?o Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galv?o 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io. PinkPepper is not currently registered in the Portuguese Electronic Complaints Book. Registration remains a production compliance action."
+            "text": "Operator: João Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galvão 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io. PinkPepper is not currently registered in the Portuguese Electronic Complaints Book. Registration remains a production compliance action."
           }
         ]
       },
@@ -3322,7 +3322,7 @@ const legalHubs = {
     "slug": "hub",
     "locale": "fr",
     "title": "Legal policies",
-    "description": "Legal policies for PinkPepper (Fran?ais).",
+    "description": "Legal policies for PinkPepper (Français).",
     "navigationLabel": "Legal",
     "version": "2026-07-18",
     "publishedLabel": "Published: 18 July 2026",
@@ -3334,7 +3334,7 @@ const legalHubs = {
         "blocks": [
           {
             "type": "paragraph",
-            "text": "Operator: Jo?o Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galv?o 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io. PinkPepper is not currently registered in the Portuguese Electronic Complaints Book. Registration remains a production compliance action."
+            "text": "Operator: João Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galvão 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io. PinkPepper is not currently registered in the Portuguese Electronic Complaints Book. Registration remains a production compliance action."
           }
         ]
       },
@@ -3383,7 +3383,7 @@ const legalHubs = {
         "blocks": [
           {
             "type": "paragraph",
-            "text": "Operator: Jo?o Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galv?o 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io. PinkPepper is not currently registered in the Portuguese Electronic Complaints Book. Registration remains a production compliance action."
+            "text": "Operator: João Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galvão 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io. PinkPepper is not currently registered in the Portuguese Electronic Complaints Book. Registration remains a production compliance action."
           }
         ]
       },
@@ -3420,7 +3420,7 @@ const legalHubs = {
     "slug": "hub",
     "locale": "es",
     "title": "Legal policies",
-    "description": "Legal policies for PinkPepper (Espa?ol).",
+    "description": "Legal policies for PinkPepper (Español).",
     "navigationLabel": "Legal",
     "version": "2026-07-18",
     "publishedLabel": "Published: 18 July 2026",
@@ -3432,7 +3432,7 @@ const legalHubs = {
         "blocks": [
           {
             "type": "paragraph",
-            "text": "Operator: Jo?o Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galv?o 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io. PinkPepper is not currently registered in the Portuguese Electronic Complaints Book. Registration remains a production compliance action."
+            "text": "Operator: João Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galvão 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io. PinkPepper is not currently registered in the Portuguese Electronic Complaints Book. Registration remains a production compliance action."
           }
         ]
       },
@@ -3481,7 +3481,7 @@ const legalHubs = {
         "blocks": [
           {
             "type": "paragraph",
-            "text": "Operator: Jo?o Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galv?o 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io. PinkPepper is not currently registered in the Portuguese Electronic Complaints Book. Registration remains a production compliance action."
+            "text": "Operator: João Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galvão 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io. PinkPepper is not currently registered in the Portuguese Electronic Complaints Book. Registration remains a production compliance action."
           }
         ]
       },
@@ -3518,7 +3518,7 @@ const legalHubs = {
     "slug": "hub",
     "locale": "pt",
     "title": "Legal policies",
-    "description": "Legal policies for PinkPepper (Portugu?s).",
+    "description": "Legal policies for PinkPepper (Português).",
     "navigationLabel": "Legal",
     "version": "2026-07-18",
     "publishedLabel": "Published: 18 July 2026",
@@ -3530,7 +3530,7 @@ const legalHubs = {
         "blocks": [
           {
             "type": "paragraph",
-            "text": "Operator: Jo?o Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galv?o 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io. PinkPepper is not currently registered in the Portuguese Electronic Complaints Book. Registration remains a production compliance action."
+            "text": "Operator: João Pedro Reis, trading as PinkPepper. NIF 256709661. Address: Rua Duarte Galvão 14 r/c dto., 1500-254 Lisboa, Portugal. Contact: support@pinkpepper.io. PinkPepper is not currently registered in the Portuguese Electronic Complaints Book. Registration remains a production compliance action."
           }
         ]
       },

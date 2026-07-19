@@ -5,11 +5,11 @@ export const LEGAL_LOCALES = ["en", "fr", "de", "es", "it", "pt"] as const satis
 export const LEGAL_POLICY_SLUGS = ["terms", "privacy", "cookies", "dpa", "acceptable-use", "refund"] as const satisfies readonly LegalPolicySlug[];
 
 export const LEGAL_OPERATOR = {
-  legalName: "Jo?o Pedro Reis",
+  legalName: "João Pedro Reis",
   tradingName: "PinkPepper",
   taxIdLabel: "NIF",
   taxId: "256709661",
-  address: "Rua Duarte Galv?o 14 r/c dto., 1500-254 Lisboa, Portugal",
+  address: "Rua Duarte Galvão 14 r/c dto., 1500-254 Lisboa, Portugal",
   country: "Portugal",
   contactEmail: "support@pinkpepper.io",
 } as const;

@@ -16,7 +16,8 @@ describe("legal release baseline", () => {
     const roots = ["src/app", "src/components", "src/content", "src/lib"].map((root) => path.join(process.cwd(), root));
     const source = roots.flatMap(files).filter((file) => !file.includes("__tests__")).map((file) => readFileSync(file, "utf8")).join(" ");
     expect(source).not.toMatch(/Irish law|courts of Ireland|Data Protection Commission|ec\.europa\.eu\/consumers\/odr|personal-data breach[^.]*72 hours|processor[^.]*72 hours/i);
-    expect(source).toContain("Jo?o Pedro Reis");
+    expect(source).toContain("Jo\u00e3o Pedro Reis");
+    expect(source).not.toContain("Jo?o Pedro Reis");
     expect(source).toContain("256709661");
   });
 

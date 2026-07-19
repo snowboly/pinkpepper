@@ -20,8 +20,8 @@ describe("legal content registry", () => {
 
   it("publishes the Portuguese operator, refund, complaints, DPA, and UK caveat facts", () => {
     const joined = [getLegalHub("en"), ...LEGAL_POLICY_SLUGS.map((slug) => getLegalDocument(slug, "en"))].map(textOf).join(" ");
-    expect(joined).toContain("Jo?o Pedro Reis");
-    expect(joined).toContain("Rua Duarte Galv?o 14 r/c dto., 1500-254 Lisboa, Portugal");
+    expect(joined).toContain("João Pedro Reis");
+    expect(joined).toContain("Rua Duarte Galvão 14 r/c dto., 1500-254 Lisboa, Portugal");
     expect(joined).toContain("NIF 256709661");
     expect(joined).toContain("full unconditional 14-day refund");
     expect(joined).toContain("CNPD");
